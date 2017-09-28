@@ -1,0 +1,17 @@
+@extends('adminlte::page')
+
+@section('title', 'Permissions')
+
+@section('content_header')
+    <h1></h1>
+
+@stop
+
+@section('content')
+
+    <div>
+        @include('adminlte::permissions.form')
+    </div>
+
+@stop
+

@@ -1,0 +1,11 @@
+go to cd storage and give 777 permission
+composer install
+compose update
+php artisan key:generate
+php artisan config:clear
+php artisan migrate
+php artisan db::seed
+login with admin@tanitech.in/admin123
+
+
+

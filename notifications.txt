@@ -1,0 +1,10 @@
+Job Open
+1) On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
+2) On Job open > Status update : send notification to team/all (except user who update status). default send notificaations to admin user .
+3) On Job open > Associating Candidate : send notification to team/all  (except user who associate Candidate). default send notificaations to admin user .
+4) On Job open > DeAssociating Candidate : send notification to team/all (except user who deassociate Candidate). default send notificaations to admin user .
+
+TODO > Tasks
+1) On creating task : send notification if tasks is created for other users.
+2) Task update : send notifications to owner if tasks is not created for self.
+
