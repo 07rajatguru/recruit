@@ -841,11 +841,11 @@ class CandidateController extends Controller
                 // $parts = explode(',12', $row);
                 $parts = preg_split('/(?<=[.?!])\s+(?=[a-z])/i', $row);
 
-
                 foreach ($parts as $part) {
                     if ($part == '') {
                         continue;
                     }
+
                     // echo $part.'<br><br>';
                     $part = strtolower($part);
 
@@ -985,12 +985,16 @@ class CandidateController extends Controller
             foreach ($records as $key => $value) {
                 $records[$key] = $value;
             }
+            if(!isset($records['sex']) || $records['sex']==''){
+                $records['sex'] = 'Male';
+            }
+            if(!isset($records['marital_status']) || $records['marital_status']==''){
+                $records['marital_status'] = 'Single';
+            }
             //print_r($records);exit;
             if(isset($records) && sizeof($records) > 0){
                 if(isset($records['fname']) && $records['fname']!= ''
                     && isset($records['lname']) && $records['lname']!=''
-                    && isset($records['sex']) && $records['sex']!=''
-                    && isset($records['marital_status']) &&  $records['marital_status']!=''
                     && isset($records['mobile']) && $records['mobile']!='' ){
                     $candidateBasicInfo = new CandidateBasicInfo();
                     $candidateBasicInfo->fname = $records['fname'];
