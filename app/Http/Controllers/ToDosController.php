@@ -35,7 +35,7 @@ class ToDosController extends Controller
         $priority = ToDos::getPriority();
 
 
-        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client');
+        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Other');
 
         $viewVariable = array();
         $viewVariable['candidate'] = $candidate;
@@ -72,7 +72,10 @@ class ToDosController extends Controller
         $toDos->candidate = $candidate;
         $toDos->status = $status;
         $toDos->type = $type;
-        $toDos->typeList = $typeList;
+        if(isset($typeList) && $typeList!=''){
+            $toDos->typeList = $typeList;
+        }
+
         $toDos->priority = $priority;
         $toDos->description = $description;
 //print_r($toDos);exit;

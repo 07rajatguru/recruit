@@ -14,7 +14,6 @@ class ToDos extends Model
         'candidate' => 'required',
         'due_date' => 'required',
         'type' => 'required',
-        'typeList' => 'required',
     );
 
     public function messages()
@@ -24,7 +23,6 @@ class ToDos extends Model
             'candidate.required' => 'Candidate is required field',
             'due_date.required' => 'Due Date is required field',
             'type.required' => 'Type is required field',
-            'typeList.required' => 'Type List is required field',
         ];
     }
 
