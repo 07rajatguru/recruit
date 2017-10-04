@@ -26,4 +26,32 @@ class Notifications extends Model
         $notifications->link = $link;
         $notifications->save();
     }
+
+    public static function getAllNotificationsByUserId($userid,$read){
+
+        $notification_query = Notifications::query();
+        $notification_query = $notification_query->where('user_id','=',$userid);
+
+        if(isset($read) && $read!=''){
+            $notification_query = $notification_query->where('read','=',0);
+        }
+
+        $notification_res = $notification_query->get();
+
+        $notifications = array();
+
+        $i=0;
+        foreach ($notification_res as $key=>$value){
+            $notifications[$i]['module'] = $value['module'];
+            $notifications[$i]['msg'] = $value['message'];
+            $notifications[$i]['read'] = $value['read'];
+            $notifications[$i]['module_id'] = $value['module_id'];
+            $notifications[$i]['link'] = $value['link'];
+            $i++;
+        }
+
+        return $notifications;
+
+    }
+
 }

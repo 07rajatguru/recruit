@@ -13,23 +13,18 @@ class NotificationController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        $notificationDetails = Notifications::where('user_id',$user_id)->where('read',0)->get();
+        //$notificationDetails = Notifications::where('user_id',$user_id)->where('read',0)->get();
 
-//        print_r($notificationDetails);exit;
+        $notifications = Notifications::getAllNotificationsByUserId($user_id,0);
 
-        $notificationArr = array();
+        return json_encode($notifications);
+    }
+    public function index(){
 
-        if(isset($notificationDetails) && sizeof($notificationDetails)>0){
-            $i=0;
-            foreach ($notificationDetails as $notificationDetail) {
-                $notificationArr[$i]['module_id'] = $notificationDetail->module_id;
-                $notificationArr[$i]['module'] = $notificationDetail->module;
-                $notificationArr[$i]['message'] = $notificationDetail->message;
-                $notificationArr[$i]['link'] = $notificationDetail->link;
-                $i++;
-            }
-        }
+        $user_id = \Auth::user()->id;
 
-        return json_encode($notificationArr);
+        $notifications = Notifications::getAllNotificationsByUserId($user_id,'');
+
+        return view('adminlte::notifications.index', array('notifications' => $notifications));
     }
 }

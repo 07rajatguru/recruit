@@ -253,3 +253,14 @@ tr.disabled > td a {
 .add-button-home{
     width:auto !important;
 }
+
+.notification-li > a {
+    padding: 5px !important;
+}
+
+.notification-li > a > h4{
+    margin: 0 0 0 5px !important;
+}
+.notification-li > a > p{
+    margin: 0 0 0 5px !important;
+}

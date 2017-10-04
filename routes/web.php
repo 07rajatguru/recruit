@@ -611,16 +611,6 @@ Route::group(['middleware' => ['auth']], function () {
     // To do's Routes End
 
 
-    // Notification Related Routes Start
-
-    Route::get('ajax/getNotification', [
-        'as' => 'notification.list',
-        'uses' => 'NotificationController@getAjaxNotification',
-    ]);
-
-    // Notification Related Routes End
-
-
     // Admin > Industry
     Route::get('companies', [
         'as' => 'companies.index',
@@ -656,6 +646,21 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CompaniesController@destroy',
          'middleware' => ['permission:industry-delete']
     ]);*/
+
+
+    // Notification Related Routes Start
+
+    Route::get('notifications', [
+        'as' => 'notification.index',
+        'uses' => 'NotificationController@index',
+    ]);
+
+    Route::get('notifications/fetch', [
+        'as' => 'notification.list',
+        'uses' => 'NotificationController@getAjaxNotification',
+    ]);
+
+    // Notification Related Routes End
 
 });
 
