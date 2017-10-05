@@ -96,6 +96,16 @@
                             @endif
                         </div>
 
+                        <div class="form-group {{ $errors->has('job_priority') ? 'has-error' : '' }}">
+                            <strong>Select Job Priority :</strong>
+                            {!! Form::select('job_priority', $job_priorities,(isset($job_open->priority) ? $job_open->priority : null), array('id'=>'job_priority','class' => 'form-control')) !!}
+                            @if ($errors->has('job_priority'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('job_priority') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
                     </div>
                 </div>
 

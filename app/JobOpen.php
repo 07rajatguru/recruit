@@ -43,15 +43,9 @@ class JobOpen extends Model
     public static function getJobOpenStatus(){
         // job opening status
         $job_open_status = array();
-        $job_open_status['In-progress'] = 'In-progress';
-        $job_open_status['Waiting for approval'] = 'Waiting for approval';
-        //$job_open_status['On-Hold'] = 'On-Hold';
-        //$job_open_status['Filled'] = 'Filled';
-        //$job_open_status['Cancelled'] = 'Cancelled';
-        //$job_open_status['Declined'] = 'Declined';
-        $job_open_status['Inactive'] = 'Inactive';
-        $job_open_status['Shortlisted cvs'] = 'Shortlisted cvs';
-        $job_open_status['Selected / Rejected'] = 'Selected / Rejected';
+        $job_open_status['Open'] = 'Open';
+        $job_open_status['Closed'] = 'Closed';
+        $job_open_status['Hold'] = 'Hold';
 
         return $job_open_status;
     }
@@ -66,6 +60,21 @@ class JobOpen extends Model
         $job_types['Temporary to permanent'] = 'Temporary to permanent';
 
         return $job_types;
+    }
+
+    public static function getJobPriorities(){
+
+        $job_priorities = array();
+        $job_priorities['0'] = '-None-';
+        $job_priorities['1'] = 'Urgent Positions';
+        $job_priorities['2'] = 'New Positions';
+        $job_priorities['3'] = 'Constant Deliveries needed';
+        $job_priorities['4'] = 'Update needed from client/on hold positions';
+        $job_priorities['5'] = 'Identified candidates';
+        $job_priorities['6'] = 'Revived Positions';
+        $job_priorities['7'] = 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet';
+
+        return $job_priorities;
     }
 
     public static function getJobOpeningId(){

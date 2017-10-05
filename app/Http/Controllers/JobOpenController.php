@@ -151,8 +151,11 @@ class JobOpenController extends Controller
         // job type
         $job_type = JobOpen::getJobTypes();
 
+        // job priority
+        $job_priorities = JobOpen::getJobPriorities();
+
         $action = "add";
-        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','team_mates'));
+        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','team_mates','job_priorities'));
 
     }
 
@@ -175,6 +178,7 @@ class JobOpenController extends Controller
         $target_date = $input['target_date'];
         // $formatted_target_date = Carbon::parse($target_date)->format('Y/m/d');
         $job_opening_status = $input['job_opening_status'];
+        $job_priority = $input['job_priority'];
         $industry_id = $input['industry_id'];
         $client_id = $input['client_id'];
         $no_of_positions = $input['no_of_positions'];
@@ -224,6 +228,7 @@ class JobOpenController extends Controller
         $job_open->city = $city;
         $job_open->state = $state;
         $job_open->country = $country;
+        $job_open->priority = $job_priority;
 
 //        print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -446,8 +451,12 @@ class JobOpenController extends Controller
         // job type
         $job_type = JobOpen::getJobTypes();
 
+        // job priority
+        $job_priorities = JobOpen::getJobPriorities();
+
         $job_open = JobOpen::find($id);
 
+        //print_r($job_open);exit;
         $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
 
@@ -459,7 +468,7 @@ class JobOpenController extends Controller
         }
 
         $action = "edit";
-        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type', 'job_open', 'date_opened', 'target_date','team_mates'));
+        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates'));
     }
 
     public function update(Request $request, $id)
@@ -494,7 +503,7 @@ class JobOpenController extends Controller
         $city = $input['city'];
         $state = $input['state'];
         $country = $input['country'];
-        //$job_show = $input['job_show'];
+        $job_priority = $input['job_priority'];
         $users = $input['user_ids'];
 
         if (isset($work_experience_from) && $work_experience_from == '')
@@ -529,6 +538,7 @@ class JobOpenController extends Controller
         $job_open->city = $city;
         $job_open->state = $state;
         $job_open->country = $country;
+        $job_open->priority = $job_priority;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
