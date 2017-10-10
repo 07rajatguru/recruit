@@ -411,6 +411,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@create',
         // 'middleware' => ['permission:industry-create']
     ]);
+    Route::get('jobs/getopenjobs', [
+        'as' => 'jobopen.getOpenJobs',
+        'uses' => 'JobOpenController@getOpenJobs',
+        // 'middleware' => ['permission:industry-create']
+    ]);
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',

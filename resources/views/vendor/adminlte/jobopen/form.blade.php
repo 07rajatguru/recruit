@@ -106,6 +106,16 @@
                             @endif
                         </div>
 
+                        <div class="form-group {{ $errors->has('job_type') ? 'has-error' : '' }}">
+                            <strong>Select Job Type :</strong>
+                            {!! Form::select('job_type', $job_type,null, array('id'=>'job_type','class' => 'form-control')) !!}
+                            @if ($errors->has('job_type'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('job_type') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
                     </div>
                 </div>
 
@@ -147,15 +157,6 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('job_type') ? 'has-error' : '' }}">
-                            <strong>Select Job Type :</strong>
-                            {!! Form::select('job_type', $job_type,null, array('id'=>'job_type','class' => 'form-control')) !!}
-                            @if ($errors->has('job_type'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('job_type') }}</strong>
-                                </span>
-                            @endif
-                        </div>
 
                         {{--<div class="form-group {{ $errors->has('job_type') ? 'has-error' : '' }}">
                             <strong>View To All :</strong>
@@ -163,6 +164,34 @@
                             <strong>Within Team :</strong>
                             {{ Form::radio('job_show', 0, true, ['class' => 'field']) }}
                         </div>--}}
+
+                        <div class="form-group {{ $errors->has('qualifications') ? 'has-error' : '' }}">
+                            <strong>Education Qualifications:</strong>
+                            {!! Form::textarea('qualifications', null, array('id'=>'qualifications','placeholder' => 'Education Qualifications','class' => 'form-control' )) !!}
+                            @if ($errors->has('qualifications'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('qualifications') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box-body col-xs-12 col-sm-12 col-md-12">
+
+                    <div class="form-group {{ $errors->has('qualifications') ? 'has-error' : '' }}">
+                        <strong>Desired Candidates:</strong>
+                        {!! Form::textarea('desired_candidate', null, array('id'=>'desired_candidate','placeholder' => 'Desired Candidate','class' => 'form-control' )) !!}
+                        @if ($errors->has('desired_candidate'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('desired_candidate') }}</strong>
+                                </span>
+                        @endif
+                    </div>
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job <span class = "required_fields">*</span></strong>
@@ -179,13 +208,6 @@
                         @endif
                     </div>
 
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="box-body col-xs-12 col-sm-12 col-md-12">
                     <div class="">
                         <div class="form-group {{ $errors->has('job_description') ? 'has-error' : '' }}">
                             <strong>Job Description:</strong>

@@ -125,4 +125,12 @@ class User extends Authenticatable
 
     }
 
+    public static function getLoggedinUserRole($user){
+
+        $roles = $user->roles->toArray();
+
+        $user_role_id = $roles[0]['id'];
+
+        return $user_role_id;
+    }
 }

@@ -118,4 +118,52 @@ class JobOpen extends Model
         }
         return $jobOpenCity;
     }
+
+    public static function getJobsCount($status_id,$user_id=0){
+
+        $jobquery = JobOpen::query();
+        //$jobquery = $jobquery->
+    }
+
+    public static function getAllJobs($all=0,$user_id){
+
+        $job_open_query = JobOpen::query();
+
+        $job_open_query = $job_open_query->select('job_openings.job_id','client_basicinfo.name','job_openings.no_of_positions','job_openings.posting_title',
+                                                'job_openings.city','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to',
+                                                'industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date');
+
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        // assign jobs to logged in user
+        if($all==0){
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+            $job_open_query = $job_open_query->where('user_id','=',$user_id);
+        }
+
+        $job_response = $job_open_query->get();
+
+        $jobs_list = array();
+
+        $i = 0;
+        foreach ($job_response as $key=>$value){
+            $jobs_list[$i]['job_id'] = $value->job_id;
+            $jobs_list[$i]['company_name'] = $value->name;
+            $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
+            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            $jobs_list[$i]['location'] = $value->city;
+            $jobs_list[$i]['qual'] = $value->qualifications;
+            $jobs_list[$i]['min_ctc'] = $value->salary_from;
+            $jobs_list[$i]['max_ctc'] = $value->salary_to;
+            $jobs_list[$i]['industry'] = $value->industry_name;
+            $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
+            $jobs_list[$i]['open_date'] = $value->date_opened;
+            $jobs_list[$i]['close_date'] = $value->desired_candidate;
+
+            $i++;
+        }
+
+        return $job_response;
+    }
 }

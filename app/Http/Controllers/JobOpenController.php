@@ -25,7 +25,44 @@ use Illuminate\Support\Facades\Input;
 
 class JobOpenController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request){
+
+        $dateClass = new Date();
+
+        $client_id = $request->client_id;
+        $job_open_id = $request->job_id;
+        $posting_title_id = $request->posting_title;
+        $job_opening_status_id = $request->job_opening_status;
+        $city_id = $request->city;
+
+        // logged in user with role 'Administrator,Director,Manager can see all the open jobs
+        // Rest other users can only see the jobs assigned to them
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+
+        return view('adminlte::jobopen.index', $viewVariable);
+
+
+    }
+
+    /*public function index(Request $request)
     {
         $dateClass = new Date();
 
@@ -38,15 +75,32 @@ class JobOpenController extends Controller
         $user_id = \Auth::user()->id;
         $client = ClientBasicinfo::getClientArray();
 
-        // get logged in users jobs from job_visble_users table
-        $logged_in_users_jobs = JobVisibleUsers::where('user_id','=',$user_id)->get();
-        $job_ids = array();
-        if(isset($logged_in_users_jobs) && sizeof($logged_in_users_jobs)>0) {
-            foreach ($logged_in_users_jobs as $logged_in_users_job) {
-               $job_ids[] = $logged_in_users_job->job_id;
+        // logged in user with role 'Administrator,Director,Manager can see all the open jobs
+        // Rest other users can only see the jobs assigned to them
+
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_ids = array();
+        }
+        else{
+            // get logged in users jobs from job_visble_users table
+            $logged_in_users_jobs = JobVisibleUsers::where('user_id','=',$user_id)->get();
+            $job_ids = array();
+            if(isset($logged_in_users_jobs) && sizeof($logged_in_users_jobs)>0) {
+                foreach ($logged_in_users_jobs as $logged_in_users_job) {
+                    $job_ids[] = $logged_in_users_job->job_id;
+                }
             }
         }
 
+        
         $job_open_clients = JobOpen::join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
             ->select('job_openings.*', 'client_basicinfo.id as client_id', 'client_basicinfo.name as name',
                 'client_basicinfo.mail as mail','client_basicinfo.mobile as mobile');
@@ -113,7 +167,7 @@ class JobOpenController extends Controller
         }
 
         return view('adminlte::jobopen.index', $viewVariable);
-    }
+    }*/
 
     public function create()
     {
@@ -195,6 +249,8 @@ class JobOpenController extends Controller
         $country = $input['country'];
         $job_show = 0;
         $users = $input['user_ids'];
+        $desired_candidate = $input['desired_candidate'];
+        $qualifications = $input['qualifications'];
 
         if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
@@ -204,7 +260,10 @@ class JobOpenController extends Controller
             $salary_from = 0;
         if (isset($salary_to) && $salary_to == '')
             $salary_to = 0;
-
+        if (isset($qualifications) && $qualifications == '')
+            $qualifications = '';
+        if (isset($desired_candidate) && $desired_candidate == '')
+            $desired_candidate = '';
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -229,6 +288,8 @@ class JobOpenController extends Controller
         $job_open->state = $state;
         $job_open->country = $country;
         $job_open->priority = $job_priority;
+        $job_open->desired_candidate = $desired_candidate;
+        $job_open->qualifications = $qualifications;
 
 //        print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -505,6 +566,8 @@ class JobOpenController extends Controller
         $country = $input['country'];
         $job_priority = $input['job_priority'];
         $users = $input['user_ids'];
+        $desired_candidate = $input['desired_candidate'];
+        $qualifications = $input['qualifications'];
 
         if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
@@ -514,7 +577,10 @@ class JobOpenController extends Controller
             $salary_from = 0;
         if (isset($salary_to) && $salary_to == '')
             $salary_to = 0;
-
+        if (isset($desired_candidate) && $desired_candidate == '')
+            $desired_candidate = '';
+        if (isset($qualifications) && $qualifications == '')
+            $qualifications = '';
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -539,6 +605,8 @@ class JobOpenController extends Controller
         $job_open->state = $state;
         $job_open->country = $country;
         $job_open->priority = $job_priority;
+        $job_open->qualifications = $qualifications;
+        $job_open->desired_candidate = $desired_candidate;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -904,4 +972,24 @@ class JobOpenController extends Controller
 
         return redirect('jobs/'.$_POST['jobid'].'/associated_candidates')->with('success','Joining date added successfully');
     }
+
+    public function getOpenJobs(){
+
+        // logged in user with role 'Administrator,Director,Manager can see all the open jobs
+        // Rest other users can only see the jobs assigned to them
+
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+
+        }
+
+    }
+
 }
