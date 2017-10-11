@@ -78,7 +78,7 @@ class ClientController extends Controller
             if($client_visibility_val)
                 $client_array[$i]['mail'] = $client->mail;
             else
-                $client_array[$i]['mail'] = $utils->mask_email($client->mail,'X',80);
+                $client_array[$i]['mail'] = '';//$utils->mask_email($client->mail,'X',80);
 
             $client_array[$i]['client_visibility'] = $client_visibility_val;
 
