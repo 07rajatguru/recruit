@@ -109,92 +109,52 @@
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv " style="position: relative; overflow: hidden; width: auto; height: 200px;">
                                                         <ul class="menu notification-ul" style="overflow: hidden; width: 100%; height: 200px;">
-                                                            <li><!-- start message -->
-                                                                <a href="#">
-                                                                    {{--<div class="pull-left">
-                                                                        <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                                                    </div>--}}
-                                                                    <h4>
-                                                                        Support Team
-                                                                        <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                                                    </h4>
-                                                                    <p>Why not buy a new awesome theme?</p>
-                                                                </a>
-                                                            </li>
-                                                            <!-- end message -->
-                                                            <li>
-                                                                <a href="#">
-                                                                    <div class="pull-left">
-                                                                        <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                                                    </div>
-                                                                    <h4>
-                                                                        AdminLTE Design Team
-                                                                        <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                                                                    </h4>
-                                                                    <p>Why not buy a new awesome theme?</p>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <div class="pull-left">
-                                                                        <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                                                    </div>
-                                                                    <h4>
-                                                                        Developers
-                                                                        <small><i class="fa fa-clock-o"></i> Today</small>
-                                                                    </h4>
-                                                                    <p>Why not buy a new awesome theme?</p>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <div class="pull-left">
-                                                                        <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                                                    </div>
-                                                                    <h4>
-                                                                        Sales Department
-                                                                        <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                                                                    </h4>
-                                                                    <p>Why not buy a new awesome theme?</p>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <div class="pull-left">
-                                                                        <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                                                    </div>
-                                                                    <h4>
-                                                                        Reviewers
-                                                                        <small><i class="fa fa-clock-o"></i> 2 days</small>
-                                                                    </h4>
-                                                                    <p>Why not buy a new awesome theme?</p>
-                                                                </a>
-                                                            </li>
-                                                        </ul><div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                                                        </ul>
+                                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div>
+                                                        <div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
                                                 </li>
                                                 <li class="footer"><a href="/notifications">See All Messages</a></li>
                                             </ul>
                                         </li>
 
-                                        <li>
-                                            @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
-                                                <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
-                                                    <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
-                                                </a>
-                                            @else
-                                                <a href="#"
-                                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                                >
-                                                    <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
-                                                </a>
-                                                <form id="logout-form" action="{{ url(config('adminlte.logout_url', 'auth/logout')) }}" method="POST" style="display: none;">
-                                                    @if(config('adminlte.logout_method'))
-                                                        {{ method_field(config('adminlte.logout_method')) }}
-                                                    @endif
-                                                    {{ csrf_field() }}
-                                                </form>
-                                            @endif
+                                        <li class="dropdown messages-menu">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                @if(\Auth::user()->id)
+                                                    {{ \Auth::user()->name }}
+                                                @endif
+                                                <i class="fa fa-arrow-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu add-button-home">
+                                                <li>
+                                                    <!-- inner menu: contains the actual data -->
+                                                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; /*height: 200px;*/">
+                                                        <ul class="menu" style="overflow: hidden; width: 100%;/* height: 200px;*/">
+                                                            <li>
+                                                                @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
+                                                                    <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
+                                                                        <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
+                                                                    </a>
+                                                                @else
+                                                                    <a href="#"
+                                                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                                                    >
+                                                                        <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
+                                                                    </a>
+                                                                    <form id="logout-form" action="{{ url(config('adminlte.logout_url', 'auth/logout')) }}" method="POST" style="display: none;">
+                                                                        @if(config('adminlte.logout_method'))
+                                                                            {{ method_field(config('adminlte.logout_method')) }}
+                                                                        @endif
+                                                                        {{ csrf_field() }}
+                                                                    </form>
+                                                                @endif
+                                                            </li>
+                                                        </ul>
+                                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                                                </li>
+                                            </ul>
                                         </li>
+
+
                                     </ul>
                                 </div>
                             @if(config('adminlte.layout') == 'top-nav')
