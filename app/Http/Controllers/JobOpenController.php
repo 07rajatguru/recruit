@@ -522,6 +522,7 @@ class JobOpenController extends Controller
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
 
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
+        $team_mates = array();
         if(isset($job_visible_users) && sizeof($job_visible_users)>0){
             foreach($job_visible_users as $row){
                 $team_mates[] = $row->user_id;

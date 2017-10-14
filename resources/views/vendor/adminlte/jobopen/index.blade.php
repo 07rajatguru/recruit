@@ -66,7 +66,7 @@
                 <td>{{ $value->open_date or ''}}</td>
                 <td>{{ $value->close_date or ''}}</td>
                 <td>
-
+                    <a class="btn btn-info" href="{{ route('jobopen.show',$value->id) }}">Show</a>
                 </td>
 
             </tr>
