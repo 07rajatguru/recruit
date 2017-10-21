@@ -429,6 +429,28 @@ class JobOpenController extends Controller
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
+
+
+            // already added posting,massmail and job search options
+            $selected_posting = array();
+            $selected_mass_mail = array();
+            $selected_job_search = array();
+
+            $mo_posting = '';
+            $mo_mass_mail='';
+            $mo_job_search = '';
+            if(isset($value->posting) && $value->posting!=''){
+                $mo_posting = $value->posting;
+                $selected_posting = explode(",",$mo_posting);
+            }
+            if(isset($value->mass_mail) && $value->mass_mail!=''){
+                $mo_mass_mail = $value->mass_mail;
+                $selected_mass_mail = explode(",",$mo_mass_mail);
+            }
+            if(isset($value->job_search) && $value->job_search!=''){
+                $mo_job_search = $value->job_search;
+                $selected_job_search = explode(",",$mo_job_search);
+            }
         }
 
         $job_visible_users = \DB::table('job_visible_users')
@@ -468,7 +490,12 @@ class JobOpenController extends Controller
         }
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type));
+        $posting_status = JobOpen::getJobPostingStatus();
+        $job_search = JobOpen::getJobSearchOptions();
+
+
+        return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
+                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search));
     }
 
     public function edit($id)
@@ -989,6 +1016,60 @@ class JobOpenController extends Controller
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
         if(in_array($user_role_id,$access_roles_id)){
 
+        }
+
+    }
+
+    public function moreOptions(Request $request){
+
+        $posting_status = $request->get('posting_status');
+        $mass_mail = $request->get('mass_mail');
+        $job_search = $request->get('job_search');
+        $job_id = $request->get('job_id');
+
+        $job_open = JobOpen::find($job_id);
+
+        $posting = '';
+        if (isset($posting_status) && sizeof($posting_status)>0){
+            foreach ($posting_status as $k=>$v) {
+                if($posting=='')
+                    $posting .= $v;
+                else
+                    $posting .= ','.$v;
+            }
+        }
+
+        $mm = '';
+        if (isset($mass_mail) && sizeof($mass_mail)>0){
+            foreach ($mass_mail as $k=>$v) {
+                if($mm=='')
+                    $mm .= $v;
+                else
+                    $mm .= ','.$v;
+            }
+        }
+
+        $js = '';
+        if (isset($job_search) && sizeof($job_search)>0){
+            foreach ($job_search as $k=>$v) {
+                if($js=='')
+                    $js .= $v;
+                else
+                    $js .= ','.$v;
+            }
+        }
+
+         $job_open->posting = $posting;
+         $job_open->mass_mail = $mm;
+         $job_open->job_search = $js;
+
+        $response = $job_open->save();
+
+        if($response){
+            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Job Opening additional information added successfully');
+        }
+        else{
+            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Error while updating data');
         }
 
     }

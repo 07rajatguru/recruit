@@ -32,6 +32,7 @@
                 <a class="btn bg-maroon" id="associated_candidates" href="{{ route('jobopen.associated_candidates_get',$jobopen['id']) }}">Associated Candidates (...)</a>
                 <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
                 <a class="btn btn-primary" href="{{ route('jobopen.edit',$jobopen['id']) }}">Edit</a>
+                @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
             </div>
         </div>
 

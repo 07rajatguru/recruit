@@ -501,6 +501,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@addJoiningDate',
         //'middleware' => ['permission:industry-create']
     ]);
+    Route::post('jobs/moreoptions', [
+        'as' => 'jobopen.moreoptions',
+        'uses' => 'JobOpenController@moreOptions',
+        //'middleware' => ['permission:industry-create']
+    ]);
 
     // Interview Module
     Route::get('interview', [

@@ -77,6 +77,29 @@ class JobOpen extends Model
         return $job_priorities;
     }
 
+    public static function getJobPostingStatus(){
+
+        $job_priorities = array();
+        $job_priorities['1'] = 'Naukri';
+        $job_priorities['2'] = 'Monster';
+        $job_priorities['3'] = 'Indeed';
+        $job_priorities['4'] = 'OLX';
+        $job_priorities['5'] = 'Quickr';
+        $job_priorities['6'] = 'IIMJobs';
+        $job_priorities['7'] = 'Others';
+
+        return $job_priorities;
+    }
+
+    public static function getJobSearchOptions(){
+
+        $job_search = array();
+        $job_search['1'] = 'Naukri';
+        $job_search['2'] = 'Monster';
+
+        return $job_search;
+    }
+
     public static function getJobOpeningId(){
 
         $jobOpenDetails = JobOpen::all();
@@ -129,10 +152,10 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','job_openings.job_id','client_basicinfo.name','job_openings.no_of_positions','job_openings.posting_title',
-                                                'job_openings.city','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to',
-                                                'industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date');
-
+        $job_open_query = $job_open_query->select('job_openings.id','job_openings.job_id','client_basicinfo.name','job_openings.no_of_positions',
+                                                'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
+                                                'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
+                                                'job_openings.target_date');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
