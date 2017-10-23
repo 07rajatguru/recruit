@@ -172,7 +172,8 @@ class JobOpenController extends Controller
     public function create()
     {
 
-        $user_id = \Auth::user()->id;
+        $user = \Auth::user();
+        $user_id = $user->id;
 
         // get all industry
         $industry_res = Industry::orderBy('name', 'ASC')->get();
@@ -184,14 +185,26 @@ class JobOpenController extends Controller
             }
         }
 
-        // get all clients
-        $client_res = ClientBasicinfo::orderBy('name', 'ASC')->get();
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            // get all clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
+        }
+        else{
+            // get logged in user clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
 
         $client = array();
 
         if (sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
-                $client[$r->id] = $r->name." - ".$r->coordinator_name;
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
 

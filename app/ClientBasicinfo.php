@@ -54,15 +54,27 @@ class ClientBasicinfo extends Ardent
         return $clientArray;
     }
 
-    public static function checkClientByEmail($email){
+    public static function getLoggedInUserClients($user_id){
 
-        $client_cnt = 0;
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
+
+        if($user_id>0)
+            $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+
+        $client_response = $client_query->get();
+
+        return $client_response;
+    }
+
+    public static function checkClientByEmail($email){
 
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->where('mail','like',$email);
         $client_cnt = $client_query->count();
 
         return $client_cnt;
+
     }
 
     public function beforeValidate ()
