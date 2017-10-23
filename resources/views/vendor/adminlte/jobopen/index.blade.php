@@ -32,6 +32,7 @@
         <thead>
         <tr>
             <th>No</th>
+            <th>Action</th>
             <th>Managed By</th>
             <th>Company Name</th>
             <th>No. Of Positions</th>
@@ -44,7 +45,7 @@
             <th>Desired Candidate</th>
             <th>Open Date</th>
             <th>Target Date</th>
-            <th width="280px">Action</th>
+
         </tr>
         </thead>
         <?php $i=0; ?>
@@ -53,21 +54,22 @@
         @foreach($jobList as $key=>$value)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td></td>
-                <td>{{ $value->company_name or '' }}</td>
-                <td>{{ $value->no_of_positions or ''}}</td>
-                <td>{{ $value->posting_title or ''}}</td>
-                <td>{{ $value->location or ''}}</td>
-                <td>{{ $value->qual or ''}}</td>
-                <td>{{ $value->min_ctc or ''}}</td>
-                <td>{{ $value->max_ctc or ''}}</td>
-                <td>{{ $value->industry or ''}}</td>
-                <td>{{ $value->desired_candidate or ''}}</td>
-                <td>{{ $value->open_date or ''}}</td>
-                <td>{{ $value->close_date or ''}}</td>
                 <td>
-                    <a class="btn btn-info" href="{{ route('jobopen.show',$value->id) }}">Show</a>
+                    <a class="btn btn-info" href="{{ route('jobopen.show',$value['id']) }}">Show</a>
                 </td>
+                <td>{{ $value['am_name'] or '' }}</td>
+                <td>{{ $value['client'] or '' }}</td>
+                <td>{{ $value['no_of_positions'] or ''}}</td>
+                <td>{{ $value['posting_title'] or ''}}</td>
+                <td>{{ $value['location'] or ''}}</td>
+                <td>{{ $value['qual'] or ''}}</td>
+                <td>{{ $value['min_ctc'] or ''}}</td>
+                <td>{{ $value['max_ctc'] or ''}}</td>
+                <td>{{ $value['industry'] or ''}}</td>
+                <td>{{ $value['desired_candidate'] or ''}}</td>
+                <td>{{ $value['open_date'] or ''}}</td>
+                <td>{{ $value['close_date'] or ''}}</td>
+
 
             </tr>
         @endforeach

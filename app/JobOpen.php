@@ -152,11 +152,12 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','job_openings.job_id','client_basicinfo.name','job_openings.no_of_positions',
+        $job_open_query = $job_open_query->select('job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions',
                                                 'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
-                                                'job_openings.target_date');
+                                                'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -173,7 +174,7 @@ class JobOpen extends Model
         foreach ($job_response as $key=>$value){
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['job_id'] = $value->job_id;
-            $jobs_list[$i]['company_name'] = $value->name;
+            $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
             $jobs_list[$i]['location'] = $value->city;
@@ -184,10 +185,11 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->desired_candidate;
+            $jobs_list[$i]['am_name'] = $value->am_name;
 
             $i++;
         }
 
-        return $job_response;
+        return $jobs_list;
     }
 }
