@@ -416,6 +416,8 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@getOpenJobs',
         // 'middleware' => ['permission:industry-create']
     ]);
+    Route::get('jobs/importExport', 'JobOpenController@importExport');
+    Route::post('jobs/importExcel', 'JobOpenController@importExcel');
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
@@ -506,6 +508,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@moreOptions',
         //'middleware' => ['permission:industry-create']
     ]);
+
 
     // Interview Module
     Route::get('interview', [

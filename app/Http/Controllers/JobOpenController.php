@@ -672,8 +672,10 @@ class JobOpenController extends Controller
 
     public function destroy($id)
     {
-        $job_associate_delete = JobAssociateCandidates::where('job_id',$id)->delete();
-        $job_open_doc_delete = JobOpenDoc::where('job_id',$id)->delete();
+        $job_associate_delete = DB::table('job_associate_candidates')->where('job_id', '=', $id)->delete();
+        $job_open_doc_delete = DB::table('job_openings_doc')->where('job_id', '=', $id)->delete();
+        $job_visible_user_delete = DB::table('job_visible_users')->where('job_id', '=', $id)->delete();
+        $job_joining_date_delete = DB::table('job_candidate_joining_date')->where('job_id', '=', $id)->delete();
         $job_open_delete = JobOpen::where('id',$id)->delete();
 
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Deleted Successfully');
@@ -1087,4 +1089,11 @@ class JobOpenController extends Controller
 
     }
 
+    public function importExport(){
+        return view('adminlte::jobopen.import');
+    }
+
+    public function importExcel(Request $request){
+
+    }
 }

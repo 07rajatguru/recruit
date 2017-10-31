@@ -121,6 +121,11 @@ return [
                     'text' => 'List Job Openings',
                     'url'  => 'jobs',
                     'icon' => 'list',
+                ],
+                [
+                    'text' => 'Import Job Openings',
+                    'url'  => 'jobs/importExport',
+                    'icon' => 'list',
                 ]
             ],
         ],
