@@ -58,7 +58,7 @@
                     <a class="btn btn-info" href="{{ route('jobopen.show',$value['id']) }}">Show</a>
                 </td>
                 <td>{{ $value['am_name'] or '' }}</td>
-                <td>{{ $value['client'] or '' }}</td>
+                <td style="background-color: {{ $value['color'] }}">{{ $value['client'] or '' }}</td>
                 <td>{{ $value['no_of_positions'] or ''}}</td>
                 <td>{{ $value['posting_title'] or ''}}</td>
                 <td>{{ $value['location'] or ''}}</td>
