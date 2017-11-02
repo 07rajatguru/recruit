@@ -56,6 +56,8 @@
                 <td>{{ ++$i }}</td>
                 <td>
                     <a class="btn btn-info" href="{{ route('jobopen.show',$value['id']) }}">Show</a>
+                    <?php $jobDetails = \App\JobOpen::find($value['id']); ?>
+                    @include('adminlte::partials.deleteModal', ['data' => $jobDetails, 'name' => 'jobopen','display_name'=>'Job Openings'])
                 </td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['client'] or '' }}</td>
