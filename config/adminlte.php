@@ -137,12 +137,12 @@ return [
                             'text' => 'Roles',
                             'url'  => 'roles',
                             'icon' => 'circle-o',
-                        ],
+                        ]/*,
                         [
                             'text' => 'Permissions',
                             'url'  => 'permissions',
                             'icon' => 'circle-o',
-                        ],
+                        ],*/
                         ]
                     ],
        /* [
