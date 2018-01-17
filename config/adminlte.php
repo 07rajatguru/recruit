@@ -123,11 +123,11 @@ return [
                     'text'        => 'Admin',
                     'icon'        => 'user-secret',
                     'submenu' => [
-                        /*[
+                        [
                             'text' => 'Companies',
                             'url'  => 'companies',
                             'icon' => 'circle-o',
-                        ],*/
+                        ],
                         [
                             'text' => 'Users',
                             'url'  => 'users',
