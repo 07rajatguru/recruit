@@ -113,12 +113,28 @@ return [
             'icon'        => 'folder-open',
             'submenu' => [
                 [
-                    'text' => 'List Job Openings',
-                    'url'  => 'jobs',
+                    'text' => 'Attendance',
+                    'url'  => '/home',
                     'icon' => 'list',
                 ]
             ],
-
+                ],
+                [
+                    'text'        => 'Admin',
+                    'icon'        => 'user-secret',
+                    'submenu' => [
+                        /*[
+                            'text' => 'Companies',
+                            'url'  => 'companies',
+                            'icon' => 'circle-o',
+                        ],*/
+                        [
+                            'text' => 'Users',
+                            'url'  => 'users',
+                            'icon' => 'circle-o',
+                        ],
+                        ]
+                    ],
        /* [
             'text'        => 'Job Openings',
             'icon'        => 'folder-open',
@@ -265,7 +281,6 @@ return [
                     'icon' => 'circle-o',
                 ]
             ],*/
-        ],
     ],
 
     /*
