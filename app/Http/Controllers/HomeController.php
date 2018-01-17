@@ -76,17 +76,17 @@ class HomeController extends Controller
         $year_array[2018] = 2018;
 
         if($isAdmin){
-            $list = User::getUsers();
+            $users = User::getUsers();
         }
         else{
-            $list = User::getUsers($loggedin_userid);
+            $users = User::getUsers($loggedin_userid);
         }
 
-
+        $list = array();
         for($d=1; $d<=31; $d++)
         {
             $time=mktime(12, 0, 0, $month, $d, $year);
-            foreach ($list as $key => $value) {
+            foreach ($users as $key => $value) {
               //  echo date('m', $time);exit;
                 if (date('n', $time)==$month)
                     $list[$key][date('j S', $time)]['login']='';
