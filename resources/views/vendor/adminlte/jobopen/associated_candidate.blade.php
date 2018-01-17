@@ -235,7 +235,7 @@
 
     </table>
 
-    <input type="hidden" id="token" value="{{ csrf_token() }}">
+   `
 @stop
 
 

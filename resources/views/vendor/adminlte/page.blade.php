@@ -222,7 +222,7 @@
 
         function getNotifications(){
             jQuery.ajax({
-                url:'/notifications/fetch',
+                url:'/notifications/all',
                 dataType:'json',
                 success: function(data){
                     console.log(data);

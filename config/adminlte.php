@@ -108,7 +108,18 @@ return [
     */
 
     'menu' => [
-        [
+            [
+            'text'        => 'Attendance',
+            'icon'        => 'folder-open',
+            'submenu' => [
+                [
+                    'text' => 'List Job Openings',
+                    'url'  => 'jobs',
+                    'icon' => 'list',
+                ]
+            ],
+
+       /* [
             'text'        => 'Job Openings',
             'icon'        => 'folder-open',
             'submenu' => [
@@ -121,12 +132,7 @@ return [
                     'text' => 'List Job Openings',
                     'url'  => 'jobs',
                     'icon' => 'list',
-                ]/*,
-                [
-                    'text' => 'Import Job Openings',
-                    'url'  => 'jobs/importExport',
-                    'icon' => 'list',
-                ]*/
+                ]
             ],
         ],
         [
@@ -182,22 +188,6 @@ return [
                     ]
                 ]
          ],
-       /* [
-            'text'        => 'Bills',
-            'icon'        => 'fa-line-chart',
-            'submenu' => [
-                [
-                    'text' => 'Create Bills',
-                    'url'  => 'bills/create',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => 'Bills',
-                    'url'  => 'bills',
-                    'icon' => 'list',
-                ]
-            ]
-        ],*/
         [
             'text'        => 'Interview',
             'icon'        => ' fa-phone-square',
@@ -274,7 +264,7 @@ return [
                     'url'  => 'candidateStatus',
                     'icon' => 'circle-o',
                 ]
-            ],
+            ],*/
         ],
     ],
 

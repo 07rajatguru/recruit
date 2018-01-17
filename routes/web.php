@@ -668,7 +668,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'NotificationController@index',
     ]);
 
-    Route::get('notifications/fetch', [
+    Route::get('notifications/all', [
         'as' => 'notification.list',
         'uses' => 'NotificationController@getAjaxNotification',
     ]);

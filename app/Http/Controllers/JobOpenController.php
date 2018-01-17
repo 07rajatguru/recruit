@@ -22,6 +22,7 @@ use DB;
 use App\CandidateStatus;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Input;
+use Excel;
 
 class JobOpenController extends Controller
 {
@@ -1093,7 +1094,134 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.import');
     }
 
-    public function importExcel(Request $request){
+    public function importExcel(Request $request)
+    {
+        $dateClass = new Date();
 
+        if ($request->hasFile('import_file')) {
+            $path = $request->file('import_file')->getRealPath();
+
+            $data = Excel::load($path, function ($reader) {
+            })->get();
+
+            $messages = array();
+
+            if (!empty($data) && $data->count()) {
+
+                foreach ($data->toArray() as $key => $value) {
+
+                    if (!empty($value)) {
+                        //foreach ($value as $v) {
+
+                            $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
+                            if (isset($max_id->id) && $max_id->id != '')
+                                $max_id = $max_id->id;
+                            else
+                                $max_id = 0;
+
+                            $job_show = 0;
+                            $title = $value['title'];
+                            $hiring_manager_id = $value['hiring_manager_id'];
+                            $job_priority = $value['job_priority'];
+                            $industry = $value['industry'];
+                            $client_id = $value['client_id'];
+                            $no_of_positions = $value['positions'];
+                            $status = $value['status'];
+                            $date_opened = $value['date_opened'];
+                            $salary_min = $value['salary_min'];
+                            $salary_max = $value['salary_max'];
+                            $country = $value['country'];
+                            $visible_user_id = $value['visible_user_id'];
+                            $desired_candidate = $value['desired_candidate'];
+                            $qualifications = $value['qualifications'];
+                            $posting_status = $value['posting_status'];
+                            $mass_mail = $value['mass_mail'];
+
+                            $work_experience_from = 0;
+                            $work_experience_to = 0;
+                            if (isset($salary_min) && $salary_min == '')
+                                $salary_min = 0;
+                            if (isset($salary_max) && $salary_max == '')
+                                $salary_max = 0;
+                            if (isset($qualifications) && $qualifications == '')
+                                $qualifications = '';
+                            if (isset($desired_candidate) && $desired_candidate == '')
+                                $desired_candidate = '';
+
+                            $increment_id = $max_id + 1;
+                            $job_unique_id = "TT-JO-$increment_id";
+                            $job_open = new JobOpen();
+                            $job_open->job_id = $job_unique_id;
+                            $job_open->job_show = $job_show;
+                            $job_open->posting_title = $title;
+                            $job_open->hiring_manager_id = $hiring_manager_id;
+                            $job_open->job_opening_status = $status;
+                            $job_open->industry_id = $industry;
+                            $job_open->client_id = $client_id;
+                            $job_open->no_of_positions = $no_of_positions;
+                            $date_opened = (array)$date_opened;
+                            $date_new = $date_opened['date'];
+                            $job_open->date_opened = $date_new; //'2016-01-01';//$formatted_date_open;
+                            //$job_open->job_type = $job_type;
+                            $job_open->work_experience_from = $work_experience_from;
+                            $job_open->work_experience_to = $work_experience_to;
+                            $job_open->salary_from = $salary_min;
+                            $job_open->salary_to = $salary_max;
+                            $job_open->country = $country;
+                            $job_open->priority = $job_priority;
+                            $job_open->desired_candidate = $desired_candidate;
+                            $job_open->qualifications = $qualifications;
+
+
+                            $validator = \Validator::make(Input::all(),$job_open::$rules);
+                        print_r($validator->errors());exit;
+                            if($validator->fails()){
+                                return redirect('jobs/create')->withInput(Input::all())->withErrors($validator->errors());
+                            }
+
+                            $job_open->save();
+                            $job_id = $job_open->id;
+
+                            if (isset($job_id) && $job_id > 0) {
+
+                                $job_visible_users = new JobVisibleUsers();
+                                $job_visible_users->job_id = $job_id;
+                                $job_visible_users->user_id = $visible_user_id;
+                                $job_visible_users->save();
+
+                                $posting = '';
+                                if (isset($posting_status) && sizeof($posting_status)>0){
+                                    foreach ($posting_status as $k=>$v) {
+                                        if($posting=='')
+                                            $posting .= $v;
+                                        else
+                                            $posting .= ','.$v;
+                                    }
+                                }
+
+                                $mm = '';
+                                if (isset($mass_mail) && sizeof($mass_mail)>0){
+                                    foreach ($mass_mail as $k=>$v) {
+                                        if($mm=='')
+                                            $mm .= $v;
+                                        else
+                                            $mm .= ','.$v;
+                                    }
+                                }
+
+                                $job_open->posting = $posting;
+                                $job_open->mass_mail = $mm;
+                                $job_open->job_search = '';
+
+                                $response = $job_open->save();
+
+                            }
+                        //}
+                    }
+                }
+            }
+
+        }
+        echo "adfdsf";exit;
     }
 }
