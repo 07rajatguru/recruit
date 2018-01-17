@@ -13,7 +13,7 @@ class AddColumnsClient extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE users ADD COLUMN company_id int(11) NULL ");
+        //DB::statement("ALTER TABLE users ADD COLUMN company_id int(11) NULL ");
     }
 
     /**
@@ -23,6 +23,6 @@ class AddColumnsClient extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE users DROP COLUMN company_id ");
+        //DB::statement("ALTER TABLE users DROP COLUMN company_id ");
     }
 }
