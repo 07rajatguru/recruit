@@ -17,7 +17,7 @@ class UserTableSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Admin',
-                'email' => 'admin@tanitech.in',
+                'email' => 'admin@trajinfotech.com',
                 'password' => \Hash::make('admin123')
             ]
         ];
