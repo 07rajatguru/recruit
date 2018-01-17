@@ -95,7 +95,12 @@ class User extends Authenticatable
     {
 
         $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+
         if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        if($director_role_id == $user_role_id){
             return true;
         }
         return false;
