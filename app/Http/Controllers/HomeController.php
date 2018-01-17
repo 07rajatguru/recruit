@@ -28,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = \Auth::user();
+        /*$user = \Auth::user();
         //$user_id = \Auth::user()->id;
         // Entry of login
         $users_log= new UsersLog();
@@ -38,7 +38,7 @@ class HomeController extends Controller
         $users_log->type ='login';
         $users_log->created_at = gmdate("Y-m-d H:i:s");
         $users_log->updated_at = gmdate("Y-m-d H:i:s");
-        $users_log->save();
+        $users_log->save();*/
 
         /*if(\Auth::user()->hasRole('Administrator')){
             print_r("In");exit;
@@ -87,7 +87,8 @@ class HomeController extends Controller
         {
             $time=mktime(12, 0, 0, $month, $d, $year);
             foreach ($list as $key => $value) {
-                if (date('m', $time)==$month)
+              //  echo date('m', $time);exit;
+                if (date('n', $time)==$month)
                     $list[$key][date('j S', $time)]['login']='';
                 $list[$key][date('j S', $time)]['logout']='';
                 $list[$key][date('j S', $time)]['total']='';
