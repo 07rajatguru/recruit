@@ -133,6 +133,16 @@ return [
                             'url'  => 'users',
                             'icon' => 'circle-o',
                         ],
+                        [
+                            'text' => 'Roles',
+                            'url'  => 'roles',
+                            'icon' => 'circle-o',
+                        ],
+                        [
+                            'text' => 'Permissions',
+                            'url'  => 'permissions',
+                            'icon' => 'circle-o',
+                        ],
                         ]
                     ],
        /* [
