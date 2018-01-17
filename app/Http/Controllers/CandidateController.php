@@ -919,6 +919,14 @@ class CandidateController extends Controller
                             $email = $records['email'];
                             $e = explode('@', $email);
                             $records['name']= $e[0];
+                            if(!isset($records['fname']) || $records['fname']==''){
+                                $records['fname'] = $e[0];
+                                //$records['lname'] = $e[0];
+                            }
+                            if(!isset($records['lname']) || $records['lname']==''){
+                                $records['lname'] = $e[0];
+                                //$records['lname'] = $e[0];
+                            }
                             /*foreach ($records['email'] as $email) {
                                 $e = explode('@', $email);
                                 $records['name']= $e[0];
@@ -926,6 +934,8 @@ class CandidateController extends Controller
                             }*/
                         }
                     }
+
+
 
                     if (preg_match('/phone/', $part)) {
 
@@ -947,7 +957,7 @@ class CandidateController extends Controller
                     if (preg_match('/sex | gender/', $part)) {
 
                         $sex = preg_split('/:|-/', $part);
-                        if($sex[1] == 'male' || $sex[1] == 'm'){
+                        if(isset($sex[1]) && ($sex[1] == 'male' || $sex[1] == 'm')){
                             $records['sex'] = 'Male';
                         } else {
                             $records['sex'] = 'Female';
@@ -1005,6 +1015,8 @@ class CandidateController extends Controller
                     $candidateBasicInfo->mobile = $records['mobile'];
                     $candidateBasicInfo->phone = $records['phone'];
                     $candidateBasicInfo->fax = $records['fax'];
+
+                    //print_r($candidateBasicInfo);exit;
                     $candidateBasicInfoStored = $candidateBasicInfo->save();
 
                     $candidateId = $candidateBasicInfo->id;

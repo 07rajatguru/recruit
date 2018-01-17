@@ -109,42 +109,63 @@ return [
 
     'menu' => [
             [
-            'text'        => 'Attendance',
-            'icon'        => 'folder-open',
-            'submenu' => [
-                [
-                    'text' => 'Attendance',
-                    'url'  => '/home',
-                    'icon' => 'list',
-                ]
-            ],
+                'text'        => 'Attendance',
+                'icon'        => 'folder-open',
+                'submenu' => [
+                    [
+                        'text' => 'Attendance',
+                        'url'  => '/home',
+                        'icon' => 'list',
+                    ]
                 ],
-                [
-                    'text'        => 'Admin',
-                    'icon'        => 'user-secret',
-                    'submenu' => [
-                        [
-                            'text' => 'Companies',
-                            'url'  => 'companies',
-                            'icon' => 'circle-o',
-                        ],
-                        [
-                            'text' => 'Users',
-                            'url'  => 'users',
-                            'icon' => 'circle-o',
-                        ],
-                        [
-                            'text' => 'Roles',
-                            'url'  => 'roles',
-                            'icon' => 'circle-o',
-                        ]/*,
-                        [
-                            'text' => 'Permissions',
-                            'url'  => 'permissions',
-                            'icon' => 'circle-o',
-                        ],*/
-                        ]
+            ],
+            [
+                'text'        => 'Candidates',
+                'icon'        => 'user',
+                'submenu' => [
+                    [
+                        'text' => 'Add Candidate',
+                        'url'  => 'candidate/create',
+                        'icon' => 'plus',
                     ],
+                    [
+                        'text' => 'List Candidates',
+                        'url'  => 'candidate',
+                        'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'Extract From Resume',
+                        'url'  => 'candidate/resume',
+                        'icon' => 'list',
+                    ]
+                ],
+            ],
+            [
+                'text'        => 'Admin',
+                'icon'        => 'user-secret',
+                'submenu' => [
+                    [
+                        'text' => 'Companies',
+                        'url'  => 'companies',
+                        'icon' => 'circle-o',
+                    ],
+                    [
+                        'text' => 'Users',
+                        'url'  => 'users',
+                        'icon' => 'circle-o',
+                    ],
+                    [
+                        'text' => 'Roles',
+                        'url'  => 'roles',
+                        'icon' => 'circle-o',
+                    ]/*,
+                    [
+                        'text' => 'Permissions',
+                        'url'  => 'permissions',
+                        'icon' => 'circle-o',
+                    ],*/
+                    ]
+            ],
        /* [
             'text'        => 'Job Openings',
             'icon'        => 'folder-open',
