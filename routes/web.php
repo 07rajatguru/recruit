@@ -43,7 +43,12 @@ Route::post('/password/reset', [
 
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::get('/home', 'HomeController@index');
+    //Route::get('/home', 'HomeController@index');
+
+    Route::any('/home', array (
+        'middleware' => 'auth',
+        'uses' => 'HomeController@index'
+    ));
 
     // Admin > Users
     Route::get('users', [

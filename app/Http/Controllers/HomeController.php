@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Interview;
 use App\ToDos;
+use App\UsersLog;
 use Illuminate\Http\Request;
+use App\User;
+use App\Date;
 
 class HomeController extends Controller
 {
@@ -31,7 +34,83 @@ class HomeController extends Controller
             print_r("out");exit;
         }*/
 
+        $loggedin_userid = \Auth::user()->id;
 
+        $isAdmin= User::isAdmin($loggedin_userid);
+
+        $list=array();
+
+        if(isset($_POST['month']) && $_POST['month']!=''){
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date("n");
+        }
+        if(isset($_POST['year']) && $_POST['year']!=''){
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date("Y");
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m));
+        }
+
+        $year_array = array();
+        $year_array[2016] = 2016;
+        $year_array[2017] = 2017;
+        $year_array[2018] = 2018;
+
+        if($isAdmin){
+            $list = User::getUsers();
+        }
+        else{
+            $list = User::getUsers($loggedin_userid);
+        }
+
+
+        for($d=1; $d<=31; $d++)
+        {
+            $time=mktime(12, 0, 0, $month, $d, $year);
+            foreach ($list as $key => $value) {
+                if (date('m', $time)==$month)
+                    $list[$key][date('j S', $time)]['login']='';
+                $list[$key][date('j S', $time)]['logout']='';
+                $list[$key][date('j S', $time)]['total']='';
+            }
+        }
+
+        if($isAdmin){
+            $response = UsersLog::getUsersAttendance(0,$month,$year);
+            /*$response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
+                        join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year group by date,users.id");*/
+        }
+        else{
+            $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
+           /* $response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
+                        join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
+        }
+
+        $date = new Date();
+        if(sizeof($response)>0){
+            foreach ($response as $key => $value) {
+                $login_time = $date->converttime($value->login);
+                $logout_time = $date->converttime($value->logout);
+                $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time);
+                $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
+
+                $total = ($logout_time - $login_time) / 60;
+
+                $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
+            }
+        }
+
+        //print_r($list);exit;
+        return view('home',array("list"=>$list,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year));
+
+        //return view('home');
         $from = date('Y-m-d 00:00:00');
         $to = date('Y-m-d 23:59:59');
         $today = date('Y-m-d');

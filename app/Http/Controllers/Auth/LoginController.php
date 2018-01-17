@@ -39,7 +39,48 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
     }
 
-    public function redirectPath(){
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postLogin(Request $request)
+    {
+
+        $this->validate($request, [
+            'email' => 'required|email', 'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if ($this->auth->attempt($credentials, $request->has('remember')))
+        {
+
+            $user = \Auth::user();
+            //$user_id = \Auth::user()->id;
+            // Entry of login
+            $users_log= new UsersLog();
+            $users_log->user_id = $user->id;
+            $users_log->date = gmdate("Y-m-d");
+            $users_log->time = gmdate("H:i:s");
+            $users_log->type ='login';
+            $users_log->created_at = gmdate("Y-m-d H:i:s");
+            $users_log->updated_at = gmdate("Y-m-d H:i:s");
+            $users_log->save();
+
+            return redirect('/home');
+            //return redirect()->intended($this->redirectPath());
+        }
+
+        return redirect($this->loginPath())
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors([
+                'email' => $this->getFailedLoginMessage(),
+            ]);
+    }
+
+    /*public function redirectPath(){
 
         $user = \Auth::user();
 
@@ -56,9 +97,9 @@ class LoginController extends Controller
             $users_log->updated_at = gmdate("Y-m-d H:i:s");
             $users_log->save();
 
-            return redirect('/home');
+            return redirect('/');
         }
-    }
+    }*/
 
     public function logout(Request $request)
     {

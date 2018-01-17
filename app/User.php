@@ -133,4 +133,26 @@ class User extends Authenticatable
 
         return $user_role_id;
     }
+
+    public static function getUsers($user_id=0){
+
+        $query = User::query();
+
+        if($user_id>0){
+            $query = $query->where('id','=',$user_id);
+        }
+
+        $user_response = $query->get();
+
+        $list = array();
+        if(sizeof($user_response)>0){
+            foreach ($user_response as $key => $value) {
+                $list[$value->name]= "";
+            }
+        }
+
+        return $list;
+    }
+
+
 }

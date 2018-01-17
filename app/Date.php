@@ -26,4 +26,14 @@ class Date
     	}
 		return $date;
     }
+    public function getCurrentTimeZone(){
+        return date_default_timezone_get();
+    }
+    public function converttime($time){
+        if(date_default_timezone_get()=="UTC" || date_default_timezone_get()=='GMT') {
+            $local_time = strtotime($time .'330 minutes');
+            return $local_time;
+        }
+        return strtotime($time);
+    }
 }
