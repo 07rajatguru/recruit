@@ -48,7 +48,8 @@ class HomeController extends Controller
 
         $loggedin_userid = \Auth::user()->id;
 
-        $isAdmin= User::isAdmin($loggedin_userid);
+        $user_role_id = \Auth::user()->role_id;
+        $isAdmin= User::isAdmin($user_role_id);
 
         $list=array();
 
