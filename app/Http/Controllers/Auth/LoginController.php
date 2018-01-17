@@ -39,13 +39,44 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
     }
 
+    public function authenticate(CreateLoginRequest $request)
+    {
+
+        if(Auth::attempt(['email'=>$request->email,'password'=>$request->password]))
+        {
+            $request->email;
+            $request->password;
+            //return redirect()->intended('login.dashboard');
+
+            $user = \Auth::user();
+            //$user_id = \Auth::user()->id;
+            // Entry of login
+            $users_log= new UsersLog();
+            $users_log->user_id = $user->id;
+            $users_log->date = gmdate("Y-m-d");
+            $users_log->time = gmdate("H:i:s");
+            $users_log->type ='login';
+            $users_log->created_at = gmdate("Y-m-d H:i:s");
+            $users_log->updated_at = gmdate("Y-m-d H:i:s");
+            $users_log->save();
+
+            return redirect('/home');
+
+        }
+        return redirect($this->loginPath())
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors([
+                'email' => $this->getFailedLoginMessage(),
+            ]);
+    }
+
     /**
      * Handle a login request to the application.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function postLogin(Request $request)
+    /*public function postLogin(Request $request)
     {
 
         $this->validate($request, [
@@ -78,7 +109,7 @@ class LoginController extends Controller
             ->withErrors([
                 'email' => $this->getFailedLoginMessage(),
             ]);
-    }
+    }*/
 
     /*public function redirectPath(){
 
