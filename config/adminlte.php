@@ -141,6 +141,27 @@ return [
                 ],
             ],
             [
+                'text'        => 'Clients',
+                'icon'        => 'users',
+                'submenu' => [
+                    [
+                        'text' => 'Add Client',
+                        'url'  => 'client/create',
+                        'icon' => 'plus',
+                    ],
+                    [
+                        'text' => 'List Clients',
+                        'url'  => 'client',
+                        'icon' => 'list',
+                    ]/*,
+                    [
+                        'text' => 'Import Clients',
+                        'url'  => 'client/importExport',
+                        'icon' => 'list',
+                    ]*/
+                ],
+            ],
+            [
                 'text'        => 'Admin',
                 'icon'        => 'user-secret',
                 'submenu' => [
