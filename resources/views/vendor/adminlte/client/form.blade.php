@@ -99,12 +99,12 @@
                         </div>--}}
 
                         <div class="form-group">
-                            <strong>GST Number <span class = "required_fields">*</span></strong>
+                            <strong>GST Number</strong>
                             {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            <strong>TDS <span class = "required_fields">*</span></strong>
+                            <strong>TDS </strong>
                             {!! Form::text('tds', null, array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control')) !!}
                         </div>
 
@@ -319,12 +319,12 @@
                     "industry_id": {
                         required: true
                     },
-                    "gst_no" : {
+                    /*"gst_no" : {
                         required: true
                     },
                     "tds" : {
                         required: true
-                    },
+                    },*/
                     "coordinator_name" : {
                         required: true
                     }
@@ -342,12 +342,12 @@
                     "industry_id": {
                         required: "Industry is required."
                     },
-                    "gst_no": {
+                   /* "gst_no": {
                         required: "GST Number is required."
                     },
                     "tds": {
                         required: "TDS is required."
-                    },
+                    },*/
                     "coordinator_name" :{
                         required: "HR / Coordinator name is required."
                     }
