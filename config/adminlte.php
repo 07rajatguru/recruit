@@ -120,6 +120,23 @@ return [
                 ],
             ],
             [
+                'text'        => 'Job Openings',
+                'icon'        => 'folder-open',
+                'submenu' => [
+                    [
+                        'text' => 'Create Job Openings',
+                        'url'  => 'jobs/create',
+                        'icon'  => 'plus',
+                    ],
+                    [
+                        'text' => 'List Job Openings',
+                        'url'  => 'jobs',
+                        'icon' => 'list',
+                    ]
+                ],
+            ],
+
+            [
                 'text'        => 'Candidates',
                 'icon'        => 'user',
                 'submenu' => [
@@ -153,12 +170,12 @@ return [
                         'text' => 'List Clients',
                         'url'  => 'client',
                         'icon' => 'list',
-                    ],
+                    ]/*,
                     [
                         'text' => 'Import Clients',
                         'url'  => 'client/importExport',
                         'icon' => 'list',
-                    ]
+                    ]*/
                 ],
             ],
            /* [
@@ -209,22 +226,7 @@ return [
                     ],*/
                     ]
             ],
-        [
-            'text'        => 'Job Openings',
-            'icon'        => 'folder-open',
-            'submenu' => [
-                [
-                    'text' => 'Create Job Openings',
-                    'url'  => 'jobs/create',
-                    'icon'  => 'plus',
-                ],
-                [
-                    'text' => 'List Job Openings',
-                    'url'  => 'jobs',
-                    'icon' => 'list',
-                ]
-            ],
-        ],
+
 
 
         /*[
