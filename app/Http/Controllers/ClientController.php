@@ -32,19 +32,26 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
         // if Super Admin get clients of all companies
-        if($isSuperAdmin){
+        if($isSuperAdmin || $isAdmin){
             $clients = \DB::table('client_basicinfo')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
                 ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
                 ->get();
         }
-
+/*
         // if Admin get clients of logged in user company
-        else {
+        else if($isAdmin) {
             $clients = \DB::table('client_basicinfo')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
                 ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
-                ->where('users.company_id',$company_id)
+                //->where('users.company_id',$company_id)
+                ->get();
+        }*/
+        else{
+            $clients = \DB::table('client_basicinfo')
+                ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
+                ->where('account_manager_id',$user->id)
                 ->get();
         }
 
