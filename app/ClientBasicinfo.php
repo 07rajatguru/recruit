@@ -62,6 +62,8 @@ class ClientBasicinfo extends Ardent
         if($user_id>0)
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
 
+        $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
+
         $client_response = $client_query->get();
 
         return $client_response;

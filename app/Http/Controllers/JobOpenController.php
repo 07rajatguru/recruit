@@ -208,7 +208,7 @@ class JobOpenController extends Controller
                 $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
-
+//print_r($client);exit;
         // get all users
         $users = User::getAllUsers();
         $team_mates = $user_id;
@@ -305,7 +305,7 @@ class JobOpenController extends Controller
         $job_open->desired_candidate = $desired_candidate;
         $job_open->qualifications = $qualifications;
 
-//        print_r($job_open);exit;
+//     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
         if($validator->fails()){
