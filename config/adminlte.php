@@ -153,14 +153,36 @@ return [
                         'text' => 'List Clients',
                         'url'  => 'client',
                         'icon' => 'list',
-                    ]/*,
+                    ],
                     [
                         'text' => 'Import Clients',
                         'url'  => 'client/importExport',
                         'icon' => 'list',
-                    ]*/
+                    ]
                 ],
             ],
+           /* [
+                'text'        => 'Bills',
+                'icon'        => 'users',
+                'submenu' => [
+                    [
+                        'text' => 'Create BNM',
+                        'url'  => 'bnm/create',
+                        'icon' => 'plus',
+                    ],
+                    [
+                        'text' => 'View BNM List',
+                        'url'  => 'bnm',
+                        'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'View BM List',
+                        'url'  => 'bm',
+                        'icon' => 'list',
+                    ],
+
+                ],
+            ],*/
             [
                 'text'        => 'Admin',
                 'icon'        => 'user-secret',
@@ -187,7 +209,7 @@ return [
                     ],*/
                     ]
             ],
-       /* [
+        [
             'text'        => 'Job Openings',
             'icon'        => 'folder-open',
             'submenu' => [
@@ -203,7 +225,9 @@ return [
                 ]
             ],
         ],
-        [
+
+
+        /*[
             'text'        => 'Candidates',
             'icon'        => 'user',
             'submenu' => [
