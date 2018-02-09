@@ -28,9 +28,9 @@
                 <h2>{{ $client['name'] }}</h2>
             </div>
 
-            <div class="pull-right">
+           {{-- <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('client.edit',$client['id']) }}">Edit</a>
-            </div>
+            </div>--}}
         </div>
 
     </div>

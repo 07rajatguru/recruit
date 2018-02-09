@@ -54,7 +54,7 @@
 
                     {{-- Only Client Owner, Admin and Super admin have access to edit rights--}}
                     <?php if($isSuperAdmin || $isAdmin || $client['client_owner']) { ?>
-                        <a class="btn btn-primary" href="{{ route('client.edit',$client['id']) }}">Edit</a>
+                        {{--<a class="btn btn-primary" href="{{ route('client.edit',$client['id']) }}">Edit</a>--}}
                         @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
                     <?php } ?>
 
