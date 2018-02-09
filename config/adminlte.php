@@ -149,12 +149,12 @@ return [
                         'text' => 'List Candidates',
                         'url'  => 'candidate',
                         'icon' => 'list',
-                    ],
+                    ]/*,
                     [
                         'text' => 'Extract From Resume',
                         'url'  => 'candidate/resume',
                         'icon' => 'list',
-                    ]
+                    ]*/
                 ],
             ],
             [
