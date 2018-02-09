@@ -532,7 +532,7 @@ class JobOpenController extends Controller
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $user_role_id = User::getLoggedinUserRole($user);
-
+        $user_id = $user->id;
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             // get all clients
