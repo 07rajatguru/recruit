@@ -182,6 +182,8 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
 
+        $job_open_query = $job_open_query->orderBy('job_openings.id','desc');
+        
         $job_response = $job_open_query->get();
 
         $jobs_list = array();
