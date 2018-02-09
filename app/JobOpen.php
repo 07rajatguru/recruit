@@ -12,7 +12,7 @@ class JobOpen extends Model
         'posting_title' => 'required',
         'client_id' => 'required',
         'date_opened' => 'required|date',
-        'target_date' => 'date|after:date_opened',
+        //'target_date' => 'date|after:date_opened',
     );
 
     public function messages()

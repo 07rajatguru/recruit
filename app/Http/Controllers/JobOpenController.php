@@ -243,7 +243,7 @@ class JobOpenController extends Controller
 
         $posting_title = $input['posting_title'];
         $hiring_manager_id = $input['hiring_manager_id'];
-        $target_date = $input['target_date'];
+        //$target_date = $input['target_date'];
         // $formatted_target_date = Carbon::parse($target_date)->format('Y/m/d');
         $job_opening_status = $input['job_opening_status'];
         $job_priority = $input['job_priority'];
@@ -286,7 +286,7 @@ class JobOpenController extends Controller
         $job_open->job_show = $job_show;
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
-        $job_open->target_date = $dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
+        //$job_open->target_date = 'NULL';//$dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
         $job_open->job_opening_status = $job_opening_status;
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;
@@ -559,7 +559,7 @@ class JobOpenController extends Controller
         $job_open = JobOpen::find($id);
 
         //print_r($job_open);exit;
-        $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
+        $target_date = '';//$dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
 
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
@@ -576,6 +576,7 @@ class JobOpenController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $dateClass = new Date();
 
         $user_id = \Auth::user()->id;
@@ -589,7 +590,7 @@ class JobOpenController extends Controller
 
         $posting_title = $input['posting_title'];
         $hiring_manager_id = $input['hiring_manager_id'];
-        $target_date = $input['target_date'];
+       // $target_date = $input['target_date'];
         // $formatted_target_date = Carbon::parse($target_date)->format('Y/m/d');
         $job_opening_status = $input['job_opening_status'];
         $industry_id = $input['industry_id'];
@@ -607,6 +608,7 @@ class JobOpenController extends Controller
         $state = $input['state'];
         $country = $input['country'];
         $job_priority = $input['job_priority'];
+        //print_r($input);exit;
         $users = $input['user_ids'];
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
@@ -631,7 +633,7 @@ class JobOpenController extends Controller
         //$job_open->job_show = $job_show;
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
-        $job_open->target_date = $dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
+       // $job_open->target_date = 'NULL';//$dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
         $job_open->job_opening_status = $job_opening_status;
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;

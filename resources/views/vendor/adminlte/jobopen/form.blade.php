@@ -61,7 +61,7 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
+                        {{--<div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
                             <strong>Target Date:</strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
@@ -74,7 +74,7 @@
                                     <strong>{{ $errors->first('target_date') }}</strong>
                                 </span>
                             @endif
-                        </div>
+                        </div>--}}
 
                         <div class="form-group {{ $errors->has('job_opening_status') ? 'has-error' : '' }}">
                             <strong>Select Job Opening Status :</strong>
