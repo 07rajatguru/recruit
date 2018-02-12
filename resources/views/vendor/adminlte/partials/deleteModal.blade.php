@@ -1,5 +1,5 @@
-<a data-toggle="modal" href="#modal-delete-{!! $data->id !!}" class="row-edit">
-    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+<a data-toggle="modal" href="#modal-delete-{!! $data->id !!}" class="fa fa-trash" title="Delete">
+    {{--{!! Form::submit('', ['class' => '']) !!}--}}
     {{--<span class="glyphicon glyphicon-trash" style="color: #ffffff;"></span>--}}
 </a>
 <div id="modal-delete-{!! $data->id !!}" class="modal text-left fade">

@@ -55,8 +55,9 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="btn btn-info" href="{{ route('jobopen.show',$value['id']) }}">Show</a>
-                    <a class="btn btn-primary" href="{{ route('jobopen.edit',$value['id']) }}">Edit</a>
+                    <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
+
+                    <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
                     <?php $jobDetails = \App\JobOpen::find($value['id']); ?>
                     @include('adminlte::partials.deleteModal', ['data' => $jobDetails, 'name' => 'jobopen','display_name'=>'Job Openings'])
                 </td>
