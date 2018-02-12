@@ -87,8 +87,13 @@
         $(document).ready(function(){
             var table = jQuery('#jo_table').DataTable( {
                 responsive: true,
-                columnDefs: [
-                    { width: 100, targets: 3 }
+                "columnDefs": [
+                    { "width": "10px", "targets": 0 },
+                    { "width": "10px", "targets": 1 },
+                    { "width": "10px", "targets": 2 },
+                    { "width": "10px", "targets": 3 },
+                    { "width": "10px", "targets": 4 },
+                    { "width": "10px", "targets": 5 }
                 ]
             } );
 
