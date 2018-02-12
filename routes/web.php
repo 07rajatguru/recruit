@@ -552,19 +552,50 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Bills Module
-    Route::get('bills', [
-        'as' => 'bills.index',
-        'uses' => 'BillsController@index'
-    ]);
 
-    Route::get('bills/create', [
+    Route::get('bnm/create', [
         'as' => 'bills.create',
         'uses' => 'BillsController@create'
     ]);
 
-    Route::post('bills/store', [
-        'as' => 'bills.store',
+    Route::get('bnm', [
+        'as' => 'bnm.index',
+        'uses' => 'BillsController@index'
+    ]);
+
+    Route::get('bm', [
+        'as' => 'bills.bm',
+        'uses' => 'BillsController@billsMade'
+    ]);
+
+    Route::get('bnm/{id}/edit', [
+        'as' => 'bnm.edit',
+        'uses' => 'BillsController@edit'
+    ]);
+
+    Route::patch('bnm/{id}', [
+        'as' => 'bnm.update',
+        'uses' => 'BillsController@update'
+    ]);
+
+    Route::post('bnm/store', [
+        'as' => 'bnm.store',
         'uses' => 'BillsController@store'
+    ]);
+
+    Route::get('bills/{id}/generatebm', [
+        'as' => 'bills.generatebm',
+        'uses' => 'BillsController@generateBM'
+    ]);
+
+    Route::get('bnm/{id}', [
+        'as' => 'bnm.show',
+        'uses' => 'BillsController@show'
+    ]);
+
+    Route::post('bills/downloadexcel', [
+        'as' => 'bnm.downloadexcel',
+        'uses' => 'BillsController@downloadExcel'
     ]);
 
     // Admin > Teams

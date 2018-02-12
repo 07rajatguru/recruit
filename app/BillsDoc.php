@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BillsEffort extends Model
+class BillsDoc extends Model
 {
+    public $table = "bills_doc";
     public $timestamps = false;
-
-    public $table = "bills_efforts";
 }

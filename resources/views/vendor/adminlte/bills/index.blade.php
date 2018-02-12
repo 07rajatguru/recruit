@@ -26,4 +26,141 @@
         </div>
 
     @endif
+
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
+        <thead>
+        <tr>
+            <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+            <th>No</th>
+            <th>Company Name</th>
+            <th>Candidate Name</th>
+            <th>Joining Date</th>
+            <th>Fixed Salary</th>
+            <th>Efforts</th>
+            <th>Candidate Contact Number</th>
+            <th>Designation offered</th>
+            <th>Job Location</th>
+            <th>Percentage Charged</th>
+            <th>Source</th>
+            <th>Client Name</th>
+            <th>Client Contact Number</th>
+            <th>Client Email Id</th>
+            <th>Action</th>
+
+        </tr>
+        </thead>
+        <?php $i=0; ?>
+        <tbody>
+        @foreach($bnm as $key=>$value)
+            <tr>
+                <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
+                <td>{{ ++$i }}</td>
+                <td>{{ $value['company_name'] }}</td>
+                <td>{{ $value['candidate_name'] }}</td>
+                <td>{{ $value['date_of_joining'] }}</td>
+                <td>{{ $value['fixed_salary'] }}</td>
+                <td>{{ $value['efforts'] }}</td>
+                <td>{{ $value['candidate_contact_number'] }}</td>
+                <td>{{ $value['designation_offered'] }}</td>
+                <td>{{ $value['job_location'] }}</td>
+                <td>{{ $value['percentage_charged'] }}</td>
+                <td>{{ $value['source'] }}</td>
+                <td>{{ $value['client_name'] }}</td>
+                <td>{{ $value['client_contact_number'] }}</td>
+                <td>{{ $value['client_email_id'] }}</td>
+                <td>
+                    @if($value['status']==0)
+                        @permission(('bnm-create'))
+                            <a class="btn btn-primary" href="{{ route('bnm.edit',$value['id']) }}">Edit</a>
+                        @endpermission
+                        <!-- BM will be generated after date of joining -->
+                        @permission(('bm-create'))
+                            @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
+                                <a class="btn btn-primary" href="{{ route('bills.generatebm',$value['id']) }}">Generate BM</a>
+                            @endif
+                        @endpermission
+                    @endif
+                        {{--<a class="btn btn-info" href="{{ route('bills.show',$value['id']) }}">Show</a>--}}
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
+@section('customscripts')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var table = $('#jo_table').DataTable( {
+               columnDefs: [  {
+                    'targets': 0,
+                    'searchable':false,
+                    'orderable':false,
+                    'className': 'dt-body-center',
+                    /*'render': function (data, type, full, meta){
+                        return '<input type="checkbox" name="id[]" value="'
+                            + $('<div/>').text(data).html() + '">';
+                    }*/
+                } ],
+                /*scrollY: "300px",
+                scrollX:  true,
+                scrollCollapse: true,
+                paging:         false,
+                columnDefs: [
+                    { width: 200, targets: 0 }
+                ],*/
+                responsive: true
+            } );
+
+            new jQuery.fn.dataTable.FixedHeader( table );
+
+            $('#example-select-all').on('click', function(){
+                // Check/uncheck all checkboxes in the table
+                var rows = table.rows({ 'search': 'applied' }).nodes();
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#jo_table tbody').on('change', 'input[type="checkbox"]', function(){
+                // If checkbox is not checked
+                if(!this.checked){
+                    var el = $('#example-select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if(el && el.checked && ('indeterminate' in el)){
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+            });
+
+        });
+        
+        function downloadExcel() {
+
+            var table = $('#jo_table').DataTable();
+            var ids = new Array();
+            // Iterate over all checkboxes in the table
+            table.$('input[type="checkbox"]').each(function () {
+                // If checkbox is checked
+                if (this.checked) {
+                    ids.push(this.value);
+                }
+            });
+
+            var token = $('input[name="csrf_token"]').val();
+            $.ajax({
+                type: 'POST',
+                url: 'bills/downloadexcel',
+                data: { ids:ids ,'_token':token},
+                success: function(res)
+                {
+
+                }
+            });
+
+        }
+
+    </script>
+@endsection
