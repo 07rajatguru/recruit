@@ -36,8 +36,8 @@
             <th>Managed By</th>
             <th>Company Name</th>
             <th>HR/Coordinator Name</th>
-            <th>No. Of Positions</th>
             <th>Position Title</th>
+            <th>No. Of Positions</th>
             <th>Location</th>
             <th>Edu Qualifications</th>
             <th>Min CTC</th>
@@ -65,8 +65,8 @@
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
                 <td>{{ $value['coordinator_name'] or '' }}</td>
-                <td>{{ $value['no_of_positions'] or ''}}</td>
                 <td>{{ $value['posting_title'] or ''}}</td>
+                <td>{{ $value['no_of_positions'] or ''}}</td>
                 <td>{{ $value['location'] or ''}}</td>
                 <td>{{ $value['qual'] or ''}}</td>
                 <td>{{ $value['min_ctc'] or ''}}</td>
