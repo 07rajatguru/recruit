@@ -86,7 +86,10 @@
     <script type="text/javascript">
         $(document).ready(function(){
             var table = jQuery('#jo_table').DataTable( {
-                responsive: true
+                responsive: true,
+                columnDefs: [
+                    { width: 100, targets: 3 }
+                ]
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );
