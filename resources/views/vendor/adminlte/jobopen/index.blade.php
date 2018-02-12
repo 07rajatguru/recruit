@@ -27,7 +27,7 @@
 
         </div>
     </div>
-
+    <div class = "table-responsive">
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>
         <tr>
@@ -35,6 +35,7 @@
             <th>Action</th>
             <th>Managed By</th>
             <th>Company Name</th>
+            <th>HR/Coordinator Name</th>
             <th>No. Of Positions</th>
             <th>Position Title</th>
             <th>Location</th>
@@ -62,7 +63,8 @@
                     @include('adminlte::partials.deleteModal', ['data' => $jobDetails, 'name' => 'jobopen','display_name'=>'Job Openings'])
                 </td>
                 <td>{{ $value['am_name'] or '' }}</td>
-                <td style="background-color: {{ $value['color'] }}">{{ $value['client'] or '' }}</td>
+                <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
+                <td>{{ $value['coordinator_name'] or '' }}</td>
                 <td>{{ $value['no_of_positions'] or ''}}</td>
                 <td>{{ $value['posting_title'] or ''}}</td>
                 <td>{{ $value['location'] or ''}}</td>
@@ -79,7 +81,7 @@
         @endforeach
         </tbody>
     </table>
-
+    </div>
 @stop
 
 @section('customscripts')
@@ -95,8 +97,7 @@
                     { "width": "10px", "targets": 4 },
                     { "width": "10px", "targets": 5 }
                 ]
-            } );
-
+            });
             new jQuery.fn.dataTable.FixedHeader( table );
         });
     </script>

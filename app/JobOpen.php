@@ -194,6 +194,8 @@ class JobOpen extends Model
         foreach ($job_response as $key=>$value){
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['job_id'] = $value->job_id;
+            $jobs_list[$i]['company_name'] = $value->company_name;
+            $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
