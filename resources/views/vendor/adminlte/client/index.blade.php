@@ -49,13 +49,13 @@
                 <td>
 
                     <?php if($isSuperAdmin || $isAdmin || $client['client_visibility']) { ?>
-                        <a class="btn btn-info" href="{{ route('client.show',$client['id']) }}">Show</a>
+                        <a title="Show" class="fa fa-circle"  href="{{ route('client.show',$client['id']) }}"></a>
                      <?php } ?>
 
                     {{-- Only Client Owner, Admin and Super admin have access to edit rights--}}
                     <?php if($isSuperAdmin || $isAdmin || $client['client_owner']) { ?>
-                        {{--<a class="btn btn-primary" href="{{ route('client.edit',$client['id']) }}">Edit</a>--}}
-                        @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
+                        <a title="Edit" class="fa fa-edit" href="{{ route('client.edit',$client['id']) }}"></a>
+                        {{--@include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])--}}
                     <?php } ?>
 
                 </td>

@@ -60,7 +60,7 @@
 
                     <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
                     <?php $jobDetails = \App\JobOpen::find($value['id']); ?>
-                    @include('adminlte::partials.deleteModal', ['data' => $jobDetails, 'name' => 'jobopen','display_name'=>'Job Openings'])
+                    {{--@include('adminlte::partials.deleteModal', ['data' => $jobDetails, 'name' => 'jobopen','display_name'=>'Job Openings'])--}}
                 </td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
