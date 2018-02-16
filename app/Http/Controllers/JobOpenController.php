@@ -432,6 +432,7 @@ class JobOpenController extends Controller
             $job_open['client_id'] = $value->client_id;
             $job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['hiring_manager_name'] = $value->hiring_manager_name;
+            //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
             $job_open['no_of_positions'] = $value->no_of_positions;
             $job_open['target_date'] = $value->target_date;
             $job_open['date_opened'] = $value->date_opened;
@@ -443,6 +444,29 @@ class JobOpenController extends Controller
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
+
+
+            $user = \Auth::user();
+            $user_id = $user->id;
+            $user_role_id = User::getLoggedinUserRole($user);
+
+            $admin_role_id = env('ADMIN');
+            $director_role_id = env('DIRECTOR');
+            $manager_role_id = env('MANAGER');
+
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id);
+
+            if(in_array($user_role_id,$access_roles_id)){
+                $job_open['access'] = '1';
+            }
+            else{
+                if($value->hiring_manager_id==$user_id){
+                    $job_open['access'] = '1';
+                }
+                else{
+                    $job_open['access'] = '0';
+                }
+            }
 
 
             // already added posting,massmail and job search options
@@ -506,7 +530,6 @@ class JobOpenController extends Controller
 
         $posting_status = JobOpen::getJobPostingStatus();
         $job_search = JobOpen::getJobSearchOptions();
-
 
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
                     'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search));

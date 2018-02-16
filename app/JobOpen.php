@@ -171,7 +171,7 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority');
+                                                'job_openings.priority','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
@@ -195,7 +195,6 @@ class JobOpen extends Model
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['job_id'] = $value->job_id;
             $jobs_list[$i]['company_name'] = $value->company_name;
-            $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
@@ -208,11 +207,28 @@ class JobOpen extends Model
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->desired_candidate;
             $jobs_list[$i]['am_name'] = $value->am_name;
+            $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
             }
             else
                 $jobs_list[$i]['color'] ='';
+
+            // Admin/super admin have access to all details
+            if($all==1){
+                $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+                $jobs_list[$i]['access'] = '1';
+            }
+            else{
+                if(isset($value->hiring_manager_id) && $value->hiring_manager_id==$user_id ){
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+                    $jobs_list[$i]['access'] = '1';
+                }
+                else{
+                    $jobs_list[$i]['coordinator_name'] = '';
+                    $jobs_list[$i]['access'] = '0';
+                }
+            }
 
             $i++;
         }

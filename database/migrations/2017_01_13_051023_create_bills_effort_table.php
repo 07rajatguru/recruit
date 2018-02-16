@@ -13,7 +13,7 @@ class CreateBillsEffortTable extends Migration
      */
     public function up()
     {
-        Schema::create('bills_effort', function(Blueprint $table) {
+       /* Schema::create('bills_effort', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('bill_id')->unsigned();
             $table->integer('user_id')->unsigned();
@@ -23,7 +23,7 @@ class CreateBillsEffortTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('bill_id')->references('id')->on('bills');
-        });
+        });*/
     }
 
     /**
@@ -33,6 +33,6 @@ class CreateBillsEffortTable extends Migration
      */
     public function down()
     {
-        Schema::drop('bills_effort');
+        /*Schema::drop('bills_effort');*/
     }
 }

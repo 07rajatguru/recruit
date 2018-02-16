@@ -13,7 +13,7 @@ class CreateBillsTables extends Migration
      */
     public function up()
     {
-        Schema::create('bills', function(Blueprint $table) {
+        /*Schema::create('bills', function(Blueprint $table) {
             $table->increments('id');
             $table->string('company_name');
             $table->integer('candidate_id')->unsigned();
@@ -41,7 +41,7 @@ class CreateBillsTables extends Migration
             $table->foreign('client_id')->references('id')->on('client_basicinfo');
             $table->foreign('candidate_id')->references('id')->on('candidate_basicinfo');
 
-        });
+        });*/
     }
 
     /**
@@ -51,6 +51,6 @@ class CreateBillsTables extends Migration
      */
     public function down()
     {
-        Schema::drop('bills');
+        /*Schema::drop('bills');*/
     }
 }
