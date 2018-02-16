@@ -25,13 +25,16 @@
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
-                <h3>{{ $jobopen['posting_title'] }} - <a target="_blank" href="/client/{{ $jobopen['client_id'] }}">{{ $jobopen['client_name']  }}</a> </h3>
+                <h3>{{ $jobopen['posting_title'] }} - {{--<a target="_blank" href="/client/{{ $jobopen['client_id'] }}">--}}{{ $jobopen['client_name']  }}{{--</a>--}} </h3>
             </div>
 
             <div class="pull-right">
                 <a class="btn bg-maroon" id="associated_candidates" href="{{ route('jobopen.associated_candidates_get',$jobopen['id']) }}">Associated Candidates (...)</a>
                 <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
-                <a class="btn btn-primary" href="{{ route('jobopen.edit',$jobopen['id']) }}">Edit</a>
+
+                @if(isset($jobopen['access']) && $jobopen['access']=='1')
+                    <a class="btn btn-primary" href="{{ route('jobopen.edit',$jobopen['id']) }}">Edit</a>
+                @endif
                 @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
             </div>
         </div>
