@@ -400,6 +400,12 @@
                     "industry_id": {
                         required: true
                     },
+                    "salary_from":{
+                        number:true
+                    },
+                    "salary_to":{
+                        number:true
+                    }
                 },
                 messages: {
                     "posting_title": {
@@ -413,6 +419,12 @@
                     },
                     "industry_id": {
                         required: "Industry is required field."
+                    },
+                    "salary_from": {
+                        number: "Enter Numeric value"
+                    },
+                    "salary_to": {
+                        number: "Enter Numeric value."
                     }
                 }
             });
