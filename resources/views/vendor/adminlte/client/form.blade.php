@@ -67,10 +67,14 @@
                             @endif
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager:</strong>
-                            {!! Form::text('account_manager', \Auth::user()->name, array('disabled'=>'true','id'=>'account_manager','placeholder' => 'Account Manager','class' => 'form-control')) !!}
-                            {!! Form::hidden('account_manager_id', \Auth::user()->id, array('readonly'=>'readonly','id'=>'account_manager_id','placeholder' => 'Account Manager','class' => 'form-control')) !!}
+                            {!! Form::select('account_manager_id', $users, null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+                            @if ($errors->has('account_manager_id'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('account_manager_id') }}</strong>
+                                </span>
+                            @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">

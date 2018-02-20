@@ -99,6 +99,11 @@ class ClientController extends Controller
     {
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
+        // For account manager 
+         $users = User::getAllUsers();
+
+         
+
 
         if(sizeof($industry_res)>0){
             foreach($industry_res as $r){
@@ -107,7 +112,7 @@ class ClientController extends Controller
         }
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry'));
+        return view('adminlte::client.create',compact('action','industry','users'));
     }
 
     public function edit($id)
@@ -167,8 +172,11 @@ class ClientController extends Controller
         }
 
         $client = (object)$client;
+        // For account manager 
+         $users = User::getAllUsers();
+
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client'));
+        return view('adminlte::client.edit',compact('action','industry','client','users'));
     }
 
     public function store(Request $request){
