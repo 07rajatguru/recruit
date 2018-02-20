@@ -46,8 +46,8 @@
                 <td>{{ $candidate->email or ''}}</td>
 
                 <td>
-                    <a class="btn btn-info" href="{{ route('candidate.show',$candidate->id) }}">Show</a>
-                    <a class="btn btn-primary" href="{{ route('candidate.edit',$candidate->id) }}">Edit</a>
+                    <a class="fa fa-circle" href="{{ route('candidate.show',$candidate->id) }}" title="Show"></a>
+                    <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>
                     @include('adminlte::partials.deleteModal', ['data' => $candidate, 'name' => 'candidate','display_name'=>'Candidate'])
                 </td>
 
@@ -61,7 +61,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             var table = jQuery('#candidate_table').DataTable( {
-                responsive: true
+                responsive: true,
+                "autoWidth": false
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );

@@ -504,6 +504,12 @@
                     },
                     "maritalStatus": {
                         required: true
+                    },
+                    "expected_salary":{
+                        number:true
+                    },
+                    "current_salary":{
+                        number:true
                     }
                 },
                 messages: {
@@ -521,6 +527,12 @@
                     },
                     "maritalStatus": {
                         required: "Marital Status is required."
+                    },
+                    "expected_salary":{
+                        number:true
+                    },
+                    "current_salary":{
+                        number:true
                     }
                 }
             });
