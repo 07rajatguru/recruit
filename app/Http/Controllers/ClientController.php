@@ -124,6 +124,13 @@ class ClientController extends Controller
     public function edit($id)
     {
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -185,7 +192,7 @@ class ClientController extends Controller
          $users = User::getAllUsers();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin'));
     }
 
     public function store(Request $request){
