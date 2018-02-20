@@ -496,41 +496,41 @@ class CandidateController extends Controller
                 $candidateOtherInfo->candidate_id = $candidate_id;
 
                 if(isset($candiateHighest_qualification)){
-                    $candidate->highest_qualification = $candiateHighest_qualification;
+                    $candidateOtherInfo->highest_qualification = $candiateHighest_qualification;
                 }
-                if(isset($candiateExperience_years)){
-                    $candidate->experience_years = $candiateExperience_years;
+                if(isset($candiateExperience_years) && $candiateExperience_years!=''){
+                    $candidateOtherInfo->experience_years = $candiateExperience_years;
                 }
-                if(isset($candiateExperience_months)){
-                    $candidate->experience_months = $candiateHighest_qualification;
+                if(isset($candiateExperience_months) && $candiateExperience_months!=''){
+                    $candidateOtherInfo->experience_months = $candiateExperience_months;
                 }
                 if(isset($candiateCurrent_job_title)){
-                    $candidate->current_job_title = $candiateCurrent_job_title;
+                    $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
                 }
                 if(isset($candiateCurrent_employer)){
-                    $candidate->current_employer = $candiateCurrent_employer;
+                    $candidateOtherInfo->current_employer = $candiateCurrent_employer;
                 }
-                if(isset($candiateExpected_salary)){
-                    $candidate->expected_salary = $candiateExpected_salary;
+                if(isset($candiateExpected_salary) && $candiateExpected_salary!=''){
+                    $candidateOtherInfo->expected_salary = $candiateExpected_salary;
                 }
-                if(isset($candiateCurrent_salary)){
-                    $candidate->current_salary = $candiateCurrent_salary;
+                if(isset($candiateCurrent_salary) && $candiateCurrent_salary!=''){
+                    $candidateOtherInfo->current_salary = $candiateCurrent_salary;
                 }
                 if(isset($candiateSkill)){
-                    $candidate->skill = $candiateSkill;
+                    $candidateOtherInfo->skill = $candiateSkill;
                 }
                 if(isset($candiateSkype_id)){
-                    $candidate->skype_id = $candiateSkype_id;
+                    $candidateOtherInfo->skype_id = $candiateSkype_id;
                 }
-                if(isset($candiateStatus)){
-                    $candidate->status_id = $candiateStatus;
+                if(isset($candiateStatus) && $candiateStatus!=''){
+                    $candidateOtherInfo->status_id = $candiateStatus;
                 }
                 if(isset($candidateSource)){
-                    $candidate->source_id = $candidateSource;
+                    $candidateOtherInfo->source_id = $candidateSource;
                 }
-                if(isset($user_id)){
+                /*if(isset($user_id)){
                     $candidate->owner_id = $user_id;
-                }
+                }*/
                 $candidateOtherInfoUpdated = $candidateOtherInfo->save();
 
                 /*if($candidateOtherInfoUpdated){
