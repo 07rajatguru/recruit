@@ -99,11 +99,17 @@ class ClientController extends Controller
     {
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
-        // For account manager 
+
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
+        // For account manager
          $users = User::getAllUsers();
-
-         
-
 
         if(sizeof($industry_res)>0){
             foreach($industry_res as $r){
@@ -112,11 +118,12 @@ class ClientController extends Controller
         }
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id'));
     }
 
     public function edit($id)
     {
+
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -148,6 +155,8 @@ class ClientController extends Controller
             $client['tds'] = $value->tds;
             $client['coordinator_name'] = $value->coordinator_name;
             $client['tan'] = $value->tan;
+
+            $user_id = $value->account_manager_id;
         }
         $client['id'] = $id;
 
@@ -176,7 +185,7 @@ class ClientController extends Controller
          $users = User::getAllUsers();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id'));
     }
 
     public function store(Request $request){
