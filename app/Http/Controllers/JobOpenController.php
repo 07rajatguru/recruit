@@ -389,7 +389,7 @@ class JobOpenController extends Controller
             }
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
-            $module_id = $job_id;
+            /*$module_id = $job_id;
             $module = 'Job Openings';
             $message = "New job opening is added";
             $link = route('jobopen.show',$job_id);
@@ -404,7 +404,7 @@ class JobOpenController extends Controller
                 }
             }
 
-            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
         }
 
@@ -966,7 +966,7 @@ class JobOpenController extends Controller
         $hiring_manager_id = $jobDetail->hiring_manager_id;
         $job_show = $jobDetail->job_show;
 
-        $authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
+        /*$authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
 
         if($job_show == 0){
             $user_details = TeamMates::select('user_id')
@@ -992,7 +992,7 @@ class JobOpenController extends Controller
         $message = "Status update";
         $link = route('jobopen.show',$job_id);
 
-        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success', 'Candidate status update successfully');
     }

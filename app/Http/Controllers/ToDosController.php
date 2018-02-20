@@ -88,7 +88,7 @@ class ToDosController extends Controller
 
         $toDosStored = $toDos->save();
 
-        if($toDosStored) {
+        /*if($toDosStored) {
             $toDos_id = $toDos->id;
             if($candidate != $user_id){
                 $module_id = $toDos_id;
@@ -100,7 +100,7 @@ class ToDosController extends Controller
 
                 event(new NotificationEvent($module_id, $module, $message, $link, $candidate));
             }
-        }
+        }*/
 
         return redirect()->route('todos.index')->with('success','ToDo Created Successfully');
     }
