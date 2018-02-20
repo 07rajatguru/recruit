@@ -234,7 +234,7 @@
         @endforeach
 
     </table>
-
+    <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
    `
 @stop
 

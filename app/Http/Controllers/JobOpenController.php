@@ -825,7 +825,7 @@ class JobOpenController extends Controller
         $hiring_manager_id = $jobDetail->hiring_manager_id;
         $job_show = $jobDetail->job_show;
 
-        $authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
+        /*$authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
 
         if($job_show == 0){
             $user_details = TeamMates::select('user_id')
@@ -851,7 +851,7 @@ class JobOpenController extends Controller
         $message = "Associating Candidate";
         $link = route('jobopen.show',$job_id);
 
-        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
         return redirect()->route('jobopen.associate_candidate_get', [$job_id])->with('success', 'Candidate associated successfully');
     }
@@ -921,7 +921,7 @@ class JobOpenController extends Controller
         $job_show = $jobDetail->job_show;
 
         // TODO :: DeAssociating Candidate : send notification to team/all (except user who deassociate Candidate). default send notificaations to admin user .
-        $authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
+        /*$authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
 
         if($job_show == 0){
             $user_details = TeamMates::select('user_id')
@@ -947,7 +947,7 @@ class JobOpenController extends Controller
         $message = "DeAssociating Candidate";
         $link = route('jobopen.show',$job_id);
 
-        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success', 'Candidate deassociated successfully');
     }
