@@ -13,6 +13,7 @@
             @else
                 <h2>Create New Candidate</h2>
             @endif
+            
         </div>
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('candidate.index') }}"> Back</a>
@@ -101,7 +102,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('maritalStatus') ? 'has-error' : '' }}">
-                                <strong>Marital Status: <span class = "required_fields">*</span> </strong>
+                                <strong>Marital Status:  </strong>
                                 {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 @if ($errors->has('maritalStatus'))
                                     <span class="help-block">
@@ -502,9 +503,9 @@
                     "mobile": {
                         required: true
                     },
-                    "maritalStatus": {
+                  /*  "maritalStatus": {
                         required: true
-                    }
+                    }*/
                 },
                 messages: {
                     "fname": {
@@ -519,9 +520,9 @@
                     "mobile": {
                         required: "Mobile is required."
                     },
-                    "maritalStatus": {
+                  /*  "maritalStatus": {
                         required: "Marital Status is required."
-                    }
+                    }*/
                 }
             });
 
