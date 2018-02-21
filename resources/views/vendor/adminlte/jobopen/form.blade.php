@@ -185,7 +185,7 @@
 
                     <div class="form-group {{ $errors->has('qualifications') ? 'has-error' : '' }}">
                         <strong>Desired Candidates:</strong>
-                        {!! Form::textarea('desired_candidate', null, array('id'=>'desired_candidate','placeholder' => 'Desired Candidate','class' => 'form-control' )) !!}
+                        {!! Form::textarea('desired_candidate', null, array('id'=>'desired_candidate','rows'=>'3','placeholder' => 'Desired Candidate','class' => 'form-control' )) !!}
                         @if ($errors->has('desired_candidate'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('desired_candidate') }}</strong>
