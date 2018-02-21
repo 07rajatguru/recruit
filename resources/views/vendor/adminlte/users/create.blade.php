@@ -109,6 +109,16 @@
                                 @endif
                             </div>
 
+                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                <strong> Type : <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('type', $type,null, array('class' => 'form-control')) !!}
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('type') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                         </div>
 
                     </div>

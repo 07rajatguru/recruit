@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','company_id'
+        'name', 'email', 'password','company_id','type'
     ];
 
     /**
@@ -56,6 +56,15 @@ class User extends Authenticatable
         }
 
         return $userArr;
+    }
+
+     public static function getTypeArray(){
+        $type = array();
+        $type['admin'] = 'Admin Team';
+        $type['recruiter'] = 'Recruitment Team';
+        $type['it'] = 'IT Team';
+
+        return $type;
     }
 
     public static function getAllUsersByCompanyId($company_id){

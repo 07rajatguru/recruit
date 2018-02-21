@@ -43,7 +43,10 @@ class UserController extends Controller
         $companies = Companies::getCompanies();
         $companies = array_fill_keys(array(''),'Select Company')+$companies;
 
-        return view('adminlte::users.create',compact('roles', 'reports_to','companies'));
+        $type  = User::getTypeArray();
+        $type = array_fill_keys(array(''),'Select type')+$type;
+
+        return view('adminlte::users.create',compact('roles', 'reports_to','companies','type'));
     }
 
 
@@ -62,7 +65,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
             'roles' => 'required',
-            'company_id' => 'required'
+           // 'company_id' => 'required'
+            'type' => 'required'
         ]);
 
 
@@ -73,6 +77,17 @@ class UserController extends Controller
         foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
         }
+
+        $type = $request->input('type');     
+
+
+       /* if(isset($user) && sizeof($user) > 0){
+            if(isset($type)){
+                $user->type = $type;
+            }
+        }*/
+
+     
 
         return redirect()->route('users.index')
             ->with('success','User created successfully');
@@ -114,7 +129,12 @@ class UserController extends Controller
         $companies = Companies::getCompanies();
         $companies = array_fill_keys(array(''),'Select Company')+$companies;
 
-        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','companies'));
+        $type  = User::getTypeArray();
+        $type = array_fill_keys(array(''),'Select type')+$type;
+      
+    
+
+        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','companies','type'));
 
     }
 
@@ -131,10 +151,12 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email',
             'password' => 'same:confirm-password',
             'roles' => 'required',
-            'company_id' => 'required'
+         //   'company_id' => 'required'
+            'type' => 'required'
+
         ]);
 
 
@@ -159,6 +181,19 @@ class UserController extends Controller
         foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
         }
+
+
+        $type = $request->input('type');     
+
+       /* $user = User::find($id);
+        if(isset($user) && sizeof($user) > 0){
+            if(isset($type)){
+                $user->type = $type;
+            }
+        }*/
+
+
+  
 
         return redirect()->route('users.index')
             ->with('success','User updated successfully');
