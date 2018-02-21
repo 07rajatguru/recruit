@@ -69,7 +69,11 @@
 
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager:</strong>
-                            {!! Form::select('account_manager_id', $users, null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+                            @if(isset($isSuperAdmin) && $isSuperAdmin==1)
+                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+                            @else
+                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled')) !!}
+                            @endif
                             @if ($errors->has('account_manager_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('account_manager_id') }}</strong>

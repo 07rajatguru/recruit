@@ -505,7 +505,17 @@
                     },
                   /*  "maritalStatus": {
                         required: true
+<<<<<<< HEAD
                     }*/
+=======
+                    },
+                    "expected_salary":{
+                        number:true
+                    },
+                    "current_salary":{
+                        number:true
+                    }
+>>>>>>> 45b22ed12f727d4d764b0b329ff9fc6524010474
                 },
                 messages: {
                     "fname": {
@@ -522,7 +532,17 @@
                     },
                   /*  "maritalStatus": {
                         required: "Marital Status is required."
+<<<<<<< HEAD
                     }*/
+=======
+                    },
+                    "expected_salary":{
+                        number:true
+                    },
+                    "current_salary":{
+                        number:true
+                    }
+>>>>>>> 45b22ed12f727d4d764b0b329ff9fc6524010474
                 }
             });
 
