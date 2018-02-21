@@ -196,9 +196,9 @@
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job <span class = "required_fields">*</span></strong>
                         @if( $action == 'edit')
-                            {!! Form::select('user_ids[]', $users,$team_mates, array('id'=>'user_ids','class' => 'form-control', 'multiple')) !!}
+                            {!! Form::select('user_ids[]', $users,$team_mates, array('id'=>'user_ids','size'=>'10','class' => 'form-control', 'multiple')) !!}
                         @else
-                            {!! Form::select('user_ids[]', $users,$team_mates, array('id'=>'user_ids','class' => 'form-control', 'multiple')) !!}
+                            {!! Form::select('user_ids[]', $users,$team_mates, array('id'=>'user_ids','size'=>'10','class' => 'form-control', 'multiple')) !!}
                         @endif
 
                         @if ($errors->has('user_ids'))
