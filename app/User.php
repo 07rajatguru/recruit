@@ -44,9 +44,17 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsers(){
-        $users = User::select('*')
-            ->get();
+    public static function getAllUsers($type=NULL){
+        $user_query = User::query();
+
+        if($type!=NULL){
+            $user_query = $user_query->where('type','=','recruiter');
+        }
+
+        $users = $user_query->get();
+
+        /*$users = User::select('*')
+            ->get();*/
 
         $userArr = array();
         if(isset($users) && sizeof($users)){

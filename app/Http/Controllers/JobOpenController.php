@@ -210,7 +210,7 @@ class JobOpenController extends Controller
         }
 //print_r($client);exit;
         // get all users
-        $users = User::getAllUsers();
+        $users = User::getAllUsers('recruiter');
         $team_mates = $user_id;
 
         // job opening status
@@ -575,14 +575,16 @@ class JobOpenController extends Controller
         }
 
         // get all users
-        $users_res = User::orderBy('name', 'ASC')->get();
+        $users = User::getAllUsers('recruiter');
+        
+        /*$users_res = User::orderBy('name', 'ASC')->get();
         $users = array();
 
         if (sizeof($users_res) > 0) {
             foreach ($users_res as $r) {
                 $users[$r->id] = $r->name;
             }
-        }
+        }*/
 
         // job opening status
         $job_open_status = JobOpen::getJobOpenStatus();
