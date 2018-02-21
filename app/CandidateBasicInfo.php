@@ -12,7 +12,7 @@ class CandidateBasicInfo extends Model
 
     public static $rules = array(
         'fname' => 'required',
-//        'lname' => 'required',
+        'lname' => 'required',
 //        'candidateSex' => 'required',
 //        'maritalStatus' => 'required',
         'mobile' => 'required',
@@ -24,7 +24,7 @@ class CandidateBasicInfo extends Model
             'fname.required' => 'First Name is required field',
             'lname.required' => 'Last Name is required field',
             'candidateSex.required' => 'Sex is required field',
-            'maritalStatus.required' => 'Marital Status is required field',
+        //    'maritalStatus.required' => 'Marital Status is required field',
             'mobile.required' => 'Mobile is required field',
         ];
     }
@@ -44,6 +44,7 @@ class CandidateBasicInfo extends Model
 
     public static function getMaritalStatusArray(){
         $type = array();
+        $type[''] = 'Select Marital Status';
         $type['Single'] = 'Single';
         $type['Engaged'] = 'Engaged';
         $type['Married'] = 'Married';

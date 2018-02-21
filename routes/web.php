@@ -41,6 +41,19 @@ Route::post('/password/reset', [
     'uses' => 'Auth\ResetPasswordController@reset'
 ]);
 
+// Create Form
+Route::get('candidate/createform',[
+    'as'=>'candidate.createf',
+    'uses'=>'CandidateCreateFormController@createf'
+]);
+
+//Store Form
+Route::post('candidate/createform',[
+    'as'=>'candidate.storef',
+    'uses'=>'CandidateCreateFormController@storef'
+]);
+
+
 Route::group(['middleware' => ['auth']], function () {
 
     //Route::get('/home', 'HomeController@index');
@@ -432,7 +445,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
-    ]);
+    ]); 
     Route::post('jobs/create', [
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',
