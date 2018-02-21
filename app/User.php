@@ -51,6 +51,8 @@ class User extends Authenticatable
             $user_query = $user_query->where('type','=','recruiter');
         }
 
+        $user_query = $user_query->orderBy('name');
+
         $users = $user_query->get();
 
         /*$users = User::select('*')
