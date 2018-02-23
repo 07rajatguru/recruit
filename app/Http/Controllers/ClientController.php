@@ -223,6 +223,49 @@ class ClientController extends Controller
 
             $client_id = $client_basic_info->id;
 
+            $client_address = new ClientAddress();
+            $client_address->client_id = $client_id;
+
+            if(isset($input->billing_country) && $input->billing_country!=''){
+                $client_address->billing_country = $input->billing_country;
+            }
+            if(isset($input->billing_state) && $input->billing_state!=''){
+                $client_address->billing_state = $input->billing_state;
+            }
+            if(isset($input->billing_street1) && $input->billing_street1!=''){
+                $client_address->billing_street1 = $input->billing_street1;
+            }
+            if(isset($input->billing_street2) && $input->billing_street2!=''){
+                $client_address->billing_street2 = $input->billing_street2;
+            }
+            if(isset($input->billing_code) && $input->billing_code!=''){
+                $client_address->billing_code = $input->billing_code;
+            }
+            if(isset($input->billing_city) && $input->billing_city!=''){
+                $client_address->billing_city = $input->billing_city;
+            }
+
+            if(isset($input->shipping_country) && $input->shipping_country!=''){
+                $client_address->shipping_country = $input->shipping_country;
+            }
+            if(isset($input->shipping_state) && $input->shipping_state!=''){
+                $client_address->shipping_state = $input->shipping_state;
+            }
+            if(isset($input->shipping_street1) && $input->shipping_street1!=''){
+                $client_address->shipping_street1 = $input->shipping_street1;
+            }
+            if(isset($input->shipping_street2) && $input->shipping_street2!=''){
+                $client_address->shipping_street2 = $input->shipping_street2;
+            }
+            if(isset($input->shipping_code) && $input->shipping_code!=''){
+                $client_address->shipping_code = $input->shipping_code;
+            }
+            if(isset($input->shipping_city) && $input->shipping_city!=''){
+                $client_address->shipping_city = $input->shipping_city;
+            }
+            $client_address->updated_at = date("Y-m-d H:i:s");
+            $client_address->save();
+
             // save client address
             $input['client_id'] = $client_id;
             ClientAddress::create($input);
