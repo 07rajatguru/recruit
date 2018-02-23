@@ -208,7 +208,7 @@ class ClientController extends Controller
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
         //$client_basic_info->fax = $input['fax'];
-        $client_basic_info->account_manager_id = $input['account_manager_id'];
+        $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
         $client_basic_info->source = $input['source'];
         $client_basic_info->about = $input['description'];
@@ -474,6 +474,7 @@ class ClientController extends Controller
         $input = $request->all();
         $input = (object)$input;
 
+        //print_r($input);exit;
         $client_basicinfo = ClientBasicinfo::find($id);
 
         $client_basicinfo->name = $input->name;
@@ -487,24 +488,54 @@ class ClientController extends Controller
         $client_basicinfo->gst_no = $input->gst_no;
         $client_basicinfo->tds = $input->tds;
         $client_basicinfo->coordinator_name = $input->coordinator_name;
+        $client_basicinfo->account_manager_id = $input->account_manager;
         $client_basicinfo->tan = $input->tan;
 
         if($client_basicinfo->save()){
 
             // update client address
             $client_address = ClientAddress::find($input->client_address_id);
-            $client_address->billing_country = $input->billing_country;
-            $client_address->billing_state = $input->billing_state;
-            $client_address->billing_street1 = $input->billing_street1;
-            $client_address->billing_street2 = $input->billing_street2;
-            $client_address->billing_code = $input->billing_code;
-            $client_address->billing_city = $input->billing_city;
-            $client_address->shipping_country = $input->shipping_country;
-            $client_address->shipping_state = $input->shipping_state;
-            $client_address->shipping_street1 = $input->shipping_street1;
-            $client_address->shipping_street2 = $input->shipping_street2;
-            $client_address->shipping_code = $input->shipping_code;
-            $client_address->shipping_city = $input->shipping_city;
+               if(!isset($client_address) && empty($client_address)){
+                   $client_address = new ClientAddress();
+                   $client_address->client_id = $id;
+               }
+            if(isset($input->billing_country) && $input->billing_country!=''){
+                $client_address->billing_country = $input->billing_country;
+            }
+            if(isset($input->billing_state) && $input->billing_state!=''){
+                $client_address->billing_state = $input->billing_state;
+            }
+            if(isset($input->billing_street1) && $input->billing_street1!=''){
+                $client_address->billing_street1 = $input->billing_street1;
+            }
+            if(isset($input->billing_street2) && $input->billing_street2!=''){
+                $client_address->billing_street2 = $input->billing_street2;
+            }
+            if(isset($input->billing_code) && $input->billing_code!=''){
+                $client_address->billing_code = $input->billing_code;
+            }
+            if(isset($input->billing_city) && $input->billing_city!=''){
+                $client_address->billing_city = $input->billing_city;
+            }
+
+            if(isset($input->shipping_country) && $input->shipping_country!=''){
+                $client_address->shipping_country = $input->shipping_country;
+            }
+            if(isset($input->shipping_state) && $input->shipping_state!=''){
+                $client_address->shipping_state = $input->shipping_state;
+            }
+            if(isset($input->shipping_street1) && $input->shipping_street1!=''){
+                $client_address->shipping_street1 = $input->shipping_street1;
+            }
+            if(isset($input->shipping_street2) && $input->shipping_street2!=''){
+                $client_address->shipping_street2 = $input->shipping_street2;
+            }
+            if(isset($input->shipping_code) && $input->shipping_code!=''){
+                $client_address->shipping_code = $input->shipping_code;
+            }
+            if(isset($input->shipping_city) && $input->shipping_city!=''){
+                $client_address->shipping_city = $input->shipping_city;
+            }
             $client_address->updated_at = date("Y-m-d H:i:s");
             $client_address->save();
             return redirect()->route('client.index')->with('success','Client updated successfully');

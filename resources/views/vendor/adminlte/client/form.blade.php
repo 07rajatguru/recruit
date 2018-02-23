@@ -81,6 +81,8 @@
                             @endif
                         </div>
 
+                        <input type="hidden" name="account_manager" id="account_manager" value="{{$user_id}}" />
+
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
                             <strong>Industry <span class = "required_fields">*</span> </strong>
                             {!! Form::select('industry_id', $industry,null, array('id'=>'industry_id','class' => 'form-control')) !!}
@@ -304,6 +306,10 @@
     <script>
 
         $(document).ready(function() {
+
+            $('#account_manager_id').on('change', function (e) {
+                $("#account_manager").val(this.value);
+            });
 
             $('#clientForm').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
