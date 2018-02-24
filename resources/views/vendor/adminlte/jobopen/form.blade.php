@@ -53,8 +53,12 @@
 
                         <div class="form-group {{ $errors->has('hiring_manager_id') ? 'has-error' : '' }}">
                             <strong>Select Hiring Manager:</strong>
-                            {!! Form::select('hiring_manager_id', $users,null, array('id'=>'hiring_manager_id','class' => 'form-control')) !!}
-                            @if ($errors->has('hiring_manager_id'))
+                              @if(isset($isSuperAdmin) && $isSuperAdmin==1)
+                                    {!! Form::select('hiring_manager_id', $users,null, array('id'=>'hiring_manager_id','class' => 'form-control')) !!}
+                              @else
+                                {!! Form::select('hiring_manager_id', $users, null, array('id'=>'hiring_manager_id','class' => 'form-control')) !!}
+                              @endif
+                              @if ($errors->has('hiring_manager_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('hiring_manager_id') }}</strong>
                                 </span>

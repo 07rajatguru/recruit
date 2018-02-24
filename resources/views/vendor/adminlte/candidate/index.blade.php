@@ -33,6 +33,7 @@
                 <th>Candidate Name</th>
                 <th>Candidate Owner</th>
                 <th>Candidate Email</th>
+                <th>Mobile Number</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -44,7 +45,7 @@
                 <td>{{ $candidate->fname or '' }} {{ $candidate->lname or '' }}</td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or ''}}</td>
-
+                <td>{{ $candidate->mobile or ''}}</td>
                 <td>
                     <a class="fa fa-circle" href="{{ route('candidate.show',$candidate->id) }}" title="Show"></a>
                     <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>

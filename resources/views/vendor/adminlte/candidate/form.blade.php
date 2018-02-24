@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
-                                <strong>Sex: <span class = "required_fields">*</span> </strong>
+                                <strong>Sex:</strong>
                                 {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @if ($errors->has('candidateSex'))
                                     <span class="help-block">
@@ -76,7 +76,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <strong>Email:</strong>
+                                <strong>Email: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('email', null, array('id'=>'email','placeholder' => 'EMAIL','class' => 'form-control', '', 'tabindex' => '7' )) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -122,15 +122,16 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('fax') ? 'has-error' : '' }}">
-                                <strong>FAX:</strong>
-                                {!! Form::text('fax', null, array('id'=>'fax','placeholder' => 'FAX','class' => 'form-control', 'tabindex' => '8' )) !!}
-                                @if ($errors->has('fax'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('fax') }}</strong>
+                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
+                             <strong>Associated Job Opening:</strong>
+                                  {!! Form::select('jobopen', $jobopen,null, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '23' )) !!}
+                                 @if ($errors->has('job'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('job') }}</strong>
                                 </span>
-                                @endif
-                            </div>
+                             @endif
+                             </div>
+
 
                         </div>
                     </div>
@@ -497,26 +498,22 @@
                     "lname": {
                         required: true
                     },
-                    "candidateSex": {
-                        required: true
-                    },
                     "mobile": {
                         required: true
                     },
-                  /*  "maritalStatus": {
+                    "email": {
                         required: true
-<<<<<<< HEAD
-                    }*/
-=======
                     },
+
                     "expected_salary":{
                         number:true
                     },
                     "current_salary":{
                         number:true
                     }
->>>>>>> 45b22ed12f727d4d764b0b329ff9fc6524010474
-                },
+                    },
+
+                
                 messages: {
                     "fname": {
                         required: "First Name is required."
@@ -524,17 +521,14 @@
                     "lname": {
                         required: "Last Name is required."
                     },
-                    "candidateSex": {
-                        required: "Sex is required."
-                    },
+                    
                     "mobile": {
                         required: "Mobile is required."
                     },
-                  /*  "maritalStatus": {
-                        required: "Marital Status is required."
-<<<<<<< HEAD
-                    }*/
-=======
+                    "email": {
+                        required: "Email is required."
+                    }
+
                     },
                     "expected_salary":{
                         number:true
@@ -542,8 +536,7 @@
                     "current_salary":{
                         number:true
                     }
->>>>>>> 45b22ed12f727d4d764b0b329ff9fc6524010474
-                }
+                
             });
 
         });

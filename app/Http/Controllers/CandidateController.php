@@ -11,6 +11,9 @@ use App\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
+use App\User;
+use App\JobOpen;
+use App\JobAssociateCandidates;
 
 class CandidateController extends Controller
 {
@@ -20,7 +23,7 @@ class CandidateController extends Controller
         $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
-                'candidate_basicinfo.email as email', 'users.name as owner')
+                'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile')
             ->orderBy('candidate_basicinfo.id','desc')
             ->get();
 
@@ -34,12 +37,16 @@ class CandidateController extends Controller
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
 
+        $jobopen = JobOpen::getJobOpen();
+ 
+
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
         $viewVariable['candidateSource'] = $candidateSource;
         $viewVariable['candidateStatus'] = $candidateStatus;
         $viewVariable['emailDisabled'] = '';
+        $viewVariable['jobopen'] = $jobopen;
         $viewVariable['action'] = 'add';
 
         return view('adminlte::candidate.create',$viewVariable);
@@ -55,7 +62,7 @@ class CandidateController extends Controller
         $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
-        $candiateFAX = $request->input('fax');
+     //   $candiateFAX = $request->input('fax');
         $candiateStreet1 = $request->input('street1');
         $candiateStreet2 = $request->input('street2');
         $candiateCity = $request->input('city');
@@ -63,6 +70,7 @@ class CandidateController extends Controller
         $candiateCountry = $request->input('country');
         $candiateZipCode = $request->input('zipcode');
         $candidateEmail = $request->input('email');
+      //  $candidatejobopen = $request->input('jobopen');
 
         $candiateHighest_qualification = $request->input('highest_qualification');
         $candiateExperience_years = $request->input('experience_years');
@@ -75,6 +83,8 @@ class CandidateController extends Controller
         $candiateSkype_id = $request->input('skype_id');
         $candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
+
+       
 
         // Save Candidate Basic Info
         $candidate = new CandidateBasicInfo();
@@ -174,6 +184,9 @@ class CandidateController extends Controller
             if(isset($user_id)){
                 $candidateOtherInfo->owner_id = $user_id;
             }
+          
+        
+            
             /*$candidateOtherInfo->candidate_id = $candidate_id;
             $candidateOtherInfo->highest_qualification = $request->input('highest_qualification');
             $candidateOtherInfo->experience_years = $request->input('experience_years');
@@ -347,6 +360,19 @@ class CandidateController extends Controller
                     $candidateOthersUploadStored = $candidateOthersUpload->save();
 
                 }
+
+
+                $job_id = $request->input('jobopen');
+                $status_id = env('associate_candidate_status', 10);
+
+                $jobopening = new JobAssociateCandidates();
+                $jobopening->job_id = $job_id;
+                $jobopening->candidate_id = $candidate_id;
+                $jobopening->status_id = $status_id;
+                $jobopening->created_at = time();
+                $jobopening->updated_at = time();
+                $jobopening->save();
+
             }
         }
 
@@ -380,6 +406,9 @@ class CandidateController extends Controller
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
 
+        $jobopen = JobOpen::getJobOpen();
+ 
+
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
@@ -387,6 +416,7 @@ class CandidateController extends Controller
         $viewVariable['candidateStatus'] = $candidateStatus;
         //$viewVariable['emailDisabled'] = 'disabled';
         $viewVariable['candidate'] = $candidates;
+        $viewVariable['jobopen'] = $jobopen;
         $viewVariable['action'] = 'edit';
 //print_r($viewVariable);exit;
         return view('adminlte::candidate.edit',$viewVariable);
@@ -395,11 +425,12 @@ class CandidateController extends Controller
     public function update(Request $request, $id){
 
         $this->validate($request, [
-            'candidateSex' => 'required',
+           // 'candidateSex' => 'required',
             'fname' => 'required',
             'lname' => 'required',
 //            'email' => 'unique:candidate_basicinfo,email',
             'mobile'  => 'required',
+            'email' => 'required'
         ]);
 
         $user_id = \Auth::user()->id;
@@ -478,6 +509,7 @@ class CandidateController extends Controller
             if(isset($candiateZipCode)){
                 $candidate->zipcode = $candiateZipCode;
             }
+             
 
             $validator = \Validator::make(Input::all(),$candidate::$rules);
 
@@ -529,6 +561,7 @@ class CandidateController extends Controller
                 if(isset($candidateSource)){
                     $candidateOtherInfo->source_id = $candidateSource;
                 }
+                
                 /*if(isset($user_id)){
                     $candidate->owner_id = $user_id;
                 }*/
@@ -574,7 +607,20 @@ class CandidateController extends Controller
                     $candidateFileUploadUpdated = $candidateFileUpload->save();
 
                 }*/
-            } else {
+
+                 $job_id = $request->input('jobopen');
+                $status_id = env('associate_candidate_status', 10);
+
+                $jobopening = new JobAssociateCandidates();
+                $jobopening->job_id = $job_id;
+                $jobopening->candidate_id = $candidate_id;
+                $jobopening->status_id = $status_id;
+                $jobopening->created_at = time();
+                $jobopening->updated_at = time();
+                $jobopening->save();
+            } 
+
+            else {
                 return redirect('candiate/')->with('error','Something went wrong while updating');
             }
             if($job_id>0){
@@ -631,7 +677,8 @@ class CandidateController extends Controller
             $candidateDetails['maritalStatus'] = $candidates->maritalStatus;
             $candidateDetails['mobile'] = $candidates->mobile;
             $candidateDetails['phone'] = $candidates->phone;
-            $candidateDetails['fax'] = $candidates->fax;
+            $candidateDetails['jobopen'] = $candidates->jobopen;
+          //  $candidateDetails['fax'] = $candidates->fax;
             $candidateDetails['country'] = $candidates->country;
             $candidateDetails['state'] = $candidates->state;
             $candidateDetails['city'] = $candidates->city;

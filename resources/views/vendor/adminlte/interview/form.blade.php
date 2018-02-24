@@ -8,7 +8,7 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('dailyreport.index') }}"> Back</a>
+            <a class="btn btn-primary" href="{{ route('interview.index') }}"> Back</a>
         </div>
 
     </div>
