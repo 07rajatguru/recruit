@@ -97,7 +97,7 @@
                     { "width": "10px", "targets": 4 },
                     { "width": "10px", "targets": 5 }
                 ],
-                "pageLength": 25
+                "pageLength": 100
             });
             new jQuery.fn.dataTable.FixedHeader( table );
         });

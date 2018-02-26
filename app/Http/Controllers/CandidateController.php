@@ -27,7 +27,8 @@ class CandidateController extends Controller
             ->orderBy('candidate_basicinfo.id','desc')
             ->get();
 
-        return view('adminlte::candidate.index', array('candidates' => $candidateDetails));
+        $count = sizeof($candidateDetails);
+        return view('adminlte::candidate.index', array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)));
     }
 
     public function create(){
