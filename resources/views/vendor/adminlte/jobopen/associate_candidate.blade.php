@@ -50,6 +50,18 @@
 
     </table>
     <input type="hidden" id="token" value="{{ csrf_token() }}">
+
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+
+            <div class="pull-right">
+                <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
+                <a class="btn btn-info"  onclick="associate_candidates({{ $job_id }});">Submit</a>
+            </div>
+            
+        </div>
+    </div>
+
 @stop
 
 
