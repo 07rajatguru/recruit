@@ -124,7 +124,7 @@
 
                              <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
                              <strong>Associated Job Opening:</strong>
-                                  {!! Form::select('jobopen', $jobopen,null, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '23' )) !!}
+                                  {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '23' )) !!}
                                  @if ($errors->has('job'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('job') }}</strong>

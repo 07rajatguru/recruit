@@ -37,9 +37,32 @@ class CandidateController extends Controller
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
 
-        $jobopen = JobOpen::getJobOpen();
- 
+        //$jobopen = JobOpen::getJobOpen();
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['client'];
+        }
+
+        $job_id = 0;
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
@@ -47,6 +70,7 @@ class CandidateController extends Controller
         $viewVariable['candidateStatus'] = $candidateStatus;
         $viewVariable['emailDisabled'] = '';
         $viewVariable['jobopen'] = $jobopen;
+        $viewVariable['job_id'] = $job_id;
         $viewVariable['action'] = 'add';
 
         return view('adminlte::candidate.create',$viewVariable);
@@ -361,17 +385,18 @@ class CandidateController extends Controller
 
                 }
 
+                if(isset($job_id) && $job_id>0){
+                    $job_id = $request->input('jobopen');
+                    $status_id = env('associate_candidate_status', 10);
 
-                $job_id = $request->input('jobopen');
-                $status_id = env('associate_candidate_status', 10);
-
-                $jobopening = new JobAssociateCandidates();
-                $jobopening->job_id = $job_id;
-                $jobopening->candidate_id = $candidate_id;
-                $jobopening->status_id = $status_id;
-                $jobopening->created_at = time();
-                $jobopening->updated_at = time();
-                $jobopening->save();
+                    $jobopening = new JobAssociateCandidates();
+                    $jobopening->job_id = $job_id;
+                    $jobopening->candidate_id = $candidate_id;
+                    $jobopening->status_id = $status_id;
+                    $jobopening->created_at = time();
+                    $jobopening->updated_at = time();
+                    $jobopening->save();
+                }
 
             }
         }
@@ -406,8 +431,31 @@ class CandidateController extends Controller
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
 
-        $jobopen = JobOpen::getJobOpen();
- 
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['client'];
+        }
+
+        // check if candidate associate with any job
+        $job_id = JobAssociateCandidates::getAssociatedJobIdByCandidateId($id);
 
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
@@ -418,7 +466,9 @@ class CandidateController extends Controller
         $viewVariable['candidate'] = $candidates;
         $viewVariable['jobopen'] = $jobopen;
         $viewVariable['action'] = 'edit';
-//print_r($viewVariable);exit;
+        $viewVariable['job_id'] = $job_id;
+
+        //print_r($viewVariable);exit;
         return view('adminlte::candidate.edit',$viewVariable);
     }
 
@@ -436,7 +486,6 @@ class CandidateController extends Controller
         $user_id = \Auth::user()->id;
 
         // for redirecting to candidate associating page after updating candidate info
-        $job_id = $request->input('jobid');
 
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
@@ -607,28 +656,25 @@ class CandidateController extends Controller
                     $candidateFileUploadUpdated = $candidateFileUpload->save();
 
                 }*/
+                $job_id = $request->input('jobopen');
+                if(isset($job_id) && $job_id>0){
+                    $job_id = $request->input('jobopen');
+                    $status_id = env('associate_candidate_status', 10);
 
-                 $job_id = $request->input('jobopen');
-                $status_id = env('associate_candidate_status', 10);
-
-                $jobopening = new JobAssociateCandidates();
-                $jobopening->job_id = $job_id;
-                $jobopening->candidate_id = $candidate_id;
-                $jobopening->status_id = $status_id;
-                $jobopening->created_at = time();
-                $jobopening->updated_at = time();
-                $jobopening->save();
+                    $jobopening = new JobAssociateCandidates();
+                    $jobopening->job_id = $job_id;
+                    $jobopening->candidate_id = $candidate_id;
+                    $jobopening->status_id = $status_id;
+                    $jobopening->created_at = time();
+                    $jobopening->updated_at = time();
+                    $jobopening->save();
+                }
             } 
 
             else {
                 return redirect('candiate/')->with('error','Something went wrong while updating');
             }
-            if($job_id>0){
-                return redirect('jobs/'.$job_id.'/associated_candidates')->with('success','Candidate Updated Successfully');
-            }
-            else{
-                return redirect()->route('candidate.index')->with('success','Candidate Updated Successfully');
-            }
+            return redirect()->route('candidate.index')->with('success','Candidate Updated Successfully');
 
         } else {
             return redirect('candiate/')->with('error','No Candiate found');

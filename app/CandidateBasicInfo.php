@@ -36,6 +36,7 @@ class CandidateBasicInfo extends Model
 
     public static function getTypeArray(){
         $type = array();
+        $type[''] = 'Select';
         $type['Male'] = 'Male';
         $type['Female'] = 'Female';
 
