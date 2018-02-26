@@ -198,11 +198,17 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
-                        <strong>Select Users who can access the job <span class = "required_fields">*</span></strong>
+                        <strong>Select Users who can access the job: <span class = "required_fields">*</span></strong>
                         @if( $action == 'edit')
-                            {!! Form::select('user_ids[]', $users,$team_mates, array('id'=>'user_ids','size'=>'10','class' => 'form-control', 'multiple')) !!}
+                            @foreach($users as $k=>$v)<br/>
+                            {!! Form::checkbox('user_ids[]',$k,in_array($k,$selected_users),null, array('id'=>'user_ids','size'=>'10','class' => 'form-control',)) !!}
+                            {!! Form::label ($v) !!}
+                            @endforeach
                         @else
-                            {!! Form::select('user_ids[]', $users,$team_mates, array('id'=>'user_ids','size'=>'10','class' => 'form-control', 'multiple')) !!}
+                            @foreach($users as $k=>$v)<br/>
+                            {!! Form::checkbox('user_ids[]', $k, null,false, array('id'=>'user_ids','size'=>'10','class' => 'form-control')) !!}
+                            {!! Form::label ($v) !!}
+                            @endforeach
                         @endif
 
                         @if ($errors->has('user_ids'))

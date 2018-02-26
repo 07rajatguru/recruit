@@ -213,6 +213,7 @@ class JobOpenController extends Controller
 //print_r($client);exit;
         // get all users
         $users = User::getAllUsers('recruiter');
+        //print_r($users);exit;
       //  $team_mates = $user_id;
 
         // job opening status
@@ -264,7 +265,8 @@ class JobOpenController extends Controller
         $state = $input['state'];
         $country = $input['country'];
         $job_show = 0;
-        $users = $input['users'];
+        $users = $input['user_ids'];
+        //print_r($users);exit;
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
 
@@ -433,8 +435,9 @@ class JobOpenController extends Controller
             $job_open['client_name'] = $value->client_name;
             $job_open['client_id'] = $value->client_id;
             $job_open['job_opening_status'] = $value->job_opening_status;
-            $job_open['hiring_manager_name'] = $value->hiring_manager_name;
             $job_open['desired_candidate'] = $value->desired_candidate;
+            $job_open['hiring_manager_name'] = $value->hiring_manager_name;
+            //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
             $job_open['no_of_positions'] = $value->no_of_positions;
             $job_open['target_date'] = $value->target_date;
             $job_open['date_opened'] = $value->date_opened;
@@ -607,15 +610,22 @@ class JobOpenController extends Controller
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
 
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
-        $team_mates = array();
+       /* $team_mates = array();
         if(isset($job_visible_users) && sizeof($job_visible_users)>0){
             foreach($job_visible_users as $row){
                 $team_mates[] = $row->user_id;
             }
+        }*/
+
+        $selected_users = array();
+        if(isset($job_visible_users) && sizeof($job_visible_users)>0){
+            foreach($job_visible_users as $row){
+                $selected_users[] = $row->user_id;
+            }
         }
 
         $action = "edit";
-        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates'));
+        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users'));
     }
 
     public function update(Request $request, $id)
@@ -803,7 +813,6 @@ class JobOpenController extends Controller
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner')
             ->whereNotIn('candidate_basicinfo.id', $candidates)
-            ->orderBy('candidate_basicinfo.id','desc')
             ->get();
 
         return view('adminlte::jobopen.associate_candidate', array('candidates' => $candidateDetails, 'job_id' => $id, 'posting_title' => $posting_title, 'message' => ''));
