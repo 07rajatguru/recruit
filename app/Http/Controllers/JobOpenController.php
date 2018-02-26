@@ -213,7 +213,7 @@ class JobOpenController extends Controller
 //print_r($client);exit;
         // get all users
         $users = User::getAllUsers('recruiter');
-        $team_mates = $user_id;
+      //  $team_mates = $user_id;
 
         // job opening status
         $job_open_status = JobOpen::getJobOpenStatus();
@@ -225,7 +225,7 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $action = "add";
-        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','team_mates','job_priorities'));
+        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities'));
 
     }
 
@@ -264,7 +264,7 @@ class JobOpenController extends Controller
         $state = $input['state'];
         $country = $input['country'];
         $job_show = 0;
-        $users = $input['user_ids'];
+        $users = $input['users'];
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
 
