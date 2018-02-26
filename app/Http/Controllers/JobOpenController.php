@@ -434,7 +434,7 @@ class JobOpenController extends Controller
             $job_open['client_id'] = $value->client_id;
             $job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['hiring_manager_name'] = $value->hiring_manager_name;
-            //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
+            $job_open['desired_candidate'] = $value->desired_candidate;
             $job_open['no_of_positions'] = $value->no_of_positions;
             $job_open['target_date'] = $value->target_date;
             $job_open['date_opened'] = $value->date_opened;

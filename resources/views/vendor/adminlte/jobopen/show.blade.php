@@ -92,6 +92,10 @@
                             <td colspan="3">{{ $jobopen['description'] }}</td>
                         </tr>
                         <tr>
+                            <th scope="row" >Desired Candidates</th>
+                            <td colspan="3">{{ $jobopen['desired_candidate'] }}</td>
+                        </tr>
+                        <tr>
                             <th scope="row" >Users who can access the job</th>
                             <td colspan="3">{{ implode(",",$jobopen['users']) }}</td>
                         </tr>
