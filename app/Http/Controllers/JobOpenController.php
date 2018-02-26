@@ -434,7 +434,7 @@ class JobOpenController extends Controller
             $job_open['client_id'] = $value->client_id;
             $job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['hiring_manager_name'] = $value->hiring_manager_name;
-            //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
+            $job_open['desired_candidate'] = $value->desired_candidate;
             $job_open['no_of_positions'] = $value->no_of_positions;
             $job_open['target_date'] = $value->target_date;
             $job_open['date_opened'] = $value->date_opened;
@@ -803,6 +803,7 @@ class JobOpenController extends Controller
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner')
             ->whereNotIn('candidate_basicinfo.id', $candidates)
+            ->orderBy('candidate_basicinfo.id','desc')
             ->get();
 
         return view('adminlte::jobopen.associate_candidate', array('candidates' => $candidateDetails, 'job_id' => $id, 'posting_title' => $posting_title, 'message' => ''));

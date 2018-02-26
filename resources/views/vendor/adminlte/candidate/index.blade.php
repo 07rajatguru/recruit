@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Candidate List</h2>
+                <h2>Candidate List ({{ $count }})</h2>
             </div>
 
             <div class="pull-right">
@@ -63,7 +63,8 @@
         jQuery(document).ready(function(){
             var table = jQuery('#candidate_table').DataTable( {
                 responsive: true,
-                "autoWidth": false
+                "autoWidth": false,
+                "pageLength": 100
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );
