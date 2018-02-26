@@ -16,6 +16,7 @@ class CandidateBasicInfo extends Model
 //        'candidateSex' => 'required',
 //        'maritalStatus' => 'required',
         'mobile' => 'required',
+        'email' => 'required'
     );
 
     public function messages()
@@ -23,9 +24,10 @@ class CandidateBasicInfo extends Model
         return [
             'fname.required' => 'First Name is required field',
             'lname.required' => 'Last Name is required field',
-            'candidateSex.required' => 'Sex is required field',
+        //   'candidateSex.required' => 'Sex is required field',
         //    'maritalStatus.required' => 'Marital Status is required field',
             'mobile.required' => 'Mobile is required field',
+            'email.required' => 'Email is required field'
         ];
     }
 
@@ -36,7 +38,7 @@ class CandidateBasicInfo extends Model
 
     public static function getTypeArray(){
         $type = array();
-        $type[''] = 'Select';
+        $type[''] = 'Select gender';
         $type['Male'] = 'Male';
         $type['Female'] = 'Female';
 
