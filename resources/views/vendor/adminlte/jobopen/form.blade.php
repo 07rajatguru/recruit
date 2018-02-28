@@ -65,7 +65,7 @@
                             @endif
                         </div>
 
-                        {{--<div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
                             <strong>Target Date:</strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
@@ -78,7 +78,7 @@
                                     <strong>{{ $errors->first('target_date') }}</strong>
                                 </span>
                             @endif
-                        </div>--}}
+                        </div>
 
                         <div class="form-group {{ $errors->has('job_opening_status') ? 'has-error' : '' }}">
                             <strong>Select Job Opening Status :</strong>
@@ -138,7 +138,11 @@
 
                         <div class="form-group {{ $errors->has('no_of_positions') ? 'has-error' : '' }}">
                             <strong>Number of Positions:</strong>
-                            {!! Form::text('no_of_positions', 1, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' )) !!}
+                            @if($action == 'edit')
+                                {!! Form::text('no_of_positions',null, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' )) !!}
+                            @else
+                                {!! Form::text('no_of_positions', 1, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' )) !!}
+                            @endif
                             @if ($errors->has('no_of_positions'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('no_of_positions') }}</strong>
@@ -151,7 +155,7 @@
                             <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
-                                </div>
+                                </div>  
                                 {!! Form::text('date_opened', isset($date_opened) ? $date_opened : null, array('id'=>'date_opened','placeholder' => 'Date Opened','class' => 'form-control' )) !!}
                             </div>
                             @if ($errors->has('date_opened'))
@@ -449,7 +453,16 @@
             $("#date_opened").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
+
             });
+            $('#date_opened').datepicker().datepicker('setDate', 'today');
+           // $('#target_date').datepicker().datepicker('setDate', 'today');
+
+            var date2 = $('#date_opened').datepicker('getDate');
+            date2.setMonth(date2.getMonth()+1);
+            $('#target_date').datepicker('setDate', date2);
+
+
             $("#hiring_manager_id").select2();
             $("#client_id").select2();
             $("#job_description").wysihtml5();
