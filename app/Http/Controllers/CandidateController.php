@@ -60,7 +60,7 @@ class CandidateController extends Controller
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            $jobopen[$v['id']] = $v['posting_title']." - ".$v['client'];
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
         }
 
         $job_id = 0;
