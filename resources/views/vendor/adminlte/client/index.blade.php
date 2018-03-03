@@ -27,6 +27,13 @@
 
     @endif
 
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+
+    @endif
+
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="client_table">
         <thead>
             <tr>
@@ -55,8 +62,11 @@
                     {{-- Only Client Owner, Admin and Super admin have access to edit rights--}}
                     <?php if($isSuperAdmin || $isAdmin || $client['client_owner']) { ?>
                         <a title="Edit" class="fa fa-edit" href="{{ route('client.edit',$client['id']) }}"></a>
-                        {{--@include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])--}}
-                    <?php } ?>
+                    <?php  }?>
+
+                    <?php if($isSuperAdmin) { ?>
+                    @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
+                    <?php  }?>
 
                 </td>
 

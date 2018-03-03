@@ -69,6 +69,36 @@ class ClientBasicinfo extends Ardent
         return $client_response;
     }
 
+    public static function getTypeDelete($id){
+
+        $job_query = JobOpen::query();
+        $job_query = $job_query->where('client_id','=',$id);
+        $job_res = $job_query->first();
+        
+        if(isset($job_res->client_id) && $job_res->client_id==$id){
+            return redirect()->route('client.index')->with('error','Client Associate With Job.!!');
+        
+        }
+        else{ 
+
+        // delete address info
+        \DB::table('client_address')->where('client_id', '=', $id)->delete();
+
+        // delete attachments
+        \DB::table('client_doc')->where('client_id', '=', $id)->delete();
+
+        // delete basic info
+        ClientBasicinfo::where('id',$id)->delete();
+
+        // unlink documents
+        $dir_name = "uploads/clients/".$id."/";
+        $client_doc = new ClientDoc();
+        $response = $client_doc->recursiveRemoveDirectory($dir_name);
+
+        return redirect()->route('client.index')->with('success','Client deleted Successfully');
+      }
+    }
+
     public static function checkClientByEmail($email){
 
         $client_query = ClientBasicinfo::query();

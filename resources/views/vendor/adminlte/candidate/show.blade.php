@@ -51,10 +51,6 @@
                             <td>{{ $candidateDetails['phone'] }}</td>
                         </tr>
 
-                        <tr>
-                            <th>Fax</th>
-                            <td>{{ $candidateDetails['fax'] }}</td>
-                        </tr>
                     </table>
                 </div>
 

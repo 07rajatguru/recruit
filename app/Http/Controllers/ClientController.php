@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use Storage;
 use App\User;
+use App\JobOpen;
 use Excel;
 
 class ClientController extends Controller
@@ -494,21 +495,10 @@ class ClientController extends Controller
     }
 
     public function delete($id){
-        // delete address info
-        \DB::table('client_address')->where('client_id', '=', $id)->delete();
 
-        // delete attachments
-        \DB::table('client_doc')->where('client_id', '=', $id)->delete();
+       $clientdelete = ClientBasicinfo::getTypeDelete($id);
 
-        // delete basic info
-        ClientBasicinfo::where('id',$id)->delete();
-
-        // unlink documents
-        $dir_name = "uploads/clients/".$id."/";
-        $client_doc = new ClientDoc();
-        $response = $client_doc->recursiveRemoveDirectory($dir_name);
-
-        return redirect()->route('client.index')->with('success','Client deleted Successfully');
+        return redirect()->route('client.index'); 
     }
 
     public function update(Request $request, $id){

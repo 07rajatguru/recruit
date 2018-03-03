@@ -26,6 +26,12 @@
 
     @endif
 
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="candidate_table">
         <thead>
             <tr>
@@ -49,7 +55,11 @@
                 <td>
                     <a class="fa fa-circle" href="{{ route('candidate.show',$candidate->id) }}" title="Show"></a>
                     <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>
+
+                  <?php if($isSuperAdmin) {?>
                     @include('adminlte::partials.deleteModal', ['data' => $candidate, 'name' => 'candidate','display_name'=>'Candidate'])
+                  <?php   }?>
+          
                 </td>
 
             </tr>

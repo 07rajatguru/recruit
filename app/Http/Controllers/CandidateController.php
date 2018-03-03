@@ -14,11 +14,23 @@ use Illuminate\Support\Facades\Input;
 use App\User;
 use App\JobOpen;
 use App\JobAssociateCandidates;
-
+    
 class CandidateController extends Controller
 {
     //
     public function index(){
+
+        $user =  \Auth::user();
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+
 
         $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
@@ -28,7 +40,8 @@ class CandidateController extends Controller
             ->get();
 
         $count = sizeof($candidateDetails);
-        return view('adminlte::candidate.index', array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)));
+        
+        return view('adminlte::candidate.index', array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),compact('isSuperAdmin'));
     }
 
     public function create(){
@@ -788,13 +801,10 @@ class CandidateController extends Controller
 
     public function destroy($id){
 
-        if(isset($id) && $id != null){
-            $candidateUplodedDocDel = CandidateUploadedResume::where('candidate_id',$id)->delete();
-            $candidateOtherInfoDel = CandidateOtherInfo::where('candidate_id',$id)->delete();
-            $candidateBasicInfoDel = CandidateBasicInfo::where('id',$id)->delete();
+        $candidatedelete = CandidateBasicInfo::getTypeDelete($id);
 
-            return redirect()->route('candidate.index')->with('success','Candidate Deleted Successfully');
-        }
+        return redirect()->route('candidate.index'); 
+          
     }
 
     public function upload(Request $request){

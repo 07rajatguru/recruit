@@ -1,3 +1,6 @@
+
+
+
 <a data-toggle="modal" href="#modal-delete-{!! $data->id !!}" class="fa fa-trash" title="Delete">
     {{--{!! Form::submit('', ['class' => '']) !!}--}}
     {{--<span class="glyphicon glyphicon-trash" style="color: #ffffff;"></span>--}}
