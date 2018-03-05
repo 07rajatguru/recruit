@@ -189,15 +189,16 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
                                                 'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
                                                 'job_openings.priority','job_openings.hiring_manager_id'
-                                                
                                             );
+        $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -206,10 +207,14 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
 
+        //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+
         $job_open_query = $job_open_query->orderBy('job_openings.id','desc');
+
         
         $job_response = $job_open_query->get();
-
+//print_r($job_response);exit;
         $jobs_list = array();
 
         $colors = self::getJobPrioritiesColor();
@@ -232,6 +237,7 @@ class JobOpen extends Model
             $jobs_list[$i]['close_date'] = $value->desired_candidate;
             $jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
+            $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
             }
@@ -257,6 +263,7 @@ class JobOpen extends Model
             $i++;
         }
 
+        //print_r($jobs_list);exit;
         return $jobs_list;
     }
 }
