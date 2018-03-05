@@ -36,6 +36,7 @@
             <th>Managed By</th>
             <th>Company Name</th>
             <th>Position Title</th>
+            <th>Ass. Candidate Count</th>
             <th>Location</th>
             <th>Min CTC</th>
             <th>Max CTC</th>
@@ -64,7 +65,8 @@
                 </td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
-                <td>{{ $value['posting_title'] or ''}}</td>   
+                <td>{{ $value['posting_title'] or ''}}</td>
+                <td><a title="Show Associated Candidates" target="_blank" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
                 <td>{{ $value['location'] or ''}}</td>
                 <td>{{ $value['min_ctc'] or ''}}</td>
                 <td>{{ $value['max_ctc'] or ''}}</td>

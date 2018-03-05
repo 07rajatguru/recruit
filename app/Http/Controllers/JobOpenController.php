@@ -930,7 +930,7 @@ class JobOpenController extends Controller
         $job_id = $_POST['jobid'];
         $candidate_id = $_POST['candidate_id'];
 
-        JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->delete();
+        JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->forceDelete();
 
         $jobDetail = JobOpen::find($job_id);
 
