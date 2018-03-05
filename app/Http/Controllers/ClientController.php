@@ -496,8 +496,27 @@ class ClientController extends Controller
 
     public function delete($id){
 
-       $clientdelete = ClientBasicinfo::getTypeDelete($id);
+       $res = ClientBasicinfo::checkAssociation($id);
 
+        if($res){
+            // delete address info
+            \DB::table('client_address')->where('client_id', '=', $id)->delete();
+
+            // delete attachments
+            \DB::table('client_doc')->where('client_id', '=', $id)->delete();
+
+            // delete basic info
+            ClientBasicinfo::where('id',$id)->delete();
+
+            // unlink documents
+            $dir_name = "uploads/clients/".$id."/";
+            $client_doc = new ClientDoc();
+            $response = $client_doc->recursiveRemoveDirectory($dir_name);
+
+            return redirect()->route('client.index')->with('success','Client deleted Successfully');
+        }else{
+            return redirect()->route('client.index')->with('error','Client is associated with job.!!');
+        }
         return redirect()->route('client.index'); 
     }
 
