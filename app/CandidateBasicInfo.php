@@ -55,23 +55,18 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-     public static function getTypeDelete($id){
+     public static function CheckAssociation($id){
 
         $job_query = JobAssociateCandidates::query();
         $job_query = $job_query->where('candidate_id','=',$id);
         $job_res = $job_query->first();
         
         if(isset($job_res->candidate_id) && $job_res->candidate_id==$id){
-            return redirect()->route('candidate.index')->with('error','Candidate Associate With Job.!!');
-        
+            return false;
         }
         else{ 
             if(isset($id) && $id != null){
-                $candidateUplodedDocDel = CandidateUploadedResume::where('candidate_id',$id)->delete();
-                $candidateOtherInfoDel = CandidateOtherInfo::where('candidate_id',$id)->delete();
-                $candidateBasicInfoDel = CandidateBasicInfo::where('id',$id)->delete();
-
-                return redirect()->route('candidate.index')->with('success','Candidate Deleted Successfully');
+                return true;
             }
         }
       

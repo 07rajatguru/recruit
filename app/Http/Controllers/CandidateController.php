@@ -803,7 +803,18 @@ class CandidateController extends Controller
 
     public function destroy($id){
 
-        $candidatedelete = CandidateBasicInfo::getTypeDelete($id);
+        $res = CandidateBasicInfo::CheckAssociation($id);
+
+        if($res){
+            $candidateUplodedDocDel = CandidateUploadedResume::where('candidate_id',$id)->delete();
+            $candidateOtherInfoDel = CandidateOtherInfo::where('candidate_id',$id)->delete();
+            $candidateBasicInfoDel = CandidateBasicInfo::where('id',$id)->delete();
+
+            return redirect()->route('candidate.index')->with('success','Candidate Deleted Successfully');
+        }
+        else{
+            return redirect()->route('candidate.index')->with('error','Candidate is associated with job.!!');
+        }
 
         return redirect()->route('candidate.index'); 
           
