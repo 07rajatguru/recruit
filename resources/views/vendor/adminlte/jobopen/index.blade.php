@@ -36,7 +36,7 @@
             <th>Managed By</th>
             <th>Company Name</th>
             <th>Position Title</th>
-            <th>Ass. Candidate Count</th>
+            <th>Candidate Count</th>
             <th>Location</th>
             <th>Min CTC</th>
             <th>Max CTC</th>
