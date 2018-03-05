@@ -76,6 +76,7 @@ class CandidateController extends Controller
             $jobopen[$v['id']] = $v['posting_title']." - ".$v['client'];
         }
 
+
         $job_id = 0;
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
@@ -121,6 +122,7 @@ class CandidateController extends Controller
         $candiateSkype_id = $request->input('skype_id');
         $candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
+        $job_id = $request->input('jobopen');
 
        
 

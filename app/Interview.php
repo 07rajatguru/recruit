@@ -50,7 +50,7 @@ class Interview extends Model
         $typeArray = array('' => 'Select Interview Type');
         $typeArray['Internal Interview'] = 'Telephonic Interview';
         $typeArray['General Interview'] = 'Skype Interview';
-        $typeArray['Online Interview'] = 'Personal Interview';
+        $typeArray['Personal Interview'] = 'Personal Interview';
 
         return $typeArray;
     }
