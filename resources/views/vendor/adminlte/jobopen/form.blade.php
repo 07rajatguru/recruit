@@ -203,14 +203,16 @@
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job: <span class = "required_fields">*</span></strong>
+                        <input type="checkbox" id="users_all"/> <strong>Select All</strong>
+
                         @if( $action == 'edit')
                             @foreach($users as $k=>$v)<br/>
-                            {!! Form::checkbox('user_ids[]',$k,in_array($k,$selected_users),null, array('id'=>'user_ids','size'=>'10','class' => 'form-control',)) !!}
+                            {!! Form::checkbox('user_ids[]',$k,in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
                             {!! Form::label ($v) !!}
                             @endforeach
                         @else
                             @foreach($users as $k=>$v)<br/>
-                            {!! Form::checkbox('user_ids[]', $k, null,false, array('id'=>'user_ids','size'=>'10','class' => 'form-control')) !!}
+                            {!! Form::checkbox('user_ids[]', $k, '', array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
                             {!! Form::label ($v) !!}
                             @endforeach
                         @endif
@@ -398,6 +400,14 @@
                     e.preventDefault();
                     return false;
                 }
+            });
+
+            $("#users_all").click(function () {
+                $('.users_ids').prop('checked', this.checked);
+            });
+
+            $(".users_ids").click(function () {
+                $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
             });
 
             $("#jobsForm").validate({
