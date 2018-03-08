@@ -27,10 +27,17 @@
 
     @endif
 
+    <div>
+        {{--{!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm')) !!}
+            <button type="button" class="btn btn-primary" onclick="downloadExcel();">Download Excel</button>
+        {!! Form::close() !!}--}}
+
+    </div>
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>
         <tr>
             <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+            <th>Action</th>
             <th>No</th>
             <th>Company Name</th>
             <th>Candidate Name</th>
@@ -45,7 +52,7 @@
             <th>Client Name</th>
             <th>Client Contact Number</th>
             <th>Client Email Id</th>
-            <th>Action</th>
+
 
         </tr>
         </thead>
@@ -54,6 +61,22 @@
         @foreach($bnm as $key=>$value)
             <tr>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
+                <td>
+                    @if($value['status']==0 )
+
+                        @if($access || ($user_id==$value['uploaded_by']))
+                            <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+
+                            <!-- BM will be generated after date of joining -->
+                            @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
+                                <a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
+                            @endif
+
+                        @endif
+
+                    @endif
+                    {{--<a class="btn btn-info" href="{{ route('bills.show',$value['id']) }}">Show</a>--}}
+                </td>
                 <td>{{ ++$i }}</td>
                 <td>{{ $value['company_name'] }}</td>
                 <td>{{ $value['candidate_name'] }}</td>
@@ -68,20 +91,7 @@
                 <td>{{ $value['client_name'] }}</td>
                 <td>{{ $value['client_contact_number'] }}</td>
                 <td>{{ $value['client_email_id'] }}</td>
-                <td>
-                    @if($value['status']==0)
-                        @permission(('bnm-create'))
-                            <a class="btn btn-primary" href="{{ route('bnm.edit',$value['id']) }}">Edit</a>
-                        @endpermission
-                        <!-- BM will be generated after date of joining -->
-                        @permission(('bm-create'))
-                            @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
-                                <a class="btn btn-primary" href="{{ route('bills.generatebm',$value['id']) }}">Generate BM</a>
-                            @endif
-                        @endpermission
-                    @endif
-                        {{--<a class="btn btn-info" href="{{ route('bills.show',$value['id']) }}">Show</a>--}}
-                </td>
+
             </tr>
         @endforeach
         </tbody>

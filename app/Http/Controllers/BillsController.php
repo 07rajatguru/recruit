@@ -7,6 +7,7 @@ use App\BillsDoc;
 use App\BillsEffort;
 use Illuminate\Http\Request;
 use App\Date;
+use App\User;
 use Illuminate\Support\Facades\Input;
 use Excel;
 
@@ -16,8 +17,25 @@ class BillsController extends Controller
     {
 
         $bnm = Bills::getAllBills(0);
-//print_r($bnm);exit;
-        return view('adminlte::bills.index', compact('bnm'));
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $access = true;
+        }
+        else{
+            $access = false;
+        }
+
+        return view('adminlte::bills.index', compact('bnm','access','user_id'));
     }
 
     public function billsMade(){
@@ -82,11 +100,17 @@ class BillsController extends Controller
         $employee_percentage[] = $input['employee_percentage_3'];
         $employee_percentage[] = $input['employee_percentage_4'];
         $employee_percentage[] = $input['employee_percentage_5'];
+        $total = 0;
         foreach ($employee_name as $k => $v) {
             if ($v != '') {
                 $employee_final[$v] = $employee_percentage[$k];
+                $total += $employee_percentage[$k];
             }
         }
+
+       if($total>100){
+           return redirect('bnm/create')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
+       }
 
         //echo $dateClass->changeDMYtoYMD($date_of_joining);exit;
         $bill = new Bills();
@@ -101,7 +125,11 @@ class BillsController extends Controller
         $bill->candidate_name = $candidate_name;
         $bill->designation_offered = $designation_offered;
         $bill->job_location = $job_location;
-        $bill->percentage_charged = $percentage_charged;
+        if(isset($percentage_charged) && $percentage_charged!='')
+            $bill->percentage_charged = $percentage_charged;
+        else
+            $bill->percentage_charged = 0;
+
         $bill->client_name = $client_name;
         $bill->client_email_id = $client_email_id;
         $bill->address_of_communication = $address_of_communication;
@@ -175,6 +203,8 @@ class BillsController extends Controller
         $generate_bm ='0';
         $bnm = Bills::find($id);
 
+        $dateClass = new Date();
+        $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
         $action = 'edit';
 
         $employee_name = array();
@@ -196,7 +226,7 @@ class BillsController extends Controller
             }
         }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj'));
 
     }
 
@@ -241,10 +271,16 @@ class BillsController extends Controller
         $employee_percentage[] = $input['employee_percentage_3'];
         $employee_percentage[] = $input['employee_percentage_4'];
         $employee_percentage[] = $input['employee_percentage_5'];
+        $total = 0;
         foreach ($employee_name as $k => $v) {
             if ($v != '') {
                 $employee_final[$v] = $employee_percentage[$k];
+                $total += $employee_percentage[$k];
             }
+        }
+
+        if($total>100){
+            return redirect('bnm/'.$id.'/edit')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
         }
 
         $bill = Bills::find($id);
@@ -328,6 +364,10 @@ class BillsController extends Controller
 
         $response = Bills::getBillsByIds($ids);
 
+        ob_end_clean();
+
+        ob_start();
+
         Excel::create('Laravel Excel', function($excel) use ($response){
 
             $excel->sheet('Excel sheet', function($sheet) use ($response) {
@@ -336,9 +376,9 @@ class BillsController extends Controller
 
             });
 
-        })->download('xls');
-
-        return;
+        })->export('xlsx');
+        ob_flush();
+        exit();
 
     }
 

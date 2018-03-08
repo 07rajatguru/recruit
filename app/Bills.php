@@ -120,6 +120,7 @@ class Bills extends Model
             $bills[$i]['address_of_communication'] = $value->address_of_communication;
             $bills[$i]['user_name'] = $value->name;
             $bills[$i]['status'] = $value->status;
+            $bills[$i]['uploaded_by'] = $value->uploaded_by;
 
             // get employee efforts
             $efforts = Bills::getEmployeeEffortsById($value->id);

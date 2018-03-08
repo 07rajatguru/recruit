@@ -25,6 +25,19 @@
 
 </div>
 
+@if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+
+@endif
+
+@if ($message = Session::get('error'))
+    <div class="alert alert-error">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
 @if( $action == 'edit')
     {!! Form::model($bnm,['method' => 'PATCH','files' => true, 'id' => 'bills_form','route' => ['bnm.update', $bnm->id]] ) !!}
 @else
@@ -69,7 +82,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    {!! Form::text('date_of_joining', isset($date_of_joining) ? $date_of_joining : null, array('id'=>'date_of_joining','placeholder' => 'Joining Date','class' => 'form-control' )) !!}
+                                    {!! Form::text('date_of_joining', isset($doj) ? $doj : null, array('id'=>'date_of_joining','placeholder' => 'Joining Date','class' => 'form-control' )) !!}
                                 </div>
                             </div>
 
