@@ -36,6 +36,7 @@ class Notifications extends Model
             $notification_query = $notification_query->where('read','=',$read);
         }
 
+        $notification_query = $notification_query->orderBy('id','desc');
         $notification_res = $notification_query->get();
 //print_r($notification_res);exit;
         $notifications = array();
@@ -58,7 +59,7 @@ class Notifications extends Model
 
         $notification_query = Notifications::query();
         $notification_query = $notification_query->where('user_id','=',$userid);
-
+        $notification_query = $notification_query->orderBy('id','desc');
         $notification_res = $notification_query->get();
 //print_r($notification_res);exit;
         $notifications = array();
