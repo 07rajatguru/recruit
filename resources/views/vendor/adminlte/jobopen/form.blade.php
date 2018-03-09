@@ -53,11 +53,7 @@
 
                         <div class="form-group {{ $errors->has('hiring_manager_id') ? 'has-error' : '' }}">
                             <strong>Select Hiring Manager:</strong>
-                              @if(isset($isSuperAdmin) && $isSuperAdmin==1)
-                                    {!! Form::select('hiring_manager_id', $users,null, array('id'=>'hiring_manager_id','class' => 'form-control')) !!}
-                              @else
-                                {!! Form::select('hiring_manager_id', $users, null, array('id'=>'hiring_manager_id','class' => 'form-control')) !!}
-                              @endif
+                                {!! Form::select('hiring_manager_id', $users,$user_id, array('id'=>'hiring_manager_id','class' => 'form-control')) !!}
                               @if ($errors->has('hiring_manager_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('hiring_manager_id') }}</strong>
@@ -204,18 +200,10 @@
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job: <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="users_all"/> <strong>Select All</strong>
-
-                        @if( $action == 'edit')
-                            @foreach($users as $k=>$v)<br/>
-                            {!! Form::checkbox('user_ids[]',$k,in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
-                            {!! Form::label ($v) !!}
-                            @endforeach
-                        @else
-                            @foreach($users as $k=>$v)<br/>
-                            {!! Form::checkbox('user_ids[]', $k, '', array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
-                            {!! Form::label ($v) !!}
-                            @endforeach
-                        @endif
+                        @foreach($users as $k=>$v)<br/>
+                        {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                        {!! Form::label ($v) !!}
+                        @endforeach
 
                         @if ($errors->has('user_ids'))
                             <span class="help-block">

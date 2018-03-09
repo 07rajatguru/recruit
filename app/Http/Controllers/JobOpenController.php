@@ -226,7 +226,9 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $action = "add";
-        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities'));
+
+        $selected_users = array($user_id);
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
 
     }
 
@@ -604,7 +606,7 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $job_open = JobOpen::find($id);
-
+        $user_id = $job_open->hiring_manager_id;
         //print_r($job_open);exit;
         $target_date = '';//$dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
@@ -625,7 +627,7 @@ class JobOpenController extends Controller
         }
 
         $action = "edit";
-        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users'));
     }
 
     public function update(Request $request, $id)
