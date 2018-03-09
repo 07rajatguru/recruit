@@ -396,7 +396,7 @@ class JobOpenController extends Controller
             }
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
-            /*$module_id = $job_id;
+            $module_id = $job_id;
             $module = 'Job Openings';
             $message = "New job opening is added";
             $link = route('jobopen.show',$job_id);
@@ -411,7 +411,7 @@ class JobOpenController extends Controller
                 }
             }
 
-            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         }
 
