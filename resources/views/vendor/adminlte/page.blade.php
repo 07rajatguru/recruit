@@ -98,8 +98,8 @@
                                         </li>
 
 
-                                        {{--<li class="dropdown messages-menu">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <li class="dropdown messages-menu">
+                                            <a href="javascript:void(0);" onclick="readAllNotifications();" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-envelope-o"></i>
                                                 <span class="label label-success notification-number">4</span>
                                             </a>
@@ -115,7 +115,7 @@
                                                 </li>
                                                 <li class="footer"><a href="/notifications">See All Messages</a></li>
                                             </ul>
-                                        </li>--}}
+                                        </li>
 
                                         <li class="dropdown messages-menu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -242,6 +242,16 @@
                     }
                     $(".notification-number").html(data.length);
                     $(".notification-display").html("You have "+data.length+" new notifications");
+                }
+            });
+        }
+        
+        function readAllNotifications() {
+            jQuery.ajax({
+                url:'/notifications/read',
+                dataType:'json',
+                success: function(data){
+                    $(".notification-number").html(0);
                 }
             });
         }
