@@ -526,6 +526,28 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@moreOptions',
         //'middleware' => ['permission:industry-create']
     ]);
+    Route::post('jobs/status', [
+        'as' => 'jobopen.status',
+        'uses' => 'JobOpenController@status',
+        //'middleware' => ['permission:industry-create']
+    ]);
+
+
+    //job status
+     Route::post('jobs/jobonhlod', [
+        'as' => 'jobopen.jobonhold',
+        'uses' => 'JobOpenController@jobonhold',
+    ]);
+
+    Route::post('jobs/jobclosebyus', [
+        'as' => 'jobopen.jobclosebyus',
+        'uses' => 'JobOpenController@jobclosebyus',
+    ]);
+
+    Route::post('jobs/jobclosebyclient', [
+        'as' => 'jobopen.jobclosebyclient',
+        'uses' => 'JobOpenController@jobclosebyclient',
+    ]);
 
 
     // Interview Module
@@ -669,6 +691,25 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'todos.getType',
         'uses' => 'ToDosController@getType',
     ]);
+
+    Route::get('todos/{id}', [
+        'as' => 'todos.show',
+        'uses' => 'ToDosController@show'
+    ]);
+    Route::get('todos/{id}/edit', [
+        'as' => 'todos.edit',
+        'uses' => 'ToDosController@edit',
+    ]);
+    Route::put('todos/{id}', [
+        'as' => 'todos.update',
+        'uses' => 'ToDosController@update',
+        
+    ]);
+     Route::delete('todos/{id}', [
+        'as' => 'todos.destroy',
+        'uses' => 'ToDosController@destroy',
+    ]);
+
 
     // To do's Routes End
 

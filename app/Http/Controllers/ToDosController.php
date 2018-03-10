@@ -13,6 +13,7 @@ use App\Status;
 use App\ToDos;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class ToDosController extends Controller
@@ -27,6 +28,8 @@ class ToDosController extends Controller
     }
 
     public function create(){
+
+
 
         $candidate = CandidateBasicInfo::getCandidateArray();
         $users = User::getAllUsers();
@@ -105,6 +108,100 @@ class ToDosController extends Controller
         return redirect()->route('todos.index')->with('success','ToDo Created Successfully');
     }
 
+    public function show($id)
+    {
+       $dateClass = new Date();
+
+
+       $todo =ToDos::find($id);
+       return view('adminlte::toDo.show')->with('toDos', $todo);
+    }
+
+    public function edit($id)
+    {
+        $dateClass = new Date();
+
+        $candidate = CandidateBasicInfo::getCandidateArray();
+        $users = User::getAllUsers();
+        $client = ClientBasicinfo::getClientArray();
+        $status = Status::getStatusArray();
+        $priority = ToDos::getPriority();
+
+
+        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Other');
+
+        $toDos = ToDos::find($id);
+
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['candidate'] = $candidate;
+        $viewVariable['client'] = $client;
+        $viewVariable['status'] = $status;
+        $viewVariable['users'] = $users;
+        $viewVariable['type'] = $todoTypeArr;
+        $viewVariable['priority'] = $priority;
+        $viewVariable['action'] = 'edit';
+        $due_date = $dateClass->changeYMDtoDMY($toDos->due_date);
+        $viewVariable['due_date'] = $due_date;
+
+        return view('adminlte::toDo.edit', $viewVariable);
+    }
+
+    public function update(Request $request, $id)
+    {
+          $user_id = \Auth::user()->id;
+
+        $dateClass = new Date();
+
+        $subject = $request->get('subject');
+        $candidate = $request->get('candidate');
+        //$due_date = $request->get('due_date');
+        //$formattedDueDate = $dateClass->changeDMYtoYMD($due_date);
+        $due_date = $dateClass->changeDMYtoYMD($request->get('due_date'));
+        $type = $request->get('type');
+        $typeList = $request->get('typeList');
+        $status = $request->get('status');
+        $priority = $request->get('priority');
+        $description = $request->get('description');
+
+        
+        $toDos = ToDos::find($id);
+        if(isset($subject))
+            $toDos->subject = $subject;
+        if(isset($candidate))
+            $toDos->candidate = $candidate;
+        if(isset($due_date))
+            $toDos->due_date = $due_date;
+        if(isset($type))
+            $toDos->type =$type;
+        if(isset($typeList))
+            $toDos->typeList = $typeList;
+        if(isset($status))
+            $toDos->status = $status;
+        if(isset($priority))
+            $toDos->priority = $priority;
+        if(isset($description))
+            $toDos->description = $description;
+
+
+
+        $validator = \Validator::make(Input::all(),$toDos::$rules);
+
+        if($validator->fails()){
+            return redirect('todos/edit')->withInput(Input::all())->withErrors($validator->errors());
+        }
+
+        $toDosUpdated = $toDos->save();
+
+        return redirect()->route('todos.index')->with('success','ToDo Updated Successfully');
+    }
+
+    public function destroy($id){
+        $todo = ToDos::where('id',$id)->delete();
+
+        return redirect()->route('todos.index')->with('success','ToDo Deleted Successfully');
+    }
+
     public function getType(){
         $selectedType = Input::get('selectedType');
 
@@ -112,12 +209,13 @@ class ToDosController extends Controller
         $typeArr[0] = array('id' => '','value'=>'Select' );
 
         if($selectedType == 1){
+
             $typeDetails = JobOpen::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 1;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->posting_title;
+                    $typeArr[$i]['value'] = $typeDetail->posting_title."-".$typeDetail->company_name;
                     $i++;
                 }
             } else {
@@ -136,14 +234,38 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
         } elseif($selectedType == 3) {
-            $typeDetails = ClientBasicinfo::all();
-            if(isset($typeDetails) && sizeof($typeDetails)>0){
-                $i = 1;
-                foreach ($typeDetails as $typeDetail) {
-                    $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->name;
-                    $i++;
+
+                $user = \Auth::user();
+                $userRole = $user->roles->pluck('id','id')->toArray();
+                $role_id = key($userRole);
+
+                $user_obj = new User();
+                $user_id = $user->id;
+
+                $user_role_id = User::getLoggedinUserRole($user);
+                $admin_role_id = env('ADMIN');
+                $director_role_id = env('DIRECTOR');
+                $manager_role_id = env('MANAGER');
+                $superadmin_role_id = env('SUPERADMIN');
+
+                $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+                if(in_array($user_role_id,$access_roles_id)){
+                    // get all clients
+                    $typeDetails = ClientBasicinfo::getLoggedInUserClients(0);
                 }
+                else{
+                    // get logged in user clients
+                    $typeDetails = ClientBasicinfo::getLoggedInUserClients($user_id);
+                }
+
+                // $typeDetails = ClientBasicinfo::all();
+                if(isset($typeDetails) && sizeof($typeDetails)>0){
+                    $i = 1;
+                    foreach ($typeDetails as $typeDetail) {
+                        $typeArr[$i]['id'] = $typeDetail->id;
+                        $typeArr[$i]['value'] = $typeDetail->name."-".$typeDetail->coordinator_name;
+                        $i++;
+                    }
             } else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }

@@ -30,17 +30,63 @@ class InterviewController extends Controller
 
     public function create(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $user_id = $user->id;
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            // get all clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
+        }
+        else{
+            // get logged in user clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
+
+        $client = array();
+
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name;
+            }
+        }
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+        }
+
+
         $viewVariable = array();
         $viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
-        $viewVariable['client'] = ClientBasicinfo::getClientArray();
-        $viewVariable['postingArray'] = JobOpen::getPostingTitleArray();
+        $viewVariable['client'] = $client;
+        $viewVariable['postingArray'] = $jobopen;
         //$viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
         $viewVariable['action'] = 'add';
 
-        return view('adminlte::interview.create', $viewVariable);
+        return view('adminlte::interview.create', $viewVariable,compact('user_id'));
     }
 
     public function store(Request $request){
@@ -77,23 +123,68 @@ class InterviewController extends Controller
 
     public function edit($id){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $user_id = $user->id;
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            // get all clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
+        }
+        else{
+            // get logged in user clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
+
+        $client = array();
+
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name;
+            }
+        }
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+        }
+
         $dateClass = new Date();
         $interview = Interview::find($id);
 
         $viewVariable = array();
+        $viewVariable['interview'] = $interview;
         $viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
-        $viewVariable['client'] = ClientBasicinfo::getClientArray();
-        $viewVariable['postingArray'] = JobOpen::getPostingTitleArray();
+        $viewVariable['client'] = $client;
+        $viewVariable['postingArray'] = $jobopen;
         $viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
-        $viewVariable['interview'] = $interview;
         $viewVariable['action'] = 'edit';
         $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->from);
         $viewVariable['toDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->to);
 
-        return view('adminlte::interview.edit', $viewVariable);
+        return view('adminlte::interview.edit', $viewVariable,compact('user_id'));
 
     }
 
@@ -105,8 +196,8 @@ class InterviewController extends Controller
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
         $client = $request->get('client_id');
-        $from = $dateClass->changeDMYtoYMD($request->get('from'));
-        $to = $dateClass->changeDMYtoYMD($request->get('to'));
+        /*$from = $dateClass->changeDMYtoYMD($request->get('from'));
+        $to = $dateClass->changeDMYtoYMD($request->get('to'));*/
         $location = $request->get('location');
         $comments = $request->get('comments');
         $posting_title = $request->get('posting_title');
@@ -127,10 +218,10 @@ class InterviewController extends Controller
             $interview->interviewer_id = $interviewer;
         if(isset($type))
             $interview->type = $type;
-        if(isset($from))
+        /*if(isset($from))
             $interview->from = $from;
         if(isset($to))
-            $interview->to = $to;
+            $interview->to = $to;*/
         if(isset($location))
             $interview->location = $location;
         if(isset($status))

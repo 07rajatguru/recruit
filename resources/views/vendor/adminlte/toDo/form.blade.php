@@ -152,7 +152,7 @@
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                {!! Form::submit(isset($interview) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+                {!! Form::submit(isset($toDos) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
             </div>
         </div>
     </div>

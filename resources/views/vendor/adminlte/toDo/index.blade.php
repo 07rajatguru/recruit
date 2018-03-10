@@ -56,7 +56,7 @@
         <tr>
             <th>No</th>
             <th>Subject</th>
-            {{--<th width="280px">Action</th>--}}
+            <th width="280px">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -69,16 +69,13 @@
 
                 <td>{{ $todo->subject }}</td>
 
+                <td>
 
-                {{--<td>
+                     <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>
+                    <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
+                    @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
 
-                    <a class="btn btn-primary" href="{{ route('todos.edit',$todo->id) }}">Edit</a>
-
-
-                    @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'To Do's])
-
-
-                </td>--}}
+                </td>
 
             </tr>
 

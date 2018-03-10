@@ -83,7 +83,7 @@
 
                             <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
                                 <strong>Comments:</strong>
-                                {!! Form::text('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '11' )) !!}
+                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '11' )) !!}
                                 @if ($errors->has('comments'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('comments') }}</strong>
@@ -146,8 +146,8 @@
                             </div>--}}
 
                             <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
-                                <strong>Interviewer:</strong>
-                                {!! Form::select('interviewer_id', $users, null, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5' )) !!}
+                                <strong>Interview Cordination:</strong>
+                                {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5')) !!}
                                 @if ($errors->has('interviewer_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('interviewer_id') }}</strong>
@@ -228,6 +228,8 @@
             $("#to").datetimepicker({
                 format:'DD-MM-YYYY HH:mm:ss'
             });
+
+             $("#candidate_id").select2();
 
         });
     </script>
