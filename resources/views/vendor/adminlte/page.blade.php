@@ -104,7 +104,7 @@
                                                 <span class="label label-success notification-number">4</span>
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li class="header notification-display">You have 4 messages</li>
+                                                <li class="header notification-display">You have 0 messages</li>
                                                 <li>
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv " style="position: relative; overflow: hidden; width: auto; height: 200px;">
