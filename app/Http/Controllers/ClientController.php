@@ -14,6 +14,7 @@ use Storage;
 use App\User;
 use App\JobOpen;
 use Excel;
+use App\Events\NotificationEvent;
 
 class ClientController extends Controller
 {
@@ -364,6 +365,17 @@ class ClientController extends Controller
                 }
             }
 
+            // TODO:: Notifications : On adding new client notify Super Admin via notification
+            $module_id = $client_id;
+            $module = 'Client';
+            $message = "New Client is added";
+            $link = route('client.show',$client_id);
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $user_arr = array();
+            $user_arr[] = $super_admin_userid;
+
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
         else{

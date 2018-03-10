@@ -762,6 +762,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'notification.list',
         'uses' => 'NotificationController@getAjaxNotification',
     ]);
+    Route::get('notifications/read', [
+        'as' => 'notification.read',
+        'uses' => 'NotificationController@readNotification',
+    ]);
 
     // Notification Related Routes End
 

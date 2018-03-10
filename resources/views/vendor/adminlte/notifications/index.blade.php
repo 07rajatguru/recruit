@@ -14,6 +14,7 @@
             <th>No</th>
             <th>Module</th>
             <th>Message</th>
+            <th>Action</th>
         </tr>
         </thead>
         <?php $i=0; ?>
@@ -23,6 +24,7 @@
                 <td>{{ ++$i }}</td>
                 <td>{{ $value['module'] or '' }}</td>
                 <td>{{ $value['msg'] or '' }}</td>
+                <td><a target="_blank" title="Show"  class="fa fa-circle" href="{{ $value['link'] or '' }}"></a></td>
             </tr>
         @endforeach
         </tbody>

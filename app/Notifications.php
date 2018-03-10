@@ -32,12 +32,36 @@ class Notifications extends Model
         $notification_query = Notifications::query();
         $notification_query = $notification_query->where('user_id','=',$userid);
 
-        if(isset($read) && $read!=''){
-            $notification_query = $notification_query->where('read','=',0);
+        if(isset($read) && ($read==0 || $read==1)){
+            $notification_query = $notification_query->where('read','=',$read);
         }
 
+        $notification_query = $notification_query->orderBy('id','desc');
         $notification_res = $notification_query->get();
+//print_r($notification_res);exit;
+        $notifications = array();
 
+        $i=0;
+        foreach ($notification_res as $key=>$value){
+            $notifications[$i]['module'] = $value['module'];
+            $notifications[$i]['msg'] = $value['message'];
+            $notifications[$i]['read'] = $value['read'];
+            $notifications[$i]['module_id'] = $value['module_id'];
+            $notifications[$i]['link'] = $value['link'];
+            $i++;
+        }
+
+        return $notifications;
+
+    }
+
+    public static function listAllNotificationsByUserId($userid){
+
+        $notification_query = Notifications::query();
+        $notification_query = $notification_query->where('user_id','=',$userid);
+        $notification_query = $notification_query->orderBy('id','desc');
+        $notification_res = $notification_query->get();
+//print_r($notification_res);exit;
         $notifications = array();
 
         $i=0;

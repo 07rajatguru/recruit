@@ -237,7 +237,14 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $action = "add";
+<<<<<<< HEAD
         return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','user_id'));
+=======
+
+        $super_admin_user_id = getenv('SUPERADMINUSERID');
+        $selected_users = array($user_id,$super_admin_user_id);
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
+>>>>>>> ba512621c9fc273a11eab81d0af58d2bfd53f37d
 
     }
 
@@ -404,7 +411,7 @@ class JobOpenController extends Controller
             }
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
-            /*$module_id = $job_id;
+            $module_id = $job_id;
             $module = 'Job Openings';
             $message = "New job opening is added";
             $link = route('jobopen.show',$job_id);
@@ -419,7 +426,7 @@ class JobOpenController extends Controller
                 }
             }
 
-            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         }
 
@@ -626,7 +633,7 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $job_open = JobOpen::find($id);
-
+        $user_id = $job_open->hiring_manager_id;
         //print_r($job_open);exit;
         $target_date = '';//$dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
@@ -647,7 +654,11 @@ class JobOpenController extends Controller
         }
 
         $action = "edit";
+<<<<<<< HEAD
         return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','user_id'));
+=======
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users'));
+>>>>>>> ba512621c9fc273a11eab81d0af58d2bfd53f37d
     }
 
     public function update(Request $request, $id)

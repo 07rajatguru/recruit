@@ -178,7 +178,7 @@ return [
                     ]*/
                 ],
             ],
-           /* [
+            [
                 'text'        => 'Bills',
                 'icon'        => 'users',
                 'submenu' => [
@@ -199,7 +199,7 @@ return [
                     ],
 
                 ],
-            ],*/
+            ],
             [
                 'text'        => 'Admin',
                 'icon'        => 'user-secret',
