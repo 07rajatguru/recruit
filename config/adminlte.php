@@ -200,6 +200,39 @@ return [
 
                 ],
             ],
+             [
+            'text'        => "To'Dos",
+            'icon'        => ' fa-th-list',
+            'submenu' => [
+                [
+                    'text' => "Add To'Dos",
+                    'url'  => 'todos/create',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => "List To'Dos",
+                    'url'  => 'todos',
+                    'icon' => 'list',
+                ]
+            ]
+         ],
+          [
+            'text'        => 'Interview',
+            'icon'        => ' fa-phone-square',
+            'submenu' => [
+                [
+                    'text' => 'Add Interview',
+                    'url'  => 'interview/create',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => 'List Interview',
+                    'url'  => 'interview',
+                    'icon' => 'list',
+                ]
+            ]
+         ],
+
             [
                 'text'        => 'Admin',
                 'icon'        => 'user-secret',
@@ -298,22 +331,7 @@ return [
                 ]
             ]
          ],
-        [
-            'text'        => "To'Dos",
-            'icon'        => ' fa-th-list',
-            'submenu' => [
-                [
-                    'text' => "Add To'Dos",
-                    'url'  => 'todos/create',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => "List To'Dos",
-                    'url'  => 'todos',
-                    'icon' => 'list',
-                ]
-            ]
-         ],
+       ,
         [
             'text'        => 'Admin',
             'icon'        => 'user-secret',
