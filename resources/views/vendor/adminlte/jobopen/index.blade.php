@@ -8,6 +8,14 @@
 @stop
 
 @section('content')
+
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
@@ -62,6 +70,11 @@
                     @if(isset($value['access']) && $value['access']==1)
                         <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
                     @endif
+
+                    @if(isset($value['access']) && $value['access']==1)
+                    @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'More Information'])
+                    @endif
+
                 </td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>

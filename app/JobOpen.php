@@ -73,6 +73,7 @@ class JobOpen extends Model
         $job_priorities['5'] = 'Identified candidates';
         $job_priorities['6'] = 'Revived Positions';
         $job_priorities['7'] = 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet';
+        $job_priorities['8'] = 'No Deliveries Needed';
 
         return $job_priorities;
     }
@@ -88,6 +89,7 @@ class JobOpen extends Model
         $job_priorities['5'] = '#92D050';
         $job_priorities['6'] = 'yellow';
         $job_priorities['7'] = '##808080';
+        $job_priorities['8'] = '##808080';
 
         return $job_priorities;
     }
@@ -102,6 +104,15 @@ class JobOpen extends Model
         $job_priorities['5'] = 'Quickr';
         $job_priorities['6'] = 'IIMJobs';
         $job_priorities['7'] = 'Others';
+
+        return $job_priorities;
+    }
+
+    public static function getJobStatus(){
+        $job_priorities = array();
+        $job_priorities['1'] ='On Hold';
+        $job_priorities['2'] ='Closed By Us';
+        $job_priorities['3'] = 'Closed By Client';
 
         return $job_priorities;
     }
