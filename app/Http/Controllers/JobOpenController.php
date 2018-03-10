@@ -58,6 +58,7 @@ class JobOpenController extends Controller
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_status'] = JobOpen::getJobStatus();
 
         return view('adminlte::jobopen.index', $viewVariable);
 
@@ -212,6 +213,16 @@ class JobOpenController extends Controller
         }
 //print_r($client);exit;
         // get all users
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
+        // For account manager
+         
         $users = User::getAllUsers('recruiter');
         //print_r($users);exit;
       //  $team_mates = $user_id;
@@ -226,7 +237,7 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $action = "add";
-        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities'));
+        return view('adminlte::jobopen.create', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','user_id'));
 
     }
 
@@ -536,9 +547,10 @@ class JobOpenController extends Controller
 
         $posting_status = JobOpen::getJobPostingStatus();
         $job_search = JobOpen::getJobSearchOptions();
+        $job_status = JobOpen::getJobStatus();
 
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
-                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search));
+                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status));
     }
 
     public function edit($id)
@@ -583,6 +595,16 @@ class JobOpenController extends Controller
         }
 
         // get all users
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
+        // For account manager
+         
         $users = User::getAllUsers('recruiter');
         
         /*$users_res = User::orderBy('name', 'ASC')->get();
@@ -625,7 +647,7 @@ class JobOpenController extends Controller
         }
 
         $action = "edit";
-        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users'));
+        return view('adminlte::jobopen.edit', compact('action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','user_id'));
     }
 
     public function update(Request $request, $id)
@@ -1145,6 +1167,27 @@ class JobOpenController extends Controller
             return redirect()->route('jobopen.show', [$job_id])->with('success', 'Error while updating data');
         }
 
+    }
+
+    public function status(Request $request){
+        $job_status = $request->get('job_status');
+        $job_id = $request->get('job_id');
+
+        $job_open = JobOpen::find($job_id);
+
+        $job = '';
+        if (isset($job_status) && sizeof($job_status)>0){
+
+                 $job = $job_status;
+            
+        }
+        $job_open->job_status = $job;
+         
+        $job_open->save();
+
+        
+            return redirect()->route('jobopen.index')->with('success', 'Job Opening Status added successfully');
+       
     }
 
     public function importExport(){
