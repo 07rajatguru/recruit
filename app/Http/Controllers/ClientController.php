@@ -74,6 +74,7 @@ class ClientController extends Controller
             $client_array[$i]['id'] = $client->id;
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
+            $client_array[$i]['mobile']= $client->mobile;
 
             if($client->am_id==$user->id){
                 $client_visibility_val = true;
@@ -152,6 +153,7 @@ class ClientController extends Controller
 
         foreach ($client_basicinfo as $key=>$value){
             $client['name'] = $value->name;
+            $client['display_name']=$value->display_name;
             $client['source'] = $value->source;
             //$client['fax'] = $value->fax;
             $client['mobile'] = $value->mobile;
@@ -205,6 +207,7 @@ class ClientController extends Controller
 
         $client_basic_info = new ClientBasicinfo();
         $client_basic_info->name = $input['name'];
+        $client_basic_info->display_name = $input['display_name'];
         $client_basic_info->mail = $input['mail'];
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
@@ -542,6 +545,7 @@ class ClientController extends Controller
         $client_basicinfo = ClientBasicinfo::find($id);
 
         $client_basicinfo->name = $input->name;
+        $client_basicinfo->display_name = $input->display_name;
         $client_basicinfo->mobile = $input->mobile;
         $client_basicinfo->mail = $input->mail;
         $client_basicinfo->description = $input->description;

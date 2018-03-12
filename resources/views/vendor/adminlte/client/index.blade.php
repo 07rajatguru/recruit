@@ -41,6 +41,7 @@
                 <th>Client Name</th>
                 <th>Client Owner</th>
                 <th>Client Email</th>
+                <th>Client Phone No.</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -52,6 +53,7 @@
                 <td>{{ $client['name'] }}</td>
                 <td>{{ $client['am_name'] }}</td>
                 <td>{{ $client['mail']}}</td>
+                <td>{{ $client['mobile'] }}</td>
 
                 <td>
 

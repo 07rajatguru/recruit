@@ -46,6 +46,17 @@
                             @endif
                         </div>
 
+                        <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                            <strong>Display Name: </strong>
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control' )) !!}
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+
                         <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number: <span class = "required_fields">*</span></strong>
                             {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Contact Number','class' => 'form-control' )) !!}
