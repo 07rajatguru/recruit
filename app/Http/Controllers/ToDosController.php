@@ -203,26 +203,39 @@ class ToDosController extends Controller
     }
 
     public function getType(){
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
         $selectedType = Input::get('selectedType');
 
-//        $typeArr = array();
         $typeArr[0] = array('id' => '','value'=>'Select' );
 
         // For Job Opening Details
         if($selectedType == 1){
-
-            
-            $typeDetails = JobOpen::all();
-            if(isset($typeDetails) && sizeof($typeDetails)>0){
-                $i = 1;
-                foreach ($typeDetails as $typeDetail) {
-                    $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->posting_title."-".$typeDetail->company_name;
-                    $i++;
-                }
-            } else {
-                $typeArr[0] = array('id' => '','value'=>'Select Type' );
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            if(in_array($user_role_id,$access_roles_id)){
+                $job_response = JobOpen::getAllJobs(1,$user_id);
             }
+            else{
+                $job_response = JobOpen::getAllJobs(0,$user_id);
+            }
+
+            $jobopen = array();
+            $jobopen[0] = 'Select';
+            $i = 1;
+            foreach ($job_response as $k=>$v){
+                $typeArr[$i]['id'] = $v['id'];
+                $typeArr[$i]['value'] = $v['posting_title']." - ".$v['company_name'];
+                $i++;
+            }
+
         } 
         // For Interview Details
         elseif($selectedType == 2) {
