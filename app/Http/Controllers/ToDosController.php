@@ -208,8 +208,10 @@ class ToDosController extends Controller
 //        $typeArr = array();
         $typeArr[0] = array('id' => '','value'=>'Select' );
 
+        // For Job Opening Details
         if($selectedType == 1){
 
+            
             $typeDetails = JobOpen::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 1;
@@ -221,7 +223,9 @@ class ToDosController extends Controller
             } else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
-        } elseif($selectedType == 2) {
+        } 
+        // For Interview Details
+        elseif($selectedType == 2) {
             $typeDetails = Interview::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 1;
@@ -233,7 +237,9 @@ class ToDosController extends Controller
             } else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
-        } elseif($selectedType == 3) {
+        } 
+        // For Client Details
+        elseif($selectedType == 3) {
 
                 $user = \Auth::user();
                 $userRole = $user->roles->pluck('id','id')->toArray();
