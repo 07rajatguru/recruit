@@ -38,26 +38,27 @@
                             <tr>
                                 <th scope="row">Candidate:</th>
                                 <td>{{ isset($candidate)? $candidate : null }}</td>
-                                <th>Client:</th>
-                                <td>{{ isset($client)? $client : null }}</td>
+                                <th>Type :</th>
+                                <td>{{ isset($type)? $type : null }}</td>
+                                {{--<th>Client:</th>
+                                <td>{{ isset($client)? $client : null }}</td>--}}
                             </tr>
                             <tr>
                                 <th scope="row">Interview Date:</th>
                                 <td>{{ isset($interviewer)? $interviewer : null }}</td>
-                                <th>Type :</th>
-                                <td>{{ isset($type)? $type : null }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Location :</th>
-                                <td>{{ isset($location)? $location : null }}</td>
                                 <th scope="row">Status :</th>
                                 <td>{{ isset($status)? $status : null }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Comments :</th>
-                                <td>{{ isset($comments)? $comments : null }}</td>
+                                <th scope="row">Location :</th>
+                                <td>{{ isset($location)? $location : null }}</td>
                                 <th scope="row">Interview Owner :</th>
                                 <td>{{ isset($interviewOwner)? $interviewOwner : null }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Comments :</th>
+                                <td>{{ isset($comments)? $comments : null }}</td>
+                                
                             </tr>
                         </table>
                     </div>

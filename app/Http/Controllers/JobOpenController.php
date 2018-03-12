@@ -40,6 +40,14 @@ class JobOpenController extends Controller
         // Rest other users can only see the jobs assigned to them
 
         $user = \Auth::user();
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
 
@@ -59,6 +67,7 @@ class JobOpenController extends Controller
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['job_status'] = JobOpen::getJobStatus();
+        $viewVariable['isSuperAdmin'] = $isSuperAdmin;
 
         return view('adminlte::jobopen.index', $viewVariable);
 
@@ -1193,6 +1202,42 @@ class JobOpenController extends Controller
         
             return redirect()->route('jobopen.index')->with('success', 'Job Opening Status added successfully');
        
+    }
+
+    public function close(Request $request){
+
+        $dateClass = new Date();
+
+        $client_id = $request->client_id;
+        $job_open_id = $request->job_id;
+        $posting_title_id = $request->posting_title;
+        $job_opening_status_id = $request->job_opening_status;
+        $city_id = $request->city;
+
+        // logged in user with role 'Administrator,Director,Manager can see all the open jobs
+        // Rest other users can only see the jobs assigned to them
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getClosedJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getClosedJobs(0,$user_id);
+        }
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_status'] = JobOpen::getJobStatus();
+        return view('adminlte::jobopen.close',$viewVariable);   
     }
 
     public function importExport(){

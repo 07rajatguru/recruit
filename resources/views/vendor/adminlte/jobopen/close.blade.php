@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Openings List</h2>
+                <h2>Job Closing List</h2>
             </div>
 
             <div class="pull-right">
@@ -41,6 +41,7 @@
         <tr>
             <th>No</th>
             <th>Action</th>
+            <th>Status</th>
             <th>Managed By</th>
             <th>Company Name</th>
             <th>Position Title</th>
@@ -75,12 +76,8 @@
                     @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'More Information'])
                     @endif
 
-                    <?php if($isSuperAdmin) {?>
-                    @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
-                    <?php   }?>
-                  
-
                 </td>
+                <td>{{ $job_status[$value['job_status']] }}</td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
                 <td>{{ $value['posting_title'] or ''}}</td>

@@ -534,6 +534,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@status',
         //'middleware' => ['permission:industry-create']
     ]);
+    Route::get('job/close', [
+        'as' => 'jobopen.close',
+        'uses' => 'JobOpenController@close',
+        // 'middleware' => ['permission:industry-create']
+    ]);
 
 
     //job status

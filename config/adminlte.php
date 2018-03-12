@@ -108,17 +108,28 @@ return [
     */
 
     'menu' => [
-            [
-                'text'        => 'Attendance',
-                'icon'        => 'folder-open',
+             [
+                'text'        => 'Clients',
+                'icon'        => 'users',
                 'submenu' => [
                     [
-                        'text' => 'Attendance',
-                        'url'  => '/home',
+                        'text' => 'Add Client',
+                        'url'  => 'client/create',
+                        'icon' => 'plus',
+                    ],
+                    [
+                        'text' => 'List Clients',
+                        'url'  => 'client',
                         'icon' => 'list',
-                    ]
+                    ]/*,
+                    [
+                        'text' => 'Import Clients',
+                        'url'  => 'client/importExport',
+                        'icon' => 'list',
+                    ]*/
                 ],
             ],
+            
             [
                 'text'        => 'Job Openings',
                 'icon'        => 'folder-open',
@@ -131,6 +142,11 @@ return [
                     [
                         'text' => 'List Job Openings',
                         'url'  => 'jobs',
+                        'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'List of Closed Job',
+                        'url'  => 'job/close',
                         'icon' => 'list',
                     ]
                 ],
@@ -157,27 +173,22 @@ return [
                     ]*/
                 ],
             ],
-            [
-                'text'        => 'Clients',
-                'icon'        => 'users',
-                'submenu' => [
-                    [
-                        'text' => 'Add Client',
-                        'url'  => 'client/create',
-                        'icon' => 'plus',
-                    ],
-                    [
-                        'text' => 'List Clients',
-                        'url'  => 'client',
-                        'icon' => 'list',
-                    ]/*,
-                    [
-                        'text' => 'Import Clients',
-                        'url'  => 'client/importExport',
-                        'icon' => 'list',
-                    ]*/
+           [
+            'text'        => 'Interview',
+            'icon'        => ' fa-phone-square',
+            'submenu' => [
+                [
+                    'text' => 'Add Interview',
+                    'url'  => 'interview/create',
+                    'icon' => 'plus',
                 ],
-            ],
+                [
+                    'text' => 'List Interview',
+                    'url'  => 'interview',
+                    'icon' => 'list',
+                ]
+            ]
+         ],
             [
                 'text'        => 'Bills',
                 'icon'        => 'users',
@@ -216,22 +227,18 @@ return [
                 ]
             ]
          ],
-          [
-            'text'        => 'Interview',
-            'icon'        => ' fa-phone-square',
-            'submenu' => [
-                [
-                    'text' => 'Add Interview',
-                    'url'  => 'interview/create',
-                    'icon' => 'plus',
+          
+         [
+                'text'        => 'Attendance',
+                'icon'        => 'folder-open',
+                'submenu' => [
+                    [
+                        'text' => 'Attendance',
+                        'url'  => '/home',
+                        'icon' => 'list',
+                    ]
                 ],
-                [
-                    'text' => 'List Interview',
-                    'url'  => 'interview',
-                    'icon' => 'list',
-                ]
-            ]
-         ],
+            ],
 
             [
                 'text'        => 'Admin',

@@ -28,7 +28,7 @@ class Interview extends Model
         $interview = new Interview();
         $interview->interview_name = $data['interview_name'];
         $interview->candidate_id = $data['candidate_id'];
-        $interview->client_id = $data['client'];
+       // $interview->client_id = $data['client'];
         $interview->posting_title = $data['posting_title'];
 
         if(isset($data['interviewer_id']) && $data['interviewer_id']!='')

@@ -104,7 +104,7 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
+                           {{-- <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
                                 <strong>Client:</strong>
                                 {!! Form::select('client_id', $client,null, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 @if ($errors->has('client_id'))
@@ -112,7 +112,7 @@
                                 <strong>{{ $errors->first('client_id') }}</strong>
                                 </span>
                                 @endif
-                            </div>
+                            </div>--}}
 
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong>Type:</strong>

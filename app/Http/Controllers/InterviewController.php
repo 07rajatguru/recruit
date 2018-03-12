@@ -19,10 +19,10 @@ class InterviewController extends Controller
     public function index(){
 
         $interViews = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
-            ->join('client_basicinfo','client_basicinfo.id','=','interview.client_id')
+            
             ->Leftjoin('users','users.id','=','interview.interviewer_id')
             ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.fname, " ", candidate_basicinfo.lname) AS candidate_name'),
-                'client_basicinfo.name as client_name','users.name as interviewer_name')
+                        'users.name as interviewer_name')
             ->get();
 
         return view('adminlte::interview.index', array('interViews' => $interViews));
@@ -43,7 +43,7 @@ class InterviewController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+       /* $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
@@ -59,7 +59,7 @@ class InterviewController extends Controller
             foreach ($client_res as $r) {
                 $client[$r->id] = $r->name." - ".$r->coordinator_name;
             }
-        }
+        }*/
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
@@ -72,13 +72,13 @@ class InterviewController extends Controller
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
         }
 
 
         $viewVariable = array();
         $viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
-        $viewVariable['client'] = $client;
+     //   $viewVariable['client'] = $client;
         $viewVariable['postingArray'] = $jobopen;
         //$viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
@@ -98,7 +98,7 @@ class InterviewController extends Controller
         $data['interview_name'] = $request->get('interview_name');
         $data['candidate_id'] = $request->get('candidate_id');
         $data['interviewer_id'] = $request->get('interviewer_id');
-        $data['client'] = $request->get('client_id');
+       // $data['client'] = $request->get('client_id');
         $data['interview_date'] = $dateClass->changeDMYHMStoYMDHMS($request->get('interview_date'));
         $data['location'] = $request->get('location');
         $data['comments'] = $request->get('comments');
@@ -136,7 +136,7 @@ class InterviewController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+      /*  $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
@@ -152,7 +152,7 @@ class InterviewController extends Controller
             foreach ($client_res as $r) {
                 $client[$r->id] = $r->name." - ".$r->coordinator_name;
             }
-        }
+        }*/
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
@@ -165,7 +165,7 @@ class InterviewController extends Controller
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+           $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
         }
 
         $dateClass = new Date();
@@ -174,7 +174,7 @@ class InterviewController extends Controller
         $viewVariable = array();
         $viewVariable['interview'] = $interview;
         $viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
-        $viewVariable['client'] = $client;
+      //  $viewVariable['client'] = $client;
         $viewVariable['postingArray'] = $jobopen;
         $viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
@@ -195,7 +195,7 @@ class InterviewController extends Controller
         $interview_name = $request->get('interview_name');
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
-        $client = $request->get('client_id');
+      //  $client = $request->get('client_id');
         /*$from = $dateClass->changeDMYtoYMD($request->get('from'));
         $to = $dateClass->changeDMYtoYMD($request->get('to'));*/
         $location = $request->get('location');
@@ -210,8 +210,8 @@ class InterviewController extends Controller
             $interview->interview_name = $interview_name;
         if(isset($candidate_id))
             $interview->candidate_id = $candidate_id;
-        if(isset($client))
-            $interview->client_id = $client;
+       // if(isset($client))
+        //    $interview->client_id = $client;
         if(isset($posting_title))
             $interview->posting_title = $posting_title;
         if(isset($interviewer))
@@ -247,11 +247,11 @@ class InterviewController extends Controller
         $dateClass = new Date();
 
         $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
-            ->leftjoin('client_basicinfo','client_basicinfo.id','=','interview.client_id')
+           
             ->leftjoin('job_openings','job_openings.id','=','interview.posting_title')
             ->leftjoin('users','users.id','=','interview.interviewer_id')
             ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.fname, " ", candidate_basicinfo.lname) AS candidate_name'),
-                'client_basicinfo.name as client_name', 'job_openings.posting_title as posting_title','users.name as interviewer_name')
+                 'job_openings.posting_title as posting_title','users.name as interviewer_name')
             ->where('interview.id','=',$id)
             ->first();
 
@@ -268,7 +268,7 @@ class InterviewController extends Controller
         $interview['id'] = $id;
         $interview['interview_name'] = $interviewDetails->interview_name;
         $interview['candidate'] = $interviewDetails->candidate_name;
-        $interview['client'] = $interviewDetails->client_name;
+      //  $interview['client'] = $interviewDetails->client_name;
         $interview['posting_title'] = $interviewDetails->posting_title;
         $interview['interviewer'] = $interviewDetails->interviewer_name;
         $interview['type'] = $interviewDetails->type;

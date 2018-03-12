@@ -629,6 +629,7 @@
                 });
             }
         }
+             $("#jobopen").select2();
 
     </script>
 
