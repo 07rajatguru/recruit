@@ -110,6 +110,7 @@ class JobOpen extends Model
 
     public static function getJobStatus(){
         $job_priorities = array();
+        $job_priorities['0'] ='Select';
         $job_priorities['1'] ='On Hold';
         $job_priorities['2'] ='Closed By Us';
         $job_priorities['3'] = 'Closed By Client';

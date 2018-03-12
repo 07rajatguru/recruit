@@ -56,7 +56,10 @@ Route::post('candidate/createform',[
 
 Route::group(['middleware' => ['auth']], function () {
 
-    //Route::get('/home', 'HomeController@index');
+    Route::any('/dashboard', array (
+        'middleware' => 'auth',
+        'uses' => 'HomeController@dashboard'
+    ));
 
     Route::any('/home', array (
         'middleware' => 'auth',

@@ -21,6 +21,20 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function dashboard(){
+
+        $loggedin_userid = \Auth::user()->id;
+        $user_role_id = \Auth::user()->roles->first()->id;
+
+        // get todo list
+        $from = date('Y-m-d 00:00:00');
+        $to = date('Y-m-d 23:59:59');
+        $today = date('Y-m-d');
+        $toDos = ToDos::where('due_date','>=',$today)->get();
+
+        return view('dashboard');
+    }
+
     /**
      * Show the application dashboard.
      *
