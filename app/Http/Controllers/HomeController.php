@@ -8,6 +8,9 @@ use App\UsersLog;
 use Illuminate\Http\Request;
 use App\User;
 use App\Date;
+use App\ClientBasicinfo;
+use App\JobOpen;
+use DB;
 
 class HomeController extends Controller
 {
@@ -32,7 +35,60 @@ class HomeController extends Controller
         $today = date('Y-m-d');
         $toDos = ToDos::where('due_date','>=',$today)->get();
 
-        return view('dashboard');
+
+        $job = DB::table('job_openings')->where('job_status')->count();
+
+        $user =  \Auth::user();
+
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        if($isSuperAdmin || $isAdmin){
+        $month = date('m');
+        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
+        }
+
+        else{
+         $month = date('m');
+        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
+                                               ->where('account_manager_id',$user->id)
+                                               ->count();   
+        }
+
+        $month = date('m');
+        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+        
+
+        $interviews = Interview::leftjoin('client_basicinfo','client_basicinfo.id','=','interview.client_id')
+            ->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
+            ->leftjoin('job_openings','job_openings.id','=','interview.posting_title')
+            ->select('interview.id as id', 'interview.interview_name as interview_name','interview.interview_date',
+                'interview.client_id as clint_id', 'client_basicinfo.name as client_name',
+                'interview.candidate_id as candidate_id', 'candidate_basicinfo.fname as candidate_fname',
+                'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
+                'job_openings.posting_title as posting_title')
+            ->where('interview_date','>=',$from)
+            ->where('interview_date','<=',$to)
+            ->get();
+
+        //print_r($interviews);exit;
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['interviews'] = $interviews;
+        $viewVariable['interviewCount'] = sizeof($interviews);
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['candidatejoinCount'] = $candidatejoin;
+
+        return view('dashboard',$viewVariable);
     }
 
     /**
