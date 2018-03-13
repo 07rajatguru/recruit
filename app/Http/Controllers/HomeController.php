@@ -36,12 +36,8 @@ class HomeController extends Controller
         $toDos = ToDos::where('due_date','>=',$today)->get();
 
 
-        $job = DB::table('job_openings')->where('job_status')->count();
 
         $user =  \Auth::user();
-
-        // get logged in user company id
-        $company_id = $user->company_id;
 
         // get role of logged in user
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -51,6 +47,18 @@ class HomeController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
+        //get Job List
+        if($isSuperAdmin || $isAdmin){
+        $job = DB::table('job_openings')->where('job_status')->count();
+        }
+
+        else{
+             $job = DB::table('job_openings')->where('job_status')
+                                             ->where('hiring_manager_id',$user->id)
+                                             ->count();
+        }
+
+        //get Client List
         if($isSuperAdmin || $isAdmin){
         $month = date('m');
         $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
@@ -63,10 +71,10 @@ class HomeController extends Controller
                                                ->count();   
         }
 
-        $month = date('m');
-        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+       /* $month = date('m');
+        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();*/
         
-
+        //Get Interview List
         $interviews = Interview::leftjoin('client_basicinfo','client_basicinfo.id','=','interview.client_id')
             ->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
             ->leftjoin('job_openings','job_openings.id','=','interview.posting_title')
@@ -86,7 +94,7 @@ class HomeController extends Controller
         $viewVariable['interviewCount'] = sizeof($interviews);
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
-        $viewVariable['candidatejoinCount'] = $candidatejoin;
+       /* $viewVariable['candidatejoinCount'] = $candidatejoin;*/
 
         return view('dashboard',$viewVariable);
     }
