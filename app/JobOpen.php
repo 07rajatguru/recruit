@@ -303,6 +303,8 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
+        //whereIn('job_status',[1,2,3]);
+        $job_open_query = $job_open_query->where('job_status',NULL);
 
         //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
         $job_open_query = $job_open_query->groupBy('job_openings.id');
