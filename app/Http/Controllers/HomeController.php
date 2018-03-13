@@ -75,11 +75,11 @@ class HomeController extends Controller
         $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();*/
         
         //Get Interview List
-        $interviews = Interview::leftjoin('client_basicinfo','client_basicinfo.id','=','interview.client_id')
-            ->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
+        $interviews = Interview::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
             ->leftjoin('job_openings','job_openings.id','=','interview.posting_title')
+            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
             ->select('interview.id as id', 'interview.interview_name as interview_name','interview.interview_date',
-                'interview.client_id as clint_id', 'client_basicinfo.name as client_name',
+                 'client_basicinfo.name as client_name',
                 'interview.candidate_id as candidate_id', 'candidate_basicinfo.fname as candidate_fname',
                 'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
                 'job_openings.posting_title as posting_title')

@@ -230,6 +230,8 @@
             });
 
              $("#candidate_id").select2();
+             $("#posting_title").select2();
+             $("#interviewer_id").select2();
 
         });
     </script>
