@@ -181,7 +181,7 @@ class InterviewController extends Controller
         $viewVariable['status'] = Interview::getInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
         $viewVariable['action'] = 'edit';
-        $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->from);
+        $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->interview_date);
         $viewVariable['toDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->to);
 
         return view('adminlte::interview.edit', $viewVariable,compact('user_id'));
@@ -196,8 +196,8 @@ class InterviewController extends Controller
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
       //  $client = $request->get('client_id');
-        /*$from = $dateClass->changeDMYtoYMD($request->get('from'));
-        $to = $dateClass->changeDMYtoYMD($request->get('to'));*/
+        $from = $dateClass->changeYMDHMStoDMYHMS($request->get('interview_date'));
+        $to = $dateClass->changeYMDHMStoDMYHMS($request->get('to'));
         $location = $request->get('location');
         $comments = $request->get('comments');
         $posting_title = $request->get('posting_title');
@@ -218,10 +218,10 @@ class InterviewController extends Controller
             $interview->interviewer_id = $interviewer;
         if(isset($type))
             $interview->type = $type;
-        /*if(isset($from))
-            $interview->from = $from;
+        if(isset($interview_date))
+            $interview->from = $interview_date;
         if(isset($to))
-            $interview->to = $to;*/
+            $interview->to = $to;
         if(isset($location))
             $interview->location = $location;
         if(isset($status))

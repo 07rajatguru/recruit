@@ -105,7 +105,7 @@
                                 </span>
                                 @endif
                             </div>
-
+                            
                             <div class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
                                 <strong>Due Date: <span class = "required_fields">*</span></strong>
                                 <div class="input-group date">
@@ -178,9 +178,8 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
-            $("#due_date").datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true
+            $("#due_date").datetimepicker({
+                format: "DD-MM-YYYY HH:mm:ss"
             });
 //            $('#typeList').select2();
             getType();
@@ -202,5 +201,6 @@
                 }
             });
         }
+        $("#typeList").select2();
     </script>
 @endsection

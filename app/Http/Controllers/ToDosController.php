@@ -38,7 +38,7 @@ class ToDosController extends Controller
         $priority = ToDos::getPriority();
 
 
-        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Other');
+        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
 
         $viewVariable = array();
         $viewVariable['candidate'] = $candidate;
@@ -59,9 +59,9 @@ class ToDosController extends Controller
         $dateClass = new Date();
 
         $subject = $request->subject;
-        $candidate = $request->candidate;
+        $candidate = $request->candidate_id;
         $due_date = $request->due_date;
-        $formattedDueDate = $dateClass->changeDMYtoYMD($due_date);
+        $formattedDueDate = $dateClass->changeDMYHMStoYMDHMS($due_date);
         $type = $request->type;
         $typeList = $request->typeList;
         $status = $request->status;
@@ -128,7 +128,7 @@ class ToDosController extends Controller
         $priority = ToDos::getPriority();
 
 
-        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Other');
+        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
 
         $toDos = ToDos::find($id);
 
@@ -141,8 +141,7 @@ class ToDosController extends Controller
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
         $viewVariable['action'] = 'edit';
-        $due_date = $dateClass->changeYMDtoDMY($toDos->due_date);
-        $viewVariable['due_date'] = $due_date;
+        $viewVariable['due_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->due_date);
 
         return view('adminlte::toDo.edit', $viewVariable);
     }
@@ -154,10 +153,10 @@ class ToDosController extends Controller
         $dateClass = new Date();
 
         $subject = $request->get('subject');
-        $candidate = $request->get('candidate');
+        $candidate = $request->get('candidate_id');
         //$due_date = $request->get('due_date');
         //$formattedDueDate = $dateClass->changeDMYtoYMD($due_date);
-        $due_date = $dateClass->changeDMYtoYMD($request->get('due_date'));
+        $due_date = $dateClass->changeDMYHMStoYMDHMS($request->get('due_date'));
         $type = $request->get('type');
         $typeList = $request->get('typeList');
         $status = $request->get('status');
@@ -288,7 +287,25 @@ class ToDosController extends Controller
             } else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
-        } else {
+        }
+
+        // For Candidate Details
+         elseif($selectedType == 4) {
+            $typeDetails = CandidateBasicInfo::all();
+            if(isset($typeDetails) && sizeof($typeDetails)>0){
+                $i=1;
+                foreach ($typeDetails as $typeDetail) {
+                    $typeArr[$i]['id'] = $typeDetail->id;
+                    $typeArr[$i]['value'] = $typeDetail->fname." ".$typeDetail->lname;
+                    $i++;
+                }
+            } else{
+                $typeArr[0] = array('id' => '','value'=>'Select Type');
+            }
+
+         }
+
+         else {
             $typeArr[0] = array('id' => '','value'=>'Select Type' );
         }
 
