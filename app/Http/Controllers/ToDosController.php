@@ -29,20 +29,51 @@ class ToDosController extends Controller
 
     public function create(){
 
-
-
         $candidate = CandidateBasicInfo::getCandidateArray();
         $users = User::getAllUsers();
-        $client = ClientBasicinfo::getClientArray();
+        //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $selectedType = Input::get('selectedType');
+
+        $typeArr[0] = array('id' => '','value'=>'Select' );
+
+        // For Job Opening Details
+        if($selectedType == 1){
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            if(in_array($user_role_id,$access_roles_id)){
+                $job_response = JobOpen::getAllJobs(1,$user_id);
+            }
+            else{
+                $job_response = JobOpen::getAllJobs(0,$user_id);
+            }
+
+            $jobopen = array();
+            $jobopen[0] = 'Select';
+            $i = 1;
+            foreach ($job_response as $k=>$v){
+                $typeArr[$i]['id'] = $v['id'];
+                $typeArr[$i]['value'] = $v['posting_title']." - ".$v['company_name'];
+                $i++;
+            }
+
+        }
 
         $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
 
         $viewVariable = array();
         $viewVariable['candidate'] = $candidate;
-        $viewVariable['client'] = $client;
+        $viewVariable['client'] = $typeArr;
         $viewVariable['status'] = $status;
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
