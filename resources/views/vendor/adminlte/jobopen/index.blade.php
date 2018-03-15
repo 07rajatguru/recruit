@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Openings List</h2>
+                <h2>Job Openings List ({{ $count }})</h2>
             </div>
 
             <div class="pull-right">

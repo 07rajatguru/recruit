@@ -64,10 +64,13 @@ class JobOpenController extends Controller
             $job_response = JobOpen::getAllJobs(0,$user_id);
         }
 
+        $count = sizeof($job_response);
+
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['job_status'] = JobOpen::getJobStatus();
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
+        $viewVariable['count'] = $count;
 
         return view('adminlte::jobopen.index', $viewVariable);
 
@@ -1109,6 +1112,30 @@ class JobOpenController extends Controller
         return redirect('jobs/'.$_POST['jobid'].'/associated_candidates')->with('success','Joining date added successfully');
     }
 
+    public function shortlisted(Request $request,$id){
+        //echo $job_id;exit;
+        
+        
+        $input = $request->all();
+
+       // print_r($input);exit;
+
+        $shortlist = $input['shortlisted'];
+        //print_r($shortlist);exit;
+        $job_associate_candidate = JobAssociateCandidates::where('job_id', '=', $id)->get();
+        //print_r($job_associate_candidate);exit;
+        $job_associate_candidates = JobAssociateCandidates::find($id);
+        $job_associate_candidates->shortlisted = $shortlist;
+        $job_associate_candidates->save();
+
+        
+        
+         
+
+         return redirect()->route('jobopen.associated_candidates_get', [$id])->with('success','Cnaidate shortlisted successfully');
+
+    }
+
     public function getOpenJobs(){
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
@@ -1234,9 +1261,13 @@ class JobOpenController extends Controller
             $job_response = JobOpen::getClosedJobs(0,$user_id);
         }
 
+        $count = sizeof($job_response);
+
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['job_status'] = JobOpen::getJobStatus();
+        $viewVariable['count'] = $count;
+
         return view('adminlte::jobopen.close',$viewVariable);   
     }
 

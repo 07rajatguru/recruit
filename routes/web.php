@@ -557,6 +557,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@jobclosebyclient',
     ]);
 
+    //candidate shortlisted
+    Route::post('jobs/shortlisted/{id}',[
+        'as' => 'jobopen.shortlisted',
+        'uses' => 'JobOpenController@shortlisted',
+    ]);
+
 
     // Interview Module
     Route::get('interview', [

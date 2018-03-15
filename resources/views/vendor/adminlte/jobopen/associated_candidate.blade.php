@@ -167,6 +167,33 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Add Shortlisted Candidate popup -->
+            <div id="modal-shortlisted" class="modal text-left fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        {!! Form::open(['method' => 'POST','file' => true, 'route' => ["jobopen.shortlisted",$job_id]]) !!}
+
+                         <div class="modal-header">
+
+                            <h1 class="modal-title">Shortlist Candidate</h1>
+                        </div>
+                        <div class="modal-body">
+                            {!! Form::hidden('shortlisted', 1 , array('id'=>'shortlist','class' => 'form-control' )) !!}
+                            <p>
+                                Are you sure want to shortlist Candidate ?
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit"  class="btn btn-primary">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        </div>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
     @if ($message = Session::get('success'))
@@ -209,6 +236,9 @@
                                             </li>
                                             <li>
                                                 <a class="joining-date" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-joining-date" >Add Joining Date</a>
+                                            </li>
+                                            <li>
+                                                <a class="sorted-candidate" data-toggle="modal" href="#modal-shortlisted" >Shortlist Candidate</a>
                                             </li>
                                         </ul>
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
@@ -345,6 +375,7 @@
             }
         }
 
+        
         function addJoiningDate(jobid) {
 
             var joining_date = $("#joining_date").val();
@@ -370,5 +401,6 @@
             }
         }
 
+        
     </script>
 @endsection

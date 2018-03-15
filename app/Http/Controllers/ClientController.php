@@ -57,6 +57,7 @@ class ClientController extends Controller
                 ->get();
         }
 
+        $count = sizeof($clients);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -95,7 +96,7 @@ class ClientController extends Controller
             $i++;
         }
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin'));
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count'));
     }
 
     public function create()
