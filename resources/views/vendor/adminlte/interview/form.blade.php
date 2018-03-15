@@ -55,6 +55,7 @@
                                 </span>
                                 @endif
                             </div>
+                            <input type="hidden" id="hidden_candidate_id" value="{{$hidden_candidate_id}}" name="hidden_candidate_id" />
 
                             <div class="form-group {{ $errors->has('from') ? 'has-error' : '' }}">
                                 <strong>Interview Date: <span class = "required_fields">*</span> </strong>
@@ -147,7 +148,7 @@
 
                             <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
                                 <strong>Interview Cordination:</strong>
-                                {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5')) !!}
+                                {!! Form::select('interviewer_id', $users, $interviewer_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5')) !!}
                                 @if ($errors->has('interviewer_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('interviewer_id') }}</strong>
@@ -238,20 +239,24 @@
         });
 
          function getCandidate(){
-            var selectedTitle = $("#posting_title").val();
-            console.log(selectedTitle);
+            var job_id = $("#posting_title").val();
+            var hidden_candidate_id = $("#hidden_candidate_id").val();
 
-            $.ajax({
-                url:'/ajax/interviewcandidate',
-                data:'selectedTitle='+selectedTitle,
-                dataType:'json',
-                success: function(data){
-                    $("#candidate_id").empty();
-                    for(var i=0;i<data.length;i++){
-                        $('#candidate_id').append($('<option></option>').val(data[i].id).html(data[i].value));
+            if(job_id>0){
+                $.ajax({
+                    url:'/job/associatedcandidate',
+                    data:'job_id='+job_id,
+                    dataType:'json',
+                    success: function(data){
+                        $("#candidate_id").empty();
+                        var response = data.data;
+                        for(var i=0;i<response.length;i++){
+                            $('#candidate_id').append($('<option></option>').val(response[i].id).html(response[i].value));
+                            $("#candidate_id").select2('val',hidden_candidate_id);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     </script>
 @endsection

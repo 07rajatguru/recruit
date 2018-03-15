@@ -48,7 +48,7 @@ class Interview extends Model
     public static function getTypeArray(){
 
         $typeArray = array('' => 'Select Interview Type');
-        $typeArray['Internal Interview'] = 'Telephonic Interview';
+        $typeArray['Telephonic Interview'] = 'Telephonic Interview';
         $typeArray['General Interview'] = 'Skype Interview';
         $typeArray['Personal Interview'] = 'Personal Interview';
 

@@ -1397,4 +1397,30 @@ class JobOpenController extends Controller
         }
         echo "adfdsf";exit;
     }
+
+    public function getAssociatedcandidates(){
+
+        $job_id = $_GET['job_id'];
+
+        $associated_candidates = JobAssociateCandidates::getAssociatedCandidatesByJobId($job_id);
+
+        $response = array();
+        $response['returnvalue'] = 'invalid';
+        $response['data'] = array();
+
+        $i = 1;
+        if(isset($associated_candidates) && sizeof($associated_candidates)>0){
+            $response['returnvalue'] = 'valid';
+            $response['data'][0]['id'] = '0';
+            $response['data'][0]['value'] = 'Select';
+            foreach ($associated_candidates as $k=>$v){
+                $response['data'][$i]['id'] = $v->id;
+                $response['data'][$i]['value'] = $v->fname." ".$v->lname;
+                $i++;
+            }
+        }
+
+        echo json_encode($response);exit;
+    }
+
 }

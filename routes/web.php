@@ -432,6 +432,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@create',
         // 'middleware' => ['permission:industry-create']
     ]);
+
     Route::get('jobs/getopenjobs', [
         'as' => 'jobopen.getOpenJobs',
         'uses' => 'JobOpenController@getOpenJobs',
@@ -539,7 +540,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@close',
         // 'middleware' => ['permission:industry-create']
     ]);
-
+    Route::get('job/associatedcandidate', [
+        'as' => 'jobopen.associatedcandidate',
+        'uses' => 'JobOpenController@getAssociatedcandidates',
+        // 'middleware' => ['permission:industry-create']
+    ]);
 
     //job status
      Route::post('jobs/jobonhlod', [
@@ -562,6 +567,8 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'jobopen.shortlisted',
         'uses' => 'JobOpenController@shortlisted',
     ]);
+
+
 
 
     // Interview Module
@@ -600,13 +607,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@destroy'
     ]);
 
-    Route::get('ajax/interviewcandidate', [
+    /*Route::get('ajax/interviewcandidate', [
         'as' => 'interview.getCandidate',
         'uses' => 'InterviewController@getCandidate',
-    ]);
+    ]);*/
 
     // Bills Module
-
     Route::get('bnm/create', [
         'as' => 'bills.create',
         'uses' => 'BillsController@create'
