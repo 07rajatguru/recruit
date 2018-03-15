@@ -10,6 +10,7 @@ use App\Events\NotificationEvent;
 use App\Interview;
 use App\JobOpen;
 use App\Status;
+use App\TodoAssignedUsers;
 use App\ToDos;
 use App\User;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class ToDosController extends Controller
     public function create(){
 
         $candidate = CandidateBasicInfo::getCandidateArray();
-        $users = User::getAllUsers();
+        $users = User::getAllUsers('recruiter');
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
@@ -71,6 +72,8 @@ class ToDosController extends Controller
 
         $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
 
+        $selected_users = array();
+
         $viewVariable = array();
         $viewVariable['candidate'] = $candidate;
         $viewVariable['client'] = $typeArr;
@@ -78,8 +81,9 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
+        $viewVariable['selected_users'] = $selected_users;
         $viewVariable['action'] = 'add';
-
+        $viewVariable['type_list'] ='';
         return view('adminlte::toDo.create', $viewVariable);
     }
 
@@ -98,6 +102,7 @@ class ToDosController extends Controller
         $status = $request->status;
         $priority = $request->priority;
         $description = $request->description;
+        $users = $request->user_ids;
 
         $toDos = new ToDos();
         $toDos->subject = $subject;
@@ -112,15 +117,26 @@ class ToDosController extends Controller
 
         $toDos->priority = $priority;
         $toDos->description = $description;
-//print_r($toDos);exit;
+
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
-//            print_r($validator->errors());exit;
+            //print_r($validator->errors());exit;
             return redirect('todos/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
         $toDosStored = $toDos->save();
+        $toDos_id = $toDos->id;
+        if($toDos_id){
+            if(isset($users) && sizeof($users)>0){
+                foreach ($users as $key=>$value){
+                    $todo_users = new TodoAssignedUsers();
+                    $todo_users->todo_id = $toDos_id;
+                    $todo_users->user_id = $value;
+                    $todo_users->save();
+                }
+            }
+        }
 
         /*if($toDosStored) {
             $toDos_id = $toDos->id;
@@ -152,28 +168,40 @@ class ToDosController extends Controller
     {
         $dateClass = new Date();
 
+        $toDos = ToDos::find($id);
+
         $candidate = CandidateBasicInfo::getCandidateArray();
-        $users = User::getAllUsers();
-        $client = ClientBasicinfo::getClientArray();
+        $users = User::getAllUsers('recruiter');
+        //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
+
+        // get assigned users list
+        $assigned_users = TodoAssignedUsers::where('todo_id','=',$id)->get();
+        $selected_users = array();
+        if(isset($assigned_users) && sizeof($assigned_users)>0){
+            foreach($assigned_users as $row){
+                $selected_users[] = $row->user_id;
+            }
+        }
 
 
         $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
 
-        $toDos = ToDos::find($id);
-
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['candidate'] = $candidate;
-        $viewVariable['client'] = $client;
+        $viewVariable['client'] = array();
         $viewVariable['status'] = $status;
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
         $viewVariable['action'] = 'edit';
+        $viewVariable['selected_users'] = $selected_users;
         $viewVariable['due_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->due_date);
-
+        $viewVariable['users'] = $users;
+        $viewVariable['type_list'] = $toDos->typeList;
+//echo $toDos->typeList;exit;
         return view('adminlte::toDo.edit', $viewVariable);
     }
 
@@ -193,7 +221,7 @@ class ToDosController extends Controller
         $status = $request->get('status');
         $priority = $request->get('priority');
         $description = $request->get('description');
-
+        $users = $request->user_ids;
         
         $toDos = ToDos::find($id);
         if(isset($subject))
@@ -222,7 +250,19 @@ class ToDosController extends Controller
         }
 
         $toDosUpdated = $toDos->save();
+        $todo_id = $toDos->id;
 
+        TodoAssignedUsers::where('todo_id',$todo_id)->delete();
+        if($todo_id){
+            if(isset($users) && sizeof($users)>0){
+                foreach ($users as $key=>$value){
+                    $todo_users = new TodoAssignedUsers();
+                    $todo_users->todo_id = $todo_id;
+                    $todo_users->user_id = $value;
+                    $todo_users->save();
+                }
+            }
+        }
         return redirect()->route('todos.index')->with('success','ToDo Updated Successfully');
     }
 

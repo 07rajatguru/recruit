@@ -48,7 +48,7 @@ class User extends Authenticatable
         $user_query = User::query();
 
         if($type!=NULL){
-            $user_query = $user_query->where('type','=','recruiter');
+            $user_query = $user_query->where('type','=',$type);
         }
 
         $user_query = $user_query->orderBy('name');

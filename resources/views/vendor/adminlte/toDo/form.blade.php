@@ -31,6 +31,7 @@
     @endif
 
     {!! Form::hidden('action', $action, array('id'=>'action')) !!}
+    {!! Form::hidden('type_list', $type_list, array('id'=>'type_list')) !!}
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -52,7 +53,7 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('candidate') ? 'has-error' : '' }}">
+                            {{--<div class="form-group {{ $errors->has('candidate') ? 'has-error' : '' }}">
                                 <strong>Users: <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('candidate', $users,null, array('id'=>'candidate','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('candidate'))
@@ -60,7 +61,7 @@
                                 <strong>{{ $errors->first('candidate') }}</strong>
                                 </span>
                                 @endif
-                            </div>
+                            </div>--}}
 
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong>Type:</strong>
@@ -85,11 +86,11 @@
 
                             <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                                 <strong>Description:</strong>
-                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '8' )) !!}
+                                {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '8' )) !!}
                                 @if ($errors->has('description'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('description') }}</strong>
-                                </span>
+                                    <strong>{{ $errors->first('description') }}</strong>
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -105,7 +106,18 @@
                                 </span>
                                 @endif
                             </div>
-                            
+
+                            <div class="form-group {{ $errors->has('typeList') ? 'has-error' : '' }}">
+                                <strong>Type List:</strong>
+                                {{--                                {!! Form::select('typeList',array(''=>'Select Type List'), null,array('id'=>'typeList','class' => 'form-control', 'tabindex' => '5')) !!}--}}
+                                {!! Form::select('typeList',$client, $type_list,array('id'=>'typeList','class' => 'form-control', 'tabindex' => '5')) !!}
+                                @if ($errors->has('typeList'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('typeList') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                             <div class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
                                 <strong>Due Date: <span class = "required_fields">*</span></strong>
                                 <div class="input-group date">
@@ -121,16 +133,6 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('typeList') ? 'has-error' : '' }}">
-                                <strong>Type List:</strong>
-{{--                                {!! Form::select('typeList',array(''=>'Select Type List'), null,array('id'=>'typeList','class' => 'form-control', 'tabindex' => '5')) !!}--}}
-                                {!! Form::select('typeList',$client, null,array('id'=>'typeList','class' => 'form-control', 'tabindex' => '5')) !!}
-                                @if ($errors->has('typeList'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('typeList') }}</strong>
-                                </span>
-                                @endif
-                            </div>
 
                             <div class="form-group {{ $errors->has('priority') ? 'has-error' : '' }}">
                                 <strong>Priority:</strong>
@@ -141,6 +143,26 @@
                                 </span>
                                 @endif
                             </div>
+                        </div>
+
+                        <div class="box-body col-xs-12 col-sm-12 col-md-12">
+
+
+                            <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
+                                <strong>Select Users : <span class = "required_fields">*</span></strong>
+                                <input type="checkbox" id="users_all"/> <strong>Select All</strong>
+                                @foreach($users as $k=>$v)<br/>
+                                {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                                {!! Form::label ($v) !!}
+                                @endforeach
+
+                                @if ($errors->has('user_ids'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('user_ids') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
                         </div>
 
                     </div>
@@ -156,8 +178,6 @@
             </div>
         </div>
     </div>
-
-
 
 
     {!! Form::close() !!}
@@ -184,11 +204,21 @@
 //            $('#typeList').select2();
             getType();
 
+            $("#users_all").click(function () {
+                $('.users_ids').prop('checked', this.checked);
+            });
+
+            $(".users_ids").click(function () {
+                $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
+            });
+
         });
         function getType(){
             var selectedType = $("#type").val();
+            var typelist = $("#type_list").val();
             console.log(selectedType);
-
+//type_list
+            //alert(typelist);
             $.ajax({
                 url:'/ajax/todotype',
                 data:'selectedType='+selectedType,
@@ -197,6 +227,7 @@
                     $("#typeList").empty();
                     for(var i=0;i<data.length;i++){
                         $('#typeList').append($('<option></option>').val(data[i].id).html(data[i].value));
+                        $('#typeList').select2('val', typelist)
                     }
                 }
             });

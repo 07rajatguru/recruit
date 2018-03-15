@@ -11,7 +11,6 @@ class ToDos extends Model
 
     public static $rules = array(
         'subject' => 'required',
-        'candidate' => 'required',
         'due_date' => 'required',
         'type' => 'required',
     );
@@ -20,7 +19,6 @@ class ToDos extends Model
     {
         return [
             'subject.required' => 'Subject is required field',
-            'candidate.required' => 'Candidate is required field',
             'due_date.required' => 'Due Date is required field',
             'type.required' => 'Type is required field',
         ];
