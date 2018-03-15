@@ -118,16 +118,18 @@
                             <strong>Fax</strong>
                             {!! Form::text('fax', null, array('id'=>'fax','placeholder' => 'Fax','class' => 'form-control')) !!}
                         </div>--}}
-
+                        @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>GST Number</strong>
                             {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control')) !!}
                         </div>
-
+                        @endif
+                        @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>TDS </strong>
                             {!! Form::text('tds', null, array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control')) !!}
                         </div>
+                        @endif
 
                     </div>
                 </div>
@@ -159,11 +161,12 @@
                             <strong>Website:</strong>
                             {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control')) !!}
                         </div>
-
+                        @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>TAN:</strong>
                             {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control')) !!}
                         </div>
+                        @endif
 
                         <div class="form-group">
                             <strong>About:</strong>
@@ -269,8 +272,8 @@
 
 
     </div>
-
     <div class="col-xs-12 col-sm-12 col-md-12">
+    @if($isSuperAdmin || $isAdmin)
         @if( $action == 'add')
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
@@ -302,6 +305,7 @@
 
             </div>
     </div>
+        @endif
     @endif
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
 

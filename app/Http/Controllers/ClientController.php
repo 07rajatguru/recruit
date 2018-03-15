@@ -109,6 +109,7 @@ class ClientController extends Controller
         $role_id = key($userRole);
 
         $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $user_id = $user->id;
 
@@ -122,7 +123,7 @@ class ClientController extends Controller
         }
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin'));
     }
 
     public function edit($id)
