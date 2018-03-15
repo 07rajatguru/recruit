@@ -27,4 +27,18 @@ class JobAssociateCandidates extends Model
         
     }
 
+    public static function getAssociatedCandidatesByJobId($job_id){
+
+        $query = new JobAssociateCandidates();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
+        $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
+            'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted');
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+
+        $response = $query->get();
+//print_r($response);exit;
+        return $response;
+    }
 }

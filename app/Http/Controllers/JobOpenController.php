@@ -873,6 +873,7 @@ class JobOpenController extends Controller
             $job_associate_candidate->status_id = $status_id;
             $job_associate_candidate->created_at = time();
             $job_associate_candidate->updated_at = time();
+            $job_associate_candidate->shortlisted = 0;
             $job_associate_candidate->save();
         }
 
@@ -934,7 +935,10 @@ class JobOpenController extends Controller
         $client_id = $jobopen_response->client_id;
         $posting_title = $jobopen_response->posting_title;
 
-        // get candidate ids already associated with job
+        $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
+
+
+        /*// get candidate ids already associated with job
         $candidate_response = JobAssociateCandidates::where('job_id', '=', $id)->get();
         $candidates = array();
         foreach ($candidate_response as $key => $value) {
@@ -946,7 +950,7 @@ class JobOpenController extends Controller
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner')
             ->whereIn('candidate_basicinfo.id', $candidates)
-            ->get();
+            ->get();*/
 
 
         // get candidate status
@@ -1112,27 +1116,15 @@ class JobOpenController extends Controller
         return redirect('jobs/'.$_POST['jobid'].'/associated_candidates')->with('success','Joining date added successfully');
     }
 
-    public function shortlisted(Request $request,$id){
-        //echo $job_id;exit;
-        
-        
+    public function shortlisted(Request $request,$job_id){
         $input = $request->all();
 
-       // print_r($input);exit;
-
         $shortlist = $input['shortlisted'];
-        //print_r($shortlist);exit;
-        $job_associate_candidate = JobAssociateCandidates::where('job_id', '=', $id)->get();
-        //print_r($job_associate_candidate);exit;
-        $job_associate_candidates = JobAssociateCandidates::find($id);
-        $job_associate_candidates->shortlisted = $shortlist;
-        $job_associate_candidates->save();
+        $candidate_id = $input['job_candidate_id'];
 
-        
-        
-         
+        DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $candidate_id and job_id = $job_id");
 
-         return redirect()->route('jobopen.associated_candidates_get', [$id])->with('success','Cnaidate shortlisted successfully');
+         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidate shortlisted successfully');
 
     }
 
