@@ -600,6 +600,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@destroy'
     ]);
 
+    Route::get('ajax/interviewcandidate', [
+        'as' => 'interview.getCandidate',
+        'uses' => 'InterviewController@getCandidate',
+    ]);
+
     // Bills Module
 
     Route::get('bnm/create', [

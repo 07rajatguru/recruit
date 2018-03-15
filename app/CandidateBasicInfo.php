@@ -101,10 +101,10 @@ class CandidateBasicInfo extends Model
     public static function getCandidateArray(){
         $candidateArray = array('' => 'Select Candidate');
 
-        $candidateDetails = CandidateBasicInfo::all();
+        $candidateDetails = JobAssociateCandidates::all();
         if(isset($candidateDetails) && sizeof($candidateDetails)){
             foreach ($candidateDetails as $candidateDetail) {
-                $candidateArray[$candidateDetail->id] = $candidateDetail->fname.' '.$candidateDetail->lname;
+                $candidateArray[$candidateDetail->id] = $candidateDetail->candidate_id;
             }
         }
 

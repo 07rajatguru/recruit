@@ -288,4 +288,21 @@ class InterviewController extends Controller
         return redirect()->route('interview.index')->with('success','Interview Deleted Successfully');
 
     }
+
+    public function getCandidate(){
+
+        $selectedTitle = Input::get('selectedTitle');
+        $candidateArr[0] = array('id' => '','value'=>'Select' );
+
+        $candidate = CandidateBasicInfo::getCandidateArray();
+
+        $candidateArray  = array();
+        $i=1;
+        foreach ($candidate as $candidates) {
+            $candidateArr[$i]['id'] = $candidates->id;
+            $candidateArr[$i]['value'] = $candidates->name;
+            $i++;
+        }
+         return json_encode($candidateArr);
+    }   
 }

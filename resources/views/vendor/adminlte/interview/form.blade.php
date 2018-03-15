@@ -48,7 +48,7 @@
 
                             <div class="form-group {{ $errors->has('candidate_id') ? 'has-error' : '' }}">
                                 <strong>Candidate: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate_id', $candidate,null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @if ($errors->has('candidate_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candidate_id') }}</strong>
@@ -95,7 +95,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
                                 <strong>Posting Name:</strong>
-                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '2' )) !!}
+                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '2' , 'onchange' => 'getCandidate()' )) !!}
                                 {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
                                 @if ($errors->has('posting_title'))
                                     <span class="help-block">
@@ -233,6 +233,25 @@
              $("#posting_title").select2();
              $("#interviewer_id").select2();
 
+             getCandidate();
+
         });
+
+         function getCandidate(){
+            var selectedTitle = $("#posting_title").val();
+            console.log(selectedTitle);
+
+            $.ajax({
+                url:'/ajax/interviewcandidate',
+                data:'selectedTitle='+selectedTitle,
+                dataType:'json',
+                success: function(data){
+                    $("#candidate_id").empty();
+                    for(var i=0;i<data.length;i++){
+                        $('#candidate_id').append($('<option></option>').val(data[i].id).html(data[i].value));
+                    }
+                }
+            });
+        }
     </script>
 @endsection
