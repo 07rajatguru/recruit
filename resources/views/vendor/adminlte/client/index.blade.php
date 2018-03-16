@@ -69,6 +69,15 @@
                     <?php if($isSuperAdmin) { ?>
                     @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
                     <?php  }?>
+                    @if(sizeof($clientdoc)>0)
+                            @foreach($clientdoc as $key=>$value)
+                                
+                                <?php if($isSuperAdmin || $isAdmin) { ?>
+                                     <a target="_blank" href="{{ $value['url'] }}"><i  class="fa fa-fw fa-download"></i></a>
+                                <?php  }?>
+
+                            @endforeach
+                    @endif
 
                 </td>
 

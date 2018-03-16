@@ -95,8 +95,27 @@ class ClientController extends Controller
 
             $i++;
         }
+         
+       
+        $client_doc = \DB::table('client_doc')
+                    ->leftjoin('client_basicinfo','client_basicinfo.id','=','client_doc.client_id')       
+                    ->select('client_doc.id','client_basicinfo.id','client_doc.file','client_doc.category')
+                   // ->where('client_doc.client_id',$client->id)
+                    ->get();
+                    //print_r($client_doc);exit;
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count'));
+        $i= 1;
+        $clientdoc = array();
+        foreach ($client_doc as $key=>$value){
+            $clientdoc[$i]['id'] = $value->id;
+            $clientdoc[$i]['url'] = "../".$value->file ;
+            //print_r($clientdoc);exit;
+            $i++;
+            
+        }
+        
+
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','clientdoc'));
     }
 
     public function create()
