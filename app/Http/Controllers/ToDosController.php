@@ -22,7 +22,8 @@ class ToDosController extends Controller
     //
     public function index(){
 
-        $todos = ToDos::all();
+        $todos = ToDos::getAllTodos();
+        
 
         return view('adminlte::toDo.index', array('todos' => $todos));
 
