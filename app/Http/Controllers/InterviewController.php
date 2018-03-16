@@ -182,8 +182,8 @@ class InterviewController extends Controller
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
       //  $client = $request->get('client_id');
-        $from = $dateClass->changeYMDHMStoDMYHMS($request->get('interview_date'));
-        $to = $dateClass->changeYMDHMStoDMYHMS($request->get('to'));
+        $interview_date = $dateClass->changeDMYHMStoYMDHMS($request->get('interview_date'));
+        //$to = $dateClass->changeYMDHMStoDMYHMS($request->get('to'));
         $location = $request->get('location');
         $comments = $request->get('comments');
         $posting_title = $request->get('posting_title');
@@ -196,18 +196,12 @@ class InterviewController extends Controller
             $interview->interview_name = $interview_name;
         if(isset($candidate_id))
             $interview->candidate_id = $candidate_id;
-       // if(isset($client))
-        //    $interview->client_id = $client;
         if(isset($posting_title))
             $interview->posting_title = $posting_title;
         if(isset($interviewer))
             $interview->interviewer_id = $interviewer;
         if(isset($type))
             $interview->type = $type;
-        if(isset($interview_date))
-            $interview->from = $interview_date;
-        if(isset($to))
-            $interview->to = $to;
         if(isset($location))
             $interview->location = $location;
         if(isset($status))
@@ -215,7 +209,7 @@ class InterviewController extends Controller
         if(isset($comments))
             $interview->comments = $comments;
         $interview->interview_owner_id = $interview_owner_id;
-
+        $interview->interview_date = $interview_date;
 
         $validator = \Validator::make(Input::all(),$interview::$rules);
 
