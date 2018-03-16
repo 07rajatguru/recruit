@@ -35,9 +35,10 @@
             <tr>
                 <th>No</th>
                 <th>Interview Name</th>
+                <th>Posting Title</th>
                 <th>Candidate</th>
                {{-- <th>Client</th>--}}
-                <th>InterView Date</th>
+                <th>Interview Date</th>
                 <th>Location</th>
                 <th width="280px">Action</th>
             </tr>
@@ -48,7 +49,8 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $interView->interview_name or '' }}</td>
-                <td>{{ $interView->candidate_name or '' }}</td>
+                <td>{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
+                <td>{{ $interView->candidate_fname }} {{ $interView->candidate_lname }}</td>
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
                 <td>{{ $interView->interview_date or ''}} </td>
                 <td>{{ $interView->location or ''}}</td>

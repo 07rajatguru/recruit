@@ -28,14 +28,6 @@ class JobOpenController extends Controller
 {
     public function index(Request $request){
 
-        $dateClass = new Date();
-
-        $client_id = $request->client_id;
-        $job_open_id = $request->job_id;
-        $posting_title_id = $request->posting_title;
-        $job_opening_status_id = $request->job_opening_status;
-        $city_id = $request->city;
-
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
         // Rest other users can only see the jobs assigned to them
 

@@ -65,4 +65,26 @@ class Interview extends Model
 
         return $interviewStatus;
     }
+
+    public static function getAllInterviews($all=0,$user_id){
+
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
+            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.fname as candidate_fname',
+            'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
+            'job_openings.posting_title as posting_title');
+
+        if($all==0){
+            $query = $query->where('interviewer_id',$user_id);
+        }
+
+        $response = $query->get();
+
+        return $response;
+    }
+
 }

@@ -18,12 +18,18 @@ class InterviewController extends Controller
 
     public function index(){
 
-        $interViews = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
-            
-            ->Leftjoin('users','users.id','=','interview.interviewer_id')
-            ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.fname, " ", candidate_basicinfo.lname) AS candidate_name'),
-                        'users.name as interviewer_name')
-            ->get();
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $access_roles_id = array($admin_role_id,$director_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $interViews = Interview::getAllInterviews(1,$user->id);
+        }
+        else{
+            $interViews = Interview::getAllInterviews(0,$user->id);
+        }
 
         return view('adminlte::interview.index', array('interViews' => $interViews));
     }

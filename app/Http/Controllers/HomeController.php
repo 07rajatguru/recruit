@@ -35,21 +35,15 @@ class HomeController extends Controller
         $today = date('Y-m-d');
         $toDos = ToDos::where('due_date','>=',$today)->get();
 
-
-
         $user =  \Auth::user();
 
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isAdmin = $user_obj::isAdmin($role_id);
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $access_roles_id = array($admin_role_id,$director_role_id);
 
         //get Job List
-        if($isSuperAdmin || $isAdmin){
-        $job = DB::table('job_openings')->where('job_status')->count();
+        if(in_array($user_role_id,$access_roles_id)){
+            $job = DB::table('job_openings')->where('job_status')->count();
         }
 
         else{
@@ -59,33 +53,24 @@ class HomeController extends Controller
         }
 
         //get Client List
-        if($isSuperAdmin || $isAdmin){
-        $month = date('m');
-        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
+        if(in_array($user_role_id,$access_roles_id)){
+            $month = date('m');
+            $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
         }
 
         else{
-         $month = date('m');
-        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
+             $month = date('m');
+             $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
                                                ->where('account_manager_id',$user->id)
                                                ->count();   
         }
 
-       /* $month = date('m');
-        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();*/
-        
-        //Get Interview List
-        $interviews = Interview::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
-            ->leftjoin('job_openings','job_openings.id','=','interview.posting_title')
-            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
-            ->select('interview.id as id', 'interview.interview_name as interview_name','interview.interview_date',
-                 'client_basicinfo.name as client_name',
-                'interview.candidate_id as candidate_id', 'candidate_basicinfo.fname as candidate_fname',
-                'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-                'job_openings.posting_title as posting_title')
-            ->where('interview_date','>=',$from)
-            ->where('interview_date','<=',$to)
-            ->get();
+        if(in_array($user_role_id,$access_roles_id)){
+            $interviews = Interview::getAllInterviews(1,$user->id);
+        }
+        else{
+            $interviews = Interview::getAllInterviews(0,$user->id);
+        }
 
         //print_r($interviews);exit;
         $viewVariable = array();

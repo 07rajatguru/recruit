@@ -81,10 +81,9 @@
                             <thead>
                             <tr>
                                 <th>Interview Name</th>
-                                <th>Client Name</th>
+                                <th>Posting Title</th>
                                 <th>Candidate Name</th>
                                 <th>Time</th>
-                                <th>Posting Title</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -92,10 +91,9 @@
                                 @foreach($interviews as $interview)
                                     <tr>
                                         <td><a href="{{ route('candidate.show',$interview->id) }}">{{ $interview->interview_name }}</a></td>
-                                        <td>{{ $interview->client_name or '' }}</td>
+                                        <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td>{{ $interview->candidate_fname .' '.$interview->candidate_lname }} </td>
                                         <td>{{ date('h:i A',strtotime($interview->interview_date)) }}</td>
-                                        <td>{{ $interview->posting_title }}</td>
                                     </tr>
                                 @endforeach
                             @else
