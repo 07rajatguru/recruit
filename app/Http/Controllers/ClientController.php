@@ -37,18 +37,13 @@ class ClientController extends Controller
         if($isSuperAdmin || $isAdmin){
             $clients = \DB::table('client_basicinfo')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
+                ->leftJoin('client_doc',function($join){
+                    $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
+                    $join->where('client_doc.category','=','Client Contract');
+                })
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file')
                 ->get();
         }
-/*
-        // if Admin get clients of logged in user company
-        else if($isAdmin) {
-            $clients = \DB::table('client_basicinfo')
-                ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
-                //->where('users.company_id',$company_id)
-                ->get();
-        }*/
         else{
             $clients = \DB::table('client_basicinfo')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
@@ -93,11 +88,17 @@ class ClientController extends Controller
 
             $client_array[$i]['client_visibility'] = $client_visibility_val;
 
+            if($isSuperAdmin || $isAdmin){
+                $client_array[$i]['url'] = $client->file;
+            }
+            else{
+                $client_array[$i]['url'] = '';
+            }
             $i++;
         }
          
        
-        $client_doc = \DB::table('client_doc')
+        /*$client_doc = \DB::table('client_doc')
                     ->leftjoin('client_basicinfo','client_basicinfo.id','=','client_doc.client_id')       
                     ->select('client_doc.id','client_basicinfo.id','client_doc.file','client_doc.category')
                    // ->where('client_doc.client_id',$client->id)
@@ -112,10 +113,10 @@ class ClientController extends Controller
             //print_r($clientdoc);exit;
             $i++;
             
-        }
+        }*/
         
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','clientdoc'));
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count'));
     }
 
     public function create()
