@@ -23,7 +23,8 @@ class InterviewController extends Controller
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
-        $access_roles_id = array($admin_role_id,$director_role_id);
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $interViews = Interview::getAllInterviews(1,$user->id);
         }
