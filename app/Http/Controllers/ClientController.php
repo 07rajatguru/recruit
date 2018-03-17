@@ -239,10 +239,19 @@ class ClientController extends Controller
         $client_basic_info->industry_id = $input['industry_id'];
         $client_basic_info->source = $input['source'];
         $client_basic_info->about = $input['description'];
-        $client_basic_info->gst_no = $input['gst_no'];
-        $client_basic_info->tds = $input['tds'];
+        if(isset($input['gst_no']) && $input['gst_no']!='')
+            $client_basic_info->gst_no = $input['gst_no'];
+        else
+            $client_basic_info->gst_no = '';
+        if(isset($input['tds']) && $input['tds']!='')
+            $client_basic_info->tds = $input['tds'];
+        else
+            $client_basic_info->tds = '';
+        if(isset($input['tan']) && $input['tan']!='')
+            $client_basic_info->tan = $input['tan'];
+        else
+            $client_basic_info->tan = '';
         $client_basic_info->coordinator_name = $input['coordinator_name'];
-        $client_basic_info->tan = $input['tan'];
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
