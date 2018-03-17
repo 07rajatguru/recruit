@@ -108,7 +108,7 @@ return [
     */
 
     'menu' => [
-        [
+        /*[
             'text'        => 'Dashboard',
             'icon'        => 'dashboard',
             'submenu' => [
@@ -116,14 +116,9 @@ return [
                     'text' => 'Dashboard',
                     'url'  => 'dashboard',
                     'icon' => 'list',
-                ]/*,
-                    [
-                        'text' => 'Import Clients',
-                        'url'  => 'client/importExport',
-                        'icon' => 'list',
-                    ]*/
+              ]
             ],
-        ],
+        ],*/
              [
                 'text'        => 'Clients',
                 'icon'        => 'users',
