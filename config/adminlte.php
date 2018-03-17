@@ -189,7 +189,7 @@ return [
                     ]*/
                 ],
             ],
-           [
+           /*[
             'text'        => 'Interview',
             'icon'        => ' fa-phone-square',
             'submenu' => [
@@ -204,7 +204,7 @@ return [
                     'icon' => 'list',
                 ]
             ]
-         ],
+         ],*/
             [
                 'text'        => 'Bills',
                 'icon'        => 'users',
@@ -227,7 +227,7 @@ return [
 
                 ],
             ],
-             [
+            /* [
             'text'        => "To'Dos",
             'icon'        => ' fa-th-list',
             'submenu' => [
@@ -242,7 +242,7 @@ return [
                     'icon' => 'list',
                 ]
             ]
-         ],
+         ],*/
           
          [
                 'text'        => 'Attendance',
