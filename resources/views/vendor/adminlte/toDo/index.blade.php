@@ -56,6 +56,7 @@
         <tr>
             <th>No</th>
             <th>Subject</th>
+            <th>Assign Task</th>
             <th width="280px">Action</th>
         </tr>
         </thead>
@@ -67,7 +68,9 @@
 
                 <td>{{ ++$i }}</td>
 
-                <td>{{ $todo->subject }}</td>
+                <td>{{ $todo['subject'] }}</td>
+
+                <td>{{ $todo['am_name'] }}</td>
 
                 <td>
 

@@ -34,4 +34,58 @@ class ToDos extends Model
 
         return $priority;
     }
+
+    public static function getAllTodos(){
+            
+        $todo_query = ToDos::query();
+        $todo_query = $todo_query->join('users', 'users.id', '=', 'to_dos.task_owner');
+        $todo_query = $todo_query->select('to_dos.*', 'users.name as name');
+        $todo_res   = $todo_query->get();
+
+        $todo_array = array();
+        $i = 0;
+        foreach($todo_res as $todos){
+            $todo_array[$i]['id'] = $todos->id;
+            $todo_array[$i]['subject'] = $todos->subject;
+         //   $todo_array[$i]['am_name'] = $todos->name;
+        
+
+        $am_name = ToDos::getAssociatedusersById($todos->id);
+        //print_r($am_name);exit;
+            $name_str = ' ';
+            foreach ($am_name as $k=>$v){
+                
+                $name_str .= ','. $v ;
+                
+            }
+            $todo_array[$i]['am_name'] = $name_str;
+            $i++;
+        }
+           // print_r($todo_array);exit;
+
+        return $todo_array;
+    }
+
+    public static function getAssociatedusersById($id){
+
+        $todo_user_query = ToDos::query();
+        $todo_user_query = $todo_user_query->join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id');
+        $todo_user_query = $todo_user_query->join('users', 'users.id', '=', 'todo_associated_users.user_id');
+        $todo_user_query = $todo_user_query->select('to_dos.*','users.name as am_name');
+        $todo_user_query = $todo_user_query->where('todo_id',$id);
+        $todo_user_query = $todo_user_query->get();
+
+        $todos_array = array();
+        $i = 0;
+        foreach($todo_user_query as $k => $value){
+            //$todos_array[$v->id] = $v->id;
+            //$todos_array[$i]['subject'] = $todos->subject;
+            $todos_array[$value->am_name] = $value->am_name;
+            $i++;
+
+        }
+        return $todos_array;
+
+    }
+
 }
