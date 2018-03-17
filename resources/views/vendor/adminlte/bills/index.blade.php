@@ -39,6 +39,9 @@
             <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
             <th>Action</th>
             <th>No</th>
+            @if($access=='true')
+                <th>Added by</th>
+            @endif
             <th>Company Name</th>
             <th>Candidate Name</th>
             <th>Joining Date</th>
@@ -78,6 +81,9 @@
                     {{--<a class="btn btn-info" href="{{ route('bills.show',$value['id']) }}">Show</a>--}}
                 </td>
                 <td>{{ ++$i }}</td>
+                @if($access=='true')
+                    <td>{{ $value['user_name'] }}</td>
+                @endif
                 <td>{{ $value['company_name'] }}</td>
                 <td>{{ $value['candidate_name'] }}</td>
                 <td>{{ $value['date_of_joining'] }}</td>
@@ -146,7 +152,7 @@
             });
 
         });
-        
+
         function downloadExcel() {
 
             var table = $('#jo_table').DataTable();
