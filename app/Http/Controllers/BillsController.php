@@ -16,8 +16,6 @@ class BillsController extends Controller
     public function index()
     {
 
-        $bnm = Bills::getAllBills(0);
-
         $user = \Auth::user();
         $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
@@ -29,9 +27,11 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
+            $bnm = Bills::getAllBills(0,1,$user_id);
             $access = true;
         }
         else{
+            $bnm = Bills::getAllBills(0,0,$user_id);
             $access = false;
         }
 

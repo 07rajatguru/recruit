@@ -91,12 +91,17 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllBills($status=0){
+    public static function getAllBills($status=0,$all=0,$user_id=0){
         $date_class = new Date();
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
         $bills_query = $bills_query->select('bills.*','users.name as name');
+
+        if($all==0){
+            $bills_query = $bills_query->where('uploaded_by',$user_id);
+        }
+
         $bills_query = $bills_query->where('status',$status);
 
         $bills_res = $bills_query->get();
