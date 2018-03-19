@@ -69,6 +69,23 @@ class ClientBasicinfo extends Ardent
         return $client_response;
     }
 
+    public static function getClientsByIds($user_id,$ids){
+
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
+
+        if($user_id>0)
+            $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+
+        $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
+
+        $client_query = $client_query->whereIn('client_basicinfo.id',$ids);
+
+        $client_response = $client_query->get();
+
+        return $client_response;
+    }
+
     public static function checkAssociation($id){
 
         $job_query = JobOpen::query();

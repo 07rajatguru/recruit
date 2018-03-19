@@ -108,7 +108,7 @@ return [
     */
 
     'menu' => [
-        /*[
+        [
             'text'        => 'Dashboard',
             'icon'        => 'dashboard',
             'submenu' => [
@@ -116,9 +116,14 @@ return [
                     'text' => 'Dashboard',
                     'url'  => 'dashboard',
                     'icon' => 'list',
-              ]
+                ]/*,
+                    [
+                        'text' => 'Import Clients',
+                        'url'  => 'client/importExport',
+                        'icon' => 'list',
+                    ]*/
             ],
-        ],*/
+        ],
              [
                 'text'        => 'Clients',
                 'icon'        => 'users',
@@ -184,7 +189,7 @@ return [
                     ]*/
                 ],
             ],
-           /*[
+           [
             'text'        => 'Interview',
             'icon'        => ' fa-phone-square',
             'submenu' => [
@@ -199,7 +204,7 @@ return [
                     'icon' => 'list',
                 ]
             ]
-         ],*/
+         ],
             [
                 'text'        => 'Bills',
                 'icon'        => 'users',
@@ -222,7 +227,7 @@ return [
 
                 ],
             ],
-            /* [
+             [
             'text'        => "To'Dos",
             'icon'        => ' fa-th-list',
             'submenu' => [
@@ -237,7 +242,7 @@ return [
                     'icon' => 'list',
                 ]
             ]
-         ],*/
+         ],
           
          [
                 'text'        => 'Attendance',

@@ -4,6 +4,7 @@
             color:#f56954 !important;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/prettify.css') }}" />
 @endsection
 <div class="row">
     <div class="col-lg-12 margin-tb">
@@ -41,128 +42,106 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
 
-                    <div class="box-body col-xs-12 col-sm-12 col-md-12">
-                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group {{ $errors->has('owner') ? 'has-error' : '' }}">
-                                <strong>Task Owner: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('owner', \Auth::user()->name, array('id'=>'owner','placeholder' => 'Owner','class' => 'form-control', 'tabindex' => '0', 'disabled' )) !!}
-                                @if ($errors->has('owner'))
-                                    <span class="help-block">
+                    <div style="width:50%;" class="form-group {{ $errors->has('owner') ? 'has-error' : '' }}">
+                        <strong>Task Owner: <span class = "required_fields">*</span> </strong>
+                        {!! Form::text('owner', \Auth::user()->name, array('id'=>'owner','placeholder' => 'Owner','class' => 'form-control', 'tabindex' => '0', 'disabled' )) !!}
+                        @if ($errors->has('owner'))
+                            <span class="help-block">
                                 <strong>{{ $errors->first('owner') }}</strong>
                                 </span>
-                                @endif
-                            </div>
+                        @endif
+                    </div>
 
-                            {{--<div class="form-group {{ $errors->has('candidate') ? 'has-error' : '' }}">
-                                <strong>Users: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate', $users,null, array('id'=>'candidate','class' => 'form-control', 'tabindex' => '2' )) !!}
-                                @if ($errors->has('candidate'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('candidate') }}</strong>
-                                </span>
-                                @endif
-                            </div>--}}
-
-                            <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <strong>Type:</strong>
-                                {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('type') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                                <strong>Status:</strong>
-                                {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '6' )) !!}
-                                {{--                                {!! Form::text('status', null, array('id'=>'status','placeholder' => 'Status','class' => 'form-control', 'tabindex' => '10' )) !!}--}}
-                                @if ($errors->has('status'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('status') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
-                                <strong>Description:</strong>
-                                {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '8' )) !!}
-                                @if ($errors->has('description'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('description') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
-
-                            <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
-                                <strong>Subject: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1' )) !!}
-                                @if ($errors->has('subject'))
-                                    <span class="help-block">
+                    <div style="width:50%;" class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
+                        <strong>Subject: <span class = "required_fields">*</span> </strong>
+                        {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1' )) !!}
+                        @if ($errors->has('subject'))
+                            <span class="help-block">
                                 <strong>{{ $errors->first('subject') }}</strong>
                                 </span>
-                                @endif
-                            </div>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('typeList') ? 'has-error' : '' }}">
-                                <strong>Type List:</strong>
-                                {{--                                {!! Form::select('typeList',array(''=>'Select Type List'), null,array('id'=>'typeList','class' => 'form-control', 'tabindex' => '5')) !!}--}}
-                                {!! Form::select('typeList',$client, $type_list,array('id'=>'typeList','class' => 'form-control', 'tabindex' => '5')) !!}
-                                @if ($errors->has('typeList'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('typeList') }}</strong>
+                    <div style="width:50%;" class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                        <strong>Type:</strong>
+                        {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        @if ($errors->has('type'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('type') }}</strong>
                                 </span>
-                                @endif
-                            </div>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
-                                <strong>Due Date: <span class = "required_fields">*</span></strong>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    {!! Form::text('due_date',  isset($dueDate) ? $dueDate : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
-                                </div>
-                                @if ($errors->has('due_date'))
-                                    <span class="help-block">
+                    <div class="form-group type_list" >
+
+                        <div class="col-sm-5">
+                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" id="search_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                            <button type="button" id="search_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                            <button type="button" id="search_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                            <button type="button" id="search_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                        </div>
+                        <div class="col-sm-5">
+                            <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
+
+                    <span style="padding: 10%;"></span>
+
+                    <div  style="width:50%;"  class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                        <strong>Status:</strong>
+                        {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control' )) !!}
+                        {{--                                {!! Form::text('status', null, array('id'=>'status','placeholder' => 'Status','class' => 'form-control', 'tabindex' => '10' )) !!}--}}
+                        @if ($errors->has('status'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('status') }}</strong>
+                                </span>
+                        @endif
+                    </div>
+
+                    <div  style="width:50%;"  class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
+                        <strong>Remarks:</strong>
+                        {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '8' )) !!}
+                        @if ($errors->has('description'))
+                            <span class="help-block">
+                                    <strong>{{ $errors->first('description') }}</strong>
+                                    </span>
+                        @endif
+                    </div>
+
+                    <div  style="width:50%;"  class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
+                        <strong>Due Date: <span class = "required_fields">*</span></strong>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            {!! Form::text('due_date',  isset($dueDate) ? $dueDate : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                        </div>
+                        @if ($errors->has('due_date'))
+                            <span class="help-block">
                                     <strong>{{ $errors->first('due_date') }}</strong>
                                     </span>
-                                @endif
-                            </div>
+                        @endif
+                    </div>
 
+                    <div class="box-body col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
+                            <strong>Select Users : <span class = "required_fields">*</span></strong>
+                            <input type="checkbox" id="users_all"/> <strong>Select All</strong>
+                            @foreach($users as $k=>$v)<br/>
+                            {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                            {!! Form::label ($v) !!}
+                            @endforeach
 
-                            <div class="form-group {{ $errors->has('priority') ? 'has-error' : '' }}">
-                                <strong>Priority:</strong>
-                                {!! Form::select('priority', $priority,null, array('id'=>'priority','class' => 'form-control', 'tabindex' => '7' )) !!}
-                                @if ($errors->has('priority'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('priority') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="box-body col-xs-12 col-sm-12 col-md-12">
-
-
-                            <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
-                                <strong>Select Users : <span class = "required_fields">*</span></strong>
-                                <input type="checkbox" id="users_all"/> <strong>Select All</strong>
-                                @foreach($users as $k=>$v)<br/>
-                                {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
-                                {!! Form::label ($v) !!}
-                                @endforeach
-
-                                @if ($errors->has('user_ids'))
-                                    <span class="help-block">
+                            @if ($errors->has('user_ids'))
+                                <span class="help-block">
                                         <strong>{{ $errors->first('user_ids') }}</strong>
                                     </span>
-                                @endif
-                            </div>
-
+                            @endif
                         </div>
 
                     </div>
@@ -202,7 +181,7 @@
                 format: "DD-MM-YYYY HH:mm:ss"
             });
 //            $('#typeList').select2();
-            getType();
+
 
             $("#users_all").click(function () {
                 $('.users_ids').prop('checked', this.checked);
@@ -212,26 +191,72 @@
                 $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
             });
 
+            $('#search').multiselect({
+                search: {
+                    left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                    right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                },
+                fireSearch: function(value) {
+                    return value.length > 1;
+                }
+            });
+
+            getType();
+            getselectedtypelist();
         });
         function getType(){
             var selectedType = $("#type").val();
-            var typelist = $("#type_list").val();
-            console.log(selectedType);
-//type_list
-            //alert(typelist);
-            $.ajax({
-                url:'/ajax/todotype',
-                data:'selectedType='+selectedType,
-                dataType:'json',
-                success: function(data){
-                    $("#typeList").empty();
-                    for(var i=0;i<data.length;i++){
-                        $('#typeList').append($('<option></option>').val(data[i].id).html(data[i].value));
-                        $('#typeList').select2('val', typelist)
-                    }
-                }
-            });
+
+            if(selectedType!=5){
+                $(".type_list").show();
+                var typelist = $("#type_list").val();
+                $.ajax({
+                  url:'/ajax/todotype',
+                  data:'selectedType='+selectedType,
+                  dataType:'json',
+                  success: function(data){
+                      $("#search").empty();
+                      $("#search_to").empty();
+                      for(var i=0;i<data.length;i++){
+                          //$('#typeList').append($('<option></option>').val(data[i].id).html(data[i].value));
+                          //$('#typeList').select2('val', typelist)
+                          $('#search').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
+                      }
+                  }
+                });
+            }
+
+            else{
+                $("#search").empty();
+                $("#search_to").empty();
+                $(".type_list").hide();
+            }
+
         }
-        $("#typeList").select2();
+
+        function getselectedtypelist() {
+            var action = $("#action").val();
+            var toDoId = $("#toDoId").val();
+            var selectedType = $("#type").val();
+
+            if(action=='edit' && selectedType!=5){
+                $(".type_list").show();
+                $.ajax({
+                    url:'/todo/getselectedtypelist',
+                    data:'selectedType='+selectedType+'&toDoId='+toDoId,
+                    dataType:'json',
+                    success: function(data){
+                        $("#search_to").empty();
+                        for(var i=0;i<data.length;i++){
+                            $('#search_to').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
+                            $('#search option[value="'+data[i].id+'"]').remove();
+                        }
+                    }
+                });
+            }
+        }
+
+        //$("#typeList").select2();
+
     </script>
 @endsection

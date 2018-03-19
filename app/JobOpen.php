@@ -282,6 +282,89 @@ class JobOpen extends Model
     
     }
 
+    public static function getJobsByIds($all=0,$ids){
+        $job_open_query = JobOpen::query();
+
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
+            'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
+            'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
+            'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
+            'job_openings.priority','job_openings.hiring_manager_id'
+        );
+        $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        // assign jobs to logged in user
+        if($all==0){
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+        }
+        //whereIn('job_status',[1,2,3]);
+        $job_open_query = $job_open_query->where('job_status',NULL);
+        $job_open_query = $job_open_query->whereIn('job_openings.id',$ids);
+
+        //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+
+        $job_open_query = $job_open_query->orderBy('job_openings.id','desc');
+
+
+        $job_response = $job_open_query->get();
+//print_r($job_response);exit;
+        $jobs_list = array();
+
+        $colors = self::getJobPrioritiesColor();
+
+        $i = 0;
+        foreach ($job_response as $key=>$value){
+            $jobs_list[$i]['id'] = $value->id;
+            $jobs_list[$i]['job_id'] = $value->job_id;
+            $jobs_list[$i]['company_name'] = $value->company_name;
+            $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
+            $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
+            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            $jobs_list[$i]['location'] = $value->city;
+            $jobs_list[$i]['qual'] = $value->qualifications;
+            $jobs_list[$i]['min_ctc'] = $value->salary_from;
+            $jobs_list[$i]['max_ctc'] = $value->salary_to;
+            $jobs_list[$i]['industry'] = $value->industry_name;
+            $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
+            $jobs_list[$i]['open_date'] = $value->date_opened;
+            $jobs_list[$i]['close_date'] = $value->desired_candidate;
+            $jobs_list[$i]['am_name'] = $value->am_name;
+            $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
+            $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
+            if(isset($value->priority) && $value->priority!='') {
+                $jobs_list[$i]['color'] = $colors[$value->priority];
+            }
+            else
+                $jobs_list[$i]['color'] ='';
+
+            // Admin/super admin have access to all details
+            if($all==1){
+                $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+                $jobs_list[$i]['access'] = '1';
+            }
+            else{
+                if(isset($value->hiring_manager_id) && $value->hiring_manager_id==$user_id ){
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+                    $jobs_list[$i]['access'] = '1';
+                }
+                else{
+                    $jobs_list[$i]['coordinator_name'] = '';
+                    $jobs_list[$i]['access'] = '0';
+                }
+            }
+
+            $i++;
+        }
+
+        //print_r($jobs_list);exit;
+        return $jobs_list;
+    }
+
     public static function getAllJobs($all=0,$user_id){
 
         $job_open_query = JobOpen::query();

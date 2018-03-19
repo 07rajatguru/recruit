@@ -112,4 +112,13 @@ class CandidateBasicInfo extends Model
     }
 
 
+    public static function getAllCandidatesById($ids){
+
+        $query = new CandidateBasicInfo();
+        $query = $query->whereIn('id',$ids);
+        $response = $query->get();
+
+        return $response;
+
+    }
 }

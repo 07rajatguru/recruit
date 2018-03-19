@@ -135,7 +135,8 @@
                             <tr>
                                 <th>Sr No.</th>
                                 <th>Subject</th>
-                                <th>Priority</th>
+                                <th>Assigned By</th>
+                                <th>Assigned To</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -144,8 +145,9 @@
                                 @foreach($toDos as $toDo)
                                     <tr>
                                         <td>{{ $i }}</td>
-                                        <td>{{ $toDo->subject }}</td>
-                                        <td>{{ $toDo->priority }}</td>
+                                        <td>{{ $toDo['subject'] }}</td>
+                                        <td>{{ $toDo['am_name'] }}</td>
+                                        <td>{{ $toDo['assigned_to'] }}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach

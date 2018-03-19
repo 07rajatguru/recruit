@@ -33,14 +33,27 @@ class HomeController extends Controller
         $from = date('Y-m-d 00:00:00');
         $to = date('Y-m-d 23:59:59');
         $today = date('Y-m-d');
-        $toDos = ToDos::where('due_date','>=',$today)->get();
+        /*$toDos = ToDos::where('due_date','>=',$today)->get();*/
 
         $user =  \Auth::user();
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
-        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        $manager_role_id = env('MANAGER');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id,$manager_role_id);
+
+        if(in_array($user_role_id,$access_roles_id)){
+            $toDos = ToDos::getAllTodos();
+        }
+        else{
+            // get assigned to todos
+            $todo_ids = ToDos::getTodoIdsByUserId($user->id);
+
+            //$todo_ids_list = implode(',',$todo_ids);
+            $toDos = ToDos::getAllTodos($todo_ids);
+        }
+
 
         //get Job List
         if(in_array($user_role_id,$access_roles_id)){
@@ -67,10 +80,10 @@ class HomeController extends Controller
         }
 
         if(in_array($user_role_id,$access_roles_id)){
-            $interviews = Interview::getAllInterviews(1,$user->id);
+            $interviews = Interview::getTodaysInterviews(1,$user->id);
         }
         else{
-            $interviews = Interview::getAllInterviews(0,$user->id);
+            $interviews = Interview::getTodaysInterviews(0,$user->id);
         }
 
         //print_r($interviews);exit;

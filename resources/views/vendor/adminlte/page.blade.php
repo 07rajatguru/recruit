@@ -212,7 +212,8 @@
 @section('adminlte_js')
     <script src="{{ asset('vendor/adminlte/dist/js/app.min.js') }}"></script>
     <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script src="{{ asset('js/multiselect.min.js') }}"></script>
     <script>
         jQuery(document).ready(function () {
             getNotifications();
