@@ -411,6 +411,7 @@ class CandidateController extends Controller
                     $jobopening->status_id = $status_id;
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
+                    $jobopening->shortlisted = 0;
                     $jobopening->save();
                 }
 
@@ -684,6 +685,7 @@ class CandidateController extends Controller
                     $jobopening->status_id = $status_id;
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
+                    $jobopening->shortlisted = 0;
                     $jobopening->save();
                 }
             } 
