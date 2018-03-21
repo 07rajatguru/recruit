@@ -100,6 +100,16 @@ class ClientBasicinfo extends Ardent
       }
     }
 
+/*     public static function checkAssociatedJob($id){
+
+        $job_query = JobOpen::query();
+        $job_query = $job_query->where('client_id','=',$id);
+        $job_query = $job_query->select('job_openings.*','job_openings.posting_title','job_openings.city');
+        $job_res = $job_query->get();
+        
+        return $job_res;
+    }*/
+
     public static function checkClientByEmail($email){
 
         $client_query = ClientBasicinfo::query();

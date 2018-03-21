@@ -27,6 +27,8 @@
 
     @endif
 
+    
+
     @if ($message = Session::get('error'))
         <div class="alert alert-error">
             <p>{{ $message }}</p>
@@ -38,7 +40,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Client Name</th>
+                <th>Company Name</th>
                 <th>Client Owner</th>
                 <th>Client Email</th>
                 <th>Client Phone No.</th>

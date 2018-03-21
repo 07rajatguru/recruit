@@ -154,6 +154,7 @@ class ClientController extends Controller
         $role_id = key($userRole);
 
         $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
         $industry_res = Industry::orderBy('id','DESC')->get();
@@ -181,6 +182,7 @@ class ClientController extends Controller
             $client['mobile'] = $value->mobile;
             $client['am_name'] = $value->am_name;
             $client['mail'] = $value->mail;
+            $client['s_email'] = $value->s_email;
             $client['ind_name'] = $value->ind_name;
             $client['website'] = $value->website;
             $client['description'] = $value->description;
@@ -218,7 +220,7 @@ class ClientController extends Controller
          $users = User::getAllUsers();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin'));
     }
 
     public function store(Request $request){
@@ -231,6 +233,7 @@ class ClientController extends Controller
         $client_basic_info->name = $input['name'];
         $client_basic_info->display_name = $input['display_name'];
         $client_basic_info->mail = $input['mail'];
+        $client_basic_info->s_email = $input['s_email'];
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
@@ -420,6 +423,15 @@ class ClientController extends Controller
     public function show($id)
     {
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
 
@@ -489,7 +501,7 @@ class ClientController extends Controller
         $client_upload_type['Others'] = 'Others';
 
         //print_r($client);exit;
-        return view('adminlte::client.show',compact('client','client_upload_type'));
+        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin'));
     }
 
     public function attachmentsDestroy($docid){
@@ -566,6 +578,12 @@ class ClientController extends Controller
         return redirect()->route('client.index'); 
     }
 
+   /* public function deleteAssociatedJob($id){
+        
+        
+
+    }*/
+
     public function update(Request $request, $id){
         $user_id = \Auth::user()->id;
 
@@ -579,6 +597,7 @@ class ClientController extends Controller
         $client_basicinfo->display_name = $input->display_name;
         $client_basicinfo->mobile = $input->mobile;
         $client_basicinfo->mail = $input->mail;
+        $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
         //$client_basicinfo->fax = $input->fax;
         $client_basicinfo->industry_id = $input->industry_id;
