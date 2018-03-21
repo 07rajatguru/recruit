@@ -76,7 +76,7 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('job_opening_status') ? 'has-error' : '' }}">
+                        {{--<div class="form-group {{ $errors->has('job_opening_status') ? 'has-error' : '' }}">
                             <strong>Select Job Opening Status :</strong>
                             {!! Form::select('job_opening_status', $job_open_status,null, array('id'=>'job_opening_status','class' => 'form-control')) !!}
                             @if ($errors->has('job_opening_status'))
@@ -84,7 +84,7 @@
                                 <strong>{{ $errors->first('job_opening_status') }}</strong>
                                 </span>
                             @endif
-                        </div>
+                        </div>--}}
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
                             <strong>Select Industry:  <span class = "required_fields">*</span>  </strong>

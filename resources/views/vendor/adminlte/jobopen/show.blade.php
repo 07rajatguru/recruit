@@ -59,9 +59,9 @@
                         </tr>
                         <tr>
                             <th scope="row">Client Name</th>
-                            <td>{{ $jobopen['client_name'] }}</td>
-                            <th>Job Opening Status</th>
-                            <td>{{ $jobopen['job_opening_status'] }}</td>
+                            <td colspan="3">{{ $jobopen['client_name'] }}</td>
+                           {{-- <th>Job Opening Status</th>
+                            <td>{{ $jobopen['job_opening_status'] }}</td> --}}
                         </tr>
                         <tr>
                             <th scope="row">Hiring Manager</th>

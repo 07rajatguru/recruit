@@ -74,6 +74,8 @@ class JobOpen extends Model
         $job_priorities['6'] = 'Revived Positions';
         $job_priorities['7'] = 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet';
         $job_priorities['8'] = 'No Deliveries Needed';
+        $job_priorities['9'] = 'Closed By Us';
+        $job_priorities['10'] = 'Closed By Client';
 
         return $job_priorities;
     }
@@ -90,6 +92,8 @@ class JobOpen extends Model
         $job_priorities['6'] = 'yellow';
         $job_priorities['7'] = '##808080';
         $job_priorities['8'] = '##808080';
+        $job_priorities['9'] = '#00B0F0';
+        $job_priorities['10'] = '#FABF8F';
 
         return $job_priorities;
     }
@@ -204,15 +208,15 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id',
-                                                'job_openings.job_status'
+                                                'job_openings.priority','job_openings.hiring_manager_id'
+                                                
                                             );
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_close_query = $job_close_query->join('users','users.id','=','job_openings.hiring_manager_id');
 
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
-        $job_close_query = $job_close_query->whereIn('job_status',[1,2,3]);
+        $job_close_query = $job_close_query->whereIn('priority',[4,9,10]);
 
         // assign jobs to logged in user
         if($all==0){
@@ -237,7 +241,7 @@ class JobOpen extends Model
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['job_id'] = $value->job_id;
             $jobs_list[$i]['company_name'] = $value->company_name;
-            $jobs_list[$i]['job_status'] = $value->job_status;
+            $jobs_list[$i]['priority'] = $value->priority;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
@@ -387,7 +391,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
         //whereIn('job_status',[1,2,3]);
-        $job_open_query = $job_open_query->where('job_status',NULL);
+        $job_open_query = $job_open_query->whereNotIn('priority',[4,9,10]);
 
         //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
         $job_open_query = $job_open_query->groupBy('job_openings.id');

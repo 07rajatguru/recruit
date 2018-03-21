@@ -60,7 +60,7 @@ class JobOpenController extends Controller
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
-        $viewVariable['job_status'] = JobOpen::getJobStatus();
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
 
@@ -232,7 +232,7 @@ class JobOpenController extends Controller
       //  $team_mates = $user_id;
 
         // job opening status
-        $job_open_status = JobOpen::getJobOpenStatus();
+        /*$job_open_status = JobOpen::getJobOpenStatus();*/
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -266,7 +266,7 @@ class JobOpenController extends Controller
         $hiring_manager_id = $input['hiring_manager_id'];
         //$target_date = $input['target_date'];
         // $formatted_target_date = Carbon::parse($target_date)->format('Y/m/d');
-        $job_opening_status = $input['job_opening_status'];
+        //$job_opening_status = $input['job_opening_status'];
         $job_priority = $input['job_priority'];
         $industry_id = $input['industry_id'];
         $client_id = $input['client_id'];
@@ -309,7 +309,7 @@ class JobOpenController extends Controller
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
         //$job_open->target_date = 'NULL';//$dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
-        $job_open->job_opening_status = $job_opening_status;
+        //$job_open->job_opening_status = $job_opening_status;
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;
         $job_open->no_of_positions = $no_of_positions;
@@ -452,7 +452,7 @@ class JobOpenController extends Controller
             $job_open['job_id'] = $value->job_id;
             $job_open['client_name'] = $value->client_name;
             $job_open['client_id'] = $value->client_id;
-            $job_open['job_opening_status'] = $value->job_opening_status;
+            //$job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['desired_candidate'] = $value->desired_candidate;
             $job_open['hiring_manager_name'] = $value->hiring_manager_name;
             //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
@@ -677,7 +677,7 @@ class JobOpenController extends Controller
         $hiring_manager_id = $input['hiring_manager_id'];
        // $target_date = $input['target_date'];
         // $formatted_target_date = Carbon::parse($target_date)->format('Y/m/d');
-        $job_opening_status = $input['job_opening_status'];
+        //$job_opening_status = $input['job_opening_status'];
         $industry_id = $input['industry_id'];
         $client_id = $input['client_id'];
         $no_of_positions = $input['no_of_positions'];
@@ -719,7 +719,7 @@ class JobOpenController extends Controller
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
        // $job_open->target_date = 'NULL';//$dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
-        $job_open->job_opening_status = $job_opening_status;
+        //$job_open->job_opening_status = $job_opening_status;
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;
         $job_open->no_of_positions = $no_of_positions;
@@ -1195,23 +1195,24 @@ class JobOpenController extends Controller
     }
 
     public function status(Request $request){
-        $job_status = $request->get('job_status');
+        $priority = $request->get('job_priority');
         $job_id = $request->get('job_id');
+        //print_r($priority);exit;
 
         $job_open = JobOpen::find($job_id);
 
         $job = '';
-        if (isset($job_status) && sizeof($job_status)>0){
+        if (isset($priority) && sizeof($priority)>0){
 
-                 $job = $job_status;
+                 $job = $priority;
             
         }
-        $job_open->job_status = $job;
+        $job_open->priority = $job;
          
         $job_open->save();
 
         
-            return redirect()->route('jobopen.index')->with('success', 'Job Opening Status added successfully');
+            return redirect()->route('jobopen.index')->with('success', 'Job Priority added successfully');
        
     }
 
@@ -1222,7 +1223,7 @@ class JobOpenController extends Controller
         $client_id = $request->client_id;
         $job_open_id = $request->job_id;
         $posting_title_id = $request->posting_title;
-        $job_opening_status_id = $request->job_opening_status;
+       // $job_opening_status_id = $request->job_opening_status;
         $city_id = $request->city;
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
@@ -1249,7 +1250,7 @@ class JobOpenController extends Controller
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
-        $viewVariable['job_status'] = JobOpen::getJobStatus();
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
 
         return view('adminlte::jobopen.close',$viewVariable);   

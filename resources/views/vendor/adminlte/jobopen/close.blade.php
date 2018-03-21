@@ -77,7 +77,7 @@
                     @endif
 
                 </td>
-                <td>{{ $job_status[$value['job_status']] }}</td>
+                <td>{{ $job_priority[$value['priority']] }}</td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
                 <td>{{ $value['posting_title'] or ''}}</td>

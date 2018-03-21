@@ -6,13 +6,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Job Status</h1>
+                <h1 class="modal-title">Select Job Priority</h1>
             </div>
             {!! Form::open(['method' => 'POST', 'route' => ["$name.status", $data['id']]]) !!}
             <input type="hidden" id="job_id" name="job_id" value="{!! $data['id'] !!}">
             <div class="modal-body">
-                <strong>Select Job Status: </strong> <br>
-                {!! Form::select('job_status', $job_status,null, array('id'=>'job_opening_status','class' => 'form-control')) !!}
+                <strong>Select Job Priority :</strong> <br>
+                {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
             </div>
 
 
