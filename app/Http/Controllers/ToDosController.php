@@ -51,7 +51,7 @@ class ToDosController extends Controller
     public function create(){
 
         $candidate = CandidateBasicInfo::getCandidateArray();
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
 
@@ -198,7 +198,7 @@ class ToDosController extends Controller
         $toDos = ToDos::find($id);
 
         $candidate = CandidateBasicInfo::getCandidateArray();
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsers();
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
