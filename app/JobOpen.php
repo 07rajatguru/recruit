@@ -202,6 +202,13 @@ class JobOpen extends Model
     }
 
     public static function getClosedJobs($all=0,$user_id){
+
+        $job_onhold = env('ONHOLD');
+        $job_client = env('CLOSEDBYCLIENT');
+        $job_us = env('CLOSEDBYUS');
+
+        $job_status = array($job_onhold,$job_us,$job_client);
+ 
         $job_close_query = JobOpen::query();
 
         $job_close_query =  $job_close_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
@@ -216,7 +223,7 @@ class JobOpen extends Model
         $job_close_query = $job_close_query->join('users','users.id','=','job_openings.hiring_manager_id');
 
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
-        $job_close_query = $job_close_query->whereIn('priority',[4,9,10]);
+        $job_close_query = $job_close_query->whereIn('priority',$job_status);
 
         // assign jobs to logged in user
         if($all==0){
@@ -371,6 +378,12 @@ class JobOpen extends Model
 
     public static function getAllJobs($all=0,$user_id){
 
+        $job_onhold = env('ONHOLD');
+        $job_client = env('CLOSEDBYCLIENT');
+        $job_us = env('CLOSEDBYUS');
+
+        $job_status = array($job_onhold,$job_us,$job_client);
+
         $job_open_query = JobOpen::query();
 
         $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
@@ -391,7 +404,8 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
         //whereIn('job_status',[1,2,3]);
-        $job_open_query = $job_open_query->whereNotIn('priority',[4,9,10]);
+        //$job_open_query = $job_open_query->whereNotIn('priority',[4,9,10]);
+        $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
 
         //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
         $job_open_query = $job_open_query->groupBy('job_openings.id');

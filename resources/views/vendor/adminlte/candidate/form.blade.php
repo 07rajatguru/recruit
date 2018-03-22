@@ -55,12 +55,13 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
-                                <strong>Sex:</strong>
-                                {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '3' )) !!}
-                                @if ($errors->has('candidateSex'))
+                            <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
+                                <strong>Mobile Number: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','placeholder' => 'Mobile Number','class' => 'form-control' )) !!}
+                                @if ($errors->has('mobile'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidateSex') }}</strong>
+                                <strong>{{ $errors->first('mobile') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -75,15 +76,15 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <strong>Email: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'EMAIL','class' => 'form-control', '', 'tabindex' => '7' )) !!}
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('email') }}</strong>
+                            <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
+                             <strong>Associated Job Opening:</strong>
+                                  {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                 @if ($errors->has('job'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('job') }}</strong>
                                 </span>
-                                @endif
-                            </div>
+                             @endif
+                             </div>
 
                         </div>
                     </div>
@@ -101,9 +102,19 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
+                                <strong>Email: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'EMAIL','class' => 'form-control', '', 'tabindex' => '4' )) !!}
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                             <div class="form-group {{ $errors->has('maritalStatus') ? 'has-error' : '' }}">
                                 <strong>Marital Status:  </strong>
-                                {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '4' )) !!}
+                                {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '6' )) !!}
                                 @if ($errors->has('maritalStatus'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('maritalStatus') }}</strong>
@@ -111,27 +122,15 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
-                                <strong>Mobile Number: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '6' )) !!}
-                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','placeholder' => 'Mobile Number','class' => 'form-control' )) !!}
-                                @if ($errors->has('mobile'))
+                             <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
+                                <strong>Sex:</strong>
+                                {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '8' )) !!}
+                                @if ($errors->has('candidateSex'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('mobile') }}</strong>
+                                <strong>{{ $errors->first('candidateSex') }}</strong>
                                 </span>
                                 @endif
                             </div>
-
-                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
-                             <strong>Associated Job Opening:</strong>
-                                  {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '23' )) !!}
-                                 @if ($errors->has('job'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('job') }}</strong>
-                                </span>
-                             @endif
-                             </div>
-
 
                         </div>
                     </div>

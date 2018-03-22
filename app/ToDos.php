@@ -37,16 +37,62 @@ class ToDos extends Model
     }
 
     public static function getAllTodos($ids=array()){
+
+        //$todo_status = env('COMPLETEDSTATUS');
+        //print_r($todo_status);exit;
             
         $todo_query = ToDos::query();
         $todo_query = $todo_query->join('users', 'users.id', '=', 'to_dos.task_owner');
-        $todo_query = $todo_query->select('to_dos.*', 'users.name as name');
+        $todo_query = $todo_query->select('to_dos.*', 'users.name as name','to_dos.status');
 
         if(isset($ids) && sizeof($ids)>0){
             $todo_query = $todo_query->whereIn('to_dos.id',$ids);
         }
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
+       // $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
+        $todo_res   = $todo_query->get();
+//print_r($todo_res);exit;
+        $todo_array = array();
+        $i = 0;
+        foreach($todo_res as $todos){
+            $todo_array[$i]['id'] = $todos->id;
+            $todo_array[$i]['subject'] = $todos->subject;
+            $todo_array[$i]['am_name'] = $todos->name;
+        
+
+            $am_name = ToDos::getAssociatedusersById($todos->id);
+            $name_str = '';
+            foreach ($am_name as $k=>$v){
+                if($name_str==''){
+                    $name_str = $v;
+                }
+                else{
+                    $name_str .= ', '. $v ;
+                }
+            }
+            $todo_array[$i]['assigned_to'] = $name_str;
+            $i++;
+        }
+
+        return $todo_array;
+    }
+
+    public static function getAllTodosdash($ids=array()){
+
+        $todo_status = env('COMPLETEDSTATUS');
+        //print_r($todo_status);exit;
+            
+        $todo_query = ToDos::query();
+        $todo_query = $todo_query->join('users', 'users.id', '=', 'to_dos.task_owner');
+        $todo_query = $todo_query->select('to_dos.*', 'users.name as name','to_dos.status');
+
+        if(isset($ids) && sizeof($ids)>0){
+            $todo_query = $todo_query->whereIn('to_dos.id',$ids);
+        }
+
+        $todo_query = $todo_query->orderBy('to_dos.id','desc');
+        $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
         $todo_res   = $todo_query->get();
 //print_r($todo_res);exit;
         $todo_array = array();
