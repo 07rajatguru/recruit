@@ -87,11 +87,11 @@
                                                                     Add Interview
                                                                 </a>
                                                             </li>
-                                                            <li>
+                                                           {{-- <li>
                                                                 <a href="/bnm/create">
                                                                     Add Bills
                                                                 </a>
-                                                            </li>
+                                                            </li>--}}
                                                             <li>
                                                                 <a href="/todos/create">
                                                                     Add Todos
