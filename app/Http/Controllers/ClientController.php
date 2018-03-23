@@ -617,7 +617,6 @@ class ClientController extends Controller
         //$client_basicinfo->tds = $input->tds;
         $client_basicinfo->coordinator_name = $input->coordinator_name;
         $client_basicinfo->account_manager_id = $input->account_manager;
-        $client_basicinfo->tan = $input->tan;
 
         if(isset($input->gst_no) && $input->gst_no!='')
             $client_basicinfo->gst_no = $input->gst_no;
