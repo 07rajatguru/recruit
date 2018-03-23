@@ -65,6 +65,36 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'auth',
         'uses' => 'HomeController@index'
     ));
+    
+     //lead management route
+
+    Route::get('lead/create',[
+        'as'=>'lead.create',
+        'uses'=>'LeadController@create']);
+
+    Route::get('lead',[
+        'as'=>'lead.index',
+        'uses'=>'LeadController@index']);
+
+   Route::post('lead/store', [
+        'as' => 'lead.store',
+        'uses' => 'LeadController@store'
+    ]);
+     
+    Route::get('lead/{id}/edit', [
+        'as' => 'lead.edit',
+        'uses' => 'LeadController@edit'
+    ]);
+
+    Route::put('lead/{id}', [
+        'as' => 'lead.update',
+        'uses' => 'LeadController@update'
+    ]);
+
+    Route::delete('lead/{id}', [
+        'as' => 'lead.destroy',
+        'uses' => 'LeadController@destroy',
+    ]);
 
     // Admin > Users
     Route::get('users', [
