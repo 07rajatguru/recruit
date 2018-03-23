@@ -606,7 +606,13 @@ class ClientController extends Controller
         //$client_basicinfo->fax = $input->fax;
         $client_basicinfo->industry_id = $input->industry_id;
         $client_basicinfo->website = $input->website;
-        $client_basicinfo->source = $input->source;
+        if(isset($input->source) && $input->source!=''){
+            $client_basicinfo->source = $input->source;
+        }
+        else{
+            $client_basicinfo->source = '';
+        }
+
         //$client_basicinfo->gst_no = $input->gst_no;
         //$client_basicinfo->tds = $input->tds;
         $client_basicinfo->coordinator_name = $input->coordinator_name;
