@@ -72,7 +72,7 @@
 
                             <!-- BM will be generated after date of joining -->
                             @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
-                                <a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
+                                {{--<a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>--}}
                             @endif
 
                         @endif

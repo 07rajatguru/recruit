@@ -658,6 +658,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'BillsController@downloadExcel'
     ]);
 
+    Route::get('bills/getclientinfo', [
+        'as' => 'bills.getclientinfo',
+        'uses' => 'BillsController@getClientInfo'
+    ]);
+    Route::get('bills/getcandidateinfo', [
+        'as' => 'bills.getcandidateinfo',
+        'uses' => 'BillsController@getCandidateInfo'
+    ]);
+
+
     // Admin > Teams
     Route::get('team', [
         'as' => 'team.index',

@@ -56,22 +56,43 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
-                            <div class="form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
-                                <strong>Company Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('company_name', null, array('id'=>'company_name','placeholder' => 'Company Name','class' => 'form-control' )) !!}
-                                @if ($errors->has('company_name'))
+
+                            <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
+                                <strong>Select Job Opening:</strong>
+                                {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '23','onchange'=>'prefilleddata()' )) !!}
+                                @if ($errors->has('job'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('company_name') }}</strong>
+                                <strong>{{ $errors->first('job') }}</strong>
                                 </span>
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('candidate_contact_number') ? 'has-error' : '' }}">
-                                <strong>Candidate Contact Number: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('candidate_contact_number', null, array('id'=>'candidate_contact_number','placeholder' => 'Candidate Mobile','class' => 'form-control' )) !!}
-                                @if ($errors->has('candidate_contact_number'))
+                            <div class="form-group {{ $errors->has('client_name') ? 'has-error' : '' }}">
+                                <strong>Client Name: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('client_name', null, array('id'=>'client_name','placeholder' => 'Client Name','class' => 'form-control' )) !!}
+                                @if ($errors->has('client_name'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidate_contact_number') }}</strong>
+                                <strong>{{ $errors->first('client_name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('client_contact_number') ? 'has-error' : '' }}">
+                                <strong>Client Contact Number: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('client_contact_number', null, array('id'=>'client_contact_number','placeholder' => 'Client Contact Number','class' => 'form-control' )) !!}
+                                @if ($errors->has('client_contact_number'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('client_contact_number') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('candidate_name') ? 'has-error' : '' }}">
+                                <strong>Candidate Name: <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('candidate_name', array(),null, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '23','onchange'=>'prefilledcandidatedata()' )) !!}
+                            @if ($errors->has('candidate_name'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('candidate_name') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -106,15 +127,7 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('client_contact_number') ? 'has-error' : '' }}">
-                                <strong>Client Contact Number: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('client_contact_number', null, array('id'=>'client_contact_number','placeholder' => 'Client Contact Number','class' => 'form-control' )) !!}
-                                @if ($errors->has('client_contact_number'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('client_contact_number') }}</strong>
-                                </span>
-                                @endif
-                            </div>
+
 
 
 
@@ -123,12 +136,22 @@
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
 
-                        <div class="form-group {{ $errors->has('candidate_name') ? 'has-error' : '' }}">
-                            <strong>Candidate Name: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('candidate_name', null, array('id'=>'candidate_name','placeholder' => 'Candidate Name','class' => 'form-control')) !!}
-                            @if ($errors->has('candidate_name'))
+                        <div class="form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
+                            <strong>Company Name: <span class = "required_fields">*</span> </strong>
+                            {!! Form::text('company_name', null, array('id'=>'company_name','placeholder' => 'Company Name','class' => 'form-control' )) !!}
+                            @if ($errors->has('company_name'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('candidate_name') }}</strong>
+                                <strong>{{ $errors->first('company_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('client_email_id') ? 'has-error' : '' }}">
+                            <strong>Client Email ID: <span class = "required_fields">*</span> </strong>
+                            {!! Form::text('client_email_id', null, array('id'=>'client_email_id','placeholder' => 'Client Email ID','class' => 'form-control' )) !!}
+                            @if ($errors->has('client_email_id'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('client_email_id') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -139,6 +162,16 @@
                             @if ($errors->has('designation_offered'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('designation_offered') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('candidate_contact_number') ? 'has-error' : '' }}">
+                            <strong>Candidate Contact Number: <span class = "required_fields">*</span> </strong>
+                            {!! Form::text('candidate_contact_number', null, array('id'=>'candidate_contact_number','placeholder' => 'Candidate Mobile','class' => 'form-control' )) !!}
+                            @if ($errors->has('candidate_contact_number'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('candidate_contact_number') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -163,39 +196,20 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('client_name') ? 'has-error' : '' }}">
-                            <strong>Client Name: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('client_name', null, array('id'=>'client_name','placeholder' => 'Client Name','class' => 'form-control' )) !!}
-                            @if ($errors->has('client_name'))
+                        <div class="form-group {{ $errors->has('address_of_communication') ? 'has-error' : '' }}">
+                            <strong>Address of communication: <span class = "required_fields">*</span> </strong>
+                            {!! Form::textarea('address_of_communication', null, array('rows'=>'3','id'=>'address_of_communication','placeholder' => 'Address of communication','class' => 'form-control' )) !!}
+                            @if ($errors->has('address_of_communication'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('client_name') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('client_email_id') ? 'has-error' : '' }}">
-                            <strong>Client Email ID: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('client_email_id', null, array('id'=>'client_email_id','placeholder' => 'Client Email ID','class' => 'form-control' )) !!}
-                            @if ($errors->has('client_email_id'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('client_email_id') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                    </div>
-
-                    <div class="form-group {{ $errors->has('address_of_communication') ? 'has-error' : '' }}">
-                        <strong>Address of communication: <span class = "required_fields">*</span> </strong>
-                        {!! Form::textarea('address_of_communication', null, array('id'=>'address_of_communication','placeholder' => 'Address of communication','class' => 'form-control' )) !!}
-                        @if ($errors->has('address_of_communication'))
-                            <span class="help-block">
                                 <strong>{{ $errors->first('address_of_communication') }}</strong>
                             </span>
-                        @endif
+                            @endif
+                        </div>
+
                     </div>
 
                 </div>
+
             </div>
         </div>
 
@@ -274,6 +288,11 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function () {
+
+            $("#jobopen").select2();
+            $("#candidate_name").select2();
+
+            // on job select pre filled all data
 
             $(function () {
                 $("#date_of_joining").datepicker({
@@ -371,5 +390,64 @@
                 }
             });
         });
+        
+        function prefilleddata() {
+
+            var job_id = $("#jobopen").val();
+
+            if(job_id>0){
+                // get client data from job id
+                $.ajax({
+                    url:'/bills/getclientinfo',
+                    data:'job_id='+job_id,
+                    dataType:'json',
+                    success: function(data){
+                        var cname = data.cname;
+                        var coordinator_name = data.coordinator_name;
+                        var mail = data.mail;
+                        var mobile = data.mobile;
+                        var designation = data.designation;
+                        var location = data.job_location;
+
+                        $("#company_name").val(cname);
+                        $("#client_name").val(coordinator_name);
+                        $("#client_email_id").val(mail);
+                        $("#client_contact_number").val(mobile);
+                        $("#designation_offered").val(designation);
+                        $("#job_location").val(location);
+                    }
+                });
+
+                // get candidate data
+                $.ajax({
+                    url:'/bills/getcandidateinfo',
+                    data:'job_id='+job_id,
+                    dataType:'json',
+                    success: function(data){
+                        var returnvalue = data.returnvalue;
+                        var response = data.data;
+                        if(returnvalue=='valid'){
+                            $('#candidate_name').empty();
+                            $('#candidate_name').append($('<option></option>').val(0).html(''));
+                            for(var i=0;i<response.length;i++){
+                                $('#candidate_name').append($('<option data-content="'+response[i].mobile+'"></option>').val(response[i].id).html(response[i].name));
+                                $('#candidate_name').select2();
+                            }
+
+                        }
+
+                    }
+                });
+            }
+
+        }
+
+        function prefilledcandidatedata() {
+            var candidate_id = $("#candidate_name").val();
+
+            var mobile  = $("#candidate_name>option:selected").attr('data-content');
+            $("#candidate_contact_number").val(mobile);
+        }
+
     </script>
 @endsection
