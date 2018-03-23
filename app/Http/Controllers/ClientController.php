@@ -240,8 +240,12 @@ class ClientController extends Controller
         //$client_basic_info->fax = $input['fax'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
-        $client_basic_info->source = $input['source'];
+        //$client_basic_info->source = $input['source'];
         $client_basic_info->about = $input['description'];
+        if(isset($input['source']) && $input['source']!='')
+            $client_basic_info->source = $input['source'];
+        else
+            $client_basic_info->source = '';
         if(isset($input['gst_no']) && $input['gst_no']!='')
             $client_basic_info->gst_no = $input['gst_no'];
         else
