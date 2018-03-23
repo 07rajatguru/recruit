@@ -3,10 +3,31 @@
 @section('title', 'HRM')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+
+    @endif
+    <div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+                <h2>Dashboard</h2>
+        </div>
+
+       <!--  <div class="pull-right">
+            @include('adminlte::partials.login', ['name' => 'dashboard'])
+            @include('adminlte::partials.logout', ['name' => 'dashboard'])
+        </div>
+ -->
+    </div>
+
+</div>
+
 @stop
 
 @section('content')
+
 
     <div class="row">
         <div class="col-lg-3 col-xs-6">

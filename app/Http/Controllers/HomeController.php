@@ -24,6 +24,41 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function login(Request $request)
+    {
+
+            $user = \Auth::user();
+            //$user_id = \Auth::user()->id;
+            // Entry of login
+            $users_log= new UsersLog();
+            $users_log->user_id = $user->id;
+            $users_log->date = gmdate("Y-m-d");
+            $users_log->time = gmdate("H:i:s");
+            $users_log->type ='login';
+            $users_log->created_at = gmdate("Y-m-d H:i:s");
+            $users_log->updated_at = gmdate("Y-m-d H:i:s");
+            $users_log->save();
+
+            return redirect()->route('dashboard')->with('success', 'Login Successfully');
+    }
+
+    public function logout(Request $request)
+    {
+        $user_id = \Auth::user()->id;
+        // Entry of login
+        $users_log= new UsersLog();
+        $users_log->user_id = $user_id;
+        $users_log->date = gmdate("Y-m-d");
+        $users_log->time = gmdate("H:i:s");
+        $users_log->type ='logout';
+        $users_log->created_at = gmdate("Y-m-d H:i:s");
+        $users_log->updated_at = gmdate("Y-m-d H:i:s");
+        $users_log->save();
+
+        return redirect()->route('dashboard')->with('success', 'Logout Successfully');
+
+    }
+
     public function dashboard(){
 
         $loggedin_userid = \Auth::user()->id;
@@ -95,14 +130,18 @@ class HomeController extends Controller
             $interviews = Interview::getTodaysInterviews(0,$user->id);
         }
 
-        //print_r($interviews);exit;
+        //get candidate join list on this month
+        $month = date('m');
+        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+       // print_r($candidatejoin);exit;
+
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
         $viewVariable['interviewCount'] = sizeof($interviews);
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
-       /* $viewVariable['candidatejoinCount'] = $candidatejoin;*/
+        $viewVariable['candidatejoinCount'] = $candidatejoin;
 
         return view('dashboard',$viewVariable);
     }
