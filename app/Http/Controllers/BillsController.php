@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Bills;
 use App\BillsDoc;
 use App\BillsEffort;
+use App\CandidateBasicInfo;
+use App\ClientBasicinfo;
+use App\JobOpen;
 use Illuminate\Http\Request;
 use App\Date;
 use App\User;
@@ -15,8 +18,6 @@ class BillsController extends Controller
 {
     public function index()
     {
-
-        $bnm = Bills::getAllBills(0);
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -29,9 +30,11 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
+            $bnm = Bills::getAllBills(0,1,$user_id);
             $access = true;
         }
         else{
+            $bnm = Bills::getAllBills(0,0,$user_id);
             $access = false;
         }
 
@@ -48,6 +51,30 @@ class BillsController extends Controller
         $action = 'add';
         $generate_bm = '0';
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+        }
+        $job_id = 0;
+
         $employee_name = array();
         $employee_percentage = array();
 
@@ -58,7 +85,7 @@ class BillsController extends Controller
             $employee_percentage[$i] = '';
         }
 
-        return view('adminlte::bills.create', compact('action', 'employee_name', 'employee_percentage','generate_bm'));
+        return view('adminlte::bills.create', compact('action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id'));
     }
 
     public function store(Request $request)
@@ -201,6 +228,29 @@ class BillsController extends Controller
     public function edit($id)
     {
         $generate_bm ='0';
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+        }
+        
         $bnm = Bills::find($id);
 
         $dateClass = new Date();
@@ -379,6 +429,36 @@ class BillsController extends Controller
         })->export('xlsx');
         ob_flush();
         exit();
+
+    }
+
+    public function getClientInfo(){
+
+        $job_id = $_GET['job_id'];
+
+        // get client info
+        $client = ClientBasicinfo::getClientInfoByJobId($job_id);
+
+        echo json_encode($client);exit;
+
+    }
+
+    public function getCandidateInfo(){
+
+        $job_id = $_GET['job_id'];
+
+        // get candidate Info
+        $response = array();
+        $response['returnvalue'] = 'invalid';
+
+        $candidate_data = CandidateBasicInfo::getCandidateInfoByJobId($job_id);
+
+        if(isset($candidate_data) && sizeof($candidate_data)>0) {
+            $response['returnvalue'] = 'valid';
+            $response['data'] = $candidate_data;
+        }
+
+        echo json_encode($response);exit;
 
     }
 

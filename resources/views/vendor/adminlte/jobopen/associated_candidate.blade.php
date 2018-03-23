@@ -18,10 +18,6 @@
             <div class="pull-right">
                 <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
             </div>
-           {{-- <div class="pull-right">
-                <a class="btn bg-maroon" onclick="deassociate_candidate({{ $job_id }});">Deassociate Candidate</a>
-                <a data-toggle="modal" href="#modal-update-status" class="btn btn-success">Change Status</a>
-            </div>--}}
 
             <!-- Schedule interview popup starts -->
             <div id="modal-schedule-interview"  class="modal text-left fade">
@@ -167,6 +163,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Add Shortlisted Candidate popup -->
+            <div id="modal-shortlisted" class="modal text-left fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        {!! Form::open(['method' => 'POST','file' => true, 'route' => ["jobopen.shortlisted",$job_id]]) !!}
+
+                         <div class="modal-header">
+
+                            <h1 class="modal-title">Shortlist Candidate</h1>
+                        </div>
+                        <div class="modal-body">
+                            {!! Form::hidden('shortlisted', 1 , array('id'=>'shortlist','class' => 'form-control' )) !!}
+                            {!! Form::hidden('job_candidate_id', null , array('id'=>'job_candidate_id','class' => 'form-control' )) !!}
+                            <p>
+                                Are you sure want to shortlist Candidate ?
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit"  class="btn btn-primary">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        </div>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
     @if ($message = Session::get('success'))
@@ -187,7 +211,12 @@
         </tr>
         <?php $i = 0; ?>
         @foreach ($candidates as $candidate)
-            <tr>
+            <?php
+            $color='';
+            if($candidate->shortlisted==1){
+                 $color='yellow';
+                 } ?>
+            <tr style="background-color: {{$color}}">
                 <td>
                     <ul class="nav navbar-nav">
                         <li class="dropdown messages-menu">
@@ -210,6 +239,11 @@
                                             <li>
                                                 <a class="joining-date" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-joining-date" >Add Joining Date</a>
                                             </li>
+                                            @if($candidate->shortlisted!=1)
+                                                <li>
+                                                    <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
+                                                </li>
+                                            @endif
                                         </ul>
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
                                 </li>
@@ -284,6 +318,10 @@
                 $('#candidate_id').val($(this).data('id'));
             });
 
+            $(".sorted-candidate").click(function() {
+                $('#job_candidate_id').val($(this).data('id'));
+            });
+
         });
 
         function deassociate_candidate(jobid,candidate_id) {
@@ -345,6 +383,7 @@
             }
         }
 
+        
         function addJoiningDate(jobid) {
 
             var joining_date = $("#joining_date").val();
@@ -370,5 +409,6 @@
             }
         }
 
+        
     </script>
 @endsection

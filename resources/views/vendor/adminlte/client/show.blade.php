@@ -28,9 +28,9 @@
                 <h2>{{ $client['name'] }}</h2>
             </div>
 
-           {{-- <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('client.edit',$client['id']) }}">Edit</a>
-            </div>--}}
+           <div class="pull-right">
+                <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
+            </div>
         </div>
 
     </div>
@@ -53,10 +53,17 @@
                         </tr>
 
                         <tr>
-                            <th>Email</th>
-                            <td>{{ $client['mail'] }}</td>
-                            <th>Source</th>
-                            <td>{{ $client['source'] }}</td>
+                            @if($isSuperAdmin || $isAdmin)
+                                <th>Email</th>
+                                <td>{{ $client['mail'] }}</td>
+                            @else
+                                <th>Email</th>
+                                <td colspan="3">{{ $client['mail'] }}</td>
+                            @endif
+                            @if($isSuperAdmin || $isAdmin)
+                                <th>Source</th>
+                                <td>{{ $client['source'] }}</td>
+                            @endif
                         </tr>
 
                         <tr>
@@ -67,18 +74,26 @@
                         </tr>
 
                         <tr>
-                            <th>Industry</th>
-                            <td>{{ $client['ind_name'] }}</td>
-                            <th>GST Number</th>
-                            <td>{{ $client['gst_no'] }}</td>
+                            @if($isSuperAdmin || $isAdmin)
+                                <th>Industry</th>
+                                <td>{{ $client['ind_name'] }}</td>
+                            @else
+                                <th>Industry</th>
+                                <td colspan="3">{{ $client['ind_name'] }}</td>
+                            @endif
+                            @if($isSuperAdmin || $isAdmin)
+                                <th>GST Number</th>
+                                <td>{{ $client['gst_no'] }}</td>
+                            @endif
                         </tr>
-
-                        <tr>
-                            <th>TDS</th>
-                            <td>{{ $client['tds'] }}</td>
-                            <th>TAN</th>
-                            <td>{{ $client['tan'] }}</td>
-                        </tr>
+                        @if($isSuperAdmin || $isAdmin)
+                            <tr>
+                                <th>TDS</th>
+                                <td>{{ $client['tds'] }}</td>
+                                <th>TAN</th>
+                                <td>{{ $client['tan'] }}</td>
+                            </tr>
+                        @endif
 
                         <tr>
                             <th>About</th>
@@ -99,8 +114,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                         <tr>
-                            <th colspan="2" style="text-align:center;">Billing Address</th>
-                            <th colspan="2"  style="text-align:center;">Shipping Address</th>
+                            <th colspan="2" style="text-align:center;">Address 1</th>
+                            <th colspan="2"  style="text-align:center;">Address 2</th>
                         </tr>
 
                         <tr>
@@ -142,7 +157,7 @@
                  </div>
              </div>
         </div>
-
+    @if($isSuperAdmin || $isAdmin)
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header  col-md-6 ">
@@ -184,5 +199,6 @@
 
             </div>
         </div>
+    @endif
     </div>
 @endsection

@@ -54,7 +54,7 @@
                                 <td>{{ $toDos->priority }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Desscription :</th>
+                                <th scope="row">Remarks :</th>
                                 <td>{{ $toDos->description }}</td>
                                
                             </tr>

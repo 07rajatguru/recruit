@@ -3,10 +3,31 @@
 @section('title', 'HRM')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+
+    @endif
+    <div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+                <h2>Dashboard</h2>
+        </div>
+
+       <!--  <div class="pull-right">
+            @include('adminlte::partials.login', ['name' => 'dashboard'])
+            @include('adminlte::partials.logout', ['name' => 'dashboard'])
+        </div>
+ -->
+    </div>
+
+</div>
+
 @stop
 
 @section('content')
+
 
     <div class="row">
         <div class="col-lg-3 col-xs-6">
@@ -81,10 +102,9 @@
                             <thead>
                             <tr>
                                 <th>Interview Name</th>
-                                <th>Client Name</th>
+                                <th>Posting Title</th>
                                 <th>Candidate Name</th>
                                 <th>Time</th>
-                                <th>Posting Title</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -92,10 +112,9 @@
                                 @foreach($interviews as $interview)
                                     <tr>
                                         <td><a href="{{ route('candidate.show',$interview->id) }}">{{ $interview->interview_name }}</a></td>
-                                        <td>{{ $interview->client_name or '' }}</td>
+                                        <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td>{{ $interview->candidate_fname .' '.$interview->candidate_lname }} </td>
                                         <td>{{ date('h:i A',strtotime($interview->interview_date)) }}</td>
-                                        <td>{{ $interview->posting_title }}</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -137,7 +156,8 @@
                             <tr>
                                 <th>Sr No.</th>
                                 <th>Subject</th>
-                                <th>Priority</th>
+                                <th>Assigned By</th>
+                                <th>Assigned To</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -146,8 +166,9 @@
                                 @foreach($toDos as $toDo)
                                     <tr>
                                         <td>{{ $i }}</td>
-                                        <td>{{ $toDo->subject }}</td>
-                                        <td>{{ $toDo->priority }}</td>
+                                        <td>{{ $toDo['subject'] }}</td>
+                                        <td>{{ $toDo['am_name'] }}</td>
+                                        <td>{{ $toDo['assigned_to'] }}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach

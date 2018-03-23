@@ -37,18 +37,13 @@ class ClientController extends Controller
         if($isSuperAdmin || $isAdmin){
             $clients = \DB::table('client_basicinfo')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
+                ->leftJoin('client_doc',function($join){
+                    $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
+                    $join->where('client_doc.category','=','Client Contract');
+                })
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file')
                 ->get();
         }
-/*
-        // if Admin get clients of logged in user company
-        else if($isAdmin) {
-            $clients = \DB::table('client_basicinfo')
-                ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
-                //->where('users.company_id',$company_id)
-                ->get();
-        }*/
         else{
             $clients = \DB::table('client_basicinfo')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
@@ -57,6 +52,7 @@ class ClientController extends Controller
                 ->get();
         }
 
+        $count = sizeof($clients);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -92,10 +88,35 @@ class ClientController extends Controller
 
             $client_array[$i]['client_visibility'] = $client_visibility_val;
 
+            if($isSuperAdmin || $isAdmin){
+                $client_array[$i]['url'] = $client->file;
+            }
+            else{
+                $client_array[$i]['url'] = '';
+            }
             $i++;
         }
+         
+       
+        /*$client_doc = \DB::table('client_doc')
+                    ->leftjoin('client_basicinfo','client_basicinfo.id','=','client_doc.client_id')       
+                    ->select('client_doc.id','client_basicinfo.id','client_doc.file','client_doc.category')
+                   // ->where('client_doc.client_id',$client->id)
+                    ->get();
+                    //print_r($client_doc);exit;
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin'));
+        $i= 1;
+        $clientdoc = array();
+        foreach ($client_doc as $key=>$value){
+            $clientdoc[$i]['id'] = $value->id;
+            $clientdoc[$i]['url'] = "../".$value->file ;
+            //print_r($clientdoc);exit;
+            $i++;
+            
+        }*/
+        
+
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count'));
     }
 
     public function create()
@@ -108,6 +129,7 @@ class ClientController extends Controller
         $role_id = key($userRole);
 
         $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $user_id = $user->id;
 
@@ -121,7 +143,7 @@ class ClientController extends Controller
         }
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin'));
     }
 
     public function edit($id)
@@ -132,6 +154,7 @@ class ClientController extends Controller
         $role_id = key($userRole);
 
         $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
         $industry_res = Industry::orderBy('id','DESC')->get();
@@ -159,6 +182,7 @@ class ClientController extends Controller
             $client['mobile'] = $value->mobile;
             $client['am_name'] = $value->am_name;
             $client['mail'] = $value->mail;
+            $client['s_email'] = $value->s_email;
             $client['ind_name'] = $value->ind_name;
             $client['website'] = $value->website;
             $client['description'] = $value->description;
@@ -196,7 +220,7 @@ class ClientController extends Controller
          $users = User::getAllUsers();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin'));
     }
 
     public function store(Request $request){
@@ -209,18 +233,32 @@ class ClientController extends Controller
         $client_basic_info->name = $input['name'];
         $client_basic_info->display_name = $input['display_name'];
         $client_basic_info->mail = $input['mail'];
+        $client_basic_info->s_email = $input['s_email'];
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
         //$client_basic_info->fax = $input['fax'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
-        $client_basic_info->source = $input['source'];
+        //$client_basic_info->source = $input['source'];
         $client_basic_info->about = $input['description'];
-        $client_basic_info->gst_no = $input['gst_no'];
-        $client_basic_info->tds = $input['tds'];
+        if(isset($input['source']) && $input['source']!='')
+            $client_basic_info->source = $input['source'];
+        else
+            $client_basic_info->source = '';
+        if(isset($input['gst_no']) && $input['gst_no']!='')
+            $client_basic_info->gst_no = $input['gst_no'];
+        else
+            $client_basic_info->gst_no = '';
+        if(isset($input['tds']) && $input['tds']!='')
+            $client_basic_info->tds = $input['tds'];
+        else
+            $client_basic_info->tds = '';
+        if(isset($input['tan']) && $input['tan']!='')
+            $client_basic_info->tan = $input['tan'];
+        else
+            $client_basic_info->tan = '';
         $client_basic_info->coordinator_name = $input['coordinator_name'];
-        $client_basic_info->tan = $input['tan'];
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
@@ -389,6 +427,15 @@ class ClientController extends Controller
     public function show($id)
     {
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
 
@@ -458,7 +505,7 @@ class ClientController extends Controller
         $client_upload_type['Others'] = 'Others';
 
         //print_r($client);exit;
-        return view('adminlte::client.show',compact('client','client_upload_type'));
+        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin'));
     }
 
     public function attachmentsDestroy($docid){
@@ -535,6 +582,12 @@ class ClientController extends Controller
         return redirect()->route('client.index'); 
     }
 
+   /* public function deleteAssociatedJob($id){
+        
+        
+
+    }*/
+
     public function update(Request $request, $id){
         $user_id = \Auth::user()->id;
 
@@ -548,16 +601,35 @@ class ClientController extends Controller
         $client_basicinfo->display_name = $input->display_name;
         $client_basicinfo->mobile = $input->mobile;
         $client_basicinfo->mail = $input->mail;
+        $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
         //$client_basicinfo->fax = $input->fax;
         $client_basicinfo->industry_id = $input->industry_id;
         $client_basicinfo->website = $input->website;
-        $client_basicinfo->source = $input->source;
-        $client_basicinfo->gst_no = $input->gst_no;
-        $client_basicinfo->tds = $input->tds;
+        if(isset($input->source) && $input->source!=''){
+            $client_basicinfo->source = $input->source;
+        }
+        else{
+            $client_basicinfo->source = '';
+        }
+
+        //$client_basicinfo->gst_no = $input->gst_no;
+        //$client_basicinfo->tds = $input->tds;
         $client_basicinfo->coordinator_name = $input->coordinator_name;
         $client_basicinfo->account_manager_id = $input->account_manager;
-        $client_basicinfo->tan = $input->tan;
+
+        if(isset($input->gst_no) && $input->gst_no!='')
+            $client_basicinfo->gst_no = $input->gst_no;
+        else
+            $client_basicinfo->gst_no = '';
+        if(isset($input->tds) && $input->tds!='')
+            $client_basicinfo->tds = $input->tds;
+        else
+            $client_basicinfo->tds = '';
+        if(isset($input->tan) && $input->tan!='')
+            $client_basicinfo->tan = $input->tan;
+        else
+            $client_basicinfo->tan = '';
 
         if($client_basicinfo->save()){
 

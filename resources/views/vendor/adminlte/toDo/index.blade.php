@@ -56,6 +56,8 @@
         <tr>
             <th>No</th>
             <th>Subject</th>
+            <th>Assign By</th>
+            <th>Assign To</th>
             <th width="280px">Action</th>
         </tr>
         </thead>
@@ -67,11 +69,15 @@
 
                 <td>{{ ++$i }}</td>
 
-                <td>{{ $todo->subject }}</td>
+                <td>{{ $todo['subject'] }}</td>
+
+                <td>{{ $todo['am_name'] }}</td>
+
+                <td>{{ $todo['assigned_to'] }}</td>
 
                 <td>
 
-                     <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>
+                   {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
                     <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
 

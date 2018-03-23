@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Closing List</h2>
+                <h2>Job Closing List ({{ $count }})</h2>
             </div>
 
             <div class="pull-right">
@@ -77,7 +77,7 @@
                     @endif
 
                 </td>
-                <td>{{ $job_status[$value['job_status']] }}</td>
+                <td>{{ $job_priority[$value['priority']] }}</td>
                 <td>{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['company_name'] or '' }}</td>
                 <td>{{ $value['posting_title'] or ''}}</td>

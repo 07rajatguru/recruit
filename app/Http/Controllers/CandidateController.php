@@ -411,6 +411,7 @@ class CandidateController extends Controller
                     $jobopening->status_id = $status_id;
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
+                    $jobopening->shortlisted = 0;
                     $jobopening->save();
                 }
 
@@ -467,8 +468,9 @@ class CandidateController extends Controller
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            $jobopen[$v['id']] = $v['posting_title']." - ".$v['client'];
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
         }
+
 
         // check if candidate associate with any job
         $job_id = JobAssociateCandidates::getAssociatedJobIdByCandidateId($id);
@@ -683,6 +685,7 @@ class CandidateController extends Controller
                     $jobopening->status_id = $status_id;
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
+                    $jobopening->shortlisted = 0;
                     $jobopening->save();
                 }
             } 

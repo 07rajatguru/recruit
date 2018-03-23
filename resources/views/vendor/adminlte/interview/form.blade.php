@@ -48,13 +48,14 @@
 
                             <div class="form-group {{ $errors->has('candidate_id') ? 'has-error' : '' }}">
                                 <strong>Candidate: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate_id', $candidate,null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @if ($errors->has('candidate_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candidate_id') }}</strong>
                                 </span>
                                 @endif
                             </div>
+                            <input type="hidden" id="hidden_candidate_id" value="{{$hidden_candidate_id}}" name="hidden_candidate_id" />
 
                             <div class="form-group {{ $errors->has('from') ? 'has-error' : '' }}">
                                 <strong>Interview Date: <span class = "required_fields">*</span> </strong>
@@ -95,7 +96,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
                                 <strong>Posting Name:</strong>
-                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '2' )) !!}
+                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '2' , 'onchange' => 'getCandidate()' )) !!}
                                 {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
                                 @if ($errors->has('posting_title'))
                                     <span class="help-block">
@@ -147,7 +148,7 @@
 
                             <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
                                 <strong>Interview Cordination:</strong>
-                                {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5')) !!}
+                                {!! Form::select('interviewer_id', $users, $interviewer_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5')) !!}
                                 @if ($errors->has('interviewer_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('interviewer_id') }}</strong>
@@ -233,6 +234,29 @@
              $("#posting_title").select2();
              $("#interviewer_id").select2();
 
+             getCandidate();
+
         });
+
+         function getCandidate(){
+            var job_id = $("#posting_title").val();
+            var hidden_candidate_id = $("#hidden_candidate_id").val();
+
+            if(job_id>0){
+                $.ajax({
+                    url:'/job/associatedcandidate',
+                    data:'job_id='+job_id,
+                    dataType:'json',
+                    success: function(data){
+                        $("#candidate_id").empty();
+                        var response = data.data;
+                        for(var i=0;i<response.length;i++){
+                            $('#candidate_id').append($('<option></option>').val(response[i].id).html(response[i].value));
+                            $("#candidate_id").select2('val',hidden_candidate_id);
+                        }
+                    }
+                });
+            }
+        }
     </script>
 @endsection

@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Client List</h2>
+                <h2>Client List ({{ $count }})</h2>
             </div>
 
             <div class="pull-right">
@@ -27,6 +27,8 @@
 
     @endif
 
+    
+
     @if ($message = Session::get('error'))
         <div class="alert alert-error">
             <p>{{ $message }}</p>
@@ -38,7 +40,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Client Name</th>
+                <th>Company Name</th>
                 <th>Client Owner</th>
                 <th>Client Email</th>
                 <th>Client Phone No.</th>
@@ -68,6 +70,9 @@
 
                     <?php if($isSuperAdmin) { ?>
                     @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
+                        @if(isset($client['url']) && $client['url']!='')
+                            <a target="_blank" href="{{$client['url']}}"><i  class="fa fa-fw fa-download"></i></a>
+                        @endif
                     <?php  }?>
 
                 </td>

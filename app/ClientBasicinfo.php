@@ -69,6 +69,23 @@ class ClientBasicinfo extends Ardent
         return $client_response;
     }
 
+    public static function getClientsByIds($user_id,$ids){
+
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
+
+        if($user_id>0)
+            $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+
+        $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
+
+        $client_query = $client_query->whereIn('client_basicinfo.id',$ids);
+
+        $client_response = $client_query->get();
+
+        return $client_response;
+    }
+
     public static function checkAssociation($id){
 
         $job_query = JobOpen::query();
@@ -82,6 +99,16 @@ class ClientBasicinfo extends Ardent
             return true;
       }
     }
+
+/*     public static function checkAssociatedJob($id){
+
+        $job_query = JobOpen::query();
+        $job_query = $job_query->where('client_id','=',$id);
+        $job_query = $job_query->select('job_openings.*','job_openings.posting_title','job_openings.city');
+        $job_res = $job_query->get();
+        
+        return $job_res;
+    }*/
 
     public static function checkClientByEmail($email){
 
@@ -112,4 +139,27 @@ class ClientBasicinfo extends Ardent
 
         return true;
     }
+
+    public static function getClientInfoByJobId($job_id){
+
+        $query = JobOpen::query();
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->where('job_openings.id','=',$job_id);
+        $query = $query->select('client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile',
+            'job_openings.posting_title','job_openings.city');
+        $response = $query->get();
+
+        $client = array();
+        foreach ($response as $k=>$v){
+            $client['cname'] = $v->cname;
+            $client['coordinator_name'] = $v->coordinator_name;
+            $client['mail'] = $v->mail;
+            $client['mobile'] = $v->mobile;
+            $client['designation'] = $v->posting_title;
+            $client['job_location'] = $v->city;
+        }
+
+        return $client;
+    }
+
 }

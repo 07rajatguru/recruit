@@ -101,10 +101,10 @@ class CandidateBasicInfo extends Model
     public static function getCandidateArray(){
         $candidateArray = array('' => 'Select Candidate');
 
-        $candidateDetails = CandidateBasicInfo::all();
+        $candidateDetails = JobAssociateCandidates::all();
         if(isset($candidateDetails) && sizeof($candidateDetails)){
             foreach ($candidateDetails as $candidateDetail) {
-                $candidateArray[$candidateDetail->id] = $candidateDetail->fname.' '.$candidateDetail->lname;
+                $candidateArray[$candidateDetail->id] = $candidateDetail->candidate_id;
             }
         }
 
@@ -112,4 +112,34 @@ class CandidateBasicInfo extends Model
     }
 
 
+    public static function getAllCandidatesById($ids){
+
+        $query = new CandidateBasicInfo();
+        $query = $query->whereIn('id',$ids);
+        $response = $query->get();
+
+        return $response;
+
+    }
+
+    public static function getCandidateInfoByJobId($job_id){
+
+        $query = CandidateBasicInfo::query();
+        $query = $query->join('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+        $query = $query->where('job_associate_candidates.shortlisted','=',1);
+        $query = $query->select('candidate_basicinfo.fname','candidate_basicinfo.lname','candidate_basicinfo.mobile','candidate_basicinfo.id');
+        $response = $query->get();
+
+        $candidate = array();
+        $i = 0 ;
+        foreach ($response as $k=>$v){
+            $candidate[$i]['id'] = $v->id;
+            $candidate[$i]['name'] = $v->fname." ".$v->lname;
+            $candidate[$i]['mobile'] = $v->mobile;
+            $i++;
+        }
+
+        return $candidate;
+    }
 }

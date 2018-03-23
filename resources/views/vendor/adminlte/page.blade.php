@@ -66,15 +66,15 @@
                                                 <li>
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
-                                                        <ul class="menu" style="overflow: hidden; width: 100%; height;150px">
-                                                            <li>
-                                                                <a href="/jobs/create">
-                                                                    Add Job Openings
-                                                                </a>
-                                                            </li>
+                                                        <ul class="menu" style=" width: 100%; height;150px">
                                                             <li>
                                                                 <a href="/client/create">
                                                                     Add Client
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="/jobs/create">
+                                                                    Add Job Openings
                                                                 </a>
                                                             </li>
                                                             <li>
@@ -82,16 +82,21 @@
                                                                     Add Candidate
                                                                 </a>
                                                             </li>
-                                                            {{--<li>
+                                                            <li>
                                                                 <a href="/interview/create">
                                                                     Add Interview
                                                                 </a>
                                                             </li>
+                                                           {{-- <li>
+                                                                <a href="/bnm/create">
+                                                                    Add Bills
+                                                                </a>
+                                                            </li>--}}
                                                             <li>
                                                                 <a href="/todos/create">
                                                                     Add Todos
                                                                 </a>
-                                                            </li>--}}
+                                                            </li>
                                                         </ul><div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
                                                 </li>
                                             </ul>
@@ -212,7 +217,8 @@
 @section('adminlte_js')
     <script src="{{ asset('vendor/adminlte/dist/js/app.min.js') }}"></script>
     <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script src="{{ asset('js/multiselect.min.js') }}"></script>
     <script>
         jQuery(document).ready(function () {
             getNotifications();

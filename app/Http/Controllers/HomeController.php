@@ -24,6 +24,41 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function login(Request $request)
+    {
+
+            $user = \Auth::user();
+            //$user_id = \Auth::user()->id;
+            // Entry of login
+            $users_log= new UsersLog();
+            $users_log->user_id = $user->id;
+            $users_log->date = gmdate("Y-m-d");
+            $users_log->time = gmdate("H:i:s");
+            $users_log->type ='login';
+            $users_log->created_at = gmdate("Y-m-d H:i:s");
+            $users_log->updated_at = gmdate("Y-m-d H:i:s");
+            $users_log->save();
+
+            return redirect()->route('dashboard')->with('success', 'Login Successfully');
+    }
+
+    public function logout(Request $request)
+    {
+        $user_id = \Auth::user()->id;
+        // Entry of login
+        $users_log= new UsersLog();
+        $users_log->user_id = $user_id;
+        $users_log->date = gmdate("Y-m-d");
+        $users_log->time = gmdate("H:i:s");
+        $users_log->type ='logout';
+        $users_log->created_at = gmdate("Y-m-d H:i:s");
+        $users_log->updated_at = gmdate("Y-m-d H:i:s");
+        $users_log->save();
+
+        return redirect()->route('dashboard')->with('success', 'Logout Successfully');
+
+    }
+
     public function dashboard(){
 
         $loggedin_userid = \Auth::user()->id;
@@ -33,68 +68,80 @@ class HomeController extends Controller
         $from = date('Y-m-d 00:00:00');
         $to = date('Y-m-d 23:59:59');
         $today = date('Y-m-d');
-        $toDos = ToDos::where('due_date','>=',$today)->get();
-
-
+        /*$toDos = ToDos::where('due_date','>=',$today)->get();*/
 
         $user =  \Auth::user();
 
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $manager_role_id = env('MANAGER');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id,$manager_role_id);
 
-        $user_obj = new User();
-        $isAdmin = $user_obj::isAdmin($role_id);
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $toDos = ToDos::getAllTodosdash();
+        }
+        else{
+            // get assigned to todos
+            $todo_ids = ToDos::getTodoIdsByUserId($user->id);
+
+            //$todo_ids_list = implode(',',$todo_ids);
+            $toDos = ToDos::getAllTodosdash($todo_ids);
+        }
+
 
         //get Job List
-        if($isSuperAdmin || $isAdmin){
-        $job = DB::table('job_openings')->where('job_status')->count();
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllJobs(1,$user->id);
+        }
+        else{
+            $job_response = JobOpen::getAllJobs(0,$user->id);
+        }
+
+        $job = sizeof($job_response);
+        /*if(in_array($user_role_id,$access_roles_id)){
+            //$job = DB::table('job_openings')->where('job_status')->count();
         }
 
         else{
-             $job = DB::table('job_openings')->where('job_status')
-                                             ->where('hiring_manager_id',$user->id)
-                                             ->count();
-        }
+             //$job = DB::table('job_openings')->where('job_status')
+                                            // ->where('hiring_manager_id',$user->id)
+                                            // ->count();
+        }*/
 
         //get Client List
-        if($isSuperAdmin || $isAdmin){
-        $month = date('m');
-        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
+        if(in_array($user_role_id,$access_roles_id)){
+            $month = date('m');
+            $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
         }
 
         else{
-         $month = date('m');
-        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
+             $month = date('m');
+             $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
                                                ->where('account_manager_id',$user->id)
                                                ->count();   
         }
 
-       /* $month = date('m');
-        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();*/
-        
-        //Get Interview List
-        $interviews = Interview::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
-            ->leftjoin('job_openings','job_openings.id','=','interview.posting_title')
-            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
-            ->select('interview.id as id', 'interview.interview_name as interview_name','interview.interview_date',
-                 'client_basicinfo.name as client_name',
-                'interview.candidate_id as candidate_id', 'candidate_basicinfo.fname as candidate_fname',
-                'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-                'job_openings.posting_title as posting_title')
-            ->where('interview_date','>=',$from)
-            ->where('interview_date','<=',$to)
-            ->get();
+        if(in_array($user_role_id,$access_roles_id)){
+            $interviews = Interview::getTodaysInterviews(1,$user->id);
+        }
+        else{
+            $interviews = Interview::getTodaysInterviews(0,$user->id);
+        }
 
-        //print_r($interviews);exit;
+        //get candidate join list on this month
+        $month = date('m');
+        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+       // print_r($candidatejoin);exit;
+
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
         $viewVariable['interviewCount'] = sizeof($interviews);
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
-       /* $viewVariable['candidatejoinCount'] = $candidatejoin;*/
+        $viewVariable['candidatejoinCount'] = $candidatejoin;
 
         return view('dashboard',$viewVariable);
     }

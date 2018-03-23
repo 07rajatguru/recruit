@@ -462,6 +462,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@create',
         // 'middleware' => ['permission:industry-create']
     ]);
+
     Route::get('jobs/getopenjobs', [
         'as' => 'jobopen.getOpenJobs',
         'uses' => 'JobOpenController@getOpenJobs',
@@ -569,7 +570,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@close',
         // 'middleware' => ['permission:industry-create']
     ]);
-
+    Route::get('job/associatedcandidate', [
+        'as' => 'jobopen.associatedcandidate',
+        'uses' => 'JobOpenController@getAssociatedcandidates',
+        // 'middleware' => ['permission:industry-create']
+    ]);
 
     //job status
      Route::post('jobs/jobonhlod', [
@@ -586,6 +591,14 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'jobopen.jobclosebyclient',
         'uses' => 'JobOpenController@jobclosebyclient',
     ]);
+
+    //candidate shortlisted
+    Route::post('jobs/shortlisted/{id}',[
+        'as' => 'jobopen.shortlisted',
+        'uses' => 'JobOpenController@shortlisted',
+    ]);
+
+
 
 
     // Interview Module
@@ -624,8 +637,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@destroy'
     ]);
 
-    // Bills Module
+    /*Route::get('ajax/interviewcandidate', [
+        'as' => 'interview.getCandidate',
+        'uses' => 'InterviewController@getCandidate',
+    ]);*/
 
+    // Bills Module
     Route::get('bnm/create', [
         'as' => 'bills.create',
         'uses' => 'BillsController@create'
@@ -670,6 +687,16 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'bnm.downloadexcel',
         'uses' => 'BillsController@downloadExcel'
     ]);
+
+    Route::get('bills/getclientinfo', [
+        'as' => 'bills.getclientinfo',
+        'uses' => 'BillsController@getClientInfo'
+    ]);
+    Route::get('bills/getcandidateinfo', [
+        'as' => 'bills.getcandidateinfo',
+        'uses' => 'BillsController@getCandidateInfo'
+    ]);
+
 
     // Admin > Teams
     Route::get('team', [
@@ -728,6 +755,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('ajax/todotype', [
         'as' => 'todos.getType',
         'uses' => 'ToDosController@getType',
+    ]);
+    Route::get('todo/getselectedtypelist', [
+        'as' => 'todos.getselectedtypelist',
+        'uses' => 'ToDosController@getSelectedTypeList',
     ]);
 
     Route::get('todos/{id}', [
