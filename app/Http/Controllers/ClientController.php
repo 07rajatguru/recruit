@@ -613,15 +613,15 @@ class ClientController extends Controller
         $client_basicinfo->account_manager_id = $input->account_manager;
         $client_basicinfo->tan = $input->tan;
 
-        if(isset($input['gst_no']) && $input['gst_no']!='')
+        if(isset($input->gst_no) && $input->gst_no!='')
             $client_basicinfo->gst_no = $input['gst_no'];
         else
             $client_basicinfo->gst_no = '';
-        if(isset($input['tds']) && $input['tds']!='')
+        if(isset($input->tds) && $input->tds!='')
             $client_basicinfo->tds = $input['tds'];
         else
             $client_basicinfo->tds = '';
-        if(isset($input['tan']) && $input['tan']!='')
+        if(isset($input->tan) && $input->tan!='')
             $client_basicinfo->tan = $input['tan'];
         else
             $client_basicinfo->tan = '';
