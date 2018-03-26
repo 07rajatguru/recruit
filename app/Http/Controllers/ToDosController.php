@@ -303,6 +303,22 @@ class ToDosController extends Controller
         return redirect()->route('todos.index')->with('success','ToDo Deleted Successfully');
     }
 
+    public function complete(Request $request, $id){
+
+        $complete = env('COMPLETEDSTATUS');
+
+        $todo_id = $request->get('id');
+        $todo_status = ToDos::find($id);
+
+        $todo = $complete;
+
+        $todo_status->status = $todo;
+        $todo_status->save();
+       // print_r($todo_status);exit;
+
+        return redirect()->route('todos.index')->with('success','ToDo Completed Successfully');
+    }
+
     public function getType(){
 
         $user = \Auth::user();

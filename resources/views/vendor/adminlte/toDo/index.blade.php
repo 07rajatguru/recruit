@@ -80,6 +80,7 @@
                    {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
                     <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
+                    @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
 
                 </td>
 

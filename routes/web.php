@@ -463,6 +463,12 @@ Route::group(['middleware' => ['auth']], function () {
         // 'middleware' => ['permission:industry-create']
     ]);
 
+    Route::get('jobs/clone/{id}', [
+        'as' => 'jobopen.clone',
+        'uses' => 'JobOpenController@clone',
+    ]);
+
+
     Route::get('jobs/getopenjobs', [
         'as' => 'jobopen.getOpenJobs',
         'uses' => 'JobOpenController@getOpenJobs',
@@ -484,8 +490,13 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',
         //'middleware' => ['permission:industry-create']
-
     ]);
+
+    Route::post('jobs/clone', [
+        'as' => 'jobopen.clonestore',
+        'uses' => 'JobOpenController@clonestore',
+    ]); 
+    
     Route::get('jobs/{id}', [
         'as' => 'jobopen.show',
         'uses' => 'JobOpenController@show'
@@ -774,10 +785,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@update',
         
     ]);
-     Route::delete('todos/{id}', [
+    Route::delete('todos/{id}', [
         'as' => 'todos.destroy',
         'uses' => 'ToDosController@destroy',
     ]);
+
+    Route::post('todos/{id}', [
+        'as' => 'todos.complete',
+        'uses' => 'ToDosController@complete',
+    ]);
+
 
 
     // To do's Routes End

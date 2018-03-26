@@ -84,7 +84,7 @@ class HomeController extends Controller
         $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
         $toDos = array();
         if(isset($todo_ids) && sizeof($todo_ids)>0){
-            $toDos = ToDos::getAllTodos($todo_ids);
+            $toDos = ToDos::getAllTodosdash($todo_ids);
         }
 
         //get Job List
