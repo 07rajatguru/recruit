@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLeadTable extends Migration
+class AddColumnInLead extends Migration
 {
     /**
      * Run the migrations.
@@ -27,6 +27,10 @@ class CreateLeadTable extends Migration
               
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE lead_management ADD COLUMN city text NOT NULL");
+        DB::statement("ALTER TABLE lead_management ADD COLUMN state text NOT NULL");
+        DB::statement("ALTER TABLE lead_management ADD COLUMN country text NOT NULL");
     }
 
     /**
@@ -38,5 +42,9 @@ class CreateLeadTable extends Migration
     {
         Schema:: drop('lead_management');
 
+        DB::statement("ALTER TABLE lead_management DROP COLUMN city ");
+        DB::statement("ALTER TABLE lead_management DROP COLUMN state ");
+        DB::statement("ALTER TABLE lead_management DROP COLUMN country");
+    
     }
 }

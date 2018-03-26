@@ -124,6 +124,31 @@ return [
                     ]*/
             ],
         ],
+
+
+         [
+                'text'        => 'Lead',
+                'icon'        => 'users',
+                'submenu' => [
+                    [
+                        'text' => 'Add Lead',
+                        'url'  => 'lead/create',
+                        'icon' => 'plus',
+                    ],
+                    [
+                        'text' => 'List Lead',
+                        'url'  => 'lead',
+                        'icon' => 'list',
+                    ]/*,
+                    [
+                        'text' => 'Import Clients',
+                        'url'  => 'client/importExport',
+                        'icon' => 'list',
+                    ]*/
+                ],
+            ],
+            
+
              [
                 'text'        => 'Clients',
                 'icon'        => 'users',
