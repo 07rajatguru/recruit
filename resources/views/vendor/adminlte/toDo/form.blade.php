@@ -94,8 +94,7 @@
 
                     <div  style="width:50%;"  class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                         <strong>Status:</strong>
-                        {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control' )) !!}
-                        {{--                                {!! Form::text('status', null, array('id'=>'status','placeholder' => 'Status','class' => 'form-control', 'tabindex' => '10' )) !!}--}}
+                        {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control' )) !!}
                         @if ($errors->has('status'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('status') }}</strong>
@@ -108,8 +107,8 @@
                         {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '8' )) !!}
                         @if ($errors->has('description'))
                             <span class="help-block">
-                                    <strong>{{ $errors->first('description') }}</strong>
-                                    </span>
+                                <strong>{{ $errors->first('description') }}</strong>
+                            </span>
                         @endif
                     </div>
 

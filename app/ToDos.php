@@ -156,4 +156,20 @@ class ToDos extends Model
         return $todo_ids;
 
     }
+
+    public static function getAllTaskOwnertodoIds($user_id){
+        $query = ToDos::query();
+        $query = $query->where('task_owner',$user_id);
+        $response = $query->get();
+
+        $todo_ids = array();
+        $i = 0;
+        foreach ($response as $k=>$v){
+            $todo_ids[$i] = $v->id;
+            $i++;
+        }
+
+        return $todo_ids;
+
+    }
 }

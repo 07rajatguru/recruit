@@ -25,14 +25,16 @@ class ToDosController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
         
-            // get assigned to todos
-            $todo_ids = ToDos::getTodoIdsByUserId($user_id);
-            //$todo_ids_list = implode(',',$todo_ids);
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+
+        $todos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
             $todos = ToDos::getAllTodos($todo_ids);
-            //print_r($todos);exit;
-        
-
-
+        }
 
         return view('adminlte::toDo.index', array('todos' => $todos));
 
@@ -44,6 +46,7 @@ class ToDosController extends Controller
         $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
+        $in_progress = env('INPROGRESS');
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -93,6 +96,8 @@ class ToDosController extends Controller
         $viewVariable['selected_users'] = $selected_users;
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
+        $viewVariable['status_id'] = $in_progress;
+
         return view('adminlte::toDo.create', $viewVariable);
     }
 
@@ -218,6 +223,7 @@ class ToDosController extends Controller
         $viewVariable['due_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->due_date);
         $viewVariable['users'] = $users;
         $viewVariable['type_list'] = $toDos->typeList;
+        $viewVariable['status_id'] = $toDos->status;
 //echo $toDos->typeList;exit;
         return view('adminlte::toDo.edit', $viewVariable);
     }
