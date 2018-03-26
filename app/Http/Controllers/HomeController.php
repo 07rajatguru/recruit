@@ -76,16 +76,16 @@ class HomeController extends Controller
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $manager_role_id = env('MANAGER');
-        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id,$manager_role_id);
 
-        
-            // get assigned to todos
-            $todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
 
-            //$todo_ids_list = implode(',',$todo_ids);
-            $toDos = ToDos::getAllTodosdash($todo_ids);
-       
-
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $toDos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $toDos = ToDos::getAllTodos($todo_ids);
+        }
 
         //get Job List
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
@@ -97,15 +97,6 @@ class HomeController extends Controller
         }
 
         $job = sizeof($job_response);
-        /*if(in_array($user_role_id,$access_roles_id)){
-            //$job = DB::table('job_openings')->where('job_status')->count();
-        }
-
-        else{
-             //$job = DB::table('job_openings')->where('job_status')
-                                            // ->where('hiring_manager_id',$user->id)
-                                            // ->count();
-        }*/
 
         //get Client List
         if(in_array($user_role_id,$access_roles_id)){
