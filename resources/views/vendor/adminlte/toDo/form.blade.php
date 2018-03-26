@@ -207,7 +207,7 @@
         function getType(){
             var selectedType = $("#type").val();
 
-            if(selectedType!=5){
+            if(selectedType!=1){
                 $(".type_list").show();
                 var typelist = $("#type_list").val();
                 $.ajax({
@@ -239,7 +239,7 @@
             var toDoId = $("#toDoId").val();
             var selectedType = $("#type").val();
 
-            if(action=='edit' && selectedType!=5){
+            if(action=='edit' && selectedType!=1){
                 $(".type_list").show();
                 $.ajax({
                     url:'/todo/getselectedtypelist',
