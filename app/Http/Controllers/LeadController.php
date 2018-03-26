@@ -22,10 +22,10 @@ class LeadController extends Controller
   			 $action = 'add';
              $generate_lead = '0';
   			 $leadservices_status=Lead::getLeadService();
-
+             $service ='';
 
        
-          return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead'));
+          return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service'));
     }
  public function store(Request $request){
 
@@ -74,13 +74,14 @@ class LeadController extends Controller
          $leadservices_status = Lead::getLeadService();
          $lead = Lead::find($id);
         
+         $service = $lead->service;
         //print_r($lead_s); exit;
+        $leadsarr = array();
         $leads_info = \DB::table('lead_management')
-        
-            
-            ->get();
-	        
-	             return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','leads'));
+        ->get();
+
+        	        
+	             return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','leads','service'));
 
 	 }
 	 public function update(Request $request, $id){
