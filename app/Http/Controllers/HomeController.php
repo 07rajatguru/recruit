@@ -78,16 +78,13 @@ class HomeController extends Controller
         $manager_role_id = env('MANAGER');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id,$manager_role_id);
 
-        if(in_array($user_role_id,$access_roles_id)){
-            $toDos = ToDos::getAllTodosdash();
-        }
-        else{
+        
             // get assigned to todos
             $todo_ids = ToDos::getTodoIdsByUserId($user->id);
 
             //$todo_ids_list = implode(',',$todo_ids);
             $toDos = ToDos::getAllTodosdash($todo_ids);
-        }
+       
 
 
         //get Job List

@@ -24,23 +24,13 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
-
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
-            $todos = ToDos::getAllTodos();
-        }
-        else{
+        
             // get assigned to todos
             $todo_ids = ToDos::getTodoIdsByUserId($user_id);
             //$todo_ids_list = implode(',',$todo_ids);
             $todos = ToDos::getAllTodos($todo_ids);
-        }
+            //print_r($todos);exit;
+        
 
 
 
@@ -89,7 +79,7 @@ class ToDosController extends Controller
 
         }
 
-        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
+        $todoTypeArr = array('1' => 'Other', '2' => 'Job Opening', '3' =>  'Interview','4' => 'Client','5' => 'Candidate');
 
         $selected_users = array();
 
@@ -212,7 +202,7 @@ class ToDosController extends Controller
             }
         }
 
-        $todoTypeArr = array('1' => 'Job Opening', '2' => 'Interview', '3' => 'Client','4' => 'Candidate','5' => 'Other');
+        $todoTypeArr = array('1' => 'Other', '2' => 'Job Opening', '3' =>  'Interview','4' => 'Client','5' => 'Candidate');
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
@@ -324,7 +314,7 @@ class ToDosController extends Controller
 
         //$typeArr = array();
         // For Job Opening Details
-        if($selectedType == 1){
+        if($selectedType == 2){
             $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $job_response = JobOpen::getAllJobs(1,$user_id);
@@ -344,7 +334,7 @@ class ToDosController extends Controller
 
         } 
         // For Interview Details
-        elseif($selectedType == 2) {
+        elseif($selectedType == 3) {
             $typeDetails = Interview::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
@@ -358,7 +348,7 @@ class ToDosController extends Controller
             }
         } 
         // For Client Details
-        elseif($selectedType == 3) {
+        elseif($selectedType == 4) {
 
                 $user = \Auth::user();
                 $userRole = $user->roles->pluck('id','id')->toArray();
@@ -397,7 +387,7 @@ class ToDosController extends Controller
         }
 
         // For Candidate Details
-         elseif($selectedType == 4) {
+         elseif($selectedType == 5) {
             $typeDetails = CandidateBasicInfo::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
