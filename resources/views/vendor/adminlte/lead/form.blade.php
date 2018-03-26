@@ -170,7 +170,7 @@
 
                    <div class="form-group">
                             <strong>Select Leads: :</strong>
-                            {!! Form::select('leads',$leadservices_status,null, array('id'=>'leads','class' => 'form-control')) !!}
+                            {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control')) !!}
                             @if ($errors->has('leads'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('job_opening_status') }}</strong>
