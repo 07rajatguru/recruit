@@ -43,7 +43,8 @@ class ToDos extends Model
             
         $todo_query = ToDos::query();
         $todo_query = $todo_query->join('users', 'users.id', '=', 'to_dos.task_owner');
-        $todo_query = $todo_query->select('to_dos.*', 'users.name as name','to_dos.status');
+        $todo_query = $todo_query->join('status','status.id','=', 'to_dos.status');
+        $todo_query = $todo_query->select('to_dos.*', 'users.name as name', 'status.id as status_id','status.name as status');
 
         if(isset($ids) && sizeof($ids)>0){
             $todo_query = $todo_query->whereIn('to_dos.id',$ids);
@@ -59,7 +60,10 @@ class ToDos extends Model
             $todo_array[$i]['id'] = $todos->id;
             $todo_array[$i]['subject'] = $todos->subject;
             $todo_array[$i]['am_name'] = $todos->name;
-        
+            $todo_array[$i]['due_date'] = $todos->due_date;
+            $todo_array[$i]['status'] = $todos->status;
+            $todo_array[$i]['status_ids'] = $todos->status_id;
+            $todo_array[$i]['task_owner'] = $todos->task_owner;           
 
             $am_name = ToDos::getAssociatedusersById($todos->id);
             $name_str = '';
@@ -101,7 +105,8 @@ class ToDos extends Model
             $todo_array[$i]['id'] = $todos->id;
             $todo_array[$i]['subject'] = $todos->subject;
             $todo_array[$i]['am_name'] = $todos->name;
-        
+            $todo_array[$i]['due_date'] = $todos->due_date;
+            $todo_array[$i]['status'] = $todos->status;
 
             $am_name = ToDos::getAssociatedusersById($todos->id);
             $name_str = '';

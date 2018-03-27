@@ -22,6 +22,8 @@ class ToDosController extends Controller
 {
     public function index(){
 
+        $todo_status = env('COMPLETEDSTATUS');
+
         $user = \Auth::user();
         $user_id = $user->id;
         
@@ -36,7 +38,8 @@ class ToDosController extends Controller
             $todos = ToDos::getAllTodos($todo_ids);
         }
 
-        return view('adminlte::toDo.index', array('todos' => $todos));
+
+        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id'));
 
     }
 

@@ -41,8 +41,10 @@
 
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <div class="">
 
-                    <div style="width:50%;" class="form-group {{ $errors->has('owner') ? 'has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('owner') ? 'has-error' : '' }}">
                         <strong>Task Owner: <span class = "required_fields">*</span> </strong>
                         {!! Form::text('owner', \Auth::user()->name, array('id'=>'owner','placeholder' => 'Owner','class' => 'form-control', 'tabindex' => '0', 'disabled' )) !!}
                         @if ($errors->has('owner'))
@@ -52,7 +54,22 @@
                         @endif
                     </div>
 
-                    <div style="width:50%;" class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
+                     <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                        <strong>Status:</strong>
+                        {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control' )) !!}
+                        @if ($errors->has('status'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('status') }}</strong>
+                                </span>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                <div class="">
+                    <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
                         <strong>Subject: <span class = "required_fields">*</span> </strong>
                         {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1' )) !!}
                         @if ($errors->has('subject'))
@@ -62,7 +79,24 @@
                         @endif
                     </div>
 
-                    <div style="width:50%;" class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                    <div  class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
+                        <strong>Due Date: <span class = "required_fields">*</span></strong>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            {!! Form::text('due_date',  isset($dueDate) ? $dueDate : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                        </div>
+                        @if ($errors->has('due_date'))
+                            <span class="help-block">
+                                    <strong>{{ $errors->first('due_date') }}</strong>
+                                    </span>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+                <div style="width:50%;" class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                         <strong>Type:</strong>
                         {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
                         @if ($errors->has('type'))
@@ -92,15 +126,7 @@
 
                     <span style="padding: 10%;"></span>
 
-                    <div  style="width:50%;"  class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                        <strong>Status:</strong>
-                        {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control' )) !!}
-                        @if ($errors->has('status'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('status') }}</strong>
-                                </span>
-                        @endif
-                    </div>
+                   
 
                     <div  style="width:50%;"  class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                         <strong>Remarks:</strong>
@@ -112,20 +138,8 @@
                         @endif
                     </div>
 
-                    <div  style="width:50%;"  class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
-                        <strong>Due Date: <span class = "required_fields">*</span></strong>
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            {!! Form::text('due_date',  isset($dueDate) ? $dueDate : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
-                        </div>
-                        @if ($errors->has('due_date'))
-                            <span class="help-block">
-                                    <strong>{{ $errors->first('due_date') }}</strong>
-                                    </span>
-                        @endif
-                    </div>
+                    
+
 
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
@@ -148,6 +162,10 @@
                 </div>
             </div>
         </div>
+                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <div class="">
+                </div>
+                </div>
 
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>

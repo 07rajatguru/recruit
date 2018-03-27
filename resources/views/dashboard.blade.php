@@ -158,6 +158,7 @@
                                 <th>Subject</th>
                                 <th>Assigned By</th>
                                 <th>Assigned To</th>
+                                <th>Due Date</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -169,6 +170,7 @@
                                         <td>{{ $toDo['subject'] }}</td>
                                         <td>{{ $toDo['am_name'] }}</td>
                                         <td>{{ $toDo['assigned_to'] }}</td>
+                                        <td>{{ $toDo['due_date'] }}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach
