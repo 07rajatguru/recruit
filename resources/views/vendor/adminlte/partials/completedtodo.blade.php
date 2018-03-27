@@ -1,7 +1,4 @@
-
-
-
-<a data-toggle="modal" href="#modal-complete-{!! $data['id'] !!}" class="fa fa-trash" title="Completed">
+<a data-toggle="modal" href="#modal-complete-{!! $data['id'] !!}" class="fa fa-circle" title="Complete the task">
     {{--{!! Form::submit('', ['class' => '']) !!}--}}
     {{--<span class="glyphicon glyphicon-trash" style="color: #ffffff;"></span>--}}
 </a>

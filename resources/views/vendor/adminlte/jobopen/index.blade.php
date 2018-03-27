@@ -79,7 +79,7 @@
                     @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
                     <?php   }?>
 
-                    <a title="Show"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
+                    <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
                   
 
                 </td>
