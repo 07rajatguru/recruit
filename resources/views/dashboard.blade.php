@@ -34,7 +34,7 @@
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3> {{ $interviewCount or 0}} </h3>
-                    <p>Today's Interviews</p>
+                    <p>Today's and Tomorrow's Interviews</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
@@ -87,7 +87,7 @@
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Today's Interview</h3>
+                    <h3 class="box-title">Today's and Tomorrow's Interview</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -111,10 +111,10 @@
                             @if(isset($interviews))
                                 @foreach($interviews as $interview)
                                     <tr>
-                                        <td><a href="{{ route('candidate.show',$interview->id) }}">{{ $interview->interview_name }}</a></td>
+                                        <td>{{ $interview->interview_name }}</td>
                                         <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td>{{ $interview->candidate_fname .' '.$interview->candidate_lname }} </td>
-                                        <td>{{ date('h:i A',strtotime($interview->interview_date)) }}</td>
+                                        <td>{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                     </tr>
                                 @endforeach
                             @else

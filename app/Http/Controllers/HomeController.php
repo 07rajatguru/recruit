@@ -61,14 +61,7 @@ class HomeController extends Controller
 
     public function dashboard(){
 
-        $loggedin_userid = \Auth::user()->id;
         $user_role_id = \Auth::user()->roles->first()->id;
-
-        // get todo list
-        $from = date('Y-m-d 00:00:00');
-        $to = date('Y-m-d 23:59:59');
-        $today = date('Y-m-d');
-        /*$toDos = ToDos::where('due_date','>=',$today)->get();*/
 
         $user =  \Auth::user();
 
@@ -112,10 +105,10 @@ class HomeController extends Controller
         }
 
         if(in_array($user_role_id,$access_roles_id)){
-            $interviews = Interview::getTodaysInterviews(1,$user->id);
+            $interviews = Interview::getDashboardInterviews(1,$user->id);
         }
         else{
-            $interviews = Interview::getTodaysInterviews(0,$user->id);
+            $interviews = Interview::getDashboardInterviews(0,$user->id);
         }
 
         //get candidate join list on this month
