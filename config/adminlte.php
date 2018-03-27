@@ -110,19 +110,8 @@ return [
     'menu' => [
         [
             'text'        => 'Dashboard',
+            'url'         => 'dashboard',
             'icon'        => 'dashboard',
-            'submenu' => [
-                [
-                    'text' => 'Dashboard',
-                    'url'  => 'dashboard',
-                    'icon' => 'list',
-                ]/*,
-                    [
-                        'text' => 'Import Clients',
-                        'url'  => 'client/importExport',
-                        'icon' => 'list',
-                    ]*/
-            ],
         ],
 
 
@@ -271,14 +260,8 @@ return [
           
          [
                 'text'        => 'Attendance',
+                'url'         => '/home',
                 'icon'        => 'folder-open',
-                'submenu' => [
-                    [
-                        'text' => 'Attendance',
-                        'url'  => '/home',
-                        'icon' => 'list',
-                    ]
-                ],
             ],
 
             [

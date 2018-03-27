@@ -240,11 +240,13 @@ class JobOpenController extends Controller
         // job priority
         $job_priorities = JobOpen::getJobPriorities();
 
+        $no_of_positions = 1;
+
         $action = "add";
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
 
     }
 
@@ -758,6 +760,272 @@ class JobOpenController extends Controller
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Updated Successfully');
     }
 
+    public function clone($id){
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        // get all industry
+        $industry_res = Industry::orderBy('name', 'ASC')->get();
+        $industry = array();
+
+        if (sizeof($industry_res) > 0) {
+            foreach ($industry_res as $r) {
+                $industry[$r->id] = $r->name;
+            }
+        }
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            // get all clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
+        }
+        else{
+            // get logged in user clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
+
+        $client = array();
+
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+            }
+        }
+//print_r($client);exit;
+        // get all users
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
+        // For account manager
+         
+        $users = User::getAllUsers('recruiter');
+        //print_r($users);exit;
+      //  $team_mates = $user_id;
+
+        // job opening status
+        /*$job_open_status = JobOpen::getJobOpenStatus();*/
+
+        $job_open = JobOpen::find($id);
+        $posting_title = $job_open->posting_title;
+        $no_of_positions = $job_open->no_of_positions;
+        $user_id = $job_open->hiring_manager_id;
+
+        $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();   
+        $selected_users = array();
+        if(isset($job_visible_users) && sizeof($job_visible_users)>0){
+            foreach($job_visible_users as $row){
+                $selected_users[] = $row->user_id;
+            }
+        }
+
+        // job type
+        $job_type = JobOpen::getJobTypes();
+
+        // job priority
+        $job_priorities = JobOpen::getJobPriorities();
+
+        $action = "clone";
+
+        
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
+
+    }
+
+    public function clonestore(Request $request){
+        $dateClass = new Date();
+
+        $user_id = \Auth::user()->id;
+        $input = $request->all();
+
+        $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
+        if (isset($max_id->id) && $max_id->id != '')
+            $max_id = $max_id->id;
+        else
+            $max_id = 0;
+
+        $posting_title = $input['posting_title'];
+        $hiring_manager_id = $input['hiring_manager_id'];
+        //$target_date = $input['target_date'];
+        // $formatted_target_date = Carbon::parse($target_date)->format('Y/m/d');
+        //$job_opening_status = $input['job_opening_status'];
+        $job_priority = $input['job_priority'];
+        $industry_id = $input['industry_id'];
+        $client_id = $input['client_id'];
+        $no_of_positions = $input['no_of_positions'];
+        $date_open = $input['date_opened'];
+        //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
+        $job_type = $input['job_type'];
+        $job_description = $input['job_description'];
+        $work_experience_from = $input['work_experience_from'];
+        $work_experience_to = $input['work_experience_to'];
+        $salary_from = $input['salary_from'];
+        $salary_to = $input['salary_to'];
+        $city = $input['city'];
+        $state = $input['state'];
+        $country = $input['country'];
+        $job_show = 0;
+        $users = $input['user_ids'];
+        //print_r($users);exit;
+        $desired_candidate = $input['desired_candidate'];
+        $qualifications = $input['qualifications'];
+
+        if (isset($work_experience_from) && $work_experience_from == '')
+            $work_experience_from = 0;
+        if (isset($work_experience_to) && $work_experience_to == '')
+            $work_experience_to = 0;
+        if (isset($salary_from) && $salary_from == '')
+            $salary_from = 0;
+        if (isset($salary_to) && $salary_to == '')
+            $salary_to = 0;
+        if (isset($qualifications) && $qualifications == '')
+            $qualifications = '';
+        if (isset($desired_candidate) && $desired_candidate == '')
+            $desired_candidate = '';
+
+        $increment_id = $max_id + 1;
+        $job_unique_id = "TT-JO-$increment_id";
+        $job_open = new JobOpen();
+        $job_open->job_id = $job_unique_id;
+        $job_open->job_show = $job_show;
+        $job_open->posting_title = $posting_title;
+        $job_open->hiring_manager_id = $hiring_manager_id;
+        //$job_open->target_date = 'NULL';//$dateClass->changeDMYtoYMD($target_date);//'2016-01-01';// $formatted_target_date;
+        //$job_open->job_opening_status = $job_opening_status;
+        $job_open->industry_id = $industry_id;
+        $job_open->client_id = $client_id;
+        $job_open->no_of_positions = $no_of_positions;
+        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
+        $job_open->job_type = $job_type;
+        $job_open->job_description = $job_description;
+        $job_open->work_experience_from = $work_experience_from;
+        $job_open->work_experience_to = $work_experience_to;
+        $job_open->salary_from = $salary_from;
+        $job_open->salary_to = $salary_to;
+        $job_open->city = $city;
+        $job_open->state = $state;
+        $job_open->country = $country;
+        $job_open->priority = $job_priority;
+        $job_open->desired_candidate = $desired_candidate;
+        $job_open->qualifications = $qualifications;
+
+//     print_r($job_open);exit;
+        $validator = \Validator::make(Input::all(),$job_open::$rules);
+
+        if($validator->fails()){
+            return redirect('jobs/create')->withInput(Input::all())->withErrors($validator->errors());
+        }
+
+        $job_open->save();
+        $job_id = $job_open->id;
+        //$job_id = $job_response->id;
+
+        if (isset($job_id) && $job_id > 0) {
+
+            if(isset($users) && sizeof($users)>0){
+                foreach ($users as $key=>$value){
+                    $job_visible_users = new JobVisibleUsers();
+                    $job_visible_users->job_id = $job_id;
+                    $job_visible_users->user_id = $value;
+                    $job_visible_users->save();
+                }
+            }
+
+            $job_summary = $request->file('job_summary');
+            $others_doc = $request->file('others_doc');
+
+            if (isset($job_summary) && $job_summary->isValid()) {
+                $job_summary_name = $job_summary->getClientOriginalName();
+                $filesize = filesize($job_summary);
+
+                $dir_name = "uploads/jobs/" . $job_id . "/";
+                $job_summary_key = "uploads/jobs/" . $job_id . "/" . $job_summary_name;
+
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/jobs/$job_id", 0777, true);
+                }
+
+                if (!$job_summary->move($dir_name, $job_summary_name)) {
+                    return false;
+                } else {
+                    $job_open_doc = new JobOpenDoc();
+
+                    $job_open_doc->job_id = $job_id;
+                    $job_open_doc->category = 'Job Summary';
+                    $job_open_doc->name = $job_summary_name;
+                    $job_open_doc->file = $job_summary_key;
+                    $job_open_doc->uploaded_by = $user_id;
+                    $job_open_doc->size = $filesize;
+                    $job_open_doc->created_at = time();
+                    $job_open_doc->updated_at = time();
+                    $job_open_doc->save();
+                }
+
+            }
+
+            if (isset($others_doc) && $others_doc->isValid()) {
+                $others_doc_name = $others_doc->getClientOriginalName();
+                $others_filesize = filesize($others_doc);
+
+                $dir_name = "uploads/jobs/" . $job_id . "/";
+                $others_doc_key = "uploads/jobs/" . $job_id . "/" . $others_doc_name;
+
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/jobs/$job_id", 0777, true);
+                }
+
+                if (!$others_doc->move($dir_name, $others_doc_name)) {
+                    return false;
+                } else {
+                    $job_open_doc = new JobOpenDoc;
+
+                    $job_open_doc->job_id = $job_id;
+                    $job_open_doc->category = 'Others';
+                    $job_open_doc->name = $others_doc_name;
+                    $job_open_doc->file = $others_doc_key;
+                    $job_open_doc->uploaded_by = $user_id;
+                    $job_open_doc->size = $others_filesize;
+                    $job_open_doc->created_at = time();
+                    $job_open_doc->updated_at = time();
+                    $job_open_doc->save();
+                }
+
+            }
+
+            // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
+            $module_id = $job_id;
+            $module = 'Job Openings';
+            $message = "New job opening is added";
+            $link = route('jobopen.show',$job_id);
+
+            $user_arr = array();
+
+            if(isset($users) && sizeof($users)>0){
+                foreach ($users as $key=>$value){
+                    if($user_id!=$value){
+                        $user_arr[] = $value;
+                    }
+                }
+            }
+
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+        }
+
+        return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully');
+        
+    }
+
     public function destroy($id)
     {
         $job_associate_delete = DB::table('job_associate_candidates')->where('job_id', '=', $id)->delete();
@@ -854,7 +1122,7 @@ class JobOpenController extends Controller
         $user_id = \Auth::user()->id;
         $job_id = $_POST['jobid'];
         $candidate_ids = $_POST['candidate_ids'];
-        $status_id = env('associate_candidate_status', 10);
+        $status_id = env('associate_candidate_status', 1);
 
         $candidate_ids_array = explode(",", $candidate_ids);
 

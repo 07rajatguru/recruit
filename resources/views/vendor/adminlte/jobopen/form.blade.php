@@ -24,6 +24,8 @@
 
 @if( $action == 'edit')
     {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm', 'route' => ['jobopen.update', $job_open->id]] ) !!}
+@elseif( $action == 'clone')
+    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm', 'route' => ['jobopen.clonestore']] ) !!}
 @else
     {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm')) !!}
 
@@ -137,7 +139,7 @@
                             @if($action == 'edit')
                                 {!! Form::text('no_of_positions',null, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' )) !!}
                             @else
-                                {!! Form::text('no_of_positions', 1, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' )) !!}
+                                {!! Form::text('no_of_positions', $no_of_positions, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' )) !!}
                             @endif
                             @if ($errors->has('no_of_positions'))
                                 <span class="help-block">
