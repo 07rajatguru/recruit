@@ -45,7 +45,7 @@ class LeadController extends Controller
          $country=$input['country'];
 
          $lead=new Lead();
-         $lead->company_name=$company_name;
+         $lead->name=$company_name;
          $lead->hr_name=$hr_name;
          $lead->mail=$email;
          $lead->secondary_email=$secondary_email;

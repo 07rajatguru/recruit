@@ -114,7 +114,7 @@ return [
             'icon'        => 'dashboard',
         ],
 
-
+/*
          [
                 'text'        => 'Lead',
                 'icon'        => 'users',
@@ -128,15 +128,10 @@ return [
                         'text' => 'List Lead',
                         'url'  => 'lead',
                         'icon' => 'list',
-                    ]/*,
-                    [
-                        'text' => 'Import Clients',
-                        'url'  => 'client/importExport',
-                        'icon' => 'list',
-                    ]*/
+                    ]
                 ],
             ],
-            
+            */
 
              [
                 'text'        => 'Clients',
