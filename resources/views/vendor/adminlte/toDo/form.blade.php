@@ -85,7 +85,7 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            {!! Form::text('due_date',  isset($dueDate) ? $dueDate : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                            {!! Form::text('due_date',  isset($due_date) ? $due_date : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
                         </div>
                         @if ($errors->has('due_date'))
                             <span class="help-block">

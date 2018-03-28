@@ -214,7 +214,7 @@ return [
                 ]
             ]
          ],
-            [
+            /*[
                 'text'        => 'Bills',
                 'icon'        => 'users',
                 'submenu' => [
@@ -235,7 +235,7 @@ return [
                     ],
 
                 ],
-            ],
+            ],*/
              [
             'text'        => "To'Dos",
             'icon'        => ' fa-th-list',
