@@ -15,13 +15,19 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('client.index') }}"> Back</a>
+            @if( $action == 'copy')
+                <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
+            @else
+                <a class="btn btn-primary" href="{{ route('client.index') }}"> Back</a>
+            @endif
         </div>
     </div>
 </div>
 
 @if( $action == 'edit')
     {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm', 'route' => ['client.update', $client->id]] ) !!}
+@elseif( $action == 'copy')
+    {!! Form::model($lead,['method' => 'POST','files' => true, 'id' => 'leadForm', 'route' => ['lead.clonestore']] ) !!}
 @else
     {!! Form::open(array('route' => 'client.store','files' => true,'method'=>'POST', 'id' => 'clientForm')) !!}
 @endif
@@ -38,7 +44,9 @@
                     <div class="">
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                             <strong>Company Name: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                            
+                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                           
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>

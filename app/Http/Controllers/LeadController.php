@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Lead;
+use App\Industry;
+use App\user;
+use App\ClientBasicinfo;
+use App\ClientAddress;
+use Illuminate\Support\Facades\Input;
+use Mockery\CountValidator\Exception;
 
 class LeadController extends Controller
 {
@@ -27,14 +33,15 @@ class LeadController extends Controller
        
           return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service'));
     }
+
  public function store(Request $request){
 
  	    $input = $request->all();
 
-         $company_name = $input['company_name'];
-         $hr_name = $input['hr_name'];
+         $company_name = $input['name'];
+         $coordinator_name = $input['coordinator_name'];
          $email=$input['mail'];
-         $secondary_email=$input['secondary_email'];
+         $s_email=$input['s_email'];
          $mobile=$input['mobile'];
          $other_number=$input['other_number'];
          $display_name=$input['display_name'];
@@ -46,9 +53,9 @@ class LeadController extends Controller
 
          $lead=new Lead();
          $lead->name=$company_name;
-         $lead->hr_name=$hr_name;
+         $lead->coordinator_name=$coordinator_name;
          $lead->mail=$email;
-         $lead->secondary_email=$secondary_email;
+         $lead->s_email=$s_email;
          $lead->mobile=$mobile;
          $lead->other_number=$other_number;
          $lead->display_name=$display_name;
@@ -61,6 +68,12 @@ class LeadController extends Controller
          $lead->save();
 
          //$validator = \Validator::make(Input::all(),$lead::$rules);s
+         $validator = \Validator::make(Input::all(),$lead::$rules);
+
+        if($validator->fails()){
+            //print_r($validator->errors());exit;
+            return redirect('lead/create')->withInput(Input::all())->withErrors($validator->errors());
+        }
          return redirect()->route('lead.index')
             ->with('success','Leads created successfully');
 
@@ -89,10 +102,10 @@ class LeadController extends Controller
         
         $input = $request->all();
 
-	 	$company_name = $request->get('company_name');
-        $hr_name = $request->get('hr_name');
+	 	$name = $request->get('name');
+        $coordinator_name = $request->get('coordinator_name');
         $email = $request->get('mail');
-        $secondary_email = $request->get('secondary_email');
+        $s_email = $request->get('s_email');
         $mobile = $request->get('mobile');
         $other_number = $request->get('other_number');
         $display_name = $request->get('display_name');
@@ -107,14 +120,14 @@ class LeadController extends Controller
          $lead_basic = Lead::find($id);
 
 
-        if(isset($company_name))
-            $lead_basic->company_name = $company_name;
-        if(isset($hr_name))
-            $lead_basic->hr_name = $hr_name;
+        if(isset($name))
+            $lead_basic->name = $name;
+        if(isset($coordinator_name))
+            $lead_basic->coordinator_name = $coordinator_name;
         if(isset($email))
             $lead_basic->mail = $email;
-        if(isset($secondary_email))
-            $lead_basic->secondary_email =$secondary_email;
+        if(isset($s_email))
+            $lead_basic->s_email =$s_email;
         if(isset($mobile))
             $lead_basic->mobile = $mobile;
         if(isset($other_number))
@@ -134,14 +147,261 @@ class LeadController extends Controller
 
         $leadUpdated = $lead_basic->save();
 
+        $validator = \Validator::make(Input::all(),$lead_basic::$rules);
+
+        if($validator->fails()){
+            //print_r($validator->errors());exit;
+            return redirect('lead/'.$lead_basic->id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
+        }
+
         return redirect()->route('lead.index')->with('success','ToDo Updated Successfully');
 
 	 }
+
+     public function clone($id){
+
+        $generate_lead = '0';
+        $industry_res = Industry::orderBy('id','DESC')->get();
+        $industry = array();
+
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
+        // For account manager
+         $users = User::getAllUsers();
+
+        if(sizeof($industry_res)>0){
+            foreach($industry_res as $r){
+                $industry[$r->id]=$r->name;
+            }
+        }
+
+        $lead = Lead::find($id);
+        $name = $lead->name;
+        $billing_city = $lead->city;
+        $billing_state = $lead->state;
+        $billing_country = $lead->country;
+        //print_r($billing_city);exit;
+
+        $action = "copy" ;
+         return view('adminlte::client.create',compact('name','billing_city','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
+     }
+
+     public function clonestore(Request $request){
+
+        $user_id = \Auth::user()->id;
+
+        $input = $request->all();
+
+        $client_basic_info = new ClientBasicinfo();
+        $client_basic_info->name = $input['name'];
+        $client_basic_info->display_name = $input['display_name'];
+        $client_basic_info->mail = $input['mail'];
+        $client_basic_info->s_email = $input['s_email'];
+        $client_basic_info->description = $input['description'];
+        $client_basic_info->mobile = $input['mobile'];
+        $client_basic_info->other_number = $input['other_number'];
+        //$client_basic_info->fax = $input['fax'];
+        $client_basic_info->account_manager_id = $input['account_manager'];
+        $client_basic_info->industry_id = $input['industry_id'];
+        //$client_basic_info->source = $input['source'];
+        $client_basic_info->about = $input['description'];
+        if(isset($input['source']) && $input['source']!='')
+            $client_basic_info->source = $input['source'];
+        else
+            $client_basic_info->source = '';
+        if(isset($input['gst_no']) && $input['gst_no']!='')
+            $client_basic_info->gst_no = $input['gst_no'];
+        else
+            $client_basic_info->gst_no = '';
+        if(isset($input['tds']) && $input['tds']!='')
+            $client_basic_info->tds = $input['tds'];
+        else
+            $client_basic_info->tds = '';
+        if(isset($input['tan']) && $input['tan']!='')
+            $client_basic_info->tan = $input['tan'];
+        else
+            $client_basic_info->tan = '';
+        $client_basic_info->coordinator_name = $input['coordinator_name'];
+        $client_basic_info->created_at = time();
+        $client_basic_info->updated_at = time();
+
+        if($client_basic_info->save()){
+
+            $client_id = $client_basic_info->id;
+
+            $client_address = new ClientAddress();
+            $client_address->client_id = $client_id;
+
+            if(isset($input->billing_country) && $input->billing_country!=''){
+                $client_address->billing_country = $input->billing_country;
+            }
+            if(isset($input->billing_state) && $input->billing_state!=''){
+                $client_address->billing_state = $input->billing_state;
+            }
+            if(isset($input->billing_street1) && $input->billing_street1!=''){
+                $client_address->billing_street1 = $input->billing_street1;
+            }
+            if(isset($input->billing_street2) && $input->billing_street2!=''){
+                $client_address->billing_street2 = $input->billing_street2;
+            }
+            if(isset($input->billing_code) && $input->billing_code!=''){
+                $client_address->billing_code = $input->billing_code;
+            }
+            if(isset($input->billing_city) && $input->billing_city!=''){
+                $client_address->billing_city = $input->billing_city;
+            }
+
+            if(isset($input->shipping_country) && $input->shipping_country!=''){
+                $client_address->shipping_country = $input->shipping_country;
+            }
+            if(isset($input->shipping_state) && $input->shipping_state!=''){
+                $client_address->shipping_state = $input->shipping_state;
+            }
+            if(isset($input->shipping_street1) && $input->shipping_street1!=''){
+                $client_address->shipping_street1 = $input->shipping_street1;
+            }
+            if(isset($input->shipping_street2) && $input->shipping_street2!=''){
+                $client_address->shipping_street2 = $input->shipping_street2;
+            }
+            if(isset($input->shipping_code) && $input->shipping_code!=''){
+                $client_address->shipping_code = $input->shipping_code;
+            }
+            if(isset($input->shipping_city) && $input->shipping_city!=''){
+                $client_address->shipping_city = $input->shipping_city;
+            }
+            $client_address->updated_at = date("Y-m-d H:i:s");
+            $client_address->save();
+
+            // save client address
+            $input['client_id'] = $client_id;
+            ClientAddress::create($input);
+
+            // save client documents
+            $client_contract = $request->file('client_contract');
+            $client_logo = $request->file('client_logo');
+            $others_doc = $request->file('others_doc');
+
+            if (isset($client_contract) && $client_contract->isValid()) {
+                $client_contract_name = $client_contract->getClientOriginalName();
+                $filesize = filesize($client_contract);
+
+                $dir_name = "uploads/clients/".$client_id."/";
+                $client_contract_key = "uploads/clients/".$client_id."/".$client_contract_name;
+
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/clients/$client_id", 0777,true);
+                }
+
+                if(!$client_contract->move($dir_name, $client_contract_name)){
+                    return false;
+                }
+                else{
+                    $client_doc = new ClientDoc;
+
+                    $client_doc->client_id = $client_id;
+                    $client_doc->category = 'Client Contract';
+                    $client_doc->name = $client_contract_name;
+                    $client_doc->file = $client_contract_key;
+                    $client_doc->uploaded_by = $user_id;
+                    $client_doc->size = $filesize;
+                    $client_doc->created_at = time();
+                    $client_doc->updated_at = time();
+                    $client_doc->save();
+                }
+
+            }
+
+            if (isset($client_logo) && $client_logo->isValid()) {
+                $client_logo_name = $client_logo->getClientOriginalName();
+                $client_logo_filesize = filesize($client_logo);
+
+                $dir_name = "uploads/clients/".$client_id."/";
+                $client_logo_key = "uploads/clients/".$client_id."/".$client_logo_name;
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/clients/$client_id", 0777,true);
+                }
+
+                if(!$client_logo->move($dir_name, $client_logo_key)){
+                    return false;
+                }
+                else{
+                    $client_doc = new ClientDoc;
+
+                    $client_doc->client_id = $client_id;
+                    $client_doc->category = 'Client Logo';
+                    $client_doc->name = $client_logo_name;
+                    $client_doc->file = $client_logo_key;
+                    $client_doc->uploaded_by = $user_id;
+                    $client_doc->size = $client_logo_filesize;
+                    $client_doc->created_at = time();
+                    $client_doc->updated_at = time();
+                    $client_doc->save();
+                }
+
+            }
+
+            if (isset($others_doc) && $others_doc->isValid()) {
+                $others_doc_name = $others_doc->getClientOriginalName();
+                $others_filesize = filesize($others_doc);
+
+                $dir_name = "uploads/clients/".$client_id."/";
+                $others_doc_key = "uploads/clients/".$client_id."/".$others_doc_name;
+
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/clients/$client_id", 0777,true);
+                }
+
+                if(!$others_doc->move($dir_name, $others_doc_name)){
+                    return false;
+                }
+                else{
+                    $client_doc = new ClientDoc;
+
+                    $client_doc->client_id = $client_id;
+                    $client_doc->category = 'Others';
+                    $client_doc->name = $others_doc_name;
+                    $client_doc->file = $others_doc_key;
+                    $client_doc->uploaded_by = $user_id;
+                    $client_doc->size = $others_filesize;
+                    $client_doc->created_at = time();
+                    $client_doc->updated_at = time();
+                    $client_doc->save();
+                }
+            }
+
+            // TODO:: Notifications : On adding new client notify Super Admin via notification
+            $module_id = $client_id;
+            $module = 'Client';
+            $message = "New Client is added";
+            $link = route('client.show',$client_id);
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $user_arr = array();
+            $user_arr[] = $super_admin_userid;
+
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+            return redirect()->route('client.index')->with('success','Client Created Successfully');
+        }
+        else{
+            return redirect('client/create')->withInput(Input::all())->withErrors($client_basic_info->errors());
+        }
+     }
 
 	 public function destroy($id){
         $lead = Lead::where('id',$id)->delete();
 
         return redirect()->route('lead.index')->with('success','Leads Deleted Successfully');
     }
+
+    public function ClientCount(){
+        
+     }
 
 }

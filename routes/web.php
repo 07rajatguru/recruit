@@ -72,6 +72,17 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'lead.create',
         'uses'=>'LeadController@create']);
 
+    Route::get('lead/clone/{id}', [
+        'as' => 'lead.clone',
+        'uses' => 'LeadController@clone',
+    ]);
+    
+    Route::post('lead/clone', [
+        'as' => 'lead.clonestore',
+        'uses' => 'LeadController@clonestore',
+    ]); 
+
+
     Route::get('lead',[
         'as'=>'lead.index',
         'uses'=>'LeadController@index']);

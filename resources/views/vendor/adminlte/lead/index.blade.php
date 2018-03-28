@@ -24,23 +24,20 @@
             <tr>
                 <th>No</th>
                 <th></th>
-                <th width="280px">Action</th>
-                
+                <th>Action</th>
                 <th>Company Name</th>
                 <th>Hr/coordinator name</th>
+                <th>Clinet Count</th>
                 <th>Email</th>
-                <th>Secondary email</th>
                 <th>Mobile number</th>
+                <th>Secondary email</th>
                 <th>Other number</th>
-                 <th>Display Name</th>
-                  <th>service</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Country</th>
-                 <th>Remarks</th>
-               
-               
-                
+                <th>Display Name</th>
+                <th>service</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -51,16 +48,17 @@
                 <td>{{ ++$i }}</td>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
                  <td>
-                              <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
-                      
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'lead','display_name'=>'lead'])
+                            <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
+                            @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'lead','display_name'=>'lead'])
+                            <a title="Clone Lead "  class="fa fa-clone" href="{{ route('lead.clone',$value['id']) }}"></a>
                 </td>
                 
-                <td>{{ $value['company_name'] }}</td>
-                <td>{{ $value['hr_name'] }}</td>
+                <td>{{ $value['name'] }}</td>
+                <td>{{ $value['coordinator_name'] }}</td>
+                <td></td>
                 <td>{{ $value['mail'] }}</td>
-                <td>{{ $value['secondary_email'] }}</td>
                 <td>{{ $value['mobile'] }}</td>
+                <td>{{ $value['s_email'] }}</td>
                 <td>{{ $value['other_number'] }}</td>
                 <td>{{ $value['display_name'] }}</td>
                 <td>{{ $value['service'] }}</td>

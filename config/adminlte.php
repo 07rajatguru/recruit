@@ -114,7 +114,7 @@ return [
             'icon'        => 'dashboard',
         ],
 
-/*
+
          [
                 'text'        => 'Lead',
                 'icon'        => 'users',
@@ -131,7 +131,7 @@ return [
                     ]
                 ],
             ],
-            */
+            
 
              [
                 'text'        => 'Clients',

@@ -12,8 +12,8 @@ class Lead extends Model
 
 
 	public static $rules = array(
-        'company_name' => 'required',
-        'hr_name' => 'required',
+        'name' => 'required',
+        'coordinator_name' => 'required',
         'mail' => 'required',
         'mobile' => 'required',
     );
@@ -21,9 +21,9 @@ class Lead extends Model
     public function messages()
     {
         return [
-            'company_name.required' => 'Company Name is required field',
-            'hr_name.required' => 'Hr/Coodinator Name is required field',
-            'mail.required' => 'Opemail is required field',
+            'name.required' => 'Company Name is required field',
+            'coordinator_name.required' => 'Hr/Coodinator Name is required field',
+            'mail.required' => 'Email is required field',
             'mobile.required' => 'Mobile Number is required field',
 
         ];

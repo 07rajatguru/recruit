@@ -8,156 +8,106 @@
 @section('content')
 
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
-
-            
             <div class="pull-left">
-            @if($generate_lead==1)
-                <h2>Please confirm the details and generate Lead</h2>
-            @elseif( $action == 'edit')
-                <h2>Edit Lead</h2>
-            @else
-                <h2>Create New Lead</h2>
-            @endif
-        </div>
+               @if($generate_lead==1)
+                    <h2>Please confirm the details and generate Lead</h2>
+                @elseif( $action == 'edit')
+                    <h2>Edit Lead</h2>
+                @else
+                    <h2>Create New Lead</h2>
+                @endif
+            </div>
             <div class="pull-right">
-
-                <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
-
+               <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
             </div>
         </div>
-        @if(isset($action))
-
+    </div>
+@if(isset($action))
     @if($action == 'edit')
         {!! Form::model($lead,['method' => 'PUT', 'files' => true, 'route' => ['lead.update', $lead['id']],'id'=>'lead_form', 'novalidate'=>'novalidate']) !!}
         {!! Form::hidden('leadId', $lead['id'], array('id'=>'leadId')) !!}
+    @elseif($action == 'copy')
+        {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form']) !!}
     @else
         {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form', 'novalidate'=>'novalidate']) !!}
     @endif
+     {!! Form::hidden('action', $action, array('id'=>'action')) !!}
 
-      {!! Form::hidden('action', $action, array('id'=>'action')) !!}
-
-
-    </div>
 
     @if (count($errors) > 0)
-
         <div class="alert alert-danger">
-
             <strong>Whoops!</strong> There were some problems with your input.<br><br>
-
             <ul>
-
                 @foreach ($errors->all() as $error)
-
                     <li>{{ $error }}</li>
-
                 @endforeach
-
             </ul>
-
         </div>
-
     @endif
 
     {!! Form::open(array('route' => 'lead.store','method'=>'POST')) !!}
 
     <div class="row">
          <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Basic Information</h3>
-            </div>
+             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Basic Information</h3>
+                </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-           <div class="box-body col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
-              <strong>Company Name:<span class = "required_fields">*</span></strong>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-xs-12 col-sm-12 col-md-12">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                                <strong>Company Name:<span class = "required_fields">*</span></strong>
+                                    {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control')) !!}
+                                     @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
 
-                {!! Form::text('company_name', null, array('id'=>'company_name','placeholder' => 'Company Name','class' => 'form-control')) !!}
-                @if ($errors->has('company_name'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('company_name') }}</strong>
-                                </span>
-                 @endif
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Hr/coordinator name:<span class = "required_fields">*</span></strong>
+                                    {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Hr/coordinator Name','class' => 'form-control')) !!}
+                           </div>
+                        </div>
 
-        </div>
-    </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Email:<span class = "required_fields">*</span></strong>
+                                   {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Secondary Email:</strong>
+                                     {!! Form::text('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control')) !!}
+                            </div>
+                        </div>
 
-        <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Mobile number:<span class = "required_fields">*</span></strong>
+                                     {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control')) !!}
+                           </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Other number:</strong>
+                                     {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control')) !!}
+                            </div>
+                        </div>
 
-            <div class="form-group">
-
-                <strong>Hr/coordinator name:<span class = "required_fields">*</span></strong>
-
-                {!! Form::text('hr_name', null, array('id'=>'hr_name','placeholder' => 'Hr/coordinator Name','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-
-        <div class="col-xs-6 col-sm-6 col-md-6">
-
-            <div class="form-group">
-
-                <strong>Email:<span class = "required_fields">*</span></strong>
-
-               {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control')) !!}
-
-
-            </div>
-
-        </div>
-
-        <div class="col-xs-6 col-sm-6 col-md-6">
-
-            <div class="form-group">
-
-                <strong>Secondary Email:</strong>
-
-                 {!! Form::text('secondary_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-
-        <div class="col-xs-6 col-sm-6 col-md-6">
-
-            <div class="form-group">
-
-                <strong>Mobile number:<span class = "required_fields">*</span></strong>
-
-                 {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-
-            <div class="form-group">
-
-                <strong>Other number:</strong>
-
-                 {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-
-
-        <div class="col-xs-6 col-sm-6 col-md-6">
-
-            <div class="form-group">
-
-                <strong>Display Name:</strong>
-
-                 {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Display Name:</strong>
+                                     {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                            </div>
+                        </div>
  @section('customs_css')
     <style>
         .error{
@@ -166,94 +116,63 @@
     </style>
  @endsection  
 
-        <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Select Leads: :</strong>
+                                    {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control')) !!}
+                                    @if ($errors->has('leads'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('job_opening_status') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
 
-                   <div class="form-group">
-                            <strong>Select Leads: :</strong>
-                            {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control')) !!}
-                            @if ($errors->has('leads'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('job_opening_status') }}</strong>
-                                </span>
-                            @endif
-                   </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Remarks:</strong>
+                                     {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control')) !!}
+                            </div>
+                        </div>
 
-        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Address</strong>
+                                    {!! Form::text('address', null, array('id'=>'job_location','placeholder' => 'Search Address','class' => 'form-control')) !!}
+                            </div>
+                        </div>
 
-<div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>City:</strong>
+                                    {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>State:</strong>
+                                    {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Country</strong>
+                                    {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                 </div>
+             </div>
+         </div>
+     </div>
 
-            <div class="form-group">
-
-                <strong>Remarks:</strong>
-
-                 {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-
-   <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-
-                <strong>Address</strong>
-
-                {!! Form::text('address', null, array('id'=>'job_location','placeholder' => 'Search Address','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group">
-
-                <strong>City:</strong>
-
-                {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group">
-
-                <strong>State:</strong>
-
-                {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group">
-
-                <strong>Country</strong>
-
-                {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control')) !!}
-
-            </div>
-
-        </div>
-
-
-        
-
-    </div></div></div></div>
-
-<div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
-
+        <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
             <button type="submit" class="btn btn-primary">Submit</button>
-
         </div>
-
-
 </div>
-
-    
-
     {!! Form::close() !!}
-
     @endif
-
-
 
 @endsection
 
@@ -266,10 +185,10 @@
 
        $("#lead_form").validate({
                 rules: {
-                    "company_name": {
+                    "name": {
                         required: true
                     },
-                    "hr_name": {
+                    "coordinator_name": {
                         required: true
                     },
                     "mail": {
@@ -280,17 +199,17 @@
                     }
                 },
                 messages: {
-                    "company_name": {
-                        required: "Company Name is required field."
+                    "name": {
+                        required: "Company Name is required."
                     },
-                    "hr_name": {
-                        required: "Hr/Coodinator Name is required field."
+                    "coordinator_name": {
+                        required: "Hr/Coodinator Name is required."
                     },
                     "mail": {
-                        required: "mail is required field."
+                        required: "mail is required."
                     },
                     "mobile": {
-                        required: "Mobile Number is required field."
+                        required: "Mobile Number is required."
                     }
                 }
             });
