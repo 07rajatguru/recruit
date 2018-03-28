@@ -85,7 +85,7 @@ class ToDosController extends Controller
 
         }
 
-        $todoTypeArr = array('1' => 'Other', '2' => 'Job Opening', '3' =>  'Interview','4' => 'Client','5' => 'Candidate');
+        $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
         $selected_users = array();
 
@@ -210,7 +210,7 @@ class ToDosController extends Controller
             }
         }
 
-        $todoTypeArr = array('1' => 'Other', '2' => 'Job Opening', '3' =>  'Interview','4' => 'Client','5' => 'Candidate');
+        $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
@@ -339,7 +339,7 @@ class ToDosController extends Controller
 
         //$typeArr = array();
         // For Job Opening Details
-        if($selectedType == 2){
+        if($selectedType == 1){
             $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $job_response = JobOpen::getAllJobs(1,$user_id);
@@ -359,7 +359,7 @@ class ToDosController extends Controller
 
         } 
         // For Interview Details
-        elseif($selectedType == 3) {
+        elseif($selectedType == 2) {
             $typeDetails = Interview::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
@@ -373,7 +373,7 @@ class ToDosController extends Controller
             }
         } 
         // For Client Details
-        elseif($selectedType == 4) {
+        elseif($selectedType == 3) {
 
                 $user = \Auth::user();
                 $userRole = $user->roles->pluck('id','id')->toArray();
@@ -412,7 +412,7 @@ class ToDosController extends Controller
         }
 
         // For Candidate Details
-         elseif($selectedType == 5) {
+         elseif($selectedType == 4) {
             $typeDetails = CandidateBasicInfo::all();
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;

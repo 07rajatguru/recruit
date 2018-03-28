@@ -98,7 +98,11 @@
             </div>
                 <div style="width:50%;" class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                         <strong>Type:</strong>
+                        @if($action == 'edit')
                         {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        @else
+                        {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        @endif
                         @if ($errors->has('type'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('type') }}</strong>
@@ -224,7 +228,7 @@
         function getType(){
             var selectedType = $("#type").val();
 
-            if(selectedType!=1){
+            if(selectedType!=5){
                 $(".type_list").show();
                 var typelist = $("#type_list").val();
                 $.ajax({
@@ -256,7 +260,7 @@
             var toDoId = $("#toDoId").val();
             var selectedType = $("#type").val();
 
-            if(action=='edit' && selectedType!=1){
+            if(action=='edit' && selectedType!=5){
                 $(".type_list").show();
                 $.ajax({
                     url:'/todo/getselectedtypelist',
