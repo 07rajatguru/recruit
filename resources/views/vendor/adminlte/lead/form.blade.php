@@ -138,7 +138,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Address</strong>
-                                    {!! Form::text('address', null, array('id'=>'job_location','placeholder' => 'Search Address','class' => 'form-control')) !!}
+                                    {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control')) !!}
                             </div>
                         </div>
 
@@ -228,7 +228,7 @@
             // location types.
             autocomplete = new google.maps.places.Autocomplete(
                     /** @type {!HTMLInputElement} */
-                    (document.getElementById('job_location')),
+                    (document.getElementById('address')),
                     {types: ['geocode']});
 
             // When the user selects an address from the dropdown, populate the address

@@ -142,4 +142,14 @@ class CandidateBasicInfo extends Model
 
         return $candidate;
     }
+
+    public static function checkCandidateByEmail($email){
+
+        $candidate_query = CandidateBasicInfo::query();
+        $candidate_query = $candidate_query->where('email','like',$email);
+        $candidate_cnt = $candidate_query->count();
+
+        return $candidate_cnt;
+
+    }
 }

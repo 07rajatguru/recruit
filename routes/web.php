@@ -420,6 +420,9 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CandidateController@getCandidateInfo'
     ]);
 
+    Route::get('candidate/importExport', 'CandidateController@importExport');
+    Route::post('candidate/importExcel', 'CandidateController@importExcel');
+
 
     // Daily Report
     Route::get('dailyreport', [

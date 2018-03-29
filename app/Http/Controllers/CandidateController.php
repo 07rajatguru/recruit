@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Input;
 use App\User;
 use App\JobOpen;
 use App\JobAssociateCandidates;
+use Excel;
     
 class CandidateController extends Controller
 {
@@ -1185,4 +1186,98 @@ class CandidateController extends Controller
         }
 //        return view('adminlte::candidate.extractResume');
     }
+
+    public function importExport(){
+
+        return view('adminlte::candidate.import');
+    }
+
+    public function importExcel(Request $request){
+        if($request->hasFile('import_file')) {
+            $path = $request->file('import_file')->getRealPath();
+
+            $data = Excel::load($path, function ($reader) {})->get();
+
+            $messages = array();
+
+            if (!empty($data) && $data->count()) {
+
+                foreach ($data->toArray() as $key => $value) {
+
+                    if(!empty($value)) {
+                        //foreach ($value as $v) {
+                           // print_r($value);exit;
+
+                            //$sr_no = $v['sr_no'];
+                          //  $managed_by = $v['managed_by'];
+                            $name = $value['name'];
+                            $gender = $value['gender'];
+                            $marital_status =$value['marital_status'];
+                            $mobile_number = $value['phone_number'];
+                            $email = $value['email_id'];
+                            $current_employer = $value['curr_company_name'];
+                            $experience = $value['total_experience'];
+                            $job_title = $value['curr_company_designation'];
+                            $skill = $value['key_skills'];
+
+                            // first check email already exist or not , if exist doesnot update data
+                            $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
+
+                            if($candidate_cnt>0){
+                                $messages[] = "Record $name already present ";
+                            }
+                            else{
+                                    $namearray = explode(' ', $name);
+                                    $mobilearray = explode(',', $mobile_number);
+                                    // Insert new candidate
+                                    $candidate_basic_info = new CandidateBasicInfo();
+                                    $candidate_basic_info->fname = $namearray[0];
+                                    $candidate_basic_info->lname = $namearray[1];
+                                    $candidate_basic_info->email = $email;
+                                    $candidate_basic_info->mobile = $mobilearray[0];
+                                    $candidate_basic_info->phone = $mobilearray[1];
+                                    $candidate_basic_info->type = $gender;
+                                    $candidate_basic_info->marital_status = $marital_status;
+                                    //$candidate_basic_info->coordinator_name = $coordinator_name;
+                                    //$candidate_basic_info->account_manager_id = $acc_mngr_id;
+
+                                    if($candidate_basic_info->save()) {
+                                        $candidate_id = $candidate_basic_info->id;
+
+                                        $candidate_otherinfo = new CandidateOtherInfo();
+                                        $candidate_otherinfo->candidate_id = $candidate_id;
+                                        $candidate_otherinfo->experience_years = $experience;
+                                        $candidate_otherinfo->save();
+                                        //$input['current_employer'] = $current_employer;
+                                        //$input['current_job_title'] = $job_title;
+                                        //$input['skill'] = $skill;
+                                        //CandidateOtherInfo::create($input);
+
+                                        if ($candidate_id > 0) {
+                                            $messages[] = "Record $name inserted successfully";
+                                        }
+
+                                    }
+                                    else{
+                                        $messages[] = "Error while inserting record $sr_no ";
+                                    }
+                                }
+
+                            }
+
+
+                        
+                    
+                    else{
+                        $messages[] = "No Data in file";
+                    }
+
+                }
+            }
+
+            return view('adminlte::candidate.import',compact('messages'));
+            //return redirect()->route('client.index')->with('success','Client Created Successfully');
+        }
+    }
+    
 }

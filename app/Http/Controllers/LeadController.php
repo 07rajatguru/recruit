@@ -17,8 +17,9 @@ class LeadController extends Controller
 
   public function index(){
 
-  	$lead = Lead::orderBy('id','DESC')->paginate(5);
-         return view('adminlte::lead.index',compact('lead'));
+  	    $lead = Lead::orderBy('id','DESC')->paginate(5);
+
+         return view('adminlte::lead.index',compact('lead','lead_count'));
 
     }
 
@@ -60,7 +61,6 @@ class LeadController extends Controller
          $lead->other_number=$other_number;
          $lead->display_name=$display_name;
          $lead->service=$leads;
-         $lead->status="";
          $lead->remarks=$remark;
          $lead->city=$city;
          $lead->state=$state;
@@ -94,7 +94,7 @@ class LeadController extends Controller
         ->get();
 
         	        
-	             return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','leads','service'));
+	             return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','service'));
 
 	 }
 	 public function update(Request $request, $id){
@@ -141,7 +141,7 @@ class LeadController extends Controller
         if(isset($city))
             $lead_basic->city =$city;
         if(isset($state))
-            $lead_basic->city=$state;
+            $lead_basic->state=$state;
         if(isset($country))
             $lead_basic->country=$country;
 

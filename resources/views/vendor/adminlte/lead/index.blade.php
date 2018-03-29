@@ -55,16 +55,16 @@
                 
                 <td>{{ $value['name'] }}</td>
                 <td>{{ $value['coordinator_name'] }}</td>
-                <td></td>
+                <td>{{ 0 }}</td>
                 <td>{{ $value['mail'] }}</td>
                 <td>{{ $value['mobile'] }}</td>
                 <td>{{ $value['s_email'] }}</td>
                 <td>{{ $value['other_number'] }}</td>
                 <td>{{ $value['display_name'] }}</td>
                 <td>{{ $value['service'] }}</td>
-                <td>{{$value['city']}}</td>
-                <td>{{$value['state']}}</td>
-                <td>{{$value['country']}}</td>
+                <td>{{ $value['city'] }}</td>
+                <td>{{ $value['state'] }}</td>
+                <td>{{ $value['country'] }}</td>
                 <td>{{ $value['remarks'] }}</td>
                
                

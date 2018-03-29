@@ -190,6 +190,11 @@ return [
                         'text' => 'List Candidates',
                         'url'  => 'candidate',
                         'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'Import Candidates',
+                        'url'  => 'candidate/importExport',
+                        'icon' => 'list',
                     ]/*,
                     [
                         'text' => 'Extract From Resume',

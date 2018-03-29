@@ -17,9 +17,9 @@
                 <h2>Interview Details</h2>
             </div>
 
-            {{-- <div class="pull-right">
-                 <a class="btn btn-primary" href="{{ route('client.edit',$client['id']) }}">Edit</a>
-             </div>--}}
+            <div class="pull-right">
+                 <a class="btn btn-primary" href="{{ route('interview.index') }}">Back</a>
+            </div>
         </div>
 
     </div>
