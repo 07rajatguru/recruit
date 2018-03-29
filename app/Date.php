@@ -17,12 +17,12 @@ class Date
 		return $date;
     }
     public function changeDMYHMStoYMDHMS($date){
-		return date('Y-m-d H:m:s', strtotime($date));
+		return date('Y-m-d H:i:s', strtotime($date));
     }
 
     public function changeYMDHMStoDMYHMS($date){
     	if($date!=''){
-			return date('d-m-Y H:m:s', strtotime($date));
+			return date('d-m-Y H:i:s', strtotime($date));
     	}
 		return $date;
     }
