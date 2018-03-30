@@ -1193,6 +1193,9 @@ class CandidateController extends Controller
     }
 
     public function importExcel(Request $request){
+
+        $user_id = \Auth::user()->id;
+
         if($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
 
@@ -1206,7 +1209,7 @@ class CandidateController extends Controller
 
                     if(!empty($value)) {
                         //foreach ($value as $v) {
-                           // print_r($value);exit;
+                           //print_r($value);exit;
 
                             //$sr_no = $v['sr_no'];
                           //  $managed_by = $v['managed_by'];
@@ -1219,6 +1222,10 @@ class CandidateController extends Controller
                             $experience = $value['total_experience'];
                             $job_title = $value['curr_company_designation'];
                             $skill = $value['key_skills'];
+                            $city = $value['home_towncity'];
+                            $zipcode = $value['pin_code'];
+                            $address = $value['permanent_address'];
+                            $current_salary = $value['annual_salary'];
 
                             // first check email already exist or not , if exist doesnot update data
                             $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
@@ -1229,28 +1236,48 @@ class CandidateController extends Controller
                             else{
                                     $namearray = explode(' ', $name);
                                     $mobilearray = explode(',', $mobile_number);
+                                    $addressarray = explode(',', $address);
+
                                     // Insert new candidate
                                     $candidate_basic_info = new CandidateBasicInfo();
                                     $candidate_basic_info->fname = $namearray[0];
                                     $candidate_basic_info->lname = $namearray[1];
                                     $candidate_basic_info->email = $email;
                                     $candidate_basic_info->mobile = $mobilearray[0];
-                                    $candidate_basic_info->phone = $mobilearray[1];
-                                    $candidate_basic_info->type = $gender;
+                                    if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){
+                                        $candidate_basic_info->phone = $mobilearray[1];
+                                    }
+                                    if ($marital_status == 'Single/unmarried') {
+                                         $candidate_basic_info->marital_status = 'Single';     
+                                    }
+                                    else{
                                     $candidate_basic_info->marital_status = $marital_status;
-                                    //$candidate_basic_info->coordinator_name = $coordinator_name;
-                                    //$candidate_basic_info->account_manager_id = $acc_mngr_id;
+                                    }
+                                    $candidate_basic_info->type = $gender;
+                                    $candidate_basic_info->city = $city;
+                                    $candidate_basic_info->zipcode = $zipcode;
+                                    $candidate_basic_info->street1 = $addressarray[0];
+                                    //$candidate_basic_info->street2 = $addressarray[1];
 
                                     if($candidate_basic_info->save()) {
                                         $candidate_id = $candidate_basic_info->id;
 
+                                        $experiencearray = explode(' ', $experience);
+                                        $currentsalaryarray = explode(' ', $current_salary);
+
                                         $candidate_otherinfo = new CandidateOtherInfo();
                                         $candidate_otherinfo->candidate_id = $candidate_id;
-                                        $candidate_otherinfo->experience_years = $experience;
+                                        $candidate_otherinfo->current_job_title = $job_title;
+                                        $candidate_otherinfo->current_employer = $current_employer;
+                                        $candidate_otherinfo->experience_years = $experiencearray[0];
+                                        $candidate_otherinfo->experience_months = $experiencearray[2];
+                                        $candidate_otherinfo->skill = $skill;
+                                        if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
+                                            # code...
+                                        $candidate_otherinfo->current_salary = $currentsalaryarray[1];
+                                        }
+                                        $candidate_otherinfo->owner_id = $user_id;
                                         $candidate_otherinfo->save();
-                                        //$input['current_employer'] = $current_employer;
-                                        //$input['current_job_title'] = $job_title;
-                                        //$input['skill'] = $skill;
                                         //CandidateOtherInfo::create($input);
 
                                         if ($candidate_id > 0) {
