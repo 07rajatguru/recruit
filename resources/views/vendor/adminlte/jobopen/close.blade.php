@@ -42,7 +42,7 @@
             <th>No</th>
             <th>Action</th>
             <th>Status</th>
-            <th>Managed By</th>
+            <th>MB</th>
             <th>Company Name</th>
             <th>Position Title</th>
             <th>CA</th>
