@@ -69,7 +69,7 @@ class JobOpen extends Model
         $job_priorities['1'] = 'Urgent Positions';
         $job_priorities['2'] = 'New Positions';
         $job_priorities['3'] = 'Constant Deliveries needed';
-        $job_priorities['4'] = 'Update needed from client/on hold positions';
+        $job_priorities['4'] = 'On Hold';
         $job_priorities['5'] = 'Identified candidates';
         $job_priorities['6'] = 'Revived Positions';
         $job_priorities['7'] = 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet';
@@ -92,7 +92,7 @@ class JobOpen extends Model
         $job_priorities['6'] = 'yellow';
         $job_priorities['7'] = '#808080';
         $job_priorities['8'] = '#808080';
-        $job_priorities['9'] = '#FFFFFF';
+        $job_priorities['9'] = '#92D050';
         $job_priorities['10'] = '#FFFFFF';
 
         return $job_priorities;
