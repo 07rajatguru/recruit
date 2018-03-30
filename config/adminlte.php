@@ -115,43 +115,43 @@ return [
         ],
 
 
-         [
-                'text'        => 'Lead',
-                'icon'        => 'users',
-                'submenu' => [
-                    [
-                        'text' => 'Add Lead',
-                        'url'  => 'lead/create',
-                        'icon' => 'plus',
-                    ],
-                    [
-                        'text' => 'List Lead',
-                        'url'  => 'lead',
-                        'icon' => 'list',
-                    ]
-                ],
-            ],
-            
+        /*[
+               'text'        => 'Lead',
+               'icon'        => 'users',
+               'submenu' => [
+                   [
+                       'text' => 'Add Lead',
+                       'url'  => 'lead/create',
+                       'icon' => 'plus',
+                   ],
+                   [
+                       'text' => 'List Lead',
+                       'url'  => 'lead',
+                       'icon' => 'list',
+                   ]
+               ],
+           ],*/
 
-             [
-                'text'        => 'Clients',
-                'icon'        => 'users',
-                'submenu' => [
-                    [
-                        'text' => 'Add Client',
-                        'url'  => 'client/create',
-                        'icon' => 'plus',
-                    ],
-                    [
-                        'text' => 'List Clients',
-                        'url'  => 'client',
-                        'icon' => 'list',
-                    ]/*,
-                    [
-                        'text' => 'Import Clients',
-                        'url'  => 'client/importExport',
-                        'icon' => 'list',
-                    ]*/
+
+            [
+               'text'        => 'Clients',
+               'icon'        => 'users',
+               'submenu' => [
+                   [
+                       'text' => 'Add Client',
+                       'url'  => 'client/create',
+                       'icon' => 'plus',
+                   ],
+                   [
+                       'text' => 'List Clients',
+                       'url'  => 'client',
+                       'icon' => 'list',
+                   ]/*,
+                   [
+                       'text' => 'Import Clients',
+                       'url'  => 'client/importExport',
+                       'icon' => 'list',
+                   ]*/
                 ],
             ],
             
@@ -191,11 +191,11 @@ return [
                         'url'  => 'candidate',
                         'icon' => 'list',
                     ],
-                    [
+                    /*[
                         'text' => 'Import Candidates',
                         'url'  => 'candidate/importExport',
                         'icon' => 'list',
-                    ]/*,
+                    ],
                     [
                         'text' => 'Extract From Resume',
                         'url'  => 'candidate/resume',
