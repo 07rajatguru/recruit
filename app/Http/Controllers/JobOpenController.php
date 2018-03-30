@@ -1276,10 +1276,11 @@ class JobOpenController extends Controller
 
         $user_id = \Auth::user()->id;
         $job_id = $_POST['jobid'];
-        $candidate_ids = $_POST['candidate_ids'];
+        $candidate_id = $_POST['candidate_id'];
         $status_id = $_POST['status_id'];
 
-        DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_ids) and job_id = $job_id");
+        DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
+        DB::statement("UPDATE  candidate_otherinfo SET status_id =$status_id where candidate_id = $candidate_id");
 
         $jobDetail = JobOpen::find($job_id);
 
@@ -1382,10 +1383,26 @@ class JobOpenController extends Controller
         $shortlist = $input['shortlisted'];
         $candidate_id = $input['job_candidate_id'];
 
+       // $candidate_short = JobOpen::getShortlistType();
+        //print_r($candidate);exit;
+
         DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $candidate_id and job_id = $job_id");
 
          return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidate shortlisted successfully');
 
+    }
+
+    public function undoshortlisted(Request $request,$job_id){
+        $input = $request->all();
+
+        $undoshortlist = $input['undoshortlisted'];
+        $candidate_id = $input['job_undo_candidate_id'];
+        //print_r($candidate_id);exit;
+
+        DB::statement("UPDATE job_associate_candidates SET shortlisted = $undoshortlist where candidate_id = $candidate_id and job_id = $job_id");
+
+         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Undo shortlisted Candidate successfully');
+           
     }
 
     public function getOpenJobs(){

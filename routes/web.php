@@ -623,6 +623,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@shortlisted',
     ]);
 
+    //undo shortlisted candidate
+    Route::post('jobs/undo/{id}',[
+        'as' => 'jobopen.undo',
+        'uses' => 'JobOpenController@undoshortlisted',
+    ]);
+
 
 
 
