@@ -215,7 +215,7 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
                                                 
                                             );
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
@@ -247,7 +247,7 @@ class JobOpen extends Model
         foreach ($job_response as $key=>$value){
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['job_id'] = $value->job_id;
-            $jobs_list[$i]['company_name'] = $value->company_name;
+            $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['priority'] = $value->priority;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
