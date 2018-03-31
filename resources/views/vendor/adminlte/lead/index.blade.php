@@ -50,7 +50,7 @@
                  <td>
                             <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'lead','display_name'=>'lead'])
-                            <a title="Clone Lead "  class="fa fa-clone" href="{{ route('lead.clone',$value['id']) }}"></a>
+                            <a title="Convert lead to client"  class="fa fa-clone" href="{{ route('lead.clone',$value['id']) }}"></a>
                 </td>
                 
                 <td>{{ $value['name'] }}</td>

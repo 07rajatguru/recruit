@@ -115,7 +115,7 @@ return [
         ],
 
 
-        /*[
+        [
                'text'        => 'Lead',
                'icon'        => 'users',
                'submenu' => [
@@ -130,8 +130,7 @@ return [
                        'icon' => 'list',
                    ]
                ],
-           ],*/
-
+           ],
 
             [
                'text'        => 'Clients',
@@ -219,7 +218,7 @@ return [
                 ]
             ]
          ],
-            /*[
+            [
                 'text'        => 'Bills',
                 'icon'        => 'users',
                 'submenu' => [
@@ -240,7 +239,7 @@ return [
                     ],
 
                 ],
-            ],*/
+            ],
              [
             'text'        => "To'Dos",
             'icon'        => ' fa-th-list',

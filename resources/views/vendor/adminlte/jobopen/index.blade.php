@@ -41,10 +41,10 @@
         <tr>
             <th>No</th>
             <th>Action</th>
-            <th>Managed By</th>
+            <th>MB</th>
             <th>Company Name</th>
             <th>Position Title</th>
-            <th>Candidate Count</th>
+            <th>CA</th>
             <th>Location</th>
             <th>Min CTC</th>
             <th>Max CTC</th>

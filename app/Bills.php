@@ -95,8 +95,12 @@ class Bills extends Model
         $date_class = new Date();
 
         $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        $bills_query = $bills_query->select('bills.*','users.name as name');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.fname'
+        ,'candidate_basicinfo.lname');
 
         if($all==0){
             $bills_query = $bills_query->where('uploaded_by',$user_id);
@@ -126,9 +130,13 @@ class Bills extends Model
             $bills[$i]['user_name'] = $value->name;
             $bills[$i]['status'] = $value->status;
             $bills[$i]['uploaded_by'] = $value->uploaded_by;
+            $bills[$i]['posting_title'] = $value->posting_title;
+            $bills[$i]['display_name'] = $value->display_name;
+            $bills[$i]['city'] = $value->city;
+            $bills[$i]['cname'] = $value->fname." ".$value->lname;
 
             // get employee efforts
-            $efforts = Bills::getEmployeeEffortsById($value->id);
+            $efforts = Bills::getEmployeeEffortsNameById($value->id);
             $efforts_str = '';
             foreach ($efforts as $k=>$v){
                 if($efforts_str==''){
@@ -148,13 +156,32 @@ class Bills extends Model
     public static function getEmployeeEffortsById($id){
 
         $efforts_query = BillsEffort::query();
+        $efforts_query = $efforts_query->join('users','users.id','=','bills_efforts.employee_name');
         $efforts_query = $efforts_query->where('bill_id',$id);
         $res = $efforts_query->get();
 
         $employees = array();
         $i = 0 ;
         foreach ($res as $key=>$value){
-            $employees[$value->employee_name] = $value->employee_percentage;
+            $employees[$value->id] = $value->employee_percentage;
+            $i++;
+        }
+
+        return $employees;
+
+    }
+
+    public static function getEmployeeEffortsNameById($id){
+
+        $efforts_query = BillsEffort::query();
+        $efforts_query = $efforts_query->join('users','users.id','=','bills_efforts.employee_name');
+        $efforts_query = $efforts_query->where('bill_id',$id);
+        $res = $efforts_query->get();
+
+        $employees = array();
+        $i = 0 ;
+        foreach ($res as $key=>$value){
+            $employees[$value->name] = $value->employee_percentage;
             $i++;
         }
 

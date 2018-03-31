@@ -68,6 +68,30 @@ class User extends Authenticatable
         return $userArr;
     }
 
+    public static function getAllUsersCopy($type=NULL){
+        $user_query = User::query();
+
+        if($type!=NULL){
+            $user_query = $user_query->where('type','=',$type);
+        }
+
+        $user_query = $user_query->orderBy('name');
+
+        $users = $user_query->get();
+
+        /*$users = User::select('*')
+            ->get();*/
+
+        $userArr = array();
+        $userArr[0] = '';
+        if(isset($users) && sizeof($users)){
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->name;
+            }
+        }
+
+        return $userArr;
+    }
      public static function getTypeArray(){
         $type = array();
         $type['admin'] = 'Admin Team';
