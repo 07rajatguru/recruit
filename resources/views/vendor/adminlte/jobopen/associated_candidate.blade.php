@@ -175,10 +175,10 @@
                             <h1 class="modal-title">Shortlist Candidate</h1>
                         </div>
                         <div class="modal-body">
-                            {!! Form::hidden('shortlisted', 1 , array('id'=>'shortlist','class' => 'form-control' )) !!}
+                            {{--{!! Form::hidden('shortlisted', 1 , array('id'=>'shortlist','class' => 'form-control' )) !!}--}}
                             {!! Form::hidden('job_candidate_id', null , array('id'=>'job_candidate_id','class' => 'form-control' )) !!}
                             <p>
-                                Are you sure want to shortlist Candidate ?
+                                {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
                             </p>
                         </div>
                         <div class="modal-footer">
@@ -202,7 +202,7 @@
                             <h1 class="modal-title">Undo Shortlist Candidate</h1>
                         </div>
                         <div class="modal-body">
-                            {!! Form::hidden('undoshortlisted', 0 , array('id'=>'undoshortlist','class' => 'form-control' )) !!}
+                            {!! Form::hidden('undoshortlisted', 0 , array('id'=>'undoshortlisted','class' => 'form-control' )) !!}
                             {!! Form::hidden('job_undo_candidate_id', null , array('id'=>'job_undo_candidate_id','class' => 'form-control' )) !!}
                             <p>
                                 Are you sure want to undo shortlist Candidate ?
@@ -242,9 +242,7 @@
         @foreach ($candidates as $candidate)
             <?php
             $color='';
-            if($candidate->shortlisted==1){
-                 $color='yellow';
-                 } ?>
+                 ?>
             <tr style="background-color: {{$color}}">
                 <td>
                     <ul class="nav navbar-nav">
@@ -271,9 +269,11 @@
                                             <li>
                                                 <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
                                             </li>
+                                            @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
                                             <li>
                                                 <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo" >Undo Shortlisted Candidate</a>
                                             </li>
+                                            @endif
                                         </ul>
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
                                 </li>
@@ -290,11 +290,17 @@
                     </a>
                 </td>
                 {{--<td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td>--}}
-
+                @if($candidate->shortlisted==1)
+                <td style="background:#FFFF00;">{{ $candidate->fname or '' }} {{ $candidate->lname or '' }}</td>
+                <td>{{ $candidate->owner or '' }}</td>
+                <td>{{ $candidate->email or '' }}</td>
+                <td>{{ $candidate->status or '' }}</td>
+                @else
                 <td>{{ $candidate->fname or '' }} {{ $candidate->lname or '' }}</td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
+                @endif
 
             </tr>
         @endforeach

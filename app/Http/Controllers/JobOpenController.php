@@ -1219,12 +1219,14 @@ class JobOpenController extends Controller
             $candidateStatus[$value['id']] = $value['name'];
         }
 
+        $shortlist_type = JobOpen::getShortlistType();
+
         $type = Interview::getTypeArray();
         $status = Interview::getInterviewStatus();
         $users = User::getAllUsers();
         return view('adminlte::jobopen.associated_candidate', array('job_id' => $id, 'posting_title' => $posting_title,
             'message' => '','candidates'=>$candidateDetails ,'candidatestatus'=>$candidateStatus,'type'=>$type,
-            'status' => $status,'users' => $users,'client_id'=>$client_id));
+            'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type));
     }
 
     public function deAssociateCandidates(){
@@ -1380,11 +1382,11 @@ class JobOpenController extends Controller
     public function shortlisted(Request $request,$job_id){
         $input = $request->all();
 
-        $shortlist = $input['shortlisted'];
+        $shortlist = $input['shortlist_type'];
         $candidate_id = $input['job_candidate_id'];
 
-       // $candidate_short = JobOpen::getShortlistType();
-        //print_r($candidate);exit;
+       
+        //print_r($candidate_short);exit;
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $candidate_id and job_id = $job_id");
 
