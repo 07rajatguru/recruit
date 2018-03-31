@@ -11,12 +11,14 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Bills List</h2>
+                <h2>{{$title}}</h2>
             </div>
 
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('bills.create') }}"> Create New Bill</a>
-            </div>
+            @if($title=="Bills Not Made")
+                <div class="pull-right">
+                    <a class="btn btn-success" href="{{ route('bills.create') }}"> Create New Bill</a>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -33,8 +35,8 @@
         {!! Form::close() !!}--}}
 
     </div>
-    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
-        <thead>
+<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
+    <thead>
         <tr>
             <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
             <th>Action</th>
@@ -42,39 +44,34 @@
             @if($access=='true')
                 <th>Added by</th>
             @endif
-            <th>Company Name</th>
+            <th>Job Openings</th>
             <th>Candidate Name</th>
             <th>Joining Date</th>
             <th>Fixed Salary</th>
             <th>Efforts</th>
             <th>Candidate Contact Number</th>
-            <th>Designation offered</th>
             <th>Job Location</th>
             <th>Percentage Charged</th>
             <th>Source</th>
             <th>Client Name</th>
             <th>Client Contact Number</th>
             <th>Client Email Id</th>
-
-
         </tr>
-        </thead>
+    </thead>
         <?php $i=0; ?>
         <tbody>
         @foreach($bnm as $key=>$value)
             <tr>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
                 <td>
-                    @if($value['status']==0 )
+                    @if($access || ($user_id==$value['uploaded_by']))
+                        <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
 
-                        @if($access || ($user_id==$value['uploaded_by']))
-                            <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
-
+                        @if($value['status']==0 )
                             <!-- BM will be generated after date of joining -->
                             @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
-                                {{--<a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>--}}
+                                <a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
                             @endif
-
                         @endif
 
                     @endif
@@ -84,13 +81,12 @@
                 @if($access=='true')
                     <td>{{ $value['user_name'] }}</td>
                 @endif
-                <td>{{ $value['company_name'] }}</td>
-                <td>{{ $value['candidate_name'] }}</td>
+                <td>{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
+                <td>{{ $value['cname'] }}</td>
                 <td>{{ $value['date_of_joining'] }}</td>
                 <td>{{ $value['fixed_salary'] }}</td>
                 <td>{{ $value['efforts'] }}</td>
                 <td>{{ $value['candidate_contact_number'] }}</td>
-                <td>{{ $value['designation_offered'] }}</td>
                 <td>{{ $value['job_location'] }}</td>
                 <td>{{ $value['percentage_charged'] }}</td>
                 <td>{{ $value['source'] }}</td>

@@ -264,3 +264,6 @@ tr.disabled > td a {
 .notification-li > a > p{
     margin: 0 0 0 5px !important;
 }
+.employee_perce{
+    height:28px !important;
+}

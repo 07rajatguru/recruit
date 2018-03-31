@@ -38,12 +38,32 @@ class BillsController extends Controller
             $access = false;
         }
 
-        return view('adminlte::bills.index', compact('bnm','access','user_id'));
+        $title = "Bills Not Made";
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title'));
     }
 
     public function billsMade(){
-        $bnm = Bills::getAllBills(1);
-        return view('adminlte::bills.index', compact('bnm'));
+       // $bnm = Bills::getAllBills(1);
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $bnm = Bills::getAllBills(1,1,$user_id);
+            $access = true;
+        }
+        else{
+            $bnm = Bills::getAllBills(1,0,$user_id);
+            $access = false;
+        }
+        $title = "Bills Made";
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title'));
     }
 
     public function create()
@@ -62,30 +82,33 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user_id);
+            $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user_id);
+            $job_response = JobOpen::getAllBillsJobs(0,$user_id);
         }
 
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name']." ,".$v['location'];
         }
         $job_id = 0;
+
+        $users = User::getAllUsersCopy('recruiter');
 
         $employee_name = array();
         $employee_percentage = array();
 
-        $employee_name[0] = \Auth::user()->name;
-        $employee_percentage[0] = '100';
+        $employee_name[0] = $user_id;
+        $employee_percentage[0] = '0';
         for ($i = 1; $i < 5; $i++) {
             $employee_name[$i] = '';
             $employee_percentage[$i] = '';
         }
 
-        return view('adminlte::bills.create', compact('action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id'));
+        $candidate_id = '';
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id'));
     }
 
     public function store(Request $request)
@@ -98,6 +121,8 @@ class BillsController extends Controller
 
         $input = $request->all();
 
+        $job_id = $input['jobopen'];
+        $candidate_id = $input['candidate_name'];
         $company_name = $input['company_name'];
         $candidate_contact_number = $input['candidate_contact_number'];
         $date_of_joining = $input['date_of_joining'];
@@ -129,7 +154,7 @@ class BillsController extends Controller
         $employee_percentage[] = $input['employee_percentage_5'];
         $total = 0;
         foreach ($employee_name as $k => $v) {
-            if ($v != '') {
+            if ($v != '' && $v!=0) {
                 $employee_final[$v] = $employee_percentage[$k];
                 $total += $employee_percentage[$k];
             }
@@ -163,6 +188,8 @@ class BillsController extends Controller
         $bill->status = 0; // 0- BNM
         $bill->remarks = '';
         $bill->uploaded_by = $user_id;
+        $bill->job_id = $job_id;
+        $bill->candidate_id = $candidate_id;
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
 
@@ -227,6 +254,7 @@ class BillsController extends Controller
 
     public function edit($id)
     {
+        $action = 'edit';
         $generate_bm ='0';
         $user = \Auth::user();
         $user_id = $user->id;
@@ -239,10 +267,10 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user_id);
+            $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user_id);
+            $job_response = JobOpen::getAllBillsJobs(0,$user_id);
         }
 
         $jobopen = array();
@@ -255,6 +283,7 @@ class BillsController extends Controller
 
         $dateClass = new Date();
         $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
+        $job_id = $bnm->
         $action = 'edit';
 
         $employee_name = array();
@@ -276,7 +305,11 @@ class BillsController extends Controller
             }
         }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj'));
+        $job_id = $bnm->job_id;
+        $candidate_id = $bnm->candidate_id;
+        $users = User::getAllUsersCopy('recruiter');
+
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id'));
 
     }
 
@@ -287,13 +320,14 @@ class BillsController extends Controller
 
         $input = $request->all();
 
+        $job_id = $input['jobopen'];
         $company_name = $input['company_name'];
         $candidate_contact_number = $input['candidate_contact_number'];
         $date_of_joining = $input['date_of_joining'];
         $fixed_salary = $input['fixed_salary'];
         $source = $input['source'];
         $client_contact_number = $input['client_contact_number'];
-        $candidate_name = $input['candidate_name'];
+        $candidate_id = $input['candidate_name'];
         $designation_offered = $input['designation_offered'];
         $job_location = $input['job_location'];
         $percentage_charged = $input['percentage_charged'];
@@ -342,7 +376,7 @@ class BillsController extends Controller
         $bill->fixed_salary = $fixed_salary;
         $bill->source = $source;
         $bill->client_contact_number = $client_contact_number;
-        $bill->candidate_name = $candidate_name;
+        $bill->candidate_name = $candidate_id;
         $bill->designation_offered = $designation_offered;
         $bill->job_location = $job_location;
         $bill->percentage_charged = $percentage_charged;
@@ -352,6 +386,8 @@ class BillsController extends Controller
         $bill->status = $status; // 0- BNM , 1- BM
         $bill->remarks = '';
         $bill->uploaded_by = $user_id;
+        $bill->job_id = $job_id;
+        $bill->candidate_id = $candidate_id;
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
 
@@ -362,17 +398,19 @@ class BillsController extends Controller
 
             $bill_response = $bill->save();
             foreach ($employee_final as $k => $v) {
-                $bill_efforts = new BillsEffort();
 
-                $bill_efforts->bill_id = $id;
-                $bill_efforts->employee_name = $k;
-                $bill_efforts->employee_percentage = $v;
+                if($k>0){
+                    $bill_efforts = new BillsEffort();
 
-                $bill_efforts->save();
+                    $bill_efforts->bill_id = $id;
+                    $bill_efforts->employee_name = $k;
+                    $bill_efforts->employee_percentage = $v;
+
+                    $bill_efforts->save();
+                }
+
             }
         }
-
-
 
         return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
     }
@@ -380,6 +418,29 @@ class BillsController extends Controller
     public function generateBM($id){
 
         $generate_bm = '1';
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getAllBillsJobs(1,$user_id);
+        }
+        else{
+            $job_response = JobOpen::getAllBillsJobs(0,$user_id);
+        }
+
+        $jobopen = array();
+        $jobopen[0] = 'Select';
+        foreach ($job_response as $k=>$v){
+            $jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+        }
 
         $bnm = Bills::find($id);
 
@@ -404,7 +465,10 @@ class BillsController extends Controller
             }
         }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm'));
+        $job_id = $bnm->job_id;
+        $candidate_id = $bnm->candidate_id;
+        $users = User::getAllUsersCopy('recruiter');
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users'));
 
     }
 

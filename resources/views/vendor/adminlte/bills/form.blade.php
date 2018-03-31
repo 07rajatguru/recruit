@@ -89,13 +89,15 @@
 
                             <div class="form-group {{ $errors->has('candidate_name') ? 'has-error' : '' }}">
                                 <strong>Candidate Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate_name', array(),null, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '23','onchange'=>'prefilledcandidatedata()' )) !!}
+                                {!! Form::select('candidate_name', array(),$candidate_id, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '23','onchange'=>'prefilledcandidatedata()' )) !!}
                             @if ($errors->has('candidate_name'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candidate_name') }}</strong>
                                 </span>
                                 @endif
                             </div>
+
+                            <input type="hidden" id="candidate_id" name="candidate_id" value="{{$candidate_id}}">
 
                             <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
                                 <strong>Joining Date: <span class = "required_fields">*</span> </strong>
@@ -225,13 +227,12 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>Employee Name :  <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('employee_name_1', $employee_name[0], array('id'=>'employee_name_1','placeholder' => 'Employee Name 1','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_name_2', $employee_name[1], array('id'=>'employee_name_2','placeholder' => 'Employee Name 2','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_name_3', $employee_name[2], array('id'=>'employee_name_3','placeholder' => 'Employee Name 3','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_name_4', $employee_name[3], array('id'=>'employee_name_4','placeholder' => 'Employee Name 4','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_name_5', $employee_name[4], array('id'=>'employee_name_5','placeholder' => 'Employee Name 5','class' => 'form-control' )) !!}
+                                {!! Form::select('employee_name_1', $users,$employee_name[0], array('id'=>'employee_name_1','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::select('employee_name_2', $users,$employee_name[1], array('id'=>'employee_name_2','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::select('employee_name_3', $users,$employee_name[2], array('id'=>'employee_name_3','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::select('employee_name_4', $users,$employee_name[3], array('id'=>'employee_name_4','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::select('employee_name_5', $users,$employee_name[4], array('id'=>'employee_name_5','class' => 'form-control', 'tabindex' => '7' )) !!}
                             </div>
-
                         </div>
 
                     </div>
@@ -240,11 +241,11 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>Employee Percentage:  <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_percentage_4', $employee_percentage[3], array('id'=>'employee_percentage_4','placeholder' => 'Employee 4 Percentage','class' => 'form-control' )) !!}
-                                {!! Form::text('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control' )) !!}
+                                {!! Form::text('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::text('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::text('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::text('employee_percentage_4', $employee_percentage[3], array('id'=>'employee_percentage_4','placeholder' => 'Employee 4 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::text('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control employee_perce' )) !!}
                             </div>
                         </div>
 
@@ -291,7 +292,13 @@
 
             $("#jobopen").select2();
             $("#candidate_name").select2();
+            $("#employee_name_1").select2();
+            $("#employee_name_2").select2();
+            $("#employee_name_3").select2();
+            $("#employee_name_4").select2();
+            $("#employee_name_5").select2();
 
+            prefilleddata();
             // on job select pre filled all data
 
             $(function () {
@@ -394,6 +401,7 @@
         function prefilleddata() {
 
             var job_id = $("#jobopen").val();
+            var candidate_id = $("#candidate_id").val();
 
             if(job_id>0){
                 // get client data from job id
@@ -432,6 +440,7 @@
                             for(var i=0;i<response.length;i++){
                                 $('#candidate_name').append($('<option data-content="'+response[i].mobile+'"></option>').val(response[i].id).html(response[i].name));
                                 $('#candidate_name').select2();
+                                $("#candidate_name").select2('val',candidate_id);
                             }
 
                         }
