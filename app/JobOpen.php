@@ -131,6 +131,16 @@ class JobOpen extends Model
         return $job_search;
     }
 
+    public static function getShortlistType(){
+        
+        $candidate_short = array();
+        $candidate_short['1'] = 'Round 1';
+        $candidate_short['2'] = 'Round 2';
+        $candidate_short['3'] = 'Round 3';
+
+        return $candidate_short;
+    }
+
     public static function getJobOpeningId(){
 
         $jobOpenDetails = JobOpen::all();
