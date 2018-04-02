@@ -422,6 +422,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('candidate/importExport', 'CandidateController@importExport');
     Route::post('candidate/importExcel', 'CandidateController@importExcel');
+    Route::get('candidate/fullname', 'CandidateController@fullname');
 
 
     // Daily Report

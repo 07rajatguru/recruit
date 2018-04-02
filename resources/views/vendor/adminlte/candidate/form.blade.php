@@ -25,10 +25,10 @@
 
 @if(isset($action))
     @if($action == 'edit')
-        {!! Form::model($candidate,['method' => 'PUT', 'files' => true, 'route' => ['candidate.update', $candidate['id']],'id'=>'candidate_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::model($candidate,['method' => 'PUT', 'files' => true, 'route' => ['candidate.update', $candidate['id']],'id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
         {!! Form::hidden('candidateId', $candidate['id'], array('id'=>'candidateId')) !!}
     @else
-        {!! Form::open(['files' => true, 'route' => 'candidate.store','id'=>'candidate_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::open(['files' => true, 'route' => 'candidate.store','id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
     @endif
 
     {!! Form::hidden('action', $action, array('id'=>'action')) !!}
@@ -46,7 +46,7 @@
                         <div class="">
 
                             <div class="form-group {{ $errors->has('fname') ? 'has-error' : '' }}">
-                                <strong>First Name: <span class = "required_fields">*</span> </strong>
+                                <strong>Full Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('fname', null, array('id'=>'fname','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 @if ($errors->has('fname'))
                                     <span class="help-block">
@@ -92,7 +92,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
 
-                            <div class="form-group {{ $errors->has('lname') ? 'has-error' : '' }}">
+                            {{--<div class="form-group {{ $errors->has('lname') ? 'has-error' : '' }}">
                                 <strong>Last Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('lname', null, array('id'=>'lname','placeholder' => 'Last Name','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('lname'))
@@ -100,11 +100,11 @@
                                 <strong>{{ $errors->first('lname') }}</strong>
                                 </span>
                                 @endif
-                            </div>
+                            </div>--}}
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'EMAIL','class' => 'form-control', '', 'tabindex' => '4' )) !!}
+                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'EMAIL','class' => 'form-control', '', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>
@@ -114,7 +114,7 @@
 
                             <div class="form-group {{ $errors->has('maritalStatus') ? 'has-error' : '' }}">
                                 <strong>Marital Status:  </strong>
-                                {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '6' )) !!}
+                                {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 @if ($errors->has('maritalStatus'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('maritalStatus') }}</strong>
@@ -124,7 +124,7 @@
 
                              <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
                                 <strong>Sex:</strong>
-                                {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '8' )) !!}
+                                {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '6' )) !!}
                                 @if ($errors->has('candidateSex'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candidateSex') }}</strong>
@@ -494,9 +494,9 @@
                     "fname": {
                         required: true
                     },
-                    "lname": {
+                    /*"lname": {
                         required: true
-                    },
+                    },*/
                     "mobile": {
                         required: true
                     },
@@ -515,11 +515,11 @@
                 
                 messages: {
                     "fname": {
-                        required: "First Name is required."
+                        required: "Full Name is required."
                     },
-                    "lname": {
+                   /* "lname": {
                         required: "Last Name is required."
-                    },
+                    },*/
                     
                     "mobile": {
                         required: "Mobile is required."

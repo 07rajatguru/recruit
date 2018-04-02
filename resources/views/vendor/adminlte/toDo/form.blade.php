@@ -25,10 +25,10 @@
 @if(isset($action))
 
     @if($action == 'edit')
-        {!! Form::model($toDos,['method' => 'PUT', 'files' => true, 'route' => ['todos.update', $toDos['id']],'id'=>'toDo_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::model($toDos,['method' => 'PUT', 'files' => true, 'route' => ['todos.update', $toDos['id']],'id'=>'toDo_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
         {!! Form::hidden('toDoId', $toDos['id'], array('id'=>'toDoId')) !!}
     @else
-        {!! Form::open(['files' => true, 'route' => 'todos.store','id'=>'toDo_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::open(['files' => true, 'route' => 'todos.store','id'=>'toDo_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
     @endif
 
     {!! Form::hidden('action', $action, array('id'=>'action')) !!}

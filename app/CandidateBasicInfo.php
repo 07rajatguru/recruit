@@ -12,7 +12,7 @@ class CandidateBasicInfo extends Model
 
     public static $rules = array(
         'fname' => 'required',
-        'lname' => 'required',
+       // 'lname' => 'required',
 //        'candidateSex' => 'required',
 //        'maritalStatus' => 'required',
         'mobile' => 'required',
@@ -22,8 +22,8 @@ class CandidateBasicInfo extends Model
     public function messages()
     {
         return [
-            'fname.required' => 'First Name is required field',
-            'lname.required' => 'Last Name is required field',
+            'fname.required' => 'Full Name is required field',
+         //   'lname.required' => 'Last Name is required field',
         //   'candidateSex.required' => 'Sex is required field',
         //    'maritalStatus.required' => 'Marital Status is required field',
             'mobile.required' => 'Mobile is required field',
