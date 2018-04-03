@@ -50,7 +50,7 @@
                 <td>{{ ++$i }}</td>
                 <td>{{ $interView->interview_name or '' }}</td>
                 <td>{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
-                <td>{{ $interView->candidate_fname }} {{ $interView->candidate_lname }}</td>
+                <td>{{ $interView->candidate_fname }}</td>
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
                 <td>{{ $interView->interview_date or ''}} </td>
                 <td>{{ $interView->location or ''}}</td>

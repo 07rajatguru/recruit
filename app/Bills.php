@@ -99,7 +99,7 @@ class Bills extends Model
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.fname'
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
         ,'candidate_basicinfo.lname');
 
         if($all==0){
@@ -133,7 +133,7 @@ class Bills extends Model
             $bills[$i]['posting_title'] = $value->posting_title;
             $bills[$i]['display_name'] = $value->display_name;
             $bills[$i]['city'] = $value->city;
-            $bills[$i]['cname'] = $value->fname." ".$value->lname;
+            $bills[$i]['cname'] = $value->full_name;
 
             // get employee efforts
             $efforts = Bills::getEmployeeEffortsNameById($value->id);

@@ -41,7 +41,7 @@
         @foreach ($candidates as $candidate)
             <tr>
                 <td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td>
-                <td>{{ $candidate->fname or '' }} {{ $candidate->lname or '' }}</td>
+                <td>{{ $candidate->fname or '' }}</td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or ''}}</td>
 

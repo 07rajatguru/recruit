@@ -440,7 +440,7 @@ class ToDosController extends Controller
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->fname." ".$typeDetail->lname;
+                    $typeArr[$i]['value'] = $typeDetail->full_name;
                     $i++;
                 }
             } else{
@@ -540,7 +540,7 @@ class ToDosController extends Controller
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->fname." ".$typeDetail->lname;
+                    $typeArr[$i]['value'] = $typeDetail->full_name;
                     $i++;
                 }
             } else{

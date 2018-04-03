@@ -1260,14 +1260,14 @@ class CandidateController extends Controller
                                 $messages[] = "Record $name already present ";
                             }
                             else{
-                                    $namearray = explode(' ', $name);
+                                   // $namearray = explode(' ', $name);
                                     $mobilearray = explode(',', $mobile_number);
                                     $addressarray = explode(',', $address);
 
                                     // Insert new candidate
                                     $candidate_basic_info = new CandidateBasicInfo();
-                                    $candidate_basic_info->fname = $namearray[0];
-                                    $candidate_basic_info->lname = $namearray[1];
+                                    $candidate_basic_info->full_name = $name;
+                                    //$candidate_basic_info->lname = $namearray[1];
                                     $candidate_basic_info->email = $email;
                                     $candidate_basic_info->mobile = $mobilearray[0];
                                     if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){

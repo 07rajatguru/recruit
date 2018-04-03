@@ -237,7 +237,7 @@ class InterviewController extends Controller
             ->join('job_openings','job_openings.id','=','interview.posting_title')
             ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
             ->leftjoin('users','users.id','=','interview.interviewer_id')
-            ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.fname, " ", candidate_basicinfo.lname) AS candidate_name'),
+            ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.full_name) AS candidate_name'),
                  'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city')
             ->where('interview.id','=',$id)
             ->first();

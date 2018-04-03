@@ -140,15 +140,15 @@ class CandidateBasicInfo extends Model
         $query = CandidateBasicInfo::query();
         $query = $query->join('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
-        $query = $query->where('job_associate_candidates.shortlisted','=',1);
-        $query = $query->select('candidate_basicinfo.fname','candidate_basicinfo.lname','candidate_basicinfo.mobile','candidate_basicinfo.id');
+        $query = $query->where('job_associate_candidates.shortlisted','!=',0);
+        $query = $query->select('candidate_basicinfo.full_name','candidate_basicinfo.lname','candidate_basicinfo.mobile','candidate_basicinfo.id');
         $response = $query->get();
 
         $candidate = array();
         $i = 0 ;
         foreach ($response as $k=>$v){
             $candidate[$i]['id'] = $v->id;
-            $candidate[$i]['name'] = $v->fname." ".$v->lname;
+            $candidate[$i]['name'] = $v->full_name;
             $candidate[$i]['mobile'] = $v->mobile;
             $i++;
         }

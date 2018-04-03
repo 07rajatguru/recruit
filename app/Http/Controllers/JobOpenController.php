@@ -1109,7 +1109,7 @@ class JobOpenController extends Controller
 
         $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id')
             ->leftjoin('users', 'users.id', '=', 'candidate_otherinfo.owner_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
+            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner')
             ->whereNotIn('candidate_basicinfo.id', $candidates)
             ->get();
@@ -1695,7 +1695,7 @@ class JobOpenController extends Controller
             $response['data'][0]['value'] = 'Select';
             foreach ($associated_candidates as $k=>$v){
                 $response['data'][$i]['id'] = $v->id;
-                $response['data'][$i]['value'] = $v->fname." ".$v->lname;
+                $response['data'][$i]['value'] = $v->fname;
                 $i++;
             }
         }

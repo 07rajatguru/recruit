@@ -113,7 +113,7 @@
                                     <tr>
                                         <td>{{ $interview->interview_name }}</td>
                                         <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
-                                        <td>{{ $interview->candidate_fname .' '.$interview->candidate_lname }} </td>
+                                        <td>{{ $interview->candidate_fname}} </td>
                                         <td>{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                     </tr>
                                 @endforeach
