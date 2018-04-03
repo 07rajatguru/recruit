@@ -360,7 +360,7 @@ class BillsController extends Controller
         foreach ($employee_name as $k => $v) {
             if ($v != '') {
                 $employee_final[$v] = $employee_percentage[$k];
-                $total += $employee_percentage[$k];
+                $total += (int)$employee_percentage[$k];
             }
         }
 
