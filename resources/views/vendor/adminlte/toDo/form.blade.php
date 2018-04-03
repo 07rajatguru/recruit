@@ -148,8 +148,8 @@
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                             <strong>Select Users : <span class = "required_fields">*</span></strong>
-                            <input type="checkbox" id="users_all"/> <strong>Select All</strong>
-                            @foreach($users as $k=>$v)<br/>
+                            <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
+                            @foreach($users as $k=>$v) &nbsp;&nbsp;
                             {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
                             {!! Form::label ($v) !!}
                             @endforeach
