@@ -50,6 +50,7 @@ class ToDosController extends Controller
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
         $in_progress = env('INPROGRESS');
+        $yet_to_start = env('YETTOSTART');
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -99,7 +100,7 @@ class ToDosController extends Controller
         $viewVariable['selected_users'] = $selected_users;
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
-        $viewVariable['status_id'] = $in_progress;
+        $viewVariable['status_id'] = $yet_to_start;
 
         return view('adminlte::toDo.create', $viewVariable);
     }
