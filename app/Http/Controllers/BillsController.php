@@ -108,7 +108,8 @@ class BillsController extends Controller
         }
 
         $candidate_id = '';
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id'));
+        $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource'));
     }
 
     public function store(Request $request)
@@ -308,8 +309,8 @@ class BillsController extends Controller
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
         $users = User::getAllUsersCopy('recruiter');
-
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id'));
+        $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource'));
 
     }
 
@@ -468,7 +469,8 @@ class BillsController extends Controller
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
         $users = User::getAllUsersCopy('recruiter');
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users'));
+        $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource'));
 
     }
 

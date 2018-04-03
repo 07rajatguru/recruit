@@ -64,115 +64,123 @@
             <tr>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
                 <td>
-                    @if($access || ($user_id==$value['uploaded_by']))
-                        <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+                    @if($title=="Bills Not Made")
+                        @if($access || ($user_id==$value['uploaded_by']) )
+                            <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
 
-                        @if($value['status']==0 )
+                            @if($value['status']==0)
                             <!-- BM will be generated after date of joining -->
-                            @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
-                                <a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
+                                @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
+                                    <a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
+                                @endif
                             @endif
+
                         @endif
-
                     @endif
-                    {{--<a class="btn btn-info" href="{{ route('bills.show',$value['id']) }}">Show</a>--}}
-                </td>
-                <td>{{ ++$i }}</td>
-                @if($access=='true')
-                    <td>{{ $value['user_name'] }}</td>
-                @endif
-                <td>{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
-                <td>{{ $value['cname'] }}</td>
-                <td>{{ $value['date_of_joining'] }}</td>
-                <td>{{ $value['fixed_salary'] }}</td>
-                <td>{{ $value['efforts'] }}</td>
-                <td>{{ $value['candidate_contact_number'] }}</td>
-                <td>{{ $value['job_location'] }}</td>
-                <td>{{ $value['percentage_charged'] }}</td>
-                <td>{{ $value['source'] }}</td>
-                <td>{{ $value['client_name'] }}</td>
-                <td>{{ $value['client_contact_number'] }}</td>
-                <td>{{ $value['client_email_id'] }}</td>
 
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
-@stop
-@section('customscripts')
-    <script type="text/javascript">
-        $(document).ready(function(){
-            var table = $('#jo_table').DataTable( {
-               columnDefs: [  {
-                    'targets': 0,
-                    'searchable':false,
-                    'orderable':false,
-                    'className': 'dt-body-center',
-                    /*'render': function (data, type, full, meta){
-                        return '<input type="checkbox" name="id[]" value="'
-                            + $('<div/>').text(data).html() + '">';
-                    }*/
-                } ],
-                /*scrollY: "300px",
-                scrollX:  true,
-                scrollCollapse: true,
-                paging:         false,
-                columnDefs: [
-                    { width: 200, targets: 0 }
-                ],*/
-                responsive: true
-            } );
+                    @if($title=="Bills Made")
+                        @if($access)
+                                <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+                        @endif
+                    @endif
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+                   </td>
+                   <td>{{ ++$i }}</td>
+                   @if($access=='true')
+                       <td>{{ $value['user_name'] }}</td>
+                   @endif
+                   <td>{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
+                   <td>{{ $value['cname'] }}</td>
+                   <td>{{ $value['date_of_joining'] }}</td>
+                   <td>{{ $value['fixed_salary'] }}</td>
+                   <td>{{ $value['efforts'] }}</td>
+                   <td>{{ $value['candidate_contact_number'] }}</td>
+                   <td>{{ $value['job_location'] }}</td>
+                   <td>{{ $value['percentage_charged'] }}</td>
+                   <td>{{ $value['source'] }}</td>
+                   <td>{{ $value['client_name'] }}</td>
+                   <td>{{ $value['client_contact_number'] }}</td>
+                   <td>{{ $value['client_email_id'] }}</td>
 
-            $('#example-select-all').on('click', function(){
-                // Check/uncheck all checkboxes in the table
-                var rows = table.rows({ 'search': 'applied' }).nodes();
-                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+               </tr>
+           @endforeach
+           </tbody>
+       </table>
+       <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+                           @stop
+                           @section('customscripts')
+                               <script type="text/javascript">
+                                   $(document).ready(function(){
+                                       var table = $('#jo_table').DataTable( {
+                                          columnDefs: [  {
+                                               'targets': 0,
+                                               'searchable':false,
+                                               'orderable':false,
+                                               'className': 'dt-body-center',
+                                               /*'render': function (data, type, full, meta){
+                                                   return '<input type="checkbox" name="id[]" value="'
+                                                       + $('<div/>').text(data).html() + '">';
+                                               }*/
+                                           } ],
+                                           /*scrollY: "300px",
+                                           scrollX:  true,
+                                           scrollCollapse: true,
+                                           paging:         false,
+                                           columnDefs: [
+                                               { width: 200, targets: 0 }
+                                           ],*/
+                                           responsive: true
+                                       } );
 
-            });
+                                       new jQuery.fn.dataTable.FixedHeader( table );
 
-            // Handle click on checkbox to set state of "Select all" control
-            $('#jo_table tbody').on('change', 'input[type="checkbox"]', function(){
-                // If checkbox is not checked
-                if(!this.checked){
-                    var el = $('#example-select-all').get(0);
-                    // If "Select all" control is checked and has 'indeterminate' property
-                    if(el && el.checked && ('indeterminate' in el)){
-                        // Set visual state of "Select all" control
-                        // as 'indeterminate'
-                        el.indeterminate = true;
-                    }
-                }
-            });
+                                       $('#example-select-all').on('click', function(){
+                                           // Check/uncheck all checkboxes in the table
+                                           var rows = table.rows({ 'search': 'applied' }).nodes();
+                                           $('input[type="checkbox"]', rows).prop('checked', this.checked);
 
-        });
+                                       });
 
-        function downloadExcel() {
+                                       // Handle click on checkbox to set state of "Select all" control
+                                       $('#jo_table tbody').on('change', 'input[type="checkbox"]', function(){
+                                           // If checkbox is not checked
+                                           if(!this.checked){
+                                               var el = $('#example-select-all').get(0);
+                                               // If "Select all" control is checked and has 'indeterminate' property
+                                               if(el && el.checked && ('indeterminate' in el)){
+                                                   // Set visual state of "Select all" control
+                                                   // as 'indeterminate'
+                                                   el.indeterminate = true;
+                                               }
+                                           }
+                                       });
 
-            var table = $('#jo_table').DataTable();
-            var ids = new Array();
-            // Iterate over all checkboxes in the table
-            table.$('input[type="checkbox"]').each(function () {
-                // If checkbox is checked
-                if (this.checked) {
-                    ids.push(this.value);
-                }
-            });
+                                   });
 
-            var token = $('input[name="csrf_token"]').val();
-            $.ajax({
-                type: 'POST',
-                url: 'bills/downloadexcel',
-                data: { ids:ids ,'_token':token},
-                success: function(res)
-                {
+                                   function downloadExcel() {
 
-                }
-            });
+                                       var table = $('#jo_table').DataTable();
+                                       var ids = new Array();
+                                       // Iterate over all checkboxes in the table
+                                       table.$('input[type="checkbox"]').each(function () {
+                                           // If checkbox is checked
+                                           if (this.checked) {
+                                               ids.push(this.value);
+                                           }
+                                       });
 
-        }
+                                       var token = $('input[name="csrf_token"]').val();
+                                       $.ajax({
+                                           type: 'POST',
+                                           url: 'bills/downloadexcel',
+                                           data: { ids:ids ,'_token':token},
+                                           success: function(res)
+                                           {
 
-    </script>
-@endsection
+                                           }
+                                       });
+
+                                   }
+
+                               </script>
+                           @endsection
