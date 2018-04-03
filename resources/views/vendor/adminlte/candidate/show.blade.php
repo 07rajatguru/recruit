@@ -47,7 +47,7 @@
                     <table class="table table-bordered">
                         <tr>
                             <th scope="row">Candidate Name</th>
-                            <td>{{ $candidateDetails['fname'] . ' ' . $candidateDetails['lname'] }}</td>
+                            <td>{{ $candidateDetails['fname'] }}</td>
                             <th>Email</th>
                             <td>{{ $candidateDetails['email'] }}</td>
                         </tr>

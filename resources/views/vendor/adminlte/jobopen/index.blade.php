@@ -78,8 +78,9 @@
                     <?php if($isSuperAdmin) {?>
                     @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
                     <?php   }?>
-
-                    <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
+                    @if(isset($value['access']) && $value['access']==1)
+                        <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
+                    @endif
                   
 
                 </td>

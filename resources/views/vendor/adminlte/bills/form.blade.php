@@ -39,9 +39,9 @@
 @endif
 
 @if( $action == 'edit')
-    {!! Form::model($bnm,['method' => 'PATCH','files' => true, 'id' => 'bills_form','route' => ['bnm.update', $bnm->id]] ) !!}
+    {!! Form::model($bnm,['method' => 'PATCH','files' => true, 'id' => 'bills_form','autocomplete' => 'off', 'route' => ['bnm.update', $bnm->id]] ) !!}
 @else
-    {!! Form::open(array('route' => 'bnm.store','files' => true,'method'=>'POST','id' => 'bills_form')) !!}
+    {!! Form::open(array('route' => 'bnm.store','files' => true,'method'=>'POST','id' => 'bills_form','autocomplete' => 'off')) !!}
 @endif
 
 <input type="hidden" id="generateBM" name="generateBM" value="{{$generate_bm}}">

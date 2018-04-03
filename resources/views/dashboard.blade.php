@@ -39,7 +39,7 @@
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="interview" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="jobs" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -78,7 +78,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="client" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
@@ -155,7 +155,7 @@
                             <thead>
                             <tr>
                                 <th>Sr No.</th>
-                                <th>Subject</th>
+                                <th width="180px">Subject</th>
                                 <th>Assigned By</th>
                                 <th>Assigned To</th>
                                 <th>Due Date</th>
@@ -170,7 +170,7 @@
                                         <td>{{ $toDo['subject'] }}</td>
                                         <td>{{ $toDo['am_name'] }}</td>
                                         <td>{{ $toDo['assigned_to'] }}</td>
-                                        <td>{{ $toDo['due_date'] }}</td>
+                                        <td>{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach

@@ -23,11 +23,11 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm', 'route' => ['jobopen.update', $job_open->id]] ) !!}
+    {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm','autocomplete' => 'off', 'route' => ['jobopen.update', $job_open->id]] ) !!}
 @elseif( $action == 'clone')
-    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm', 'route' => ['jobopen.clonestore']] ) !!}
+    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm','autocomplete' => 'off', 'route' => ['jobopen.clonestore']] ) !!}
 @else
-    {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm')) !!}
+    {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm','autocomplete' => 'off')) !!}
 
 @endif
 

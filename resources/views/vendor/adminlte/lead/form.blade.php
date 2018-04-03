@@ -25,12 +25,12 @@
     </div>
 @if(isset($action))
     @if($action == 'edit')
-        {!! Form::model($lead,['method' => 'PUT', 'files' => true, 'route' => ['lead.update', $lead['id']],'id'=>'lead_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::model($lead,['method' => 'PUT', 'files' => true, 'route' => ['lead.update', $lead['id']],'id'=>'lead_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
         {!! Form::hidden('leadId', $lead['id'], array('id'=>'leadId')) !!}
     @elseif($action == 'copy')
-        {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form']) !!}
+        {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form','autocomplete' => 'off']) !!}
     @else
-        {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form','autocomplete' => 'off', 'novalidate'=>'novalidate']) !!}
     @endif
      {!! Form::hidden('action', $action, array('id'=>'action')) !!}
 

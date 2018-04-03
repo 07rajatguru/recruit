@@ -422,6 +422,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('candidate/importExport', 'CandidateController@importExport');
     Route::post('candidate/importExcel', 'CandidateController@importExcel');
+    Route::get('candidate/fullname', 'CandidateController@fullname');
 
 
     // Daily Report
@@ -771,6 +772,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos', [
         'as' => 'todos.index',
         'uses' => 'ToDosController@index',
+    ]);
+
+     Route::get('todos/complete', [
+        'as' => 'todos.completetodo',
+        'uses' => 'ToDosController@completetodo',
     ]);
 
     Route::get('todos/create', [

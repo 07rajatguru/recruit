@@ -50,6 +50,7 @@ class ToDosController extends Controller
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
         $in_progress = env('INPROGRESS');
+        $yet_to_start = env('YETTOSTART');
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -99,7 +100,7 @@ class ToDosController extends Controller
         $viewVariable['selected_users'] = $selected_users;
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
-        $viewVariable['status_id'] = $in_progress;
+        $viewVariable['status_id'] = $yet_to_start;
 
         return view('adminlte::toDo.create', $viewVariable);
     }
@@ -320,6 +321,27 @@ class ToDosController extends Controller
        // print_r($todo_status);exit;
 
         return redirect()->route('todos.index')->with('success','ToDo Completed Successfully');
+    }
+
+    public function completetodo(Request $request){
+        $todo_status = env('COMPLETEDSTATUS');
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+
+        $todos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $todos = ToDos::getCompleteTodos($todo_ids);
+        }
+
+        return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id'));
+
     }
 
     public function getType(){

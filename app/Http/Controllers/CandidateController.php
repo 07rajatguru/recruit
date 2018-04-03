@@ -15,10 +15,36 @@ use App\User;
 use App\JobOpen;
 use App\JobAssociateCandidates;
 use Excel;
+use DB;
     
 class CandidateController extends Controller
 {
     //
+    public function fullname(){
+        
+        $candidate_fullname = CandidateBasicInfo::select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname')
+                                               // ->limit(20)
+                                                
+                                                ->get();
+        
+        $i = 0;
+        foreach ($candidate_fullname as $candidatefullname) {
+            $id[$i] = $candidatefullname->id;
+            $fname[$i] = $candidatefullname->fname;
+            $lname[$i] = $candidatefullname->lname;
+
+            $fid =  $id[$i];
+            $ffullname = $fname[$i];
+            $lfullname = $lname[$i];
+            $fullname = $ffullname. ' ' . $lfullname;
+            DB::statement("UPDATE candidate_basicinfo SET full_name = '$fullname' where id=$fid");
+        $i++; 
+        }
+           //print_r($fullname);exit;
+
+
+    }
+
     public function index(){
 
         $user =  \Auth::user();
@@ -35,7 +61,7 @@ class CandidateController extends Controller
 
         $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
+            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile')
             ->orderBy('candidate_basicinfo.id','desc')
             ->get();
@@ -99,7 +125,7 @@ class CandidateController extends Controller
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
         $candiateFname = $request->input('fname');
-        $candiateLname = $request->input('lname');
+       // $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
      //   $candiateFAX = $request->input('fax');
@@ -137,11 +163,11 @@ class CandidateController extends Controller
             $candidate->marital_status = $candiateMaritalStatus;
         }
         if(isset($candiateFname)){
-            $candidate->fname = $candiateFname;
+            $candidate->full_name = $candiateFname;
         }
-        if(isset($candiateFname)){
+       /* if(isset($candiateFname)){
             $candidate->lname = $candiateLname;
-        }
+        }*/
         if(isset($candidateEmail)){
             $candidate->email = $candidateEmail;
         }
@@ -427,7 +453,7 @@ class CandidateController extends Controller
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
-                'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
+                'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone',
                 'candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email',
                 'candidate_basicinfo.country as country', 'candidate_basicinfo.state as state',
@@ -496,7 +522,7 @@ class CandidateController extends Controller
         $this->validate($request, [
            // 'candidateSex' => 'required',
             'fname' => 'required',
-            'lname' => 'required',
+       //     'lname' => 'required',
 //            'email' => 'unique:candidate_basicinfo,email',
             'mobile'  => 'required',
             'email' => 'required'
@@ -509,7 +535,7 @@ class CandidateController extends Controller
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
         $candiateFname = $request->input('fname');
-        $candiateLname = $request->input('lname');
+       // $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
         $candiateFAX = $request->input('fax');
@@ -545,11 +571,11 @@ class CandidateController extends Controller
                 $candidate->marital_status = $candiateMaritalStatus;
             }
             if(isset($candiateFname)){
-                $candidate->fname = $candiateFname;
+                $candidate->full_name = $candiateFname;
             }
-            if(isset($candiateFname)){
+            /*if(isset($candiateFname)){
                 $candidate->lname = $candiateLname;
-            }
+            }*/
             if(isset($candiateMobile)){
                 $candidate->mobile = $candiateMobile;
             }
@@ -709,7 +735,7 @@ class CandidateController extends Controller
             ->leftjoin('candidate_status','candidate_status.id','=','candidate_otherinfo.status_id')
             ->leftjoin('users','users.id','=','candidate_uploaded_resume.uploaded_by')
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
-                'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
+                'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone',
                 'candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email',
                 'candidate_basicinfo.country as country', 'candidate_basicinfo.state as state',
@@ -737,7 +763,7 @@ class CandidateController extends Controller
 
             $candidateDetails['id'] = $candidates->id;
             $candidateDetails['fname'] = $candidates->fname;
-            $candidateDetails['lname'] = $candidates->lname;
+           // $candidateDetails['lname'] = $candidates->lname;
             $candidateDetails['email'] = $candidates->email;
             $candidateDetails['candidateSex'] = $candidates->candidateSex;
             $candidateDetails['maritalStatus'] = $candidates->maritalStatus;

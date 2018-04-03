@@ -253,6 +253,11 @@ return [
                     'text' => "List To'Dos",
                     'url'  => 'todos',
                     'icon' => 'list',
+                ],
+                [
+                    'text' => "List Completed To'Dos",
+                    'url'  => 'todos/complete',
+                    'icon' => 'list',
                 ]
             ]
          ],

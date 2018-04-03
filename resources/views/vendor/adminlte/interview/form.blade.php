@@ -18,10 +18,10 @@
 @if(isset($action))
 
     @if($action == 'edit')
-        {!! Form::model($interview,['method' => 'PUT', 'files' => true, 'route' => ['interview.update', $interview['id']],'id'=>'interview_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::model($interview,['method' => 'PUT', 'files' => true, 'route' => ['interview.update', $interview['id']],'id'=>'interview_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
         {!! Form::hidden('candidateId', $interview['id'], array('id'=>'candidateId')) !!}
     @else
-        {!! Form::open(['files' => true, 'route' => 'interview.store','id'=>'interview_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::open(['files' => true, 'route' => 'interview.store','id'=>'interview_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
     @endif
 
     {!! Form::hidden('action', $action, array('id'=>'action')) !!}
