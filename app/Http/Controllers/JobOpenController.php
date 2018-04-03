@@ -1112,6 +1112,7 @@ class JobOpenController extends Controller
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner')
             ->whereNotIn('candidate_basicinfo.id', $candidates)
+            ->orderBy('candidate_basicinfo.id','desc')
             ->get();
 
         return view('adminlte::jobopen.associate_candidate', array('candidates' => $candidateDetails, 'job_id' => $id, 'posting_title' => $posting_title, 'message' => ''));

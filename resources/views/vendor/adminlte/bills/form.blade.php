@@ -237,11 +237,11 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>Employee Percentage:  <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' )) !!}
-                                {!! Form::text('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce' )) !!}
-                                {!! Form::text('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce' )) !!}
-                                {!! Form::text('employee_percentage_4', $employee_percentage[3], array('id'=>'employee_percentage_4','placeholder' => 'Employee 4 Percentage','class' => 'form-control employee_perce' )) !!}
-                                {!! Form::text('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::number('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::number('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::number('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::number('employee_percentage_4', $employee_percentage[3], array('id'=>'employee_percentage_4','placeholder' => 'Employee 4 Percentage','class' => 'form-control employee_perce' )) !!}
+                                {!! Form::number('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control employee_perce' )) !!}
                             </div>
                         </div>
 
