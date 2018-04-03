@@ -704,7 +704,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'BillsController@store'
     ]);
 
-    Route::get('bills/{id}/generatebm', [
+    Route::get('bm/{id}/generatebm', [
         'as' => 'bills.generatebm',
         'uses' => 'BillsController@generateBM'
     ]);

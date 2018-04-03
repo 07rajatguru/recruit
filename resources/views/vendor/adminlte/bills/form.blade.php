@@ -120,18 +120,14 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
-                                <strong>Source: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control' )) !!}
+                                <strong>Candidate Source:</strong>
+                                {!! Form::select('source', $candidateSource,null, array('id'=>'source','class' => 'form-control')) !!}
                                 @if ($errors->has('source'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('source') }}</strong>
                                 </span>
                                 @endif
                             </div>
-
-
-
-
 
                         </div>
                     </div>
