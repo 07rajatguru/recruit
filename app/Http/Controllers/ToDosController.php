@@ -502,9 +502,9 @@ class ToDosController extends Controller
                     $typeArr[$i]['value'] = $typeDetail->interview_name;
                     $i++;
                 }
-            } else {
+            } /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
-            }
+            }*/
         }
 
         // For Client Details
@@ -527,9 +527,9 @@ class ToDosController extends Controller
                     $typeArr[$i]['value'] = $typeDetail->name."-".$typeDetail->coordinator_name;
                     $i++;
                 }
-            } else {
+            } /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
-            }
+            }*/
         }
 
         // For Candidate Details
@@ -543,9 +543,9 @@ class ToDosController extends Controller
                     $typeArr[$i]['value'] = $typeDetail->full_name;
                     $i++;
                 }
-            } else{
+            }/* else{
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
-            }
+            }*/
 
         }
 
