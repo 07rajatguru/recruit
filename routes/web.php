@@ -769,11 +769,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // To Do's Routes start
 
-    Route::get('todo/getselectedtypelist', [
-        'as' => 'todos.getselectedtypelist',
-        'uses' => 'ToDosController@getSelectedTypeList',
-    ]);
-    
     Route::get('todos', [
         'as' => 'todos.index',
         'uses' => 'ToDosController@index',
@@ -798,7 +793,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'todos.getType',
         'uses' => 'ToDosController@getType',
     ]);
-
+    Route::get('todos/getselectedtypelist', [
+        'as' => 'todos.getselectedtypelist',
+        'uses' => 'ToDosController@getSelectedTypeList',
+    ]);
 
     Route::get('todos/{id}', [
         'as' => 'todos.show',
