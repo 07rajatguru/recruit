@@ -67,11 +67,13 @@
                     @if($title=="Bills Not Made")
                         @if($access || ($user_id==$value['uploaded_by']) )
                             <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+                            <a class="fa fa-trash" title="delete" href="{{ route('bnm.delete',$value['id']) }}"></a>
+                            <a class="fa fa-circle" title="show" href="{{ route('bnm.show',$value['id']) }}"></a>
 
                             @if($value['status']==0)
                             <!-- BM will be generated after date of joining -->
                                 @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
-                                    <a class="fa fa-circle"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
+                                  <a class="fa fa-square"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
                                 @endif
                             @endif
 

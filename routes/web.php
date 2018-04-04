@@ -710,9 +710,14 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'BillsController@generateBM'
     ]);
 
-    Route::get('bnm/{id}', [
+    Route::get('bnm/{id}/show', [
         'as' => 'bnm.show',
         'uses' => 'BillsController@show'
+    ]);
+
+    Route::get('bnm/{id}', [
+        'as' => 'bnm.delete',
+        'uses' => 'BillsController@delete'
     ]);
 
     Route::post('bills/downloadexcel', [
@@ -728,6 +733,15 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'bills.getcandidateinfo',
         'uses' => 'BillsController@getCandidateInfo'
     ]);
+    Route::delete('bills/destroy/{id}', [
+        'as' => 'billattachments.destroy',
+        'uses' => 'BillsController@attachmentsDestroy'
+    ]);
+    Route::post('billattachments/upload/{id}', [
+        'as' => 'billattachments.upload',
+        'uses' => 'BillsController@upload',
+    ]);
+
 
 
     // Admin > Teams

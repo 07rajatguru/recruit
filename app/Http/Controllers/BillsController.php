@@ -13,6 +13,7 @@ use App\Date;
 use App\User;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\Utils;
 
 class BillsController extends Controller
 {
@@ -253,6 +254,76 @@ class BillsController extends Controller
         return redirect()->route('bnm.index')->with('success', 'Bills Created Successfully');
     }
 
+    public function show($id){
+
+       $bills = Bills::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id')
+                    ->leftjoin('bills_efforts', 'bills_efforts.bill_id', '=', 'bills.id')
+                    ->leftjoin('bills_doc', 'bills_doc.bill_id', '=', 'bills.id')
+                    ->join('users','users.id','=','bills_efforts.employee_name')
+                    ->select('bills.id as id', 'bills.company_name as company_name', 'bills.candidate_contact_number as number', 'bills.designation_offered as offered', 'bills.date_of_joining as date', 'bills.job_location as location', 'bills.fixed_salary as salary', 'bills.percentage_charged as percentage', 'bills.remarks as remarks', 'bills.source as source', 'bills.client_name as client_name', 'bills.client_contact_number as contact_number', 'bills.client_email_id as email_id', 'bills.address_of_communication as address', 'candidate_basicinfo.full_name as candidate_name', 'users.name as ename', 'bills_efforts.employee_percentage as employee_percentage', 'bills_doc.file as file')
+                    ->where('bills.id', $id)
+                    ->first();
+
+
+        $billsdetails = array();
+        $employeename = array();
+        $employeepercentage = array();
+    
+         if(isset($bills) && sizeof($bills) > 0){
+            $billsdetails['id'] = $bills->id;
+            $billsdetails['company_name'] = $bills->company_name;
+            $billsdetails['candidate_name'] = $bills->candidate_name;
+            $billsdetails['candidate_contact_number'] = $bills->number;
+            $billsdetails['designation_offered'] = $bills->offered;
+            $billsdetails['date_of_joining'] = $bills->date;
+            $billsdetails['job_location'] = $bills->location;
+            $billsdetails['fixed_salary'] = $bills->salary;
+            $billsdetails['percentage_charged'] = $bills->percentage;
+            $billsdetails['description'] = $bills->remarks;
+            $billsdetails['source'] = $bills->source;
+            $billsdetails['client_name'] =$bills->client_name;
+            $billsdetails['client_contact_number'] = $bills->contact_number;
+            $billsdetails['client_email_id'] = $bills->email_id;
+            $billsdetails['address_of_communication'] = $bills->address;
+            $billsdetails['fileurl'] = $bills->file;
+            $billsdetails['employee_name'] = $bills->ename;
+            $billsdetails['employee_percentage'] = $bills->employee_percentage;
+
+            /*for ($i = 1; $i < 5; $i++) {
+                $employeename[$i]['employee_name'] = $bills->ename;
+                $employeepercentage[$i]['employee_percentage'] = $bills->employee_percentage;
+            }*/
+
+         }
+          
+          $i = 0;
+            $billsdetails['files'] = array();
+            $billsFiles = BillsDoc::select('bills_doc.*')
+                ->where('bills_doc.bill_id',$id)
+                ->get();
+            $utils = new Utils();
+            if(isset($billsFiles) && sizeof($billsFiles) > 0){
+                foreach ($billsFiles as $billfile) {
+                    $billsdetails['files'][$i]['id'] = $billfile->id;
+                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                    $billsdetails['files'][$i]['name'] = $billfile->name ;
+                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+
+                    $i++;
+
+                }
+            }
+
+        $viewVariable = array();
+        $viewVariable['billsdetails'] = $billsdetails;
+        $viewVariable['employeename'] = $employeename;
+        $viewVariable['employeepercentage'] = $employeepercentage;
+        //print_r($viewVariable);exit;
+
+       return view('adminlte::bills.show', $viewVariable);
+    }
+
     public function edit($id)
     {
         $action = 'edit';
@@ -310,7 +381,28 @@ class BillsController extends Controller
         $candidate_id = $bnm->candidate_id;
         $users = User::getAllUsersCopy('recruiter');
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource'));
+
+            $i = 0;
+            
+            $billsdetails['files'] = array();
+            $billsFiles = BillsDoc::select('bills_doc.*')
+                ->where('bills_doc.bill_id',$id)
+                ->get();
+            $utils = new Utils();
+            if(isset($billsFiles) && sizeof($billsFiles) > 0){
+                foreach ($billsFiles as $billfile) {
+                    $billsdetails['files'][$i]['id'] = $billfile->id;
+                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                    $billsdetails['files'][$i]['name'] = $billfile->name ;
+                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+
+                    $i++;
+
+                }
+            }
+
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails'));
 
     }
 
@@ -414,6 +506,64 @@ class BillsController extends Controller
         }
 
         return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
+    }
+
+    public function delete($id){
+
+        BillsEffort::where('bill_id',$id)->delete();
+        BillsDoc::where('bill_id',$id)->delete();
+        $todo = Bills::where('id',$id)->delete();
+
+        return redirect()->route('bnm.index')->with('success','Bill Deleted Successfully');
+
+    }
+
+    public function attachmentsDestroy($id){
+
+        $billFileDetails = BillsDoc::find($id);
+
+        unlink($billFileDetails->file);
+
+        $billFileDelete = BillsDoc::where('id',$id)->delete();
+
+        $billId = $_POST['id'];
+
+        return redirect()->route('bnm.show',[$billId])->with('success','Attachment deleted Successfully');
+    }
+
+    public function upload(Request $request){
+
+        $user_id = \Auth::user()->id;
+        $upload_documents = $request->upload_documents;
+        $file = $request->file('file');
+        $bill_id = $request->id;
+       // print_r($bill_id);exit;
+
+        if (isset($file) && $file->isValid()) {
+            $file_name = $file->getClientOriginalName();
+            $file_extension = $file->getClientOriginalExtension();
+            $file_realpath = $file->getRealPath();
+            $file_size = $file->getSize();
+            $dir = 'uploads/bills/' . $bill_id . '/';
+
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+            $file->move($dir, $file_name);
+            $file_path = $dir . $file_name;
+
+            $bills_doc = new BillsDoc();
+            $bills_doc->bill_id = $bill_id;
+            $bills_doc->file = $file_path;
+            $bills_doc->name = $file_name;
+            $bills_doc->size = $file_size;
+            $bills_doc->created_at = date('Y-m-d');
+            $bills_doc->updated_at = date('Y-m-d');
+
+            $bills_doc->save();
+        }
+        return redirect()->route('bnm.show',[$bill_id])->with('success','Attachment uploaded successfully');
     }
 
     public function generateBM($id){
