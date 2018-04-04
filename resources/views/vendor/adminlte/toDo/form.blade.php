@@ -263,7 +263,7 @@
             if(action=='edit' && selectedType!=5){
                 $(".type_list").show();
                 $.ajax({
-                    url:'/todo/getselectedtypelist',
+                    url:'/todos/getselectedtypelist',
                     data:'selectedType='+selectedType+'&toDoId='+toDoId,
                     dataType:'json',
                     success: function(data){

@@ -807,7 +807,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'todos.getType',
         'uses' => 'ToDosController@getType',
     ]);
-    Route::get('todo/getselectedtypelist', [
+    Route::get('todos/getselectedtypelist', [
         'as' => 'todos.getselectedtypelist',
         'uses' => 'ToDosController@getSelectedTypeList',
     ]);
