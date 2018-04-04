@@ -97,7 +97,7 @@ class ToDos extends Model
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
         $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
-        $todo_res   = $todo_query->get();
+        $todo_res   = $todo_query->limit(7)->get();
 //print_r($todo_res);exit;
         $todo_array = array();
         $i = 0;
