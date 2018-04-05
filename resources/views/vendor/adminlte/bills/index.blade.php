@@ -91,7 +91,7 @@
                    @if($access=='true')
                        <td>{{ $value['user_name'] }}</td>
                    @endif
-                   <td>{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
+                   <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
                    <td>{{ $value['cname'] }}</td>
                    <td>{{ $value['date_of_joining'] }}</td>
                    <td>{{ $value['fixed_salary'] }}</td>

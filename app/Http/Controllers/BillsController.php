@@ -485,11 +485,13 @@ class BillsController extends Controller
 
         $billFileDetails = BillsDoc::find($id);
 
+        $billId =  $billFileDetails->bill_id;
+
         unlink($billFileDetails->file);
 
         $billFileDelete = BillsDoc::where('id',$id)->delete();
 
-        $billId = $_POST['id'];
+        //$billId = $_POST['id'];
 
         return redirect()->route('bnm.show',[$billId])->with('success','Attachment deleted Successfully');
     }
