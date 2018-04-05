@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Input;
 use App\User;
 use App\JobOpen;
 use App\JobAssociateCandidates;
+use App\JobCandidateJoiningdate;
 use Excel;
 use DB;
     
@@ -69,6 +70,33 @@ class CandidateController extends Controller
         $count = sizeof($candidateDetails);
         
         return view('adminlte::candidate.index', array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),compact('isSuperAdmin'));
+    }
+
+    public function candidatejoin(){
+
+        $user =  \Auth::user();
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+
+
+        $candidateJoinDetails = JobCandidateJoiningdate::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id')
+            ->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id')
+            ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
+            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date')
+
+            ->orderBy('job_candidate_joining_date.id','desc')
+            ->get();
+
+        $count = sizeof($candidateJoinDetails);
+        
+        return view('adminlte::candidate.candidatejoin', array('candidates' => $candidateJoinDetails,'count' => sizeof($candidateJoinDetails)),compact('isSuperAdmin'));   
     }
 
     public function create(){

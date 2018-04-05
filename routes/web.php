@@ -419,6 +419,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'candidate.candidateinfo',
         'uses' => 'CandidateController@getCandidateInfo'
     ]);
+    Route::get('candidatejoin', [
+        'as' => 'candidatejoin.index',
+        'uses' => 'CandidateController@candidatejoin'
+    ]);
 
     Route::get('candidate/importExport', 'CandidateController@importExport');
     Route::post('candidate/importExcel', 'CandidateController@importExcel');
