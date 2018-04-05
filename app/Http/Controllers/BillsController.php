@@ -352,6 +352,7 @@ class BillsController extends Controller
         }
         
         $bnm = Bills::find($id);
+        //print_r($bnm);exit;
 
         $dateClass = new Date();
         $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
@@ -402,7 +403,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id'));
 
     }
 
@@ -504,7 +505,32 @@ class BillsController extends Controller
 
             }
         }
+         $file = $request->file('file');
+        if (isset($file) && $file->isValid()) {
+            $file_name = $file->getClientOriginalName();
+            $file_extension = $file->getClientOriginalExtension();
+            $file_realpath = $file->getRealPath();
+            $file_size = $file->getSize();
+            $dir = 'uploads/bills/' . $id . '/';
 
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+            $file->move($dir, $file_name);
+            $file_path = $dir . $file_name;
+
+            $bills_doc = new BillsDoc();
+            $bills_doc->bill_id = $id;
+            $bills_doc->file = $file_path;
+            $bills_doc->name = $file_name;
+            $bills_doc->size = $file_size;
+            $bills_doc->created_at = date('Y-m-d');
+            $bills_doc->updated_at = date('Y-m-d');
+
+            $bills_doc->save();
+             return redirect('bnm/'.$id.'/edit');
+        }
         return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
     }
 

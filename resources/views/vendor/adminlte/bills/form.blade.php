@@ -274,7 +274,7 @@
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Attachmetns</h3>
                          &nbsp;&nbsp;
-                        
+                        @include('adminlte::bills.upload', ['data' => $bnm, 'name' => 'billattachments'])
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -294,7 +294,7 @@
                                             <i class="fa fa-fw fa-download"></i>
                                         </a>
                                         &nbsp;
-                                    
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $bnm, 'name' => 'billattachments' ,'display_name'=> 'Attachments'])
                                     </td>
 
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
