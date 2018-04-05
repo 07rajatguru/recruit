@@ -113,7 +113,8 @@
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
                     { "width": "10px", "targets": 5 },
-                    { "width": "10px", "targets": 6 }
+                    { "width": "10px", "targets": 6 },
+                    { "width": "10px", "targets": 7 }
                 ],
                 "pageLength": 100
             });
