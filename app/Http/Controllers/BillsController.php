@@ -583,7 +583,28 @@ class BillsController extends Controller
         $candidate_id = $bnm->candidate_id;
         $users = User::getAllUsersCopy('recruiter');
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource'));
+
+         $i = 0;
+            
+            $billsdetails['files'] = array();
+            $billsFiles = BillsDoc::select('bills_doc.*')
+                ->where('bills_doc.bill_id',$id)
+                ->get();
+            $utils = new Utils();
+            if(isset($billsFiles) && sizeof($billsFiles) > 0){
+                foreach ($billsFiles as $billfile) {
+                    $billsdetails['files'][$i]['id'] = $billfile->id;
+                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                    $billsdetails['files'][$i]['name'] = $billfile->name ;
+                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+
+                    $i++;
+
+                }
+            }
+
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails'));
 
     }
 
