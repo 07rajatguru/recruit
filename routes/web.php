@@ -715,8 +715,8 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'BillsController@show'
     ]);
 
-    Route::get('bnm/{id}', [
-        'as' => 'bnm.delete',
+    Route::delete('bnm/{id}', [
+        'as' => 'bnm.destroy',
         'uses' => 'BillsController@delete'
     ]);
 

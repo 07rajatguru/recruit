@@ -153,6 +153,82 @@ class Bills extends Model
         return $bills;
     }
 
+    public static function getShowBill($id){
+        
+        $bills = Bills::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id')
+                    ->leftjoin('bills_efforts', 'bills_efforts.bill_id', '=', 'bills.id')
+                    ->leftjoin('bills_doc', 'bills_doc.bill_id', '=', 'bills.id')
+                    //->join('users','users.id','=','bills_efforts.employee_name')
+                    ->select('bills.id as id', 'bills.company_name as company_name', 'bills.candidate_contact_number as number', 'bills.designation_offered as offered', 'bills.date_of_joining as date', 'bills.job_location as location', 'bills.fixed_salary as salary', 'bills.percentage_charged as percentage', 'bills.remarks as remarks', 'bills.source as source', 'bills.client_name as client_name', 'bills.client_contact_number as contact_number', 'bills.client_email_id as email_id', 'bills.address_of_communication as address', 'candidate_basicinfo.full_name as candidate_name', 'bills_efforts.employee_percentage as employee_percentage', 'bills_doc.file as file')
+                    ->where('bills.id', $id)
+                    ->first();
+
+
+        $billsdetails = array();
+        $employeename = array();
+        $employeepercentage = array();
+    
+         if(isset($bills) && sizeof($bills) > 0){
+            $billsdetails['id'] = $bills->id;
+            $billsdetails['company_name'] = $bills->company_name;
+            $billsdetails['candidate_name'] = $bills->candidate_name;
+            $billsdetails['candidate_contact_number'] = $bills->number;
+            $billsdetails['designation_offered'] = $bills->offered;
+            $billsdetails['date_of_joining'] = $bills->date;
+            $billsdetails['job_location'] = $bills->location;
+            $billsdetails['fixed_salary'] = $bills->salary;
+            $billsdetails['percentage_charged'] = $bills->percentage;
+            $billsdetails['description'] = $bills->remarks;
+            $billsdetails['source'] = $bills->source;
+            $billsdetails['client_name'] =$bills->client_name;
+            $billsdetails['client_contact_number'] = $bills->contact_number;
+            $billsdetails['client_email_id'] = $bills->email_id;
+            $billsdetails['address_of_communication'] = $bills->address;
+            $billsdetails['fileurl'] = $bills->file;
+            //$billsdetails['employee_name'] = $bills->ename;
+            //$billsdetails['employee_percentage'] = $bills->employee_percentage;
+
+        $efforts = Bills::getEmployeeEffortsNameById($id);
+
+        // set employee name and percentage
+        $i = 0;
+        if (isset($efforts) && sizeof($efforts) > 0) {
+            foreach ($efforts as $k => $v) {
+                $employee_name[$i] = $k;
+                $employee_percentage[$i] = $v;
+                $i++;
+            }
+        }
+         }
+          
+          $i = 0;
+            $billsdetails['files'] = array();
+            $billsFiles = BillsDoc::select('bills_doc.*')
+                ->where('bills_doc.bill_id',$id)
+                ->get();
+            $utils = new Utils();
+            if(isset($billsFiles) && sizeof($billsFiles) > 0){
+                foreach ($billsFiles as $billfile) {
+                    $billsdetails['files'][$i]['id'] = $billfile->id;
+                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                    $billsdetails['files'][$i]['name'] = $billfile->name ;
+                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+
+                    $i++;
+
+                }
+            }
+
+        $viewVariable = array();
+        $viewVariable['billsdetails'] = $billsdetails;
+        $viewVariable['employee_name'] = $employee_name;
+        $viewVariable['employee_percentage'] = $employee_percentage;
+        //print_r($viewVariable);exit;
+
+        return $viewVariable;
+    }
+
     public static function getEmployeeEffortsById($id){
 
         $efforts_query = BillsEffort::query();

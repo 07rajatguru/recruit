@@ -103,33 +103,73 @@
                         <table class="table table-bordered">
                             <tr>
                                 <th scope="row">Employee Name 1 :</th>
-                                <td>{{ $billsdetails['employee_name'] }}</td>
+                                @if(isset($employee_name[0]) && sizeof($employee_name[0])>0)
+                                <td>{{ $employee_name[0] }}</td>
+                                @else
+                                <td></td>
+                                @endif
                                 <th>Employee Percentage 1 :</th>
-                                <td>{{ $billsdetails['employee_percentage'] }}</td>
+                                @if(isset($employee_percentage[0]) && sizeof($employee_percentage[0])>0)
+                                <td>{{ $employee_percentage[0] }}</td>
+                                @else
+                                <td></td>
+                                @endif
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 2 :</th>
+                                @if(isset($employee_name[1]) && sizeof($employee_name[1])>0)
+                                <td>{{ $employee_name[1] }}</td>
+                                @else
                                 <td></td>
+                                @endif
                                 <th>Employee Percentage 2 :</th>
+                                @if(isset($employee_percentage[1]) && sizeof($employee_percentage[1])>0)
+                                <td>{{ $employee_percentage[1] }}</td>
+                                @else
                                 <td></td>
+                                @endif
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 3 :</th>
+                                @if(isset($employee_name[2]) && sizeof($employee_name[2])>0)
+                                <td>{{ $employee_name[2] }}</td>
+                                @else
                                 <td></td>
+                                @endif
                                 <th>Employee Percentage 3 :</th>
+                                @if(isset($employee_percentage[2]) && sizeof($employee_percentage[2])>0)
+                                <td>{{ $employee_percentage[2] }}</td>
+                                @else
                                 <td></td>
+                                @endif
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 4 :</th>
+                                @if(isset($employee_name[3]) && sizeof($employee_name[3])>0)
+                                <td>{{ $employee_name[3] }}</td>
+                                @else
                                 <td></td>
-                                <th scope="row">Employee Percentage 4 :</th>
+                                @endif
+                                <th>Employee Percentage 4 :</th>
+                                @if(isset($employee_percentage[3]) && sizeof($employee_percentage[3])>0)
+                                <td>{{ $employee_percentage[3] }}</td>
+                                @else
                                 <td></td>
+                                @endif
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 5 :</th>
+                                @if(isset($employee_name[4]) && sizeof($employee_name[4])>0)
+                                <td>{{ $employee_name[4] }}</td>
+                                @else
                                 <td></td>
-                                <th scope="row">Employee Percentage 5 :</th>
+                                @endif
+                                <th>Employee Percentage 5 :</th>
+                                @if(isset($employee_percentage[4]) && sizeof($employee_percentage[4])>0)
+                                <td>{{ $employee_percentage[4] }}</td>
+                                @else
                                 <td></td>
+                                @endif
                             </tr>
                         </table>
                     </div>

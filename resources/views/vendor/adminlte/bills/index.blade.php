@@ -67,7 +67,7 @@
                     @if($title=="Bills Not Made")
                         @if($access || ($user_id==$value['uploaded_by']) )
                             <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
-                            <a class="fa fa-trash" title="delete" href="{{ route('bnm.delete',$value['id']) }}"></a>
+                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
                             <a class="fa fa-circle" title="show" href="{{ route('bnm.show',$value['id']) }}"></a>
 
                             @if($value['status']==0)
