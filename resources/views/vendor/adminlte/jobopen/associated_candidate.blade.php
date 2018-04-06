@@ -267,13 +267,15 @@
                                             <li>
                                                 <a class="joining-date" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-joining-date" >Add Joining Date</a>
                                             </li>
-                                            <li>
-                                                <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
-                                            </li>
-                                            @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
-                                            <li>
-                                                <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo" >Undo Shortlisted Candidate</a>
-                                            </li>
+                                            @if(isset($access) && $access==true)
+                                                <li>
+                                                    <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
+                                                </li>
+                                                @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
+                                                    <li>
+                                                        <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo" >Undo Shortlisted Candidate</a>
+                                                    </li>
+                                                @endif
                                             @endif
                                         </ul>
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>

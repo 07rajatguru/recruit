@@ -1190,29 +1190,30 @@ class JobOpenController extends Controller
 
     public function associatedCandidates($id)
     {
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
 
         // get job name from id
         $jobopen_response = JobOpen::where('id', $id)->first();
+        $hiring_manager_id = $jobopen_response->hiring_manager_id;
+
+        $access = false;
+        $access_roles_id = array($director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $access= true;
+        }
+        elseif ($hiring_manager_id == $user->id){
+            $access = true;
+        }
+
         $client_id = $jobopen_response->client_id;
         $posting_title = $jobopen_response->posting_title;
 
         $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
-
-
-        /*// get candidate ids already associated with job
-        $candidate_response = JobAssociateCandidates::where('job_id', '=', $id)->get();
-        $candidates = array();
-        foreach ($candidate_response as $key => $value) {
-            $candidates[] = $value->candidate_id;
-        }
-
-        $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id')
-            ->leftjoin('users', 'users.id', '=', 'candidate_otherinfo.owner_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname',
-                'candidate_basicinfo.email as email', 'users.name as owner')
-            ->whereIn('candidate_basicinfo.id', $candidates)
-            ->get();*/
-
 
         // get candidate status
         $candidateresult = CandidateStatus::orderBy('name','asc')->select('id','name')->get()->toArray();
@@ -1227,7 +1228,7 @@ class JobOpenController extends Controller
         $users = User::getAllUsers();
         return view('adminlte::jobopen.associated_candidate', array('job_id' => $id, 'posting_title' => $posting_title,
             'message' => '','candidates'=>$candidateDetails ,'candidatestatus'=>$candidateStatus,'type'=>$type,
-            'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type));
+            'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type,'access'=>$access));
     }
 
     public function deAssociateCandidates(){
