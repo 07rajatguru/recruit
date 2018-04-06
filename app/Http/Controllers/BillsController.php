@@ -71,6 +71,7 @@ class BillsController extends Controller
     {
         $action = 'add';
         $generate_bm = '0';
+        $status = '0';
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -110,7 +111,7 @@ class BillsController extends Controller
 
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource'));
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status'));
     }
 
     public function store(Request $request)
@@ -295,6 +296,12 @@ class BillsController extends Controller
         $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
         $job_id = $bnm->
         $action = 'edit';
+        $status = $bnm->status;
+
+        if($status == 1){
+            $generate_bm = '1';
+        }
+
 
         $employee_name = array();
         $employee_percentage = array();
@@ -340,7 +347,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status'));
 
     }
 
@@ -466,9 +473,21 @@ class BillsController extends Controller
             $bills_doc->updated_at = date('Y-m-d');
 
             $bills_doc->save();
+
+            if ($status == 1) {
+                return redirect('bm/'.$id.'/generatebm');
+            }
+            else{
              return redirect('bnm/'.$id.'/edit');
+            }
         }
-        return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
+
+        if($status == 1){
+            return redirect()->route('bills.bm')->with('success', 'BM Updated Successfully');
+        }
+        else{
+            return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
+        }
     }
 
     public function delete($id){
@@ -559,6 +578,7 @@ class BillsController extends Controller
         }
 
         $bnm = Bills::find($id);
+        $status = $bnm->status;
 
         $action = 'edit';
 
@@ -606,7 +626,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status'));
 
     }
 

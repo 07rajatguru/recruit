@@ -10,7 +10,11 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if($generate_bm==1)
-                <h2>Please confirm the details and generate Bills Made</h2>
+                @if($status==0)
+                    <h2>Please confirm the details and generate Bills Made</h2>
+                @else
+                    <h2>Edit BM</h2>
+                @endif
             @elseif( $action == 'edit')
                 <h2>Edit BNM</h2>
             @else
@@ -18,7 +22,11 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('bnm.index') }}"> Back</a>
+            @if($status==0)
+                <a class="btn btn-primary" href="{{ route('bnm.index') }}"> Back</a>
+            @else
+                <a class="btn btn-primary" href="{{ route('bills.bm') }}"> Back</a>
+            @endif
         </div>
 
     </div>
