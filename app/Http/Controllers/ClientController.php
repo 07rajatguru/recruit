@@ -71,6 +71,7 @@ class ClientController extends Controller
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['mobile']= $client->mobile;
+           // $client_array[$i]['convert_client'] = $client->convert_client;
 
             if($client->am_id==$user->id){
                 $client_visibility_val = true;
@@ -121,6 +122,7 @@ class ClientController extends Controller
 
     public function create()
     {
+        $generate_lead = '0';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -143,11 +145,13 @@ class ClientController extends Controller
         }
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead'));
     }
 
     public function edit($id)
     {
+
+        $generate_lead = '0';
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -220,7 +224,7 @@ class ClientController extends Controller
          $users = User::getAllUsers();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead'));
     }
 
     public function store(Request $request){

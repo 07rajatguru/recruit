@@ -163,6 +163,16 @@
 
                     </div>
 
+                    <div class="form-group {{ $errors->has('reminder') ? 'has-error' : '' }}">
+                        <strong>Reminder:</strong>
+                        {!! Form::select('reminder', $reminder,null, array('id'=>'reminder','class' => 'form-control' )) !!}
+                        @if ($errors->has('reminder'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('reminder') }}</strong>
+                                </span>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         </div>

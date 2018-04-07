@@ -10,6 +10,7 @@ use App\ClientBasicinfo;
 use App\ClientAddress;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
+use App\Events\NotificationEvent;
 
 class LeadController extends Controller
 {
@@ -17,7 +18,7 @@ class LeadController extends Controller
 
   public function index(){
 
-  	    $lead = Lead::orderBy('id','DESC')->paginate(5);
+  	    $lead = Lead::orderBy('id','DESC')->paginate(50);
 
          return view('adminlte::lead.index',compact('lead','lead_count'));
 
@@ -65,6 +66,7 @@ class LeadController extends Controller
          $lead->city=$city;
          $lead->state=$state;
          $lead->country=$country;
+         $lead->convert_client = 0;
          $lead->save();
 
          //$validator = \Validator::make(Input::all(),$lead::$rules);s
@@ -82,19 +84,24 @@ class LeadController extends Controller
 	 public function edit($id){
         
 
-         $action = 'edit';
-         $generate_lead = '0';
-         $leadservices_status = Lead::getLeadService();
-         $lead = Lead::find($id);
+        $action = 'edit';
+        $generate_lead = '0';
+        $leadservices_status = Lead::getLeadService();
+        $lead = Lead::find($id);
         
-         $service = $lead->service;
+        $convert_client = $lead->convert_client;
+        if($convert_client == 1){
+            $generate_lead = 1;
+        }
+
+        $service = $lead->service;
         //print_r($lead_s); exit;
         $leadsarr = array();
         $leads_info = \DB::table('lead_management')
         ->get();
 
         	        
-	             return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','service'));
+	   return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','service','convert_client'));
 
 	 }
 	 public function update(Request $request, $id){
@@ -114,10 +121,10 @@ class LeadController extends Controller
         $city=$request->get('city');
         $state=$request->get('state');
         $country=$request->get('country');
-
-
+        $generatelead = $request->get('generatelead');
+        
          
-         $lead_basic = Lead::find($id);
+        $lead_basic = Lead::find($id);
 
 
         if(isset($name))
@@ -144,6 +151,7 @@ class LeadController extends Controller
             $lead_basic->state=$state;
         if(isset($country))
             $lead_basic->country=$country;
+        
 
         $leadUpdated = $lead_basic->save();
 
@@ -160,7 +168,7 @@ class LeadController extends Controller
 
      public function clone($id){
 
-        $generate_lead = '0';
+        $generate_lead = '1';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -187,7 +195,12 @@ class LeadController extends Controller
         $billing_city = $lead->city;
         $billing_state = $lead->state;
         $billing_country = $lead->country;
-        //print_r($billing_city);exit;
+            $convert_client = 0;
+            if($generate_lead==1){
+                $lead->convert_client = 1;
+            }
+            $lead->save();
+        //print_r($billing_state);exit;
 
         $action = "copy" ;
          return view('adminlte::client.create',compact('name','billing_city','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
@@ -211,6 +224,12 @@ class LeadController extends Controller
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
         //$client_basic_info->source = $input['source'];
+        $generatelead = $input['generatelead'];
+        $convert_client = 0;
+        if($generatelead==1){
+            $client_basic_info->convert_client = 1;
+        }
+        
         $client_basic_info->about = $input['description'];
         if(isset($input['source']) && $input['source']!='')
             $client_basic_info->source = $input['source'];
@@ -376,6 +395,17 @@ class LeadController extends Controller
                 }
             }
 
+            /*$lead = new lead();
+            $lead->name = $input['name'];
+            $lead->mobile = $input['mobile'];
+            $lead->city = $input['citya'];
+            $generatelead = $input['generatelead'];
+            $convert_client = 0;
+            if($generatelead==1){
+                $lead->convert_client = 1;
+            }
+            $lead->save();*/
+
             // TODO:: Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
@@ -394,14 +424,10 @@ class LeadController extends Controller
         }
      }
 
-	 public function destroy($id){
+	public function destroy($id){
         $lead = Lead::where('id',$id)->delete();
 
         return redirect()->route('lead.index')->with('success','Leads Deleted Successfully');
     }
-
-    public function ClientCount(){
-        
-     }
 
 }

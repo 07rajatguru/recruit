@@ -8,7 +8,9 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            @if( $action == 'edit')
+            @if($generate_lead==1)
+                <h2>Please confirm the details and generate Client</h2>
+            @elseif( $action == 'edit')
                 <h2>Edit Client</h2>
             @else
                 <h2>Create New Client</h2>
@@ -31,6 +33,8 @@
 @else
     {!! Form::open(array('route' => 'client.store','files' => true,'method'=>'POST', 'id' => 'clientForm','autocomplete' => 'off')) !!}
 @endif
+
+<input type="hidden" id="generatelead" name="generatelead" value="{{$generate_lead}}">
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">

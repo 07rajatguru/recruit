@@ -48,6 +48,8 @@
 
     {!! Form::open(array('route' => 'lead.store','method'=>'POST')) !!}
 
+<input type="hidden" id="generatelead" name="generatelead" value="{{$generate_lead}}">
+
     <div class="row">
          <div class="col-xs-12 col-sm-12 col-md-12">
              <div class="box box-warning col-xs-12 col-sm-12 col-md-12">

@@ -49,6 +49,7 @@ class ToDosController extends Controller
         $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
+        $reminder = ToDos::getReminder();
         $in_progress = env('INPROGRESS');
         $yet_to_start = env('YETTOSTART');
 
@@ -97,6 +98,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
+        $viewVariable['reminder'] = $reminder;
         $viewVariable['selected_users'] = $selected_users;
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
@@ -122,6 +124,7 @@ class ToDosController extends Controller
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
+        $reminder = $request->reminder;
 
         $toDos = new ToDos();
         $toDos->subject = $subject;
@@ -131,7 +134,7 @@ class ToDosController extends Controller
         $toDos->status = $status;
         $toDos->type = $type;
 
-
+        $toDos->reminder = $reminder;
         $toDos->priority = $priority;
         $toDos->description = $description;
 
@@ -201,6 +204,7 @@ class ToDosController extends Controller
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
+        $reminder = ToDos::getReminder();
 
         // get assigned users list
         $assigned_users = TodoAssignedUsers::where('todo_id','=',$id)->get();
@@ -221,6 +225,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
+        $viewVariable['reminder'] = $reminder;
         $viewVariable['action'] = 'edit';
         $viewVariable['selected_users'] = $selected_users;
        // $viewVariable['selected_typelist'] = $selected_typelist;
@@ -248,6 +253,7 @@ class ToDosController extends Controller
         $status = $request->get('status');
         $priority = $request->get('priority');
         $description = $request->get('description');
+        $reminder = $request->get('reminder');
         $users = $request->user_ids;
         
         $toDos = ToDos::find($id);
@@ -263,6 +269,8 @@ class ToDosController extends Controller
             $toDos->status = $status;
         if(isset($priority))
             $toDos->priority = $priority;
+        if(isset($reminder))
+            $toDos->reminder = $reminder;
         if(isset($description))
             $toDos->description = $description;
 

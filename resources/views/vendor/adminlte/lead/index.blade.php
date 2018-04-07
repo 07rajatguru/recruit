@@ -55,7 +55,7 @@
                 
                 <td>{{ $value['name'] }}</td>
                 <td>{{ $value['coordinator_name'] }}</td>
-                <td>{{ 0 }}</td>
+                <td>{{ $value['convert_client'] or '0' }}</td>
                 <td>{{ $value['mail'] }}</td>
                 <td>{{ $value['mobile'] }}</td>
                 <td>{{ $value['s_email'] }}</td>
