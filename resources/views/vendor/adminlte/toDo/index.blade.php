@@ -106,7 +106,16 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             var table = jQuery('#todos_table').DataTable( {
-                responsive: true
+                responsive: true,
+                "columnDefs": [
+                    { "width": "5px", "targets": 0 },
+                    { "width": "10px", "targets": 1 },
+                    { "width": "10px", "targets": 2 },
+                    { "width": "10px", "targets": 3 },
+                    { "width": "10px", "targets": 4 },
+                    { "width": "5px", "targets": 5 },
+                    { "width": "5px", "targets": 6}
+                ],
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );
