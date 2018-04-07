@@ -55,12 +55,12 @@
         <thead>
         <tr>
             <th>No</th>
+            <th >Action</th>
             <th>Subject</th>
             <th>Assign By</th>
             <th>Assign To</th>
             <th>Due Date</th>
             <th>Status</th>
-            <th width="280px">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -70,6 +70,19 @@
             <tr>
 
                 <td>{{ ++$i }}</td>
+
+                <td>
+
+                    {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
+                    @if($todo['task_owner'] == $user_id)
+                        <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
+                    @endif
+                    {{--@include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])--}}
+                    @if($todo['status_ids']!=$todo_status)
+                        @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
+                    @endif
+
+                </td>
 
                 <td>{{ $todo['subject'] }}</td>
 
@@ -81,18 +94,7 @@
 
                 <td>{{ $todo['status'] }}</td>
 
-                <td>
 
-                   {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
-                    @if($todo['task_owner'] == $user_id)
-                        <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
-                    @endif
-                    {{--@include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])--}}
-                    @if($todo['status_ids']!=$todo_status)
-                    @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
-                    @endif
-
-                </td>
 
             </tr>
 
