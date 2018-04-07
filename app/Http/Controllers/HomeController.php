@@ -134,29 +134,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        /*$user = \Auth::user();
-        //$user_id = \Auth::user()->id;
-        // Entry of login
-        $users_log= new UsersLog();
-        $users_log->user_id = $user->id;
-        $users_log->date = gmdate("Y-m-d");
-        $users_log->time = gmdate("H:i:s");
-        $users_log->type ='login';
-        $users_log->created_at = gmdate("Y-m-d H:i:s");
-        $users_log->updated_at = gmdate("Y-m-d H:i:s");
-        $users_log->save();*/
 
-        /*if(\Auth::user()->hasRole('Administrator')){
-            print_r("In");exit;
-        } else {
-            print_r("out");exit;
-        }*/
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $acct_role_id = env('ACCOUNTANT');
 
         $loggedin_userid = \Auth::user()->id;
 
         $user_role_id = \Auth::user()->roles->first()->id;
 
-        $isAdmin= User::isAdmin($user_role_id);
+        //$isAdmin= User::isAdmin($user_role_id);
 
         $list=array();
 
@@ -183,7 +171,8 @@ class HomeController extends Controller
         $year_array[2017] = 2017;
         $year_array[2018] = 2018;
 
-        if($isAdmin){
+        $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
             $users = User::getUsers();
         }
         else{
@@ -203,7 +192,7 @@ class HomeController extends Controller
             }
         }
 
-        if($isAdmin){
+        if(in_array($user_role_id,$access_roles_id)){
             $response = UsersLog::getUsersAttendance(0,$month,$year);
             /*$response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year group by date,users.id");*/
