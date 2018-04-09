@@ -131,7 +131,9 @@
                                            columnDefs: [
                                                { width: 200, targets: 0 }
                                            ],*/
-                                           responsive: true
+                                           responsive: true,
+                                           stateSave: true,
+                                           "pageLength": 100
                                        } );
 
                                        new jQuery.fn.dataTable.FixedHeader( table );
