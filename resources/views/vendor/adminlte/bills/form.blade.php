@@ -191,7 +191,7 @@
                                 </span>
                             @endif
                         </div>
-                        @if($isSuperAdmin || $isAccountant)
+                        @if($isSuperAdmin)
                         <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
                             <strong>Percentage Charged: </strong>
                             {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control' )) !!}

@@ -141,10 +141,15 @@ class BillsController extends Controller
         $candidate_name = $input['candidate_name'];
         $designation_offered = $input['designation_offered'];
         $job_location = $input['job_location'];
-        $percentage_charged = $input['percentage_charged'];
+        //$percentage_charged = $input['percentage_charged'];
         $client_name = $input['client_name'];
         $client_email_id = $input['client_email_id'];
         $address_of_communication = $input['address_of_communication'];
+
+        if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
+            $percentage_charged = $input['percentage_charged'];
+        else
+            $percentage_charged = '';
 
         $employee_name = array();
         $employee_final = array();
@@ -276,6 +281,12 @@ class BillsController extends Controller
         $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
@@ -353,7 +364,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant'));
 
     }
 
@@ -374,7 +385,7 @@ class BillsController extends Controller
         $candidate_id = $input['candidate_name'];
         $designation_offered = $input['designation_offered'];
         $job_location = $input['job_location'];
-        $percentage_charged = $input['percentage_charged'];
+        //$percentage_charged = $input['percentage_charged'];
         $client_name = $input['client_name'];
         $client_email_id = $input['client_email_id'];
         $address_of_communication = $input['address_of_communication'];
@@ -383,6 +394,11 @@ class BillsController extends Controller
         if($generateBM==1){
             $status = 1;
         }
+
+        if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
+            $percentage_charged = $input['percentage_charged'];
+        else
+            $percentage_charged = '';
 
         $employee_name = array();
         $employee_final = array();
@@ -423,7 +439,7 @@ class BillsController extends Controller
         $bill->candidate_name = $candidate_id;
         $bill->designation_offered = $designation_offered;
         $bill->job_location = $job_location;
-        $bill->percentage_charged = $percentage_charged;
+        //$bill->percentage_charged = $percentage_charged;
         $bill->client_name = $client_name;
         $bill->client_email_id = $client_email_id;
         $bill->address_of_communication = $address_of_communication;
@@ -432,6 +448,11 @@ class BillsController extends Controller
         $bill->uploaded_by = $user_id;
         $bill->job_id = $job_id;
         $bill->candidate_id = $candidate_id;
+
+        /*if(isset($input->percentage_charged) && $input->percentage_charged!='')
+            $bill->percentage_charged = $input->percentage_charged;
+        else
+            $bill->percentage_charged = '';*/
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
 

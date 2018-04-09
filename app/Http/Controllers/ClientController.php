@@ -230,7 +230,7 @@ class ClientController extends Controller
     public function store(Request $request){
 
         $user_id = \Auth::user()->id;
-
+        $user_name = \Auth::user()->name;
         $input = $request->all();
 
         $client_basic_info = new ClientBasicinfo();
@@ -413,7 +413,7 @@ class ClientController extends Controller
             // TODO:: Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
-            $message = "New Client is added";
+            $message = $user_name . " is added new Client";
             $link = route('client.show',$client_id);
 
             $super_admin_userid = getenv('SUPERADMINUSERID');
