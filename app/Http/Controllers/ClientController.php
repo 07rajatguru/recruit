@@ -413,7 +413,7 @@ class ClientController extends Controller
             // TODO:: Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
-            $message = $user_name . " is added new Client";
+            $message = $user_name . " added new Client";
             $link = route('client.show',$client_id);
 
             $super_admin_userid = getenv('SUPERADMINUSERID');
