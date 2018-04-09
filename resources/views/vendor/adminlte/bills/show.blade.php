@@ -110,7 +110,7 @@
                                 @endif
                                 <th>Employee Percentage 1 :</th>
                                 @if(isset($employee_percentage[0]) && sizeof($employee_percentage[0])>0)
-                                <td>{{ $employee_percentage[0] }}</td>
+                                <td>{{ (int)$employee_percentage[0] }}</td>
                                 @else
                                 <td></td>
                                 @endif
@@ -124,7 +124,7 @@
                                 @endif
                                 <th>Employee Percentage 2 :</th>
                                 @if(isset($employee_percentage[1]) && sizeof($employee_percentage[1])>0)
-                                <td>{{ $employee_percentage[1] }}</td>
+                                <td>{{ (int)$employee_percentage[1] }}</td>
                                 @else
                                 <td></td>
                                 @endif
@@ -138,7 +138,7 @@
                                 @endif
                                 <th>Employee Percentage 3 :</th>
                                 @if(isset($employee_percentage[2]) && sizeof($employee_percentage[2])>0)
-                                <td>{{ $employee_percentage[2] }}</td>
+                                <td>{{ (int)$employee_percentage[2] }}</td>
                                 @else
                                 <td></td>
                                 @endif
@@ -152,7 +152,7 @@
                                 @endif
                                 <th>Employee Percentage 4 :</th>
                                 @if(isset($employee_percentage[3]) && sizeof($employee_percentage[3])>0)
-                                <td>{{ $employee_percentage[3] }}</td>
+                                <td>{{ (int)$employee_percentage[3] }}</td>
                                 @else
                                 <td></td>
                                 @endif
@@ -166,7 +166,7 @@
                                 @endif
                                 <th>Employee Percentage 5 :</th>
                                 @if(isset($employee_percentage[4]) && sizeof($employee_percentage[4])>0)
-                                <td>{{ $employee_percentage[4] }}</td>
+                                <td>{{ (int)$employee_percentage[4] }}</td>
                                 @else
                                 <td></td>
                                 @endif
