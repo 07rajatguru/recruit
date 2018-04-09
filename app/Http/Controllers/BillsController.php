@@ -77,6 +77,12 @@ class BillsController extends Controller
         $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
@@ -111,7 +117,7 @@ class BillsController extends Controller
 
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status'));
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant'));
     }
 
     public function store(Request $request)
