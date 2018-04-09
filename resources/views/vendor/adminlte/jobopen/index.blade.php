@@ -122,7 +122,8 @@
                     { "width": "10px", "targets": 6 },
                     { "width": "10px", "targets": 7 }
                 ],
-                "pageLength": 100
+                "pageLength": 100,
+                stateSave: true
             });
             new jQuery.fn.dataTable.FixedHeader( table );
         });
