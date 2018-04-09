@@ -77,7 +77,9 @@
                     @if($todo['task_owner'] == $user_id)
                         <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @endif
-                    {{--@include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])--}}
+                    <?php if($isSuperAdmin) { ?>
+                        @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
+                    <?php  }?>
                     @if($todo['status_ids']!=$todo_status)
                         @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
                     @endif

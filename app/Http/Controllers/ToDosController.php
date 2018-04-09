@@ -20,13 +20,152 @@ use Illuminate\Support\Facades\Input;
 
 class ToDosController extends Controller
 {
+
+    public function daily(){
+
+        $todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
+                        ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
+                        ->select('to_dos.*', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
+                        ->where('to_dos.reminder','=',1)
+                        ->get();
+
+        //print_r($todos);exit;
+
+        foreach ($todos as $todo) {
+        $toDos = new ToDos();
+        $toDos->subject = $todo->subject;
+        $toDos->task_owner = $todo->task_owner;
+        $toDos->due_date = $todo->due_date;
+        $toDos->candidate = $todo->candidate;
+        $toDos->status = $todo->status;
+        $toDos->type = $todo->type;
+
+        $toDos->reminder = $todo->reminder;
+        $toDos->priority = $todo->priority;
+        $toDos->description = $todo->description;
+
+       // print_r($toDos);exit;
+        $toDosStored = $toDos->save();
+        $toDos_id = $toDos->id;
+        if($toDos_id){
+            if(isset($todo->userid) && sizeof($todo->userid)>0){
+                    $todo_users = new TodoAssignedUsers();
+                    $todo_users->todo_id = $toDos_id;
+                    $todo_users->user_id = $todo->userid;
+                    $todo_users->save();
+            }
+
+            if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
+                    $todo_ass_list = new AssociatedTypeList();
+                    $todo_ass_list->todo_id = $toDos_id;
+                    $todo_ass_list->typelist_id = $todo->typelistid;
+                    $todo_ass_list->save();
+            }
+
+        }
+      }
+    }
+
+    public function weekly(){
+
+        $todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
+                        ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
+                        ->select('to_dos.*', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
+                        ->where('to_dos.reminder','=',2)
+                        ->get();
+
+       // print_r($todos);exit;
+
+        foreach ($todos as $todo) {
+        $toDos = new ToDos();
+        $toDos->subject = $todo->subject;
+        $toDos->task_owner = $todo->task_owner;
+        $toDos->due_date = $todo->due_date;
+        $toDos->candidate = $todo->candidate;
+        $toDos->status = $todo->status;
+        $toDos->type = $todo->type;
+
+        $toDos->reminder = $todo->reminder;
+        $toDos->priority = $todo->priority;
+        $toDos->description = $todo->description;
+
+       // print_r($toDos);exit;
+        $toDosStored = $toDos->save();
+        $toDos_id = $toDos->id;
+        if($toDos_id){
+            if(isset($todo->userid) && sizeof($todo->userid)>0){
+                    $todo_users = new TodoAssignedUsers();
+                    $todo_users->todo_id = $toDos_id;
+                    $todo_users->user_id = $todo->userid;
+                    $todo_users->save();
+            }
+
+            if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
+                    $todo_ass_list = new AssociatedTypeList();
+                    $todo_ass_list->todo_id = $toDos_id;
+                    $todo_ass_list->typelist_id = $todo->typelistid;
+                    $todo_ass_list->save();
+            }
+
+        }
+      }
+    }
+
+    public function monthly(Request $request){
+
+        $todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
+                        ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
+                        ->select('to_dos.*', 'to_dos.task_owner as task_owner', 'to_dos.due_date as duedate', 'to_dos.candidate as candidate', 'to_dos.status as status', 'to_dos.type as type', 'to_dos.subject as subject', 'to_dos.priority as priority', 'to_dos.description as description', 'to_dos.reminder as reminder', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
+                        ->where('to_dos.reminder','=',3)
+                        ->get();
+
+        print_r($todos);exit;
+
+       foreach ($todos as $todo) {
+        $toDos = new ToDos();
+        $toDos->subject = $todo->subject;
+        $toDos->task_owner = $todo->task_owner;
+        $toDos->due_date = $todo->due_date;
+        $toDos->candidate = $todo->candidate;
+        $toDos->status = $todo->status;
+        $toDos->type = $todo->type;
+
+        $toDos->reminder = $todo->reminder;
+        $toDos->priority = $todo->priority;
+        $toDos->description = $todo->description;
+
+       // print_r($toDos);exit;
+        $toDosStored = $toDos->save();
+        $toDos_id = $toDos->id;
+        if($toDos_id){
+            if(isset($todo->userid) && sizeof($todo->userid)>0){
+                    $todo_users = new TodoAssignedUsers();
+                    $todo_users->todo_id = $toDos_id;
+                    $todo_users->user_id = $todo->userid;
+                    $todo_users->save();
+            }
+
+            if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
+                    $todo_ass_list = new AssociatedTypeList();
+                    $todo_ass_list->todo_id = $toDos_id;
+                    $todo_ass_list->typelist_id = $todo->typelistid;
+                    $todo_ass_list->save();
+            }
+
+        }
+      }
+    }
+
     public function index(){
 
         $todo_status = env('COMPLETEDSTATUS');
 
         $user = \Auth::user();
         $user_id = $user->id;
-        
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
         $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
@@ -39,7 +178,7 @@ class ToDosController extends Controller
         }
 
 
-        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id'));
+        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin'));
 
     }
 

@@ -816,10 +816,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@getSelectedTypeList',
     ]);
 
-    Route::get('todos/{id}', [
+   /* Route::get('todos/{id}', [
         'as' => 'todos.show',
         'uses' => 'ToDosController@show'
-    ]);
+    ]);*/
     Route::get('todos/{id}/edit', [
         'as' => 'todos.edit',
         'uses' => 'ToDosController@edit',
@@ -839,7 +839,20 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@complete',
     ]);
 
+    Route::get('todos/daily', [
+        'as' => 'todos.daily',
+        'uses' => 'ToDosController@daily',
+    ]);
 
+    Route::get('todos/weekly', [
+        'as' => 'todos.weekly',
+        'uses' => 'ToDosController@weekly',
+    ]);
+
+    Route::get('todos/monthly', [
+        'as' => 'todos.monthly',
+        'uses' => 'ToDosController@monthly',
+    ]);
 
     // To do's Routes End
 
