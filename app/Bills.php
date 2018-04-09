@@ -140,10 +140,10 @@ class Bills extends Model
             $efforts_str = '';
             foreach ($efforts as $k=>$v){
                 if($efforts_str==''){
-                    $efforts_str = $k .'('.$v . '%)';
+                    $efforts_str = $k .'('.(int)$v . '%)';
                 }
                 else{
-                    $efforts_str .= ', '. $k .'('.$v . '%)';
+                    $efforts_str .= ', '. $k .'('.(int)$v . '%)';
                 }
             }
             $bills[$i]['efforts'] = $efforts_str;
