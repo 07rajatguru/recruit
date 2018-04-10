@@ -14,26 +14,36 @@ use App\Events\NotificationEvent;
 
 class LeadController extends Controller
 {
-   
 
-  public function index(){
+    public function index(){
 
-  	    $lead = Lead::orderBy('id','DESC')->paginate(50);
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
 
-         return view('adminlte::lead.index',compact('lead','lead_count'));
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $leads = Lead::getAllLeads(1,$user->id);
+        }
+        else{
+            $leads = Lead::getAllLeads(0,$user->id);
+        }
+
+        $lead_count = 0;
+        //$lead = Lead::orderBy('id','DESC')->paginate(50);
+        return view('adminlte::lead.index',compact('leads','lead_count'));
 
     }
 
-    
-  public function create(){
+    public function create(){
 
-  			 $action = 'add';
-             $generate_lead = '0';
-  			 $leadservices_status=Lead::getLeadService();
-             $service ='';
+        $action = 'add';
+        $generate_lead = '0';
+        $leadservices_status=Lead::getLeadService();
+        $service ='';
 
-       
-          return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service'));
+        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service'));
     }
 
  public function store(Request $request){
@@ -69,16 +79,12 @@ class LeadController extends Controller
          $lead->convert_client = 0;
          $lead->save();
 
-         //$validator = \Validator::make(Input::all(),$lead::$rules);s
          $validator = \Validator::make(Input::all(),$lead::$rules);
 
         if($validator->fails()){
-            //print_r($validator->errors());exit;
             return redirect('lead/create')->withInput(Input::all())->withErrors($validator->errors());
         }
-         return redirect()->route('lead.index')
-            ->with('success','Leads created successfully');
-
+         return redirect()->route('lead.index')->with('success','Leads created successfully');
 
 	}
 	 public function edit($id){
