@@ -48,6 +48,7 @@ class LeadController extends Controller
 
  public function store(Request $request){
 
+        $user = \Auth::user();
  	    $input = $request->all();
 
          $company_name = $input['name'];
@@ -77,6 +78,7 @@ class LeadController extends Controller
          $lead->state=$state;
          $lead->country=$country;
          $lead->convert_client = 0;
+         $lead->account_manager_id = $user->id;
          $lead->save();
 
          $validator = \Validator::make(Input::all(),$lead::$rules);
@@ -112,7 +114,8 @@ class LeadController extends Controller
 	 }
 	 public function update(Request $request, $id){
 
-        
+	     $user  = \Auth::user()->id;
+
         $input = $request->all();
 
 	 	$name = $request->get('name');
@@ -157,7 +160,8 @@ class LeadController extends Controller
             $lead_basic->state=$state;
         if(isset($country))
             $lead_basic->country=$country;
-        
+
+         $lead_basic->account_manager_id = $user->id;
 
         $leadUpdated = $lead_basic->save();
 
