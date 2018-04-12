@@ -15,7 +15,7 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('jobopen.index') }}"> Back</a>
+            <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
         </div>
 
     </div>
