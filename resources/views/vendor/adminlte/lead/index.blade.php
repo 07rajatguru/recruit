@@ -30,6 +30,10 @@
                 <th>Email</th>
                 <th>Mobile number</th>
                 <th>City</th>
+                <th>Website</th>
+                <th>Referred By</th>
+                <th>Source</th>
+                <th>Designation</th>
                 <th>Secondary email</th>
                 <th>Other number</th>
                 <th>service</th>
@@ -59,6 +63,10 @@
                 <td>{{ $value['mail'] }}</td>
                 <td>{{ $value['mobile'] }}</td>
                 <td>{{ $value['city'] }}</td>
+                <td>{{ $value['website'] }}</td>
+                <td>{{ $value['referredby'] }}</td>
+                <td>{{ $value['source'] }}</td>
+                <td>{{ $value['designation'] }}</td>
                 <td>{{ $value['s_email'] }}</td>
                 <td>{{ $value['other_number'] }}</td>
                 <td>{{ $value['service'] }}</td>

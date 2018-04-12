@@ -43,6 +43,8 @@ class Lead extends Model
     public static function getAllLeads($all=0,$user_id){
 
         $query = Lead::query();
+        $query = $query->join('users','users.id','=','lead_management.referredby');
+        $query = $query->select('lead_management.*', 'users.name as referredby');
 
         if($all==0){
             $query = $query->where('account_manager_id',$user_id);
@@ -63,6 +65,10 @@ class Lead extends Model
             $response[$i]['city'] = $value->city;
             $response[$i]['state'] = $value->state;
             $response[$i]['country'] = $value->country;
+            $response[$i]['website'] = $value->website;
+            $response[$i]['source'] = $value->source;
+            $response[$i]['Designation'] = $value->designation;
+            $response[$i]['referredby'] = $value->referredby;
             $response[$i]['convert_client'] = $value->convert_client;
             $i++;
         }

@@ -29,7 +29,7 @@
 @if( $action == 'edit')
     {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off', 'route' => ['client.update', $client->id]] ) !!}
 @elseif( $action == 'copy')
-    {!! Form::model($lead,['method' => 'POST','files' => true, 'id' => 'leadForm','autocomplete' => 'off', 'route' => ['lead.clonestore']] ) !!}
+    {!! Form::model($lead,['method' => 'POST','files' => true, 'id' => 'leadForm','autocomplete' => 'off', 'route' => ['lead.clonestore', $lead->id]] ) !!}
 @else
     {!! Form::open(array('route' => 'client.store','files' => true,'method'=>'POST', 'id' => 'clientForm','autocomplete' => 'off')) !!}
 @endif

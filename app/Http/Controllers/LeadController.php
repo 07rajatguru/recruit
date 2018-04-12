@@ -42,9 +42,10 @@ class LeadController extends Controller
         $action = 'add';
         $generate_lead = '0';
         $leadservices_status=Lead::getLeadService();
+        $users=User::getAllUsers();
         $service ='';
 
-        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service'));
+        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users'));
     }
 
  public function store(Request $request){
@@ -64,6 +65,10 @@ class LeadController extends Controller
          $city=$input['city'];
          $state=$input['state'];
          $country=$input['country'];
+         $website=$input['website'];
+         $source=$input['source'];
+         $designation=$input['designation'];
+         $referredby_id=$input['referredby_id'];
 
          $lead=new Lead();
          $lead->name=$company_name;
@@ -80,6 +85,10 @@ class LeadController extends Controller
          $lead->country=$country;
          $lead->convert_client = 0;
          $lead->account_manager_id = $user->id;
+         $lead->website=$website;
+         $lead->source=$source;
+         $lead->designation=$designation;
+         $lead->referredby=$referredby_id;
          $lead->save();
 
          $validator = \Validator::make(Input::all(),$lead::$rules);
@@ -105,12 +114,13 @@ class LeadController extends Controller
 
         $service = $lead->service;
         //print_r($lead_s); exit;
+        $users=User::getAllUsers();
         $leadsarr = array();
         $leads_info = \DB::table('lead_management')
         ->get();
 
         	        
-	   return view('adminlte::lead.edit',compact('lead','action','generate_lead','leadservices_status','service','convert_client'));
+	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client'));
 
 	 }
 	 public function update(Request $request, $id){
@@ -132,7 +142,11 @@ class LeadController extends Controller
         $state=$request->get('state');
         $country=$request->get('country');
         $generatelead = $request->get('generatelead');
-        
+        $website = $request->get('website');
+        $source = $request->get('source');
+        $designation = $request->get('designation');
+        $referredby_id= $request->get('referredby_id');
+
          
         $lead_basic = Lead::find($id);
 
@@ -161,6 +175,14 @@ class LeadController extends Controller
             $lead_basic->state=$state;
         if(isset($country))
             $lead_basic->country=$country;
+        if(isset($website))
+            $lead_basic->website=$website;
+        if(isset($source))
+            $lead_basic->source=$source;
+        if(isset($designation))
+            $lead_basic->designation=$designation;
+        if(isset($referredby_id))
+            $lead_basic->referredby=$referredby_id;
 
          $lead_basic->account_manager_id = $user;
 
@@ -179,7 +201,7 @@ class LeadController extends Controller
 
      public function clone($id){
 
-        $generate_lead = '1';
+        $generate_lead = '0';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -203,6 +225,7 @@ class LeadController extends Controller
 
         $lead = Lead::find($id);
         $name = $lead->name;
+        $website = $lead->website;
         $billing_city = $lead->city;
         $billing_state = $lead->state;
         $billing_country = $lead->country;
@@ -214,14 +237,22 @@ class LeadController extends Controller
         //print_r($billing_state);exit;
 
         $action = "copy" ;
-         return view('adminlte::client.create',compact('name','billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
+         return view('adminlte::client.create',compact('name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
      }
 
-     public function clonestore(Request $request){
+     public function clonestore(Request $request,$id){
 
         $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
 
         $input = $request->all();
+
+        $generate_lead = '1';
+        $lead = Lead::find($id);
+            if($generate_lead==1){
+                $lead->convert_client = 1;
+            }
+        $lead->save();
 
         $client_basic_info = new ClientBasicinfo();
         $client_basic_info->name = $input['name'];
@@ -231,6 +262,7 @@ class LeadController extends Controller
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
+        $client_basic_info->website = $input['website'];
         //$client_basic_info->fax = $input['fax'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
@@ -420,7 +452,7 @@ class LeadController extends Controller
             // TODO:: Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
-            $message = "New Client is added";
+            $message = $user_name . " added new Client";
             $link = route('client.show',$client_id);
 
             $super_admin_userid = getenv('SUPERADMINUSERID');

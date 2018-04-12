@@ -137,6 +137,34 @@
                             </div>
                         </div>
 
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Website:</strong>
+                                    {!! Form::text('website', null, array('id'=>'website', 'placeholder' => 'Website','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Source:</strong>
+                                    {!! Form::text('source', null, array('placeholder' => 'Source','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Designation:</strong>
+                                    {!! Form::text('designation', null, array('placeholder' => 'Designation','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Referred By:</strong>
+                                    {!! Form::select('referredby_id',$users, null, array('id'=>'referredby_id','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Address</strong>
@@ -215,6 +243,7 @@
                     }
                 }
             });
+            $("#referredby_id").select2();
             });
 
 

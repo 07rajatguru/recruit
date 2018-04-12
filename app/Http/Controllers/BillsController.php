@@ -590,6 +590,11 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
@@ -653,7 +658,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin'));
 
     }
 
