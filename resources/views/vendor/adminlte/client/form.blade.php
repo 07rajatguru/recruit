@@ -233,12 +233,20 @@
 
                         <div class="form-group">
                             <strong>City:</strong>
+                            @if( $action == 'copy')
+                            {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '21')) !!}
+                            @else
                             {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '21')) !!}
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>State:</strong>
+                            @if( $action == 'copy')
+                            {!! Form::text('billing_state', $billing_state, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '22')) !!}
+                            @else
                             {!! Form::text('billing_state', null, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '22')) !!}
+                            @endif
                         </div>
 
                         <div class="form-group">
@@ -248,7 +256,11 @@
 
                         <div class="form-group">
                             <strong>Country:</strong>
+                            @if( $action == 'copy')
+                            {!! Form::text('billing_country', $billing_country, array('id'=>'billing_country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '24')) !!}
+                            @else
                             {!! Form::text('billing_country', null, array('id'=>'billing_country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '24')) !!}
+                            @endif
                         </div>
 
                     </div>

@@ -63,6 +63,7 @@ class Lead extends Model
             $response[$i]['city'] = $value->city;
             $response[$i]['state'] = $value->state;
             $response[$i]['country'] = $value->country;
+            $response[$i]['convert_client'] = $value->convert_client;
             $i++;
         }
 

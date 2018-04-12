@@ -29,6 +29,7 @@ class LeadController extends Controller
         else{
             $leads = Lead::getAllLeads(0,$user->id);
         }
+       // print_r($leads);exit;
 
         $lead_count = 0;
         //$lead = Lead::orderBy('id','DESC')->paginate(50);
@@ -161,7 +162,7 @@ class LeadController extends Controller
         if(isset($country))
             $lead_basic->country=$country;
 
-         $lead_basic->account_manager_id = $user->id;
+         $lead_basic->account_manager_id = $user;
 
         $leadUpdated = $lead_basic->save();
 
@@ -213,7 +214,7 @@ class LeadController extends Controller
         //print_r($billing_state);exit;
 
         $action = "copy" ;
-         return view('adminlte::client.create',compact('name','billing_city','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
+         return view('adminlte::client.create',compact('name','billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
      }
 
      public function clonestore(Request $request){

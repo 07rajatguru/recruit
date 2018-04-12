@@ -1243,12 +1243,12 @@ class CandidateController extends Controller
 
     public function importExport(){
 
-        return view('adminlte::candidate.import');
+        $candidateimportsource = CandidateBasicInfo::getCandidateimportsource();
+
+        return view('adminlte::candidate.import',compact('candidateimportsource'));
     }
 
-    public function importExcel(Request $request){
-
-        $user_id = \Auth::user()->id;
+    public function importn1excel(){
 
         if($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
@@ -1345,9 +1345,6 @@ class CandidateController extends Controller
                                 }
 
                             }
-
-
-                        
                     
                     else{
                         $messages[] = "No Data in file";
@@ -1359,6 +1356,32 @@ class CandidateController extends Controller
             return view('adminlte::candidate.import',compact('messages'));
             //return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
-    }
+     }
     
+
+    public function importn2excel(){
+
+        $messages = "Work in progress";
+
+        return view('adminlte::candidate.import',compact('messages'));
+     }
+
+    public function importExcel(Request $request){
+
+        $user_id = \Auth::user()->id;
+
+        $candidateSource = CandidateBasicInfo::getCandidateimportsource();
+
+        $candidatesource = $request->input('candidateSource');
+
+
+        if($candidatesource == 'n1'){
+            $candidate = CandidateController::importn1excel();
+        }
+        elseif ($candidatesource == 'n2') {
+            $candidate = CandidateController::importn2excel();
+        }
+
+        return view('adminlte::candidate.import',compact('messages','candidateSource'));
+    }
 }

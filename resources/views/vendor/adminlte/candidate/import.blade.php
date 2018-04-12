@@ -46,7 +46,12 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <h3>Import File Form:</h3>
+               <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <div class="">
+                        <strong>Candidate Source:</strong>
+                            {!! Form::select('candidateSource', $candidateSource,null, array('id'=>'candidateSource','class' => 'form-control', 'tabindex' => '25')) !!}
+
+                <br>
                 <form style="" action="{{ URL::to('candidate/importExcel') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
 
                     <input type="file" name="import_file" />
@@ -58,6 +63,8 @@
                 </form>
 
                 <br>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

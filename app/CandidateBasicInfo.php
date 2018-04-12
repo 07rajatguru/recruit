@@ -72,6 +72,17 @@ class CandidateBasicInfo extends Model
       
     }
 
+    public static function getCandidateimportsource(){
+        $candidateimportsource = array();
+        $candidateimportsource['n1'] = 'N1';
+        $candidateimportsource['n2'] = 'N2';
+        $candidateimportsource['m1'] = 'M1';
+        $candidateimportsource['m2'] = 'M2';
+        $candidateimportsource['other'] = 'Other';
+
+        return $candidateimportsource;
+    }
+
     public static function getCandidateSourceArray(){
         $candidateSourceArray = array();
 
