@@ -83,6 +83,7 @@
                     @if($todo['status_ids']!=$todo_status)
                         @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
                     @endif
+                    @include('adminlte::partials.todostatus', ['data' => $todo, 'name' => 'todos','display_name'=>'More Information'])
 
                 </td>
 

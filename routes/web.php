@@ -835,6 +835,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@destroy',
     ]);
 
+    Route::post('todos/status', [
+        'as' => 'todos.status',
+        'uses' => 'ToDosController@status',
+    ]);
     Route::post('todos/{id}', [
         'as' => 'todos.complete',
         'uses' => 'ToDosController@complete',

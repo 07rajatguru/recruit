@@ -177,8 +177,9 @@ class ToDosController extends Controller
             $todos = ToDos::getAllTodos($todo_ids);
         }
 
+        $status = Status::getStatusArray();
 
-        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin'));
+        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin','status'));
 
     }
 
@@ -489,6 +490,27 @@ class ToDosController extends Controller
 
         return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id'));
 
+    }
+
+    public function status(Request $request){
+        $todostatus = $request->get('todostatus');
+        $id = $request->get('id');
+        //print_r($todostatus);exit;
+
+        $status_todo = ToDos::find($id);
+
+        $todos = '';
+        if (isset($todostatus) && sizeof($todostatus)>0){
+
+                 $todos = $todostatus;
+            
+        }
+        $status_todo->status = $todos;
+         
+        $status_todo->save();
+
+        return redirect()->route('todos.index')->with('success', 'Todo Status Updated successfully');
+       
     }
 
     public function getType(){
