@@ -16,7 +16,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
+                <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
             </div>
 
             <!-- Schedule interview popup starts -->
