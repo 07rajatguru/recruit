@@ -87,7 +87,7 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['am_name'] or '' }}</td>
                 <td style="background-color: {{ $value['color'] }}">{{ $value['display_name'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or ''}}</td>
-                <td ><a title="Show Associated Candidates" target="_blank" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
+                <td ><a title="Show Associated Candidates" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or ''}}</td>
                 <td>{{ $value['min_ctc'] or ''}}</td>
                 <td>{{ $value['max_ctc'] or ''}}</td>
