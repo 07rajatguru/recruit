@@ -42,6 +42,7 @@ class ClientController extends Controller
                     $join->where('client_doc.category','=','Client Contract');
                 })
                 ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file')
+                ->orderBy('client_basicinfo.id','desc')
                 ->get();
         }
         else{
@@ -49,6 +50,7 @@ class ClientController extends Controller
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
                 ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
                 ->where('account_manager_id',$user->id)
+                ->orderBy('client_basicinfo.id','desc')
                 ->get();
         }
 
