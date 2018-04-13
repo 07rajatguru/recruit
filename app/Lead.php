@@ -43,7 +43,7 @@ class Lead extends Model
     public static function getAllLeads($all=0,$user_id){
 
         $query = Lead::query();
-        $query = $query->join('users','users.id','=','lead_management.referredby');
+        $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
 
         if($all==0){
