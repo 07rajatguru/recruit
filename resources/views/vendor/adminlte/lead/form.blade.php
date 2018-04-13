@@ -161,14 +161,14 @@
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>Referred By:</strong>
-                                    {!! Form::select('referredby_id',$users, null, array('id'=>'referredby_id','class' => 'form-control')) !!}
+                                    {!! Form::select('referredby_id',$users, $referredby, array('id'=>'referredby_id','class' => 'form-control')) !!}
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Address</strong>
-                                    {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control')) !!}
+                                    {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()")) !!}
                             </div>
                         </div>
 
@@ -211,7 +211,13 @@
 
      $(document).ready(function() {
 
-        
+        $('#lead_form').on('keyup keypress', function(e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
        $("#lead_form").validate({
                 rules: {
