@@ -798,6 +798,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@completetodo',
     ]);
 
+    Route::get('todos/mytask', [
+        'as' => 'todos.mytask',
+        'uses' => 'ToDosController@mytask',
+    ]);
+
     Route::get('todos/create', [
         'as' => 'todos.create',
         'uses' => 'ToDosController@create',
