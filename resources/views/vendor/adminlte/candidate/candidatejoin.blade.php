@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Candidate List ({{ $count }})</h2>
+                <h2>Candidate Joining This Month ({{ $count }})</h2>
             </div>
 
             <div class="pull-right">
@@ -41,6 +41,7 @@
                 <th>Candidate Email</th>
                 <th>Mobile Number</th>
                 <th>Joining Date</th>
+                <th>Posting Title</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -54,6 +55,8 @@
                 <td>{{ $candidate->email or ''}}</td>
                 <td>{{ $candidate->mobile or ''}}</td>
                 <td>{{ $candidate->date or '' }}</td>
+                <td><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">
+                        {{ $candidate->jobname or '' }}</a></td>
                 <td>
                     <a class="fa fa-circle" href="{{ route('candidate.show',$candidate->id) }}" title="Show"></a>
                     <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>

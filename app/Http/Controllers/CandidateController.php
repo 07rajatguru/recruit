@@ -85,12 +85,14 @@ class CandidateController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
 
+            $month = date('m');
 
         $candidateJoinDetails = JobCandidateJoiningdate::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id')
             ->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id')
             ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date')
-
+            ->leftjoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id')
+            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid')
+            ->whereRaw('MONTH(joining_date) = ?',[$month])
             ->orderBy('job_candidate_joining_date.id','desc')
             ->get();
 
