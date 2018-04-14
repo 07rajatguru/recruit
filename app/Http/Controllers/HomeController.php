@@ -112,8 +112,20 @@ class HomeController extends Controller
         }
 
         //get candidate join list on this month
+        if(in_array($user_role_id,$access_roles_id)){
+            $month = date('m');
+            $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+        }
+
+        else{
         $month = date('m');
-        $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+        $candidatejoin = DB::table('job_candidate_joining_date')//->join('job_openings','job_openings.id','=','job_candidate_joining_date.job_id')
+                                                                ->join('job_visible_users','job_visible_users.job_id','=','job_candidate_joining_date.job_id')
+                                                                ->whereRaw('MONTH(joining_date) = ?',[$month])
+                                                                //->where('hiring_manager_id',$user->id)
+                                                                ->where('user_id',$user->id)
+                                                                ->count();
+        }
        // print_r($candidatejoin);exit;
 
         $viewVariable = array();
