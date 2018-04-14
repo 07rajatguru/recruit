@@ -51,7 +51,9 @@
             <th>Efforts</th>
             <th>Candidate Contact Number</th>
             <th>Job Location</th>
-            <th>Percentage Charged</th>
+            @if($isSuperAdmin)
+              <th>Percentage Charged</th>
+            @endif
             <th>Source</th>
             <th>Client Name</th>
             <th>Client Contact Number</th>
@@ -98,7 +100,9 @@
                    <td>{{ $value['efforts'] }}</td>
                    <td>{{ $value['candidate_contact_number'] }}</td>
                    <td>{{ $value['job_location'] }}</td>
-                   <td>{{ $value['percentage_charged'] }}</td>
+                   @if($isSuperAdmin || $isAccountant)
+                      <td>{{ $value['percentage_charged'] }}</td>
+                   @endif
                    <td>{{ $value['source'] }}</td>
                    <td>{{ $value['client_name'] }}</td>
                    <td>{{ $value['client_contact_number'] }}</td>

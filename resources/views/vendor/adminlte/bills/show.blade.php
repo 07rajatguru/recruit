@@ -63,10 +63,17 @@
                                 <td>{{ $billsdetails['job_location'] }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Fix Salary :</th>
-                                <td>{{ $billsdetails['fixed_salary'] }}</td>
-                                <th scope="row">Percentage Charged :</th>
-                                <td>{{ $billsdetails['percentage_charged'] }}</td>
+                                @if($isSuperAdmin || $isAccountant)
+                                    <th scope="row">Fix Salary :</th>
+                                    <td>{{ $billsdetails['fixed_salary'] }}</td>
+                                @else
+                                    <th scope="row">Fix Salary :</th>
+                                    <td colspan="3">{{ $billsdetails['fixed_salary'] }}</td>
+                                @endif
+                                @if($isSuperAdmin || $isAccountant)
+                                    <th scope="row">Percentage Charged :</th>
+                                    <td>{{ $billsdetails['percentage_charged'] }}</td>
+                                @endif
                             </tr>
                             <tr>
                                 <th scope="row">Remarks :</th>

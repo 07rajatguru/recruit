@@ -29,6 +29,12 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $bnm = Bills::getAllBills(0,1,$user_id);
@@ -40,7 +46,7 @@ class BillsController extends Controller
         }
 
         $title = "Bills Not Made";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant'));
     }
 
     public function billsMade(){
@@ -54,6 +60,12 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $bnm = Bills::getAllBills(1,1,$user_id);
@@ -64,7 +76,8 @@ class BillsController extends Controller
             $access = false;
         }
         $title = "Bills Made";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant'));
+
     }
 
     public function create()
@@ -268,9 +281,19 @@ class BillsController extends Controller
 
     public function show($id){
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
        $viewVariable = Bills::getShowBill($id);
 
-       return view('adminlte::bills.show', $viewVariable);
+       return view('adminlte::bills.show', $viewVariable,compact('isSuperAdmin','isAccountant'));
     }
 
     public function edit($id)
@@ -594,6 +617,7 @@ class BillsController extends Controller
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
@@ -658,7 +682,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant'));
 
     }
 
