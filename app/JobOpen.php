@@ -244,7 +244,7 @@ class JobOpen extends Model
         //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
         $job_close_query = $job_close_query->groupBy('job_openings.id');
 
-        $job_close_query = $job_close_query->orderBy('job_openings.id','desc');
+        $job_close_query = $job_close_query->orderBy('job_openings.updated_at','desc');
 
         
         $job_response = $job_close_query->get();
@@ -510,7 +510,7 @@ class JobOpen extends Model
         //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
-        $job_open_query = $job_open_query->orderBy('job_openings.id','desc');
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
 
         
         $job_response = $job_open_query->get();

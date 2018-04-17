@@ -294,13 +294,13 @@
                 </td>
                 {{--<td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td>--}}
                 @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
-                <td style="background:#FFFF00;">{{ $candidate->fname or '' }}</td>
+                <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
                 @else
-                <td>{{ $candidate->fname or '' }}</td>
+                <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
