@@ -113,7 +113,7 @@
                     <div class="form-group type_list" >
 
                         <div class="col-sm-5">
-                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
+                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple" readonly="true">
                             </select>
                         </div>
                         <div class="col-sm-2">
