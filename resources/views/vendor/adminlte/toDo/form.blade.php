@@ -113,7 +113,7 @@
                     <div class="form-group type_list" >
 
                         <div class="col-sm-5">
-                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple" readonly="true">
+                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
                             </select>
                         </div>
                         <div class="col-sm-2">
@@ -184,7 +184,7 @@
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                {!! Form::submit(isset($toDos) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+                {!! Form::submit(isset($toDos) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate','onclick'=>"$('#search').prop('disabled', true);" ]) !!}
             </div>
         </div>
     </div>
