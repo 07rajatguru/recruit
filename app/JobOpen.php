@@ -567,4 +567,49 @@ class JobOpen extends Model
         //print_r($jobs_list);exit;
         return $jobs_list;
     }
+
+    public static function getJobById($job_id){
+
+        /*
+         * $job_open_detail = \DB::table('job_openings')
+            ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
+            ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
+            ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
+            ->select('job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name')
+            ->where('job_openings.id', '=', $id)
+            ->get();
+         */
+
+        $job_query = JobOpen::query();
+        $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.about as client_desc');
+        $job_query = $job_query->where('job_openings.id', '=', $job_id);
+        $job_response = $job_query->get();
+
+        $response = array();
+        foreach ($job_response as $k=>$v){
+            $response['company_name'] = $v->client_name;
+            $response['client_desc'] = $v->client_desc;
+            $response['posting_title'] = $v->posting_title;
+            $location ='';
+            if($v->city!=''){
+                $location .= $v->city;
+            }
+            if($v->state!=''){
+                if($location=='')
+                    $location .= $v->state;
+                else
+                    $location .= ", ".$v->state;
+            }
+            if($v->country!=''){
+                if($location=='')
+                    $location .= $v->country;
+                else
+                    $location .= ", ".$v->country;
+            }
+            $response['job_location'] = $location;
+        }
+
+        return $response;
+    }
 }

@@ -9,6 +9,7 @@ use App\Interview;
 use App\JobOpen;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
@@ -124,7 +125,10 @@ class InterviewController extends Controller
             return redirect('interview/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
+        /**/
+
         $interviewStored = $interview->save();
+
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
 
@@ -182,7 +186,11 @@ class InterviewController extends Controller
     }
 
     public function update(Request $request, $id){
-        $user_id = \Auth::user()->id;
+        $user = \Auth::user();
+
+        $user_id = $user->id;
+        $user_email = $user->email;
+
         $dateClass = new Date();
 
         $interview_name = $request->get('interview_name');
@@ -225,6 +233,34 @@ class InterviewController extends Controller
         }
 
         $interviewUpdated = $interview->save();
+
+        // sent mail to logged in user about interview details
+
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to'] = $user_email;
+
+        // Candidate details
+        $candidate_response  = CandidateBasicInfo::find($candidate_id);
+        $cname = $candidate_response->full_name;
+
+        // job Details
+        $job_details = JobOpen::getJobById($posting_title);
+
+        $input['cname'] = $cname;
+        $input['company_name'] = $job_details['company_name'];
+        $input['client_desc'] = $job_details['client_desc'];
+        $input['job_designation'] = $job_details['posting_title'];
+        $input['job_location'] = $job_details['job_location'];
+        $input['job_description'] = '';
+
+        \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->subject('Interview Details - Arvind Smartspaces Ltd. - Bangalore');
+        });
 
         return redirect()->route('interview.index')->with('success','Interview Updated Successfully');
     }
