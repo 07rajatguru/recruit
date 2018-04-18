@@ -582,7 +582,8 @@ class JobOpen extends Model
 
         $job_query = JobOpen::query();
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.about as client_desc');
+        $job_query = $job_query->join('interview', 'interview.posting_title','=', 'job_openings.id');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.about as client_desc','interview.interview_date as date', 'interview.location as interview_location');
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
 
@@ -608,6 +609,11 @@ class JobOpen extends Model
                     $location .= ", ".$v->country;
             }
             $response['job_location'] = $location;
+            $response['job_description'] = $v->job_description;
+            $datearray = explode(' ', $v->date);
+            $response['interview_date'] = $datearray[0];
+            $response['interview_time'] = $datearray[1];
+            $response['interview_location'] = $v->interview_location;
         }
 
         return $response;

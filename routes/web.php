@@ -673,6 +673,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'interview.destroy',
         'uses' => 'InterviewController@destroy'
     ]);
+    Route::get('interview/getclientinfos', [
+        'as' => 'interview.getclientinfos',
+        'uses' => 'InterviewController@getClientInfos'
+    ]);
 
     /*Route::get('ajax/interviewcandidate', [
         'as' => 'interview.getCandidate',

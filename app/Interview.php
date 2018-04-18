@@ -39,6 +39,7 @@ class Interview extends Model
         //$interview->to = $to;
         $interview->location = $data['location'];
         $interview->status = $data['status'];
+        $interview->about = $data['about'];
         $interview->comments = $data['comments'];
         $interview->interview_owner_id = $data['interview_owner_id'];
 

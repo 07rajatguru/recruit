@@ -150,10 +150,20 @@
 
                             <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
                                 <strong>Interview Venue:</strong>
-                                {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '8' )) !!}
+                                {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '8' , 'rows' => '3')) !!}
                                 @if ($errors->has('location'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('location') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
+                                <strong>About:</strong>
+                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About','class' => 'form-control', 'tabindex' => '11', 'rows' => '3' )) !!}
+                                @if ($errors->has('about'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('about') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -225,6 +235,7 @@
                 }
             });
 
+            $("#about").wysihtml5();
             $("#from").datetimepicker({
                 format:'DD-MM-YYYY HH:mm:ss'
             });
@@ -256,6 +267,18 @@
                             $('#candidate_id').append($('<option></option>').val(response[i].id).html(response[i].value));
                             $("#candidate_id").select2('val',hidden_candidate_id);
                         }
+                    }
+                });
+
+                 $.ajax({
+                    url:'/interview/getclientinfos',
+                    data:'job_id='+job_id,
+                    dataType:'json',
+                    success: function(data){
+                        var cabout = data.cabout;
+                        
+
+                        $('#about').data("wysihtml5").editor.setValue(cabout);
                     }
                 });
             }

@@ -59,7 +59,8 @@
                         <tr>
                             <th scope="row">Comments :</th>
                             <td>{{ isset($comments)? $comments : null }}</td>
-
+                            <th scope="row">About :</th>
+                            <td>{{ isset($about)? $about : null }}</td>
                         </tr>
                     </table>
                 </div>

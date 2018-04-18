@@ -162,4 +162,20 @@ class ClientBasicinfo extends Ardent
         return $client;
     }
 
+        public static function getClientAboutByJobId($job_id){
+
+        $query = JobOpen::query();
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->where('job_openings.id','=',$job_id);
+        $query = $query->select('client_basicinfo.description as cabout');
+        $response = $query->get();
+
+        $client = array();
+        foreach ($response as $k=>$v){
+            $client['cabout'] = $v->cabout;
+        }
+
+        return $client;
+    }
+
 }

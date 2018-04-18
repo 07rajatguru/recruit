@@ -115,6 +115,7 @@ class InterviewController extends Controller
         $data['posting_title'] = $request->get('posting_title');
         $data['type'] = $request->get('type');
         $data['status'] = $request->get('status');
+        $data['about'] = $request->get('about');
         $data['interview_owner_id'] = $user_id;
 
         $interview = Interview::createInterview($data);
@@ -177,6 +178,7 @@ class InterviewController extends Controller
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
+        $viewVariable['about'] = $interview->about;
         $viewVariable['action'] = 'edit';
         $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->interview_date);
         $viewVariable['toDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->to);
@@ -204,6 +206,7 @@ class InterviewController extends Controller
         $posting_title = $request->get('posting_title');
         $type = $request->get('type');
         $status = $request->get('status');
+        $about = $request->get('about');
         $interview_owner_id = $user_id;
 
         $interview = Interview::find($id);
@@ -221,6 +224,8 @@ class InterviewController extends Controller
             $interview->location = $location;
         if(isset($status))
             $interview->status = $status;
+        if(isset($about))
+            $interview->about = $about;
         if(isset($comments))
             $interview->comments = $comments;
         $interview->interview_owner_id = $interview_owner_id;
@@ -255,7 +260,11 @@ class InterviewController extends Controller
         $input['client_desc'] = $job_details['client_desc'];
         $input['job_designation'] = $job_details['posting_title'];
         $input['job_location'] = $job_details['job_location'];
-        $input['job_description'] = '';
+        $input['job_description'] = $job_details['job_description'];
+        $input['interview_date'] = $job_details['interview_date'];
+        $input['interview_day'] = '';
+        $input['interview_time'] = $job_details['interview_time'];
+        $input['interview_location'] = $job_details['interview_location'];
 
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
@@ -299,6 +308,7 @@ class InterviewController extends Controller
         $interview['location'] = $interviewDetails->location;
         $interview['status'] = $interviewDetails->status;
         $interview['comments'] = $interviewDetails->comments;
+        $interview['about'] = $interviewDetails->about;
         $interview['interviewOwner'] = $interviewOwner;
 
         return view('adminlte::interview.show', $interview);
@@ -309,6 +319,17 @@ class InterviewController extends Controller
         $interviewDelete = Interview::where('id',$id)->delete();
 
         return redirect()->route('interview.index')->with('success','Interview Deleted Successfully');
+
+    }
+
+    public function getClientInfos(){
+
+        $job_id = $_GET['job_id'];
+
+        // get client info
+        $client = ClientBasicinfo::getClientAboutByJobId($job_id);
+
+        echo json_encode($client);exit;
 
     }
 

@@ -59,8 +59,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <p><b>Interview Date/Day : </b> {{ $interview_date }} ({{ $interview_day }})</p>
-                        <p><b>Interview Time : </b> {{ $interview_time }}</p>
+                        <p><b>Interview Date/Day : </b> {{date('jS F,y',strtotime($interview_date)) }} ({{ date('l',strtotime($interview_day)) }})</p>
+                        <p><b>Interview Time : </b> {{date('h:i A',strtotime($interview_time))  }}</p>
                         <p><b>Interview Venue : </b></p>
                         <p>{{ $interview_location }}</p>
                     </td>
