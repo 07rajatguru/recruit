@@ -65,6 +65,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'auth',
         'uses' => 'HomeController@index'
     ));
+
+    Route::get('home/export',[
+        'as'=>'home.export',
+        'uses'=>'HomeController@export']);
+
     
      //lead management route
 

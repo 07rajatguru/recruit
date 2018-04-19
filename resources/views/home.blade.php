@@ -27,6 +27,12 @@
             </div>
 
             <div class="attendance_submit col-md-2"> <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" /> </div>
+            <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
+            <div class="pull-right col-md-2">
+                <a class="btn btn-success btn-block"" href="{{ route('home.export') }}"> Export</a>
+            </div>
+            <?php   }?>
+          
         </div>
 
         <div class="col-sm-12" style="margin-top:2%;">

@@ -10,6 +10,7 @@ use App\User;
 use App\Date;
 use App\ClientBasicinfo;
 use App\JobOpen;
+use Excel;
 use DB;
 
 class HomeController extends Controller
@@ -147,6 +148,17 @@ class HomeController extends Controller
     public function index()
     {
 
+        $user =  \Auth::user();
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
@@ -230,7 +242,7 @@ class HomeController extends Controller
         }
 
         //print_r($list);exit;
-        return view('home',array("list"=>$list,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year));
+        return view('home',array("list"=>$list,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year),compact('isSuperAdmin','isAdmin','isAccountant','isDirector'));
 
         //return view('home');
         $from = date('Y-m-d 00:00:00');
@@ -257,5 +269,68 @@ class HomeController extends Controller
         $viewVariable['interviewCount'] = sizeof($interviews);
 
         return view('home', $viewVariable);
+    }
+
+    public function export(){
+
+       // $user_log = UsersLog::all();
+
+        Excel::create('Attendance', function($excel) {
+
+        $excel->sheet('Sheet 1', function($sheet) {
+
+            if(isset($_POST['month']) && $_POST['month']!=''){
+                $month = $_POST['month'];
+            }
+            else{
+                $month = date("n");
+            }
+            if(isset($_POST['year']) && $_POST['year']!=''){
+                $year = $_POST['year'];
+            }
+            else{
+                $year = date("Y");
+            }
+
+            $response = UsersLog::getUsersAttendanceList(0,$month,$year);
+
+            /*$list = array();
+            $date = new Date();
+            if(sizeof($response)>0){
+                foreach ($response as $key => $value) {
+                    $data[] = array(
+                        $login_time = $date->converttime($value->login),
+                        $logout_time = $date->converttime($value->logout),
+                        $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time),
+                        $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time),
+
+                        $total = ($logout_time - $login_time) / 60,
+
+                        $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total)),
+                    );
+                }
+            }*/
+        //print_r($response);exit;
+        /*user=DB::table('users_log')->join("users","users.id","=","users_log.user_id")
+                                        ->select("users_log.*","users.name as name")
+                                        ->orderBy('users_log.id','desc')
+                                        ->get();
+                foreach($list as $lists) {
+                 $data[] = array(
+                    $lists->id,
+                    $lists->name,
+                    $lists->login,
+                    $lists->logout,
+                    $lists->total,
+                );
+            }*/
+            $sheet->fromArray($response, null, 'A1', false, false);
+
+            $headings = array('User Name', 'Date', 'Login', 'Logout', 'Total');
+
+            $sheet->prependRow(1, $headings);
+        });
+    })->export('xls');
+        return view('home');
     }
 }
