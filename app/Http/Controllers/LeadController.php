@@ -39,12 +39,14 @@ class LeadController extends Controller
 
     public function create(){
 
+        $user = \Auth::user();
+        $user_id = $user->id;
         $action = 'add';
         $generate_lead = '0';
         $leadservices_status=Lead::getLeadService();
         $users=User::getAllUsers();
         $service ='';
-        $referredby = '';
+        $referredby = $user_id;
 
         return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby'));
     }
