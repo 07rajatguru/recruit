@@ -222,7 +222,7 @@ class JobOpen extends Model
         $job_close_query = JobOpen::query();
 
         $job_close_query =  $job_close_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
-                                                'job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from',
+                                                'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
                                                 'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
@@ -262,7 +262,24 @@ class JobOpen extends Model
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
-            $jobs_list[$i]['location'] = $value->city;
+            //$jobs_list[$i]['location'] = $value->city;
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
+            $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $value->salary_from;
             $jobs_list[$i]['max_ctc'] = $value->salary_to;
@@ -528,7 +545,24 @@ class JobOpen extends Model
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
-            $jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
+            //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
+            $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $value->salary_from;
             $jobs_list[$i]['max_ctc'] = $value->salary_to;
@@ -583,13 +617,14 @@ class JobOpen extends Model
         $job_query = JobOpen::query();
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_query = $job_query->join('interview', 'interview.posting_title','=', 'job_openings.id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.about as client_desc','interview.interview_date as date', 'interview.location as interview_location');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location');
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
 
         $response = array();
         foreach ($job_response as $k=>$v){
             $response['company_name'] = $v->client_name;
+            $response['company_url'] = $v->website;
             $response['client_desc'] = $v->client_desc;
             $response['posting_title'] = $v->posting_title;
             $location ='';
@@ -608,6 +643,7 @@ class JobOpen extends Model
                 else
                     $location .= ", ".$v->country;
             }
+            $response['city'] = $v->city;
             $response['job_location'] = $location;
             $response['job_description'] = $v->job_description;
             $datearray = explode(' ', $v->date);

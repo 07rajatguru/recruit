@@ -44,7 +44,7 @@
                 <tr>
                     <td>
                         <p><b>Company Name : </b>{{ $company_name }}</p>
-                        <p><b>Company URL: </b>{{ $company_name }}</p>
+                        <p><b>Company URL: </b>{{ $company_url }}</p>
                         <p><b>About Client : </b></p>
                         <p>{{ $client_desc }}</p>
                     </td>

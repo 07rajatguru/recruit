@@ -102,6 +102,7 @@ class InterviewController extends Controller
     public function store(Request $request){
 
         $user_id = \Auth::user()->id;
+        $user_email = \Auth::user()->email;
         $dateClass = new Date();
 
         $data = array();
@@ -129,6 +130,42 @@ class InterviewController extends Controller
         /**/
 
         $interviewStored = $interview->save();
+
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to'] = $user_email;
+
+        // Candidate details
+
+        $candidate_id = $request->get('candidate_id');
+        $candidate_response  = CandidateBasicInfo::find($candidate_id);
+        $cname = $candidate_response->full_name;
+
+        // job Details
+
+        $posting_title = $request->get('posting_title');
+        $job_details = JobOpen::getJobById($posting_title);
+
+        $input['cname'] = $cname;
+        $input['city'] = $job_details['city'];
+        $input['company_name'] = $job_details['company_name'];
+        $input['company_url'] =$job_details['company_url'];
+        $input['client_desc'] = $job_details['client_desc'];
+        $input['job_designation'] = $job_details['posting_title'];
+        $input['job_location'] = $job_details['job_location'];
+        $input['job_description'] = $job_details['job_description'];
+        $input['interview_date'] = $job_details['interview_date'];
+        $input['interview_day'] = '';
+        $input['interview_time'] = $job_details['interview_time'];
+        $input['interview_location'] = $job_details['interview_location'];
+
+        \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
+        });
 
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
@@ -241,7 +278,7 @@ class InterviewController extends Controller
 
         // sent mail to logged in user about interview details
 
-        $from_name = getenv('FROM_NAME');
+     /*   $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
 
         $input['from_name'] = $from_name;
@@ -257,6 +294,7 @@ class InterviewController extends Controller
 
         $input['cname'] = $cname;
         $input['company_name'] = $job_details['company_name'];
+        $input['company_url'] =$job_details['company_url'];
         $input['client_desc'] = $job_details['client_desc'];
         $input['job_designation'] = $job_details['posting_title'];
         $input['job_location'] = $job_details['job_location'];
@@ -269,7 +307,7 @@ class InterviewController extends Controller
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Interview Details - Arvind Smartspaces Ltd. - Bangalore');
-        });
+        });*/
 
         return redirect()->route('interview.index')->with('success','Interview Updated Successfully');
     }
