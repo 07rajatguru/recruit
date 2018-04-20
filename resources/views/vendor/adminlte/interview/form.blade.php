@@ -83,15 +83,16 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
-                                <strong>Comments:</strong>
-                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '9' )) !!}
-                                @if ($errors->has('comments'))
+                            <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
+                                <strong>About Client:</strong>
+                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '9' )) !!}
+                                @if ($errors->has('about'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('comments') }}</strong>
+                                <strong>{{ $errors->first('about') }}</strong>
                                 </span>
                                 @endif
                             </div>
+
                         </div>
 
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
@@ -158,12 +159,12 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
-                                <strong>About:</strong>
-                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About','class' => 'form-control', 'tabindex' => '11', 'rows' => '3' )) !!}
-                                @if ($errors->has('about'))
+                            <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
+                                <strong>Comments:</strong>
+                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '11', 'rows' => '8' )) !!}
+                                @if ($errors->has('comments'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('about') }}</strong>
+                                <strong>{{ $errors->first('comments') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -235,7 +236,7 @@
                 }
             });
 
-            $("#about").wysihtml5();
+           // $("#about").wysihtml5();
             $("#from").datetimepicker({
                 format:'DD-MM-YYYY HH:mm:ss'
             });
@@ -277,8 +278,7 @@
                     success: function(data){
                         var cabout = data.cabout;
                         
-
-                        $('#about').data("wysihtml5").editor.setValue(cabout);
+                        $('#about').val(cabout);
                     }
                 });
             }

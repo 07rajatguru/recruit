@@ -33,7 +33,9 @@ class InterviewController extends Controller
             $interViews = Interview::getAllInterviews(0,$user->id);
         }
 
-        return view('adminlte::interview.index', array('interViews' => $interViews));
+        $count = sizeof($interViews);
+
+        return view('adminlte::interview.index', array('interViews' => $interViews),compact('count'));
     }
 
     public function create(){
@@ -131,7 +133,7 @@ class InterviewController extends Controller
 
         $interviewStored = $interview->save();
 
-        $from_name = getenv('FROM_NAME');
+/*        $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
 
         $input['from_name'] = $from_name;
@@ -165,7 +167,7 @@ class InterviewController extends Controller
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
-        });
+        });*/
 
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');

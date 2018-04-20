@@ -170,9 +170,10 @@ class ClientBasicinfo extends Ardent
         $query = $query->select('client_basicinfo.description as cabout');
         $response = $query->get();
 
+
         $client = array();
         foreach ($response as $k=>$v){
-            $client['cabout'] = $v->cabout;
+            $client['cabout'] = strip_tags($v->cabout);
         }
 
         return $client;

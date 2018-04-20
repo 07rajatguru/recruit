@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Interview</h2>
+                <h2>Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
 
@@ -74,8 +74,11 @@
                 format: "dd-mm-yyyy",
                 autoclose: true
             });
+
             var table = jQuery('#interview_table').DataTable( {
-                responsive: true
+                responsive: true,
+                 "pageLength": 50,
+                stateSave: true
             } );
             new jQuery.fn.dataTable.FixedHeader( table );
         });

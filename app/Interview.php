@@ -78,7 +78,7 @@ class Interview extends Model
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
             'job_openings.posting_title as posting_title');
-        $query = $query->orderby('interview.id','desc');
+        $query = $query->orderby('interview.interview_date','desc');
 
         if($all==0){
             $query = $query->where('interviewer_id',$user_id);
