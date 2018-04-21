@@ -47,7 +47,15 @@
         <tbody>
             
             @foreach($leads as $key=>$value)
-            <tr>
+            <?php
+            if($value['convert_client'] == 1) {
+                $color='#32CD32';
+            }
+            else{
+                $color='';
+            }
+                 ?>
+            <tr style="background-color: {{$color}}">
                 <td>{{ ++$i }}</td>
                  <td>
                     <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
