@@ -55,7 +55,7 @@
                 $color='';
             }
                  ?>
-            <tr style="background-color: {{$color}}">
+            <tr >
                 <td>{{ ++$i }}</td>
                  <td>
                     <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
@@ -66,7 +66,7 @@
                     @endif
                 </td>
                 
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['name'] }}</td>
+                <td style="background-color:{{$color}};white-space: pre-wrap; word-wrap: break-word;">{{ $value['name'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] }}</td>
                 <td>{{ $value['mail'] }}</td>
                 <td>{{ $value['mobile'] }}</td>
