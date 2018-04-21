@@ -78,7 +78,7 @@
             var table = jQuery('#interview_table').DataTable( {
                 responsive: true,
                  "pageLength": 50,
-                stateSave: true
+
             } );
             new jQuery.fn.dataTable.FixedHeader( table );
         });
