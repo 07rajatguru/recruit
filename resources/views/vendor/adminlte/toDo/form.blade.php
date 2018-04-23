@@ -44,13 +44,13 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
 
-                    <div class="form-group {{ $errors->has('owner') ? 'has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('assigned_by') ? 'has-error' : '' }}">
                         <strong>Task Owner: <span class = "required_fields">*</span> </strong>
-                        {!! Form::text('owner', \Auth::user()->name, array('id'=>'owner','placeholder' => 'Owner','class' => 'form-control', 'tabindex' => '0', 'disabled' )) !!}
-                        @if ($errors->has('owner'))
+                        {!! Form::select('assigned_by', $assigned_by, $assigned_by_id, array('id'=>'assigned_by','class' => 'form-control', 'tabindex' => '0' )) !!}
+                        @if ($errors->has('assigned_by'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('owner') }}</strong>
-                                </span>
+                                <strong>{{ $errors->first('assigned_by') }}</strong>
+                            </span>
                         @endif
                     </div>
 
@@ -140,9 +140,19 @@
                                 <strong>{{ $errors->first('description') }}</strong>
                             </span>
                         @endif
-                    </div>
+                    </div>                    
 
-                    
+                    {{-- <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group {{ $errors->has('assigned_by') ? 'has-error' : '' }}">
+                            <strong>Assigned By:</strong>
+                            {!! Form::select('assigned_by', $assigned_by, $assigned_by_id, array('id'=>'assigned_by','class' => 'form-control', 'tabindex' => '6')) !!}
+                            @if ($errors->has('assigned_by'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('assigned_by') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div> --}}
 
 
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
@@ -212,6 +222,7 @@
                 format: "DD-MM-YYYY HH:mm:ss"
             });
 //            $('#typeList').select2();
+              $('#assigned_by').select2();
 
 
             $("#users_all").click(function () {

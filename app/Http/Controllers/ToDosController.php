@@ -240,6 +240,8 @@ class ToDosController extends Controller
         $viewVariable['priority'] = $priority;
         $viewVariable['reminder'] = $reminder;
         $viewVariable['selected_users'] = $selected_users;
+        $viewVariable['assigned_by'] = $users;
+        $viewVariable['assigned_by_id'] = $user_id;
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
         $viewVariable['status_id'] = $yet_to_start;
@@ -253,6 +255,7 @@ class ToDosController extends Controller
 
         $dateClass = new Date();
 
+        $task_owner = $request->assigned_by;
         $subject = $request->subject;
         $candidate = $request->candidate_id;
         $due_date = $request->due_date;
@@ -265,10 +268,11 @@ class ToDosController extends Controller
         $description = $request->description;
         $users = $request->user_ids;
         $reminder = $request->reminder;
+      //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
         $toDos->subject = $subject;
-        $toDos->task_owner = $user_id;
+        $toDos->task_owner = $task_owner;
         $toDos->due_date = $formattedDueDate;
         $toDos->candidate = $candidate;
         $toDos->status = $status;
@@ -277,6 +281,7 @@ class ToDosController extends Controller
         $toDos->reminder = $reminder;
         $toDos->priority = $priority;
         $toDos->description = $description;
+        //$toDos->assigned_by = $assigned_by;
 
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
@@ -336,6 +341,8 @@ class ToDosController extends Controller
     public function edit($id)
     {
         $dateClass = new Date();
+        $user = \Auth::user();
+        $user_id = $user->id;
 
         $toDos = ToDos::find($id);
 
@@ -359,6 +366,7 @@ class ToDosController extends Controller
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
+        $viewVariable['task_owner'] = $toDos->task_owner;
         $viewVariable['candidate'] = $candidate;
         $viewVariable['client'] = array();
         $viewVariable['status'] = $status;
@@ -366,6 +374,8 @@ class ToDosController extends Controller
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
         $viewVariable['reminder'] = $reminder;
+        $viewVariable['assigned_by'] = $users;
+        $viewVariable['assigned_by_id'] = $toDos->task_owner;
         $viewVariable['action'] = 'edit';
         $viewVariable['selected_users'] = $selected_users;
        // $viewVariable['selected_typelist'] = $selected_typelist;
@@ -383,6 +393,7 @@ class ToDosController extends Controller
 
         $dateClass = new Date();
 
+        $task_owner = $request->get('assigned_by');
         $subject = $request->get('subject');
         $candidate = $request->get('candidate_id');
         //$due_date = $request->get('due_date');
@@ -394,9 +405,12 @@ class ToDosController extends Controller
         $priority = $request->get('priority');
         $description = $request->get('description');
         $reminder = $request->get('reminder');
+       // $assigned_by = $request->get('assigned_by');
         $users = $request->user_ids;
         
         $toDos = ToDos::find($id);
+        if(isset($task_owner))
+            $toDos->task_owner = $task_owner;
         if(isset($subject))
             $toDos->subject = $subject;
         if(isset($candidate))
@@ -413,6 +427,8 @@ class ToDosController extends Controller
             $toDos->reminder = $reminder;
         if(isset($description))
             $toDos->description = $description;
+       /* if(isset($assigned_by))
+            $toDos->assigned_by =$assigned_by;*/
 
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
