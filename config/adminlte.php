@@ -237,6 +237,16 @@ return [
                         'url'  => 'bm',
                         'icon' => 'list',
                     ],
+                    [
+                        'text' => 'CANCEL BNM',
+                        'url'  => 'bnm/cancel',
+                        'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'CANCEL BM',
+                        'url'  => 'bm/cancel',
+                        'icon' => 'list',
+                    ],
 
                 ],
             ],

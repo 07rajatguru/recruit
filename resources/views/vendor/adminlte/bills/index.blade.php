@@ -11,7 +11,15 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>{{$title}}</h2>
+                @if($cancel_bill == 0)
+                  <h2>{{$title}} ({{$count}})</h2>
+                @else
+                  @if($cancel_bnm == 1)
+                    <h2>Cancel BNM ({{$count}})</h2>
+                  @else
+                    <h2>Cancel BM ({{$count}})</h2>
+                  @endif
+                @endif
             </div>
 
             @if($title=="Bills Not Made")
@@ -71,12 +79,18 @@
                             <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
                              @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
                             <a class="fa fa-circle" title="show" href="{{ route('bnm.show',$value['id']) }}"></a>
+                           <!--  <a class="fa fa-close" title="Cancel BNM" href="{{ route('bnm.cancel',$value['id']) }}"></a> -->
+                           @if($value['cancel_bill']==0)
+                            @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                           @endif
 
                             @if($value['status']==0)
+                              @if($value['cancel_bill']!=1)
                             <!-- BM will be generated after date of joining -->
                                 @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
                                   <a class="fa fa-square"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
                                 @endif
+                              @endif  
                             @endif
 
                         @endif
@@ -85,6 +99,9 @@
                     @if($title=="Bills Made")
                         @if($access)
                                 <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+                                @if($value['cancel_bill']==0)
+                                  @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                                @endif
                         @endif
                     @endif
 

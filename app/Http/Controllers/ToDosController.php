@@ -179,7 +179,9 @@ class ToDosController extends Controller
 
         $status = Status::getStatusArray();
 
-        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin','status'));
+        $count = sizeof($todos);
+
+        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin','status','count'));
 
     }
 
@@ -504,7 +506,8 @@ class ToDosController extends Controller
             $todos = ToDos::getCompleteTodos($todo_ids);
         }
 
-        return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id'));
+        $count = sizeof($todos);
+        return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id','count'));
 
     }
 
@@ -525,7 +528,9 @@ class ToDosController extends Controller
             $todos = ToDos::getMyTodos($todo_ids);
         }
 
-        return view('adminlte::toDo.mytask', array('todos' => $todos),compact('todo_status','user_id'));
+        $count = sizeof($todos);
+
+        return view('adminlte::toDo.mytask', array('todos' => $todos),compact('todo_status','user_id','count'));
     }
 
     public function status(Request $request){

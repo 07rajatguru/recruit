@@ -699,9 +699,19 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'BillsController@index'
     ]);
 
+    Route::get('bnm/cancel', [
+        'as' => 'bnm.cancelbnm',
+        'uses' => 'BillsController@cancelbnm'
+    ]);
+
     Route::get('bm', [
         'as' => 'bills.bm',
         'uses' => 'BillsController@billsMade'
+    ]);
+
+    Route::get('bm/cancel', [
+        'as' => 'bills.bmcancel',
+        'uses' => 'BillsController@cancelbm'
     ]);
 
     Route::get('bnm/{id}/edit', [
@@ -732,6 +742,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('bnm/{id}', [
         'as' => 'bnm.destroy',
         'uses' => 'BillsController@delete'
+    ]);
+
+    Route::get('bnm/{id}', [
+        'as' => 'bnm.cancel',
+        'uses' => 'BillsController@cancel'
     ]);
 
     Route::post('bills/downloadexcel', [

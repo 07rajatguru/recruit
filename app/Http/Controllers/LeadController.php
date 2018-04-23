@@ -32,8 +32,10 @@ class LeadController extends Controller
        // print_r($leads);exit;
 
         $lead_count = 0;
+
+        $count = sizeof($leads);
         //$lead = Lead::orderBy('id','DESC')->paginate(50);
-        return view('adminlte::lead.index',compact('leads','lead_count'));
+        return view('adminlte::lead.index',compact('leads','lead_count','count'));
 
     }
 

@@ -13,7 +13,7 @@
 
             <div class="pull-left">
 
-                <h2>Completed To Do's</h2>
+                <h2>Completed To Do's ({{$count}})</h2>
 
             </div>
 
