@@ -472,10 +472,10 @@ class BillsController extends Controller
         $bill->job_id = $job_id;
         $bill->candidate_id = $candidate_id;
 
-        /*if(isset($input->percentage_charged) && $input->percentage_charged!='')
-            $bill->percentage_charged = $input->percentage_charged;
+        if(isset($percentage_charged) && $percentage_charged!='')
+            $bill->percentage_charged = $percentage_charged;
         else
-            $bill->percentage_charged = '';*/
+            $bill->percentage_charged = 0;
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
 
