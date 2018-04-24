@@ -8,6 +8,7 @@ use App\BillsEffort;
 use App\CandidateBasicInfo;
 use App\ClientBasicinfo;
 use App\JobOpen;
+use App\JobCandidateJoiningdate;
 use Illuminate\Http\Request;
 use App\Date;
 use App\User;
@@ -353,6 +354,12 @@ class BillsController extends Controller
 
         }
 
+        $candidatejoindate = new JobCandidateJoiningdate();
+        $candidatejoindate->job_id = $job_id;
+        $candidatejoindate->candidate_id = $candidate_id;
+        $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
+        $candidatejoindate->save();
+
         return redirect()->route('bnm.index')->with('success', 'Bills Created Successfully');
     }
 
@@ -608,6 +615,12 @@ class BillsController extends Controller
              return redirect('bnm/'.$id.'/edit');
             }
         }
+
+        $candidatejoindate = new JobCandidateJoiningdate();
+        $candidatejoindate->job_id = $job_id;
+        $candidatejoindate->candidate_id = $candidate_id;
+        $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
+        $candidatejoindate->save();
 
         if($status == 1){
             return redirect()->route('bills.bm')->with('success', 'BM Updated Successfully');
