@@ -13,7 +13,7 @@ class ChangeBillCancel extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `bills` CHANGE `cancel_bill` `cancel_bill` INT(11) NULL DEFAULT '0';");
+        //DB::statement("ALTER TABLE `bills` CHANGE `cancel_bill` `cancel_bill` INT(11) NULL DEFAULT '0';");
     }
 
     /**
@@ -23,6 +23,6 @@ class ChangeBillCancel extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE `bills` CHANGE `cancel_bill` `cancel_bill` INT(11) NULL;");
+       // DB::statement("ALTER TABLE `bills` CHANGE `cancel_bill` `cancel_bill` INT(11) NULL;");
     }
 }
