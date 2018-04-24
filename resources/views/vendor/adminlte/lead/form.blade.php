@@ -73,8 +73,8 @@
 
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>Hr/coordinator name:<span class = "required_fields">*</span></strong>
-                                    {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Hr/coordinator Name','class' => 'form-control')) !!}
+                                <strong>Contact Point:<span class = "required_fields">*</span></strong>
+                                    {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Contact Point','class' => 'form-control')) !!}
                            </div>
                         </div>
 
@@ -93,8 +93,8 @@
 
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>Mobile number:<span class = "required_fields">*</span></strong>
-                                     {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control')) !!}
+                                <strong>Mobile:<span class = "required_fields">*</span></strong>
+                                     {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control')) !!}
                            </div>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6">

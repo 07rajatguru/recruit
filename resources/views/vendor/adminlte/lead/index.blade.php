@@ -26,9 +26,9 @@
                 <th>No</th>
                 <th>Action</th>
                 <th>Company Name</th>
-                <th>Hr/coordinator name</th>
+                <th>Contact Point</th>
                 <th>Email</th>
-                <th>Mobile number</th>
+                <th>Mobile</th>
                 <th>City</th>
                 <th>Referred By</th>
                 <th>Website</th>
