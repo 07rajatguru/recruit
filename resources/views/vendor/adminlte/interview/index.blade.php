@@ -46,9 +46,19 @@
         <?php $i=0; ?>
         <tbody>
         @foreach ($interViews as $interView)
+        <?php
+            if(date("Y-m-d") == date("Y-m-d",strtotime($interView->interview_date)))
+                $color = '#32CD32';
+            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView->interview_date)))
+                $color = '#B1A0C7';
+            elseif(date("Y-m-d") > date("Y-m-d",strtotime($interView->interview_date)))
+                $color = '';
+            else
+                $color = '#FABF8F';
+         ?>
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $interView->interview_name or '' }}</td>
+                <td style="background-color: {{ $color }}">{{ $interView->interview_name or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
                 <td>{{ $interView->candidate_fname }}</td>
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
