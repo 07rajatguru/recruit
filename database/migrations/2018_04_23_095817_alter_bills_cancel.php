@@ -13,7 +13,7 @@ class AlterBillsCancel extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE bills ADD COLUMN cancel_bill int(11) NULL");
+        DB::statement("ALTER TABLE bills ADD COLUMN cancel_bill int(11) NOT NULL DEFAULT '0';");
     }
 
     /**
