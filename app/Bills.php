@@ -94,6 +94,10 @@ class Bills extends Model
     public static function getAllBills($status=0,$all=0,$user_id=0){
         $date_class = new Date();
 
+        $cancel_bill = 1;
+
+        $cancel = array($cancel_bill);
+
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
@@ -107,6 +111,7 @@ class Bills extends Model
         }
 
         $bills_query = $bills_query->where('status',$status);
+        $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
 
         $bills_res = $bills_query->get();
 
@@ -134,6 +139,75 @@ class Bills extends Model
             $bills[$i]['display_name'] = $value->display_name;
             $bills[$i]['city'] = $value->city;
             $bills[$i]['cname'] = $value->full_name;
+            $bills[$i]['cancel_bill'] = $value->cancel_bill;
+
+            // get employee efforts
+            $efforts = Bills::getEmployeeEffortsNameById($value->id);
+            $efforts_str = '';
+            foreach ($efforts as $k=>$v){
+                if($efforts_str==''){
+                    $efforts_str = $k .'('.(int)$v . '%)';
+                }
+                else{
+                    $efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                }
+            }
+            $bills[$i]['efforts'] = $efforts_str;
+            $i++;
+        }
+
+        return $bills;
+    }
+
+    public static function getCancelBills($status=0,$all=0,$user_id=0){
+        $date_class = new Date();
+
+        $cancel_bill = 1;
+
+        $cancel = array($cancel_bill);
+
+        $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
+        ,'candidate_basicinfo.lname');
+
+        if($all==0){
+            $bills_query = $bills_query->where('uploaded_by',$user_id);
+        }
+
+        $bills_query = $bills_query->where('status',$status);
+        $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
+
+        $bills_res = $bills_query->get();
+
+        $bills = array();
+        $i = 0 ;
+        foreach ($bills_res as $key=>$value){
+            $bills[$i]['id'] = $value->id;
+            $bills[$i]['company_name'] = $value->company_name;
+            $bills[$i]['candidate_name'] = $value->candidate_name;
+            $bills[$i]['candidate_contact_number'] = $value->candidate_contact_number;
+            $bills[$i]['designation_offered'] = $value->designation_offered;
+            $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+            $bills[$i]['job_location'] = $value->job_location;
+            $bills[$i]['fixed_salary'] = $value->fixed_salary;
+            $bills[$i]['percentage_charged'] = $value->percentage_charged;
+            $bills[$i]['source'] = $value->source;
+            $bills[$i]['client_name'] = $value->client_name;
+            $bills[$i]['client_contact_number'] = $value->client_contact_number;
+            $bills[$i]['client_email_id'] = $value->client_email_id;
+            $bills[$i]['address_of_communication'] = $value->address_of_communication;
+            $bills[$i]['user_name'] = $value->name;
+            $bills[$i]['status'] = $value->status;
+            $bills[$i]['uploaded_by'] = $value->uploaded_by;
+            $bills[$i]['posting_title'] = $value->posting_title;
+            $bills[$i]['display_name'] = $value->display_name;
+            $bills[$i]['city'] = $value->city;
+            $bills[$i]['cname'] = $value->full_name;
+            $bills[$i]['cancel_bill'] = $value->cancel_bill;
 
             // get employee efforts
             $efforts = Bills::getEmployeeEffortsNameById($value->id);
