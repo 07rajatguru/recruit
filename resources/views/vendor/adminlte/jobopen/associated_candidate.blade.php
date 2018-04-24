@@ -17,6 +17,43 @@
 
             <div class="pull-right">
                 <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
+               {{-- <ul class="nav navbar-nav">
+                    <li class="dropdown messages-menu">
+                        <a class="btn bg-red" class="dropdown-toggle" style="line-height: 3px " data-toggle="dropdown" aria-expanded="false">More Option</a>
+                      @foreach ($candidates as $candidate)
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
+                                        <ul class="menu" style="overflow: hidden; width: 100%;">
+                                            <li>
+                                                <a class="schedule-interview" data-toggle="modal" href="#modal-schedule-interview" >Schedule Interview</a>
+                                            </li>
+                                            <li>
+                                                <a class="update-status-modal" data-toggle="modal" href="#modal-update-status">
+                                                    Update Status
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="joining-date" data-toggle="modal" href="#modal-joining-date" >Add Joining Date</a>
+                                            </li>
+                                            @if(isset($access) && $access==true)
+                                                <li>
+                                                    <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
+                                                </li>
+                                                
+                                                    <li>
+                                                        <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo" >Undo Shortlisted Candidate</a>
+                                                    </li>                                            
+                                                
+                                            @endif
+                                        </ul>
+                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+            @endforeach--}}
             </div>
 
             <!-- Schedule interview popup starts -->
@@ -230,7 +267,7 @@
 
     <table class="table table-bordered">
         <tr>
-           {{-- <th>{{ Form::checkbox('candidate[]',0 ,null,array('id'=>'allcb')) }}</th>--}}
+           {{-- <th>{{ Form::checkbox('candidate[]',0 ,null,array('id'=>'allcb')) }}</th> --}}
             <th>Action</th>
             <th>Candidate Name</th>
             <th>Candidate Owner</th>
@@ -245,6 +282,7 @@
             $color='';
                  ?>
             <tr style="background-color: {{$color}}">
+             {{--   <td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td> --}}
                 <td>
                     <ul class="nav navbar-nav">
                         <li class="dropdown messages-menu">
@@ -292,7 +330,7 @@
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
-                {{--<td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td>--}}
+                
                 @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
@@ -312,7 +350,7 @@
 
     </table>
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
-   `
+   
 @stop
 
 
@@ -456,6 +494,30 @@
             }
         }
 
-        
+       /* function associated_candidates_get(jobid){
+            var candidate_ids = new Array();
+            var token = $("#token").val();
+
+            if(jobid>0){
+
+                $("input:checkbox[name=candidate]:checked").each(function(){
+                    candidate_ids.push($(this).val());
+                });
+
+                var url = '/jobs/associated_candidates_get';
+
+                if(candidate_ids.length > 0){
+                    var form = $('<form action="' + url + '" method="get">' +
+                            '<input type="hidden" name="_token" value="'+token+'" />' +
+                            '<input type="text" name="jobid" value="'+jobid+'" />' +
+                            '<input type="text" name="candidate_ids" value="'+candidate_ids+'" />' +
+                            '</form>');
+
+                    $('body').append(form);
+                    form.submit();
+                }
+            }
+        }*/
+
     </script>
 @endsection
