@@ -630,14 +630,20 @@ class BillsController extends Controller
     public function cancel($id){
         
         $cancel_bill =1;
-
+        $bills = array();
         $bill = Bills::find($id);
+        $bills['status'] = $bill->status;
         $bill->cancel_bill = $cancel_bill;
         $bill_cancel = $bill->save();
 
         //print_r($bill_cancel);exit;
 
-        return redirect()->route('bnm.index')->with('success','Bill Cancel Successfully');
+        if($bills['status'] == 1){
+            return redirect()->route('bills.bm')->with('success', 'BM Updated Successfully');
+        }
+        else{
+            return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
+        }
 
     }
 

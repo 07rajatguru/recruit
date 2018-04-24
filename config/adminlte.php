@@ -238,12 +238,12 @@ return [
                         'icon' => 'list',
                     ],
                     [
-                        'text' => 'CANCEL BNM',
+                        'text' => 'Cancel BNM',
                         'url'  => 'bnm/cancel',
                         'icon' => 'list',
                     ],
                     [
-                        'text' => 'CANCEL BM',
+                        'text' => 'Cancel BM',
                         'url'  => 'bm/cancel',
                         'icon' => 'list',
                     ],
