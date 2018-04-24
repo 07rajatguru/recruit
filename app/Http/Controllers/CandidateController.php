@@ -490,6 +490,7 @@ class CandidateController extends Controller
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
                     $jobopening->shortlisted = 0;
+                    $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
 
@@ -764,6 +765,7 @@ class CandidateController extends Controller
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
                     $jobopening->shortlisted = 0;
+                    $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
             } 

@@ -1135,6 +1135,7 @@ class JobOpenController extends Controller
             $job_associate_candidate->status_id = $status_id;
             $job_associate_candidate->created_at = time();
             $job_associate_candidate->updated_at = time();
+            $job_associate_candidate->date = date("Y-m-d h:i:s");
             $job_associate_candidate->shortlisted = 0;
             $job_associate_candidate->save();
         }
