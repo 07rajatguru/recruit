@@ -109,6 +109,7 @@ class Interview extends Model
 
         $query = $query->where('interview_date','>',"$from_date");
         $query = $query->where('interview_date','<',"$to_date");
+        $query = $query->orderby('interview.interview_date','asc');
 
         $response = $query->get();
 
