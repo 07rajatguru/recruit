@@ -133,6 +133,8 @@ class InterviewController extends Controller
 
         $interviewStored = $interview->save();
 
+
+
 /*        $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
 
@@ -277,6 +279,52 @@ class InterviewController extends Controller
         }
 
         $interviewUpdated = $interview->save();
+
+        // Interview Schedule Mail
+
+       /* $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+        $to_address = 'meet@trajinfotech.com';
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to'] = $to_address;
+
+        // Candidate details
+
+        $candidate_id = $request->get('candidate_id');
+        $candidate_response  = CandidateBasicInfo::find($candidate_id);
+        $cname = $candidate_response->full_name;
+        $ccity = $candidate_response->city;
+        $cmobile = $candidate_response->mobile;
+        $cemail = $candidate_response->email;
+
+        // job Details
+
+        $posting_title = $request->get('posting_title');
+        $job_details = JobOpen::getJobById($posting_title);
+
+        $input['cname'] = $cname;
+        $input['ccity'] = $ccity;
+        $input['cmobile'] = $cmobile;
+        $input['cemail'] = $cemail;
+        $input['city'] = $job_details['city'];
+        $input['company_name'] = $job_details['company_name'];
+        $input['company_url'] =$job_details['company_url'];
+        $input['client_desc'] = $job_details['client_desc'];
+        $input['job_designation'] = $job_details['posting_title'];
+        $input['job_location'] = $job_details['job_location'];
+        $input['job_description'] = $job_details['job_description'];
+        $input['interview_date'] = $job_details['interview_date'];
+        $input['interview_day'] = '';
+        $input['interview_time'] = $job_details['interview_time'];
+        $input['interview_location'] = $job_details['interview_location'];
+        $input['interview_type'] =$job_details['interview_type'];
+
+        \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->subject('Interview Schedule for '.$input['company_name'].' position in '. $input['city']);
+        });*/
 
         // sent mail to logged in user about interview details
 
