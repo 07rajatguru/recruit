@@ -40,13 +40,16 @@ class UserController extends Controller
         $reports_to = User::getUserArray($user_id);
         $reports_to = array_fill_keys(array(''),'Select Reports to')+$reports_to;
 
+        $floor_incharge = User::getUserArray($user_id);
+        $floor_incharge = array_fill_keys(array(''),'Select Floor Incharge')+$floor_incharge;
+
         $companies = Companies::getCompanies();
         $companies = array_fill_keys(array(''),'Select Company')+$companies;
 
         $type  = User::getTypeArray();
         $type = array_fill_keys(array(''),'Select type')+$type;
 
-        return view('adminlte::users.create',compact('roles', 'reports_to','companies','type'));
+        return view('adminlte::users.create',compact('roles', 'reports_to','companies','type','floor_incharge'));
     }
 
 
@@ -123,8 +126,12 @@ class UserController extends Controller
         $reports_to = User::getUserArray($id);
         $reports_to = array_fill_keys(array(''),'Select Reports to')+$reports_to;
 
+        $floor_incharge = User::getUserArray($id);
+        $floor_incharge = array_fill_keys(array(''),'Select Floor Incharge')+$floor_incharge;
+
         $userRole = $user->roles->pluck('id','id')->toArray();
         $userReportsTo = $user->reports_to;
+        $userFloorIncharge = $user->floor_incharge;
 
         $companies = Companies::getCompanies();
         $companies = array_fill_keys(array(''),'Select Company')+$companies;
@@ -134,7 +141,7 @@ class UserController extends Controller
       
     
 
-        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','companies','type'));
+        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge'));
 
     }
 
@@ -174,6 +181,12 @@ class UserController extends Controller
             $input = array_except($input,array('reports_to'));
         }
 
+        if(!empty($input['floor_incharge'])){
+            $input['floor_incharge'] = $input['floor_incharge'];
+        }else{
+            $input = array_except($input,array('floor_incharge'));
+        }
+
         $user = User::find($id);
         $user->update($input);
         DB::table('role_user')->where('user_id',$id)->delete();
@@ -182,7 +195,7 @@ class UserController extends Controller
             $user->attachRole($value);
         }
 
-
+        
         $type = $request->input('type');     
 
        /* $user = User::find($id);

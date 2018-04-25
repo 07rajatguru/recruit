@@ -89,6 +89,16 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('floor_incharge') ? 'has-error' : '' }}">
+                                <strong>Floor Incharge :</strong>
+                                {!! Form::select('floor_incharge', $floor_incharge,null, array('id'=>'floor_incharge','class' => 'form-control')) !!}
+                                @if ($errors->has('floor_incharge'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('floor_incharge') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
                                 <strong>Select Compnay :</strong>
                                 {!! Form::select('company_id', $companies,null, array('id'=>'company_id','class' => 'form-control')) !!}

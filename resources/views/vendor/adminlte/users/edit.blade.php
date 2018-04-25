@@ -116,6 +116,19 @@
 
             <div class="form-group">
 
+                <strong>Floor Incharge :</strong>
+
+                {!! Form::select('floor_incharge', $floor_incharge,isset($userFloorIncharge) ? $userFloorIncharge : null, array('id'=>'floor_incharge','class' => 'form-control')) !!}
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+
+            <div class="form-group">
+
                 <strong>Select Company :</strong>
 
                 {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control')) !!}
