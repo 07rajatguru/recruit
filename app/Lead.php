@@ -75,5 +75,20 @@ class Lead extends Model
 
         return $response;
     }
+
+    /*public static function getDailyReportLead(){
+
+        $from_date = date("Y-m-d 00:00:00");
+        $to_date = date("Y-m-d 23:59:59");
+        
+        $query = Lead::query();
+        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->where('created_at','>',"$from_date");
+        $query = $query->where('created_at','<',"$to_date");
+
+        $lead_res = $query->get();
+
+        return $lead_res;
+    }*/
 }
 

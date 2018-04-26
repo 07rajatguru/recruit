@@ -1,66 +1,39 @@
-@extends('adminlte::emails.emailMaster')
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Adler Talent</title>
 
-@section('title')
-    <p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Daily report from <b>{!! $fromDate !!}</b> of <b>{!! $toDate !!}</b>.</p>
-@stop
+    @yield('style')
+</head>
 
-@section('style')
-    <style>
-        .table-bordered {
-            border: 1px solid #ddd;
-        }
-        .table {
-            width: 100%;
-            max-width: 100%;
-            margin-bottom: 20px;
-        }
-        table {
-            border-spacing: 0;
-            border-collapse: collapse;
-        }
+<body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
+            <u><b><p>No of CVs Associated : {{$associate_count}}</p></b></u>
+            <table width="100%" cellpadding="0" cellspacing="0" border="1" border-color="#000000">
+                <tr style="background-color: #C4D79B">
+                    <td align="center"><b>Sr.No.</b></td>
+                    <td align="center"><b>Date</b></td>
+                    <td align="center"><b>Position Name</b></td>
+                    <td align="center"><b>Company</b></td>
+                    <td align="center"><b>Location</b></td>
+                    <td align="center"><b>No of resumes<br/>associated</b></td>
+                    <td align="center"><b>Status</b></td>
+                </tr>
 
-        .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
-            border: 1px solid #ddd;
-        }
-
-        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-            padding: 8px;
-            line-height: 1.42857143;
-            vertical-align: top;
-            border-top: 1px solid #ddd;
-        }
-    </style>
-@endsection
-
-@section('description')
-    <table class="table table-bordered">
-        <tr>
-            <th>Report Date</th>
-            <th>No</th>
-            <th>Position Name</th>
-            <th>Company</th>
-            <th>Location</th>
-            <th>Number of CVs sent to TL / Supervisor</th>
-            <th>Number of Cvs reached to client after screening</th>
-            <th>Created by</th>
-            <th>Status</th>
-        </tr>
-
-        <?php $i=0; ?>
-
-        @foreach ($dailyReports as $dailyReport)
-            <tr>
-                <td>{{ $dailyReport->report_date or ''}}</td>
-                <td>{{ ++$i }}</td>
-                <td>{{ $dailyReport->position_name or '' }}</td>
-                <td>{{ $dailyReport->client_name or '' }}</td>
-                <td>{{ $dailyReport->location or ''}}</td>
-                <td>{{ $dailyReport->cvs_to_tl or ''}}</td>
-                <td>{{ $dailyReport->cvs_to_client or ''}}</td>
-                <td>{{ $dailyReport->user_name or '' }}</td>
-                <td>{{ $dailyReport->candidate_status or '' }}</td>
-            </tr>
-        @endforeach
-
-    </table>
-@endsection
+                <?php $i=0; ?>
+                @foreach($associate_daily as $key=>$value)
+                <tr>
+                    <td align="center">{{ ++$i }}</td>
+                    <td align="center">{{date('jS F,y') }}</td>
+                    <td align="center">{{$value['posting_title']}}</td>
+                    <td align="center">{{$value['company']}}</td>
+                    <td align="center">{{$value['location']}}</td>
+                    <td align="center">{{$value['associate_count'] or ''}}</td>
+                    <td align="center">{{$value['status']}}</td>
+                </tr> 
+                @endforeach
+            </table>
+            <u><b><p>No of Interviews Scheduled : {{''}}</p></b></u>
+            <u><b><p>No of Leads Added : {{$lead_count}}</p></b></u>
+</body>
+</html>
