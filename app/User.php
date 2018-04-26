@@ -215,5 +215,31 @@ class User extends Authenticatable
         return $list;
     }
 
+    public static function getOtherUsers($user_id=0){
+
+        $superadmin_role_id =  getenv('SUPERADMIN');
+        $superadmin = array($superadmin_role_id);
+        $query = User::query();
+        $query = $query->join('role_user','role_user.user_id','=','users.id');
+        $query = $query->select('users.*','role_user.role_id as role_id');
+        $query = $query->whereNotIn('role_id',$superadmin);
+
+        if($user_id>0){
+            $query = $query->where('id','=',$user_id);
+        }
+
+        $user_response = $query->get();
+
+        $list = array();
+        if(sizeof($query)>0){
+            foreach ($user_response as $key => $value) {
+                $list[$value->name]= "";
+            }
+        }
+
+//        print_r($user_response);exit;
+        return $list;
+    }
+
 
 }

@@ -197,10 +197,10 @@ class HomeController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $users = User::getUsers();
+            $users = User::getOtherUsers();
         }
         else{
-            $users = User::getUsers($loggedin_userid);
+            $users = User::getOtherUsers($loggedin_userid);
         }
 
         $list = array();
