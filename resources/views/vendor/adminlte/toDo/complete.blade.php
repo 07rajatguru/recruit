@@ -71,7 +71,7 @@
 
                 <td>{{ ++$i }}</td>
 
-                <td>{{ $todo['subject'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $todo['subject'] }}</td>
 
                 <td>{{ $todo['am_name'] }}</td>
 
