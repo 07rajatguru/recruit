@@ -42,7 +42,7 @@ class JobAssociateCandidates extends Model
         return $response;
     }
 
-/*    public static function getDailyReportAssociate(){
+    public static function getDailyReportAssociate(){
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -52,7 +52,7 @@ class JobAssociateCandidates extends Model
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         //$query = $query->join('interview','interview.posting_title','=','job_openings.id');
-        $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.job_id) as count"),'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location');
+        $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),*/'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location');
         $query = $query->where('date','>',"$from_date");
         $query = $query->where('date','<',"$to_date");
 
@@ -66,12 +66,12 @@ class JobAssociateCandidates extends Model
             $response[$i]['posting_title'] = $value->posting_title;
             $response[$i]['company'] = $value->company;
             $response[$i]['location'] = $value->location;
-            //$response[$i]['associate_count'] = $value->count;
+            $response[$i]['associate_candidate_count'] = $value->count;
             $response[$i]['status'] = $status;
             $i++;
         }
 
         //print_r($response);exit;
         return $response;   
-    }*/
+    }
 }

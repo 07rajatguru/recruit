@@ -76,7 +76,7 @@ class Lead extends Model
         return $response;
     }
 
-    /*public static function getDailyReportLead(){
+    public static function getDailyReportLead(){
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -89,6 +89,6 @@ class Lead extends Model
         $lead_res = $query->get();
 
         return $lead_res;
-    }*/
+    }
 }
 

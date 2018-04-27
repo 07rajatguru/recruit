@@ -112,6 +112,17 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'lead.clonestore',
         'uses' => 'LeadController@clonestore',
     ]); 
+
+   /* // Report > Daily , Weekly
+    Route::get('report/daily' ,[
+        'as' => 'report.daily',
+        'uses' => 'ReportController@dailyreport'
+    ]);
+
+    Route::get('report/weekly' ,[
+        'as' => 'report.weekly',
+        'uses' => 'ReportController@weeklyreport'
+    ]);*/
     
     // Admin > Users
     Route::get('users', [

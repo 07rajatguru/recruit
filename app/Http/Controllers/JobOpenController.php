@@ -27,42 +27,6 @@ use Excel;
 
 class JobOpenController extends Controller
 {
-
-    /*public function dailyreport(){
-
-        $from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'meet@trajinfotech.com';
-
-        $input['from_name'] = $from_name;
-        $input['from_address'] = $from_address;
-        $input['to'] = $to_address;
-
-        $associate_daily = JobAssociateCandidates::getDailyReportAssociate();
-        $lead_daily = Lead::getDailyReportLead();
-
-        $associate_count = sizeof($associate_daily);
-        $lead_count = sizeof($lead_daily);
-
-        $input['associate_daily'] = $associate_daily;
-
-        foreach($associate_daily as $key=>$value){
-        $input['associate_count'] = $associate_count;
-        $input['posting_title'] = $value['posting_title'];
-        $input['company'] = $value['company'];
-        $input['location'] = $value['location'];
-        $input['status'] = $value['status'];
-        $input['lead_count'] = $lead_count;
-        }
-
-        /*\Mail::send('adminlte::emails.DailyReport', $input, function ($message) use($input) {
-            $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to'])->subject('Activity Report (Daily Report & Interview Report)');
-        });
-    
-        return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count'));
-    }*/
-
     public function index(Request $request){
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
