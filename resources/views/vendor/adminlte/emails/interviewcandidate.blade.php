@@ -44,7 +44,7 @@
                 <tr>
                     <td>
                         <p><b>Company Name : </b>{{ $company_name }}</p>
-                        <p><b>Company URL: </b>{{ $company_url }}</p>
+                        <p><b>Company URL: </b><a href="{{ $company_url }}">{{ $company_url }}</a></p>
                         <p><b>About Client : </b></p>
                         <p>{{ $client_desc }}</p>
                     </td>
@@ -59,10 +59,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <p><b>Interview Date/Day : </b> {{date('jS F,y',strtotime($interview_date)) }} ({{ date('l',strtotime($interview_day)) }})</p>
+                        <p><b>Interview Date/Day : </b> {{date('jS F,y (l)',strtotime($interview_date)) }}</p>
                         <p><b>Interview Time : </b> {{date('h:i A',strtotime($interview_time))  }}</p>
                         <p><b>Interview Venue : </b></p>
                         <p>{{ $interview_location }}</p>
+                        <p><b>Contact Person :</b>{{$contact_person}}</p>
                     </td>
                 </tr>
                 <tr>

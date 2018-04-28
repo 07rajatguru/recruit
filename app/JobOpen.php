@@ -617,7 +617,7 @@ class JobOpen extends Model
         $job_query = JobOpen::query();
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_query = $job_query->join('interview', 'interview.posting_title','=', 'job_openings.id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person');
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
 
@@ -625,7 +625,7 @@ class JobOpen extends Model
         foreach ($job_response as $k=>$v){
             $response['company_name'] = $v->client_name;
             $response['company_url'] = $v->website;
-            $response['client_desc'] = $v->client_desc;
+            $response['client_desc'] = strip_tags($v->client_desc);
             $response['posting_title'] = $v->posting_title;
             $location ='';
             if($v->city!=''){
@@ -645,7 +645,8 @@ class JobOpen extends Model
             }
             $response['city'] = $v->city;
             $response['job_location'] = $location;
-            $response['job_description'] = $v->job_description;
+            $response['contact_person'] = $v->contact_person;
+            $response['job_description'] = strip_tags($v->job_description);
             $datearray = explode(' ', $v->date);
             $response['interview_date'] = $datearray[0];
             $response['interview_time'] = $datearray[1];
