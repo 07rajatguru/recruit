@@ -78,6 +78,9 @@ class Lead extends Model
 
     public static function getDailyReportLead(){
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
         
@@ -85,6 +88,7 @@ class Lead extends Model
         $query = $query->select('lead_management.*','lead_management.created_at');
         $query = $query->where('created_at','>',"$from_date");
         $query = $query->where('created_at','<',"$to_date");
+        $query = $query->where('lead_management.account_manager_id','=',$user_id);
 
         $lead_res = $query->get();
 

@@ -44,6 +44,9 @@ class JobAssociateCandidates extends Model
 
     public static function getDailyReportAssociate(){
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
         $status = 'CVs sent';
@@ -52,9 +55,10 @@ class JobAssociateCandidates extends Model
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         //$query = $query->join('interview','interview.posting_title','=','job_openings.id');
-        $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),*/'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location');
+        $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),*/'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location','job_openings.hiring_manager_id as user_ids');
         $query = $query->where('date','>',"$from_date");
         $query = $query->where('date','<',"$to_date");
+        $query = $query->where('job_openings.hiring_manager_id','=',$user_id);
 
         $associate_res = $query->get();
 
