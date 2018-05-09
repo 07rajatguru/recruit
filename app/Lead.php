@@ -40,6 +40,18 @@ class Lead extends Model
         return $typeArray;
     }
 
+    public static function getLeadStatus(){
+
+        $statusArray = array('' => 'Select Lead Status');
+        $statusArray['Business Proposal Sent'] = 'Business Proposal Sent';
+        $statusArray['Awaiting requirements'] = 'Awaiting Requirements';
+        $statusArray['follow up in progress'] = 'Follow up in Progress';
+        $statusArray['got the requirements']= 'Got the Requirements';
+        $statusArray['cancel leads']='Cancel Leads';
+       
+        return $statusArray;
+    }
+
     public static function getAllLeads($all=0,$user_id){
 
         $query = Lead::query();

@@ -167,7 +167,7 @@
 
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <strong>Address</strong>
+                                <strong>Address:</strong>
                                     {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()")) !!}
                             </div>
                         </div>
@@ -188,11 +188,18 @@
                         
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>Country</strong>
+                                <strong>Country:</strong>
                                     {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control')) !!}
                             </div>
                         </div>
+
                  </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>Status:</strong>
+                                    {!! Form::select('status',$status, null, array('id'=>'status','placeholder' => 'Country ','class' => 'form-control')) !!}
+                            </div>
+                        </div>
              </div>
          </div>
      </div>

@@ -47,10 +47,11 @@ class LeadController extends Controller
         $generate_lead = '0';
         $leadservices_status=Lead::getLeadService();
         $users=User::getAllUsers();
+        $status = Lead::getLeadStatus();
         $service ='';
         $referredby = $user_id;
 
-        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby'));
+        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status'));
     }
 
  public function store(Request $request){
@@ -110,6 +111,7 @@ class LeadController extends Controller
         $action = 'edit';
         $generate_lead = '0';
         $leadservices_status = Lead::getLeadService();
+        $status = Lead::getLeadStatus();
         $lead = Lead::find($id);
         
         $convert_client = $lead->convert_client;
@@ -126,7 +128,7 @@ class LeadController extends Controller
         ->get();
 
         	        
-	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby'));
+	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status'));
 
 	 }
 	 public function update(Request $request, $id){
