@@ -354,6 +354,9 @@ class BillsController extends Controller
 
         }
 
+        JobCandidateJoiningdate::where('job_id','=',$job_id);
+        JobCandidateJoiningdate::where('candidate_id','=',$candidate_id)->delete();
+
         $candidatejoindate = new JobCandidateJoiningdate();
         $candidatejoindate->job_id = $job_id;
         $candidatejoindate->candidate_id = $candidate_id;
@@ -615,6 +618,9 @@ class BillsController extends Controller
              return redirect('bnm/'.$id.'/edit');
             }
         }
+
+        JobCandidateJoiningdate::where('job_id','=',$job_id);
+        JobCandidateJoiningdate::where('candidate_id','=',$candidate_id)->delete();
 
         $candidatejoindate = new JobCandidateJoiningdate();
         $candidatejoindate->job_id = $job_id;
