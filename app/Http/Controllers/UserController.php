@@ -80,9 +80,13 @@ class UserController extends Controller
         foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
         }
+        $reports_to = $request->input('reports_to');
+        $floor_incharge = $request->input('floor_incharge');
+        $type = $request->input('type');
 
-        $type = $request->input('type');     
-
+        $user->reports_to = $reports_to;
+        $user->floor_incharge = $floor_incharge;
+        $users = $user->save();
 
        /* if(isset($user) && sizeof($user) > 0){
             if(isset($type)){
@@ -195,8 +199,13 @@ class UserController extends Controller
             $user->attachRole($value);
         }
 
-        
-        $type = $request->input('type');     
+        $reports_to = $request->input('reports_to');
+        $floor_incharge = $request->input('floor_incharge');
+        $type = $request->input('type');
+
+        $user->reports_to = $reports_to; 
+        $user->floor_incharge = $floor_incharge;
+        $users = $user->save();    
 
        /* $user = User::find($id);
         if(isset($user) && sizeof($user) > 0){
