@@ -26,10 +26,12 @@
                 </select>
             </div>
 
-            <div class="attendance_submit col-md-2"> <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" /> </div>
+            <div class="attendance_submit col-md-2">
+                <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" />
+            </div>
             <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
             <div class="pull-right col-md-2">
-                <a class="btn btn-success btn-block"" href="{{ route('home.export') }}"> Export</a>
+                <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
             </div>
             <?php   }?>
           
@@ -92,5 +94,21 @@
 
         }
 
+        function export_data() {
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+
+            var url = '/home/export';
+
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="month" value="'+month+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+
+        }
     </script>
 @stop
