@@ -292,8 +292,8 @@
                             <ul class="dropdown-menu">
                                 <li>
                                     <!-- inner menu: contains the actual data -->
-                                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;overflow: auto;">
-                                        <ul class="menu" style="overflow: hidden; width: 100%;">
+                                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
+                                        <ul class="menu" style="overflow: hidden; width: 100%;overflow: auto;">
                                             <li>
                                                 <a class="schedule-interview" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-schedule-interview" >Schedule Interview</a>
                                             </li>
