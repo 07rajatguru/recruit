@@ -117,7 +117,7 @@
 
                                 <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
                                     <strong>Interviewer:</strong>
-                                    {!! Form::select('interviewer_id', $users, null, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5' )) !!}
+                                    {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5' )) !!}
                                     @if ($errors->has('interviewer_id'))
                                         <span class="help-block">
                                 <strong>{{ $errors->first('interviewer_id') }}</strong>

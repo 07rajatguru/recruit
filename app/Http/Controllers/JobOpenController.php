@@ -1194,6 +1194,7 @@ class JobOpenController extends Controller
     public function associatedCandidates($id)
     {
         $user = \Auth::user();
+        $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
 
         $director_role_id = env('DIRECTOR');
@@ -1231,7 +1232,7 @@ class JobOpenController extends Controller
         $users = User::getAllUsers();
         return view('adminlte::jobopen.associated_candidate', array('job_id' => $id, 'posting_title' => $posting_title,
             'message' => '','candidates'=>$candidateDetails ,'candidatestatus'=>$candidateStatus,'type'=>$type,
-            'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type,'access'=>$access));
+            'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type,'access'=>$access,'user_id'=>$user_id));
     }
 
     public function deAssociateCandidates(){
@@ -1340,6 +1341,7 @@ class JobOpenController extends Controller
         $data['comments'] = '';
         $data['posting_title'] =  $request->get('job_id');
         $data['type'] = $request->get('type');
+        $data['about'] = '';
         $data['status'] = $request->get('status');
         $data['interview_owner_id'] = $user_id;
 
