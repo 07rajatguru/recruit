@@ -7,8 +7,7 @@
 @stop
 
 @section('content')
-    <h1>Under Maintenance</h1>
-    {{--<div class="row">
+    <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Candidate Joining This Month ({{ $count }})</h2>
@@ -18,7 +17,7 @@
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
         </div>
-    </div>--}}
+    </div>
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -33,7 +32,7 @@
         </div>
     @endif
 
-    <!-- <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="candidate_table">
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="candidate_table">
         <thead>
             <tr>
                 <th>No</th>
@@ -60,7 +59,7 @@
             </tr>
         @endforeach
         </tbody>
-    </table> -->
+    </table>
 @stop
 
 @section('customscripts')

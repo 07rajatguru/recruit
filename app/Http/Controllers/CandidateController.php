@@ -83,45 +83,17 @@ class CandidateController extends Controller
         $user_obj = new User();
 
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAdmin = $user_obj::isAdmin($role_id);
 
-        if($isSuperAdmin || $isAdmin){
-
-        $month = date('m');
-
-        $candidateJoinDetails = JobCandidateJoiningdate::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id')
-            ->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id')
-            ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
-            ->leftjoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid')
-         //   ->where('hiring_manager_id',$user->id)
-            ->whereRaw('MONTH(joining_date) = ?',[$month])
-            ->orderBy('job_candidate_joining_date.id','desc')
-            ->get();
-
-        $count = sizeof($candidateJoinDetails);
+        if($isSuperAdmin){
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1);
+            $count = sizeof($response);
         }
         else{
-
-        $month = date('m');
-
-        $candidateJoinDetails = JobCandidateJoiningdate::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id')
-            ->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id')
-            ->join('job_visible_users','job_visible_users.job_id','=','job_candidate_joining_date.job_id')
-            ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
-            ->leftjoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid')
-            //->where('hiring_manager_id',$user->id)
-            ->where('user_id',$user->id)
-          //  ->where('candidate_otherinfo.owner_id',$user->id)
-            ->whereRaw('MONTH(joining_date) = ?',[$month])
-            ->orderBy('job_candidate_joining_date.id','desc')
-            ->get();
-
-        $count = sizeof($candidateJoinDetails);   
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0);
+            $count = sizeof($response);
         }
         
-        return view('adminlte::candidate.candidatejoin', array('candidates' => $candidateJoinDetails,'count' => sizeof($candidateJoinDetails)),compact('isSuperAdmin'));   
+        return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count,compact('isSuperAdmin')));
     }
 
     public function create(){
