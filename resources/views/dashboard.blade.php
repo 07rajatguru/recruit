@@ -59,7 +59,7 @@
         <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h3>{{ $candidatejoinCount or 0 }}</h3>
+                    <h3> 0{{-- {{ $candidatejoinCount or 0 }}--}}</h3>
                     <p>Candidate Joining this month</p>
                 </div>
                 <div class="icon">

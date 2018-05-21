@@ -83,8 +83,9 @@ class CandidateController extends Controller
         $user_obj = new User();
 
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAdmin = $user_obj::isAdmin($role_id);
 
-        if($isSuperAdmin){
+        if($isSuperAdmin || $isAdmin){
 
         $month = date('m');
 
@@ -112,6 +113,7 @@ class CandidateController extends Controller
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid')
             //->where('hiring_manager_id',$user->id)
             ->where('user_id',$user->id)
+          //  ->where('candidate_otherinfo.owner_id',$user->id)
             ->whereRaw('MONTH(joining_date) = ?',[$month])
             ->orderBy('job_candidate_joining_date.id','desc')
             ->get();

@@ -121,10 +121,10 @@ class HomeController extends Controller
         else{
         $month = date('m');
         $candidatejoin = DB::table('job_candidate_joining_date')//->join('job_openings','job_openings.id','=','job_candidate_joining_date.job_id')
-                                                                ->join('job_visible_users','job_visible_users.job_id','=','job_candidate_joining_date.job_id')
+                                                              //  ->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id')
                                                                 ->whereRaw('MONTH(joining_date) = ?',[$month])
                                                                 //->where('hiring_manager_id',$user->id)
-                                                                ->where('user_id',$user->id)
+                                                              //  ->where('owner_id',$user->id)
                                                                 ->count();
         }
        // print_r($candidatejoin);exit;
