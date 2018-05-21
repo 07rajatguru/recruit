@@ -90,7 +90,8 @@ class Interview extends Model
     }
 
     public static function getDashboardInterviews($all=0,$user_id){
-        $from_date = date("Y-m-d 00:00:00");
+
+        $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
         $query = Interview::query();

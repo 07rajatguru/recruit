@@ -110,14 +110,12 @@
                             <tbody>
                             @if(isset($interviews))
                                 @foreach($interviews as $interview)
-                                    @if(date("h:i A") > date("h:i A",strtotime($interview->interview_date)))
                                     <tr>
                                         <td>{{ $interview->interview_name }}</td>
                                         <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td>{{ $interview->candidate_fname}} </td>
                                         <td>{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                     </tr>
-                                    @endif
                                 @endforeach
                             @else
                                 <tr>
