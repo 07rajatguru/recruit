@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interview;
+use App\JobCandidateJoiningdate;
 use App\ToDos;
 use App\UsersLog;
 use Illuminate\Http\Request;
@@ -114,18 +115,11 @@ class HomeController extends Controller
 
         //get candidate join list on this month
         if(in_array($user_role_id,$access_roles_id)){
-            $month = date('m');
-            $candidatejoin = DB::table('job_candidate_joining_date')->whereRaw('MONTH(joining_date) = ?',[$month])->count();
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCount($user->id,1);
         }
 
         else{
-        $month = date('m');
-        $candidatejoin = DB::table('job_candidate_joining_date')//->join('job_openings','job_openings.id','=','job_candidate_joining_date.job_id')
-                                                              //  ->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id')
-                                                                ->whereRaw('MONTH(joining_date) = ?',[$month])
-                                                                //->where('hiring_manager_id',$user->id)
-                                                              //  ->where('owner_id',$user->id)
-                                                                ->count();
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCount($user->id,0);
         }
        // print_r($candidatejoin);exit;
 
@@ -135,7 +129,7 @@ class HomeController extends Controller
         $viewVariable['interviewCount'] = sizeof($interviews);
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
-        $viewVariable['candidatejoinCount'] = $candidatejoin;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
 
         return view('dashboard',$viewVariable);
     }
