@@ -35,7 +35,9 @@ class Lead extends Model
         $typeArray['Recruitment'] = 'Recruitment';
         $typeArray['Temp'] = 'Temp';
         $typeArray['Payroll'] = 'Payroll';
-        $typeArray['Compliance']='Compliance';	
+        $typeArray['Compliance']='Compliance';
+        $typeArray['IT'] = 'IT';
+        $typeArray['HR Advisory'] = 'HR Advisory';	
        
         return $typeArray;
     }
