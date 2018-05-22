@@ -27,6 +27,23 @@ use Excel;
 
 class JobOpenController extends Controller
 {
+
+/*    public function salary()
+    {
+        $job_salary = JobOpen::select('job_openings.id as id','job_openings.salary_from as salary_from','job_openings.salary_to as salary_to')
+                                  ->limit(2)
+                                  ->get();
+
+        $i=0;
+        foreach ($job_salary as $jobsalary) {
+            $id[$i] = $jobsalary->id;
+            $salary_from[$i] = $jobsalary->salary_from;
+            $salary_to[$i] = $jobsalary->salary_to;
+        }
+        echo $jobsalary;exit;
+
+    }*/
+
     public function index(Request $request){
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
@@ -205,7 +222,7 @@ class JobOpenController extends Controller
         $lacs['100+'] = '100+';
 
         // Thousand dropdown
-        $thousand = array();
+        $thousand = array(''=>'Thousand');
         for($i=0;$i<100;$i+=5){
             $thousand[$i] = $i;
         }
@@ -260,11 +277,16 @@ class JobOpenController extends Controller
 
         $no_of_positions = 1;
 
+        $lacs_from = '';
+        $thousand_from = '';
+        $lacs_to = '';
+        $thousand_to = '';
+
         $action = "add";
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to'));
 
     }
 
@@ -309,6 +331,11 @@ class JobOpenController extends Controller
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
 
+        $lacs_from = $input['lacs_from'];
+        $thousand_from = $input['thousand_from'];
+        $lacs_to = $input['lacs_to'];
+        $thousand_to = $input['thousand_to'];
+
         if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
         if (isset($work_experience_to) && $work_experience_to == '')
@@ -321,6 +348,14 @@ class JobOpenController extends Controller
             $qualifications = '';
         if (isset($desired_candidate) && $desired_candidate == '')
             $desired_candidate = '';
+        if (isset($lacs_from) && $lacs_from == '')
+            $lacs_from = 0;
+        if (isset($thousand_from) && $thousand_from == '')
+            $thousand_from = 0;
+        if (isset($lacs_to) && $lacs_to)
+            $lacs_to = 0;
+        if (isset($thousand_to) && $thousand_to == '')
+            $thousand_to = 0;
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -347,6 +382,10 @@ class JobOpenController extends Controller
         $job_open->priority = $job_priority;
         $job_open->desired_candidate = $desired_candidate;
         $job_open->qualifications = $qualifications;
+        $job_open->lacs_from = $lacs_from;
+        $job_open->thousand_from = $thousand_from;
+        $job_open->lacs_to = $lacs_to;
+        $job_open->thousand_to = $thousand_to;
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -484,7 +523,7 @@ class JobOpenController extends Controller
             $job_open['industry_name'] = $value->industry_name;
             $job_open['description'] = strip_tags($value->job_description);
             $job_open['work_experience'] = $value->work_experience_from . "-" . $value->work_experience_to;
-            $job_open['salary'] = $value->salary_from . "-" . $value->salary_to;
+            $job_open['salary'] = $value->lacs_from . "." . $value->thousand_from . "-" . $value->lacs_to . "." . $value->thousand_to;
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
@@ -596,6 +635,22 @@ class JobOpenController extends Controller
             }
         }
 
+        $lacs = array();
+        $lacs[0] = 'lacs';
+        for($i=1;$i<=50;$i++){
+            $lacs[$i] = $i;
+        }
+        for($i=55;$i<100;$i+=5){
+            $lacs[$i] = $i;
+        }
+        $lacs['100+'] = '100+';
+
+        // Thousand dropdown
+        $thousand = array(''=>'Thousand');
+        for($i=0;$i<100;$i+=5){
+            $thousand[$i] = $i;
+        }
+
         $user = \Auth::user();
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -655,6 +710,10 @@ class JobOpenController extends Controller
 
         $job_open = JobOpen::find($id);
         $user_id = $job_open->hiring_manager_id;
+        $lacs_from = $job_open->lacs_from;
+        $thousand_from = $job_open->thousand_from;
+        $lacs_to = $job_open->lacs_to;
+        $thousand_to = $job_open->thousand_to;
         //print_r($job_open);exit;
         $target_date = '';//$dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
@@ -676,7 +735,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to'));
 
     }
 
@@ -718,6 +777,10 @@ class JobOpenController extends Controller
         $users = $input['user_ids'];
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
+        $lacs_from = $input['lacs_from'];
+        $thousand_from = $input['thousand_from'];
+        $lacs_to = $input['lacs_to'];
+        $thousand_to = $input['thousand_to'];
 
         if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
@@ -731,6 +794,14 @@ class JobOpenController extends Controller
             $desired_candidate = '';
         if (isset($qualifications) && $qualifications == '')
             $qualifications = '';
+        if (isset($lacs_from) && $lacs_from == '')
+            $lacs_from = 0;
+        if (isset($thousand_from) && $thousand_from == '')
+            $thousand_from = 0;
+        if (isset($lacs_to) && $lacs_to == '')
+            $lacs_to = 0;
+        if (isset($thousand_to) && $thousand_to == '')
+            $thousand_to = 0;
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -757,6 +828,10 @@ class JobOpenController extends Controller
         $job_open->priority = $job_priority;
         $job_open->qualifications = $qualifications;
         $job_open->desired_candidate = $desired_candidate;
+        $job_open->lacs_from = $lacs_from;
+        $job_open->thousand_from = $thousand_from;
+        $job_open->lacs_to = $lacs_to;
+        $job_open->thousand_to = $thousand_to;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -791,6 +866,23 @@ class JobOpenController extends Controller
             foreach ($industry_res as $r) {
                 $industry[$r->id] = $r->name;
             }
+        }
+
+        // lacs dropdown
+        $lacs = array();
+        $lacs[0] = 'lacs';
+        for($i=1;$i<=50;$i++){
+            $lacs[$i] = $i;
+        }
+        for($i=55;$i<100;$i+=5){
+            $lacs[$i] = $i;
+        }
+        $lacs['100+'] = '100+';
+
+        // Thousand dropdown
+        $thousand = array(''=>'Thousand');
+        for($i=0;$i<100;$i+=5){
+            $thousand[$i] = $i;
         }
 
         $user_role_id = User::getLoggedinUserRole($user);
@@ -839,6 +931,10 @@ class JobOpenController extends Controller
         $posting_title = $job_open->posting_title;
         $no_of_positions = $job_open->no_of_positions;
         $user_id = $job_open->hiring_manager_id;
+        $lacs_from = $job_open->lacs_from;
+        $thousand_from = $job_open->thousand_from;
+        $lacs_to = $job_open->lacs_to;
+        $thousand_to = $job_open->thousand_to;
 
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();   
         $selected_users = array();
@@ -857,7 +953,7 @@ class JobOpenController extends Controller
         $action = "clone";
 
         
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to'));
 
     }
 
@@ -865,6 +961,7 @@ class JobOpenController extends Controller
         $dateClass = new Date();
 
         $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
         $input = $request->all();
 
         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
@@ -898,6 +995,10 @@ class JobOpenController extends Controller
         //print_r($users);exit;
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
+        $lacs_from = $input['lacs_from'];
+        $thousand_from = $input['thousand_from'];
+        $lacs_to = $input['lacs_to'];
+        $thousand_to = $input['thousand_to'];
 
         if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
@@ -937,6 +1038,11 @@ class JobOpenController extends Controller
         $job_open->priority = $job_priority;
         $job_open->desired_candidate = $desired_candidate;
         $job_open->qualifications = $qualifications;
+        $job_open->lacs_from = $lacs_from;
+        $job_open->thousand_from = $thousand_from;
+        $job_open->lacs_to = $lacs_to;
+        $job_open->thousand_to = $thousand_to;
+
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -1024,7 +1130,7 @@ class JobOpenController extends Controller
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
             $module_id = $job_id;
             $module = 'Job Openings';
-            $message = "New job opening is added";
+            $message = $user_name . " added new job";
             $link = route('jobopen.show',$job_id);
 
             $user_arr = array();
@@ -1036,7 +1142,6 @@ class JobOpenController extends Controller
                     }
                 }
             }
-
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         }

@@ -505,7 +505,7 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
-                                                'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
+                                                'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
                                                 'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
                                             );
@@ -564,8 +564,8 @@ class JobOpen extends Model
             }
             $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
-            $jobs_list[$i]['min_ctc'] = $value->salary_from;
-            $jobs_list[$i]['max_ctc'] = $value->salary_to;
+            $jobs_list[$i]['min_ctc'] = $value->lacs_from.".".$value->thousand_from;
+            $jobs_list[$i]['max_ctc'] = $value->lacs_to.".".$value->thousand_to;
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;

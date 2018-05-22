@@ -299,10 +299,19 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
+                        <strong>Salary From :</strong>
                         <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
-                            <strong>Salary From :</strong>
-                            {!! Form::select('lacs_from', $lacs,'', array('id'=>'lacs_from','class' => 'form-control')) !!}
-                            {!! Form::select('thousand_from', $thousand,'', array('id'=>'thousand_from','class' => 'form-control')) !!}
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    {!! Form::select('lacs_from', $lacs, $lacs_from, array('id'=>'lacs_from','class' => 'form-control')) !!}
+                                </div>
+                            </div>
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    {!! Form::select('thousand_from', $thousand, $thousand_from, array('id'=>'thousand_from','class' => 
+                                    'form-control')) !!}
+                                </div>
+                            </div>
                             @if ($errors->has('annual_salary_from'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('annual_salary_from') }}</strong>
@@ -314,13 +323,23 @@
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
+                        <strong>Salary To :</strong>
                         <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
-                            <strong>Salary To :</strong>
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    {!! Form::select('lacs_to', $lacs, $lacs_to, array('id'=>'lacs_to','class' => 'form-control')) !!}
+                                </div>
+                            </div>
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    {!! Form::select('thousand_to', $thousand, $thousand_to, array('id'=>'thousand_to','class' => 
+                                    'form-control')) !!}
+                                </div>
+                            </div>
 
-
-                            @if ($errors->has('annual_salary_from'))
+                            @if ($errors->has('annual_salary_to'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('annual_salary_from') }}</strong>
+                                    <strong>{{ $errors->first('annual_salary_to') }}</strong>
                                 </span>
                             @endif
                         </div>

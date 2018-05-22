@@ -512,6 +512,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
     Route::get('jobs/importExport', 'JobOpenController@importExport');
     Route::post('jobs/importExcel', 'JobOpenController@importExcel');
+    Route::get('jobs/salary', 'JobOpenController@salary');
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
