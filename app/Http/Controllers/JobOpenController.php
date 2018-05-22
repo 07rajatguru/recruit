@@ -193,6 +193,23 @@ class JobOpenController extends Controller
             }
         }
 
+        // lacs dropdown
+        $lacs = array();
+        $lacs[0] = 'lacs';
+        for($i=1;$i<=50;$i++){
+            $lacs[$i] = $i;
+        }
+        for($i=55;$i<100;$i+=5){
+            $lacs[$i] = $i;
+        }
+        $lacs['100+'] = '100+';
+
+        // Thousand dropdown
+        $thousand = array();
+        for($i=0;$i<100;$i+=5){
+            $thousand[$i] = $i;
+        }
+
         $user_role_id = User::getLoggedinUserRole($user);
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -216,7 +233,7 @@ class JobOpenController extends Controller
                 $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
-//print_r($client);exit;
+
         // get all users
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -247,7 +264,7 @@ class JobOpenController extends Controller
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand'));
 
     }
 
