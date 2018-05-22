@@ -56,9 +56,49 @@ class Lead extends Model
 
     public static function getAllLeads($all=0,$user_id){
 
+        $cancel_lead = 0;
         $query = Lead::query();
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
+        $query = $query->where('cancel_lead',$cancel_lead);
+
+        if($all==0){
+            $query = $query->where('account_manager_id',$user_id);
+        }
+
+        $response = $query->get();
+
+        $i = 0;
+        foreach ($response as $key=>$value){
+            $response[$i]['id'] = $value->id;
+            $response[$i]['name'] = $value->name;
+            $response[$i]['coordinator_name'] = $value->coordinator_name;
+            $response[$i]['mail'] = $value->mail;
+            $response[$i]['mobile'] = $value->mobile;
+            $response[$i]['s_email'] = $value->s_email;
+            $response[$i]['other_number'] = $value->other_number;
+            $response[$i]['service'] = $value->service;
+            $response[$i]['city'] = $value->city;
+            $response[$i]['state'] = $value->state;
+            $response[$i]['country'] = $value->country;
+            $response[$i]['website'] = $value->website;
+            $response[$i]['source'] = $value->source;
+            $response[$i]['Designation'] = $value->designation;
+            $response[$i]['referredby'] = $value->referredby;
+            $response[$i]['convert_client'] = $value->convert_client;
+            $i++;
+        }
+
+        return $response;
+    }
+
+    public static function getCancelLeads($all=0,$user_id){
+
+        $cancel_lead = 1;
+        $query = Lead::query();
+        $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
+        $query = $query->select('lead_management.*', 'users.name as referredby');
+        $query = $query->where('cancel_lead',$cancel_lead);
 
         if($all==0){
             $query = $query->where('account_manager_id',$user_id);

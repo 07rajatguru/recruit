@@ -83,6 +83,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'lead.index',
         'uses'=>'LeadController@index']);
 
+    Route::get('lead/cancel', [
+        'as' => 'lead.leadcancel',
+        'uses' => 'LeadController@cancellead'
+    ]);
+    
    Route::post('lead/store', [
         'as' => 'lead.store',
         'uses' => 'LeadController@store'
@@ -112,6 +117,12 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'lead.clonestore',
         'uses' => 'LeadController@clonestore',
     ]); 
+
+    Route::get('lead/{id}', [
+        'as' => 'lead.cancel',
+        'uses' => 'LeadController@cancel'
+    ]);
+
 
    /* // Report > Daily , Weekly
     Route::get('report/daily' ,[

@@ -1,5 +1,5 @@
 
-<a data-toggle="modal" href="#modal-close-{!! $data['id'] !!}" class="fa fa-close" title="Cancel Bill"></a>
+<a data-toggle="modal" href="#modal-close-{!! $data['id'] !!}" class="fa fa-close" title="Cancel {!! $display_name !!}"></a>
 <div id="modal-close-{!! $data['id'] !!}" class="modal text-left fade">
 
 
@@ -9,7 +9,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Cancel Bill</h1>
+                <h1 class="modal-title">Cancel {!! $display_name !!}</h1>
             </div>
             <div class="modal-body">
                 <p>

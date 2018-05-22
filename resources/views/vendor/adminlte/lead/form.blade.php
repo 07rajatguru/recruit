@@ -19,7 +19,11 @@
                 @endif
             </div>
             <div class="pull-right">
-               <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
+                @if($cancel_lead==1)
+                    <a class="btn btn-primary" href="{{ route('lead.leadcancel') }}"> Back</a>
+                @else
+                    <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
+                @endif
             </div>
         </div>
     </div>
