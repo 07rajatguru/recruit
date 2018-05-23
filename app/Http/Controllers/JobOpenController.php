@@ -28,10 +28,10 @@ use Excel;
 class JobOpenController extends Controller
 {
 
-/*    public function salary()
+    public function salary()
     {
         $job_salary = JobOpen::select('job_openings.id as id','job_openings.salary_from as salary_from','job_openings.salary_to as salary_to')
-                                  ->limit(2)
+                                  //->limit(2)
                                   ->get();
 
         $i=0;
@@ -39,10 +39,75 @@ class JobOpenController extends Controller
             $id[$i] = $jobsalary->id;
             $salary_from[$i] = $jobsalary->salary_from;
             $salary_to[$i] = $jobsalary->salary_to;
-        }
-        echo $jobsalary;exit;
 
-    }*/
+            $sid = $id[$i];
+            $sfrom = $salary_from[$i];
+            $sto = $salary_to[$i];
+
+        $from = $sfrom; 
+        $lacs_from = floor($from/100000);
+        $lacs_convert = ($lacs_from*100000);
+        $remaining = $from - $lacs_convert;
+        $thousand_from = floor($remaining/1000);
+
+        $to = $sto; 
+        $lacs_to = floor($to/100000);
+        $lacs_convert = ($lacs_to*100000);
+        $remaining = $to - $lacs_convert;
+        $thousand_to = floor($remaining/1000);
+
+        if ($lacs_from>=100) 
+            $lacs_from = "100+";
+        
+        if ($lacs_to>=100) 
+            $lacs_to = "100+";
+
+        // lacs dropdown
+        $lacs = array();
+        $lacs[0] = 'lacs';
+        for($i=1;$i<=50;$i++){
+            $lacs[$i] = $i;
+        }
+        for($i=55;$i<100;$i+=5){
+            $lacs[$i] = $i;
+        }
+        $lacs['100+'] = '100+';
+
+        // Thousand dropdown
+        $thousand = array(''=>'Thousand');
+        for($i=0;$i<100;$i+=5){
+            $thousand[$i] = $i;
+        }
+
+        // Value for Thousand From if not in array
+        if(!in_array($thousand_from,$thousand)){
+            $tfrom = $thousand_from%5;
+            $thousand_from = $thousand_from - $tfrom;
+        }
+        else{
+            $thousand_from = $thousand_from;
+        }
+
+        // Value for Thousand To if not in array
+        if(!in_array($thousand_to,$thousand)){
+            $tto = $thousand_to%5;
+            $thousand_to = $thousand_to - $tto;
+        }
+        else{
+            $thousand_to = $thousand_to;
+        }
+
+        
+        //echo $sfrom;exit;
+        //echo "id:".$sid."lacs_from:".$lacs_from." Thousand_from: ".$thousand_from;
+        //echo "id:".$sid."lacs_to:".$lacs_to." thousand_to: ".$thousand_to;
+
+        DB::statement("UPDATE job_openings SET lacs_from = '$lacs_from', thousand_from = '$thousand_from', lacs_to = '$lacs_to', thousand_to = '$thousand_to' where id=$sid");
+            $i++;
+        }
+        
+
+    }
 
     public function index(Request $request){
 
