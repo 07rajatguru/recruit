@@ -292,6 +292,19 @@ class JobOpenController extends Controller
             $thousand[$i] = $i;
         }
 
+        //Work experience from dropdown
+        $work_from = array('0'=>'Work Experience From');
+        for($i=1;$i<=30;$i++){
+            $work_from[$i] = $i;
+        }
+
+        //Work experience from dropdown
+        $work_to = array('0'=>'Work Experience To');
+        for($i=1;$i<=30;$i++){
+            $work_to[$i] = $i;
+        }
+
+
         $user_role_id = User::getLoggedinUserRole($user);
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -346,12 +359,14 @@ class JobOpenController extends Controller
         $thousand_from = '';
         $lacs_to = '';
         $thousand_to = '';
+        $work_exp_from = '';
+        $work_exp_to = '';
 
         $action = "add";
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to'));
 
     }
 
@@ -383,10 +398,10 @@ class JobOpenController extends Controller
         //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
         $job_type = $input['job_type'];
         $job_description = $input['job_description'];
-        $work_experience_from = $input['work_experience_from'];
-        $work_experience_to = $input['work_experience_to'];
-        $salary_from = $input['salary_from'];
-        $salary_to = $input['salary_to'];
+        //$work_experience_from = $input['work_experience_from'];
+        //$work_experience_to = $input['work_experience_to'];
+       // $salary_from = $input['salary_from'];
+        //$salary_to = $input['salary_to'];
         $city = $input['city'];
         $state = $input['state'];
         $country = $input['country'];
@@ -400,15 +415,17 @@ class JobOpenController extends Controller
         $thousand_from = $input['thousand_from'];
         $lacs_to = $input['lacs_to'];
         $thousand_to = $input['thousand_to'];
+        $work_exp_from = $input['work_experience_from'];
+        $work_exp_to = $input['work_experience_to'];
 
-        if (isset($work_experience_from) && $work_experience_from == '')
-            $work_experience_from = 0;
-        if (isset($work_experience_to) && $work_experience_to == '')
-            $work_experience_to = 0;
-        if (isset($salary_from) && $salary_from == '')
-            $salary_from = 0;
-        if (isset($salary_to) && $salary_to == '')
-            $salary_to = 0;
+        //if (isset($work_experience_from) && $work_experience_from == '')
+          //  $work_experience_from = 0;
+        //if (isset($work_experience_to) && $work_experience_to == '')
+          //  $work_experience_to = 0;
+       // if (isset($salary_from) && $salary_from == '')
+         //   $salary_from = 0;
+       // if (isset($salary_to) && $salary_to == '')
+         //   $salary_to = 0;
         if (isset($qualifications) && $qualifications == '')
             $qualifications = '';
         if (isset($desired_candidate) && $desired_candidate == '')
@@ -417,10 +434,14 @@ class JobOpenController extends Controller
             $lacs_from = 0;
         if (isset($thousand_from) && $thousand_from == '')
             $thousand_from = 0;
-        if (isset($lacs_to) && $lacs_to)
+        if (isset($lacs_to) && $lacs_to == '')
             $lacs_to = 0;
         if (isset($thousand_to) && $thousand_to == '')
             $thousand_to = 0;
+        if (isset($work_exp_from) && $work_exp_from == '')
+            $work_exp_from = 0;
+        if (isset($work_exp_to) && $work_exp_to == '')
+            $work_exp_to = 0;
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -437,10 +458,10 @@ class JobOpenController extends Controller
         $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
         $job_open->job_type = $job_type;
         $job_open->job_description = $job_description;
-        $job_open->work_experience_from = $work_experience_from;
-        $job_open->work_experience_to = $work_experience_to;
-        $job_open->salary_from = $salary_from;
-        $job_open->salary_to = $salary_to;
+        //$job_open->work_experience_from = $work_experience_from;
+        //$job_open->work_experience_to = $work_experience_to;
+        //$job_open->salary_from = $salary_from;
+        //$job_open->salary_to = $salary_to;
         $job_open->city = $city;
         $job_open->state = $state;
         $job_open->country = $country;
@@ -451,6 +472,8 @@ class JobOpenController extends Controller
         $job_open->thousand_from = $thousand_from;
         $job_open->lacs_to = $lacs_to;
         $job_open->thousand_to = $thousand_to;
+        $job_open->work_exp_from = $work_exp_from;
+        $job_open->work_exp_to = $work_exp_to;
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -716,6 +739,18 @@ class JobOpenController extends Controller
             $thousand[$i] = $i;
         }
 
+        //Work experience from dropdown
+        $work_from = array('0'=>'Work Experience From');
+        for($i=1;$i<=30;$i++){
+            $work_from[$i] = $i;
+        }
+
+        //Work experience from dropdown
+        $work_to = array('0'=>'Work Experience From');
+        for($i=1;$i<=30;$i++){
+            $work_to[$i] = $i;
+        }
+
         $user = \Auth::user();
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -779,6 +814,8 @@ class JobOpenController extends Controller
         $thousand_from = $job_open->thousand_from;
         $lacs_to = $job_open->lacs_to;
         $thousand_to = $job_open->thousand_to;
+        $work_exp_from = $job_open->work_exp_from;
+        $work_exp_to = $job_open->work_exp_to;
         //print_r($job_open);exit;
         $target_date = '';//$dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
@@ -800,7 +837,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to'));
 
     }
 
@@ -830,10 +867,10 @@ class JobOpenController extends Controller
         //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
         $job_type = $input['job_type'];
         $job_description = $input['job_description'];
-        $work_experience_from = $input['work_experience_from'];
-        $work_experience_to = $input['work_experience_to'];
-        $salary_from = $input['salary_from'];
-        $salary_to = $input['salary_to'];
+        //$work_experience_from = $input['work_experience_from'];
+        //$work_experience_to = $input['work_experience_to'];
+        //$salary_from = $input['salary_from'];
+        //$salary_to = $input['salary_to'];
         $city = $input['city'];
         $state = $input['state'];
         $country = $input['country'];
@@ -846,15 +883,17 @@ class JobOpenController extends Controller
         $thousand_from = $input['thousand_from'];
         $lacs_to = $input['lacs_to'];
         $thousand_to = $input['thousand_to'];
+        $work_exp_from = $input['work_experience_from'];
+        $work_exp_to = $input['work_experience_to'];
 
-        if (isset($work_experience_from) && $work_experience_from == '')
-            $work_experience_from = 0;
-        if (isset($work_experience_to) && $work_experience_to == '')
-            $work_experience_to = 0;
-        if (isset($salary_from) && $salary_from == '')
-            $salary_from = 0;
-        if (isset($salary_to) && $salary_to == '')
-            $salary_to = 0;
+       // if (isset($work_experience_from) && $work_experience_from == '')
+         //   $work_experience_from = 0;
+        //if (isset($work_experience_to) && $work_experience_to == '')
+          //  $work_experience_to = 0;
+       // if (isset($salary_from) && $salary_from == '')
+         //   $salary_from = 0;
+        //if (isset($salary_to) && $salary_to == '')
+          //  $salary_to = 0;
         if (isset($desired_candidate) && $desired_candidate == '')
             $desired_candidate = '';
         if (isset($qualifications) && $qualifications == '')
@@ -867,6 +906,10 @@ class JobOpenController extends Controller
             $lacs_to = 0;
         if (isset($thousand_to) && $thousand_to == '')
             $thousand_to = 0;
+        if (isset($work_exp_from) && $work_exp_from == '')
+            $work_exp_from = 0;
+        if (isset($work_exp_to) && $work_exp_to == '')
+            $work_exp_to = 0;
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -883,10 +926,10 @@ class JobOpenController extends Controller
         $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
         $job_open->job_type = $job_type;
         $job_open->job_description = $job_description;
-        $job_open->work_experience_from = $work_experience_from;
-        $job_open->work_experience_to = $work_experience_to;
-        $job_open->salary_from = $salary_from;
-        $job_open->salary_to = $salary_to;
+        //$job_open->work_experience_from = $work_experience_from;
+        //$job_open->work_experience_to = $work_experience_to;
+       // $job_open->salary_from = $salary_from;
+        //$job_open->salary_to = $salary_to;
         $job_open->city = $city;
         $job_open->state = $state;
         $job_open->country = $country;
@@ -897,6 +940,8 @@ class JobOpenController extends Controller
         $job_open->thousand_from = $thousand_from;
         $job_open->lacs_to = $lacs_to;
         $job_open->thousand_to = $thousand_to;
+        $job_open->work_exp_from = $work_exp_from;
+        $job_open->work_exp_to = $work_exp_to;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -950,6 +995,18 @@ class JobOpenController extends Controller
             $thousand[$i] = $i;
         }
 
+        //Work experience from dropdown
+        $work_from = array('0'=>'Work Experience From');
+        for($i=1;$i<=30;$i++){
+            $work_from[$i] = $i;
+        }
+
+        //Work experience from dropdown
+        $work_to = array('0'=>'Work Experience From');
+        for($i=1;$i<=30;$i++){
+            $work_to[$i] = $i;
+        }
+
         $user_role_id = User::getLoggedinUserRole($user);
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -1000,6 +1057,8 @@ class JobOpenController extends Controller
         $thousand_from = $job_open->thousand_from;
         $lacs_to = $job_open->lacs_to;
         $thousand_to = $job_open->thousand_to;
+        $work_exp_from = $job_open->work_exp_from;
+        $work_exp_to = $job_open->work_exp_to;
 
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();   
         $selected_users = array();
@@ -1018,7 +1077,7 @@ class JobOpenController extends Controller
         $action = "clone";
 
         
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to'));
 
     }
 
@@ -1048,10 +1107,10 @@ class JobOpenController extends Controller
         //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
         $job_type = $input['job_type'];
         $job_description = $input['job_description'];
-        $work_experience_from = $input['work_experience_from'];
-        $work_experience_to = $input['work_experience_to'];
-        $salary_from = $input['salary_from'];
-        $salary_to = $input['salary_to'];
+        //$work_experience_from = $input['work_experience_from'];
+        //$work_experience_to = $input['work_experience_to'];
+        //$salary_from = $input['salary_from'];
+        //$salary_to = $input['salary_to'];
         $city = $input['city'];
         $state = $input['state'];
         $country = $input['country'];
@@ -1064,19 +1123,33 @@ class JobOpenController extends Controller
         $thousand_from = $input['thousand_from'];
         $lacs_to = $input['lacs_to'];
         $thousand_to = $input['thousand_to'];
+        $work_exp_from = $input['work_experience_from'];
+        $work_exp_to = $input['work_experience_to'];
 
         if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
         if (isset($work_experience_to) && $work_experience_to == '')
             $work_experience_to = 0;
-        if (isset($salary_from) && $salary_from == '')
-            $salary_from = 0;
-        if (isset($salary_to) && $salary_to == '')
-            $salary_to = 0;
+      //  if (isset($salary_from) && $salary_from == '')
+        //    $salary_from = 0;
+        //if (isset($salary_to) && $salary_to == '')
+        //    $salary_to = 0;
         if (isset($qualifications) && $qualifications == '')
             $qualifications = '';
         if (isset($desired_candidate) && $desired_candidate == '')
             $desired_candidate = '';
+        if (isset($lacs_from) && $lacs_from == '')
+            $lacs_from = 0;
+        if (isset($thousand_from) && $thousand_from == '')
+            $thousand_from = 0;
+        if (isset($lacs_to) && $lacs_to == '')
+            $lacs_to = 0;
+        if (isset($thousand_to) && $thousand_to == '')
+            $thousand_to = 0;
+        if (isset($work_exp_from) && $work_exp_from == '')
+            $work_exp_from = 0;
+        if (isset($work_exp_to) && $work_exp_to == '')
+            $work_exp_to = 0;
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -1093,10 +1166,10 @@ class JobOpenController extends Controller
         $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
         $job_open->job_type = $job_type;
         $job_open->job_description = $job_description;
-        $job_open->work_experience_from = $work_experience_from;
-        $job_open->work_experience_to = $work_experience_to;
-        $job_open->salary_from = $salary_from;
-        $job_open->salary_to = $salary_to;
+        //$job_open->work_experience_from = $work_experience_from;
+        //$job_open->work_experience_to = $work_experience_to;
+       // $job_open->salary_from = $salary_from;
+       // $job_open->salary_to = $salary_to;
         $job_open->city = $city;
         $job_open->state = $state;
         $job_open->country = $country;
@@ -1107,6 +1180,8 @@ class JobOpenController extends Controller
         $job_open->thousand_from = $thousand_from;
         $job_open->lacs_to = $lacs_to;
         $job_open->thousand_to = $thousand_to;
+        $job_open->work_exp_from = $work_exp_from;
+        $job_open->work_exp_to = $work_exp_to;
 
 
 //     print_r($job_open);exit;
