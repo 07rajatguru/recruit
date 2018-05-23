@@ -71,6 +71,7 @@ class Interview extends Model
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
@@ -81,7 +82,11 @@ class Interview extends Model
         $query = $query->orderby('interview.interview_date','desc');
 
         if($all==0){
-            $query = $query->where('interviewer_id',$user_id);
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
         }
 
         $response = $query->get();
@@ -96,6 +101,7 @@ class Interview extends Model
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
@@ -105,7 +111,11 @@ class Interview extends Model
             'job_openings.posting_title as posting_title','job_openings.city');
 
         if($all==0){
-            $query = $query->where('interviewer_id',$user_id);
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
         }
 
         $query = $query->where('interview_date','>',"$from_date");
