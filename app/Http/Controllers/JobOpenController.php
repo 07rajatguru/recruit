@@ -97,8 +97,26 @@ class JobOpenController extends Controller
             $thousand_to = $thousand_to;
         }
 
+        // Value for Lacs From if not in array
+        if(!in_array($lacs_from,$lacs)){
+            $lfrom = $lacs_from%5;
+            $lacs_from = $lacs_from - $lfrom;
+        }
+        else{
+            $lacs_from = $lacs_from;
+        }
+
+        // Value for Lacs To if not in array
+        if(!in_array($lacs_to,$lacs)){
+            $lto = $lacs_to%5;
+            $lacs_to = $lacs_to - $lto;
+        }
+        else{
+            $lacs_to = $lacs_to;
+        }
+
         
-        //echo $sfrom;exit;
+        //echo "id:".$sid."lacs_from:".$lacs_from."lacs_to:".$lacs_to;
         //echo "id:".$sid."lacs_from:".$lacs_from." Thousand_from: ".$thousand_from;
         //echo "id:".$sid."lacs_to:".$lacs_to." thousand_to: ".$thousand_to;
 
