@@ -109,6 +109,29 @@ class JobOpenController extends Controller
 
     }
 
+    public function work()
+    {
+        $job_work = JobOpen::select('job_openings.id as id','job_openings.work_experience_from as work_exp_from','job_openings.work_experience_to as work_exp_to')
+                                  ->limit(13)
+                                  ->get();
+
+
+        $i=0;
+        foreach ($job_work as $jobwork) {
+            $id[$i] = $jobwork->id;
+            $work_exp_from[$i] = $jobwork->work_exp_from;
+            $work_exp_to[$i] = $jobwork->work_exp_to;
+
+            $wid = $id[$i];
+            $wfrom = $work_exp_from[$i];
+            $wto = $work_exp_to[$i];
+            $i++;
+            DB::statement("UPDATE job_openings SET work_exp_from = '$wfrom', work_exp_to = '$wto' where id=$wid");
+        }
+        //echo $job_work;exit;
+
+    }
+
     public function index(Request $request){
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
@@ -610,7 +633,7 @@ class JobOpenController extends Controller
             $job_open['job_type'] = $value->job_type;
             $job_open['industry_name'] = $value->industry_name;
             $job_open['description'] = strip_tags($value->job_description);
-            $job_open['work_experience'] = $value->work_experience_from . "-" . $value->work_experience_to;
+            $job_open['work_experience'] = $value->work_exp_from . "-" . $value->work_exp_to;
             $job_open['salary'] = $value->lacs_from . "." . $value->thousand_from . "-" . $value->lacs_to . "." . $value->thousand_to;
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
