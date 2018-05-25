@@ -198,12 +198,12 @@
                         </div>
 
                  </div>
-                       {{-- <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>Status:</strong>
-                                    {!! Form::select('status',$status, null, array('id'=>'status','placeholder' => 'Country ','class' => 'form-control')) !!}
+                                    {!! Form::select('status',$status, $lead_status, array('id'=>'status','placeholder' => 'Country ','class' => 'form-control')) !!}
                             </div>
-                        </div>  --}}
+                        </div> 
              </div>
          </div>
      </div>

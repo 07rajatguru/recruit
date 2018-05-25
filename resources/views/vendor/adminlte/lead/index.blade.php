@@ -41,6 +41,7 @@
                 <th>State</th>
                 <th>Country</th>
                 <th>Remarks</th>
+                <th>Lead Status</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -87,7 +88,7 @@
                 <td>{{ $value['state'] }}</td>
                 <td>{{ $value['country'] }}</td>
                 <td>{{ $value['remarks'] }}</td>
-               
+                <td>{{ $value['lead_status'] }}</td>
                
                 </tr>
         @endforeach

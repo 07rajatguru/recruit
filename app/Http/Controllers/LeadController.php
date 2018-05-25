@@ -87,9 +87,10 @@ class LeadController extends Controller
         $users=User::getAllUsers();
         $status = Lead::getLeadStatus();
         $service ='';
+        $lead_status ='';
         $referredby = $user_id;
 
-        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead'));
+        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead','lead_status'));
     }
 
  public function store(Request $request){
@@ -113,6 +114,7 @@ class LeadController extends Controller
          $source=$input['source'];
          $designation=$input['designation'];
          $referredby_id=$input['referredby_id'];
+         $lead_status = $input['status'];
 
          $lead=new Lead();
          $lead->name=$company_name;
@@ -133,6 +135,7 @@ class LeadController extends Controller
          $lead->source=$source;
          $lead->designation=$designation;
          $lead->referredby=$referredby_id;
+         $lead->lead_status=$lead_status;
          $lead->save();
 
          $validator = \Validator::make(Input::all(),$lead::$rules);
@@ -159,6 +162,7 @@ class LeadController extends Controller
 
         $service = $lead->service;
         $referredby = $lead->referredby;
+        $lead_status = $lead->lead_status;
         //print_r($lead_s); exit;
         $users=User::getAllUsers();
         $leadsarr = array();
@@ -166,7 +170,7 @@ class LeadController extends Controller
         ->get();
 
         	        
-	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead'));
+	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status'));
 
 	 }
 	 public function update(Request $request, $id){
@@ -192,6 +196,7 @@ class LeadController extends Controller
         $source = $request->get('source');
         $designation = $request->get('designation');
         $referredby_id= $request->get('referredby_id');
+        $lead_status = $request->get('status');
 
          
         $lead_basic = Lead::find($id);
@@ -229,6 +234,8 @@ class LeadController extends Controller
             $lead_basic->designation=$designation;
         if(isset($referredby_id))
             $lead_basic->referredby=$referredby_id;
+        if(isset($lead_status))
+            $lead_basic->lead_status=$lead_status;
 
          $lead_basic->account_manager_id = $user;
 

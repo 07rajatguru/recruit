@@ -45,11 +45,10 @@ class Lead extends Model
     public static function getLeadStatus(){
 
         $statusArray = array('' => 'Select Lead Status');
-        $statusArray['Business Proposal Sent'] = 'Business Proposal Sent';
-        $statusArray['Awaiting requirements'] = 'Awaiting Requirements';
-        $statusArray['follow up in progress'] = 'Follow up in Progress';
-        $statusArray['got the requirements']= 'Got the Requirements';
-        $statusArray['cancel leads']='Cancel Leads';
+        $statusArray['Active'] = 'Active';
+        $statusArray['In Progress'] = 'In Progress';
+        $statusArray['In Active'] = 'In Active';
+        $statusArray['Cancel']='Cancel';
        
         return $statusArray;
     }
@@ -86,6 +85,7 @@ class Lead extends Model
             $response[$i]['Designation'] = $value->designation;
             $response[$i]['referredby'] = $value->referredby;
             $response[$i]['convert_client'] = $value->convert_client;
+            $response[$i]['lead_status'] = $value->lead_status;
             $i++;
         }
 
@@ -124,6 +124,7 @@ class Lead extends Model
             $response[$i]['Designation'] = $value->designation;
             $response[$i]['referredby'] = $value->referredby;
             $response[$i]['convert_client'] = $value->convert_client;
+            $response[$i]['lead_status'] = $value->lead_status;
             $i++;
         }
 
