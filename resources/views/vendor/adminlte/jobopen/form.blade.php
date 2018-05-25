@@ -247,7 +247,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
                         <div class="form-group {{ $errors->has('work_experience_from') ? 'has-error' : '' }}">
-                            {!! Form::select('work_experience_from', $work_from, $work_exp_from, array('id'=>'work_experience_from','placeholder' => 'Work Experience from','class' => 'form-control' )) !!}
+                            {!! Form::select('work_experience_from', $work_from, $work_exp_from, array('id'=>'work_experience_from','class' => 'form-control' )) !!}
                             @if ($errors->has('work_experience_from'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('work_experience_from') }}</strong>
@@ -269,7 +269,7 @@
                     <div class="">
                         <div class="form-group {{ $errors->has('work_experience_to') ? 'has-error' : '' }}">
                             
-                            {!! Form::select('work_experience_to', $work_to, $work_exp_to, array('id'=>'work_experience_to','placeholder' => 'Work Experience to','class' => 'form-control' )) !!}
+                            {!! Form::select('work_experience_to', $work_to, $work_exp_to, array('id'=>'work_experience_to','class' => 'form-control' )) !!}
                             @if ($errors->has('work_experience_to'))
                                 <span class="help-block">
                                         <strong>{{ $errors->first('work_experience_to') }}</strong>
