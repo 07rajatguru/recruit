@@ -637,6 +637,32 @@ class JobOpenController extends Controller
         $job_open['id'] = $id;
 
         foreach ($job_open_detail as $key => $value) {
+
+            // value get in 2 decimal point
+            if ($value->lacs_from >= '100') {
+                $min_ctc = '100+';
+            }
+            else{
+                $lacs_from = $value->lacs_from*100000;
+                $thousand_from = $value->thousand_from*1000;
+                $mictc = $lacs_from+$thousand_from;
+                $minctc = $mictc/100000;
+                $min_ctc = number_format($minctc,2);
+            }
+
+            if ($value->lacs_to >= '100') {
+                $max_ctc = '100+';
+            }
+            else{
+                $lacs_to = $value->lacs_to*100000;
+                $thousand_to = $value->thousand_to*1000;
+                $mactc = $lacs_to+$thousand_to;
+                $maxctc = $mactc/100000;
+                $max_ctc = number_format($maxctc,2);
+            }
+
+            $salary = $min_ctc.'-'.$max_ctc;
+
             $job_open['posting_title'] = $value->posting_title;
             $job_open['job_id'] = $value->job_id;
             $job_open['client_name'] = $value->client_name;
@@ -652,7 +678,7 @@ class JobOpenController extends Controller
             $job_open['industry_name'] = $value->industry_name;
             $job_open['description'] = strip_tags($value->job_description);
             $job_open['work_experience'] = $value->work_exp_from . "-" . $value->work_exp_to;
-            $job_open['salary'] = $value->lacs_from . "." . $value->thousand_from . "-" . $value->lacs_to . "." . $value->thousand_to;
+            $job_open['salary'] = $salary;
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;

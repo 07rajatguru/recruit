@@ -46,8 +46,8 @@
             <th>Position Title</th>
             <th>CA</th>
             <th>Location</th>
-            <th>Min CTC</th>
-            <th>Max CTC</th>
+            <th>Min CTC<br/>(in Lacs)</th>
+            <th>Max CTC<br/>(in Lacs)</th>
             <th>HR/Coordinator Name</th>
             <th>No. Of Positions</th>
             <th>Edu Qualifications</th>

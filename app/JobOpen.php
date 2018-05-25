@@ -538,6 +538,30 @@ class JobOpen extends Model
 
         $i = 0;
         foreach ($job_response as $key=>$value){
+            // value get in 2 decimal point
+            if ($value->lacs_from >= '100') {
+                $min_ctc = '100+';
+            }
+            else{
+                $lacs_from = $value->lacs_from*100000;
+                $thousand_from = $value->thousand_from*1000;
+                $mictc = $lacs_from+$thousand_from;
+                $minctc = $mictc/100000;
+                $min_ctc = number_format($minctc,2);
+            }
+
+            if ($value->lacs_to >= '100') {
+                $max_ctc = '100+';
+            }
+            else{
+                $lacs_to = $value->lacs_to*100000;
+                $thousand_to = $value->thousand_to*1000;
+                $mactc = $lacs_to+$thousand_to;
+                $maxctc = $mactc/100000;
+                $max_ctc = number_format($maxctc,2);
+            }
+            //echo $mactc;exit;
+            //$min_ctc = $value->lacs_from.".".$value->thousand_from;
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['job_id'] = $value->job_id;
             $jobs_list[$i]['company_name'] = $value->company_name;
@@ -564,8 +588,8 @@ class JobOpen extends Model
             }
             $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
-            $jobs_list[$i]['min_ctc'] = $value->lacs_from.".".$value->thousand_from;
-            $jobs_list[$i]['max_ctc'] = $value->lacs_to.".".$value->thousand_to;
+            $jobs_list[$i]['min_ctc'] = $min_ctc;
+            $jobs_list[$i]['max_ctc'] = $max_ctc;
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
