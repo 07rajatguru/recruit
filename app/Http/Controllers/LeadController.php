@@ -198,6 +198,13 @@ class LeadController extends Controller
         $referredby_id= $request->get('referredby_id');
         $lead_status = $request->get('status');
 
+        if ($lead_status == 'Cancel') {
+            $cancel_lead = 1;
+        }
+        else{
+            $cancel_lead =0;
+        }
+
          
         $lead_basic = Lead::find($id);
 
@@ -236,6 +243,8 @@ class LeadController extends Controller
             $lead_basic->referredby=$referredby_id;
         if(isset($lead_status))
             $lead_basic->lead_status=$lead_status;
+        if(isset($cancel_lead))
+            $lead_basic->cancel_lead=$cancel_lead;
 
          $lead_basic->account_manager_id = $user;
 
