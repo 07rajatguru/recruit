@@ -912,6 +912,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@monthly',
     ]);
 
+    Route::get('todos/read', [
+        'as' => 'todos.read',
+        'uses' => 'ToDosController@readTodos',
+    ]);
+
+    Route::get('todos/all', [
+        'as' => 'todos.list',
+        'uses' => 'ToDosController@getAjaxtodo',
+    ]);
+
     // To do's Routes End
 
 

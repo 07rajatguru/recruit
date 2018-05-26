@@ -32,12 +32,12 @@ class Notifications extends Model
         $notification_query = Notifications::query();
         $notification_query = $notification_query->where('user_id','=',$userid);
 
-        if(isset($read) && ($read==0 || $read==1)){
+        /*if(isset($read) && ($read==0 || $read==1)){
             $notification_query = $notification_query->where('read','=',$read);
-        }
+        }*/
 
         $notification_query = $notification_query->orderBy('id','desc');
-        $notification_res = $notification_query->get();
+        $notification_res = $notification_query->limit(15)->get();
 //print_r($notification_res);exit;
         $notifications = array();
 
