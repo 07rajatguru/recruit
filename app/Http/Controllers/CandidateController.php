@@ -464,6 +464,7 @@ class CandidateController extends Controller
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
                     $jobopening->shortlisted = 0;
+                    $jobopening->associate_by = $user_id;
                     $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
@@ -739,6 +740,7 @@ class CandidateController extends Controller
                     $jobopening->created_at = time();
                     $jobopening->updated_at = time();
                     $jobopening->shortlisted = 0;
+                    $job_associate_candidate->associate_by = $user_id;
                     $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
