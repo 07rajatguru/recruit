@@ -62,58 +62,63 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="box-body col-xs-12 col-sm-12 col-md-12">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                       
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                                 <strong>Company Name:<span class = "required_fields">*</span></strong>
-                                    {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control')) !!}
+                                    {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1')) !!}
                                      @if ($errors->has('name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                     @endif
                             </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Contact Point:<span class = "required_fields">*</span></strong>
-                                    {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Contact Point','class' => 'form-control')) !!}
-                           </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                
                             <div class="form-group">
                                 <strong>Email:<span class = "required_fields">*</span></strong>
-                                   {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control')) !!}
+                                   {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
                             </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Secondary Email:</strong>
-                                     {!! Form::text('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control')) !!}
-                            </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                       
                             <div class="form-group">
                                 <strong>Mobile:<span class = "required_fields">*</span></strong>
-                                     {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control')) !!}
+                                     {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5')) !!}
                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Other number:</strong>
-                                     {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control')) !!}
-                            </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                     
                             <div class="form-group">
                                 <strong>Display Name:</strong>
-                                     {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                                     {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '7')) !!}
                             </div>
-                        </div>
+                
+                            <div class="form-group">
+                                <strong>Status:</strong>
+                                    {!! Form::select('status',$status, $lead_status, array('id'=>'status','placeholder' => 'Country ','class' => 'form-control','tabindex' => '9')) !!}
+                            </div>
+                                                
+                            <div class="form-group">
+                                <strong>Remarks:</strong>
+                                     {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control','tabindex' => '11')) !!}
+                            </div>
+                       </div>
+
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                       
+                            <div class="form-group">
+                                <strong>Contact Point:<span class = "required_fields">*</span></strong>
+                                    {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2')) !!}
+                           </div>
+                    
+                            <div class="form-group">
+                                <strong>Secondary Email:</strong>
+                                     {!! Form::text('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4')) !!}
+                            </div>
+                        
+                            <div class="form-group">
+                                <strong>Other number:</strong>
+                                     {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6')) !!}
+                            </div>
+                        
+
+                        
  @section('customs_css')
     <style>
         .error{
@@ -122,88 +127,70 @@
     </style>
  @endsection  
 
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                       
                             <div class="form-group">
                                 <strong>Select Leads: :</strong>
-                                    {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control')) !!}
+                                    {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control','tabindex' => '8')) !!}
                                     @if ($errors->has('leads'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('job_opening_status') }}</strong>
                                     </span>
                                     @endif
                             </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Remarks:</strong>
-                                     {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control')) !!}
-                            </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                       
                             <div class="form-group">
                                 <strong>Website:</strong>
-                                    {!! Form::text('website', null, array('id'=>'website', 'placeholder' => 'Website','class' => 'form-control')) !!}
+                                    {!! Form::text('website', null, array('id'=>'website', 'placeholder' => 'Website','class' => 'form-control','tabindex' => '10')) !!}
                             </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                       
                             <div class="form-group">
                                 <strong>Source:</strong>
-                                    {!! Form::text('source', null, array('placeholder' => 'Source','class' => 'form-control')) !!}
+                                    {!! Form::text('source', null, array('placeholder' => 'Source','class' => 'form-control','tabindex' => '12')) !!}
                             </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                       
+                       
                             <div class="form-group">
                                 <strong>Designation:</strong>
-                                    {!! Form::text('designation', null, array('placeholder' => 'Designation','class' => 'form-control')) !!}
+                                    {!! Form::text('designation', null, array('placeholder' => 'Designation','class' => 'form-control','tabindex' => '13')) !!}
                             </div>
-                        </div>
-
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                        
                             <div class="form-group">
                                 <strong>Referred By:</strong>
-                                    {!! Form::select('referredby_id',$users, $referredby, array('id'=>'referredby_id','class' => 'form-control')) !!}
+                                    {!! Form::select('referredby_id',$users, $referredby, array('id'=>'referredby_id','class' => 'form-control','tabindex' => '14')) !!}
                             </div>
-                        </div>
+                        
+                    </div>
 
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Address:</strong>
-                                    {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()")) !!}
+                                    {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()",'tabindex' => '15')) !!}
                             </div>
                         </div>
 
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>City:</strong>
-                                    {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control')) !!}
+                                    {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '16')) !!}
                             </div>
                         </div>
                         
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>State:</strong>
-                                    {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control')) !!}
+                                    {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control','tabindex' => '17')) !!}
                             </div>
                         </div>
                         
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>Country:</strong>
-                                    {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control')) !!}
+                                    {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control','tabindex' => '18')) !!}
                             </div>
                         </div>
 
                  </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Status:</strong>
-                                    {!! Form::select('status',$status, $lead_status, array('id'=>'status','placeholder' => 'Country ','class' => 'form-control')) !!}
-                            </div>
-                        </div> 
+                        
              </div>
          </div>
      </div>
