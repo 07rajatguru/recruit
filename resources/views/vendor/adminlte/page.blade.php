@@ -294,7 +294,7 @@
                         var li = '';
                         li += '<li class="todos-li">';
                             li += '<a href="#">';
-                                li += '<h4>';
+                                li += '<h4 style="margin-left:5px;cursor: auto;">';
                                     li += data[i].subject;
                                 li += '</h4>';
                                 //li += '<p>'+data[i].subject+'</p>';
