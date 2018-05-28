@@ -53,6 +53,17 @@ Route::post('candidate/createform',[
     'uses'=>'CandidateCreateFormController@storef'
 ]);
 
+// Report > Daily , Weekly
+    Route::get('report/daily' ,[
+        'as' => 'report.daily',
+        'uses' => 'ReportController@dailyreport'
+    ]);
+
+    Route::get('report/weekly' ,[
+        'as' => 'report.weekly',
+        'uses' => 'ReportController@weeklyreport'
+    ]);
+
 
 Route::group(['middleware' => ['auth']], function () {
 
@@ -124,16 +135,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
 
-   /* // Report > Daily , Weekly
-    Route::get('report/daily' ,[
-        'as' => 'report.daily',
-        'uses' => 'ReportController@dailyreport'
-    ]);
-
-    Route::get('report/weekly' ,[
-        'as' => 'report.weekly',
-        'uses' => 'ReportController@weeklyreport'
-    ]);*/
+    
     
     // Admin > Users
     Route::get('users', [

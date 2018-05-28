@@ -649,7 +649,7 @@ class JobOpen extends Model
         foreach ($job_response as $k=>$v){
             $response['company_name'] = $v->client_name;
             $response['company_url'] = $v->website;
-            $response['client_desc'] = strip_tags($v->client_desc);
+            $response['client_desc'] = $v->client_desc;
             $response['posting_title'] = $v->posting_title;
             $location ='';
             if($v->city!=''){
@@ -670,7 +670,7 @@ class JobOpen extends Model
             $response['city'] = $v->city;
             $response['job_location'] = $location;
             $response['contact_person'] = $v->contact_person;
-            $response['job_description'] = strip_tags($v->job_description);
+            $response['job_description'] = $v->job_description;
             $datearray = explode(' ', $v->date);
             $response['interview_date'] = $datearray[0];
             $response['interview_time'] = $datearray[1];
