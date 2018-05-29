@@ -25,17 +25,22 @@ class LeadController extends Controller
         $access_roles_id = array($superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $leads = Lead::getAllLeads(1,$user->id);
+            $convert_client = Lead::getConvertedClient(1,$user->id);
         }
         else{
             $leads = Lead::getAllLeads(0,$user->id);
+            $convert_client = Lead::getConvertedClient(0,$user->id);
         }
        // print_r($leads);exit;
+
+        $convert_client_count = sizeof($convert_client);
+        //print_r($convert_client_count);exit;
 
         $lead_count = 0;
 
         $count = sizeof($leads);
         //$lead = Lead::orderBy('id','DESC')->paginate(50);
-        return view('adminlte::lead.index',compact('leads','lead_count','count'));
+        return view('adminlte::lead.index',compact('leads','lead_count','count','convert_client_count'));
 
     }
 

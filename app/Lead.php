@@ -131,6 +131,23 @@ class Lead extends Model
         return $response;
     }
 
+    public static function getConvertedClient($all=0,$user_id){
+
+        $convert_client = '1';
+        $query = Lead::query();
+        $query = $query->select('lead_management.*');
+        $query = $query->where('convert_client',$convert_client);
+
+        if($all==0){
+            $query = $query->where('account_manager_id',$user_id);
+        }
+        
+        $response = $query->get();
+
+        //print_r($response);exit;
+        return $response;
+    }
+
     public static function getDailyReportLead(){
 
         $user = \Auth::user();
