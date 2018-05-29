@@ -36,7 +36,7 @@
 
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
+                            {{--<div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
                                 <strong>Interview Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('interview_name', null, array('id'=>'interview_name','placeholder' => 'Interview Name','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 @if ($errors->has('interview_name'))
@@ -44,17 +44,19 @@
                                 <strong>{{ $errors->first('interview_name') }}</strong>
                                 </span>
                                 @endif
-                            </div>
+                            </div>--}}
 
-                            <div class="form-group {{ $errors->has('candidate_id') ? 'has-error' : '' }}">
-                                <strong>Candidate: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
-                                @if ($errors->has('candidate_id'))
+                            <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
+                                <strong>Posting Name:</strong>
+                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '3' , 'onchange' => 'getCandidate()' )) !!}
+                                {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
+                                @if ($errors->has('posting_title'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidate_id') }}</strong>
+                                <strong>{{ $errors->first('posting_title') }}</strong>
                                 </span>
                                 @endif
                             </div>
+                            
                             <input type="hidden" id="hidden_candidate_id" value="{{$hidden_candidate_id}}" name="hidden_candidate_id" />
 
                             <div class="form-group {{ $errors->has('from') ? 'has-error' : '' }}">
@@ -95,17 +97,19 @@
 
                         </div>
 
+
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
-                                <strong>Posting Name:</strong>
-                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '3' , 'onchange' => 'getCandidate()' )) !!}
-                                {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
-                                @if ($errors->has('posting_title'))
+
+                            <div class="form-group {{ $errors->has('candidate_id') ? 'has-error' : '' }}">
+                                <strong>Candidate: <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                @if ($errors->has('candidate_id'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('posting_title') }}</strong>
+                                <strong>{{ $errors->first('candidate_id') }}</strong>
                                 </span>
                                 @endif
                             </div>
+                            
 
                            {{-- <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
                                 <strong>Client:</strong>
@@ -207,9 +211,9 @@
 
             $("#interview_form").validate({
                 rules: {
-                    "interview_name": {
+                    /*"interview_name": {
                         required: true
-                    },
+                    },*/
                     "candidate_id": {
                         required: true
                     },
@@ -221,9 +225,9 @@
                     }*/
                 },
                 messages: {
-                    "interview_name": {
+                    /*"interview_name": {
                         required: "Interview Name is required."
-                    },
+                    },*/
                     "candidate_id": {
                         required: "Candidate is required."
                     },

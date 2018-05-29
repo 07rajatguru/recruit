@@ -34,9 +34,10 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Interview Name</th>
+                {{--<th>Interview Name</th>--}}
                 <th>Posting Title</th>
                 <th>Candidate</th>
+                <th>Candidate <br/>Contact No.</th>
                {{-- <th>Client</th>--}}
                 <th>Interview Date</th>
                 <th>Location</th>
@@ -48,21 +49,22 @@
         @foreach ($interViews as $interView)
         <?php
             if(date("Y-m-d") == date("Y-m-d",strtotime($interView->interview_date)))
-                $color = '#32CD32';
+                $color = "RGB(143, 177, 213)";
             elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView->interview_date)))
-                $color = '#B1A0C7';
-            elseif(date("Y-m-d") > date("Y-m-d",strtotime($interView->interview_date)))
-                $color = '';
+                $color = '#feb80a';
+            elseif(date("Y-m-d") < date("Y-m-d",strtotime($interView->interview_date)))
+                $color = '#C4D79B';
             else
-                $color = '#FABF8F';
+                $color = '';
          ?>
             <tr>
                 <td>{{ ++$i }}</td>
-                <td style="background-color: {{ $color }}">{{ $interView->interview_name or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
+                {{--<td style="background-color: {{ $color }}">{{ $interView->interview_name or '' }}</td>--}}
+                <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
                 <td>{{ $interView->candidate_fname }}</td>
+                <td>{{ $interView->contact }}</td>
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
-                <td>{{ $interView->interview_date or ''}} </td>
+                <td>{{ date('d-m-Y h:i A',strtotime($interView->interview_date)) }}</td>
                 <td>{{ $interView->location or ''}}</td>
 
                 <td>

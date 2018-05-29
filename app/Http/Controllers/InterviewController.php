@@ -108,7 +108,7 @@ class InterviewController extends Controller
         $dateClass = new Date();
 
         $data = array();
-        $data['interview_name'] = $request->get('interview_name');
+       // $data['interview_name'] = $request->get('interview_name');
         $data['candidate_id'] = $request->get('candidate_id');
         $data['interviewer_id'] = $request->get('interviewer_id');
        // $data['client'] = $request->get('client_id');
@@ -233,7 +233,7 @@ class InterviewController extends Controller
 
         $dateClass = new Date();
 
-        $interview_name = $request->get('interview_name');
+        //$interview_name = $request->get('interview_name');
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
       //  $client = $request->get('client_id');
@@ -248,8 +248,8 @@ class InterviewController extends Controller
         $interview_owner_id = $user_id;
 
         $interview = Interview::find($id);
-        if(isset($interview_name))
-            $interview->interview_name = $interview_name;
+       // if(isset($interview_name))
+        //    $interview->interview_name = $interview_name;
         if(isset($candidate_id))
             $interview->candidate_id = $candidate_id;
         if(isset($posting_title))
@@ -370,7 +370,7 @@ class InterviewController extends Controller
             ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
             ->leftjoin('users','users.id','=','interview.interviewer_id')
             ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.full_name) AS candidate_name'),
-                 'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city')
+                 'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city','candidate_basicinfo.mobile as contact')
             ->where('interview.id','=',$id)
             ->first();
 
@@ -385,8 +385,9 @@ class InterviewController extends Controller
         
         $interview = array();
         $interview['id'] = $id;
-        $interview['interview_name'] = $interviewDetails->interview_name;
+       // $interview['interview_name'] = $interviewDetails->interview_name;
         $interview['candidate'] = $interviewDetails->candidate_name;
+        $interview['contact'] = $interviewDetails->contact;
       //  $interview['client'] = $interviewDetails->client_name;
         $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.",".$interviewDetails->city;
         $interview['interviewer'] = $interviewDetails->interviewer_name;

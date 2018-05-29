@@ -101,9 +101,9 @@
                         <table class="table no-margin">
                             <thead>
                             <tr>
-                                <th>Interview Name</th>
                                 <th>Posting Title</th>
                                 <th>Candidate Name</th>
+                                <th>Candidate Contact No.</th>
                                 <th>Time</th>
                             </tr>
                             </thead>
@@ -111,9 +111,9 @@
                             @if(isset($interviews))
                                 @foreach($interviews as $interview)
                                     <tr>
-                                        <td>{{ $interview->interview_name }}</td>
                                         <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td>{{ $interview->candidate_fname}} </td>
+                                        <td>{{ $interview->contact }}</td>
                                         <td>{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                     </tr>
                                 @endforeach

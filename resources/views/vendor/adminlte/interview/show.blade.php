@@ -31,14 +31,16 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                         <tr>
-                            <th scope="row">Interview Name:</th>
-                            <td>{{ isset($interview_name)? $interview_name : null }}</td>
+                            {{--<th scope="row">Interview Name:</th>
+                            <td>{{ isset($interview_name)? $interview_name : null }}</td>--}}
                             <th>Posting Name</th>
                             <td>{{ isset($posting_title)? $posting_title : null }}</td>
-                        </tr>
-                        <tr>
                             <th scope="row">Candidate:</th>
                             <td>{{ isset($candidate)? $candidate : null }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Candidate Contact No.:</th>
+                            <td>{{ isset($contact)? $contact : null }}</td>
                             <th>Type :</th>
                             <td>{{ isset($type)? $type : null }}</td>
                             {{--<th>Client:</th>

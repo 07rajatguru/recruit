@@ -10,7 +10,7 @@ class Interview extends Model
     public $table = "interview";
 
     public static $rules = array(
-        'interview_name' => 'required',
+        //'interview_name' => 'required',
         'candidate_id' => 'required',
         'interview_date' => 'required',
     );
@@ -18,7 +18,7 @@ class Interview extends Model
     public function messages()
     {
         return [
-            'interview_name.required' => 'Interview Name is required field',
+            //'interview_name.required' => 'Interview Name is required field',
             'candidate_id.required' => 'Candidate is required field',
             'interview_date.required' => 'Interview Date is required field'
         ];
@@ -26,7 +26,7 @@ class Interview extends Model
 
     public static function createInterview($data){
         $interview = new Interview();
-        $interview->interview_name = $data['interview_name'];
+        $interview->interview_name = '';
         $interview->candidate_id = $data['candidate_id'];
        // $interview->client_id = $data['client'];
         $interview->posting_title = $data['posting_title'];
@@ -78,7 +78,7 @@ class Interview extends Model
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title', 'job_openings.city as city');
+            'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
         $query = $query->orderby('interview.interview_date','desc');
 
         if($all==0){
@@ -108,7 +108,7 @@ class Interview extends Model
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city');
+            'job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact');
 
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
