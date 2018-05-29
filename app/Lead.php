@@ -60,6 +60,7 @@ class Lead extends Model
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
+        $query = $query->orderBy('lead_management.id','desc');
 
         if($all==0){
             $query = $query->where('account_manager_id',$user_id);
@@ -99,6 +100,7 @@ class Lead extends Model
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
+        $query = $query->orderBy('lead_management.id','desc');
 
         if($all==0){
             $query = $query->where('account_manager_id',$user_id);
@@ -141,7 +143,7 @@ class Lead extends Model
         if($all==0){
             $query = $query->where('account_manager_id',$user_id);
         }
-        
+
         $response = $query->get();
 
         //print_r($response);exit;
