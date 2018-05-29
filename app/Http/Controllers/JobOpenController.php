@@ -682,6 +682,7 @@ class JobOpenController extends Controller
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
+            $job_open['education_qualification'] = $value->qualifications;
 
 
             $user = \Auth::user();
