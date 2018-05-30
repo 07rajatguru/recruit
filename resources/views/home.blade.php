@@ -40,7 +40,7 @@
         <div class="col-sm-12" style="margin-top:2%;">
             @section ('cotable_panel_body')
                 <div style ="overflow-x:scroll;">
-                    <table class="table table-bordered" id="attendance_table">
+                    <!-- <table class="table table-bordered" id="attendance_table">
 
                         @foreach($list as $key=>$value)
                             <tr>
@@ -63,6 +63,34 @@
                             </tr>
                         @endforeach
 
+                    </table> -->
+
+                    <table class="table table-bordered" id="attendance_table">
+                        <thead>
+                        <td style="border: 1px solid black;">
+                            @foreach($value as $key1=>$value1)
+                                <th style="border: 1px solid black;">{{ $key1 }}</th>
+                            @endforeach
+                        </td>
+                        </thead>
+                        <tbody>
+                        @foreach($list as $key=>$value)
+                        <tr style="border: 1px solid black;">
+                            <th style="color: red; border: 1px solid black;">{{ $key }}<hr>
+                                <span> Login </span><hr>
+                                <span> Logout </span><hr>
+                                <span> Total </span>
+                            </th>
+                            @foreach($value as $key1=>$value1)
+                            <td style="border: 1px solid black;">
+                                {{ $value1['login'] }}<hr>
+                                {{ $value1['logout'] }}<hr>
+                                {{ $value1['total'] }}
+                            </td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                        </tbody>
                     </table>
                 </div>
             @endsection
@@ -75,6 +103,20 @@
 
 @section('customscripts')
     <script type="text/javascript">
+
+        $(document).ready(function() {
+        var table = $('#attendance_table').DataTable( {
+            scrollY: true,
+            scrollX: true,
+            paging: false,
+            searching: false,
+            info: false,
+            sort: false,
+            fixedColumns: {
+            leftColumns: 1
+        }
+        } );
+    } );
         function filter_data(){
 
             var month = $("#month :selected").val();
