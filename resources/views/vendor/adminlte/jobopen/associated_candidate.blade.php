@@ -65,7 +65,7 @@
                             <div class="box-header with-border col-md-6 ">
                                 <h3 class="box-title">Schedule Interview</h3>
 
-                                <div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
+                                <!-- <div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
                                     <strong>Interview Name: <span class = "required_fields">*</span> </strong>
                                     {!! Form::text('interview_name', null, array('id'=>'interview_name','placeholder' => 'Interview Name','class' => 'form-control', 'tabindex' => '1' )) !!}
                                     @if ($errors->has('interview_name'))
@@ -73,7 +73,7 @@
                                 <strong>{{ $errors->first('interview_name') }}</strong>
                                 </span>
                                     @endif
-                                </div>
+                                </div> -->
 
                                 {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 {!! Form::hidden('client_id', $client_id, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '1' )) !!}

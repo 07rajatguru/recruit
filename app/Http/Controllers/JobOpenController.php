@@ -1663,7 +1663,7 @@ class JobOpenController extends Controller
         $dateClass = new Date();
 
         $data = array();
-        $data['interview_name'] = $request->get('interview_name');
+        //$data['interview_name'] = $request->get('interview_name');
         $data['candidate_id'] = $request->get('candidate_id');
         $data['interviewer_id'] = $request->get('interviewer_id');
         $data['client'] = $request->get('client_id');

@@ -48,14 +48,15 @@
         <tbody>
         @foreach ($interViews as $interView)
         <?php
+        $date = date('Y-m-d', strtotime('this week'));
             if(date("Y-m-d") == date("Y-m-d",strtotime($interView->interview_date)))
-                $color = "RGB(143, 177, 213)";
+                $color = "#8FB1D5";
             elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView->interview_date)))
                 $color = '#feb80a';
-            elseif(date("Y-m-d") < date("Y-m-d",strtotime($interView->interview_date)))
-                $color = '#C4D79B';
-            else
+            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($interView->interview_date)) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($interView->interview_date)))
                 $color = '';
+            else
+                $color = '#C4D79B';
          ?>
             <tr>
                 <td>{{ ++$i }}</td>
