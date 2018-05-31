@@ -124,7 +124,7 @@ class ClientController extends Controller
 
     public function create()
     {
-        $generate_lead = '0';
+        $generate_lead = '1';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -153,7 +153,7 @@ class ClientController extends Controller
     public function edit($id)
     {
 
-        $generate_lead = '0';
+        $generate_lead = '1';
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -186,6 +186,7 @@ class ClientController extends Controller
             $client['source'] = $value->source;
             //$client['fax'] = $value->fax;
             $client['mobile'] = $value->mobile;
+            $client['other_number'] = $value->other_number;
             $client['am_name'] = $value->am_name;
             $client['mail'] = $value->mail;
             $client['s_email'] = $value->s_email;
@@ -606,6 +607,7 @@ class ClientController extends Controller
         $client_basicinfo->name = $input->name;
         $client_basicinfo->display_name = $input->display_name;
         $client_basicinfo->mobile = $input->mobile;
+        $client_basicinfo->other_number = $input->other_number;
         $client_basicinfo->mail = $input->mail;
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
