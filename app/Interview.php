@@ -214,4 +214,17 @@ class Interview extends Model
 
     }
 
+    public static function getInterviewids($interview_id){
+
+        $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
+            ->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
+            ->join('job_openings','job_openings.id','=','interview.posting_title')
+            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
+            ->select('candidate_otherinfo.owner_id as candidate_owner_id','client_basicinfo.account_manager_id as client_owner_id')
+            ->where('interview.id','=',$interview_id)
+            ->first();
+
+            return $interviewDetails;
+    }
+
 }

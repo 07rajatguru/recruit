@@ -66,7 +66,7 @@
                 <td>{{ $interView->contact }}</td>
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
                 <td>{{ date('d-m-Y h:i A',strtotime($interView->interview_date)) }}</td>
-                <td>{{ $interView->location or ''}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView->location or ''}}</td>
 
                 <td>
                     <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>

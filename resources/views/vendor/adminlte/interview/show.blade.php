@@ -48,7 +48,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Interview Date:</th>
-                            <td>{{ isset($interviewer)? $interviewer : null }}</td>
+                            <td>{{ date('d-m-Y h:i A',strtotime($interview_date)) }}</td>
                             <th scope="row">Status :</th>
                             <td>{{ isset($status)? $status : null }}</td>
                         </tr>

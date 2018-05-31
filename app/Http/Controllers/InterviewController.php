@@ -8,6 +8,7 @@ use App\Date;
 use App\Interview;
 use App\JobOpen;
 use App\User;
+use App\Events\NotificationEvent;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\DB;
@@ -104,6 +105,7 @@ class InterviewController extends Controller
     public function store(Request $request){
 
         $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
         $dateClass = new Date();
 
@@ -132,8 +134,27 @@ class InterviewController extends Controller
         /**/
 
         $interviewStored = $interview->save();
+        $interview_id = $interview->id;
 
+        $interviewDetails = Interview::getInterviewids($interview_id);
 
+        $client_owner_id = $interviewDetails->client_owner_id;
+        $candidate_owner_id = $interviewDetails->candidate_owner_id;
+            //print_r($candidate_owner_id);exit;
+
+        // Notifications : On adding new Interview notify Super Admin, Client Owner & Candidate Owner via notification
+            $module_id = $interview_id;
+            $module = 'Interview';
+            $message = $user_name . " has scheduled interview";
+            $link = route('interview.show',$interview_id);
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $user_arr = array();
+            $user_arr[] = $super_admin_userid;
+            $user_arr[] = $client_owner_id;
+            $user_arr[] = $candidate_owner_id;
+
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
 /*      $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
