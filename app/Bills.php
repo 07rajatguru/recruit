@@ -702,14 +702,57 @@ class Bills extends Model
         $join_mail = $join_mail->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name');
         $join_mail = $join_mail->where('bills.id',$id);
-        $join_mail_res = $join_mail->get();
+        $join_mail_res = $join_mail->first();
 
         $join_confirmation_mail = array();
-        $i = 0;
-        foreach ($join_mail_res as $key => $value) {
-            $join_confirmation_mail[$i]['company_name'] = $value->company_name;
-            $join_confirmation_mail[$i]['designation_offered'] = $value->designation_offered;
-            $join_confirmation_mail[$i]['candidate_name'] = $value->candidate_name;
+        if (isset($join_mail_res) && sizeof($join_mail_res)>0) {
+            $salary = $join_mail_res->fixed_salary;
+            $pc = $join_mail_res->percentage_charged;
+
+            $fees = ($salary * $pc)/100;
+            $gst = ($fees * 18)/100;
+            $billing_amount = $fees + $gst;
+
+            $join_confirmation_mail['client_name'] = $join_mail_res->client_name;
+            $join_confirmation_mail['company_name'] = $join_mail_res->company_name;
+            $join_confirmation_mail['candidate_name'] = $join_mail_res->candidate_name;
+            $join_confirmation_mail['designation_offered'] = $join_mail_res->designation_offered;
+            $join_confirmation_mail['joining_date'] = $join_mail_res->date_of_joining;
+            $join_confirmation_mail['job_location'] = $join_mail_res->job_location;
+            $join_confirmation_mail['fixed_salary'] = $join_mail_res->fixed_salary;
+            $join_confirmation_mail['percentage_charged'] = $join_mail_res->percentage_charged;
+            $join_confirmation_mail['fees'] = $fees;
+            $join_confirmation_mail['gst'] = $gst;
+            $join_confirmation_mail['billing_amount'] = $billing_amount;
+            $join_confirmation_mail['client_email_id'] = $join_mail_res->client_email_id;
+            $join_confirmation_mail['candidate_id'] = $join_mail_res->candidate_id;
         }
+
+        return $join_confirmation_mail;
+    }
+
+    public static function getCandidateOwnerEmail($bill_id){
+
+        $query = Bills::query();
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
+        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->where('bills.id','=',$bill_id);
+        $query = $query->select('users.email as candidateowneremail');
+        $res = $query->first();
+
+        return $res;
+    }
+
+    public static function getClientOwnerEmail($bill_id){
+
+        $query = Bills::query();
+        $query = $query->join('job_openings','job_openings.id','=','bills.job_id');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->join('users','users.id','=','client_basicinfo.account_manager_id');
+        $query = $query->where('bills.id','=',$bill_id);
+        $query = $query->select('users.email as clientowneremail');
+        $response = $query->first();
+
+        return $response;
     }
 }

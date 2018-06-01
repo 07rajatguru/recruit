@@ -862,6 +862,46 @@ class BillsController extends Controller
 
     public function SendConfirmationMail($id){
         
+        $user_id = \Auth::user()->id;
+        
+        //Logged in User Email Id
+        $user_email = User::getUserEmailById($user_id);
+
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+
+        $join_mail = Bills::getJoinConfirmationMail($id);
+        //$client_email_id = $join_mail['client_email_id'];
+        $candidate_name = $join_mail['candidate_name'];
+        $candidate_id = $join_mail['candidate_id'];
+        //print_r($join_mail);exit;
+
+        $candidate_email = Bills::getCandidateOwnerEmail($id);
+        $candidate_owner_email = $candidate_email->candidateowneremail;
+
+        $client_email = Bills::getClientOwnerEmail($id);
+        $client_owner_email = $client_email->clientowneremail;
+
+        $to_address = $user_email;
+
+        $cc_address = array();
+        $cc_address[] = $client_owner_email;
+        $cc_address[] = $candidate_owner_email;
+
+        $input = array();
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to'] = $to_address;
+        $input['cc'] = $cc_address;
+        $input['join_mail'] = $join_mail;
+        $input['candidate_name'] = $candidate_name;
+
+        \Mail::send('adminlte::emails.joinconfirmationmail', $input, function ($message) use ($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->cc($input['cc'])->subject('Joining Confirmation of '. $input['candidate_name']);
+        });
+
+        return redirect('/recovery');
     }
 
 }

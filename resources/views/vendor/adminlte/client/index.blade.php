@@ -15,7 +15,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" onclick="client_emails_notification();"> Submit</a>
+                {{--<a class="btn btn-success" onclick="client_emails_notification();"> Submit</a>--}}
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
             </div>
         </div>
