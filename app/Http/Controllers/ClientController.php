@@ -15,6 +15,7 @@ use App\User;
 use App\JobOpen;
 use Excel;
 use App\Events\NotificationEvent;
+use App\Events\NotificationMail;
 
 class ClientController extends Controller
 {
@@ -272,6 +273,7 @@ class ClientController extends Controller
         if($client_basic_info->save()){
 
             $client_id = $client_basic_info->id;
+            $client_name = $client_basic_info->name;
 
             $client_address = new ClientAddress();
             $client_address->client_id = $client_id;
@@ -424,6 +426,16 @@ class ClientController extends Controller
             $user_arr[] = $super_admin_userid;
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+            // Email Notification : data store in datebase
+            $module = "Client";
+            $sender_name = $user_id;
+            $to = "meet@trajinfotech.com";
+            $subject = "Client - ".$client_name;
+            $message = "<tr>" . $user_name . " added new Client </tr>";
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message));
+
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
         else{

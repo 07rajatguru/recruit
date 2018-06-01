@@ -24,6 +24,7 @@ use App\CandidateStatus;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\Events\NotificationMail;
 
 class JobOpenController extends Controller
 {
@@ -616,6 +617,15 @@ class JobOpenController extends Controller
             }
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+            // Email Notification : data store in datebase
+            $module = "Job Open";
+            $sender_name = $user_id;
+            $to = "meet@trajinfotech.com";
+            $subject = "Job Open - ".$posting_title;
+            $message = "<tr>" . $user_name . " added new Job </tr>";
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message));
 
         }
 

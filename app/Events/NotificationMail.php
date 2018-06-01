@@ -14,7 +14,7 @@ class NotificationMail
     use InteractsWithSockets, SerializesModels;
     public $module;
     public $sender_name;
-    public $to,
+    public $to;
     public $subject;
     public $message;
 
