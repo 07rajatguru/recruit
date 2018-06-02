@@ -267,3 +267,55 @@ tr.disabled > td a {
 .employee_perce{
     height:28px !important;
 }
+.navbar-nav>.messages-menu>.dropdown-menu>li .menu>li>a>h4 {
+    margin:0;
+    color:#333333;
+    font-family: 'SanFranciscoDisplayMedium';
+    text-transform: capitalize;
+    font-size: 16px;
+}
+
+.navbar-nav>.messages-menu>.dropdown-menu>li .menu>li>a>p {
+    margin:0;
+    padding: 5px 0 0 0px;
+    color:#666666;
+    font-family: 'SanFranciscoDisplayRegular;
+    font-size: 14px;
+}
+
+.navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a, .navbar-nav>.messages-menu>.dropdown-menu>li
+
+.menu>li>a, .navbar-nav>.tasks-menu>.dropdown-menu>li .menu>li>a {
+    display: block;
+    white-space: normal;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.navbar-nav>.notifications-menu>.dropdown-menu>li.footer>a, .navbar-nav>.messages-menu>.dropdown-menu>li.footer>a,
+
+.navbar-nav>.tasks-menu>.dropdown-menu>li.footer>a {
+    color:#666666;
+    font-family: 'SanFranciscoDisplayRegular;
+    font-size: 14px;
+}
+
+
+/* width */
+.dropdown-menu ::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+.dropdown-menu ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+.dropdown-menu ::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+.dropdown-menu ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
