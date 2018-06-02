@@ -389,7 +389,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
 
-    // CANDIDATE
+    // Candidate
     Route::get('candidate', [
         'as' => 'candidate.index',
         'uses' => 'CandidateController@index'
@@ -956,6 +956,158 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Notification Related Routes End
+
+    //Training Routes start
+
+     // Admin > Training
+    Route::get('training', [
+        'as' => 'training.index',
+        'uses' => 'TrainingController@index',
+//        'middleware' => ['permission:team-list|team-create|team-edit|team-delete']
+    ]);
+    Route::get('training/create', [
+        'as' => 'training.create',
+        'uses' => 'TrainingController@create',
+//        'middleware' => ['permission:team-create']
+    ]);
+    Route::post('training/create', [
+        'as' => 'training.store',
+        'uses' => 'TrainingController@store',
+//        'middleware' => ['permission:team-create']
+    ]);
+    
+    Route::get('training/{id}/edit', [
+        'as' => 'training.edit',
+        'uses' => 'TrainingController@edit',
+//        'middleware' => ['permission:team-edit']
+    ]);
+    Route::patch('training/{id}', [
+        'as' => 'training.update',
+        'uses' => 'TrainingController@update',
+       // 'middleware' => ['permission:team-edit']
+    ]);
+    
+
+    Route::post('training/upload/{id}', [
+        'as' => 'trainingattachments.upload',
+        'uses' => 'TrainingController@upload',
+    ]);
+
+    Route::get('training/{id}/show', [
+        'as' => 'training.show',
+        'uses' => 'TrainingController@show'
+    ]);
+
+    Route::delete('training/{id}', [
+        'as' => 'training.destroy',
+        'uses' => 'TrainingController@trainingDestroy',
+
+    ]);
+    Route::delete('training/destroy/{id}', [
+        'as' => 'trainingattachments.destroy',
+        'uses' => 'TrainingController@attachmentsDestroy',
+   ]);
+
+    // Admin > Process Manual
+    
+    Route::get('process', [
+        'as' => 'process.index',
+        'uses' => 'ProcessController@index',
+    ]);
+    
+    Route::get('process/create', [
+        'as' => 'process.create',
+        'uses' => 'ProcessController@create',
+
+    ]);
+
+    Route::post('process/create', [
+        'as' => 'process.store',
+        'uses' => 'ProcessController@store',
+
+    ]);
+    Route::get('process/{id}/edit', [
+        'as' => 'process.edit',
+        'uses' => 'ProcessController@edit',
+
+    ]);
+    Route::patch('process/{id}', [
+        'as' => 'process.update',
+        'uses' => 'ProcessController@update',
+      
+    ]);
+    Route::post('process/upload/{id}', [
+        'as' => 'processattachments.upload',
+        'uses' => 'ProcessController@upload',
+    ]);
+    Route::get('process/{id}/show', [
+        'as' => 'process.show',
+        'uses' => 'ProcessController@show'
+    ]);
+
+    Route::delete('process/{id}', [
+        'as' => 'process.destroy',
+        'uses' => 'ProcessController@processDestroy',
+
+    ]);
+
+    Route::delete('process/destroy/{id}', [
+        'as' => 'processattachments.destroy',
+        'uses' => 'ProcessController@attachmentsDestroy',
+   ]);
+
+
+    //Training Routes start
+
+     // Admin > Accounting Heads
+    Route::get('accounting', [
+        'as' => 'accounting.index',
+        'uses' => 'AccountingController@index',
+//        'middleware' => ['permission:team-list|team-create|team-edit|team-delete']
+    ]);
+    Route::get('accounting/create', [
+        'as' => 'accounting.create',
+        'uses' => 'AccountingController@create',
+//        'middleware' => ['permission:team-create']
+    ]);
+    Route::post('accounting/create', [
+        'as' => 'accounting.store',
+        'uses' => 'AccountingController@store',
+//        'middleware' => ['permission:team-create']
+    ]);
+    
+    Route::get('accounting/{id}/edit', [
+        'as' => 'accounting.edit',
+        'uses' => 'AccountingController@edit',
+//        'middleware' => ['permission:team-edit']
+    ]);
+    Route::patch('accounting/{id}', [
+        'as' => 'accounting.update',
+        'uses' => 'AccountingController@update',
+       // 'middleware' => ['permission:team-edit']
+    ]);
+    
+
+    // Route::post('training/upload/{id}', [
+    //     'as' => 'trainingattachments.upload',
+    //     'uses' => 'TrainingController@upload',
+    // // ]);
+
+    // Route::get('training/{id}/show', [
+    //     'as' => 'training.show',
+    //     'uses' => 'TrainingController@show'
+    // ]);
+
+    Route::delete('accounting/{id}', [
+        'as' => 'accounting.destroy',
+        'uses' => 'AccountingController@accountingDestroy',
+
+    ]);
+   //  Route::delete('training/destroy/{id}', [
+   //      'as' => 'trainingattachments.destroy',
+   //      'uses' => 'TrainingController@attachmentsDestroy',
+   // ]);
+
 
 });
 

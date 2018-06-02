@@ -284,6 +284,55 @@ return [
             ],
 
             [
+               'text'        => 'Training',
+               'icon'        => 'users',
+               'submenu' => [
+                   [
+                       'text' => 'Add Training',
+                       'url'  => 'training/create',
+                       'icon' => 'plus',
+                   ],
+                   [
+                       'text' => 'List Training',
+                       'url'  => 'training',
+                       'icon' => 'list',
+                   ]
+               ],
+           ],
+           [
+               'text'        => 'Process Manual',
+               'icon'        => 'users',
+               'submenu' => [
+                   [
+                       'text' => 'Add Process',
+                       'url'  => 'process/create',
+                       'icon' => 'plus',
+                   ],
+                   [
+                       'text' => 'List Process',
+                       'url'  => 'process',
+                       'icon' => 'list',
+                   ]
+               ],
+           ],
+           [
+               'text'        => 'Accounting Heads',
+               'icon'        => 'users',
+               'submenu' => [
+                   [
+                       'text' => 'Add Accounting Heads',
+                       'url'  => 'accounting/create',
+                       'icon' => 'plus',
+                   ],
+                   [
+                       'text' => 'List Accounting Heads',
+                       'url'  => 'accounting',
+                       'icon' => 'list',
+                   ]
+               ],
+           ],
+
+            [
                 'text'        => 'Admin',
                 'icon'        => 'user-secret',
                 'submenu' => [
