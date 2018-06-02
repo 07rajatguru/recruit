@@ -92,7 +92,7 @@ class ToDos extends Model
         return $todo_array;
     }
 
-    public static function getAllTodosdash($ids=array()){
+    public static function getAllTodosdash($ids=array(),$limit=0){
 
         $todo_status = env('COMPLETEDSTATUS');
         //print_r($todo_status);exit;
@@ -107,7 +107,12 @@ class ToDos extends Model
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
         $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
-        $todo_res   = $todo_query->limit(7)->get();
+
+        if($limit>0)
+            $todo_query   = $todo_query->limit($limit);
+
+        $todo_res = $todo_query->get();
+
 //print_r($todo_res);exit;
         $todo_array = array();
         $i = 0;
