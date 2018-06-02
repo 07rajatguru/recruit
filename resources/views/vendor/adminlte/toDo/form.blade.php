@@ -113,7 +113,7 @@
                     <div class="form-group type_list" >
 
                         <div class="col-sm-5">
-                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
+                            <select name="from[]" id="search" class="form-control" size="8" multiple="multiple"  readonly="true">
                             </select>
                         </div>
                         <div class="col-sm-2">
@@ -244,7 +244,7 @@
             });
 
             getType();
-            getselectedtypelist();
+            //getselectedtypelist();
         });
         function getType(){
             var selectedType = $("#type").val();
@@ -264,7 +264,10 @@
                           //$('#typeList').select2('val', typelist)
                           $('#search').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
                       }
-                  }
+                  },
+                    complete: function (data) {
+                        getselectedtypelist();
+                    }
                 });
             }
 
@@ -290,7 +293,7 @@
                     success: function(data){
                         $("#search_to").empty();
                         for(var i=0;i<data.length;i++){
-                            $('#search_to').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
+                            $('#search_to').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value));
                             $('#search option[value="'+data[i].id+'"]').remove();
                         }
                     }
