@@ -11,7 +11,8 @@
    <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Lead Managment ({{$count}}) - Converted Client ({{$convert_client_count}})</h2>
+                <h2>Total Leads({{$count}})</h2>
+                <h4><span>Leads converted to client - {{ $convert_client_count }}</span></h4>
             </div>
 
             <div class="pull-right">
