@@ -44,7 +44,7 @@
                 <th>Client Owner</th>
                 <th>Client Email</th>
                 <th>Client Phone No.</th>
-                {{-- <th>Client Address</th> --}}
+                <th>Client Address</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -57,7 +57,7 @@
                 <td>{{ $client['am_name'] }}</td>
                 <td>{{ $client['mail']}}</td>
                 <td>{{ $client['mobile'] }}</td>
-               {{-- <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td> --}}
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 
                     <?php if($isSuperAdmin || $isAdmin || $client['client_visibility']) { ?>

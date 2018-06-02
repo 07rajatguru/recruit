@@ -37,21 +37,21 @@ class ClientController extends Controller
         // if Super Admin get clients of all companies
         if($isSuperAdmin || $isAdmin){
             $clients = \DB::table('client_basicinfo')
-                //->join('client_address','client_address.client_id','=','client_basicinfo.id')
+                ->join('client_address','client_address.client_id','=','client_basicinfo.id')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
                 ->leftJoin('client_doc',function($join){
                     $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
                     $join->where('client_doc.category','=','Client Contract');
                 })
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file'/*,'client_address.billing_street2 as area','client_address.billing_city as city'*/)
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city')
                 ->orderBy('client_basicinfo.id','desc')
                 ->get();
         }
         else{
             $clients = \DB::table('client_basicinfo')
-                //->join('client_address','client_address.client_id','=','client_basicinfo.id')
+                ->join('client_address','client_address.client_id','=','client_basicinfo.id')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id'/*,'client_address.billing_street2 as area','client_address.billing_city as city'*/)
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city')
                 ->where('account_manager_id',$user->id)
                 ->orderBy('client_basicinfo.id','desc')
                 ->get();
@@ -77,7 +77,7 @@ class ClientController extends Controller
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['mobile']= $client->mobile;
 
-            /*$address ='';
+            $address ='';
             if($client->area!=''){
                 $address .= $client->area;
             }
@@ -88,7 +88,8 @@ class ClientController extends Controller
                     $address .= ", ".$client->city;
             }
 
-            $client_array[$i]['address'] = $address;*/
+            $client_array[$i]['address'] = $address;
+           // $client_array[$i]['convert_client'] = $client->convert_client;
 
             if($client->am_id==$user->id){
                 $client_visibility_val = true;
@@ -442,7 +443,7 @@ class ClientController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-            /*// Email Notification : data store in datebase
+           /* // Email Notification : data store in datebase
             $module = "Client";
             $sender_name = $user_id;
             $to = $user_email;
@@ -450,7 +451,7 @@ class ClientController extends Controller
             $message = "<tr>" . $user_name . " added new Client </tr>";
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message));*/
-            
+
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
         else{
