@@ -44,7 +44,7 @@
                 <th>Client Owner</th>
                 <th>Client Email</th>
                 <th>Client Phone No.</th>
-                {{-- <th>Client Address</th> --}}
+                <th>Client Address</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -53,11 +53,11 @@
         @foreach ($client_array as $key => $client)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $client['name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
                 <td>{{ $client['am_name'] }}</td>
-                <td>{{ $client['mail']}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['mail']}}</td>
                 <td>{{ $client['mobile'] }}</td>
-               {{-- <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td> --}}
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 
                     <?php if($isSuperAdmin || $isAdmin || $client['client_visibility']) { ?>

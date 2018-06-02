@@ -789,7 +789,7 @@ class ToDosController extends Controller
         $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
 
         if(isset($todo_ids) && sizeof($todo_ids)>0){
-            $todos = Todos::getAllTodosdash($todo_ids);
+            $todos = Todos::getAllTodosdash($todo_ids,15);
         }
 //print_r($todos);exit;
         return json_encode($todos);
