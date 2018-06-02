@@ -91,7 +91,7 @@
                 
                             <div class="form-group">
                                 <strong>Status:</strong>
-                                    {!! Form::select('status',$status, $lead_status, array('id'=>'status','placeholder' => 'Country ','class' => 'form-control','tabindex' => '9')) !!}
+                                    {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
                             </div>
                                                 
                             <div class="form-group">
