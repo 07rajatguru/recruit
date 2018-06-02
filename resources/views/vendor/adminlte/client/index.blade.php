@@ -53,9 +53,9 @@
         @foreach ($client_array as $key => $client)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $client['name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
                 <td>{{ $client['am_name'] }}</td>
-                <td>{{ $client['mail']}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['mail']}}</td>
                 <td>{{ $client['mobile'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
