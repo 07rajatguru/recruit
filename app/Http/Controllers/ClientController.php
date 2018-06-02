@@ -37,19 +37,21 @@ class ClientController extends Controller
         // if Super Admin get clients of all companies
         if($isSuperAdmin || $isAdmin){
             $clients = \DB::table('client_basicinfo')
+                //->join('client_address','client_address.client_id','=','client_basicinfo.id')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
                 ->leftJoin('client_doc',function($join){
                     $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
                     $join->where('client_doc.category','=','Client Contract');
                 })
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file')
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file'/*,'client_address.billing_street2 as area','client_address.billing_city as city'*/)
                 ->orderBy('client_basicinfo.id','desc')
                 ->get();
         }
         else{
             $clients = \DB::table('client_basicinfo')
+                //->join('client_address','client_address.client_id','=','client_basicinfo.id')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id')
+                ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id'/*,'client_address.billing_street2 as area','client_address.billing_city as city'*/)
                 ->where('account_manager_id',$user->id)
                 ->orderBy('client_basicinfo.id','desc')
                 ->get();
@@ -74,7 +76,19 @@ class ClientController extends Controller
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['mobile']= $client->mobile;
-           // $client_array[$i]['convert_client'] = $client->convert_client;
+
+            /*$address ='';
+            if($client->area!=''){
+                $address .= $client->area;
+            }
+            if($client->city!=''){
+                if($address=='')
+                    $address .= $client->city;
+                else
+                    $address .= ", ".$client->city;
+            }
+
+            $client_array[$i]['address'] = $address;*/
 
             if($client->am_id==$user->id){
                 $client_visibility_val = true;
@@ -235,6 +249,7 @@ class ClientController extends Controller
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
+        $user_email = \Auth::user()->email;
         $input = $request->all();
 
         $client_basic_info = new ClientBasicinfo();
@@ -278,49 +293,49 @@ class ClientController extends Controller
             $client_address = new ClientAddress();
             $client_address->client_id = $client_id;
 
-            if(isset($input->billing_country) && $input->billing_country!=''){
-                $client_address->billing_country = $input->billing_country;
+            if(isset($input['billing_country']) && $input['billing_country']!=''){
+                $client_address->billing_country = $input['billing_country'];
             }
-            if(isset($input->billing_state) && $input->billing_state!=''){
-                $client_address->billing_state = $input->billing_state;
+            if(isset($input['billing_state']) && $input['billing_state']!=''){
+                $client_address->billing_state = $input['billing_state'];
             }
-            if(isset($input->billing_street1) && $input->billing_street1!=''){
-                $client_address->billing_street1 = $input->billing_street1;
+            if(isset($input['billing_street1']) && $input['billing_street1']!=''){
+                $client_address->billing_street1 = $input['billing_street1'];
             }
-            if(isset($input->billing_street2) && $input->billing_street2!=''){
-                $client_address->billing_street2 = $input->billing_street2;
+            if(isset($input['billing_street2']) && $input['billing_street2']!=''){
+                $client_address->billing_street2 = $input['billing_street2'];
             }
-            if(isset($input->billing_code) && $input->billing_code!=''){
-                $client_address->billing_code = $input->billing_code;
+            if(isset($input['billing_code']) && $input['billing_code']!=''){
+                $client_address->billing_code = $input['billing_code'];
             }
-            if(isset($input->billing_city) && $input->billing_city!=''){
-                $client_address->billing_city = $input->billing_city;
+            if(isset($input['billing_city']) && $input['billing_city']!=''){
+                $client_address->billing_city = $input['billing_city'];
             }
 
-            if(isset($input->shipping_country) && $input->shipping_country!=''){
-                $client_address->shipping_country = $input->shipping_country;
+            if(isset($input['shipping_country']) && $input['shipping_country']!=''){
+                $client_address->shipping_country = $input['shipping_country'];
             }
-            if(isset($input->shipping_state) && $input->shipping_state!=''){
-                $client_address->shipping_state = $input->shipping_state;
+            if(isset($input['shipping_state']) && $input['shipping_state']!=''){
+                $client_address->shipping_state = $input['shipping_state'];
             }
-            if(isset($input->shipping_street1) && $input->shipping_street1!=''){
-                $client_address->shipping_street1 = $input->shipping_street1;
+            if(isset($input['shipping_street1']) && $input['shipping_street1']!=''){
+                $client_address->shipping_street1 = $input['shipping_street1'];
             }
-            if(isset($input->shipping_street2) && $input->shipping_street2!=''){
-                $client_address->shipping_street2 = $input->shipping_street2;
+            if(isset($input['shipping_street2']) && $input['shipping_street2']!=''){
+                $client_address->shipping_street2 = $input['shipping_street2'];
             }
-            if(isset($input->shipping_code) && $input->shipping_code!=''){
-                $client_address->shipping_code = $input->shipping_code;
+            if(isset($input['shipping_code']) && $input['shipping_code']!=''){
+                $client_address->shipping_code = $input['shipping_code'];
             }
-            if(isset($input->shipping_city) && $input->shipping_city!=''){
-                $client_address->shipping_city = $input->shipping_city;
+            if(isset($input['shipping_city']) && $input['shipping_city']!=''){
+                $client_address->shipping_city = $input['shipping_city'];
             }
             $client_address->updated_at = date("Y-m-d H:i:s");
             $client_address->save();
 
             // save client address
-            $input['client_id'] = $client_id;
-            ClientAddress::create($input);
+           // $input['client_id'] = $client_id;
+           // ClientAddress::create($input);
 
             // save client documents
             $client_contract = $request->file('client_contract');
@@ -427,15 +442,15 @@ class ClientController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-            // Email Notification : data store in datebase
+            /*// Email Notification : data store in datebase
             $module = "Client";
             $sender_name = $user_id;
-            $to = "meet@trajinfotech.com";
+            $to = $user_email;
             $subject = "Client - ".$client_name;
             $message = "<tr>" . $user_name . " added new Client </tr>";
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message));
-
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message));*/
+            
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
         else{
@@ -592,7 +607,9 @@ class ClientController extends Controller
             // unlink documents
             $dir_name = "uploads/clients/".$id."/";
             $client_doc = new ClientDoc();
-            $response = $client_doc->recursiveRemoveDirectory($dir_name);
+            if(is_dir($dir_name)){
+                $response = $client_doc->recursiveRemoveDirectory($dir_name);
+            }
 
             return redirect()->route('client.index')->with('success','Client deleted Successfully');
         }else{
