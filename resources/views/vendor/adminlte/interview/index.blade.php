@@ -34,9 +34,10 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Interview Name</th>
+                {{--<th>Interview Name</th>--}}
                 <th>Posting Title</th>
                 <th>Candidate</th>
+                <th>Candidate <br/>Contact No.</th>
                {{-- <th>Client</th>--}}
                 <th>Interview Date</th>
                 <th>Location</th>
@@ -47,23 +48,25 @@
         <tbody>
         @foreach ($interViews as $interView)
         <?php
+        $date = date('Y-m-d', strtotime('this week'));
             if(date("Y-m-d") == date("Y-m-d",strtotime($interView->interview_date)))
-                $color = '#32CD32';
+                $color = "#8FB1D5";
             elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView->interview_date)))
-                $color = '#B1A0C7';
-            elseif(date("Y-m-d") > date("Y-m-d",strtotime($interView->interview_date)))
+                $color = '#feb80a';
+            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($interView->interview_date)) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($interView->interview_date)))
                 $color = '';
             else
-                $color = '#FABF8F';
+                $color = '#C4D79B';
          ?>
             <tr>
                 <td>{{ ++$i }}</td>
-                <td style="background-color: {{ $color }}">{{ $interView->interview_name or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
+                {{--<td style="background-color: {{ $color }}">{{ $interView->interview_name or '' }}</td>--}}
+                <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView->client_name }} - {{ $interView->posting_title }} , {{$interView->city}}</td>
                 <td>{{ $interView->candidate_fname }}</td>
+                <td>{{ $interView->contact }}</td>
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
-                <td>{{ $interView->interview_date or ''}} </td>
-                <td>{{ $interView->location or ''}}</td>
+                <td>{{ date('d-m-Y h:i A',strtotime($interView->interview_date)) }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView->location or ''}}</td>
 
                 <td>
                     <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>

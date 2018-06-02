@@ -53,6 +53,17 @@ Route::post('candidate/createform',[
     'uses'=>'CandidateCreateFormController@storef'
 ]);
 
+// Report > Daily , Weekly
+    Route::get('report/daily' ,[
+        'as' => 'report.daily',
+        'uses' => 'ReportController@dailyreport'
+    ]);
+
+    Route::get('report/weekly' ,[
+        'as' => 'report.weekly',
+        'uses' => 'ReportController@weeklyreport'
+    ]);
+
 
 Route::group(['middleware' => ['auth']], function () {
 
@@ -83,6 +94,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'lead.index',
         'uses'=>'LeadController@index']);
 
+    Route::get('lead/cancel', [
+        'as' => 'lead.leadcancel',
+        'uses' => 'LeadController@cancellead'
+    ]);
+    
    Route::post('lead/store', [
         'as' => 'lead.store',
         'uses' => 'LeadController@store'
@@ -113,16 +129,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'LeadController@clonestore',
     ]); 
 
-   /* // Report > Daily , Weekly
-    Route::get('report/daily' ,[
-        'as' => 'report.daily',
-        'uses' => 'ReportController@dailyreport'
+    Route::get('lead/{id}', [
+        'as' => 'lead.cancel',
+        'uses' => 'LeadController@cancel'
     ]);
 
-    Route::get('report/weekly' ,[
-        'as' => 'report.weekly',
-        'uses' => 'ReportController@weeklyreport'
-    ]);*/
+
+    
     
     // Admin > Users
     Route::get('users', [
@@ -512,6 +525,8 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
     Route::get('jobs/importExport', 'JobOpenController@importExport');
     Route::post('jobs/importExcel', 'JobOpenController@importExcel');
+    Route::get('jobs/salary', 'JobOpenController@salary');
+    Route::get('jobs/work', 'JobOpenController@work');
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
@@ -897,6 +912,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos/monthly', [
         'as' => 'todos.monthly',
         'uses' => 'ToDosController@monthly',
+    ]);
+
+    Route::get('todos/read', [
+        'as' => 'todos.read',
+        'uses' => 'ToDosController@readTodos',
+    ]);
+
+    Route::get('todos/all', [
+        'as' => 'todos.list',
+        'uses' => 'ToDosController@getAjaxtodo',
     ]);
 
     // To do's Routes End

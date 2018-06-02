@@ -128,6 +128,11 @@ return [
                        'text' => 'List Lead',
                        'url'  => 'lead',
                        'icon' => 'list',
+                   ],
+                   [
+                       'text' => 'Cancel Lead',
+                       'url'  => 'lead/cancel',
+                       'icon' => 'list',
                    ]
                ],
            ],

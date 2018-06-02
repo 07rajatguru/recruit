@@ -45,7 +45,11 @@ class JobAssociateCandidates extends Model
     public static function getDailyReportAssociate(){
 
         $user = \Auth::user();
-        $user_id = $user->id;
+       // $user_id = $user->id;
+
+        $users = User::getAllUsers('recruiter');
+
+        foreach ($users as $key => $value) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -55,27 +59,29 @@ class JobAssociateCandidates extends Model
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         //$query = $query->join('interview','interview.posting_title','=','job_openings.id');
-        $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),*/'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location','job_openings.hiring_manager_id as user_ids');
+        $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),*/'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location','job_openings.hiring_manager_id as user_ids','job_associate_candidates.associate_by as aby');
         $query = $query->where('date','>',"$from_date");
         $query = $query->where('date','<',"$to_date");
-        $query = $query->where('job_openings.hiring_manager_id','=',$user_id);
+        $query = $query->where('job_associate_candidates.associate_by','=',$key);
 
         $associate_res = $query->get();
 
         $response = array();
         $i = 0;
-        foreach ($associate_res as $key => $value) {
+        foreach ($associate_res as $key1 => $value1) {
            // $response[$i]['id'] = $value->id;
-            $response[$i]['date'] = $value->date;
-            $response[$i]['posting_title'] = $value->posting_title;
-            $response[$i]['company'] = $value->company;
-            $response[$i]['location'] = $value->location;
-            $response[$i]['associate_candidate_count'] = $value->count;
+            $response[$i]['date'] = $value1->date;
+            $response[$i]['posting_title'] = $value1->posting_title;
+            $response[$i]['company'] = $value1->company;
+            $response[$i]['location'] = $value1->location;
+            $response[$i]['associate_candidate_count'] = $value1->count;
             $response[$i]['status'] = $status;
+            $response[$i]['associate_by'] = $value1->aby;
             $i++;
         }
 
         //print_r($response);exit;
         return $response;   
+    }
     }
 }

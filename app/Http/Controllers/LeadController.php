@@ -25,9 +25,38 @@ class LeadController extends Controller
         $access_roles_id = array($superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $leads = Lead::getAllLeads(1,$user->id);
+            $convert_client = Lead::getConvertedClient(1,$user->id);
         }
         else{
             $leads = Lead::getAllLeads(0,$user->id);
+            $convert_client = Lead::getConvertedClient(0,$user->id);
+        }
+       // print_r($leads);exit;
+
+        $convert_client_count = sizeof($convert_client);
+        //print_r($convert_client_count);exit;
+
+        $lead_count = 0;
+
+        $count = sizeof($leads);
+        //$lead = Lead::orderBy('id','DESC')->paginate(50);
+        return view('adminlte::lead.index',compact('leads','lead_count','count','convert_client_count'));
+
+    }
+
+    public function cancellead()
+    {
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $leads = Lead::getCancelLeads(1,$user->id);
+        }
+        else{
+            $leads = Lead::getCancelLeads(0,$user->id);
         }
        // print_r($leads);exit;
 
@@ -35,7 +64,20 @@ class LeadController extends Controller
 
         $count = sizeof($leads);
         //$lead = Lead::orderBy('id','DESC')->paginate(50);
-        return view('adminlte::lead.index',compact('leads','lead_count','count'));
+        return view('adminlte::lead.cancel',compact('leads','lead_count','count'));        
+    }
+
+    public function cancel($id){
+        
+        $cancel_lead =1;
+        $lead = array();
+        $lead = Lead::find($id);
+        $lead->cancel_lead = $cancel_lead;
+        $lead_cancel = $lead->save();
+
+        //print_r($lead_cancel);exit;
+
+        return redirect()->route('lead.index')->with('success', 'BNM Updated Successfully');
 
     }
 
@@ -45,13 +87,15 @@ class LeadController extends Controller
         $user_id = $user->id;
         $action = 'add';
         $generate_lead = '0';
+        $cancel_lead = '0';
         $leadservices_status=Lead::getLeadService();
         $users=User::getAllUsers();
         $status = Lead::getLeadStatus();
         $service ='';
+        $lead_status ='';
         $referredby = $user_id;
 
-        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status'));
+        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead','lead_status'));
     }
 
  public function store(Request $request){
@@ -75,6 +119,7 @@ class LeadController extends Controller
          $source=$input['source'];
          $designation=$input['designation'];
          $referredby_id=$input['referredby_id'];
+         $lead_status = $input['status'];
 
          $lead=new Lead();
          $lead->name=$company_name;
@@ -95,6 +140,7 @@ class LeadController extends Controller
          $lead->source=$source;
          $lead->designation=$designation;
          $lead->referredby=$referredby_id;
+         $lead->lead_status=$lead_status;
          $lead->save();
 
          $validator = \Validator::make(Input::all(),$lead::$rules);
@@ -113,7 +159,7 @@ class LeadController extends Controller
         $leadservices_status = Lead::getLeadService();
         $status = Lead::getLeadStatus();
         $lead = Lead::find($id);
-        
+        $cancel_lead = $lead->cancel_lead;
         $convert_client = $lead->convert_client;
         if($convert_client == 1){
             $generate_lead = 1;
@@ -121,6 +167,7 @@ class LeadController extends Controller
 
         $service = $lead->service;
         $referredby = $lead->referredby;
+        $lead_status = $lead->lead_status;
         //print_r($lead_s); exit;
         $users=User::getAllUsers();
         $leadsarr = array();
@@ -128,7 +175,7 @@ class LeadController extends Controller
         ->get();
 
         	        
-	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status'));
+	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status'));
 
 	 }
 	 public function update(Request $request, $id){
@@ -144,7 +191,7 @@ class LeadController extends Controller
         $mobile = $request->get('mobile');
         $other_number = $request->get('other_number');
         $display_name = $request->get('display_name');
-        $leads = $request->get('service');
+        $leads = $request->get('leads');
         $remarks = $request->get('remarks');
         $city=$request->get('city');
         $state=$request->get('state');
@@ -154,6 +201,14 @@ class LeadController extends Controller
         $source = $request->get('source');
         $designation = $request->get('designation');
         $referredby_id= $request->get('referredby_id');
+        $lead_status = $request->get('status');
+
+        if ($lead_status == 'Cancel') {
+            $cancel_lead = 1;
+        }
+        else{
+            $cancel_lead =0;
+        }
 
          
         $lead_basic = Lead::find($id);
@@ -191,6 +246,10 @@ class LeadController extends Controller
             $lead_basic->designation=$designation;
         if(isset($referredby_id))
             $lead_basic->referredby=$referredby_id;
+        if(isset($lead_status))
+            $lead_basic->lead_status=$lead_status;
+        if(isset($cancel_lead))
+            $lead_basic->cancel_lead=$cancel_lead;
 
          $lead_basic->account_manager_id = $user;
 

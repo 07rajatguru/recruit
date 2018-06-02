@@ -15,6 +15,7 @@ use App\User;
 use App\JobOpen;
 use Excel;
 use App\Events\NotificationEvent;
+use App\Events\NotificationMail;
 
 class ClientController extends Controller
 {
@@ -124,7 +125,7 @@ class ClientController extends Controller
 
     public function create()
     {
-        $generate_lead = '0';
+        $generate_lead = '1';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -153,7 +154,7 @@ class ClientController extends Controller
     public function edit($id)
     {
 
-        $generate_lead = '0';
+        $generate_lead = '1';
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -186,6 +187,7 @@ class ClientController extends Controller
             $client['source'] = $value->source;
             //$client['fax'] = $value->fax;
             $client['mobile'] = $value->mobile;
+            $client['other_number'] = $value->other_number;
             $client['am_name'] = $value->am_name;
             $client['mail'] = $value->mail;
             $client['s_email'] = $value->s_email;
@@ -271,6 +273,7 @@ class ClientController extends Controller
         if($client_basic_info->save()){
 
             $client_id = $client_basic_info->id;
+            $client_name = $client_basic_info->name;
 
             $client_address = new ClientAddress();
             $client_address->client_id = $client_id;
@@ -423,6 +426,16 @@ class ClientController extends Controller
             $user_arr[] = $super_admin_userid;
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+            // Email Notification : data store in datebase
+            $module = "Client";
+            $sender_name = $user_id;
+            $to = "meet@trajinfotech.com";
+            $subject = "Client - ".$client_name;
+            $message = "<tr>" . $user_name . " added new Client </tr>";
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message));
+
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
         else{
@@ -606,6 +619,7 @@ class ClientController extends Controller
         $client_basicinfo->name = $input->name;
         $client_basicinfo->display_name = $input->display_name;
         $client_basicinfo->mobile = $input->mobile;
+        $client_basicinfo->other_number = $input->other_number;
         $client_basicinfo->mail = $input->mail;
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;

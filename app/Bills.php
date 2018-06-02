@@ -100,6 +100,7 @@ class Bills extends Model
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+       // $bills_query = $bills_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
@@ -107,7 +108,11 @@ class Bills extends Model
         ,'candidate_basicinfo.lname');
 
         if($all==0){
-            $bills_query = $bills_query->where('uploaded_by',$user_id);
+            //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
+              //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
+                //$bills_query = $bills_query->orwhere('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->where('uploaded_by',$user_id);
+            //});
         }
 
         $bills_query = $bills_query->where('status',$status);

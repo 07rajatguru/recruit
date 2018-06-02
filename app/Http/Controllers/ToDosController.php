@@ -767,4 +767,31 @@ class ToDosController extends Controller
         return json_encode($typeArr);
 
     }
+
+    public function readTodos(){
+
+        $user_id = \Auth::user()->id;
+
+        ToDos::where('task_owner','=',$user_id);
+
+        $response['returnvalue'] = 'valid';
+
+        return json_encode($response);
+    }
+
+    public function getAjaxtodo(){
+
+        $user_id = \Auth::user()->id;
+
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $todos = Todos::getAllTodosdash($todo_ids);
+        }
+//print_r($todos);exit;
+        return json_encode($todos);
+    }
 }

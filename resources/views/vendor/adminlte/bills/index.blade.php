@@ -77,9 +77,11 @@
                     @if($title=="Bills Not Made")
                         @if($access || ($user_id==$value['uploaded_by']) )
                             <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
-                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
                             <a class="fa fa-circle" title="show" href="{{ route('bnm.show',$value['id']) }}"></a>
                            <!--  <a class="fa fa-close" title="Cancel BNM" href="{{ route('bnm.cancel',$value['id']) }}"></a> -->
+                          @if($isSuperAdmin)
+                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                          @endif
                            @if($value['cancel_bill']==0)
                             @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
                            @endif
@@ -97,8 +99,11 @@
                     @endif
 
                     @if($title=="Bills Made")
-                        @if($access)
+                        @if($access || ($user_id==$value['uploaded_by']))
                                 <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+                                @if($isSuperAdmin)
+                                  @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                                @endif
                                 @if($value['cancel_bill']==0)
                                   @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
                                 @endif

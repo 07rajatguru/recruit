@@ -46,7 +46,7 @@
                         <p><b>Company Name : </b>{{ $company_name }}</p>
                         <p><b>Company URL: </b><a href="{{ $company_url }}">{{ $company_url }}</a></p>
                         <p><b>About Client : </b></p>
-                        <p>{{ $client_desc }}</p>
+                        <p>{!! $client_desc !!}</p>
                     </td>
                 </tr>
                 <tr>
@@ -54,7 +54,7 @@
                         <p><b>Job Designation :</b> {{ $job_designation }}</p>
                         <p><b>Job Location :</b> {{ $job_location }}</p>
                         <p><b>Job Description :</b></p>
-                        <p> {{ $job_description }}</p>
+                        <p> {!! $job_description !!}</p>
                     </td>
                 </tr>
                 <tr>

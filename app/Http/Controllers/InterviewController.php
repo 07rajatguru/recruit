@@ -8,6 +8,7 @@ use App\Date;
 use App\Interview;
 use App\JobOpen;
 use App\User;
+use App\Events\NotificationEvent;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\DB;
@@ -104,11 +105,12 @@ class InterviewController extends Controller
     public function store(Request $request){
 
         $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
         $dateClass = new Date();
 
         $data = array();
-        $data['interview_name'] = $request->get('interview_name');
+       // $data['interview_name'] = $request->get('interview_name');
         $data['candidate_id'] = $request->get('candidate_id');
         $data['interviewer_id'] = $request->get('interviewer_id');
        // $data['client'] = $request->get('client_id');
@@ -132,8 +134,27 @@ class InterviewController extends Controller
         /**/
 
         $interviewStored = $interview->save();
+        $interview_id = $interview->id;
 
+        $interviewDetails = Interview::getInterviewids($interview_id);
 
+        $client_owner_id = $interviewDetails->client_owner_id;
+        $candidate_owner_id = $interviewDetails->candidate_owner_id;
+            //print_r($candidate_owner_id);exit;
+
+        // Notifications : On adding new Interview notify Super Admin, Client Owner & Candidate Owner via notification
+            $module_id = $interview_id;
+            $module = 'Interview';
+            $message = $user_name . " has scheduled interview";
+            $link = route('interview.show',$interview_id);
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $user_arr = array();
+            $user_arr[] = $super_admin_userid;
+            $user_arr[] = $client_owner_id;
+            $user_arr[] = $candidate_owner_id;
+
+            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
 /*      $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -233,7 +254,7 @@ class InterviewController extends Controller
 
         $dateClass = new Date();
 
-        $interview_name = $request->get('interview_name');
+        //$interview_name = $request->get('interview_name');
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
       //  $client = $request->get('client_id');
@@ -248,8 +269,8 @@ class InterviewController extends Controller
         $interview_owner_id = $user_id;
 
         $interview = Interview::find($id);
-        if(isset($interview_name))
-            $interview->interview_name = $interview_name;
+       // if(isset($interview_name))
+        //    $interview->interview_name = $interview_name;
         if(isset($candidate_id))
             $interview->candidate_id = $candidate_id;
         if(isset($posting_title))
@@ -370,7 +391,7 @@ class InterviewController extends Controller
             ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
             ->leftjoin('users','users.id','=','interview.interviewer_id')
             ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.full_name) AS candidate_name'),
-                 'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city')
+                 'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city','candidate_basicinfo.mobile as contact')
             ->where('interview.id','=',$id)
             ->first();
 
@@ -385,8 +406,9 @@ class InterviewController extends Controller
         
         $interview = array();
         $interview['id'] = $id;
-        $interview['interview_name'] = $interviewDetails->interview_name;
+       // $interview['interview_name'] = $interviewDetails->interview_name;
         $interview['candidate'] = $interviewDetails->candidate_name;
+        $interview['contact'] = $interviewDetails->contact;
       //  $interview['client'] = $interviewDetails->client_name;
         $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.",".$interviewDetails->city;
         $interview['interviewer'] = $interviewDetails->interviewer_name;

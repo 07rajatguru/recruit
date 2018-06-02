@@ -10,7 +10,7 @@ class Interview extends Model
     public $table = "interview";
 
     public static $rules = array(
-        'interview_name' => 'required',
+        //'interview_name' => 'required',
         'candidate_id' => 'required',
         'interview_date' => 'required',
     );
@@ -18,7 +18,7 @@ class Interview extends Model
     public function messages()
     {
         return [
-            'interview_name.required' => 'Interview Name is required field',
+            //'interview_name.required' => 'Interview Name is required field',
             'candidate_id.required' => 'Candidate is required field',
             'interview_date.required' => 'Interview Date is required field'
         ];
@@ -26,7 +26,7 @@ class Interview extends Model
 
     public static function createInterview($data){
         $interview = new Interview();
-        $interview->interview_name = $data['interview_name'];
+        $interview->interview_name = '';
         $interview->candidate_id = $data['candidate_id'];
        // $interview->client_id = $data['client'];
         $interview->posting_title = $data['posting_title'];
@@ -71,17 +71,22 @@ class Interview extends Model
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title', 'job_openings.city as city');
+            'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
         $query = $query->orderby('interview.interview_date','desc');
 
         if($all==0){
-            $query = $query->where('interviewer_id',$user_id);
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
         }
 
         $response = $query->get();
@@ -90,21 +95,27 @@ class Interview extends Model
     }
 
     public static function getDashboardInterviews($all=0,$user_id){
-        $from_date = date("Y-m-d 00:00:00");
+
+        $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city');
+            'job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact');
 
         if($all==0){
-            $query = $query->where('interviewer_id',$user_id);
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
         }
 
         $query = $query->where('interview_date','>',"$from_date");
@@ -161,7 +172,11 @@ class Interview extends Model
     public static function getDailyReportInterview(){
 
          $user = \Auth::user();
-        $user_id = $user->id;
+       // $user_id = $user->id;
+
+        $users = User::getAllUsers('recruiter');
+
+        foreach ($users as $key => $value) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -172,7 +187,7 @@ class Interview extends Model
         $query = $query->select('job_openings.posting_title as posting_title','job_openings.city as location','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','candidate_basicinfo.full_name as cname','candidate_basicinfo.city as ccity','candidate_basicinfo.mobile as cmobile','candidate_basicinfo.email as cemail');
         $query = $query->where('interview_date','>',"$from_date");
         $query = $query->where('interview_date','<',"$to_date");
-        $query = $query->where('interview.interview_owner_id','=',$user_id);
+        $query = $query->where('interview.interviewer_id','=',$key);
 
         $interview_res = $query->get();
 
@@ -195,7 +210,21 @@ class Interview extends Model
 
         //print_r($response);exit;
         return $response;
+    }
 
+    }
+
+    public static function getInterviewids($interview_id){
+
+        $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
+            ->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
+            ->join('job_openings','job_openings.id','=','interview.posting_title')
+            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
+            ->select('candidate_otherinfo.owner_id as candidate_owner_id','client_basicinfo.account_manager_id as client_owner_id')
+            ->where('interview.id','=',$interview_id)
+            ->first();
+
+            return $interviewDetails;
     }
 
 }

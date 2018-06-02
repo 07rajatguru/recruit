@@ -99,6 +99,10 @@
                             <th scope="row" >Users who can access the job</th>
                             <td colspan="3">{{ implode(",",$jobopen['users']) }}</td>
                         </tr>
+                        <tr>
+                            <th scope="row" >Education Qualification</th>
+                            <td colspan="3">{{ $jobopen['education_qualification']}}</td>
+                        </tr>
                      </table>
 
                 </div>
