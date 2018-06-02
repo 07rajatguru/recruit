@@ -286,32 +286,70 @@ return [
                 'text'        => 'Attendance',
                 'url'         => '/home',
                 'icon'        => 'folder-open',
-            ],
+            ]
 
-            [
-                'text'        => 'Admin',
-                'icon'        => 'user-secret',
-                'submenu' => [
-                    [
-                        'text' => 'Companies',
-                        'url'  => 'companies',
-                        'icon' => 'circle-o',
-                    ],
-                    [
-                        'text' => 'Users',
-                        'url'  => 'users',
-                        'icon' => 'circle-o',
-                    ],
-                    [
-                        'text' => 'Roles',
-                        'url'  => 'roles',
-                        'icon' => 'circle-o',
-                    ]/*,
-                    [
-                        'text' => 'Permissions',
-                        'url'  => 'permissions',
-                        'icon' => 'circle-o',
-                    ],*/
+        /*[
+           'text'        => 'Training',
+           'icon'        => 'users',
+           'submenu' => [
+               [
+                   'text' => 'Add Training',
+                   'url'  => 'training/create',
+                   'icon' => 'plus',
+               ],
+               [
+                   'text' => 'List Training',
+                   'url'  => 'training',
+                   'icon' => 'list',
+               ]
+           ],
+       ],
+       [
+           'text'        => 'Process Manual',
+           'icon'        => 'users',
+           'submenu' => [
+               [
+                   'text' => 'Add Process',
+                   'url'  => 'process/create',
+                   'icon' => 'plus',
+               ],
+               [
+                   'text' => 'List Process',
+                   'url'  => 'process',
+                   'icon' => 'list',
+               ]
+           ],
+       ]*/,
+
+        [
+            'text'        => 'Admin',
+            'icon'        => 'user-secret',
+            'submenu' => [
+                [
+                    'text' => 'Companies',
+                    'url'  => 'companies',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Users',
+                    'url'  => 'users',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Roles',
+                    'url'  => 'roles',
+                    'icon' => 'circle-o',
+                ],
+                /*[
+                    'text' => 'Accounting Heads',
+                    'url'  => 'accounting',
+                    'icon' => 'circle-o',
+                ]*/
+                    /* [
+                         'text' => 'Permissions',
+                         'url'  => 'permissions',
+                         'icon' => 'circle-o',
+                     ],*/
                     ]
             ],
 
