@@ -45,6 +45,7 @@ class ClientController extends Controller
                 })
                 ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city')
                 ->orderBy('client_basicinfo.id','desc')
+                ->groupBy('client_basicinfo.id')
                 ->get();
         }
         else{
@@ -54,6 +55,7 @@ class ClientController extends Controller
                 ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city')
                 ->where('account_manager_id',$user->id)
                 ->orderBy('client_basicinfo.id','desc')
+                ->groupBy('client_basicinfo.id')
                 ->get();
         }
 
@@ -443,7 +445,7 @@ class ClientController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-           /* // Email Notification : data store in datebase
+            /* // Email Notification : data store in datebase
             $module = "Client";
             $sender_name = $user_id;
             $to = $user_email;
