@@ -13,6 +13,7 @@ use Mockery\CountValidator\Exception;
 use Storage;
 use App\User;
 use App\JobOpen;
+use App\Lead;
 use Excel;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
@@ -595,7 +596,24 @@ class ClientController extends Controller
 
     public function delete($id){
 
-       $res = ClientBasicinfo::checkAssociation($id);
+        $lead_res = \DB::table('client_basicinfo')
+                    ->select('client_basicinfo.lead_id')
+                    ->where('id','=',$id)
+                    ->first();
+
+        if (isset($lead_res) && $lead_res !='') {
+            $lead_id = $lead_res->lead_id;
+        }
+
+        if (isset($lead_id) && $lead_id !='') {
+            $lead = Lead::find($lead_id);
+            //print_r($lead);exit;
+            $lead->convert_client = 0;
+            $lead->save();
+        }
+
+
+        $res = ClientBasicinfo::checkAssociation($id);
 
         if($res){
             // delete address info

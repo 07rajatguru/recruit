@@ -338,6 +338,7 @@ class LeadController extends Controller
         $convert_client = 0;
         if($generatelead==1){
             $client_basic_info->convert_client = 1;
+            $client_basic_info->lead_id = $id;
         }
         
         $client_basic_info->about = $input['description'];
