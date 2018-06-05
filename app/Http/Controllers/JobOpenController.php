@@ -419,6 +419,7 @@ class JobOpenController extends Controller
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
+        $user_email = \Auth::user()->email;
         $input = $request->all();
 
         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
@@ -468,6 +469,8 @@ class JobOpenController extends Controller
          //   $salary_from = 0;
        // if (isset($salary_to) && $salary_to == '')
          //   $salary_to = 0;
+        if (isset($no_of_positions) && $no_of_positions == '')
+            $no_of_positions = 0;
         if (isset($qualifications) && $qualifications == '')
             $qualifications = '';
         if (isset($desired_candidate) && $desired_candidate == '')
@@ -621,9 +624,9 @@ class JobOpenController extends Controller
             // Email Notification : data store in datebase
             $module = "Job Open";
             $sender_name = $user_id;
-            $to = "meet@trajinfotech.com";
+            $to = $user_email;
             $subject = "Job Open - ".$posting_title;
-            $message = "<tr>" . $user_name . " added new Job </tr>";
+            $message = "<tr><td>" . $user_name . " added new Job </td></tr>";
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message));
 
@@ -972,6 +975,8 @@ class JobOpenController extends Controller
          //   $salary_from = 0;
         //if (isset($salary_to) && $salary_to == '')
           //  $salary_to = 0;
+        if (isset($no_of_positions) && $no_of_positions == '')
+            $no_of_positions = 0;
         if (isset($desired_candidate) && $desired_candidate == '')
             $desired_candidate = '';
         if (isset($qualifications) && $qualifications == '')
