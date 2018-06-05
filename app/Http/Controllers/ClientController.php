@@ -446,14 +446,14 @@ class ClientController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-            /* // Email Notification : data store in datebase
+            // Email Notification : data store in datebase
             $module = "Client";
             $sender_name = $user_id;
             $to = $user_email;
             $subject = "Client - ".$client_name;
-            $message = "<tr>" . $user_name . " added new Client </tr>";
+            $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message));*/
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message));
 
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }

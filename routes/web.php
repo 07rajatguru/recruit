@@ -982,6 +982,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Notification Related Routes End
 
+    
+    //Email Notification start
+    Route::get('sendingmail', [
+        'as' => 'email.sendingmail',
+        'uses' => 'EmailNotificationController@sendingmail'
+    ]);
+
+    //Email Notification stop
+
     //Training Routes start
 
      // Admin > Training
