@@ -228,28 +228,28 @@ return [
                 'icon'        => 'users',
                 'submenu' => [
                     [
-                        'text' => 'Create BNM',
-                        'url'  => 'bnm/create',
+                        'text' => 'Create Forecasting',
+                        'url'  => 'forecasting/create',
                         'icon' => 'plus',
                     ],
                     [
-                        'text' => 'View BNM List',
-                        'url'  => 'bnm',
+                        'text' => 'View Forecasting List',
+                        'url'  => 'forecasting',
                         'icon' => 'list',
                     ],
                     [
-                        'text' => 'View BM List',
-                        'url'  => 'bm',
+                        'text' => 'View Recovery List',
+                        'url'  => 'recovery',
                         'icon' => 'list',
                     ],
                     [
-                        'text' => 'Cancel BNM',
-                        'url'  => 'bnm/cancel',
+                        'text' => 'Cancel Forecasting',
+                        'url'  => 'forecasting/cancel',
                         'icon' => 'list',
                     ],
                     [
-                        'text' => 'Cancel BM',
-                        'url'  => 'bm/cancel',
+                        'text' => 'Cancel Recovery',
+                        'url'  => 'recovery/cancel',
                         'icon' => 'list',
                     ],
 

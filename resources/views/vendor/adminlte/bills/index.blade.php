@@ -15,14 +15,14 @@
                   <h2>{{$title}} ({{$count}})</h2>
                 @else
                   @if($cancel_bnm == 1)
-                    <h2>Cancel BNM ({{$count}})</h2>
+                    <h2>Cancel Forecasting ({{$count}})</h2>
                   @else
-                    <h2>Cancel BM ({{$count}})</h2>
+                    <h2>Cancel Recovery ({{$count}})</h2>
                   @endif
                 @endif
             </div>
 
-            @if($title=="Bills Not Made")
+            @if($title=="Forecasting")
                 <div class="pull-right">
                     <a class="btn btn-success" href="{{ route('bills.create') }}"> Create New Bill</a>
                 </div>
@@ -74,23 +74,23 @@
             <tr>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
                 <td>
-                    @if($title=="Bills Not Made")
+                    @if($title=="Forecasting")
                         @if($access || ($user_id==$value['uploaded_by']) )
-                            <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
-                            <a class="fa fa-circle" title="show" href="{{ route('bnm.show',$value['id']) }}"></a>
-                           <!--  <a class="fa fa-close" title="Cancel BNM" href="{{ route('bnm.cancel',$value['id']) }}"></a> -->
+                            <a class="fa fa-edit" title="Edit" href="{{ route('forecasting.edit',$value['id']) }}"></a>
+                            <a class="fa fa-circle" title="show" href="{{ route('forecasting.show',$value['id']) }}"></a>
+                        {{--<a class="fa fa-close" title="Cancel BNM" href="{{ route('forecasting.cancel',$value['id']) }}"></a>--}}
                           @if($isSuperAdmin)
-                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                           @endif
                            @if($value['cancel_bill']==0)
-                            @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                            @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                            @endif
 
                             @if($value['status']==0)
                               @if($value['cancel_bill']!=1)
                             <!-- BM will be generated after date of joining -->
                                 @if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining'])))
-                                  <a class="fa fa-square"  title="Generate BM" href="{{ route('bills.generatebm',$value['id']) }}"></a>
+                                  <a class="fa fa-square"  title="Generate BM" href="{{ route('bills.generaterecovery',$value['id']) }}"></a>
                                 @endif
                               @endif  
                             @endif
@@ -98,14 +98,14 @@
                         @endif
                     @endif
 
-                    @if($title=="Bills Made")
+                    @if($title=="Recovery")
                         @if($access || ($user_id==$value['uploaded_by']))
-                                <a class="fa fa-edit" title="Edit" href="{{ route('bnm.edit',$value['id']) }}"></a>
+                                <a class="fa fa-edit" title="Edit" href="{{ route('forecasting.edit',$value['id']) }}"></a>
                                 @if($isSuperAdmin)
-                                  @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                                  @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                                 @endif
                                 @if($value['cancel_bill']==0)
-                                  @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'bnm','display_name'=>'Bill'])
+                                  @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                                 @endif
                         @endif
                     @endif

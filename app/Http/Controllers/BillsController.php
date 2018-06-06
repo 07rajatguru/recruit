@@ -49,7 +49,7 @@ class BillsController extends Controller
 
         $count = sizeof($bnm);
 
-        $title = "Bills Not Made";
+        $title = "Forecasting";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
     }
 
@@ -84,7 +84,7 @@ class BillsController extends Controller
 
         $count = sizeof($bnm);
 
-        $title = "Bills Not Made";
+        $title = "Forecasting";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm'));
     }
 
@@ -117,7 +117,7 @@ class BillsController extends Controller
         }
 
         $count = sizeof($bnm);
-        $title = "Bills Made";
+        $title = "Recovery";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
 
     }
@@ -153,7 +153,7 @@ class BillsController extends Controller
         }
 
         $count = sizeof($bnm);
-        $title = "Bills Made";
+        $title = "Recovery";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn'));
 
     }
@@ -266,7 +266,7 @@ class BillsController extends Controller
         }
 
        if($total>100){
-           return redirect('bnm/create')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
+           return redirect('forecasting/create')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
        }
 
         //echo $dateClass->changeDMYtoYMD($date_of_joining);exit;
@@ -299,7 +299,7 @@ class BillsController extends Controller
         $validator = \Validator::make(Input::all(),$bill::$rules);
 
         if($validator->fails()){
-            return redirect('bnm/create')->withInput(Input::all())->withErrors($validator->errors());
+            return redirect('forecasting/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
         $bill_response = $bill->save();
@@ -363,7 +363,7 @@ class BillsController extends Controller
         $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
         $candidatejoindate->save();
 
-        return redirect()->route('bnm.index')->with('success', 'Bills Created Successfully');
+        return redirect()->route('forecasting.index')->with('success', 'Bills Created Successfully');
     }
 
     public function show($id){
@@ -534,7 +534,7 @@ class BillsController extends Controller
         }
 
         if($total>100){
-            return redirect('bnm/'.$id.'/edit')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
+            return redirect('forecasting/'.$id.'/edit')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
         }
 
         $bill = Bills::find($id);
@@ -567,7 +567,7 @@ class BillsController extends Controller
         $validator = \Validator::make(Input::all(),$bill::$rules);
 
         if($validator->fails()){
-            return redirect('bnm/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
+            return redirect('forecasting/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
         else{
 
@@ -612,10 +612,10 @@ class BillsController extends Controller
             $bills_doc->save();
 
             if ($status == 1) {
-                return redirect('bm/'.$id.'/generatebm');
+                return redirect('recovery/'.$id.'/generaterecovery');
             }
             else{
-             return redirect('bnm/'.$id.'/edit');
+             return redirect('forecasting/'.$id.'/edit');
             }
         }
 
@@ -629,10 +629,10 @@ class BillsController extends Controller
         $candidatejoindate->save();
 
         if($status == 1){
-            return redirect()->route('bills.bm')->with('success', 'BM Updated Successfully');
+            return redirect()->route('bills.recovery')->with('success', 'Recovery Updated Successfully');
         }
         else{
-            return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
+            return redirect()->route('forecasting.index')->with('success', 'Forecasting Updated Successfully');
         }
     }
 
@@ -642,7 +642,7 @@ class BillsController extends Controller
         BillsDoc::where('bill_id',$id)->delete();
         $todo = Bills::where('id',$id)->delete();
 
-        return redirect()->route('bnm.index')->with('success','Bill Deleted Successfully');
+        return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully');
 
     }
 
@@ -658,10 +658,10 @@ class BillsController extends Controller
         //print_r($bill_cancel);exit;
 
         if($bills['status'] == 1){
-            return redirect()->route('bills.bm')->with('success', 'BM Updated Successfully');
+            return redirect()->route('bills.recovery')->with('success', 'Recovery Canceled Successfully');
         }
         else{
-            return redirect()->route('bnm.index')->with('success', 'BNM Updated Successfully');
+            return redirect()->route('forecasting.index')->with('success', 'Forecasting Canceled Successfully');
         }
 
     }
@@ -678,7 +678,7 @@ class BillsController extends Controller
 
         //$billId = $_POST['id'];
 
-        return redirect()->route('bnm.show',[$billId])->with('success','Attachment deleted Successfully');
+        return redirect()->route('forecasting.show',[$billId])->with('success','Attachment deleted Successfully');
     }
 
     public function upload(Request $request){
@@ -713,7 +713,7 @@ class BillsController extends Controller
 
             $bills_doc->save();
         }
-        return redirect()->route('bnm.show',[$bill_id])->with('success','Attachment uploaded successfully');
+        return redirect()->route('forecasting.show',[$bill_id])->with('success','Attachment uploaded successfully');
     }
 
     public function generateBM($id){

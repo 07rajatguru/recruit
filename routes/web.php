@@ -715,63 +715,63 @@ Route::group(['middleware' => ['auth']], function () {
     ]);*/
 
     // Bills Module
-    Route::get('bnm/create', [
+    Route::get('forecasting/create', [
         'as' => 'bills.create',
         'uses' => 'BillsController@create'
     ]);
 
-    Route::get('bnm', [
-        'as' => 'bnm.index',
+    Route::get('forecasting', [
+        'as' => 'forecasting.index',
         'uses' => 'BillsController@index'
     ]);
 
-    Route::get('bnm/cancel', [
-        'as' => 'bnm.cancelbnm',
+    Route::get('forecasting/cancel', [
+        'as' => 'forecasting.cancelbnm',
         'uses' => 'BillsController@cancelbnm'
     ]);
 
-    Route::get('bm', [
-        'as' => 'bills.bm',
+    Route::get('recovery', [
+        'as' => 'bills.recovery',
         'uses' => 'BillsController@billsMade'
     ]);
 
-    Route::get('bm/cancel', [
+    Route::get('recovery/cancel', [
         'as' => 'bills.bmcancel',
         'uses' => 'BillsController@cancelbm'
     ]);
 
-    Route::get('bnm/{id}/edit', [
-        'as' => 'bnm.edit',
+    Route::get('forecasting/{id}/edit', [
+        'as' => 'forecasting.edit',
         'uses' => 'BillsController@edit'
     ]);
 
-    Route::patch('bnm/{id}', [
-        'as' => 'bnm.update',
+    Route::patch('forecasting/{id}', [
+        'as' => 'forecasting.update',
         'uses' => 'BillsController@update'
     ]);
 
-    Route::post('bnm/store', [
-        'as' => 'bnm.store',
+    Route::post('forecasting/store', [
+        'as' => 'forecasting.store',
         'uses' => 'BillsController@store'
     ]);
 
-    Route::get('bm/{id}/generatebm', [
-        'as' => 'bills.generatebm',
+    Route::get('recovery/{id}/generaterecovery', [
+        'as' => 'bills.generaterecovery',
         'uses' => 'BillsController@generateBM'
     ]);
 
-    Route::get('bnm/{id}/show', [
-        'as' => 'bnm.show',
+    Route::get('forecasting/{id}/show', [
+        'as' => 'forecasting.show',
         'uses' => 'BillsController@show'
     ]);
 
-    Route::delete('bnm/{id}', [
-        'as' => 'bnm.destroy',
+    Route::delete('forecasting/{id}', [
+        'as' => 'forecasting.destroy',
         'uses' => 'BillsController@delete'
     ]);
 
-    Route::get('bnm/{id}', [
-        'as' => 'bnm.cancel',
+    Route::get('forecasting/{id}', [
+        'as' => 'forecasting.cancel',
         'uses' => 'BillsController@cancel'
     ]);
 

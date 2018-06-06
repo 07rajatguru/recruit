@@ -11,21 +11,21 @@
         <div class="pull-left">
             @if($generate_bm==1)
                 @if($status==0)
-                    <h2>Please confirm the details and generate Bills Made</h2>
+                    <h2>Please confirm the details and generate Recovery</h2>
                 @else
-                    <h2>Edit BM</h2>
+                    <h2>Edit Recovery</h2>
                 @endif
             @elseif( $action == 'edit')
-                <h2>Edit BNM</h2>
+                <h2>Edit Forecasting</h2>
             @else
-                <h2>Create BNM</h2>
+                <h2>Create Forecasting</h2>
             @endif
         </div>
         <div class="pull-right">
             @if($status==0)
-                <a class="btn btn-primary" href="{{ route('bnm.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('forecasting.index') }}"> Back</a>
             @else
-                <a class="btn btn-primary" href="{{ route('bills.bm') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('bills.recovery') }}"> Back</a>
             @endif
         </div>
 
@@ -47,9 +47,9 @@
 @endif
 
 @if( $action == 'edit')
-    {!! Form::model($bnm,['method' => 'PATCH','files' => true, 'id' => 'bills_form','autocomplete' => 'off', 'route' => ['bnm.update', $bnm->id]] ) !!}
+    {!! Form::model($bnm,['method' => 'PATCH','files' => true, 'id' => 'bills_form','autocomplete' => 'off', 'route' => ['forecasting.update', $bnm->id]] ) !!}
 @else
-    {!! Form::open(array('route' => 'bnm.store','files' => true,'method'=>'POST','id' => 'bills_form','autocomplete' => 'off')) !!}
+    {!! Form::open(array('route' => 'forecasting.store','files' => true,'method'=>'POST','id' => 'bills_form','autocomplete' => 'off')) !!}
 @endif
 
 <input type="hidden" id="generateBM" name="generateBM" value="{{$generate_bm}}">
