@@ -626,7 +626,7 @@ class JobOpenController extends Controller
             $sender_name = $user_id;
             $to = $user_email;
             $subject = "Job Open - ".$posting_title;
-            $message = "<tr><td>" . $user_name . " added new Job </td></tr>";
+            $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message));
 
@@ -1169,6 +1169,7 @@ class JobOpenController extends Controller
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
+        $user_email = \Auth::user()->email;
         $input = $request->all();
 
         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
@@ -1366,6 +1367,15 @@ class JobOpenController extends Controller
                 }
             }
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+            // Email Notification : data store in datebase
+            $module = "Job Open";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $subject = "Job Open - ".$posting_title;
+            $message = "<tr><td>" . $user_name . " added new Job </td></tr>";
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message));
 
         }
 

@@ -14,7 +14,8 @@ class EmailNotificationController extends Controller
 
         $mail_res = \DB::table('emails_notification')
                     ->select('emails_notification.*', 'emails_notification.id as id')
-                    //->offset(6)
+                    //->offset(28)
+                    //->where('status','!=','1')
                     ->limit(1)
                     ->get();
 
@@ -27,11 +28,11 @@ class EmailNotificationController extends Controller
             $mail[$i]['subject'] = $value->subject;
             $mail[$i]['message'] = $value->message;
             $mail[$i]['status'] = $value->status;
-            $sent_date = date('YY-mm-dd');
+            $sent_date = date('Y-m-d');
             //echo $sent_date;exit;
             $status = 2;
 
-		    DB::statement("UPDATE emails_notification SET sent_date = $sent_date, status=$status where id = $value->id");
+		    DB::statement("UPDATE emails_notification SET sent_date = '$sent_date', status=$status where id = $value->id");
             $i++;
         }
         
