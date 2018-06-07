@@ -46,17 +46,18 @@ class ProcessController extends Controller
         }
 
         $count = sizeof($process_response);
+	    $processFiles = ProcessDoc::select('process_doc.file')->get();
 
         $viewVariable = array();
         $viewVariable['processList'] = $process_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
+        $viewVariable['processFiles'] = $processFiles;
         $viewVariable['count'] = $count;   
 
-    $process = ProcessManual::All();
+        //$process = ProcessManual::All();
 
-	$processFiles = ProcessDoc::select('process_doc.file')->get();
 
-    	return view('adminlte::process.index ',compact('process','processFiles','viewVariable','isSuperAdmin'));
+    	return view('adminlte::process.index ',$viewVariable);
     }
 
     public function create(){
@@ -76,15 +77,14 @@ class ProcessController extends Controller
 
     public function store(Request $request){
 
-    	$users = User::getAllUsers('recruiter');
+    	//$users = User::getAllUsers('recruiter');
 		$user_id = \Auth::user()->id;
         
         $process = new ProcessManual();
-
-        $upload_documents = $request->file('upload_documents');
         $process->title = $request->input('title');
         $processStored  = $process->save();
 
+        $upload_documents = $request->file('upload_documents');
         //save files in ProcessDoc table
         $process_id = $process->id;
 
@@ -121,24 +121,26 @@ class ProcessController extends Controller
 
                 }
             }
-// insert in Process_Visible_Table
-        $process_id = $process->id;
+        // insert in Process_Visible_Table
+
+            $users = $request->input('user_ids');
+            $process_id = $process->id;
             if(isset($users) && sizeof($users)>0){
                 foreach ($users as $key=>$value){
                     $process_visible_users = new ProcessVisibleUser();
                     $process_visible_users->process_id = $process_id;
-                    $process_visible_users->user_id = $key;
+                    $process_visible_users->user_id = $value;
                     $process_visible_users->save();
                 }
             }
 
 //echo '<pre>';print_r($process_visible_users);die;
-    	return redirect('process/create')->withInput(Input::all());
+    	return redirect()->route('process.index')->with('success','Process Manual Created Successfully');
     }
 
     public function edit($id){
 
-     	$users = User::getAllUsers();
+     	$users = User::getAllUsers('recruiter');
      	$process = ProcessManual::find($id);
        
         $action = "edit" ;
@@ -180,29 +182,29 @@ class ProcessController extends Controller
                 $selected_users[] = $row->user_id;
             }
         }
-		//print_r($processdetails);die;
+		//print_r($selected_users);die;
         return view('adminlte::process.edit',compact('action','users','process','processdetails','selected_users'));
      }
 
     public function update(Request $request,$id){
         
-        $users = User::getAllUsers();
+        //$users = User::getAllUsers();
      	$user_id = \Auth::user()->id;
         
         $process = ProcessManual::find($id);
         $process->title = $request->input('title');
         $processStored  = $process->save();
 
+        $file = $request->file('file');
         //save files 
         $process_id = $process->id;         
-        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-                foreach ($upload_documents as $k => $v) {
-                    if (isset($v) && $v->isValid()) {
+        if (isset($file) && sizeof($file) > 0) {
+                    if (isset($file) && $file->isValid()) {
                         // echo "here";
-                        $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
-                        $file_size = $v->getSize();
+                        $file_name = $file->getClientOriginalName();
+                        $file_extension = $file->getClientOriginalExtension();
+                        $file_realpath = $file->getRealPath();
+                        $file_size = $file->getSize();
 
                         //$extention = File::extension($file_name);
 
@@ -212,7 +214,7 @@ class ProcessController extends Controller
                             mkdir($dir, 0777, true);
                             chmod($dir, 0777);
                         }
-                        $v->move($dir, $file_name);
+                        $file->move($dir, $file_name);
 
                         $file_path = $dir . $file_name;
                         $process_doc = new ProcessDoc();
@@ -224,24 +226,25 @@ class ProcessController extends Controller
                         $process_doc->updated_at = date('Y-m-d');
 					    $process_doc->save();
                     }
-
-                }
+                    return redirect()->route('process.edit',[$process_id]); 
         }
 
-       // Update in process visible table
+        // Update in process visible table
+            $users = $request->input('user_ids');
             $process_id = $process->id;
+            ProcessVisibleUser::where('process_id',$process_id)->delete();
             if(isset($users) && sizeof($users)>0){
                 foreach ($users as $key=>$value){
                     $process_visible_users = new ProcessVisibleUser();
                     $process_visible_users->process_id = $process_id;
-                    $process_visible_users->user_id = $key;
+                    $process_visible_users->user_id = $value;
                     $process_visible_users->save();
                 }
             }
             //echo '<pre>';print_r($process_visible_users);die;
         return redirect()->route('process.index')->with('success','Process Manual Updated Successfully');
         
-}
+    }
 
 
 	public function upload(Request $request){
@@ -284,14 +287,42 @@ class ProcessController extends Controller
         }
 
         return redirect()->route('process.show',[$process_id])->with('success','Attachment uploaded successfully');
-}
+    }
 
     public function show($id){
 		
 		$process_id = ProcessManual::find($id);
+
+        $process_res = \DB::table('process_manual')
+                    //->join('process_visible_users','process_visible_users.process_id','=','process_manual.id')
+                    //->join('users','users.id','=','process_visible_users.user_id')
+                    ->select('process_manual.*')
+                    ->where('process_manual.id','=',$id)
+                    ->get();
+
+        $process = array();
+
+        foreach ($process_res as $key => $value) {
+            $process['title'] = $value->title;
+            //$process['name'] = $value->name;
+        }
+
+        $process_user_res = \DB::table('process_visible_users')
+                            ->join('users','users.id','=','process_visible_users.user_id')
+                            ->select('users.id', 'users.name as name')
+                            ->where('process_visible_users.process_id',$id)
+                            ->get();
+        $c = 0;
+        foreach ($process_user_res as $key => $value) {
+            $process['name'][$c] = $value->name;
+            $c++;
+        }
+
+        //print_r($process);exit;
+
 			
-        	$processModel = new ProcessManual();
-            $processdetails['id'] = $processModel->id;           
+        	/*$processModel = new ProcessManual();
+            $processdetails['id'] = $processModel->id;*/           
 
 		$i = 0;
         $processdetails['files'] = array();
@@ -314,12 +345,11 @@ class ProcessController extends Controller
             }
        
 		// print_r($processdetails);die;
-        return view('adminlte::process.show',compact('processdetails','process_id'));
-
-}
+        return view('adminlte::process.show',compact('processdetails','process_id','process'));
+    }
 
     
-  public function processDestroy($id){
+    public function processDestroy($id){
         ProcessDoc::where('process_id',$id)->delete();
         ProcessVisibleUser::where('process_id',$id)->delete();
         $process = ProcessManual::where('id',$id)->delete();

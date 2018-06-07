@@ -24,6 +24,7 @@ class ProcessManual extends Model
 
              
         $process_open_query = ProcessManual::query();
+        $process_open_query = $process_open_query->select('process_manual.*');
         //echo '<pre>';print_r($process_open_query);exit;
         // assign jobs to logged in user
         if($all==0){
@@ -43,18 +44,10 @@ class ProcessManual extends Model
 
             // Admin/super admin have access to all details
             if($all==1){
-                $process_list[$i]['coordinator_name'] = $value->coordinator_name;
                 $process_list[$i]['access'] = '1';
             }
             else{
-                if(isset($value->hiring_manager_id) && $value->hiring_manager_id==$user_id ){
-                    $process_list[$i]['coordinator_name'] = $value->coordinator_name;
-                    $process_list[$i]['access'] = '1';
-                }
-                else{
-                    $process_list[$i]['coordinator_name'] = '';
-                    $process_list[$i]['access'] = '0';
-                }
+                $process_list[$i]['access'] = '0';
             }
 
             $i++;

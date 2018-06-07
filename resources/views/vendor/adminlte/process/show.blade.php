@@ -29,10 +29,33 @@
             </div>
 
            <div class="pull-right">
+                <a class="btn btn-primary" href="{{ route('process.edit',$process_id) }}">Edit</a>
                 <a class="btn btn-primary" href="{{ route('process.index') }}">Back</a>
             </div>
         </div>
 
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Basic Information</h3>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th scope="row">Process Title</th>
+                            <td>{{ $process['title'] }}</td>
+                            <th>Who can show this process</th>
+                            <td>{{ implode(",",$process['name']) }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">    
@@ -41,7 +64,7 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @include('adminlte::process.upload', ['name' => 'trainingattachments'])
+                    @include('adminlte::process.upload', ['name' => 'trainingattachments' , 'data' =>$process_id])
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
