@@ -16,9 +16,10 @@ use DB;
 class TrainingController extends Controller
 {
     public function index(){
-	$training = Training::All();
+	   
+       $training = Training::All();
 
-	$trainingFiles = TrainingDoc::select('training_doc.file')->get();
+	   $trainingFiles = TrainingDoc::select('training_doc.file')->get();
 	//print_r($trainingFiles);die;
 	
     return view('adminlte::training.index',compact('training','trainingFiles'));
@@ -40,10 +41,11 @@ class TrainingController extends Controller
 		$user_id = \Auth::user()->id;
         
         $training = new Training();
-
-        $upload_documents = $request->file('upload_documents');
         $training->title = $request->input('title');
         $trainingStored  = $training->save();
+
+        $upload_documents = $request->file('upload_documents');
+        //print_r($upload_documents);exit;
 
         //save files 
         $training_id = $training->id;
@@ -75,24 +77,19 @@ class TrainingController extends Controller
                         $training_doc->name = $file_name;
                         $training_doc->size = $file_size;
                         $training_doc->created_at = date('Y-m-d');
-                        $training_doc->updated_at = date('Y-m-d');
-					
+                        $training_doc->updated_at = date('Y-m-d');		
                         $training_doc->save();
                     }
-
                 }
-            }
-       
-    	return redirect('training/create')->withInput(Input::all());
-
-
-
+            }   
+        return redirect()->route('training.index')->with('success','Training Created Successfully');
     }
-     public function edit($id){
+
+    public function edit($id){
 
      	$users = User::getAllUsers();
      	$training = Training::find($id);
-       
+        
         $action = "edit" ;
 
         $i = 0;
@@ -116,10 +113,10 @@ class TrainingController extends Controller
             }
 		//print_r($trainingdetails);die;
         return view('adminlte::training.edit',compact('action','users','training','trainingdetails'));
-     }
+    }
 
 
-     public function update(Request $request,$id){
+    public function update(Request $request,$id){
 
      	$user_id = \Auth::user()->id;
         
@@ -127,16 +124,18 @@ class TrainingController extends Controller
         $training->title = $request->input('title');
         $trainingStored  = $training->save();
 
+        $file = $request->file('file');
+
         //save files 
         $training_id = $training->id;         
-        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-                foreach ($upload_documents as $k => $v) {
-                    if (isset($v) && $v->isValid()) {
+        if (isset($file) && sizeof($file) > 0) {
+        //print_r($upload_documents);exit;
+                    if (isset($file) && $file->isValid()) {
                         // echo "here";
-                        $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
-                        $file_size = $v->getSize();
+                        $file_name = $file->getClientOriginalName();
+                        $file_extension = $file->getClientOriginalExtension();
+                        $file_realpath = $file->getRealPath();
+                        $file_size = $file->getSize();
 
                         //$extention = File::extension($file_name);
 
@@ -146,7 +145,7 @@ class TrainingController extends Controller
                             mkdir($dir, 0777, true);
                             chmod($dir, 0777);
                         }
-                        $v->move($dir, $file_name);
+                        $file->move($dir, $file_name);
 
                         $file_path = $dir . $file_name;
                         $training_doc = new TrainingDoc();
@@ -159,15 +158,14 @@ class TrainingController extends Controller
 					    $training_doc->save();
                     }
 
-                }
-}
+                return redirect('training/'. $id .'/edit');        
+            }
         return redirect()->route('training.index')->with('success','Training Updated Successfully');
-     
-        
-}
+         
+    }
 
 
-public function upload(Request $request){
+    public function upload(Request $request){
 
 	    
         $file = $request->file('file');
@@ -207,7 +205,7 @@ public function upload(Request $request){
         }
 
         return redirect()->route('training.show',[$training_id])->with('success','Attachment uploaded successfully');
-  }
+    }
 
     
 	public function show($id){
@@ -240,7 +238,7 @@ public function upload(Request $request){
 		// print_r($trainingdetails);die;
         return view('adminlte::training.show',compact('trainingdetails','training_id'));
 
-}
+    }
     
    public function trainingDestroy($id){
         TrainingDoc::where('training_id',$id)->delete();
@@ -251,7 +249,7 @@ public function upload(Request $request){
 
     public function attachmentsDestroy($docid){
 
-        $processDocDelete = TrainingDoc::where('id',$docid)->delete();
+        $trainingDocDelete = TrainingDoc::where('id',$docid)->delete();
 
         $id = $_POST['id'];
 

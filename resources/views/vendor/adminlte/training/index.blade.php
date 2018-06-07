@@ -31,7 +31,6 @@
             <tr>
                 <th>No</th>
                 <th>Training Name</th>
-                <!-- <th>Team Mates</th> -->
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -49,7 +48,7 @@
                 <td>
                   
                     <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
-                    <a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $trainingFile['file'] }}"></a>
+                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $trainingFile['file'] }}"></a>--}}
                               
                   <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
                  <!--  {!! Form::open(['method' => 'DELETE','route' => ['training.destroy', $value['id']],'style'=>'display:inline']) !!}

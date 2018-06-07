@@ -282,13 +282,13 @@ return [
             ]
          ],
           
-         [
+            [
                 'text'        => 'Attendance',
                 'url'         => '/home',
                 'icon'        => 'folder-open',
-            ]
+            ],
 
-        /*[
+        [
            'text'        => 'Training',
            'icon'        => 'users',
            'submenu' => [
@@ -319,7 +319,7 @@ return [
                    'icon' => 'list',
                ]
            ],
-       ]*/,
+       ],
 
         [
             'text'        => 'Admin',

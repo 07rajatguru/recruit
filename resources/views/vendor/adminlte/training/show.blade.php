@@ -25,10 +25,11 @@
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
-                <h2>Training Attachment</h2>
+                <h2>{{$training_id['title']}}</h2>
             </div>
 
            <div class="pull-right">
+                <a class="btn btn-primary" href="{{ route('training.edit',$training_id) }}">Edit</a>
                 <a class="btn btn-primary" href="{{ route('training.index') }}">Back</a>
             </div>
         </div>
@@ -41,7 +42,7 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @include('adminlte::training.upload', ['name' => 'trainingattachments'])
+                    @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_id])
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
