@@ -309,12 +309,12 @@ return [
            'icon'        => 'users',
            'submenu' => [
                [
-                   'text' => 'Add Process',
+                   'text' => 'Add Process Manual',
                    'url'  => 'process/create',
                    'icon' => 'plus',
                ],
                [
-                   'text' => 'List Process',
+                   'text' => 'List Process Manual',
                    'url'  => 'process',
                    'icon' => 'list',
                ]

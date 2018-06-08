@@ -56,9 +56,10 @@
                     {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $processFile['file'] }}"></a>--}}
                     @if(isset($value['access']) && $value['access']==1)
                         <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
+                    @endif
+                    @if($isSuperAdmin)
                         @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process'])
                     @endif
-
                 </td>
                 
            </tr>

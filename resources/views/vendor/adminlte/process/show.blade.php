@@ -66,7 +66,9 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @include('adminlte::process.upload', ['name' => 'trainingattachments' , 'data' =>$process])
+                    @if(isset($process['access']) && $process['access']==1)
+                        @include('adminlte::process.upload', ['name' => 'processattachments' , 'data' =>$process])
+                    @endif
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -82,11 +84,11 @@
                             @foreach($processdetails['files'] as $key => $value)
                                 <tr>
                                     <td>
-                                        <a download href="{{ $value['url'] }}">
-                                            <i class="fa fa-fw fa-download"></i>
-                                        </a>
+                                        {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
+                                        @if(isset($process['access']) && $process['access']==1)
+                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
+                                        @endif
                                           </td>
 
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
