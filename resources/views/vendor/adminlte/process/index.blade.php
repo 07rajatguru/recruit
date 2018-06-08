@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('process.create') }}"> Create New Process</a>
+                <a class="btn btn-success" href="{{ route('process.create') }}"> Add New Process Manual</a>
             </div>
         </div>
     </div>
@@ -73,7 +73,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             var table = jQuery('#training_table').DataTable( {
-                responsive: true
+                responsive: true,
+                "pageLength": 100,
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );

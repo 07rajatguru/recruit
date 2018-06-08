@@ -2,9 +2,9 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if( $action == 'edit')
-                <h2>Edit Process</h2>
+                <h2>Edit Process Manual</h2>
             @else
-                <h2>Create New Process</h2>
+                <h2>Add New Process Manual</h2>
             @endif
         </div>
         <div class="pull-right">
@@ -95,7 +95,7 @@
                                         @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
                                     </td>
 
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
+                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
                                     <td>{{ $value['size'] }}</td>
                                    </tr>
                             @endforeach

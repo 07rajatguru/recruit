@@ -69,7 +69,7 @@
                                         @endif
                                           </td>
 
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
+                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
                                     <td>{{ $value['size'] }}</td>
                                    </tr>
                             @endforeach
