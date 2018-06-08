@@ -321,6 +321,7 @@ class JobOpen extends Model
     }
 
     public static function getJobsByIds($all=0,$ids){
+        $user_id = \Auth::user()->id;
         $job_open_query = JobOpen::query();
 
         $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
@@ -350,7 +351,7 @@ class JobOpen extends Model
 
 
         $job_response = $job_open_query->get();
-//print_r($job_response);exit;
+
         $jobs_list = array();
 
         $colors = self::getJobPrioritiesColor();
