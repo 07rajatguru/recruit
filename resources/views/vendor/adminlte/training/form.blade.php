@@ -75,9 +75,7 @@
                             @foreach($trainingdetails['files'] as $key => $value)
                                 <tr>
                                     <td>
-                                        <a download href="{{ $value['url'] }}">
-                                            <i class="fa fa-fw fa-download"></i>
-                                        </a>
+                                        {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
                                         &nbsp;
                                         @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments'])
                                           </td>

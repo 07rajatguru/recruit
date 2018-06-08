@@ -29,7 +29,9 @@
             </div>
 
            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('training.edit',$training_id) }}">Edit</a>
+                @if($training_id['owner_id'] == $user_id || $isSuperAdmin)
+                    <a class="btn btn-primary" href="{{ route('training.edit',$training_id) }}">Edit</a>
+                @endif
                 <a class="btn btn-primary" href="{{ route('training.index') }}">Back</a>
             </div>
         </div>
@@ -42,7 +44,9 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_id])
+                    @if($training_id['owner_id'] == $user_id || $isSuperAdmin)
+                        @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_id])
+                    @endif
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -58,11 +62,11 @@
                             @foreach($trainingdetails['files'] as $key => $value)
                                 <tr>
                                     <td>
-                                        <a download href="{{ $value['url'] }}">
-                                            <i class="fa fa-fw fa-download"></i>
-                                        </a>
+                                        {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_id['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments'])
+                                        @if($training_id['owner_id'] == $user_id || $isSuperAdmin)
+                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_id['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments'])
+                                        @endif
                                           </td>
 
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>

@@ -16,13 +16,25 @@ use DB;
 class TrainingController extends Controller
 {
     public function index(){
+
+        $user = \Auth::user();
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
 	   
-       $training = Training::All();
+       $training = Training::getAlltraining($user_id);
 
 	   $trainingFiles = TrainingDoc::select('training_doc.file')->get();
 	//print_r($trainingFiles);die;
 	
-    return view('adminlte::training.index',compact('training','trainingFiles'));
+    return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id'));
    
     }
 
@@ -211,6 +223,15 @@ class TrainingController extends Controller
 
     
 	public function show($id){
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 		
 		$training_id = Training::find($id);
 			
@@ -238,7 +259,7 @@ class TrainingController extends Controller
             }
        
 		// print_r($trainingdetails);die;
-        return view('adminlte::training.show',compact('trainingdetails','training_id'));
+        return view('adminlte::training.show',compact('trainingdetails','training_id','user_id','isSuperAdmin'));
 
     }
     

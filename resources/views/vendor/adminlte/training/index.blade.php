@@ -49,12 +49,12 @@
                   
                     <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
                     {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $trainingFile['file'] }}"></a>--}}
-                              
-                  <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
-                 <!--  {!! Form::open(['method' => 'DELETE','route' => ['training.destroy', $value['id']],'style'=>'display:inline']) !!}
-                    {!! Form::submit('Delete', ['class' => 'fa fa-trash']) !!}
-                    {!! Form::close() !!} -->
-                @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training'])                  
+                    @if($value['owner_id'] == $user_id || $isSuperAdmin)         
+                    <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
+                    @endif
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training'])                  
+                    @endif
                     
                 </td>
            </tr>
