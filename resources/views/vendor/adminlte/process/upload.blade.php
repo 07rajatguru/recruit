@@ -1,7 +1,7 @@
-<a data-toggle="modal" href="#modal-delete-{!! $data['id'] !!}" class="row-edit">
+<a data-toggle="modal" href="#modal-upload-{!! $data['id'] !!}" class="row-edit">
     Upload Attachments
 </a>
-<div id="modal-delete-{!! $data['id'] !!}" class="modal text-left fade">
+<div id="modal-upload-{!! $data['id'] !!}" class="modal text-left fade">
 
 <div class="modal-dialog"> 
         <div class="modal-content">
