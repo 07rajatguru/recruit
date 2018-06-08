@@ -29,7 +29,9 @@
             </div>
 
            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('process.edit',$process_id) }}">Edit</a>
+            @if(isset($process['access']) && $process['access']==1)
+                <a class="btn btn-primary" href="{{ route('process.edit',$process['id']) }}">Edit</a>
+            @endif
                 <a class="btn btn-primary" href="{{ route('process.index') }}">Back</a>
             </div>
         </div>
@@ -64,7 +66,7 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @include('adminlte::process.upload', ['name' => 'trainingattachments' , 'data' =>$process_id])
+                    @include('adminlte::process.upload', ['name' => 'trainingattachments' , 'data' =>$process])
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -84,7 +86,7 @@
                                             <i class="fa fa-fw fa-download"></i>
                                         </a>
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process_id['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
                                           </td>
 
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>

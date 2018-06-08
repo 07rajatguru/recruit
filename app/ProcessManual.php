@@ -47,7 +47,12 @@ class ProcessManual extends Model
                 $process_list[$i]['access'] = '1';
             }
             else{
-                $process_list[$i]['access'] = '0';
+              if (isset($value->owner_id) && $value->owner_id == $user_id){
+                  $process_list[$i]['access'] = '1';
+              }
+              else{
+                  $process_list[$i]['access'] = '0';
+              }
             }
 
             $i++;

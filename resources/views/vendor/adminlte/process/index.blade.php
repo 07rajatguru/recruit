@@ -54,13 +54,10 @@
                   
                     <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>
                     {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $processFile['file'] }}"></a>--}}
-                    <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
-
-                    <!-- {!! Form::open(['method' => 'DELETE','route' => ['process.destroy', $value['id']],'style'=>'display:inline']) !!}
-                    {!! Form::submit('Delete', ['class' => 'fa fa-trash']) !!}
-                    {!! Form::close() !!} -->
-
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process'])
+                    @if(isset($value['access']) && $value['access']==1)
+                        <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process'])
+                    @endif
 
                 </td>
                 

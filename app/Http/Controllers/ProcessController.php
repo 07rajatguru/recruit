@@ -82,6 +82,7 @@ class ProcessController extends Controller
         
         $process = new ProcessManual();
         $process->title = $request->input('title');
+        $process->owner_id = $user_id;
         $processStored  = $process->save();
 
         $upload_documents = $request->file('upload_documents');
@@ -193,6 +194,7 @@ class ProcessController extends Controller
         
         $process = ProcessManual::find($id);
         $process->title = $request->input('title');
+        $process->owner_id = $user_id;
         $processStored  = $process->save();
 
         $file = $request->file('file');
@@ -291,7 +293,7 @@ class ProcessController extends Controller
 
     public function show($id){
 		
-		$process_id = ProcessManual::find($id);
+		//$process_id = ProcessManual::find($id);
 
         $process_res = \DB::table('process_manual')
                     //->join('process_visible_users','process_visible_users.process_id','=','process_manual.id')
@@ -303,8 +305,32 @@ class ProcessController extends Controller
         $process = array();
 
         foreach ($process_res as $key => $value) {
+            $process['id'] = $value->id;
             $process['title'] = $value->title;
             //$process['name'] = $value->name;
+
+            $user = \Auth::user();
+            $user_id = $user->id;
+            $user_role_id = User::getLoggedinUserRole($user);
+
+            $admin_role_id = env('ADMIN');
+            $director_role_id = env('DIRECTOR');
+            $manager_role_id = env('MANAGER');
+            $superadmin_role_id = env('SUPERADMIN');
+
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+
+            if(in_array($user_role_id,$access_roles_id)){
+                $process['access'] = '1';
+            }
+            else{
+                if(isset($value->owner_id) && $value->owner_id==$user_id){
+                    $process['access'] = '1';
+                }
+                else{
+                    $process['access'] = '0';
+                }
+            }
         }
 
         $process_user_res = \DB::table('process_visible_users')

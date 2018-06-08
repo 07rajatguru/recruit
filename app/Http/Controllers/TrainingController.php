@@ -42,6 +42,7 @@ class TrainingController extends Controller
         
         $training = new Training();
         $training->title = $request->input('title');
+        $training->owner_id = $user_id;
         $trainingStored  = $training->save();
 
         $upload_documents = $request->file('upload_documents');
@@ -122,6 +123,7 @@ class TrainingController extends Controller
         
         $training = Training::find($id);
         $training->title = $request->input('title');
+        $training->owner_id = $user_id;
         $trainingStored  = $training->save();
 
         $file = $request->file('file');
