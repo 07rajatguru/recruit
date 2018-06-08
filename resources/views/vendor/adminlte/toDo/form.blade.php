@@ -130,17 +130,30 @@
 
                     <span style="padding: 10%;"></span>
 
-                   
-
-                    <div  style="width:50%;"  class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
-                        <strong>Remarks:</strong>
-                        {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '8' )) !!}
-                        @if ($errors->has('description'))
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="box-body col-xs-6 col-sm-6 col-md-6">                   
+                          <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
+                            <strong>Remarks:</strong>
+                            {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '8' )) !!}
+                            @if ($errors->has('description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('description') }}</strong>
                             </span>
-                        @endif
-                    </div>                    
+                            @endif
+                          </div>
+                        </div>
+                        <div class="box-body col-xs-6 col-sm-6 col-md-6">                   
+                          <div class="form-group {{ $errors->has('reminder') ? 'has-error' : '' }}">
+                            <strong>Reminder:</strong>
+                            {!! Form::select('reminder', $reminder,null, array('id'=>'reminder','class' => 'form-control' )) !!}
+                            @if ($errors->has('reminder'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('reminder') }}</strong>
+                            </span>
+                            @endif
+                          </div> 
+                        </div>
+                    </div>                   
 
                     {{-- <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group {{ $errors->has('assigned_by') ? 'has-error' : '' }}">
@@ -172,16 +185,6 @@
                         </div>
 
                     </div>
-
-                    {{--<div class="form-group {{ $errors->has('reminder') ? 'has-error' : '' }}">
-                        <strong>Reminder:</strong>
-                        {!! Form::select('reminder', $reminder,null, array('id'=>'reminder','class' => 'form-control' )) !!}
-                        @if ($errors->has('reminder'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('reminder') }}</strong>
-                                </span>
-                        @endif
-                    </div>--}}
 
                 </div>
             </div>

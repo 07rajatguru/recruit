@@ -269,7 +269,7 @@ class ToDosController extends Controller
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
-        $reminder = $request->reminder;
+        //$reminder = $request->reminder;
       //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
@@ -280,7 +280,7 @@ class ToDosController extends Controller
         $toDos->status = $status;
         $toDos->type = $type;
 
-        $toDos->reminder = $reminder;
+        //$toDos-//>reminder = //$reminder;
         $toDos->priority = $priority;
         $toDos->description = $description;
         //$toDos->assigned_by = $assigned_by;
@@ -353,7 +353,7 @@ class ToDosController extends Controller
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
-        $reminder = ToDos::getReminder();
+        //$reminder = ToDos::getReminder();
 
         // get assigned users list
         $assigned_users = TodoAssignedUsers::where('todo_id','=',$id)->get();
@@ -375,7 +375,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
-        $viewVariable['reminder'] = $reminder;
+        $viewVariable[//'reminder'] = //$reminder;
         $viewVariable['assigned_by'] = $users;
         $viewVariable['assigned_by_id'] = $toDos->task_owner;
         $viewVariable['action'] = 'edit';
@@ -406,7 +406,7 @@ class ToDosController extends Controller
         $status = $request->get('status');
         $priority = $request->get('priority');
         $description = $request->get('description');
-        $reminder = $request->get('reminder');
+        //$reminder = $request->get('reminder');
        // $assigned_by = $request->get('assigned_by');
         $users = $request->user_ids;
         
@@ -425,8 +425,8 @@ class ToDosController extends Controller
             $toDos->status = $status;
         if(isset($priority))
             $toDos->priority = $priority;
-        if(isset($reminder))
-            $toDos->reminder = $reminder;
+        //if(isset($reminder))
+           // $toDos->reminder = $reminder;
         if(isset($description))
             $toDos->description = $description;
        /* if(isset($assigned_by))
