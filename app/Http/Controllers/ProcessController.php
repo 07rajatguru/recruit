@@ -344,12 +344,6 @@ class ProcessController extends Controller
             $c++;
         }
 
-        //print_r($process);exit;
-
-			
-        	/*$processModel = new ProcessManual();
-            $processdetails['id'] = $processModel->id;*/           
-
 		$i = 0;
         $processdetails['files'] = array();
         $processFiles = ProcessDoc::select('process_doc.*')

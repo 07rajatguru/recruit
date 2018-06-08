@@ -80,7 +80,7 @@
                                         @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments'])
                                           </td>
 
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
+                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
                                     <td>{{ $value['size'] }}</td>
                                    </tr>
                             @endforeach

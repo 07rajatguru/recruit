@@ -67,7 +67,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             var table = jQuery('#training_table').DataTable( {
-                responsive: true
+                responsive: true,
+                "pageLength": 100,
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );
