@@ -25,7 +25,7 @@
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
-                <h2>Process Attachment</h2>
+                <h2>Process Manual Details</h2>
             </div>
 
            <div class="pull-right">
