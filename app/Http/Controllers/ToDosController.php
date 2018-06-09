@@ -12,6 +12,7 @@ use App\Interview;
 use App\JobOpen;
 use App\Status;
 use App\TodoAssignedUsers;
+use App\TodoFrequency;
 use App\ToDos;
 use App\User;
 use Illuminate\Http\Request;
@@ -247,6 +248,7 @@ class ToDosController extends Controller
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
         $viewVariable['status_id'] = $yet_to_start;
+        $viewVariable['reminder_id'] = '';
 
         return view('adminlte::toDo.create', $viewVariable);
     }
@@ -269,7 +271,7 @@ class ToDosController extends Controller
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
-        $reminder = $request->reminder;
+        //$reminder = $request->reminder;
       //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
@@ -280,7 +282,7 @@ class ToDosController extends Controller
         $toDos->status = $status;
         $toDos->type = $type;
 
-        $toDos->reminder = $reminder;
+        //$toDos-//>reminder = //$reminder;
         $toDos->priority = $priority;
         $toDos->description = $description;
         //$toDos->assigned_by = $assigned_by;
@@ -364,6 +366,8 @@ class ToDosController extends Controller
             }
         }
 
+        //$reminder_id = TodoFrequency::where('todo_id','=',$id)->get();
+
         $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
         $viewVariable = array();
@@ -385,6 +389,8 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type_list'] = $toDos->typeList;
         $viewVariable['status_id'] = $toDos->status;
+        //$viewVariable['reminder_id'] = $toDos->reminder;
+        //echo $toDos->reminder;exit;
 //echo $toDos->typeList;exit;
         return view('adminlte::toDo.edit', $viewVariable);
     }
@@ -425,8 +431,8 @@ class ToDosController extends Controller
             $toDos->status = $status;
         if(isset($priority))
             $toDos->priority = $priority;
-        if(isset($reminder))
-            $toDos->reminder = $reminder;
+        //if(isset($reminder))
+           // $toDos->reminder = $reminder;
         if(isset($description))
             $toDos->description = $description;
        /* if(isset($assigned_by))
@@ -461,6 +467,18 @@ class ToDosController extends Controller
                     $todo_ass_list->save();
                 }
             }
+
+/*            if (isset($reminder) && sizeof($reminder)>0) {
+                    $todo_reminder = new TodoFrequency();
+                    $todo_reminder->todo_id = $todo_id;
+                    $todo_reminder->reminder = $reminder;
+                    if (condition) {
+                        # code...
+                    }
+                    $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    $todo_reminder->save();
+            }*/
+
         }
         return redirect()->route('todos.index')->with('success','ToDo Updated Successfully');
     }
