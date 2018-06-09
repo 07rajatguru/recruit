@@ -2,9 +2,9 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if( $action == 'edit')
-                <h2>Edit Training</h2>
+                <h2>Edit Training Material</h2>
             @else
-                <h2>Create New Training</h2>
+                <h2>Create New Training Material</h2>
             @endif
         </div>
         <div class="pull-right">
