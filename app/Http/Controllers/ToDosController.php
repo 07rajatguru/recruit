@@ -12,6 +12,7 @@ use App\Interview;
 use App\JobOpen;
 use App\Status;
 use App\TodoAssignedUsers;
+use App\TodoFrequency;
 use App\ToDos;
 use App\User;
 use Illuminate\Http\Request;
@@ -247,6 +248,7 @@ class ToDosController extends Controller
         $viewVariable['action'] = 'add';
         $viewVariable['type_list'] ='';
         $viewVariable['status_id'] = $yet_to_start;
+        $viewVariable['reminder_id'] = '';
 
         return view('adminlte::toDo.create', $viewVariable);
     }
@@ -353,7 +355,7 @@ class ToDosController extends Controller
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
-        //$reminder = ToDos::getReminder();
+        $reminder = ToDos::getReminder();
 
         // get assigned users list
         $assigned_users = TodoAssignedUsers::where('todo_id','=',$id)->get();
@@ -363,6 +365,8 @@ class ToDosController extends Controller
                 $selected_users[] = $row->user_id;
             }
         }
+
+        //$reminder_id = TodoFrequency::where('todo_id','=',$id)->get();
 
         $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
@@ -375,7 +379,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
-        $viewVariable[//'reminder'] = //$reminder;
+        $viewVariable['reminder'] = $reminder;
         $viewVariable['assigned_by'] = $users;
         $viewVariable['assigned_by_id'] = $toDos->task_owner;
         $viewVariable['action'] = 'edit';
@@ -385,6 +389,8 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type_list'] = $toDos->typeList;
         $viewVariable['status_id'] = $toDos->status;
+        //$viewVariable['reminder_id'] = $toDos->reminder;
+        //echo $toDos->reminder;exit;
 //echo $toDos->typeList;exit;
         return view('adminlte::toDo.edit', $viewVariable);
     }
@@ -406,7 +412,7 @@ class ToDosController extends Controller
         $status = $request->get('status');
         $priority = $request->get('priority');
         $description = $request->get('description');
-        //$reminder = $request->get('reminder');
+        $reminder = $request->get('reminder');
        // $assigned_by = $request->get('assigned_by');
         $users = $request->user_ids;
         
@@ -461,6 +467,18 @@ class ToDosController extends Controller
                     $todo_ass_list->save();
                 }
             }
+
+/*            if (isset($reminder) && sizeof($reminder)>0) {
+                    $todo_reminder = new TodoFrequency();
+                    $todo_reminder->todo_id = $todo_id;
+                    $todo_reminder->reminder = $reminder;
+                    if (condition) {
+                        # code...
+                    }
+                    $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    $todo_reminder->save();
+            }*/
+
         }
         return redirect()->route('todos.index')->with('success','ToDo Updated Successfully');
     }
