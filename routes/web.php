@@ -1002,7 +1002,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('training/create', [
         'as' => 'training.create',
         'uses' => 'TrainingController@create',
-//        'middleware' => ['permission:team-create']
+        'middleware' => ['permission:training-create']
     ]);
     Route::post('training/create', [
         'as' => 'training.store',
@@ -1013,7 +1013,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('training/{id}/edit', [
         'as' => 'training.edit',
         'uses' => 'TrainingController@edit',
-//        'middleware' => ['permission:team-edit']
+        'middleware' => ['permission:training-edit']
     ]);
     Route::patch('training/{id}', [
         'as' => 'training.update',
@@ -1052,7 +1052,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('process/create', [
         'as' => 'process.create',
         'uses' => 'ProcessController@create',
-
+        'middleware' => ['permission:process-create']
     ]);
 
     Route::post('process/create', [
@@ -1063,7 +1063,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('process/{id}/edit', [
         'as' => 'process.edit',
         'uses' => 'ProcessController@edit',
-
+        'middleware' => ['permission:process-edit']
     ]);
     Route::patch('process/{id}', [
         'as' => 'process.update',
