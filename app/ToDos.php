@@ -37,8 +37,7 @@ class ToDos extends Model
     }
 
     public static function getReminder(){
-        $repetition = array();
-        $repetition['0'] = '---Select---';
+        $repetition = array('' => 'Select');
         $repetition['1'] = 'Daily';
         $repetition['2'] = 'Weekly';
         $repetition['3'] = 'Monthly';

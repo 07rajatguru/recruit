@@ -24,7 +24,71 @@ class ToDosController extends Controller
 
     public function daily(){
 
-        $todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
+        $today = date("Y-m-d h:i:s");
+        $complete = env('COMPLETEDSTATUS');  
+
+        $todo_frequency = TodoFrequency::join('to_dos','to_dos.id','=','todo_frequency.todo_id')
+                                       //->join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                                       ->leftjoin('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
+                                       ->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.due_date as due_date','to_dos.status as status','to_dos.description as desc','to_dos.type as type','todo_associated_typelist.typelist_id as typelistid')
+                                       //->where('todo_frequency.reminder_date',$today)
+                                       ->where('todo_frequency.reminder','=',1)
+                                       //->where('status','!=',$complete)
+                                       ->get();
+
+        /*$todo_users = ToDos::join('to_dos','to_dos.id','=','todo_associated_users.todo_id')
+                                        ->select('todo_associated_users.user_id as userid')
+                                        ->get();*/
+
+
+        echo '<pre>'; print_r($todo_frequency);exit;
+
+        foreach ($todo_frequency as $todo) {
+            $toDos = new ToDos();
+            $toDos->subject = $todo->subject;
+            $toDos->task_owner = $todo->task_owner;
+            $toDos->due_date = $today;
+            $toDos->status = $todo->status;
+            $toDos->type = $todo->type;
+            $toDos->description = $todo->description;
+
+            // print_r($toDos);exit;
+            $toDosStored = $toDos->save();
+            $toDos_id = $toDos->id;
+            if($toDos_id){
+                if(isset($todo->userid) && sizeof($todo->userid)>0){
+                        $todo_users = new TodoAssignedUsers();
+                        $todo_users->todo_id = $toDos_id;
+                        $todo_users->user_id = $todo->userid;
+                        $todo_users->save();
+                }
+
+                if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
+                        $todo_ass_list = new AssociatedTypeList();
+                        $todo_ass_list->todo_id = $toDos_id;
+                        $todo_ass_list->typelist_id = $todo->typelistid;
+                        $todo_ass_list->save();
+                }
+
+                /*if (isset($reminder) && $reminder!='') {
+                    $todo_reminder = new TodoFrequency();
+                    $todo_reminder->todo_id = $toDos_id;
+                    $todo_reminder->reminder = $reminder;
+                    if ($reminder == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    }
+                    elseif ($reminder == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    }
+                    elseif ($reminder == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    }
+                    $todo_reminder->save();
+                }*/
+            }
+        }
+
+        /*$todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
                         ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
                         ->select('to_dos.*', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
                         ->where('to_dos.reminder','=',1)
@@ -64,12 +128,68 @@ class ToDosController extends Controller
             }
 
         }
-      }
+      }*/
     }
 
     public function weekly(){
 
-        $todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
+        $today = date("Y-m-d h:i:s");
+
+        $todo_frequency = TodoFrequency::join('to_dos','to_dos.id','=','todo_frequency.todo_id')
+                                       ->join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                                       ->leftjoin('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
+                                       ->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.due_date as due_date','to_dos.status as status','to_dos.description as desc','to_dos.type as type','todo_associated_users.user_id as userid','todo_associated_typelist.typelist_id as typelistid')
+                                       //->where('todo_frequency.reminder_date',$today)
+                                       ->where('todo_frequency.reminder','=',2)
+                                       ->get();
+        echo '<pre>'; print_r($todo_frequency);exit;
+
+        foreach ($todo_frequency as $todo) {
+            $toDos = new ToDos();
+            $toDos->subject = $todo->subject;
+            $toDos->task_owner = $todo->task_owner;
+            $toDos->due_date = $today;
+            $toDos->status = $todo->status;
+            $toDos->type = $todo->type;
+            $toDos->description = $todo->description;
+
+            // print_r($toDos);exit;
+            $toDosStored = $toDos->save();
+            $toDos_id = $toDos->id;
+            if($toDos_id){
+                if(isset($todo->userid) && sizeof($todo->userid)>0){
+                        $todo_users = new TodoAssignedUsers();
+                        $todo_users->todo_id = $toDos_id;
+                        $todo_users->user_id = $todo->userid;
+                        $todo_users->save();
+                }
+
+                if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
+                        $todo_ass_list = new AssociatedTypeList();
+                        $todo_ass_list->todo_id = $toDos_id;
+                        $todo_ass_list->typelist_id = $todo->typelistid;
+                        $todo_ass_list->save();
+                }
+
+               /* if (isset($reminder) && $reminder!='') {
+                    $todo_reminder = new TodoFrequency();
+                    $todo_reminder->todo_id = $toDos_id;
+                    $todo_reminder->reminder = $reminder;
+                    if ($reminder == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    }
+                    elseif ($reminder == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    }
+                    elseif ($reminder == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    }
+                    $todo_reminder->save();
+                }*/
+            }
+        }
+
+        /*$todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
                         ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
                         ->select('to_dos.*', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
                         ->where('to_dos.reminder','=',2)
@@ -109,12 +229,68 @@ class ToDosController extends Controller
             }
 
         }
-      }
+      }*/
     }
 
     public function monthly(Request $request){
 
-        $todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
+        $today = date("Y-m-d h:i:s");
+
+        $todo_frequency = TodoFrequency::join('to_dos','to_dos.id','=','todo_frequency.todo_id')
+                                       ->join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                                       ->leftjoin('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
+                                       ->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.due_date as due_date','to_dos.status as status','to_dos.description as desc','to_dos.type as type','todo_associated_users.user_id as userid','todo_associated_typelist.typelist_id as typelistid')
+                                       //->where('todo_frequency.reminder_date',$today)
+                                       ->where('todo_frequency.reminder','=',3)
+                                       ->get();
+        echo '<pre>'; print_r($todo_frequency);exit;
+
+        foreach ($todo_frequency as $todo) {
+            $toDos = new ToDos();
+            $toDos->subject = $todo->subject;
+            $toDos->task_owner = $todo->task_owner;
+            $toDos->due_date = $today;
+            $toDos->status = $todo->status;
+            $toDos->type = $todo->type;
+            $toDos->description = $todo->description;
+
+            // print_r($toDos);exit;
+            $toDosStored = $toDos->save();
+            $toDos_id = $toDos->id;
+            if($toDos_id){
+                if(isset($todo->userid) && sizeof($todo->userid)>0){
+                        $todo_users = new TodoAssignedUsers();
+                        $todo_users->todo_id = $toDos_id;
+                        $todo_users->user_id = $todo->userid;
+                        $todo_users->save();
+                }
+
+                if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
+                        $todo_ass_list = new AssociatedTypeList();
+                        $todo_ass_list->todo_id = $toDos_id;
+                        $todo_ass_list->typelist_id = $todo->typelistid;
+                        $todo_ass_list->save();
+                }
+
+                /*if (isset($reminder) && $reminder!='') {
+                    $todo_reminder = new TodoFrequency();
+                    $todo_reminder->todo_id = $toDos_id;
+                    $todo_reminder->reminder = $reminder;
+                    if ($reminder == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    }
+                    elseif ($reminder == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    }
+                    elseif ($reminder == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    }
+                    $todo_reminder->save();
+                }*/
+            }
+        }
+
+        /*$todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
                         ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
                         ->select('to_dos.*', 'to_dos.task_owner as task_owner', 'to_dos.due_date as duedate', 'to_dos.candidate as candidate', 'to_dos.status as status', 'to_dos.type as type', 'to_dos.subject as subject', 'to_dos.priority as priority', 'to_dos.description as description', 'to_dos.reminder as reminder', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
                         ->where('to_dos.reminder','=',3)
@@ -154,7 +330,7 @@ class ToDosController extends Controller
             }
 
         }
-      }
+      }*/
     }
 
     public function index(){
@@ -271,7 +447,7 @@ class ToDosController extends Controller
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
-        //$reminder = $request->reminder;
+        $reminder = $request->reminder;
       //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
@@ -313,6 +489,22 @@ class ToDosController extends Controller
                     $todo_ass_list->typelist_id = $value;
                     $todo_ass_list->save();
                 }
+            }
+
+            if (isset($reminder) && $reminder!='') {
+                    $todo_reminder = new TodoFrequency();
+                    $todo_reminder->todo_id = $toDos_id;
+                    $todo_reminder->reminder = $reminder;
+                    if ($reminder == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    }
+                    elseif ($reminder == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    }
+                    elseif ($reminder == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    }
+                    $todo_reminder->save();
             }
 
         }
@@ -366,7 +558,11 @@ class ToDosController extends Controller
             }
         }
 
-        //$reminder_id = TodoFrequency::where('todo_id','=',$id)->get();
+        $todo_frequency = TodoFrequency::where('todo_id','=',$id)->first();
+        $reminder_id = array();
+        if (isset($todo_frequency) && sizeof($todo_frequency)>0) {
+            $reminder_id = $todo_frequency->reminder;
+        }
 
         $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
@@ -389,8 +585,8 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type_list'] = $toDos->typeList;
         $viewVariable['status_id'] = $toDos->status;
-        //$viewVariable['reminder_id'] = $toDos->reminder;
-        //echo $toDos->reminder;exit;
+        $viewVariable['reminder_id'] = $reminder_id;
+        //echo $reminder_id;exit;
 //echo $toDos->typeList;exit;
         return view('adminlte::toDo.edit', $viewVariable);
     }
@@ -468,14 +664,19 @@ class ToDosController extends Controller
                 }
             }
 
-/*            if (isset($reminder) && sizeof($reminder)>0) {
+            /*if (isset($reminder) && $reminder!='') {
                     $todo_reminder = new TodoFrequency();
                     $todo_reminder->todo_id = $todo_id;
                     $todo_reminder->reminder = $reminder;
-                    if (condition) {
-                        # code...
+                    if ($reminder == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
                     }
-                    $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    elseif ($reminder == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    }
+                    elseif ($reminder == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    }
                     $todo_reminder->save();
             }*/
 
