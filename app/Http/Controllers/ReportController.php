@@ -65,19 +65,22 @@ class ReportController extends Controller
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'meet@trajinfotech.com';
+        $to_address = 'saloni@trajinfotech.com';
 
         $users = User::getAllUsers('recruiter');
-        //print_r($users);exit;
 
-            $input = array();
-            $input['from_name'] = $from_name;
-            $input['from_address'] = $from_address;
-            $input['to'] = $to_address;
+        $input = array();
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to'] = $to_address;
+
         foreach ($users as $key => $value) {
 
-            $associate_daily = JobAssociateCandidates::getDailyReportAssociate();
-            $lead_daily = Lead::getDailyReportLead();
+            $associate_response = JobAssociateCandidates::getDailyReportAssociate($key);
+            $associate_daily = $associate_response['associate_data'];
+            $associate_count = $associate_response['cvs_cnt'];
+
+            /*$lead_daily = Lead::getDailyReportLead();
             $interview_daily = Interview::getDailyReportInterview();
 
             $associate_count = sizeof($associate_daily);
@@ -108,7 +111,7 @@ class ReportController extends Controller
             	$input['cmobile'] = $value2['cmobile'];
             	$input['cemail'] = $value2['cemail'];
             	$input['interview_count'] =$interview_count;
-            }
+            }*/
 
             $input['value'] = $value;
 
@@ -117,7 +120,7 @@ class ReportController extends Controller
             $message->to($input['to'])->subject('Activity Report (Daily Report & Interview Report) - '.$input['value']);
         });*/
     
-        return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
+            return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
         }
     }
 
