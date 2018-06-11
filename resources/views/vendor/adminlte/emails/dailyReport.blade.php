@@ -7,68 +7,80 @@
     @yield('style')
 </head>
 
+<style>
+    .cvs_td_top{
+        border-top: black 1px solid;
+        padding: 8px;
+    }
+    .cvs_td_right{
+        border-right: black 1px solid;
+    }
+    .cvs_td_bottom{
+        border-bottom: black 1px solid;
+    }
+    .cvs_td_left{
+        border-left: black 1px solid;
+    }
+
+</style>
 <body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
-            <u><b><h1>No of CVs Associated : {{$associate_count or '0'}}</h1></b></u>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" border-color="#000000">
-                <tr style="background-color: #C4D79B">
-                    <td align="center"><b>Sr.No.</b></td>
-                    <td align="center"><b>Date</b></td>
-                    <td align="center"><b>Position Name</b></td>
-                    <td align="center"><b>Company</b></td>
-                    <td align="center"><b>Location</b></td>
-                    <td align="center"><b>No of resumes<br/>associated</b></td>
-                    <td align="center"><b>Status</b></td>
+
+<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
+    <tr>
+        <td>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: rgba(157,92,172,0.9); height: 70px;">
+                <tr>
+                    <td align="center">
+                        Adler Talent Solutions Pvt. Ltd.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+                <tr>
+                    <td colspan="7">
+                        <u><b><h1>No of CVs Associated : {{$associate_count or '0'}}</h1></b></u>
+                    </td>
+                </tr>
+                <tr style="background-color: #C4D79B;">
+                    <td align="center" class="cvs_td_top cvs_td_left"><b>Sr.No.</b></td>
+                    <td align="center" class="cvs_td_top cvs_td_left" ><b>Date</b></td>
+                    <td align="center" class="cvs_td_top cvs_td_left"><b>Position Name</b></td>
+                    <td align="center" class="cvs_td_top cvs_td_left" ><b>Company</b></td>
+                    <td align="center" class="cvs_td_top cvs_td_left"><b>Location</b></td>
+                    <td align="center" class="cvs_td_top cvs_td_left"><b>No of resumes<br/>associated</b></td>
+                    <td align="center" class="cvs_td_top cvs_td_left cvs_td_right" ><b>Status</b></td>
                 </tr>
 
-                <?php $i=0; ?>
+                <?php
+                 $i=1;
+                 $total_cnt = sizeof($associate_daily);
+                ?>
                 @foreach($associate_daily as $key=>$value)
-                <tr>
-                    <td align="center">{{ ++$i }}</td>
-                    <td align="center">{{date('jS F,y') }}</td>
-                    <td align="center">{{$value['posting_title']}}</td>
-                    <td align="center">{{$value['company']}}</td>
-                    <td align="center">{{$value['location']}}</td>
-                    <td align="center">{{$value['associate_candidate_count'] or ''}}</td>
-                    <td align="center">{{$value['status']}}</td>
-                </tr> 
+                    <tr>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{ $i }}</td>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{date('jS F,y') }}</td>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['posting_title']}}</td>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['company']}}</td>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['location']}}</td>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['associate_candidate_count'] or ''}}</td>
+                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left cvs_td_right" >{{$value['status']}}</td>
+                    </tr>
+                    <?php $i++; ?>
                 @endforeach
+
             </table>
-            <u><b><h1>No of Interviews Scheduled : {{$interview_count or '0'}}</h1></b></u>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" border-color="#000000">
-                <tr style="background-color: #7598d9">
-                    <td align="center"><b>Sr.<br/>No.</b></td>
-                    <td align="center"><b>Position</b></td>
-                    <td align="center"><b>Position Location</b></td>
-                    <td align="center"><b>Name of the Candidate</b></td>
-                    <td align="center"><b>Interview Date</b></td>
-                    <td align="center"><b>Interview Time</b></td>
-                    <td align="center"><b>Candidate Location</b></td>
-                    <td align="center"><b>Mode of Interview</b></td>
-                    <td align="center"><b>Skype ID</b></td>
-                    <td align="center"><b>Contact No.</b></td>
-                    <td align="center"><b>Email ID</b></td>
-                    <td align="center"><b>Confirmed</b></td>
-                    <td align="center"><b>Source</b></td>
-                </tr>
-                <?php $i=0; ?>
-                @foreach($interview_daily as $key=>$value)
-                <tr>
-                    <td align="center">{{ ++$i }}</td>
-                    <td align="center">{{$value['posting_title']}}</td>
-                    <td align="center">{{$value['interview_location']}}</td>
-                    <td align="center">{{$value['cname']}}</td>
-                    <td align="center">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
-                    <td align="center">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
-                    <td align="center">{{$value['ccity']}}</td>
-                    <td align="center">{{$value['interview_type']}}</td>
-                    <td align="center">{{''}}</td>
-                    <td align="center">{{$value['cmobile']}}</td>
-                    <td align="center">{{$value['cemail']}}</td>
-                    <td align="center"><b>{{'Yes'}}</b></td>
-                    <td align="center"><b>{{'Adler'}}</b></td>
-                </tr>
-                @endforeach
-            </table>
-            <u><b><h1>No of Leads Added : {{$lead_count or '0'}}</h1></b></u>
+        </td>
+    </tr>
+    <tr style="height: 45px; background-color: #dddddd;">
+        <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
+    </tr>
+</table>
+
+
+
 </body>
 </html>
