@@ -997,7 +997,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('training', [
         'as' => 'training.index',
         'uses' => 'TrainingController@index',
-//        'middleware' => ['permission:team-list|team-create|team-edit|team-delete']
+        'middleware' => ['permission:training-list']
     ]);
     Route::get('training/create', [
         'as' => 'training.create',
@@ -1007,7 +1007,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('training/create', [
         'as' => 'training.store',
         'uses' => 'TrainingController@store',
-//        'middleware' => ['permission:team-create']
+        'middleware' => ['permission:training-create']
     ]);
     
     Route::get('training/{id}/edit', [
@@ -1018,28 +1018,32 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('training/{id}', [
         'as' => 'training.update',
         'uses' => 'TrainingController@update',
-       // 'middleware' => ['permission:team-edit']
+        'middleware' => ['permission:training-edit']
     ]);
     
 
     Route::post('training/upload/{id}', [
         'as' => 'trainingattachments.upload',
         'uses' => 'TrainingController@upload',
+        'middleware' => ['permission:training-edit']
     ]);
 
     Route::get('training/{id}/show', [
         'as' => 'training.show',
-        'uses' => 'TrainingController@show'
+        'uses' => 'TrainingController@show',
+        'middleware' => ['permission:training-list']
     ]);
 
     Route::delete('training/{id}', [
         'as' => 'training.destroy',
         'uses' => 'TrainingController@trainingDestroy',
-
+        'middleware' => ['permission:training-destroy']
     ]);
+
     Route::delete('training/destroy/{id}', [
         'as' => 'trainingattachments.destroy',
         'uses' => 'TrainingController@attachmentsDestroy',
+        'middleware' => ['permission:training-destroy']
    ]);
 
     // Admin > Process Manual
@@ -1047,6 +1051,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('process', [
         'as' => 'process.index',
         'uses' => 'ProcessController@index',
+        'middleware' => ['permission:process-list']
     ]);
     
     Route::get('process/create', [
@@ -1058,7 +1063,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('process/create', [
         'as' => 'process.store',
         'uses' => 'ProcessController@store',
-
+        'middleware' => ['permission:process-create']
     ]);
     Route::get('process/{id}/edit', [
         'as' => 'process.edit',
@@ -1068,26 +1073,29 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('process/{id}', [
         'as' => 'process.update',
         'uses' => 'ProcessController@update',
-      
+        'middleware' => ['permission:process-edit']
     ]);
     Route::post('process/upload/{id}', [
         'as' => 'processattachments.upload',
         'uses' => 'ProcessController@upload',
+        'middleware' => ['permission:process-edit']
     ]);
     Route::get('process/{id}/show', [
         'as' => 'process.show',
-        'uses' => 'ProcessController@show'
+        'uses' => 'ProcessController@show',
+        'middleware' => ['permission:process-list']
     ]);
 
     Route::delete('process/{id}', [
         'as' => 'process.destroy',
         'uses' => 'ProcessController@processDestroy',
-
+        'middleware' => ['permission:process-destroy']
     ]);
 
     Route::delete('process/destroy/{id}', [
         'as' => 'processattachments.destroy',
         'uses' => 'ProcessController@attachmentsDestroy',
+        'middleware' => ['permission:process-destroy']
    ]);
 
 

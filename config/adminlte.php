@@ -289,16 +289,16 @@ return [
             ],
 
         [
-           'text'        => 'Training',
+           'text'        => 'Training Material',
            'icon'        => 'users',
            'submenu' => [
                [
-                   'text' => 'Add Training',
+                   'text' => 'Create New Training Material',
                    'url'  => 'training/create',
                    'icon' => 'plus',
                ],
                [
-                   'text' => 'List Training',
+                   'text' => 'List of Training Material',
                    'url'  => 'training',
                    'icon' => 'list',
                ]
