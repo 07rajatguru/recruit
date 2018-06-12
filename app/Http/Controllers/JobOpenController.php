@@ -627,8 +627,9 @@ class JobOpenController extends Controller
             $to = $user_email;
             $subject = "Job Open - ".$posting_title;
             $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
+            $module_id = $job_id;
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message));*/
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id));*/
 
         }
 

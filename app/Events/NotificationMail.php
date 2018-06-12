@@ -17,13 +17,14 @@ class NotificationMail
     public $to;
     public $subject;
     public $message;
+    public $module_id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($module, $sender_name, $to, $subject, $message)
+    public function __construct($module, $sender_name, $to, $subject, $message, $module_id)
     {
         //
         $this->module = $module;
@@ -31,6 +32,7 @@ class NotificationMail
         $this->to = $to;
         $this->subject = $subject;
         $this->message = $message;
+        $this->module_id = $module_id;
     }
 
     /**
