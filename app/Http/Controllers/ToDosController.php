@@ -24,24 +24,99 @@ class ToDosController extends Controller
 
     public function daily(){
 
-        $today = date("Y-m-d h:i:s");
-        $complete = env('COMPLETEDSTATUS');  
+        $todo_frequency = TodoFrequency::gettodobyfrequency(1);
 
-        $todo_frequency = TodoFrequency::join('to_dos','to_dos.id','=','todo_frequency.todo_id')
-                                       //->join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
-                                       ->leftjoin('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
-                                       ->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.due_date as due_date','to_dos.status as status','to_dos.description as desc','to_dos.type as type','todo_associated_typelist.typelist_id as typelistid')
-                                       //->where('todo_frequency.reminder_date',$today)
-                                       ->where('todo_frequency.reminder','=',1)
-                                       //->where('status','!=',$complete)
-                                       ->get();
+        //echo '<pre>'; print_r($todo_frequency);exit;
 
-        /*$todo_users = ToDos::join('to_dos','to_dos.id','=','todo_associated_users.todo_id')
-                                        ->select('todo_associated_users.user_id as userid')
-                                        ->get();*/
+        foreach ($todo_frequency as $key => $value) {
+            $toDos = new ToDos();
+            $toDos->subject = $value['subject'];
+            $toDos->task_owner = $value['task_owner'];
+            $toDos->due_date = date("Y-m-d h:i:s");
+            $toDos->status = $value['status'];
+            $toDos->type = $value['type'];
+            $toDos->description = $value['desc'];
+
+            //echo '<pre>'; print_r($toDos);exit;
+            $toDosStored = $toDos->save();
+            $toDos_id = $toDos->id;
+
+            $todo_typelist = ToDos::join('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
+                                  ->select('todo_associated_typelist.typelist_id as typelistid')
+                                  ->where('todo_associated_typelist.todo_id','=',$value['id'])
+                                  ->get();
+
+            $i=0;
+            foreach ($todo_typelist as $k => $v) {
+                $typelistid[$i] = $v->typelistid;
+                $typelist_id = $typelistid[$i];
+                $i++;
+                //echo '<pre>'; print_r($typelistid);exit;
+
+                if(isset($typelist_id) && sizeof($typelist_id)>0){
+                //foreach ($typelistid as $key=>$value){
+                    $todo_ass_list = new AssociatedTypeList();
+                    $todo_ass_list->todo_id = $toDos_id;
+                    $todo_ass_list->typelist_id = $typelist_id;
+
+                    //echo '<pre>'; print_r($todo_ass_list);exit;
+                    $todo_ass_list->save();
+                //}
+                }
+            }
+
+            $todo_users = ToDos::join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                                ->select('to_dos.id','todo_associated_users.user_id as userid')
+                                ->where('todo_associated_users.todo_id','=',$value['id'])
+                                ->get();
+            $i=0;
+            foreach ($todo_users as $k1 => $v1) {
+                $user_id[$i] = $v1->userid;
+                $user_ids = $user_id[$i];
+                $i++;
+
+                if(isset($user_ids) && sizeof($user_ids)>0){
+                //foreach ($user_ids as $key=>$value){
+                    $todo_user_list = new TodoAssignedUsers();
+                    $todo_user_list->todo_id = $toDos_id;
+                    $todo_user_list->user_id = $user_ids;
+
+                    //echo '<pre>'; print_r($todo_user_list);exit;
+                    $todo_user_list->save();
+               // }
+                }
+            }
+        }
+        
 
 
-        echo '<pre>'; print_r($todo_frequency);exit;
+        /*$todo_users = ToDos::join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                            ->join('todo_frequency','todo_frequency.todo_id','=','to_dos.id')
+                            ->select('to_dos.id','todo_associated_users.user_id as userid')
+                            ->where('todo_frequency.reminder','=',1)
+                            ->groupby('todo_associated_users.todo_id')
+                            ->get();
+
+        $users = array();
+        $i=0;
+        foreach ($todo_users as $key => $value) {
+            $user = ToDos::getAssociatedusersById($value->id);
+            $id = '';
+            foreach ($user as $key => $value) {
+                if ($id == '') {
+                    $id = $key;
+                }
+                else{
+                    $id .= ', ' . $key;
+                }
+            }
+            $users[$i] = $id;
+            $user_id = $users[$i];
+            $i++;
+        
+        echo '<pre>'; print_r($user_id);exit;
+
+
 
         foreach ($todo_frequency as $todo) {
             $toDos = new ToDos();
@@ -56,11 +131,13 @@ class ToDosController extends Controller
             $toDosStored = $toDos->save();
             $toDos_id = $toDos->id;
             if($toDos_id){
-                if(isset($todo->userid) && sizeof($todo->userid)>0){
+                if(isset($user_id) && sizeof($user_id)>0){
+                    foreach ($user_id as $k => $v) {
                         $todo_users = new TodoAssignedUsers();
                         $todo_users->todo_id = $toDos_id;
-                        $todo_users->user_id = $todo->userid;
+                        $todo_users->user_id = $k;
                         $todo_users->save();
+                    }
                 }
 
                 if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
@@ -68,7 +145,7 @@ class ToDosController extends Controller
                         $todo_ass_list->todo_id = $toDos_id;
                         $todo_ass_list->typelist_id = $todo->typelistid;
                         $todo_ass_list->save();
-                }
+                }*/
 
                 /*if (isset($reminder) && $reminder!='') {
                     $todo_reminder = new TodoFrequency();
@@ -84,67 +161,82 @@ class ToDosController extends Controller
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
                     }
                     $todo_reminder->save();
-                }*/
+                }
             }
         }
-
-        /*$todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
-                        ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
-                        ->select('to_dos.*', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
-                        ->where('to_dos.reminder','=',1)
-                        ->get();
-
-        //print_r($todos);exit;
-
-        foreach ($todos as $todo) {
-        $toDos = new ToDos();
-        $toDos->subject = $todo->subject;
-        $toDos->task_owner = $todo->task_owner;
-        $toDos->due_date = $todo->due_date;
-        $toDos->candidate = $todo->candidate;
-        $toDos->status = $todo->status;
-        $toDos->type = $todo->type;
-
-        $toDos->reminder = $todo->reminder;
-        $toDos->priority = $todo->priority;
-        $toDos->description = $todo->description;
-
-       // print_r($toDos);exit;
-        $toDosStored = $toDos->save();
-        $toDos_id = $toDos->id;
-        if($toDos_id){
-            if(isset($todo->userid) && sizeof($todo->userid)>0){
-                    $todo_users = new TodoAssignedUsers();
-                    $todo_users->todo_id = $toDos_id;
-                    $todo_users->user_id = $todo->userid;
-                    $todo_users->save();
-            }
-
-            if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
-                    $todo_ass_list = new AssociatedTypeList();
-                    $todo_ass_list->todo_id = $toDos_id;
-                    $todo_ass_list->typelist_id = $todo->typelistid;
-                    $todo_ass_list->save();
-            }
-
-        }
-      }*/
+        }*/
     }
 
     public function weekly(){
 
         $today = date("Y-m-d h:i:s");
 
-        $todo_frequency = TodoFrequency::join('to_dos','to_dos.id','=','todo_frequency.todo_id')
-                                       ->join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
-                                       ->leftjoin('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
-                                       ->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.due_date as due_date','to_dos.status as status','to_dos.description as desc','to_dos.type as type','todo_associated_users.user_id as userid','todo_associated_typelist.typelist_id as typelistid')
-                                       //->where('todo_frequency.reminder_date',$today)
-                                       ->where('todo_frequency.reminder','=',2)
-                                       ->get();
-        echo '<pre>'; print_r($todo_frequency);exit;
+        $todo_frequency = TodoFrequency::gettodobyfrequency(2);
 
-        foreach ($todo_frequency as $todo) {
+        //echo '<pre>'; print_r($todo_frequency);exit;
+
+        foreach ($todo_frequency as $key => $value) {
+            $toDos = new ToDos();
+            $toDos->subject = $value['subject'];
+            $toDos->task_owner = $value['task_owner'];
+            $toDos->due_date = date("Y-m-d h:i:s");
+            $toDos->status = $value['status'];
+            $toDos->type = $value['type'];
+            $toDos->description = $value['desc'];
+
+            //echo '<pre>'; print_r($toDos);exit;
+            $toDosStored = $toDos->save();
+            $toDos_id = $toDos->id;
+
+            $todo_typelist = ToDos::join('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
+                                  ->select('todo_associated_typelist.typelist_id as typelistid')
+                                  ->where('todo_associated_typelist.todo_id','=',$value['id'])
+                                  ->get();
+
+            $i=0;
+            foreach ($todo_typelist as $k => $v) {
+                $typelistid[$i] = $v->typelistid;
+                $typelist_id = $typelistid[$i];
+                $i++;
+                //echo '<pre>'; print_r($typelistid);exit;
+
+                if(isset($typelist_id) && sizeof($typelist_id)>0){
+                //foreach ($typelistid as $key=>$value){
+                    $todo_ass_list = new AssociatedTypeList();
+                    $todo_ass_list->todo_id = $toDos_id;
+                    $todo_ass_list->typelist_id = $typelist_id;
+
+                    //echo '<pre>'; print_r($todo_ass_list);exit;
+                    $todo_ass_list->save();
+                //}
+                }
+            }
+
+            $todo_users = ToDos::join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                                ->select('to_dos.id','todo_associated_users.user_id as userid')
+                                ->where('todo_associated_users.todo_id','=',$value['id'])
+                                ->get();
+            $i=0;
+            foreach ($todo_users as $k1 => $v1) {
+                $user_id[$i] = $v1->userid;
+                $user_ids = $user_id[$i];
+                $i++;
+
+                if(isset($user_ids) && sizeof($user_ids)>0){
+                //foreach ($user_ids as $key=>$value){
+                    $todo_user_list = new TodoAssignedUsers();
+                    $todo_user_list->todo_id = $toDos_id;
+                    $todo_user_list->user_id = $user_ids;
+
+                    //echo '<pre>'; print_r($todo_user_list);exit;
+                    $todo_user_list->save();
+                //}
+                }
+            }
+        }
+
+
+        /*foreach ($todo_frequency as $todo) {
             $toDos = new ToDos();
             $toDos->subject = $todo->subject;
             $toDos->task_owner = $todo->task_owner;
@@ -185,67 +277,80 @@ class ToDosController extends Controller
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
                     }
                     $todo_reminder->save();
-                }*/
+                }
             }
-        }
-
-        /*$todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
-                        ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
-                        ->select('to_dos.*', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
-                        ->where('to_dos.reminder','=',2)
-                        ->get();
-
-       // print_r($todos);exit;
-
-        foreach ($todos as $todo) {
-        $toDos = new ToDos();
-        $toDos->subject = $todo->subject;
-        $toDos->task_owner = $todo->task_owner;
-        $toDos->due_date = $todo->due_date;
-        $toDos->candidate = $todo->candidate;
-        $toDos->status = $todo->status;
-        $toDos->type = $todo->type;
-
-        $toDos->reminder = $todo->reminder;
-        $toDos->priority = $todo->priority;
-        $toDos->description = $todo->description;
-
-       // print_r($toDos);exit;
-        $toDosStored = $toDos->save();
-        $toDos_id = $toDos->id;
-        if($toDos_id){
-            if(isset($todo->userid) && sizeof($todo->userid)>0){
-                    $todo_users = new TodoAssignedUsers();
-                    $todo_users->todo_id = $toDos_id;
-                    $todo_users->user_id = $todo->userid;
-                    $todo_users->save();
-            }
-
-            if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
-                    $todo_ass_list = new AssociatedTypeList();
-                    $todo_ass_list->todo_id = $toDos_id;
-                    $todo_ass_list->typelist_id = $todo->typelistid;
-                    $todo_ass_list->save();
-            }
-
-        }
-      }*/
+        }*/
     }
 
     public function monthly(Request $request){
 
         $today = date("Y-m-d h:i:s");
 
-        $todo_frequency = TodoFrequency::join('to_dos','to_dos.id','=','todo_frequency.todo_id')
-                                       ->join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
-                                       ->leftjoin('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
-                                       ->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.due_date as due_date','to_dos.status as status','to_dos.description as desc','to_dos.type as type','todo_associated_users.user_id as userid','todo_associated_typelist.typelist_id as typelistid')
-                                       //->where('todo_frequency.reminder_date',$today)
-                                       ->where('todo_frequency.reminder','=',3)
-                                       ->get();
-        echo '<pre>'; print_r($todo_frequency);exit;
+        $todo_frequency = TodoFrequency::gettodobyfrequency(3);
 
-        foreach ($todo_frequency as $todo) {
+        //echo '<pre>'; print_r($todo_frequency);exit;
+
+         foreach ($todo_frequency as $key => $value) {
+            $toDos = new ToDos();
+            $toDos->subject = $value['subject'];
+            $toDos->task_owner = $value['task_owner'];
+            $toDos->due_date = date("Y-m-d h:i:s");
+            $toDos->status = $value['status'];
+            $toDos->type = $value['type'];
+            $toDos->description = $value['desc'];
+
+            //echo '<pre>'; print_r($toDos);exit;
+            $toDosStored = $toDos->save();
+            $toDos_id = $toDos->id;
+
+            $todo_typelist = ToDos::join('todo_associated_typelist','todo_associated_typelist.todo_id','=','to_dos.id')
+                                  ->select('todo_associated_typelist.typelist_id as typelistid')
+                                  ->where('todo_associated_typelist.todo_id','=',$value['id'])
+                                  ->get();
+
+            $i=0;
+            foreach ($todo_typelist as $k => $v) {
+                $typelistid[$i] = $v->typelistid;
+                $typelist_id = $typelistid[$i];
+                $i++;
+                //echo '<pre>'; print_r($typelist_id);exit;
+
+                if(isset($typelist_id) && sizeof($typelist_id)>0){
+                //foreach ($typelistid as $key=>$value){
+                    $todo_ass_list = new AssociatedTypeList();
+                    $todo_ass_list->todo_id = $toDos_id;
+                    $todo_ass_list->typelist_id = $typelist_id;
+
+                    //echo '<pre>'; print_r($todo_ass_list);exit;
+                    $todo_ass_list->save();
+                //}
+                }
+            }
+
+            $todo_users = ToDos::join('todo_associated_users','todo_associated_users.todo_id','=','to_dos.id')
+                                ->select('to_dos.id','todo_associated_users.user_id as userid')
+                                ->where('todo_associated_users.todo_id','=',$value['id'])
+                                ->get();
+            $i=0;
+            foreach ($todo_users as $k1 => $v1) {
+                $user_id[$i] = $v1->userid;
+                $user_ids = $user_id[$i];
+                $i++;
+
+                if(isset($user_ids) && sizeof($user_ids)>0){
+                //foreach ($user_ids as $key=>$value){
+                    $todo_user_list = new TodoAssignedUsers();
+                    $todo_user_list->todo_id = $toDos_id;
+                    $todo_user_list->user_id = $user_ids;
+
+                    //echo '<pre>'; print_r($todo_user_list);exit;
+                    $todo_user_list->save();
+                //}
+                }
+            }
+        }
+
+        /*foreach ($todo_frequency as $todo) {
             $toDos = new ToDos();
             $toDos->subject = $todo->subject;
             $toDos->task_owner = $todo->task_owner;
@@ -286,51 +391,9 @@ class ToDosController extends Controller
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
                     }
                     $todo_reminder->save();
-                }*/
+                }
             }
-        }
-
-        /*$todos = ToDos::join('todo_associated_users','todo_associated_users.todo_id', '=', 'to_dos.id')
-                        ->leftjoin('todo_associated_typelist', 'todo_associated_typelist.todo_id', '=', 'to_dos.id')
-                        ->select('to_dos.*', 'to_dos.task_owner as task_owner', 'to_dos.due_date as duedate', 'to_dos.candidate as candidate', 'to_dos.status as status', 'to_dos.type as type', 'to_dos.subject as subject', 'to_dos.priority as priority', 'to_dos.description as description', 'to_dos.reminder as reminder', 'todo_associated_users.user_id as userid', 'todo_associated_typelist.typelist_id as typelistid')
-                        ->where('to_dos.reminder','=',3)
-                        ->get();
-
-        print_r($todos);exit;
-
-       foreach ($todos as $todo) {
-        $toDos = new ToDos();
-        $toDos->subject = $todo->subject;
-        $toDos->task_owner = $todo->task_owner;
-        $toDos->due_date = $todo->due_date;
-        $toDos->candidate = $todo->candidate;
-        $toDos->status = $todo->status;
-        $toDos->type = $todo->type;
-
-        $toDos->reminder = $todo->reminder;
-        $toDos->priority = $todo->priority;
-        $toDos->description = $todo->description;
-
-       // print_r($toDos);exit;
-        $toDosStored = $toDos->save();
-        $toDos_id = $toDos->id;
-        if($toDos_id){
-            if(isset($todo->userid) && sizeof($todo->userid)>0){
-                    $todo_users = new TodoAssignedUsers();
-                    $todo_users->todo_id = $toDos_id;
-                    $todo_users->user_id = $todo->userid;
-                    $todo_users->save();
-            }
-
-            if(isset($todo->typelistid) && sizeof($todo->typelistid)>0){
-                    $todo_ass_list = new AssociatedTypeList();
-                    $todo_ass_list->todo_id = $toDos_id;
-                    $todo_ass_list->typelist_id = $todo->typelistid;
-                    $todo_ass_list->save();
-            }
-
-        }
-      }*/
+        }*/
     }
 
     public function index(){
@@ -645,6 +708,7 @@ class ToDosController extends Controller
 
         TodoAssignedUsers::where('todo_id',$todo_id)->delete();
         AssociatedTypeList::where('todo_id',$todo_id)->delete();
+        TodoFrequency::where('todo_id',$todo_id)->delete();
         if($todo_id){
             if(isset($users) && sizeof($users)>0){
                 foreach ($users as $key=>$value){
@@ -664,7 +728,7 @@ class ToDosController extends Controller
                 }
             }
 
-            /*if (isset($reminder) && $reminder!='') {
+            if (isset($reminder) && $reminder!='') {
                     $todo_reminder = new TodoFrequency();
                     $todo_reminder->todo_id = $todo_id;
                     $todo_reminder->reminder = $reminder;
@@ -678,7 +742,7 @@ class ToDosController extends Controller
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
                     }
                     $todo_reminder->save();
-            }*/
+            }
 
         }
         return redirect()->route('todos.index')->with('success','ToDo Updated Successfully');

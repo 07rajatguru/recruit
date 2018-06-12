@@ -142,7 +142,7 @@
                             @endif
                           </div>
                         </div>
-                        {{--<div class="box-body col-xs-6 col-sm-6 col-md-6">                   
+                        <div class="box-body col-xs-6 col-sm-6 col-md-6">                   
                           <div class="form-group {{ $errors->has('reminder') ? 'has-error' : '' }}">
                             <strong>Reminder:</strong>
                             {!! Form::select('reminder', $reminder,$reminder_id, array('id'=>'reminder','class' => 'form-control' )) !!}
@@ -152,7 +152,7 @@
                             </span>
                             @endif
                           </div> 
-                        </div>--}}
+                        </div>
                     </div>                   
 
                     {{-- <div class="box-body col-xs-6 col-sm-6 col-md-6">
