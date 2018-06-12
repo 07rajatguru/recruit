@@ -91,4 +91,35 @@ class JobAssociateCandidates extends Model
         return $response;   
 
     }
+
+    public static function getWeeklyReportAssociate($user_id){
+
+        $date = date('Y-m-d',strtotime('Monday this week'));
+        /*$daten = date('Y-m-d',strtotime("$date +5days"));
+        $d = $date . $daten;
+        print_r($d);exit;*/
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.date as date');
+        $query = $query->where('job_associate_candidates.associate_by',$user_id);
+        $query = $query->where('job_associate_candidates.date','>=',date('Y-m-d',strtotime('Monday this week')));
+        $query = $query->where('job_associate_candidates.date','<=',date('Y-m-d',strtotime("$date +6days")));
+        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.date)'));
+        $query_response = $query->get();
+
+        $response['associate_data'] = array();
+        $i = 0;
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+            $cnt += $value->count;
+            $datearry = explode(' ', $value->date);
+            $response['associate_data'][$i]['associate_date'] = $datearry[0];
+            $response['associate_data'][$i]['associate_candidate_count'] = $value->count;
+            $i++;
+        }
+        $response['cvs_cnt'] = $cnt;
+        //print_r($response);exit;
+        return $response;  
+
+    }
 }

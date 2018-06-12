@@ -8,38 +8,108 @@
 </head>
 
 <body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
-            <u><b><h1>No of CVs Associated in this week : 40 (7*5 = 35+5 = 40)</h1></b></u>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" border-color="#000000">
-                <tr style="background-color: #C4D79B">
-                    <td align="center"><b>Sr.No.</b></td>
-                    <td align="center"><b>Day(Date)</b></td>
-                    <td align="center"><b>No of resumes<br/>associated</b></td>
-                </tr>
 
-                <?php $i=0; ?>
+<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
+    <tr>
+        <td>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: rgba(157,92,172,0.9); height: 70px;">
                 <tr>
-                    <td align="center">{{ ++$i }}</td>
-                    <td align="center">{{date(' l (jS F,y)')}}</td>
-                    <td align="center">{{''}}</td>
-                </tr> 
-                <tr>
-                    <td align="center"></td>
-                    <td align="center">Total Associated</td>
-                    <td align="center"></td>
-                </tr>
-                <tr>
-                    <td align="center"></td>
-                    <td align="center">Benchmark</td>
-                    <td align="center">40</td>
-                </tr>
-                <tr>
-                    <td align="center"></td>
-                    <td align="center">No of resumes not <br/> achieved</td>
-                    <td align="center"></td>
+                    <td align="center">
+                        Adler Talent Solutions Pvt. Ltd.
+                    </td>
                 </tr>
             </table>
-            <u><b><h1>No of Interviews Scheduled : {{''}}</h1></b></u>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" border-color="#000000">
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+                <tr>
+                    <td colspan="7">
+                        <u><b><h1>No of CVs Associated in this week : {{$associate_count or '0'}}</h1></b></u>
+                    </td>
+                </tr>
+
+                <tr style="background-color: #C4D79B;">
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Day(Date)</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>No of resumes<br/>associated</b></td>
+                </tr>
+
+                <?php
+                 $i=1;
+                 $total_cnt = sizeof($associate_weekly);
+                ?>
+                @foreach($associate_weekly as $key=>$value)
+                    <tr>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('l (jS F,y) ',strtotime($value['associate_date']))}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;border-right: black 1px solid;">{{$value['associate_candidate_count']}}</td>
+                    </tr>
+                    <?php $i++; ?>
+                @endforeach
+
+                    <tr>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;"></td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">Total Associated</td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid;">{{$associate_count or '0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;"></td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">Benchmark</td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid;">40</td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;"></td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">No of resumes not <br/> achieved</td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid; color: red"><?php if ($associate_count<40): ?>{{$associate_count-40}}<?php endif ?></td>
+                    </tr>
+
+                <tr>
+                    <td colspan="7">
+                        <u><b><h1>No of Interviews Scheduled : {{$interview_count or '0'}}</h1></b></u>
+                    </td>
+                </tr>
+
+                <tr style="background-color: #C4D79B;">
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Day(Date)</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>No of Interviews</b></td>
+                </tr>
+
+                <?php
+                 $i=1;
+                 $total_cnt = sizeof($interview_weekly);
+                ?>
+                @foreach($interview_weekly as $key=>$value)
+                    <tr>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('l (jS F,y) ',strtotime($value['interview_date']))}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;border-right: black 1px solid;">{{$value['interview_daily_count']}}</td>
+                    </tr>
+                    <?php $i++; ?>
+                @endforeach
+
+                    <tr>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;"></td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">Total</td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid;">{{$interview_count or '0'}}</td>
+                    </tr>
+
+                    <tr>
+                    <td colspan="7">
+                        <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+                <!-- 
+            <tr><u><b><h1>No of Interviews Scheduled : {{''}}</h1></b></u></tr>
                 <tr style="background-color: #C4D79B">
                     <td align="center"><b>Sr.No.</b></td>
                     <td align="center"><b>Day(Date)</b></td>
@@ -56,7 +126,15 @@
                     <td align="center">Total</td>
                     <td align="center"></td>
                 </tr>
-            </table>
-            <u><b><h1>No of Leads Added : {{''}}</h1></b></u>
+                <tr>
+                    <td colspan="7">
+                        <u><b><h1>No of Leads Added : {{''}}</h1></b></u>
+                    </td>
+                </tr> -->
+
+    <tr style="height: 45px; background-color: #dddddd;">
+        <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
+    </tr>
+</table>
 </body>
 </html>
