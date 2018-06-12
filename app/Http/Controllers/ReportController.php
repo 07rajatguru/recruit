@@ -133,12 +133,12 @@ class ReportController extends Controller
             $input['lead_count'] = $lead_count;
 
 
-            /*\Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
+            \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name'])->cc($input['cc']);
                 $message->to($input['to'])->subject('Weekly Activity Report -'.$input['value']);
-            });*/
+            });
 
-            return view('adminlte::emails.WeeklyReport',compact('associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
+            //return view('adminlte::emails.WeeklyReport',compact('associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
         }
     }
 }
