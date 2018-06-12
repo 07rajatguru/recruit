@@ -150,29 +150,20 @@ class Lead extends Model
         return $response;
     }
 
-    public static function getDailyReportLead(){
-
-        $user = \Auth::user();
-        //$user_id = $user->id;
-
-        $users = User::getAllUsers('recruiter');
-
-        foreach ($users as $key => $value) {
-            
+    public static function getDailyReportLeadCount($user_id){
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
-        
+
         $query = Lead::query();
         $query = $query->select('lead_management.*','lead_management.created_at');
-        $query = $query->where('created_at','>',"$from_date");
-        $query = $query->where('created_at','<',"$to_date");
-        $query = $query->where('lead_management.account_manager_id','=',$key);
+        $query = $query->where('created_at','>=',"$from_date");
+        $query = $query->where('created_at','<=',"$to_date");
+        $query = $query->where('lead_management.account_manager_id','=',$user_id);
 
-        $lead_res = $query->get();
-        //print_r($lead_res);exit;
-        return $lead_res;
-        }
+        $lead_cnt = $query->count();
+
+        return $lead_cnt;
     }
 }
 

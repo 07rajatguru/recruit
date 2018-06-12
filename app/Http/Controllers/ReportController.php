@@ -67,7 +67,7 @@ class ReportController extends Controller
         $from_address = getenv('FROM_ADDRESS');
         $to_address = 'saloni@trajinfotech.com';
 
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsersEmails('recruiter');
 
         $input = array();
         $input['from_name'] = $from_name;
@@ -80,47 +80,22 @@ class ReportController extends Controller
             $associate_daily = $associate_response['associate_data'];
             $associate_count = $associate_response['cvs_cnt'];
 
-            /*$lead_daily = Lead::getDailyReportLead();
-            $interview_daily = Interview::getDailyReportInterview();
+            $lead_count = Lead::getDailyReportLeadCount($key);
 
-            $associate_count = sizeof($associate_daily);
-            $lead_count = sizeof($lead_daily);
-            $interview_count = sizeof($interview_daily);
-
-            $input['associate_daily'] = $associate_daily;
-
-            foreach($associate_daily as $key1=>$value1){
-            $input['associate_count'] = $associate_count;
-            $input['posting_title'] = $value1['posting_title'];
-            $input['company'] = $value1['company'];
-            $input['location'] = $value1['location'];
-            $input['associate_candidate_count'] = $value1['associate_candidate_count'];
-            $input['status'] = $value1['status'];
-            }
-            $input['lead_count'] = $lead_count;
-
-            $input['interview_daily'] = $interview_daily;
-
-            foreach ($interview_daily as $key2 => $value2) {
-            	$input['interview_location'] = $value2['interview_location'];
-            	$input['cname'] = $value2['cname'];
-            	$input['interview_date'] = $value2['interview_date'];
-            	$input['interview_time'] = $value2['interview_time'];
-            	$input['ccity'] = $value2['ccity'];
-            	$input['interview_type'] = $value2['interview_type'];
-            	$input['cmobile'] = $value2['cmobile'];
-            	$input['cemail'] = $value2['cemail'];
-            	$input['interview_count'] =$interview_count;
-            }*/
+            $interview_daily = Interview::getDailyReportInterview($key);
 
             $input['value'] = $value;
+            $input['associate_daily'] = $associate_daily;
+            $input['associate_count'] = $associate_count;
+            $input['lead_count'] = $lead_count;
+            $input['interview_daily'] = $interview_daily;
 
-       /* \Mail::send('adminlte::emails.DailyReport', $input, function ($message) use($input) {
-            $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to'])->subject('Activity Report (Daily Report & Interview Report) - '.$input['value']);
-        });*/
-    
-            return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
+            \Mail::send('adminlte::emails.DailyReport', $input, function ($message) use($input) {
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to'])->subject('Activity Report (Daily Report & Interview Report) - '.$input['value']);
+            });
+
+            //return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
         }
     }
 
