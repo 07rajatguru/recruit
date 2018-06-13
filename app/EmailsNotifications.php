@@ -36,13 +36,15 @@ class EmailsNotifications extends Model
         $query = $query->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id');
         $query = $query->join('users', 'users.id', '=', 'job_openings.hiring_manager_id');
         $query = $query->join('industry', 'industry.id', '=', 'job_openings.industry_id');
-        $query = $query->select('job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name');
+        $query = $query->select('emails_notification.module_id as module_id','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name');
         $query = $query->where('emails_notification.id',$id);
         $query_res = $query->get();
 
         $job_open = array();
 
         foreach ($query_res as $key => $value) {
+
+            $job_open['module_id'] = $value->module_id;
 
             // value get in 2 decimal point
             if ($value->lacs_from >= '100') {
@@ -135,12 +137,12 @@ class EmailsNotifications extends Model
                 $mo_job_search = $value->job_search;
                 $selected_job_search = explode(",",$mo_job_search);
             }
-        }
 
         $job_visible_users = \DB::table('job_visible_users')
             ->select('users.id','users.name')
             ->join('users','users.id','=','job_visible_users.user_id')
-            ->where('job_visible_users.job_id',$id)
+            ->join('emails_notification','emails_notification.module_id','=','job_visible_users.job_id')
+            ->where('emails_notification.id',$id)
             ->get();
         $count = 0;
         foreach ($job_visible_users as $key => $value) {
@@ -155,8 +157,9 @@ class EmailsNotifications extends Model
         $job_open['doc'] = array();
         $jobopen_doc = \DB::table('job_openings_doc')
             ->join('users', 'users.id', '=', 'job_openings_doc.uploaded_by')
+            ->join('emails_notification','emails_notification.module_id','=','job_openings_doc.job_id')
             ->select('job_openings_doc.*', 'users.name as upload_name')
-            ->where('job_id', '=', $id)
+            ->where('emails_notification.id','=', $id)
             ->get();
 
         $utils = new Utils();
@@ -177,6 +180,7 @@ class EmailsNotifications extends Model
         $posting_status = JobOpen::getJobPostingStatus();
         $job_search = JobOpen::getJobSearchOptions();
         $job_status = JobOpen::getJobStatus();
+        }
 
         //print_r($job_open);exit;
         return $job_open; 

@@ -28,6 +28,7 @@ class EmailNotificationController extends Controller
             $mail[$i]['subject'] = $value->subject;
             $mail[$i]['message'] = $value->message;
             $mail[$i]['status'] = $value->status;
+            $mail[$i]['module_id'] = $value->module_id;
             $sent_date = date('Y-m-d');
             //echo $sent_date;exit;
             $status = 2;

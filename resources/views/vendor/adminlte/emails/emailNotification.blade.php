@@ -99,53 +99,47 @@
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;border-bottom: black 1px solid;">{{ $job['city'] }}</td>
                 </tr>
             </table>
+
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+            	<td colspan="7">
+					<h3 class="box-title">Attachments</h3>
+				</td>
+
+				<tr>
+                	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"></th>
+                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">File Name</th>
+                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Uploaded by</th>
+                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Size</th>
+                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid">Category</th>
+                </tr>
+
+                @if(sizeof($job['doc'])>0)
+                    @foreach($job['doc'] as $key=>$value)
+                    	<tr>
+                        	<td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">
+                            	<a download href="{{ $value['url'] }}" >D</a> 
+                        	</td>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;"><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">{{ $value['uploaded_by'] }}</td>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">{{ $value['size'] }}</td>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;border-right: black 1px solid">{{ $value['category'] }}</td>
+                        </tr>
+                    @endforeach
+                @endif
+			</table>
+
+			<table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+				<tr>
+					<td align="center" style="padding: 0px;">
+						<button type="button" formtarget="_blank" onclick="location.href = '{{ route('jobopen.show',$job['module_id']) }}';">Show</button>
+					</td>
+				</tr>
+			</table>
+
         	</td>
         </tr>
-                 
 
-        {{--<div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                                <div class="box-header  col-md-6 ">
-                                    <h3 class="box-title">Attachments</h3>
-                                    &nbsp;&nbsp;
-                                    @include('adminlte::jobopen.upload', ['data' => $jobopen, 'name' => 'jobopen'])
-                                </div>
-                
-                                <div class="box-header  col-md-8 ">
-                
-                                </div>
-                
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th></th>
-                                            <th>File Name</th>
-                                            <th>Uploaded by</th>
-                                            <th>Size</th>
-                                            <th>Category</th>
-                                        </tr>
-                                        @if(sizeof($jobopen['doc'])>0)
-                                            @foreach($jobopen['doc'] as $key=>$value)
-                                                <tr>
-                                                    <td>
-                                                        <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
-                                                        &nbsp;
-                                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $jobopen['id'], 'name' => 'jobopenattachments' ,'display_name'=> 'Attachments'])
-                                                    </td>
-                                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
-                                                    <td>{{ $value['uploaded_by'] }}</td>
-                                                    <td>{{ $value['size'] }}</td>
-                                                    <td>{{ $value['category'] }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </table>
-                                </div>
-                
-                            </div>
-                        </div>--}}
-        <input type="hidden" id="token" value="{{ csrf_token() }}">
-	</tr>
 		<tr style="height: 45px; background-color: #dddddd;">
         	<td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
     	</tr>
