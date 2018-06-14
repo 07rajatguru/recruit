@@ -32,7 +32,7 @@ class ProcessManual extends Model
             $process_open_query = $process_open_query->where('user_id','=',$user_id);
         }
 
-        $process_open_query = $process_open_query->orderBy('process_manual.id','desc');
+        $process_open_query = $process_open_query->orderBy('process_manual.id','asc');
         $process_response = $process_open_query->get();
 
         $process_list = array();
