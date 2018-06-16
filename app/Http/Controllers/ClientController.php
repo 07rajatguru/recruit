@@ -79,6 +79,7 @@ class ClientController extends Controller
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['mobile']= $client->mobile;
+            $client_array[$i]['hr_name'] = $client->coordinator_name;
 
             $address ='';
             if($client->area!=''){
