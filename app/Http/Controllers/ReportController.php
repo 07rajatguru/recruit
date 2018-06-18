@@ -94,7 +94,7 @@ class ReportController extends Controller
 
             \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->cc($input['cc'])->subject('Activity Report (Daily Report & Interview Report) - '.$input['value']);
+                $message->to($input['to'])->subject('Activity Report (Daily Report & Interview Report) - '.$input['value']);
             });
 
             //return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
