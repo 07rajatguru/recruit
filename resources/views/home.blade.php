@@ -44,7 +44,7 @@
             </div>--}}
 
             @section ('cotable_panel_body')
-                {{--<div style ="overflow-x:scroll;">
+                <div style ="overflow-x:scroll;">
                     <!-- <table class="table table-bordered" id="attendance_table">
 
                         @foreach($list as $key=>$value)
@@ -97,7 +97,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                </div>--}}
+                </div>
             @endsection
             @include('widgets.panel', array('header'=>true, 'as'=>'cotable'))
         </div>
