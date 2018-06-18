@@ -1098,10 +1098,8 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:process-destroy']
    ]);
 
-
-    //Training Routes start
-
-     // Admin > Accounting Heads
+    // Admin > Accounting Heads
+    
     Route::get('accounting', [
         'as' => 'accounting.index',
         'uses' => 'AccountingController@index',
@@ -1129,27 +1127,11 @@ Route::group(['middleware' => ['auth']], function () {
        // 'middleware' => ['permission:team-edit']
     ]);
     
-
-    // Route::post('training/upload/{id}', [
-    //     'as' => 'trainingattachments.upload',
-    //     'uses' => 'TrainingController@upload',
-    // // ]);
-
-    // Route::get('training/{id}/show', [
-    //     'as' => 'training.show',
-    //     'uses' => 'TrainingController@show'
-    // ]);
-
     Route::delete('accounting/{id}', [
         'as' => 'accounting.destroy',
-        'uses' => 'AccountingController@accountingDestroy',
+        'uses' => 'AccountingController@Destroy',
 
     ]);
-   //  Route::delete('training/destroy/{id}', [
-   //      'as' => 'trainingattachments.destroy',
-   //      'uses' => 'TrainingController@attachmentsDestroy',
-   // ]);
-
-
+   
 });
 

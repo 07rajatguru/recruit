@@ -340,11 +340,11 @@ return [
                     'url'  => 'roles',
                     'icon' => 'circle-o',
                 ],
-                /*[
-                    'text' => 'Accounting Heads',
+                [
+                    'text' => 'Accounting Head',
                     'url'  => 'accounting',
                     'icon' => 'circle-o',
-                ]*/
+                ]
                     /* [
                          'text' => 'Permissions',
                          'url'  => 'permissions',

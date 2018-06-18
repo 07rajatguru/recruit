@@ -16,7 +16,7 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($training,['method' => 'PATCH','files' => true, 'id' => 'team_form', 'route' => ['accounting.update', $training->id]] ) !!}
+    {!! Form::model($accounting,['method' => 'PATCH','files' => true, 'id' => 'team_form', 'route' => ['accounting.update', $accounting->id]] ) !!}
 @else
     {!! Form::open(array('route' => 'accounting.store','files' => true,'method'=>'POST', 'id' => 'accounting_form')) !!}
 @endif
@@ -30,7 +30,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="">
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                        <strong>Accountnig Name: <span class = "required_fields">*</span></strong>
+                        <strong>Accounting Name: <span class = "required_fields">*</span></strong>
                         {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Accounting Name','class' => 'form-control','required' )) !!}
                         @if ($errors->has('name'))
                             <span class="help-block">
