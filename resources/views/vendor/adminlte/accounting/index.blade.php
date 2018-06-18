@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('accounting.create') }}"> Create New Accounting Heads</a>
+                <a class="btn btn-success" href="{{ route('accounting.create') }}"> Create New Accounting Head</a>
             </div>
         </div>
     </div>
@@ -31,28 +31,23 @@
             <tr>
                 <th>No</th>
                 <th>Accounting Name</th>
-                <!-- <th>Team Mates</th> -->
                 <th width="280px">Action</th>
             </tr>
         </thead>
-        <tbody>
 
-            
+        <tbody>            
         <?php $i = 0 ;?>
         @foreach ($accountings as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $value['name'] }}</td>
-                <td>
-                  
-                    
-                              
-                  <a class="fa fa-edit" title="Edit" href="{{route('accounting.edit',$value['id']) }}"></a>
+                <td>            
+                    <a class="fa fa-edit" title="Edit" href="{{route('accounting.edit',$value['id']) }}"></a>
                    
-                 @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'accounting','display_name'=>'Training'])                 
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'accounting','display_name'=>'Accounting Head'])
                     
                 </td>
-           </tr>
+            </tr>
         @endforeach
         </tbody>
     </table>

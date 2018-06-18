@@ -37,17 +37,17 @@ class AccountingController extends Controller
         $accounting->name = $request->input('name');
         $accountingStored  = $accounting->save();
 
-        return redirect('accounting/create')->withInput(Input::all());
+        return redirect()->route('accounting.index')->with('success','Accounting Head Created Successfully');
     }
 
     public function edit($id){
 
     	$users = User::getAllUsers();
-     	$training = AccountingHeads::find($id);
+     	$accounting = AccountingHeads::find($id);
        
         $action = "edit" ;
 
-        return view('adminlte::accounting.edit',compact('users','training','action'));
+        return view('adminlte::accounting.edit',compact('users','accounting','action'));
     }
 
      public function update(Request $request,$id){
@@ -58,15 +58,15 @@ class AccountingController extends Controller
         $accounting->name = $request->input('name');
         $accountingStored  = $accounting->save();
 
-       return redirect()->route('accounting.index')->with('success','Accounting Updated Successfully');
+       return redirect()->route('accounting.index')->with('success','Accounting Head Updated Successfully');
 
 }
 
-	public function accountingDestroy($id){
+	public function Destroy($id){
         
-        $training = AccountingHeads::where('id',$id)->delete();
+        $accounting = AccountingHeads::where('id',$id)->delete();
 
-        return redirect()->route('accounting.index')->with('success','Account Deleted Successfully');
+        return redirect()->route('accounting.index')->with('success','Accounting Head Deleted Successfully');
     }
 
 }
