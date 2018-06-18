@@ -13,7 +13,7 @@ class Training extends Model
              
         $training_open_query = Training::query();
         $training_open_query = $training_open_query->select('training.*');
-        $training_open_query = $training_open_query->orderBy('id','desc');
+        $training_open_query = $training_open_query->orderBy('id','asc');
         $training_response = $training_open_query->get();
 
         $training_list = array();

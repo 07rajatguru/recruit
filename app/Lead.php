@@ -165,5 +165,20 @@ class Lead extends Model
 
         return $lead_cnt;
     }
+
+    public static function getWeeklyReportLeadCount($user_id){
+
+        $date = date('Y-m-d',strtotime('Monday this week'));
+
+        $query = Lead::query();
+        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
+        $query = $query->where('created_at','<=',date('Y-m-d',strtotime("$date +6days")));
+        $query = $query->where('lead_management.account_manager_id','=',$user_id);
+
+        $lead_cnt = $query->count();
+
+        return $lead_cnt;   
+    }
 }
 

@@ -79,6 +79,7 @@ class ClientController extends Controller
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['mobile']= $client->mobile;
+            $client_array[$i]['hr_name'] = $client->coordinator_name;
 
             $address ='';
             if($client->area!=''){
@@ -452,8 +453,9 @@ class ClientController extends Controller
             $to = $user_email;
             $subject = "Client - ".$client_name;
             $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
+            $module_id = $client_id;
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message));*/
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,'$module_id'));*/
 
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }

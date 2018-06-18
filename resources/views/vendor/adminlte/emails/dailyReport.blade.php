@@ -46,13 +46,13 @@
                     </td>
                 </tr>
                 <tr style="background-color: #C4D79B;">
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Sr.No.</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left" ><b>Date</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Position Name</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left" ><b>Company</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Location</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>No of resumes<br/>associated</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left cvs_td_right" ><b>Status</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Date</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Name</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding:8px;border-left: black 1px solid;"><b>Company</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Location</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>No of resumes<br/>associated</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>Status</b></td>
                 </tr>
 
                 <?php
@@ -61,13 +61,13 @@
                 ?>
                 @foreach($associate_daily as $key=>$value)
                     <tr>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{ $i }}</td>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{date('jS F,y') }}</td>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['posting_title']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['company']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['location']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left">{{$value['associate_candidate_count'] or ''}}</td>
-                        <td align="center" class="cvs_td_top @if($total_cnt==$i) cvs_td_bottom @endif  cvs_td_left cvs_td_right" >{{$value['status']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('jS F,y') }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;"">{{$value['company']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['associate_candidate_count'] or ''}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid; border-right: black 1px solid;">{{$value['status']}}</td>
                     </tr>
                     <?php $i++; ?>
                 @endforeach
@@ -81,19 +81,19 @@
                 </tr>
 
                 <tr style="background-color: #7598d9">
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Sr.<br/>No.</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Position</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Position Location</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Name of the Candidate</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Interview Date</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Interview Time</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Candidate Location</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Mode of Interview</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Skype ID</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Contact No.</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Email ID</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left"><b>Confirmed</b></td>
-                    <td align="center" class="cvs_td_top cvs_td_left cvs_td_right"><b>Source</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.<br/>No.</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Location</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Name of the Candidate</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Interview Date</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Interview Time</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Candidate Location</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Mode of Interview</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Skype ID</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Contact No.</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Email ID</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Confirmed</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>Source</b></td>
                 </tr>
 
                 <?php
@@ -102,19 +102,19 @@
                 ?>
                 @foreach($interview_daily as $key=>$value)
                     <tr>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{ $i }}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['posting_title']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['interview_location']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['cname']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['ccity']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['interview_type']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{''}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['cmobile']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left">{{$value['cemail']}}</td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left"><b>{{'Yes'}}</b></td>
-                        <td align="center" class="cvs_td_top @if($total_interview_cnt==$i) cvs_td_bottom @endif cvs_td_left cvs_td_right"><b>{{'Adler'}}</b></td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['interview_location']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cname']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['ccity']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['interview_type']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{''}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cmobile']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cemail']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;"><b>{{'Yes'}}</b></td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;border-right: black 1px solid;"><b>{{'Adler'}}</b></td>
                     </tr>
                     <?php $i++; ?>
                 @endforeach
