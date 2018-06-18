@@ -65,7 +65,7 @@ class ReportController extends Controller
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'saloni@trajinfotech.com';
+        $to_address = 'tarikapanjwani@gmail.com';
         $cc_address = 'tarikapanjwani@gmail.com';
 
         $users = User::getAllUsersEmails('recruiter');
