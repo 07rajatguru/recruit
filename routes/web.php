@@ -81,6 +81,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'home.export',
         'uses'=>'HomeController@export']);
 
+    Route::get('home/calender',[
+        'as' => 'home.calender',
+        'uses' => 'HomeController@calenderevent'
+    ]);
+
 
      //lead management route
 

@@ -39,7 +39,7 @@
         </div>
 
         <div class="col-sm-12" style="margin-top:2%;">
-           {{-- <div id="calendar">
+            {{-- <div id="calendar">
 
             </div>--}}
 
@@ -110,9 +110,10 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-            /*$('#calendar').fullCalendar({
+           /* $('#calendar').fullCalendar({
                 header: {
                     left: 'title',
+                    center: '',
                     right: 'month,basicWeek,basicDay prev,next'
                 },
                 buttonIcons: {
@@ -122,7 +123,7 @@
                 defaultDate: '2018-06-12',
                 defaultView: 'month',
                 editable: true,
-                events: [
+                /*events: [
                     {
                         title: 'Login : 10 AM',
                         start: '2018-06-01'
@@ -130,8 +131,36 @@
                     {
                         title: 'Logout :7 PM',
                         start: '2018-06-01'
+                    },
+                    {
+                        title: 'Total ',
+                        start: '2018-06-01'
+                    },
+                ],
+
+                events: function(start, end, timezone, callback) {
+                $.ajax({
+                    url: '/home/calendar',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        start: 'login',
+                        end: 'logout',
+                    },
+                    success: function(doc) {
+                    var events = [];
+                    $(doc).find('event').each(function() {
+                        events.push({
+                            title: $(this).attr('title'),
+                            start: $(this).attr('start'), // will be parsed
+                            end: $(this).attr('end'),
+                            total: $(this).attr('total')
+                        });
+                    });
+                    callback(events);
                     }
-                ]
+                });
+            }
             });*/
 
         var table = $('#attendance_table').DataTable( {
