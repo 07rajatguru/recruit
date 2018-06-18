@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+
     <div class="row">
 
         <div class="filter_section">
@@ -38,8 +39,12 @@
         </div>
 
         <div class="col-sm-12" style="margin-top:2%;">
+           {{-- <div id="calendar">
+
+            </div>--}}
+
             @section ('cotable_panel_body')
-                <div style ="overflow-x:scroll;">
+                {{--<div style ="overflow-x:scroll;">
                     <!-- <table class="table table-bordered" id="attendance_table">
 
                         @foreach($list as $key=>$value)
@@ -92,7 +97,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                </div>
+                </div>--}}
             @endsection
             @include('widgets.panel', array('header'=>true, 'as'=>'cotable'))
         </div>
@@ -105,6 +110,30 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+            /*$('#calendar').fullCalendar({
+                header: {
+                    left: 'title',
+                    right: 'month,basicWeek,basicDay prev,next'
+                },
+                buttonIcons: {
+                    prev: ' fa fa-caret-left',
+                    next: ' fa fa-caret-right'
+                },
+                defaultDate: '2018-06-12',
+                defaultView: 'month',
+                editable: true,
+                events: [
+                    {
+                        title: 'Login : 10 AM',
+                        start: '2018-06-01'
+                    },
+                    {
+                        title: 'Logout :7 PM',
+                        start: '2018-06-01'
+                    }
+                ]
+            });*/
+
         var table = $('#attendance_table').DataTable( {
             scrollY: true,
             scrollX: true,
