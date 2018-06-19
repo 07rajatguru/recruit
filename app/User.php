@@ -259,5 +259,19 @@ class User extends Authenticatable
         return $list;
     }
 
+    public static function getUserNameById($user_id){
+
+        $user_name = '';
+
+        $user_query = User::query();
+        $user_query = $user_query->where('id','=',$user_id);
+        $user_query = $user_query->first();
+
+        if(isset($user_query)){
+            $user_name = $user_query->name;
+        }
+
+        return $user_name;
+    }
 
 }
