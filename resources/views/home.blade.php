@@ -39,7 +39,7 @@
         </div>
 
         <div class="col-sm-12" style="margin-top:2%;">
-            {{-- <div id="calendar">
+            {{--<div id="calendar">
 
             </div>--}}
 
@@ -110,7 +110,7 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-           /* $('#calendar').fullCalendar({
+            /*$('#calendar').fullCalendar({
                 header: {
                     left: 'title',
                     center: '',
@@ -123,44 +123,51 @@
                 defaultDate: '2018-06-12',
                 defaultView: 'month',
                 editable: true,
-                /*events: [
-                    {
-                        title: 'Login : 10 AM',
-                        start: '2018-06-01'
-                    },
-                    {
-                        title: 'Logout :7 PM',
-                        start: '2018-06-01'
-                    },
-                    {
-                        title: 'Total ',
-                        start: '2018-06-01'
-                    },
-                ],
-
+                //events: 'calender.php',
                 events: function(start, end, timezone, callback) {
                 $.ajax({
-                    url: '/home/calendar',
-                    type: 'GET',
+                    url: 'home/calender',
+                    type: 'POST',
                     dataType: 'json',
                     data: {
-                        start: 'login',
-                        end: 'logout',
+                         start: start.format(),
+                         end: end.format(),
+                        _token: "<?php echo csrf_token() ?>"
                     },
                     success: function(doc) {
-                    var events = [];
+        var events = [];
+        $(doc).find('event').each(function() {
+          events.push({
+            title: $(this).attr('title'),
+            start: $(this).attr('start') // will be parsed
+          });
+        });
+        callback(events);
+      }
+                    success: function(doc) {
+                    /*var events = [];
                     $(doc).find('event').each(function() {
                         events.push({
-                            title: $(this).attr('title'),
-                            start: $(this).attr('start'), // will be parsed
-                            end: $(this).attr('end'),
-                            total: $(this).attr('total')
+                            title: title,
+                            start: start, // will be parsed
                         });
                     });
-                    callback(events);
+                    callback(events);*/
+                    /*var events = [];
+                if(!!doc.result){
+                    $.map( doc.result, function( r ) {
+                        events.push({
+                            //id: '1',
+                            title: r.title,
+                            start: r.start,
+                            end: r.end
+                        });
+                    });
+                }
+                callback(events);
                     }
                 });
-            }
+                }
             });*/
 
         var table = $('#attendance_table').DataTable( {

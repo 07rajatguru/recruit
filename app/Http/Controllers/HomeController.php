@@ -330,7 +330,7 @@ class HomeController extends Controller
 
     public function calenderevent(){
 
-        $user =  \Auth::user();
+        /*$user =  \Auth::user();
 
         // get role of logged in user
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -400,14 +400,14 @@ class HomeController extends Controller
             $response = UsersLog::getUsersAttendance(0,$month,$year);
             /*$response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year group by date,users.id");*/
-        }
+       /* }
         else{
             $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
            /* $response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
-        }
+       // }
 
-        $date = new Date();
+        /*$date = new Date();
         if(sizeof($response)>0){
             foreach ($response as $key => $value) {
                 $login_time = $date->converttime($value->login);
@@ -419,8 +419,14 @@ class HomeController extends Controller
 
                 $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
             }
-        }
+        }*/
+
+        $data[] = array(
+            'title' => 'login',
+            'start' => date('Y-m-d'),
+            'end' => date('Y-m-d')
+        ); 
         
-        return json_encode($list);
+        return json_encode($data);
     }
 }

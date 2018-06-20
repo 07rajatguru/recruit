@@ -77,14 +77,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@index'
     ));
 
+    Route::post('home/calender',[
+        'as' => 'home.calender',
+        'uses' => 'HomeController@calenderevent'
+    ]);
+
     Route::post('home/export',[
         'as'=>'home.export',
         'uses'=>'HomeController@export']);
 
-    Route::get('home/calender',[
-        'as' => 'home.calender',
-        'uses' => 'HomeController@calenderevent'
-    ]);
+    
 
 
      //lead management route
