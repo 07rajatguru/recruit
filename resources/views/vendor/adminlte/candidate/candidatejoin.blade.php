@@ -37,11 +37,13 @@
             <tr>
                 <th>No</th>
                 <th>Candidate Name</th>
+                <th>Position Name</th>
+                <th>Min CTC</th>
+                <th>Max CTC</th>
+                <th>Joining Date</th>
                 <th>Candidate Owner</th>
                 <th>Candidate Email</th>
                 <th>Mobile Number</th>
-                <th>Joining Date</th>
-                <th>Posting Title</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -49,13 +51,15 @@
         @foreach ($candidates as $candidate)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $candidate->fname or '' }}</td>
-                <td>{{ $candidate->owner or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate->email or ''}}</td>
-                <td>{{ $candidate->mobile or ''}}</td>
-                <td>{{ $candidate->date or '' }}</td>
+                <td>{{ $candidate['candidate_name'] or '' }}</td>
                 <td><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">
-                        {{ $candidate->jobname or '' }}</a></td>
+                        {{ $candidate['position_name'] or '' }}</a></td>
+                <td>{{ $candidate['min_ctc'] or ''}}</td>
+                <td>{{ $candidate['max_ctc'] or '' }}</td>
+                <td>{{ $candidate['date'] or '' }}</td>
+                <td>{{ $candidate['candidate_owner'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['candidate_email'] or ''}}</td>
+                <td>{{ $candidate['candidate_mobile'] or ''}}</td>
             </tr>
         @endforeach
         </tbody>
@@ -75,9 +79,10 @@
                     { "width": "10px", "targets": 4 },
                     { "width": "10px", "targets": 5 },
                     { "width": "10px", "targets": 6 },
-                    { "width": "10px", "targets": 7 }
+                    { "width": "10px", "targets": 7 },
+                    { "width": "10px", "targets": 8 }
                 ],
-                stateSave: true,
+
                 "autoWidth": false,
                 "pageLength": 100
             } );
