@@ -1139,6 +1139,37 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'AccountingController@Destroy',
 
     ]);
+
+    // Expense Route
+    Route::get('expense',[
+        'as' => 'expense.index',
+        'uses' => 'ExpenseController@index'
+    ]);
+
+    Route::get('expense/create',[
+        'as' => 'expense.create',
+        'uses' => 'ExpenseController@create'
+    ]);
+
+    Route::post('expense/create',[
+        'as' => 'expense.store',
+        'uses' => 'ExpenseController@store'
+    ]);
+
+    Route::get('expense/{id}/edit', [
+        'as' => 'expense.edit',
+        'uses' => 'ExpenseController@edit'
+    ]);
+
+    Route::patch('expense/{id}', [
+        'as' => 'expense.update',
+        'uses' => 'ExpenseController@update'
+    ]);
+
+    Route::delete('expense/{id}', [
+        'as' => 'expense.destroy',
+        'uses' => 'ExpenseController@destroy'
+    ]);
    
 });
 

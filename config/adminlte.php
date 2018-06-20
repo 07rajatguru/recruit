@@ -320,7 +320,17 @@ return [
                ]
            ],
        ],
-
+       [
+           'text'        => 'Finance',
+           'icon'        => 'money',
+           'submenu' => [
+               [
+                   'text' => 'Expense',
+                   'url'  => 'expense',
+                   'icon' => 'circle-o',
+               ],
+           ],
+       ],
         [
             'text'        => 'Admin',
             'icon'        => 'user-secret',
