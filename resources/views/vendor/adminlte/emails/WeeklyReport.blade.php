@@ -15,7 +15,10 @@
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: rgba(157,92,172,0.9); height: 70px;">
                 <tr>
                     <td align="center">
-                        Adler Talent Solutions Pvt. Ltd.
+                       <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
+                <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">        <img class="site-logo" width="60px" height="80px" src="http://adlertalent.com/wp-content/uploads/2016/06/logo.png" alt="Adler Talent Solutions Pvt. Ltd." style=" padding-top: 16px;   vertical-align: middle;"> <span>Adler Talent Solutions Pvt. Ltd.</span> </a>
+            
+    </div>
                     </td>
                 </tr>
             </table>
@@ -68,6 +71,10 @@
                         <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid; color: red"><?php if ($associate_count<40): ?>{{$associate_count-40}}<?php endif ?></td>
                     </tr>
 
+                    <tr>
+                        <td colspan="7"><br></td>
+                    </tr>
+
                 <tr>
                     <td colspan="7">
                         <u><b><h1>No of Interviews Scheduled : {{$interview_count or '0'}}</h1></b></u>
@@ -100,6 +107,11 @@
                     </tr>
 
                     <tr>
+
+                    <tr>
+                        <td colspan="7"><br></td>
+                    </tr>
+
                     <td colspan="7">
                         <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
                     </td>
