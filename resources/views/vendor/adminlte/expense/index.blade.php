@@ -44,22 +44,26 @@
 
         <tbody>            
         <?php $i = 0 ;?>
-       
+        @foreach($expense as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
-                <td>{{ '' }}</td>
+                <td>{{ $value['date'] or '' }}</td>
+                <td>{{ $value['amount'] or '' }}</td>
+                <td>{{ $value['paid_to'] or '' }}</td>
+                <td>{{ $value['expense_head'] or '' }}</td>
+                <td>{{ $value['remarks'] or '' }}</td>
+                <td>{{ $value['payment_mode'] or '' }}</td>
+                <td>{{ $value['payment_type'] or '' }}</td>
+                <td>{{ $value['number'] or '' }}</td>
                 <td>            
-                    
+                    <a class="fa fa-edit" href="{{ route('expense.edit',$value['id']) }}" title="Edit"></a>
+
+                    <?php if($isSuperAdmin) {?>
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'Expense'])
+                    <?php   }?>
                 </td>
             </tr>
-       
+        @endforeach
         </tbody>
     </table>
     

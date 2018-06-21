@@ -16,7 +16,7 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($accounting,['method' => 'PATCH','files' => true, 'id' => 'expense_form', 'route' => ['accounting.update', $accounting->id]] ) !!}
+    {!! Form::model($expense,['method' => 'PATCH','files' => true, 'id' => 'expense_form', 'route' => ['expense.update', $expense->id]] ) !!}
 @else
     {!! Form::open(array('route' => 'expense.store','files' => true,'method'=>'POST', 'id' => 'expense_form')) !!}
 @endif
@@ -33,7 +33,7 @@
                         <div class="">
 
                             <div class="form-group {{ $errors->has('date') ? 'has-error' : '' }}">
-                                <strong>Date:</strong>
+                                <strong>Date:<span class = "required_fields">*</span></strong>
                                 {!! Form::text('date', null, array('id'=>'date','placeholder' => 'Date','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 @if ($errors->has('date'))
                                     <span class="help-block">
@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('paid_to') ? 'has-error' : '' }}">
-                                <strong>Paid To:</strong>
+                                <strong>Paid To:<span class = "required_fields">*</span></strong>
                                 {!! Form::text('paid_to', null, array('id'=>'paid_to','placeholder' => 'Paid To','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @if ($errors->has('paid_to'))
                                     <span class="help-block">
@@ -53,7 +53,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
-                                <strong>Remarks:</strong>
+                                <strong>Remarks:<span class = "required_fields">*</span></strong>
                                 {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '5'  )) !!}
                                 @if ($errors->has('remarks'))
                                     <span class="help-block">
@@ -68,7 +68,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
                             <div class="form-group {{ $errors->has('amount') ? 'has-error' : '' }}">
-                                <strong>Amount:</strong>
+                                <strong>Amount:<span class = "required_fields">*</span></strong>
                                 {!! Form::text('amount', null, array('id'=>'amount','placeholder' => 'Amount','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('amount'))
                                     <span class="help-block">
@@ -78,8 +78,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('head') ? 'has-error' : '' }}">
-                                <strong>Expense Head:  </strong>
-                                {!! Form::select('head', $head, null, array('id'=>'head','class' => 'form-control', 'tabindex' => '4' )) !!}
+                                <strong>Expense Head: <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('head', $head, $expense_head, array('id'=>'head','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 @if ($errors->has('head'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('head') }}</strong>
@@ -88,8 +88,8 @@
                             </div>
 
                              <div class="form-group {{ $errors->has('pmode') ? 'has-error' : '' }}">
-                                <strong>Payment Mode:</strong>
-                                {!! Form::select('pmode', $payment_mode, null, array('id'=>'pmode','class' => 'form-control', 'tabindex' => '6' )) !!}
+                                <strong>Payment Mode:<span class = "required_fields">*</span></strong>
+                                {!! Form::select('pmode', $payment_mode, $pmode, array('id'=>'pmode','class' => 'form-control', 'tabindex' => '6' )) !!}
                                 @if ($errors->has('pmode'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('pmode') }}</strong>
@@ -98,8 +98,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('ptype') ? 'has-error' : '' }}">
-                                <strong>Payment Type:</strong>
-                                  {!! Form::select('ptype', $payment_type, null, array('id'=>'ptype','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                <strong>Payment Type:<span class = "required_fields">*</span></strong>
+                                  {!! Form::select('ptype', $payment_type, $ptype, array('id'=>'ptype','class' => 'form-control', 'tabindex' => '7' )) !!}
                                  @if ($errors->has('ptype'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('ptype') }}</strong>
@@ -107,12 +107,12 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('number') ? 'has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('reference_number') ? 'has-error' : '' }}">
                                 <strong>Reference Number:</strong>
-                                {!! Form::text('number', null, array('id'=>'number','placeholder' => 'Reference Number','class' => 'form-control', 'tabindex' => '8' )) !!}
-                                @if ($errors->has('number'))
+                                {!! Form::text('reference_number', null, array('id'=>'reference_number','placeholder' => 'Reference Number','class' => 'form-control', 'tabindex' => '8' )) !!}
+                                @if ($errors->has('reference_number'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('number') }}</strong>
+                                <strong>{{ $errors->first('reference_number') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -148,7 +148,7 @@
     <div class="form-group">
         <div class="col-sm-2">&nbsp;</div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            {!! Form::submit('Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+            {!! Form::submit(isset($expense) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
         </div>
     </div>
 
@@ -166,24 +166,54 @@
             });
 
 
-           /* $("#team_form").validate({
+            $("#expense_form").validate({
                 rules: {
-                    "team_name": {
+                    "date": {
                         required: true
                     },
-                    "user_ids": {
+                    "amount": {
+                        required: true
+                    },
+                    "paid_to": {
+                        required: true
+                    },
+                    "head": {
+                        required: true
+                    },
+                    "pmode": {
+                        required: true
+                    },
+                    "ptype": {
+                        required: true
+                    },
+                    "remarks": {
                         required: true
                     }
                 },
                 messages: {
-                    "team_name": {
-                        required: "Team Name is required field."
+                    "date": {
+                        required: "Date is required field."
                     },
-                    "user_ids": {
-                        required: "Select Users is required field."
+                    "amount": {
+                        required: "Amount is required field."
+                    },
+                    "paid_to": {
+                        required: "Paid To is required field."
+                    },
+                    "head": {
+                        required: "Expense Head is required field."
+                    },
+                    "pmode": {
+                        required: "Payment Mode is required field."
+                    },
+                    "ptype": {
+                        required: "Payment Type is required field."
+                    },
+                    "remarks": {
+                        required: "Remarks is required field."
                     }
                 }
-            });*/
+            });
         });
     </script>
 @endsection
