@@ -1170,6 +1170,13 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'expense.destroy',
         'uses' => 'ExpenseController@destroy'
     ]);
+
+    // Reports Routes
+
+    Route::get('recoveryreport',[
+        'as' => 'recoveryreport.index',
+        'uses' => 'RecoveryReportController@index'
+    ]);
    
 });
 
