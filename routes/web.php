@@ -1177,6 +1177,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'recoveryreport.index',
         'uses' => 'RecoveryReportController@index'
     ]);
+
+    Route::get('selectionreport',[
+        'as' => 'selectionreport.index',
+        'uses' => 'SelectionReportController@index'
+    ]);
    
 });
-

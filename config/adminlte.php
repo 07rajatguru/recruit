@@ -288,13 +288,13 @@ return [
                 'icon'        => 'folder-open',
             ],
 
-       /* [
+        /*[
            'text'        => 'Report',
            'icon'        => 'file',
            'submenu' => [
                [
                    'text' => 'Selection report',
-                   'url'  => 'expense',
+                   'url'  => 'selectionreport',
                    'icon' => 'circle-o',
                ],
                [
