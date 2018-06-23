@@ -327,4 +327,106 @@ class HomeController extends Controller
     })->export('xls');
         return view('home');
     }
+
+    public function calenderevent(){
+
+        /*$user =  \Auth::user();
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $acct_role_id = env('ACCOUNTANT');
+
+        $loggedin_userid = \Auth::user()->id;
+
+        $user_role_id = \Auth::user()->roles->first()->id;
+        
+        $list=array();
+
+        if(isset($_POST['month']) && $_POST['month']!=''){
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date("n");
+        }
+        if(isset($_POST['year']) && $_POST['year']!=''){
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date("Y");
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m));
+        }
+
+        $year_array = array();
+        $year_array[2016] = 2016;
+        $year_array[2017] = 2017;
+        $year_array[2018] = 2018;
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $users = User::getOtherUsers();
+        }
+        else{
+            $users = User::getOtherUsers($loggedin_userid);
+        }
+
+        $list = array();
+        for($d=1; $d<=31; $d++)
+        {
+            $time=mktime(12, 0, 0, $month, $d, $year);
+            foreach ($users as $key => $value) {
+              //  echo date('m', $time);exit;
+                if (date('n', $time)==$month)
+                    $list[$key][date('j S', $time)]['login']='';
+                $list[$key][date('j S', $time)]['logout']='';
+                $list[$key][date('j S', $time)]['total']='';
+            }
+        }
+
+        if(in_array($user_role_id,$access_roles_id)){
+            $response = UsersLog::getUsersAttendance(0,$month,$year);
+            /*$response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
+                        join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year group by date,users.id");*/
+       /* }
+        else{
+            $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
+           /* $response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
+                        join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
+       // }
+
+        /*$date = new Date();
+        if(sizeof($response)>0){
+            foreach ($response as $key => $value) {
+                $login_time = $date->converttime($value->login);
+                $logout_time = $date->converttime($value->logout);
+                $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time);
+                $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
+
+                $total = ($logout_time - $login_time) / 60;
+
+                $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
+            }
+        }*/
+
+        $data[] = array(
+            'title' => 'login',
+            'start' => date('Y-m-d'),
+            'end' => date('Y-m-d')
+        ); 
+        
+        return json_encode($data);
+    }
 }

@@ -288,6 +288,23 @@ return [
                 'icon'        => 'folder-open',
             ],
 
+        /*[
+           'text'        => 'Report',
+           'icon'        => 'file',
+           'submenu' => [
+               [
+                   'text' => 'Selection report',
+                   'url'  => 'selectionreport',
+                   'icon' => 'circle-o',
+               ],
+               [
+                   'text' => 'Recovery report',
+                   'url'  => 'recoveryreport',
+                   'icon' => 'circle-o',
+               ],
+           ],
+        ],*/
+
         [
            'text'        => 'Training Material',
            'icon'        => 'users',
@@ -320,7 +337,17 @@ return [
                ]
            ],
        ],
-
+       [
+           'text'        => 'Finance',
+           'icon'        => 'money',
+           'submenu' => [
+               [
+                   'text' => 'Expense',
+                   'url'  => 'expense',
+                   'icon' => 'circle-o',
+               ],
+           ],
+       ],
         [
             'text'        => 'Admin',
             'icon'        => 'user-secret',

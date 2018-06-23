@@ -67,6 +67,7 @@ class ReportController extends Controller
         $from_address = getenv('FROM_ADDRESS');
         $to_address = 'tarikapanjwani@gmail.com';
         $cc_address = 'rajlalwani@adlertalent.com';
+        //$cc_address = 'tarikapanjwani@gmail.com';
 
         $users = User::getAllUsersEmails('recruiter');
 
@@ -85,8 +86,9 @@ class ReportController extends Controller
             $lead_count = Lead::getDailyReportLeadCount($key);
 
             $interview_daily = Interview::getDailyReportInterview($key);
+            $user_name = User::getUserNameById($key);
 
-            $input['value'] = $value;
+            $input['value'] = $user_name;
             $input['associate_daily'] = $associate_daily;
             $input['associate_count'] = $associate_count;
             $input['lead_count'] = $lead_count;
@@ -94,10 +96,10 @@ class ReportController extends Controller
 
             \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->cc($input['cc'])->subject('Activity Report (Daily Report & Interview Report) - '.$input['value']);
+                $message->to($input['to'])->cc($input['cc'])->subject('Activity Report - '.$input['value'] . ' - ' . date("d-m-Y"));
             });
 
-            //return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
+           // return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
         }
     }
 
@@ -135,12 +137,13 @@ class ReportController extends Controller
             $input['lead_count'] = $lead_count;
 
 
-            \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
+            /*\Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name'])->cc($input['cc']);
                 $message->to($input['to'])->subject('Weekly Activity Report -'.$input['value']);
-            });
+            });*/
 
-            //return view('adminlte::emails.WeeklyReport',compact('associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
+echo 'Weekly Activity Report -'.$input['value'];
+            return view('adminlte::emails.WeeklyReport',compact('associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
         }
     }
 }

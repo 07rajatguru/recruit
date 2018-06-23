@@ -77,9 +77,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@index'
     ));
 
+    Route::post('home/calender',[
+        'as' => 'home.calender',
+        'uses' => 'HomeController@calenderevent'
+    ]);
+
     Route::post('home/export',[
         'as'=>'home.export',
         'uses'=>'HomeController@export']);
+
+    
 
 
      //lead management route
@@ -1132,6 +1139,48 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'AccountingController@Destroy',
 
     ]);
+
+    // Expense Route
+    Route::get('expense',[
+        'as' => 'expense.index',
+        'uses' => 'ExpenseController@index'
+    ]);
+
+    Route::get('expense/create',[
+        'as' => 'expense.create',
+        'uses' => 'ExpenseController@create'
+    ]);
+
+    Route::post('expense/create',[
+        'as' => 'expense.store',
+        'uses' => 'ExpenseController@store'
+    ]);
+
+    Route::get('expense/{id}/edit', [
+        'as' => 'expense.edit',
+        'uses' => 'ExpenseController@edit'
+    ]);
+
+    Route::patch('expense/{id}', [
+        'as' => 'expense.update',
+        'uses' => 'ExpenseController@update'
+    ]);
+
+    Route::delete('expense/{id}', [
+        'as' => 'expense.destroy',
+        'uses' => 'ExpenseController@destroy'
+    ]);
+
+    // Reports Routes
+
+    Route::get('recoveryreport',[
+        'as' => 'recoveryreport.index',
+        'uses' => 'RecoveryReportController@index'
+    ]);
+
+    Route::get('selectionreport',[
+        'as' => 'selectionreport.index',
+        'uses' => 'SelectionReportController@index'
+    ]);
    
 });
-
