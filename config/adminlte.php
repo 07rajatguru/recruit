@@ -337,7 +337,7 @@ return [
                ]
            ],
        ],
-       [
+       /*[
            'text'        => 'Finance',
            'icon'        => 'money',
            'submenu' => [
@@ -347,7 +347,7 @@ return [
                    'icon' => 'circle-o',
                ],
            ],
-       ],
+       ],*/
         [
             'text'        => 'Admin',
             'icon'        => 'user-secret',
