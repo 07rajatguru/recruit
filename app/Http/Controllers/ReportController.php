@@ -105,8 +105,8 @@ class ReportController extends Controller
 
     	$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'meet@trajinfotech.com';
-        $cc_address = 'meet@trajinfotech.com';
+        $to_address = 'tarikapanjwani@gmail.com';
+        $cc_address = 'rajlalwani@adlertalent.com';
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
