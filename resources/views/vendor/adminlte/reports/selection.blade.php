@@ -39,7 +39,7 @@
     		<div class="form-group month">
     			<div class="box-body col-xs-3 col-sm-3 col-md-3">
     				<div class="form-group">
-    					{{Form::select('month', $month, null, array('id'=>'month', 'class'=>'form-control'))}}
+    					{{Form::select('month', $month_array, null, array('id'=>'month', 'class'=>'form-control'))}}
     				</div>
     			</div>
     		</div>
@@ -55,19 +55,61 @@
     		<div class="form-group year">
     			<div class="box-body col-xs-3 col-sm-3 col-md-3">
     				<div class="form-group">
-    					{{Form::select('year', $year, null, array('id'=>'year', 'class'=>'form-control'))}}
+    					{{Form::select('year', $year_array, null, array('id'=>'year', 'class'=>'form-control'))}}
     				</div>
     			</div>
     		</div>
 
     		<div class="box-body col-xs-2 col-sm-2 col-md-2">
     			<div class="form-group">
-    				{!! Form::submit('Select', ['class' => 'btn btn-primary']) !!}
+    				{!! Form::submit('Select', ['class' => 'btn btn-primary', 'onchange' => 'select_data()']) !!}
     			</div>
     		</div>
 
     	</div>
     </div>
+
+    <br/>
+
+    <div class = "table-responsive">
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="selection_report_table">
+    	<thead>
+            <tr>
+    		    <th>No</th>
+    		    <th>Candidate Name</th>
+    		    <th>Company Name</th>
+    		    <th>Position/Dept</th>
+    		    <th>Salary offered(fixed)</th>
+    		    <th>Billing(Salary <br/> Offered*Percentage <br/> Charged)</th>
+    		    <th>GST @ 18% (Billing <br/> amount*18/100)</th>
+    		    <th>Invoice <br/> Raised <br/> (Billing+GST)</th>
+    		    <th>Payment Expected <br/> including GST <br/> (Billing*90/100)+GST</th>
+    		    <th>Joining date</th>
+    		    <th>Contact Person</th>
+    		    <th>Location</th>
+            </tr>
+    	</thead>
+    	<?php $i=0;?>
+    	<tbody>
+    		@foreach($selection_report as $selection)
+            <tr>
+    		    <td>{{ ++$i }}</td>
+    		    <td>{{ $selection['candidate_name'] or '' }}</td>
+    		    <td>{{ $selection['company_name'] or '' }}</td>
+    		    <td>{{ $selection['position'] or '' }}</td>
+    		    <td>{{ $selection['fixed_salary'] or '' }}</td>
+    		    <td>{{ $selection['billing'] or '' }}</td>
+    		    <td>{{ $selection['gst'] or '' }}</td>
+    		    <td>{{ $selection['invoice'] or '' }}</td>
+    		    <td>{{ $selection['payment'] or '' }}</td>
+    		    <td>{{ $selection['joining_date'] or '' }}</td>
+    		    <td>{{ $selection['contact_person'] or '' }}</td>
+    		    <td>{{ $selection['location'] or '' }}</td>
+            </tr>
+    		@endforeach
+    	</tbody>
+    </table>
+	</div>
     
 @stop
 
@@ -84,7 +126,15 @@
                 autoclose: true,
             });
 
-             getSelect();
+            var table = jQuery('#selection_report_table').DataTable( {
+                responsive: true,
+                "pageLength": 100,
+                stateSave: true
+            });
+            new jQuery.fn.dataTable.FixedHeader( table );
+
+            getSelect();
+            select_data();
         });
 		
 		function getSelect() {
@@ -122,6 +172,23 @@
 			}
 		}
 
+        function select_data(){
+            var selectedValue = $("#select").val();
+
+                $.ajax({
+                  url:'/report/selection',
+                  data:'selectedValue='+selectedValue,
+                  dataType:'json',
+                  success: function(data){
+                      for(var i=0;i<data.length;i++){
+                          //$('#typeList').append($('<option></option>').val(data[i].id).html(data[i].value));
+                          //$('#typeList').select2('val', typelist)
+                          $('#selection_report_table').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
+                      }
+                  }
+
+                });
+            }
 	</script>
 
 @endsection

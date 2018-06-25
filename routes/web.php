@@ -1182,5 +1182,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'selectionreport.index',
         'uses' => 'SelectionReportController@index'
     ]);
+
+    Route::get('report/selection',[
+        'as' => 'selectionreport.report',
+        'uses' => 'SelectionReportController@selectdata'
+    ]);
    
 });
