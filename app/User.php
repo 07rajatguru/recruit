@@ -66,12 +66,19 @@ class User extends Authenticatable
     }
 
     public static function getAllUsersEmails($type=NULL){
+
+        $status = 'Inactive';
+        $superadmin = getenv('SUPERADMINUSERID');
+        $status_array = array($status);
+        $super_array = array($superadmin);
+
         $user_query = User::query();
 
         if($type!=NULL){
             $user_query = $user_query->where('type','=',$type);
         }
-
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
