@@ -1178,14 +1178,9 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'RecoveryReportController@index'
     ]);
 
-    Route::get('selectionreport',[
+    Route::any('/selectionreport',[
         'as' => 'selectionreport.index',
         'uses' => 'SelectionReportController@index'
     ]);
-
-    Route::get('report/selection',[
-        'as' => 'selectionreport.report',
-        'uses' => 'SelectionReportController@selectdata'
-    ]);
-   
+    
 });

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Input;
 
 class Bills extends Model
 {
@@ -115,7 +116,7 @@ class Bills extends Model
             //});
         }
 
-        $bills_query = $bills_query->where('status',$status);
+        $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
 
         $bills_res = $bills_query->get();
@@ -183,7 +184,7 @@ class Bills extends Model
             $bills_query = $bills_query->where('uploaded_by',$user_id);
         }
 
-        $bills_query = $bills_query->where('status',$status);
+        $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
 
         $bills_res = $bills_query->get();
@@ -358,16 +359,39 @@ class Bills extends Model
     public static function getSelectionReport($month,$year){
         $date_class = new Date();
 
+        $select = Input::get('select');
+
         $selection_query = Bills::query();
         $selection_query = $selection_query->join('job_openings','job_openings.id','=','bills.job_id');
         $selection_query = $selection_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $selection_query = $selection_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $selection_query = $selection_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
-        $selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
-        $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+
+        //$selection_query = $selection_query->where(function($selection_query) use ($month,$year){
+        if ($select == 0) {   
+            $selection_query = $selection_query->where('date_of_joining','>=', $month);
+            $selection_query = $selection_query->where('date_of_joining','<=', $year);
+        }
+
+        if ($select == 1) {   
+            $selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+            $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+
+        if ($select == 2) {   
+            $selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+            $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+
+        if ($select == 3) {   
+            //$selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+            $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+        //});
+
         $selection_res = $selection_query->get();
 
-        $selection = array();
+        /*$selection = array();
         $i = 0;
         foreach ($selection_res as $key => $value) {
 
@@ -390,9 +414,9 @@ class Bills extends Model
             $selection[$i]['contact_person'] = $value->client_name;
             $selection[$i]['location'] = $value->job_location;
             $i++;
-        }
+        }*/
 
-        return $selection;
+        return $selection_res;
     }
 
     public static function getEmployeeEffortsById($id){

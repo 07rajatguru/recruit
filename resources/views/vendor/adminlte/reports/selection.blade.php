@@ -62,7 +62,7 @@
 
     		<div class="box-body col-xs-2 col-sm-2 col-md-2">
     			<div class="form-group">
-    				{!! Form::submit('Select', ['class' => 'btn btn-primary', 'onchange' => 'select_data()']) !!}
+    				{!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
     			</div>
     		</div>
 
@@ -91,20 +91,20 @@
     	</thead>
     	<?php $i=0;?>
     	<tbody>
-    		@foreach($selection_report as $selection)
+    		@foreach($selection as $selections)
             <tr>
     		    <td>{{ ++$i }}</td>
-    		    <td>{{ $selection['candidate_name'] or '' }}</td>
-    		    <td>{{ $selection['company_name'] or '' }}</td>
-    		    <td>{{ $selection['position'] or '' }}</td>
-    		    <td>{{ $selection['fixed_salary'] or '' }}</td>
-    		    <td>{{ $selection['billing'] or '' }}</td>
-    		    <td>{{ $selection['gst'] or '' }}</td>
-    		    <td>{{ $selection['invoice'] or '' }}</td>
-    		    <td>{{ $selection['payment'] or '' }}</td>
-    		    <td>{{ $selection['joining_date'] or '' }}</td>
-    		    <td>{{ $selection['contact_person'] or '' }}</td>
-    		    <td>{{ $selection['location'] or '' }}</td>
+    		    <td>{{ $selections['candidate_name'] or '' }}</td>
+    		    <td>{{ $selections['company_name'] or '' }}</td>
+    		    <td>{{ $selections['position'] or '' }}</td>
+    		    <td>{{ $selections['fixed_salary'] or '' }}</td>
+    		    <td>{{ $selections['billing'] or '' }}</td>
+    		    <td>{{ $selections['gst'] or '' }}</td>
+    		    <td>{{ $selections['invoice'] or '' }}</td>
+    		    <td>{{ $selections['payment'] or '' }}</td>
+    		    <td>{{ $selections['joining_date'] or '' }}</td>
+    		    <td>{{ $selections['contact_person'] or '' }}</td>
+    		    <td>{{ $selections['location'] or '' }}</td>
             </tr>
     		@endforeach
     	</tbody>
@@ -118,11 +118,11 @@
 
 		$(document).ready(function(){
             $("#from_date").datepicker({
-                format: "dd-mm-yyyy",
+                format: "yyyy-mm-dd",
                 autoclose: true,
             });
              $("#to_date").datepicker({
-                format: "dd-mm-yyyy",
+                format: "yyyy-mm-dd",
                 autoclose: true,
             });
 
@@ -134,7 +134,7 @@
             new jQuery.fn.dataTable.FixedHeader( table );
 
             getSelect();
-            select_data();
+            //select_data();
         });
 		
 		function getSelect() {
@@ -173,22 +173,64 @@
 		}
 
         function select_data(){
-            var selectedValue = $("#select").val();
+           
+            var select = $("#select").val();
+            var month = $("#month").val();
+            var year = $("#year").val();
+            var from_date = $("#from_date").val();
+            var to_date = $("#to_date").val();
+            var quater = $("#quater").val();
 
-                $.ajax({
-                  url:'/report/selection',
-                  data:'selectedValue='+selectedValue,
-                  dataType:'json',
-                  success: function(data){
-                      for(var i=0;i<data.length;i++){
-                          //$('#typeList').append($('<option></option>').val(data[i].id).html(data[i].value));
-                          //$('#typeList').select2('val', typelist)
-                          $('#selection_report_table').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
-                      }
-                  }
+            var url = '/selectionreport';
 
-                });
+            if (select == 0){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="from_date" value="'+from_date+'" />' +
+                '<input type="text" name="to_date" value="'+to_date+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
             }
+
+            else if (select == 1){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="month" value="'+month+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
+
+            else if (select == 2){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="quater" value="'+quater+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
+
+            else if (select == 3){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
+
+        }
 	</script>
 
 @endsection
