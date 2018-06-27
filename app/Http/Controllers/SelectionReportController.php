@@ -13,19 +13,23 @@ class SelectionReportController extends Controller
 
     	$select = array('0'=>'Custom','1'=>'Monthly','2'=>'Quarterly','3'=>'Yearly');
 
+        // Month data
     	$month_array = array();
     	for ($i=1; $i <=12 ; $i++) { 
     		$month_array[$i] = date('M',mktime(0,0,0,$i));
         }
 
+        // Year Data
         $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
         $ending_year = date('Y',strtotime('+10 year'));
+        $default = date('Y');
 
         $year_array = array();
     	for ($y=$starting_year; $y < $ending_year ; $y++) { 
     		$year_array[$y] = $y;
         }
 
+        // Quarter data
         $quater = array();
         $quater['0'] = 'Quarter 1(Apr-Jun)';
         $quater['1'] = 'Quarter 2(July-Sept)';
@@ -35,6 +39,7 @@ class SelectionReportController extends Controller
         $selectdata = Input::get('select');
         $quaterdata = Input::get('quater');
 
+        // Custom wise
         if ($selectdata == 0) {
             if(isset($_POST['from_date']) && $_POST['from_date']!=''){
                 $month = $_POST['from_date'];
@@ -52,7 +57,7 @@ class SelectionReportController extends Controller
 
             $date_class = new Date();
 
-            $selection_report = Bills::getSelectionReport($month,$year);
+            $selection_report = Bills::getSelectionReport('','',$month,$year);
             $selection = array();
             $i = 0;
             foreach ($selection_report as $key => $value) {
@@ -78,6 +83,7 @@ class SelectionReportController extends Controller
             }
         }
 
+        // Month wish
         else if ($selectdata == 1) {
             if(isset($_POST['month']) && $_POST['month']!=''){
                 $month = $_POST['month'];
@@ -94,7 +100,7 @@ class SelectionReportController extends Controller
 
             $date_class = new Date();
 
-            $selection_report = Bills::getSelectionReport($month,$year);
+            $selection_report = Bills::getSelectionReport('','',$month,$year);
             $selection = array();
             $i = 0;
             foreach ($selection_report as $key => $value) {
@@ -120,6 +126,7 @@ class SelectionReportController extends Controller
             }
         }
 
+        // Quater wise
         else if ($selectdata == 2) {
             if(isset($_POST['year']) && $_POST['year']!=''){
                 $year = $_POST['year'];
@@ -131,23 +138,14 @@ class SelectionReportController extends Controller
             // Get Quater 1-4
 
             if ($quaterdata == 0) {
-                $monthdata = array('4','5','6');
-                
-                /*$april = date('Y-m-d',strtotime("first day of april"));
-                $june = date('Y-m-d',strtotime("last day of june"));
-                print_r($april);exit;
 
-                $month = array();
-                for ($m=$april; $m < $june ; $m++) { 
-                    $month[$m] = $m;
-                }*/
+                $m1 = date('m-d',strtotime("first day of april"));
+                $m2 = date('m-d',strtotime("last day of june"));
+                //print_r($m1);exit;
 
-                foreach ($monthdata as $key1 => $value1) {
-                    $month = $value1;
+                $date_class = new Date();
 
-                    $date_class = new Date();
-
-                $selection_report = Bills::getSelectionReport($month,$year);
+                $selection_report = Bills::getSelectionReport($m1,$m2,'',$year);
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
@@ -171,24 +169,114 @@ class SelectionReportController extends Controller
                     $selection[$i]['location'] = $value->job_location;
                     $i++;
                 }
-                }
             }
 
             if ($quaterdata == 1) {
                 
+                $m1 = date('m-d',strtotime("first day of july"));
+                $m2 = date('m-d',strtotime("last day of september"));
+                //print_r($m2);exit;
+
+                $date_class = new Date();
+
+                $selection_report = Bills::getSelectionReport($m1,$m2,'',$year);
+                $selection = array();
+                $i = 0;
+                foreach ($selection_report as $key => $value) {
+                    $fixed_salary = $value->fixed_salary;
+                    $percentage_charged = $value->percentage_charged;
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+
+                    $selection[$i]['candidate_name'] = $value->fname;
+                    $selection[$i]['company_name'] = $value->company_name;
+                    $selection[$i]['position'] = $value->position;
+                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['billing'] = $billing;
+                    $selection[$i]['gst'] = $gst;
+                    $selection[$i]['invoice'] = $invoice;
+                    $selection[$i]['payment'] = $payment;
+                    $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                    $selection[$i]['contact_person'] = $value->client_name;
+                    $selection[$i]['location'] = $value->job_location;
+                    $i++;
+                }
             }
 
             if ($quaterdata == 2) {
                 
+                $m1 = date('m-d',strtotime("first day of october"));
+                $m2 = date('m-d',strtotime("last day of December"));
+                //print_r($m2);exit;
+
+                $date_class = new Date();
+
+                $selection_report = Bills::getSelectionReport($m1,$m2,'',$year);
+                $selection = array();
+                $i = 0;
+                foreach ($selection_report as $key => $value) {
+                    $fixed_salary = $value->fixed_salary;
+                    $percentage_charged = $value->percentage_charged;
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+
+                    $selection[$i]['candidate_name'] = $value->fname;
+                    $selection[$i]['company_name'] = $value->company_name;
+                    $selection[$i]['position'] = $value->position;
+                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['billing'] = $billing;
+                    $selection[$i]['gst'] = $gst;
+                    $selection[$i]['invoice'] = $invoice;
+                    $selection[$i]['payment'] = $payment;
+                    $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                    $selection[$i]['contact_person'] = $value->client_name;
+                    $selection[$i]['location'] = $value->job_location;
+                    $i++;
+                }
             }
 
             if ($quaterdata == 3) {
                 
+                $m1 = date('m-d',strtotime("first day of january"));
+                $m2 = date('m-d',strtotime("last day of february"));
+                //print_r($m2);exit;
+
+                $date_class = new Date();
+
+                $selection_report = Bills::getSelectionReport($m1,$m2,'',$year);
+                $selection = array();
+                $i = 0;
+                foreach ($selection_report as $key => $value) {
+                    $fixed_salary = $value->fixed_salary;
+                    $percentage_charged = $value->percentage_charged;
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+
+                    $selection[$i]['candidate_name'] = $value->fname;
+                    $selection[$i]['company_name'] = $value->company_name;
+                    $selection[$i]['position'] = $value->position;
+                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['billing'] = $billing;
+                    $selection[$i]['gst'] = $gst;
+                    $selection[$i]['invoice'] = $invoice;
+                    $selection[$i]['payment'] = $payment;
+                    $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                    $selection[$i]['contact_person'] = $value->client_name;
+                    $selection[$i]['location'] = $value->job_location;
+                    $i++;
+                }
             }
 
             
         }
 
+        // Year wise
         else if ($selectdata == 3) {
             if(isset($_POST['year']) && $_POST['year']!=''){
                 $year = $_POST['year'];
@@ -199,7 +287,7 @@ class SelectionReportController extends Controller
 
             $date_class = new Date();
 
-            $selection_report = Bills::getSelectionReport('',$year);
+            $selection_report = Bills::getSelectionReport('','','',$year);
             $selection = array();
             $i = 0;
             foreach ($selection_report as $key => $value) {
@@ -231,7 +319,7 @@ class SelectionReportController extends Controller
         
         //echo "<pre>"; print_r($selection);exit;
 
-    	return view('adminlte::reports.selection',compact('select','month_array','year_array','quater','month','year','selection_report','selection'));
+    	return view('adminlte::reports.selection',compact('select','month_array','year_array','quater','month','year','selection_report','selection','default'));
     }
 
     /*public function selectdata(){

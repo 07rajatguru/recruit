@@ -47,7 +47,7 @@
     		<div class="form-group quater">
     			<div class="box-body col-xs-3 col-sm-3 col-md-3">
     				<div class="form-group">
-    					{{Form::select('quater', $quater, null, array('id'=>'quater', 'class'=>'form-control'))}}
+    					{{Form::select('quater', $quater, 0, array('id'=>'quater', 'class'=>'form-control'))}}
     				</div>
     			</div>
     		</div>
@@ -55,7 +55,7 @@
     		<div class="form-group year">
     			<div class="box-body col-xs-3 col-sm-3 col-md-3">
     				<div class="form-group">
-    					{{Form::select('year', $year_array, null, array('id'=>'year', 'class'=>'form-control'))}}
+    					{{Form::select('year', $year_array, $default, array('id'=>'year', 'class'=>'form-control'))}}
     				</div>
     			</div>
     		</div>

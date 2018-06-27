@@ -356,7 +356,7 @@ class Bills extends Model
         return $recovery;
     }
 
-    public static function getSelectionReport($month,$year){
+    public static function getSelectionReport($m1,$m2,$month,$year){
         $date_class = new Date();
 
         $select = Input::get('select');
@@ -379,7 +379,8 @@ class Bills extends Model
         }
 
         if ($select == 2) {   
-            $selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+            $selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'>=', $m1);
+            $selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'<=', $m2);
             $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
         }
 
