@@ -60,7 +60,7 @@ class ToDos extends Model
         }
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
-        $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
+        $todo_query = $todo_query->whereNotIn('to_dos.status',explode(',', $todo_status));
         $todo_res   = $todo_query->get();
 //print_r($todo_res);exit;
         $todo_array = array();
@@ -105,7 +105,7 @@ class ToDos extends Model
         }
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
-        $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
+        $todo_query = $todo_query->whereNotIn('to_dos.status',explode(',', $todo_status));
 
         if($limit>0)
             $todo_query   = $todo_query->limit($limit);
@@ -154,7 +154,7 @@ class ToDos extends Model
         }
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
-        $todo_query = $todo_query->whereIn('status',explode(',', $todo_status));
+        $todo_query = $todo_query->whereIn('to_dos.status',explode(',', $todo_status));
         $todo_res   = $todo_query->get();
 //print_r($todo_res);exit;
         $todo_array = array();
@@ -204,7 +204,7 @@ class ToDos extends Model
         }
 
         $todo_query = $todo_query->orderBy('to_dos.id','desc');
-        $todo_query = $todo_query->whereNotIn('status',explode(',', $todo_status));
+        $todo_query = $todo_query->whereNotIn('to_dos.status',explode(',', $todo_status));
         $todo_query = $todo_query->where('user_id',$user);
         $todo_res   = $todo_query->get();
 //print_r($todo_res);exit;
