@@ -302,8 +302,13 @@ return [
                    'url'  => 'recoveryreport',
                    'icon' => 'circle-o',
                ],
-           ],
-        ],*/
+               [
+                   'text' => 'Userwise report',
+                   'url'  => 'userreport',
+                   'icon' => 'circle-o',
+               ],
+           ],*/
+        ],
 
         [
            'text'        => 'Training Material',

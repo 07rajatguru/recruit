@@ -572,6 +572,7 @@ class BillsController extends Controller
         else{
 
             $bill_response = $bill->save();
+            BillsEffort::where('bill_id','=',$id)->delete();
             foreach ($employee_final as $k => $v) {
 
                 if($k>0){

@@ -420,6 +420,41 @@ class Bills extends Model
         return $selection_res;
     }
 
+    public static function getUserwiseReport($user_id,$m1,$m2,$month,$year){
+        $date_class = new Date();
+
+        $select =Input::get('select');
+
+        $userwise_query = Bills::query();
+        $userwise_query = $userwise_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $userwise_query = $userwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $userwise_query = $userwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $userwise_query = $userwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $userwise_query = $userwise_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
+        $userwise_query = $userwise_query->where('bills_efforts.employee_name',$user_id);
+
+        if ($select == 0) {
+            $userwise_query = $userwise_query->where('date_of_joining','>=', $month);
+            $userwise_query = $userwise_query->where('date_of_joining','<=', $year);
+        }
+
+        else if ($select == 1) {
+            $userwise_query = $userwise_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+            $userwise_query = $userwise_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+
+        else if ($select == 2) {
+            $userwise_query = $userwise_query->where(\DB::raw('MONTH(date_of_joining)'),'>=', $m1);
+            $userwise_query = $userwise_query->where(\DB::raw('MONTH(date_of_joining)'),'<=', $m2);
+            $userwise_query = $userwise_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+        $userwise_res = $userwise_query->get();
+
+        //print_r($userwise_res);exit;
+
+        return $userwise_res;
+    }
+
     public static function getEmployeeEffortsById($id){
 
         $efforts_query = BillsEffort::query();
