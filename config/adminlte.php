@@ -307,8 +307,8 @@ return [
                    'url'  => 'userreport',
                    'icon' => 'circle-o',
                ],
-           ],*/
-        ],
+           ],
+        ],*/
 
         [
            'text'        => 'Training Material',
