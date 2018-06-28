@@ -490,4 +490,52 @@ class Bills extends Model
         return $employees;
 
     }
+
+    public static function getRecoveryReportdata(){
+        $date_class = new Date();
+
+        $recovery_query = Bills::query();
+        $recovery_query = $recovery_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $recovery_query = $recovery_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $recovery_query = $recovery_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $recovery_query = $recovery_query->where('bills.status','=',1);
+        $recovery_query = $recovery_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
+        $recovery_res = $recovery_query->get();
+
+        $recovery = array();
+        $i = 0;
+        foreach ($recovery_res as $key => $value) {
+            $fixed_salary = $value->fixed_salary;
+            $percentage_charged = $value->percentage_charged;
+            $billing = ($fixed_salary * $percentage_charged) / 100;
+
+            $expected_payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+
+            $efforts = Bills::getEmployeeEffortsNameById($value->id);
+            $efforts_str = '';
+            foreach ($efforts as $key1 => $value1) {
+                if($efforts_str == ''){
+                    $efforts_str = $key1 . '(' . (int)$value1 . '%)';
+                }
+                else{
+                    $efforts_str .= ',' . $key1 . '(' . (int)$value1 . '%)';
+                }
+            }
+
+            $data[] = array(
+            $recovery[$i]['candidate_name'] = $value->fname,
+            $recovery[$i]['company_name'] = $value->company_name,
+            $recovery[$i]['position'] = $value->designation_offered,
+            $recovery[$i]['salary_offered'] = $value->fixed_salary,
+            $recovery[$i]['billing'] = $billing,
+            $recovery[$i]['expected_payment'] = $expected_payment,
+            $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
+            $recovery[$i]['efforts'] = $efforts_str,
+            $recovery[$i]['contact_person'] = $value->client_name,
+            );
+            $i++;
+        }
+
+        return $data;
+    }
 }

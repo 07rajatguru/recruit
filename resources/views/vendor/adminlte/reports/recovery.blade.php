@@ -14,6 +14,9 @@
             <div class="pull-left">
                 <h2>Recovery Report</h2>
             </div>
+        <div class="pull-right col-md-2">
+            <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
+        </div>
         </div>
     </div>
 
@@ -31,7 +34,7 @@
             	<th>Joining <br/> Date</th>
             	<th>Efforts</th>
             	<th>Contact Person</th>
-            	<th>Remarks</th>
+            	{{--<th>Remarks</th>--}}
 		    </tr>
         	</thead>
         	<?php $i=0; ?>
@@ -48,7 +51,7 @@
         			<td>{{ $recovery['joining_date'] or '' }}</td>
         			<td>{{ $recovery['efforts'] or '' }}</td>
         			<td>{{ $recovery['contact_person'] or '' }}</td>
-        			<td>{{ '' }}</td>
+        			{{--<td>{{ '' }}</td>--}}
         		</tr>
         		@endforeach
         	</tbody>
@@ -67,5 +70,17 @@
             });
             new jQuery.fn.dataTable.FixedHeader( table );
         });
+
+        function export_data() {
+            var url = 'recoveryreport/export';
+
+             var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+
+        }
     </script>
 @endsection
