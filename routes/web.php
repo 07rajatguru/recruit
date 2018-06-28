@@ -1178,19 +1178,24 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'RecoveryReportController@index'
     ]);
 
+    Route::post('recoveryreport/export',[
+        'as' => 'recoveryreport.export',
+        'uses' => 'RecoveryReportController@export'
+    ]);
+
     Route::any('/selectionreport',[
         'as' => 'selectionreport.index',
         'uses' => 'SelectionReportController@index'
     ]);
 
+    Route::post('selectionreport/export',[
+        'as' => 'selectionreport.export',
+        'uses' => 'SelectionReportController@export'
+    ]);
+
     Route::any('/userreport',[
         'as' => 'userreport.index',
         'uses' => 'UserwiseReportController@index'
-    ]);
-
-    Route::post('recoveryreport/export',[
-        'as' => 'recoveryreport.export',
-        'uses' => 'RecoveryReportController@export'
     ]);
     
 });

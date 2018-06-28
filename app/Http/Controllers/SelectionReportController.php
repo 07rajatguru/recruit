@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Bills;
 use App\Date;
+use Excel;
 
 class SelectionReportController extends Controller
 {
@@ -320,6 +321,108 @@ class SelectionReportController extends Controller
         //echo "<pre>"; print_r($selection);exit;
 
     	return view('adminlte::reports.selection',compact('select','month_array','year_array','quater','month','year','selection_report','selection','default'));
+    }
+
+    public function export(){
+
+        Excel::create('Selection Report',function($excel){
+
+            $excel->sheet('sheet 1',function($sheet){
+
+                $selectdata = Input::get('select');
+                $quaterdata = Input::get('quater');
+
+                // Custom wise
+                if ($selectdata == 0) {
+                    if(isset($_POST['from_date']) && $_POST['from_date']!=''){
+                        $month = $_POST['from_date'];
+                    }
+                    else{
+                        $month = '';
+                    }
+                    if(isset($_POST['to_date']) && $_POST['to_date']!=''){
+                        $year = $_POST['to_date'];
+                    }
+                    else{
+                        $year = '';
+                    }
+
+                    $selection_report = Bills::getSelectionReportdata('','',$month,$year);
+                }
+
+                // Month wish
+                else if ($selectdata == 1) {
+                    if(isset($_POST['month']) && $_POST['month']!=''){
+                        $month = $_POST['month'];
+                    }
+                    else{
+                        $month = '';
+                    }
+                    if(isset($_POST['year']) && $_POST['year']!=''){
+                        $year = $_POST['year'];
+                    }
+                    else{
+                        $year = '';
+                    }
+                    $selection_report = Bills::getSelectionReportdata('','',$month,$year);
+                }
+
+                // Quater wise
+                else if ($selectdata == 2) {
+                    if(isset($_POST['year']) && $_POST['year']!=''){
+                        $year = $_POST['year'];
+                    }
+                    else{
+                        $year = '';
+                    }
+
+                    // Get Quater 1-4
+                    if ($quaterdata == 0) {
+                        $m1 = date('m-d',strtotime("first day of april"));
+                        $m2 = date('m-d',strtotime("last day of june"));
+                    
+                        $selection_report = Bills::getSelectionReportdata($m1,$m2,'',$year);
+                    }
+                    if ($quaterdata == 1) {
+                        $m1 = date('m-d',strtotime("first day of july"));
+                        $m2 = date('m-d',strtotime("last day of september"));
+                    
+                        $selection_report = Bills::getSelectionReportdata($m1,$m2,'',$year);
+                    }
+                    if ($quaterdata == 2) {
+                        $m1 = date('m-d',strtotime("first day of october"));
+                        $m2 = date('m-d',strtotime("last day of december"));
+                    
+                        $selection_report = Bills::getSelectionReportdata($m1,$m2,'',$year);
+                    }
+                    if ($quaterdata == 3) {
+                        $m1 = date('m-d',strtotime("first day of january"));
+                        $m2 = date('m-d',strtotime("last day of february"));
+                    
+                        $selection_report = Bills::getSelectionReportdata($m1,$m2,'',$year);
+                    }
+                }
+
+                // Year wise
+                else if ($selectdata == 3) {
+                    if(isset($_POST['year']) && $_POST['year']!=''){
+                        $year = $_POST['year'];
+                    }
+                    else{
+                        $year = '';
+                    }
+                    $selection_report = Bills::getSelectionReportdata('','','',$year);
+                }
+
+
+            $sheet->fromArray($selection_report, null, 'A1', false, false);
+
+            $heading = array('Candidate Name','Company Name','Position/Dept','Salary Offered(fixed)','Billing','GST @ 18%','invoice Raised','Payment Expected Including GST','Joining Date','Contact Person','Location');
+
+            $sheet->prependRow(1,$heading);
+            });
+        })->export('xls');
+        return view('selectionreport');
     }
 
     /*public function selectdata(){

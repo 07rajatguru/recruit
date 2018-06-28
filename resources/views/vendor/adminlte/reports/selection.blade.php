@@ -14,6 +14,9 @@
             <div class="pull-left">
                 <h2>Selection Report</h2>
             </div>
+            <div class="pull-right col-md-2">
+                <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
         	<div class="box-body col-xs-4 col-sm-4 col-md-4">
@@ -230,6 +233,65 @@
             form.submit();
             }
 
+        }
+
+        function export_data(){
+
+            var select = $("#select :selected").val();
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+            var from_date = $("#from_date :selected").val();
+            var to_date = $("#to_date :selected").val();
+            var quater = $("#quater :selected").val();
+
+            var url = 'selectionreport/export';
+
+            if (select == 0){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="from_date" value="'+from_date+'" />' +
+                '<input type="text" name="to_date" value="'+to_date+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
+
+            else if (select == 1){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="month" value="'+month+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
+
+            else if (select == 2){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="quater" value="'+quater+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
+
+            else if (select == 3){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="select" value="'+select+'" />'+
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+            }
         }
 	</script>
 
