@@ -248,4 +248,29 @@ class Interview extends Model
             return $interviewDetails;
     }
 
+    public static function getCandidateOwnerEmail($interview_id){
+
+        $query = Interview::query();
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
+        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->where('interview.id','=',$interview_id);
+        $query = $query->select('users.email as candidateowneremail');
+        $res = $query->first();
+
+        return $res;
+    }
+
+    public static function getClientOwnerEmail($interview_id){
+
+        $query = Interview::query();
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->join('users','users.id','=','client_basicinfo.account_manager_id');
+        $query = $query->where('interview.id','=',$interview_id);
+        $query = $query->select('users.email as clientowneremail');
+        $response = $query->first();
+
+        return $response;
+    }
+
 }
