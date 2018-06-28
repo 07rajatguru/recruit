@@ -312,11 +312,15 @@ class Bills extends Model
     public static function getRecoveryReport(){
         $date_class = new Date();
 
+        $cancel = 1;
+        $cancel_bill = array($cancel);
+
         $recovery_query = Bills::query();
         $recovery_query = $recovery_query->join('job_openings','job_openings.id','=','bills.job_id');
         $recovery_query = $recovery_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $recovery_query = $recovery_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $recovery_query = $recovery_query->where('bills.status','=',1);
+        $recovery_query = $recovery_query->whereNotIn('bills.cancel_bill',$cancel_bill);
         $recovery_query = $recovery_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
         $recovery_res = $recovery_query->get();
 
@@ -359,6 +363,9 @@ class Bills extends Model
     public static function getSelectionReport($m1,$m2,$month,$year){
         $date_class = new Date();
 
+        $cancel = 1;
+        $cancel_bill = array($cancel);
+
         $select = Input::get('select');
 
         $selection_query = Bills::query();
@@ -366,6 +373,7 @@ class Bills extends Model
         $selection_query = $selection_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $selection_query = $selection_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $selection_query = $selection_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
+        $selection_query = $selection_query->whereNotIn('bills.cancel_bill',$cancel_bill);
 
         //$selection_query = $selection_query->where(function($selection_query) use ($month,$year){
         if ($select == 0) {   
@@ -423,6 +431,9 @@ class Bills extends Model
     public static function getUserwiseReport($user_id,$m1,$m2,$month,$year){
         $date_class = new Date();
 
+        $cancel = 1;
+        $cancel_bill = array($cancel);
+
         $select =Input::get('select');
 
         $userwise_query = Bills::query();
@@ -432,6 +443,7 @@ class Bills extends Model
         $userwise_query = $userwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $userwise_query = $userwise_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
         $userwise_query = $userwise_query->where('bills_efforts.employee_name',$user_id);
+        $userwise_query = $userwise_query->whereNotIn('bills.cancel_bill',$cancel_bill);
 
         if ($select == 0) {
             $userwise_query = $userwise_query->where('date_of_joining','>=', $month);
@@ -494,11 +506,15 @@ class Bills extends Model
     public static function getRecoveryReportdata(){
         $date_class = new Date();
 
+        $cancel = 1;
+        $cancel_bill = array($cancel);
+
         $recovery_query = Bills::query();
         $recovery_query = $recovery_query->join('job_openings','job_openings.id','=','bills.job_id');
         $recovery_query = $recovery_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $recovery_query = $recovery_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $recovery_query = $recovery_query->where('bills.status','=',1);
+        $recovery_query = $recovery_query->whereNotIn('bills.cancel_bill',$cancel_bill);
         $recovery_query = $recovery_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
         $recovery_res = $recovery_query->get();
 
