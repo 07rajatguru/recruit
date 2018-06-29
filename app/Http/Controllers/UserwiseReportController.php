@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use App\User;
 use App\Bills;
 use App\Date;
+use Excel;
 
 class UserwiseReportController extends Controller
 {
@@ -305,5 +306,98 @@ class UserwiseReportController extends Controller
             //print_r($userwise);exit;
 
     	return view("adminlte::reports.userwise",compact('select','month_array','quater','year_array','default','userwise_report','userwise'));
+    }
+
+    public function export(){
+
+        Excel::create('Userwise Report', function($excel){
+
+            $excel->sheet('Sheet 1', function($sheet){
+                $user = \Auth::user();
+                $user_id = $user->id;
+
+                $selectdata = Input::get('select');
+                $quaterdata = Input::get('quater');
+                
+                // Custom wish
+                if ($selectdata == 0) {
+                    if(isset($_POST['from_date']) && $_POST['from_date']!=''){
+                        $month = $_POST['from_date'];
+                    }
+                    else{
+                        $month = '';
+                    }
+                    if(isset($_POST['to_date']) && $_POST['to_date']!=''){
+                        $year = $_POST['to_date'];
+                    }
+                    else{
+                        $year = '';
+                    }
+                    $userwise_report = Bills::getUserwiseReportdata($user_id,'','',$month,$year);
+                }
+
+                // Month wish
+                else if ($selectdata == 1) {
+                    if(isset($_POST['month']) && $_POST['month']!=''){
+                        $month = $_POST['month'];
+                    }
+                    else{
+                        $month = '';
+                    }
+                    if(isset($_POST['year']) && $_POST['year']!=''){
+                        $year = $_POST['year'];
+                    }
+                    else{
+                        $year = '';
+                    }
+                    $userwise_report = Bills::getUserwiseReportdata($user_id,'','',$month,$year);
+                }
+
+                // Ouater wise
+                else if ($selectdata == 2) {
+                    if(isset($_POST['year']) && $_POST['year']!=''){
+                        $year = $_POST['year'];
+                    }
+                    else{
+                        $year = '';
+                    }
+
+                    // Get Quater 1-4
+                    if ($quaterdata == 0) {
+
+                        $m1 = date('m-d',strtotime("first day of april"));
+                        $m2 = date('m-d',strtotime("last day of june"));
+                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                    }
+
+                    if ($quaterdata == 1) {
+
+                        $m1 = date('m-d',strtotime("first day of july"));
+                        $m2 = date('m-d',strtotime("last day of september"));
+                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                    }
+
+                    if ($quaterdata == 2) {
+
+                        $m1 = date('m-d',strtotime("first day of october"));
+                        $m2 = date('m-d',strtotime("last day of december"));
+                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                    }
+
+                    if ($quaterdata == 3) {
+
+                        $m1 = date('m-d',strtotime("first day of january"));
+                        $m2 = date('m-d',strtotime("last day of march"));
+                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                    }
+                }
+
+                $sheet->fromArray($userwise_report, null, 'A1', false, false);
+
+                $heading = array('Candidate Name','Company Name','Position/Dept','Salary Offered(fixed)','Billing','Joining Date','Efforts With');
+
+                $sheet->prependRow(1,$heading);
+            });
+        })->export('xls');
     }
 }

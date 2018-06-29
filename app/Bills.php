@@ -626,4 +626,71 @@ class Bills extends Model
 
         return $data;
     }
+
+    public static function getUserwiseReportdata($user_id,$m1,$m2,$month,$year){
+        $date_class = new Date();
+
+        $cancel = 1;
+        $cancel_bill = array($cancel);
+
+        $select =Input::get('select');
+
+        $userwise_query = Bills::query();
+        $userwise_query = $userwise_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $userwise_query = $userwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $userwise_query = $userwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $userwise_query = $userwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $userwise_query = $userwise_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
+        $userwise_query = $userwise_query->where('bills_efforts.employee_name',$user_id);
+        $userwise_query = $userwise_query->whereNotIn('bills.cancel_bill',$cancel_bill);
+
+        if ($select == 0) {
+            $userwise_query = $userwise_query->where('date_of_joining','>=', $month);
+            $userwise_query = $userwise_query->where('date_of_joining','<=', $year);
+        }
+
+        else if ($select == 1) {
+            $userwise_query = $userwise_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+            $userwise_query = $userwise_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+
+        else if ($select == 2) {
+            $userwise_query = $userwise_query->where(\DB::raw('MONTH(date_of_joining)'),'>=', $m1);
+            $userwise_query = $userwise_query->where(\DB::raw('MONTH(date_of_joining)'),'<=', $m2);
+            $userwise_query = $userwise_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
+        }
+        $userwise_res = $userwise_query->get();
+
+        $userwise = array();
+            $i = 0;
+            foreach ($userwise_res as $key => $value) {
+                $fixed_salary = $value->fixed_salary;
+                $percentage_charged = $value->percentage_charged;
+                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                $efforts_str = '';
+                foreach ($efforts as $key1 => $value1) {
+                    if($efforts_str == ''){
+                        $efforts_str = $key1 . '(' . (int)$value1 . '%)';
+                    }
+                    else{
+                        $efforts_str .= ',' . $key1 . '(' . (int)$value1 . '%)';
+                    }
+                }
+                $data[] = array(
+                $userwise[$i]['candidate_name'] = $value->fname,
+                $userwise[$i]['company_name'] = $value->company_name,
+                $userwise[$i]['position'] = $value->position,
+                $userwise[$i]['fixed_salary'] = $value->fixed_salary,
+                $userwise[$i]['billing'] = $billing,
+                $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
+                $userwise[$i]['efforts'] = $efforts_str,
+                );
+                $i++;
+            }
+
+        //print_r($userwise_res);exit;
+
+        return $data;
+    }
 }

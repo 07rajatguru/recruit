@@ -237,12 +237,12 @@
 
         function export_data(){
 
-            var select = $("#select :selected").val();
-            var month = $("#month :selected").val();
-            var year = $("#year :selected").val();
-            var from_date = $("#from_date :selected").val();
-            var to_date = $("#to_date :selected").val();
-            var quater = $("#quater :selected").val();
+            var select = $("#select").val();
+            var month = $("#month").val();
+            var year = $("#year").val();
+            var from_date = $("#from_date").val();
+            var to_date = $("#to_date").val();
+            var quater = $("#quater").val();
 
             var url = 'selectionreport/export';
 
