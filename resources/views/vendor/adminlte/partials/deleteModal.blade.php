@@ -18,7 +18,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    Are you sure want to delete this {!! $display_name !!}?
+                    Are you sure want to delete {!! $display_name !!}?
                 </p>
             </div>
             <div class="modal-footer">
