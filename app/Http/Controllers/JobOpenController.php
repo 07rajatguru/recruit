@@ -1862,7 +1862,6 @@ class JobOpenController extends Controller
          
         $job_open->save();
 
-        
             return redirect()->route('jobopen.index')->with('success', 'Job Priority added successfully');
        
     }
@@ -1884,6 +1883,11 @@ class JobOpenController extends Controller
         $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
@@ -1901,6 +1905,7 @@ class JobOpenController extends Controller
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
+        $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
 
