@@ -63,7 +63,7 @@ class SelectionReportController extends Controller
             $i = 0;
             foreach ($selection_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
                 $gst = ($billing * 18 ) / 100;
                 $invoice = $billing+$gst;
@@ -106,7 +106,7 @@ class SelectionReportController extends Controller
             $i = 0;
             foreach ($selection_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
                 $gst = ($billing * 18 ) / 100;
                 $invoice = $billing+$gst;
@@ -151,7 +151,7 @@ class SelectionReportController extends Controller
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
                     $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = $value->percentage_charged;
+                    $percentage_charged = (float)$value->percentage_charged;
                     $billing = ($fixed_salary * $percentage_charged) / 100;
                     $gst = ($billing * 18 ) / 100;
                     $invoice = $billing+$gst;
@@ -185,7 +185,7 @@ class SelectionReportController extends Controller
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
                     $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = $value->percentage_charged;
+                    $percentage_charged = (float)$value->percentage_charged;
                     $billing = ($fixed_salary * $percentage_charged) / 100;
                     $gst = ($billing * 18 ) / 100;
                     $invoice = $billing+$gst;
@@ -219,7 +219,7 @@ class SelectionReportController extends Controller
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
                     $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = $value->percentage_charged;
+                    $percentage_charged = (float)$value->percentage_charged;
                     $billing = ($fixed_salary * $percentage_charged) / 100;
                     $gst = ($billing * 18 ) / 100;
                     $invoice = $billing+$gst;
@@ -253,7 +253,7 @@ class SelectionReportController extends Controller
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
                     $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = $value->percentage_charged;
+                    $percentage_charged = (float)$value->percentage_charged;
                     $billing = ($fixed_salary * $percentage_charged) / 100;
                     $gst = ($billing * 18 ) / 100;
                     $invoice = $billing+$gst;
@@ -293,7 +293,7 @@ class SelectionReportController extends Controller
             $i = 0;
             foreach ($selection_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
                 $gst = ($billing * 18 ) / 100;
                 $invoice = $billing+$gst;
