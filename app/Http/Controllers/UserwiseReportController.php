@@ -68,13 +68,13 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
                 $userwise[$i]['fixed_salary'] = $value->fixed_salary;
-                $userwise[$i]['billing'] = $billing;
+                $userwise[$i]['billing'] = (float)$billing;
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -116,13 +116,13 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
                 $userwise[$i]['fixed_salary'] = $value->fixed_salary;
-                $userwise[$i]['billing'] = $billing;
+                $userwise[$i]['billing'] = (float)$billing;
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -164,13 +164,13 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
                 $userwise[$i]['fixed_salary'] = $value->fixed_salary;
-                $userwise[$i]['billing'] = $billing;
+                $userwise[$i]['billing'] = (float)$billing;
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -202,13 +202,13 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
                 $userwise[$i]['fixed_salary'] = $value->fixed_salary;
-                $userwise[$i]['billing'] = $billing;
+                $userwise[$i]['billing'] = (float)$billing;
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -240,13 +240,13 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
                 $userwise[$i]['fixed_salary'] = $value->fixed_salary;
-                $userwise[$i]['billing'] = $billing;
+                $userwise[$i]['billing'] = (float)$billing;
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -278,13 +278,13 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
                 $userwise[$i]['fixed_salary'] = $value->fixed_salary;
-                $userwise[$i]['billing'] = $billing;
+                $userwise[$i]['billing'] = (float)$billing;
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
