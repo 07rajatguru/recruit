@@ -52,12 +52,12 @@
                         <u><b><h1>No of CVs Associated : {{$associate_count or '0'}}</h1></b></u>
                     </td>
                 </tr>
-                <tr style="background-color: #C4D79B;">
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Date</b></td>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Name</b></td>
+                <tr  style="background-color: #C4D79B;">
+                    <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
+                    <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Date</b></td>
+                    <td colspan="7" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Name</b></td>
                     <td align="center" style="border-top: black 1px solid;padding:8px;border-left: black 1px solid;"><b>Company</b></td>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Location</b></td>
+                    <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Location</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>No of resumes<br/>associated</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>Status</b></td>
                 </tr>
@@ -67,13 +67,13 @@
                  $total_cnt = sizeof($associate_daily);
                 ?>
                 @foreach($associate_daily as $key=>$value)
-                    <tr>
+                    <tr colspan="7">
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('jS F,y') }}</td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;"">{{$value['company']}}</td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}</td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['associate_candidate_count'] or ''}}</td>
+                        <td colspan="7" align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['company']}}</td>
+                        <td  align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}</td>
+                        <td  align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['associate_candidate_count'] or ''}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid; border-right: black 1px solid;">{{$value['status']}}</td>
                     </tr>
                     <?php $i++; ?>
