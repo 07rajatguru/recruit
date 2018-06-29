@@ -67,7 +67,7 @@ class UserwiseReportController extends Controller
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
@@ -115,7 +115,7 @@ class UserwiseReportController extends Controller
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
@@ -163,7 +163,7 @@ class UserwiseReportController extends Controller
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
@@ -201,7 +201,7 @@ class UserwiseReportController extends Controller
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
@@ -239,7 +239,7 @@ class UserwiseReportController extends Controller
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
@@ -277,7 +277,7 @@ class UserwiseReportController extends Controller
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
-                $percentage_charged = $value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
                 $billing = ($fixed_salary * $percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
