@@ -66,7 +66,7 @@ class ReportController extends Controller
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $to_address = 'tarikapanjwani@gmail.com';
-        $cc_address = 'saloni@trajinfotech.com';
+        $cc_address = 'rajlalwani@adlertalent.com';
         //$cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
@@ -98,10 +98,10 @@ class ReportController extends Controller
 
             \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->cc($input['cc'])->subject('Activity Report - '.$input['value'] . ' - ' . date("d-m-Y"));
+                $message->to($input['to'])->cc($input['cc'])->subject('Daily Report - '.$input['value'] . ' - ' . date("d-m-Y"));
             });
 
-           //return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
+           //return view('adminlte::emails.DailyReport', compact('app_url','associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
         }
     }
 
