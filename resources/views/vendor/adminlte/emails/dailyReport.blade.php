@@ -52,7 +52,7 @@
                         <u><b><h1>No of CVs Associated : {{$associate_count or '0'}}</h1></b></u>
                     </td>
                 </tr>
-                <tr  style="background-color: #92D050;">
+                <tr  style="background-color: #f39c12;">
                     <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
                     <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Date</b></td>
                     <td colspan="7" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Name</b></td>
