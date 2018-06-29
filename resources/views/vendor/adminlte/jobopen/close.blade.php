@@ -76,6 +76,10 @@
                     @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'More Information'])
                     @endif
 
+                    <?php if($isSuperAdmin) {?>
+                    @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
+                    <?php   }?>
+
                 </td>
                 <td>{{ $job_priority[$value['priority']] }}</td>
                 <td>{{ $value['am_name'] or '' }}</td>
