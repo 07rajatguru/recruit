@@ -66,7 +66,7 @@ class ReportController extends Controller
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $to_address = 'tarikapanjwani@gmail.com';
-        $cc_address = 'rajlalwani@adlertalent.com';
+        $cc_address = 'saloni@trajinfotech.com';
         //$cc_address = 'tarikapanjwani@gmail.com';
 
         $users = User::getAllUsersEmails('recruiter');
@@ -99,7 +99,7 @@ class ReportController extends Controller
                 $message->to($input['to'])->cc($input['cc'])->subject('Activity Report - '.$input['value'] . ' - ' . date("d-m-Y"));
             });
 
-           // return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
+           //return view('adminlte::emails.DailyReport', compact('associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
         }
     }
 
