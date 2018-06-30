@@ -8,6 +8,18 @@
 </head>
 
 <body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                <tr>
+                    <td align="center">
+                       <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
+                        <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
+                            <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:100%;height: 150px;padding-top: 16px;   vertical-align: middle;">
+                        </a>
+                       </div>
+                    </td>
+                </tr>
+            </table>
     
             <p>Dear Sir,</p>
             <p><u> Please find below Interview Schedule:</u></p>
@@ -44,6 +56,12 @@
                     <td align="center"><b>{{'Adler'}}</b></td>
                 </tr>
             </table>
+
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+            <tr style="height: 45px; background-color: #dddddd;">
+                <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
+            </tr>
+        </table>
 
 </body>
 </html>

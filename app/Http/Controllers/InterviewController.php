@@ -156,18 +156,23 @@ class InterviewController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-/*      $from_name = getenv('FROM_NAME');
+        // Interview Candidate Mail
+        /*$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
+        $app_url = getenv('APP_URL');
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
         $input['to'] = $user_email;
+        $input['app_url'] = $app_url;
 
         // Candidate details
+        $candidate_id = $request->get('candidate_id');
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
         $cname = $candidate_response->full_name;
 
         // job Details
+        $posting_title = $request->get('posting_title');
         $job_details = JobOpen::getJobById($posting_title);
 
         $input['cname'] = $cname;
@@ -189,9 +194,9 @@ class InterviewController extends Controller
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
         });*/
 
-        /*// Interview Schedule Mail
+        // Interview Schedule Mail
         
-        $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
+        /*$candidate_email = Interview::getCandidateOwnerEmail($interview_id);
         $candidate_owner_email = $candidate_email->candidateowneremail;
        // print_r($candidate_owner_email);exit;
 
@@ -208,10 +213,12 @@ class InterviewController extends Controller
 
             $from_name = getenv('FROM_NAME');
             $from_address = getenv('FROM_ADDRESS');
+            $app_url = getenv('APP_URL');
         
             $input['from_name'] = $from_name;
             $input['from_address'] = $from_address;
             $input['to'] = $value;
+            $input['app_url'] = $app_url;
 
             // Candidate details
 
