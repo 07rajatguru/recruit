@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Training Material</h2>
+                <h2>Training Material ({{$count or '0'}})</h2>
             </div>
 
             <div class="pull-right">

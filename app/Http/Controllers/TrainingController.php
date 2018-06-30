@@ -9,6 +9,7 @@ use App\pdfParser;
 use App\User;
 use App\Training;
 use App\TrainingDoc;
+use App\TrainingVisibleUser;
 use App\Utils;
 use DB;
 
@@ -28,21 +29,41 @@ class TrainingController extends Controller
 
         $user_id = $user->id;
         $user_role_id = User::getLoggedinUserRole($user);
-	   
-       $training = Training::getAlltraining($user_id);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+	        $training = Training::getAlltraining(1,$user_id);
+        }
+        else{
+            $training = Training::getAlltraining(0,$user_id);   
+        }
+
+        $count = sizeof($training);
 
 	   $trainingFiles = TrainingDoc::select('training_doc.file')->get();
 	//print_r($trainingFiles);die;
 	
-    return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id'));
+    return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id','count'));
    
     }
 
     public function create(){
 
 		$action = 'add';
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $users = User::getAllUsers('recruiter');
+        $super_admin_user_id = getenv('SUPERADMINUSERID');
+        $selected_users = array($user_id,$super_admin_user_id);
         
-        return view('adminlte::training.create',compact('action'));
+        return view('adminlte::training.create',compact('action','users','selected_users','user_id'));
 
     }
     
@@ -94,13 +115,24 @@ class TrainingController extends Controller
                         $training_doc->save();
                     }
                 }
-            }   
+            }  
+
+            $users = $request->input('user_ids');
+            if (isset($users) && sizeof($users)>0) {
+                foreach ($users as $key => $value) {
+                    $training_visible_users = new TrainingVisibleUser;
+                    $training_visible_users->training_id = $training_id;
+                    $training_visible_users->user_id = $value;
+                    $training_visible_users->save();
+                }
+            }
+
         return redirect()->route('training.index')->with('success','Training Created Successfully');
     }
 
     public function edit($id){
 
-     	$users = User::getAllUsers();
+     	$users = User::getAllUsers('recruiter');
      	$training = Training::find($id);
         
         $action = "edit" ;
@@ -124,8 +156,27 @@ class TrainingController extends Controller
 
                 }
             }
+
+        // get all users
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+        
+        $training_visible_users =TrainingVisibleUser::where('training_id',$id)->get();
+       // echo'<pre>'; print_r($training_visible_users);die;
+       
+        $selected_users = array();
+        if(isset($training_visible_users) && sizeof($training_visible_users)>0){
+            foreach($training_visible_users as $row){
+                $selected_users[] = $row->user_id;
+            }
+        }
 		//print_r($trainingdetails);die;
-        return view('adminlte::training.edit',compact('action','users','training','trainingdetails'));
+        return view('adminlte::training.edit',compact('action','users','training','trainingdetails','selected_users'));
     }
 
 
@@ -174,6 +225,18 @@ class TrainingController extends Controller
 
                 return redirect('training/'. $id .'/edit');        
             }
+
+        $users = $request->input('user_ids');
+        TrainingVisibleUser::where('training_id',$training_id)->delete();
+        if (isset($users) && sizeof($users)>0) {
+            foreach ($users as $key => $value) {
+                $training_visible_users = new TrainingVisibleUser;
+                $training_visible_users->training_id = $training_id;
+                $training_visible_users->user_id = $value;
+                $training_visible_users->save();
+            }
+        }
+
         return redirect()->route('training.index')->with('success','Training Updated Successfully');
          
     }
@@ -265,6 +328,7 @@ class TrainingController extends Controller
     
    public function trainingDestroy($id){
         TrainingDoc::where('training_id',$id)->delete();
+        TrainingVisibleUser::where('training_id',$id)->delete();
         $training = Training::where('id',$id)->delete();
 
         return redirect()->route('training.index')->with('success','Training Deleted Successfully');
