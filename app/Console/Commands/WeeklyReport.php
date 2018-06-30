@@ -43,7 +43,7 @@ class WeeklyReport extends Command
     {
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'saloni@trajinfotech.com';
+        $to_address = 'rajlalwani@adlertalent.com';
         $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
