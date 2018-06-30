@@ -43,8 +43,8 @@ class WeeklyReport extends Command
     {
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'meet@trajinfotech.com';
-        $cc_address = 'trajinfotech09@gmail.com';
+        $to_address = 'rajlalwani@adlertalent.com';
+        $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
         $input['from_name'] = $from_name;
@@ -77,7 +77,7 @@ class WeeklyReport extends Command
 
             \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name'])->cc($input['cc']);
-                $message->to($input['to'])->subject('Weekly Activity Report -'.$input['value']);
+                $message->to($input['to'],$input['cc'])->subject('Weekly Activity Report -'.$input['value']);
             });
         }
     }

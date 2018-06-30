@@ -43,8 +43,8 @@ class DailyReport extends Command
     {
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'tarikapanjwani@gmail.com';
-        $cc_address = 'rajlalwani@adlertalent.com';
+        $to_address = 'rajlalwani@adlertalent.com';
+        $cc_address = 'tarikapanjwani@gmail.com';
         //$cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
@@ -76,7 +76,7 @@ class DailyReport extends Command
 
             \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
                 $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->cc($input['cc'])->subject('Daily Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                $message->to($input['to'],$input['cc'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
             });
 
         }
