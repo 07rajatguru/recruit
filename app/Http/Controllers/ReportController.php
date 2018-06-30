@@ -111,11 +111,13 @@ class ReportController extends Controller
         $from_address = getenv('FROM_ADDRESS');
         $to_address = 'tarikapanjwani@gmail.com';
         $cc_address = 'rajlalwani@adlertalent.com';
+        $app_url = getenv('APP_URL');
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
         $input['to'] = $to_address;
         $input['cc'] = $cc_address;
+        $input['app_url'] = $app_url;
 
         $users = User::getAllUsersEmails('recruiter');
 
@@ -145,7 +147,7 @@ class ReportController extends Controller
             });
 
 //echo 'Weekly Activity Report -'.$input['value'];
-           // return view('adminlte::emails.WeeklyReport',compact('associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
+            //return view('adminlte::emails.WeeklyReport',compact('app_url','associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
         }
     }
 }

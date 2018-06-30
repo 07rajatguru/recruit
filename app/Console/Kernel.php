@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\DailyReport',
+        'App\Console\Commands\WeeklyReport',
     ];
 
     /**
@@ -28,6 +29,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         $schedule->command('report:daily')->dailyAt('20:00');
+        $schedule->command('report:weekly')->weeklyOn(6, '20:00');
     }
 
     /**
