@@ -118,7 +118,7 @@
 
                 <strong>Floor Incharge :</strong>
 
-                {!! Form::select('floor_incharge', $floor_incharge,isset($userFloorIncharge) ? $userFloorIncharge : null, array('id'=>'floor_incharge','class' => 'form-control')) !!}
+                {!! Form::select('floor_incharge', $floor_incharge,isset($userFloorIncharge) ? $userFloorIncharge : 0, array('id'=>'floor_incharge','class' => 'form-control')) !!}
 
             </div>
 
