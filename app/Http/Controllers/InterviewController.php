@@ -157,13 +157,13 @@ class InterviewController extends Controller
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         // Interview Candidate Mail
-        /*$from_name = getenv('FROM_NAME');
+        $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
-        $input['to'] = $user_email;
+        $input['to'] = 'tarikapanjwani@gmail.com';//$user_email;
         $input['app_url'] = $app_url;
 
         // Candidate details
@@ -192,7 +192,7 @@ class InterviewController extends Controller
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
-        });*/
+        });
 
         // Interview Schedule Mail
         
