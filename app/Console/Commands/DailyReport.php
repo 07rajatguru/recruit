@@ -47,25 +47,36 @@ class DailyReport extends Command
        // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $to_array = array();
-        $to_array[] = 'saloni@trajinfotech.com';
-        $to_array[] = 'tarikapanjwani@gmail.com';
-
-        $cc_array = array();
-        $cc_array[] = 'srlalwani22@gmail.com';
-
         $users = User::getAllUsersEmails('recruiter');
-
-        $input = array();
-        $input['from_name'] = $from_name;
-        $input['from_address'] = $from_address;
-       // $input['to'] = $to_address;
-       // $input['cc'] = $cc_address;
-        $input['app_url'] = $app_url;
-        $input['to_array'] = $to_array;
-        $input['cc_array'] = $cc_array;
-
+        
         foreach ($users as $key => $value) {
+
+            //Get Reports to Email
+            $report_res = User::getUsersReportToEmail($key);
+            $report_email = $report_res->email;
+
+            //Get Floor Incharge Email
+            $floor_res = User::getUsersFloorInchargeEmail($key);
+            $floor_incharge_email = $floor_res->email;
+            //print_r($report_email);exit;
+
+            $to_array = array();
+            $to_array[] = $value;
+
+            $cc_array = array();
+            $cc_array[] = $report_email;
+            $cc_array[] = $floor_incharge_email;
+            $cc_array[] = 'tarikapanjwani@gmail.com';
+            $cc_array[] = 'rajlalwani@adlertalent.com';
+        
+            $input = array();
+            $input['from_name'] = $from_name;
+            $input['from_address'] = $from_address;
+            // $input['to'] = $to_address;
+            // $input['cc'] = $cc_address;
+            $input['app_url'] = $app_url;
+            $input['to_array'] = array_unique($to_array);
+            $input['cc_array'] = array_unique($cc_array);
 
             $associate_response = JobAssociateCandidates::getDailyReportAssociate($key);
             $associate_daily = $associate_response['associate_data'];
