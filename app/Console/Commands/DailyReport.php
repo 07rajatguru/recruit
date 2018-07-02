@@ -43,19 +43,27 @@ class DailyReport extends Command
     {
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'rajlalwani@adlertalent.com';
-        $cc_address = 'tarikapanjwani@gmail.com';
-        //$cc_address = 'tarikapanjwani@gmail.com';
+       // $to_address = 'saloni@trajinfotech.com';
+       // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
+
+        $to_array = array();
+        $to_array[] = 'saloni@trajinfotech.com';
+        $to_array[] = 'tarikapanjwani@gmail.com';
+
+        $cc_array = array();
+        $cc_array[] = 'srlalwani22@gmail.com';
 
         $users = User::getAllUsersEmails('recruiter');
 
         $input = array();
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
-        $input['to'] = $to_address;
-        $input['cc'] = $cc_address;
+       // $input['to'] = $to_address;
+       // $input['cc'] = $cc_address;
         $input['app_url'] = $app_url;
+        $input['to_array'] = $to_array;
+        $input['cc_array'] = $cc_array;
 
         foreach ($users as $key => $value) {
 
@@ -76,7 +84,7 @@ class DailyReport extends Command
 
             \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
                 $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'],$input['cc'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
             });
 
         }
