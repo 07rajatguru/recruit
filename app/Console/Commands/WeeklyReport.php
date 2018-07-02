@@ -67,7 +67,9 @@ class WeeklyReport extends Command
 
             $lead_count = Lead::getWeeklyReportLeadCount($key);
 
-            $input['value'] = $value;
+            $user_name = User::getUserNameById($key);
+
+            $input['value'] = $user_name;
             $input['associate_weekly'] = $associate_weekly;
             $input['associate_count'] = $associate_count;
             $input['interview_weekly'] = $interview_weekly;
@@ -77,7 +79,7 @@ class WeeklyReport extends Command
 
             \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name'])->cc($input['cc']);
-                $message->to($input['to'],$input['cc'])->subject('Weekly Activity Report -'.$input['value']);
+                $message->to($input['to'])->cc($input['cc'])->subject('Weekly Activity Report -'.$input['value']);
             });
         }
     }
