@@ -539,6 +539,9 @@ class BillsController extends Controller
 
         $bill = Bills::find($id);
 
+        $uploaded_by = $bill->uploaded_by;
+        //print_r($uploaded_by);exit;
+
         $bill->receipt_no = 'xyz';
         $bill->company_name = $company_name;
         $bill->candidate_contact_number = $candidate_contact_number;
@@ -555,7 +558,7 @@ class BillsController extends Controller
         $bill->address_of_communication = $address_of_communication;
         $bill->status = $status; // 0- BNM , 1- BM
         $bill->remarks = '';
-        $bill->uploaded_by = $user_id;
+        $bill->uploaded_by = $uploaded_by;
         $bill->job_id = $job_id;
         $bill->candidate_id = $candidate_id;
 
