@@ -40,8 +40,8 @@ class UserController extends Controller
         $reports_to = User::getUserArray($user_id);
         $reports_to = array_fill_keys(array(''),'Select Reports to')+$reports_to;
 
-        $floor_incharge = User::getUserArray($user_id);
-        $floor_incharge = array_fill_keys(array(''),'Select Floor Incharge')+$floor_incharge;
+        $floor_incharge = User::getAllUsers();
+        $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
 
         $companies = Companies::getCompanies();
         $companies = array_fill_keys(array(''),'Select Company')+$companies;
@@ -133,8 +133,8 @@ class UserController extends Controller
         $reports_to = User::getUserArray($id);
         $reports_to = array_fill_keys(array(''),'Select Reports to')+$reports_to;
 
-        $floor_incharge = User::getUserArray($id);
-        $floor_incharge = array_fill_keys(array(''),'Select Floor Incharge')+$floor_incharge;
+        $floor_incharge = User::getAllUsers();
+        $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $userReportsTo = $user->reports_to;
