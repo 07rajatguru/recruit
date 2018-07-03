@@ -45,12 +45,15 @@ class User extends Authenticatable
     }
 
     public static function getAllUsers($type=NULL){
+        $status = 'Inactive';
+        $status_array = array($status);
         $user_query = User::query();
 
         if($type!=NULL){
             $user_query = $user_query->where('type','=',$type);
         }
 
+        $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -94,12 +97,16 @@ class User extends Authenticatable
     }
 
     public static function getAllUsersCopy($type=NULL){
+        $status = 'Inactive';
+        $status_array = array($status);
+        
         $user_query = User::query();
 
         if($type!=NULL){
             $user_query = $user_query->where('type','=',$type);
         }
 
+        $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -244,9 +251,12 @@ class User extends Authenticatable
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $superadmin = array($superadmin_role_id);
+        $status = 'Inactive';
+        $status_array = array($status);
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->select('users.*','role_user.role_id as role_id');
+        $query = $query->whereNotIn('status',$status_array);
         $query = $query->whereNotIn('role_id',$superadmin);
 
         if($user_id>0){
