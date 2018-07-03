@@ -185,8 +185,10 @@ class TrainingController extends Controller
      	$user_id = \Auth::user()->id;
         
         $training = Training::find($id);
+        $owner_id = $training->owner_id;
+
         $training->title = $request->input('title');
-        $training->owner_id = $user_id;
+        $training->owner_id = $owner_id;
         $trainingStored  = $training->save();
 
         $file = $request->file('file');
