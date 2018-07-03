@@ -152,6 +152,7 @@ class CandidateBasicInfo extends Model
         $query = $query->join('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
         $query = $query->where('job_associate_candidates.shortlisted','!=',0);
+        $query = $query->where('job_associate_candidates.deleted_at',NULL);
         $query = $query->select('candidate_basicinfo.full_name','candidate_basicinfo.lname','candidate_basicinfo.mobile','candidate_basicinfo.id');
         $response = $query->get();
 

@@ -525,7 +525,7 @@ class JobOpen extends Model
         //$job_open_query = $job_open_query->whereNotIn('priority',[4,9,10]);
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
 
-        //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
+        $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
