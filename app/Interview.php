@@ -179,7 +179,7 @@ class Interview extends Model
         $query = $query->select('job_openings.posting_title as posting_title','job_openings.city as location','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','candidate_basicinfo.full_name as cname','candidate_basicinfo.city as ccity','candidate_basicinfo.mobile as cmobile','candidate_basicinfo.email as cemail');
         $query = $query->where('interview_date','>',"$from_date");
         $query = $query->where('interview_date','<',"$to_date");
-        $query = $query->where('interview.interviewer_id','=',$user_id);
+        $query = $query->where('interview.interview_owner_id','=',$user_id);
 
         $interview_res = $query->get();
 
