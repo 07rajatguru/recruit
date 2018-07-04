@@ -159,10 +159,6 @@ class InterviewController extends Controller
 
         // Interview Candidate Mail
 
-        $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateowneremail;
-
-
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
@@ -172,23 +168,27 @@ class InterviewController extends Controller
         //$input['to'] = $user_email;
         $input['app_url'] = $app_url;
 
+
+        $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
+        $candidate_owner_email = $candidate_email->candidateowneremail;
+
+        $client_email = Interview::getClientOwnerEmail($interview_id);
+        $client_owner_email = $client_email->clientowneremail;
+
         // Candidate details
         $candidate_id = $request->get('candidate_id');
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
         $cname = $candidate_response->full_name;
-
-        $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientowneremail;
 
         $to_address = array();
         //$to_address[] = $candidate_owner_email;
         //$to_address[] = $client_owner_email;
 
         $to_address[] = 'tarikapanjwani@gmail.com';
-        $to_address[] = 'rajlalwani@adlertalent.com';
+        $to_address[] = 'adler.rgl@gmail.com';
 
         $input['to'] = $to_address;
-        
+
         // job Details
         $posting_title = $request->get('posting_title');
         $job_details = JobOpen::getJobById($posting_title);
@@ -214,7 +214,7 @@ class InterviewController extends Controller
 
         // Interview Schedule Mail
         
-        /*
+
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
@@ -264,14 +264,16 @@ class InterviewController extends Controller
         $input['interview_type'] =$job_details['interview_type'];
         $input['file'] = $file_path;
 
+        //return view('adminlte::emails.interviewschedule',compact('app_url','input'));
+
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' position in '. $input['city']);
-            $message->attach($input['file'], [
+           /* $message->attach($input['file'], [
                         'as' => 'file.pdf',
                         'mime' => 'application/pdf',
-                    ]);
-        });*/
+                    ]);*/
+        });
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
 
@@ -399,10 +401,10 @@ class InterviewController extends Controller
         $ccity = $candidate_response->city;
         $cmobile = $candidate_response->mobile;
         $cemail = $candidate_response->email;
-
+*/
         // job Details
 
-        $posting_title = $request->get('posting_title');
+        /*$posting_title = $request->get('posting_title');
         $job_details = JobOpen::getJobById($posting_title);
 
         $input['cname'] = $cname;
@@ -429,12 +431,12 @@ class InterviewController extends Controller
 
         // sent mail to logged in user about interview details
 
-       /* $from_name = getenv('FROM_NAME');
+       /*$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
-        $input['to'] = $user_email;
+       // $input['to'] = $user_email;
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
@@ -456,6 +458,20 @@ class InterviewController extends Controller
         $input['interview_time'] = $job_details['interview_time'];
         $input['interview_location'] = $job_details['interview_location'];
         $input['contact_person'] = $job_details['contact_person'];
+
+        $app_url='';
+        $job_designation = $input['job_designation'] ;
+        $job_location = $input['job_location'] ;
+        $job_description = $input['job_description'];
+        $interview_date = $input['interview_date'];
+        $interview_day = $input['interview_day'];
+        $interview_time = $input['interview_time'];
+        $interview_location = $input['interview_location'];
+        $contact_person = $input['contact_person'];
+        $interview_type = $input['interview_type'];
+
+        return view('adminlte::emails.interviewschedule',compact('app_url','job_designation','job_location','job_description','interview_date','interview_day',
+            'interview_time','interview_location','contact_person','cname','ccity','interview_type','cmobile','cemail'));
 
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
