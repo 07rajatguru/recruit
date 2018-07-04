@@ -61,13 +61,13 @@ class DailyReport extends Command
             //print_r($report_email);exit;
 
             $to_array = array();
-            $to_array[] = $value;
+            $to_array[] = 'tarikapanjwani@gmail.com';//$value;
 
             $cc_array = array();
-            $cc_array[] = $report_email;
-            $cc_array[] = $floor_incharge_email;
+            //$cc_array[] = $report_email;
+           // $cc_array[] = $floor_incharge_email;
             $cc_array[] = 'tarikapanjwani@gmail.com';
-            $cc_array[] = 'rajlalwani@adlertalent.com';
+           // $cc_array[] = 'rajlalwani@adlertalent.com';
         
             $input = array();
             $input['from_name'] = $from_name;
