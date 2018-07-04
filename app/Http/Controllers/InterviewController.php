@@ -158,13 +158,18 @@ class InterviewController extends Controller
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         // Interview Candidate Mail
+
+        $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
+        $candidate_owner_email = $candidate_email->candidateowneremail;
+
+
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
-        $input['to'] = 'tarikapanjwani@gmail.com';//$user_email;
+        //$input['to'] = $user_email;
         $input['app_url'] = $app_url;
 
         // Candidate details
@@ -172,6 +177,18 @@ class InterviewController extends Controller
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
         $cname = $candidate_response->full_name;
 
+        $client_email = Interview::getClientOwnerEmail($interview_id);
+        $client_owner_email = $client_email->clientowneremail;
+
+        $to_address = array();
+        //$to_address[] = $candidate_owner_email;
+        //$to_address[] = $client_owner_email;
+
+        $to_address[] = 'tarikapanjwani@gmail.com';
+        $to_address[] = 'rajlalwani@adlertalent.com';
+
+        $input['to'] = $to_address;
+        
         // job Details
         $posting_title = $request->get('posting_title');
         $job_details = JobOpen::getJobById($posting_title);
@@ -197,20 +214,7 @@ class InterviewController extends Controller
 
         // Interview Schedule Mail
         
-        /*$candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateowneremail;
-       // print_r($candidate_owner_email);exit;
-
-        
-        $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientowneremail;
-        //print_r($client_owner_email);exit;
-        
-        $to_address = array();
-        $to_address[] = $candidate_owner_email;
-        $to_address[] = $client_owner_email;
-        //print_r($to_address);exit;  
-
+        /*
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
