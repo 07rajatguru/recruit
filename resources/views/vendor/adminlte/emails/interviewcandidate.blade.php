@@ -31,38 +31,19 @@
                 <tr>
                     <td>
                         <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$cname}},</p></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <i><p>Greetings from Adler Talent Solutions !! </p></i>
-                    </td>
-                </tr>
-                <tr>
-                    <td><p style="text-align: justify;">
-                        Adler Talent Solutions Private Limited is one of the fastest growing company into Talent consulting business catering services to Top Corporates and MNCs.We are offering quality services into Executive Search and talent solutions across INDIA and Overseas. We cater talent solution services in industries like Infrastructure, Oil and Gas, EPC Projects, Port and SEZ, Manufacturing, Engineering, Automobile, Auto Ancillary, Construction,Real Estate, Telecom, Textile,Pharmaceutical, Logistic, Consumer Durable, FMCG, Retail, Hospitality, Media, Chemicals, Information Technology and service industries. For more details about our company, please visit : <a href="https://adlertalent.com/">www.adlertalent.com</a>
-                     </p>
+                        <p style="text-align: justify;">
+                            Adler Talent Solutions Private Limited is one of the fastest growing company into Talent consulting business catering services to Top Corporates and MNCs.We are offering quality services into Executive Search and talent solutions across INDIA and Overseas. We cater talent solution services in industries like Infrastructure, Oil and Gas, EPC Projects, Port and SEZ, Manufacturing, Engineering, Automobile, Auto Ancillary, Construction,Real Estate, Telecom, Textile,Pharmaceutical, Logistic, Consumer Durable, FMCG, Retail, Hospitality, Media, Chemicals, Information Technology and service industries. For more details about our company, please visit : <a href="https://adlertalent.com/">www.adlertalent.com</a>
+                        </p>
                         <p><u> As per our telephonic conversation please find the interview details below:</u></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <p><b>Company Name : </b>{{ $company_name }}</p>
                         <p><b>Company URL: </b><a href="{{ $company_url }}">{{ $company_url }}</a></p>
                         <p><b>About Client : </b></p>
                         <p>{!! $client_desc !!}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <p><b>Job Designation :</b> {{ $job_designation }}</p>
                         <p><b>Job Location :</b> {{ $job_location }}</p>
                         <p><b>Job Description :</b></p>
                         <p> {!! $job_description !!}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <p><b>Interview Date/Day : </b> {{date('jS F,y (l)',strtotime($interview_date)) }}</p>
                         <p><b>Interview Time : </b> {{date('h:i A',strtotime($interview_time))  }}</p>
                         <p><b>Interview Venue : </b></p>
