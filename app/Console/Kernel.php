@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         'App\Console\Commands\DailyReport',
         'App\Console\Commands\WeeklyReport',
+        'App\Console\Commands\ReportTest',
     ];
 
     /**
