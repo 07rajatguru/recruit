@@ -96,6 +96,7 @@ class Interview extends Model
 
     public static function getDashboardInterviews($all=0,$user_id){
 
+        date_default_timezone_set("Asia/kolkata");
         $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
