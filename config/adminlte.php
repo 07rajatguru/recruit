@@ -257,7 +257,7 @@ return [
             ],
              [
             'text'        => "To'Dos",
-            'icon'        => ' fa-th-list',
+            'icon'        => 'tasks',
             'submenu' => [
                 [
                     'text' => "Add To'Dos",
