@@ -1094,6 +1094,7 @@ class ToDosController extends Controller
 
         $user_id = \Auth::user()->id;
 
+        $todos = array();
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
         $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
 
