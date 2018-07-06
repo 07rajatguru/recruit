@@ -1,27 +1,56 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
 use App\ToDos;
-use Illuminate\Http\Request;
-use App\EmailsNotifications;
 use App\User;
-use DB;
-use Date;
 
-class EmailNotificationController extends Controller
+class EveryMinute extends Command
 {
-	public function sendingmail(){
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'email:everyminute';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $status = 1;
 
         $mail_res = \DB::table('emails_notification')
-                    ->select('emails_notification.*', 'emails_notification.id as id')
-                    ->limit(1)
-                    ->get();
+            ->select('emails_notification.*', 'emails_notification.id as id')
+            ->where('status','=',0)
+            ->limit(1)
+            ->get();
 
         $mail = array();
-        $i=0;
+        $i = 0;
         foreach ($mail_res as $key => $value) {
+            $email_notification_id = $value->id;
             $mail[$i]['id'] = $value->id;
             $mail[$i]['module'] = $value->module;
             $mail[$i]['to'] = $value->to;
@@ -34,7 +63,7 @@ class EmailNotificationController extends Controller
 
             $status = 2;
 
-		    DB::statement("UPDATE emails_notification SET sent_date = '$sent_date', status=$status where id = $value->id");
+            \DB::statement("UPDATE emails_notification SET sent_date = '$sent_date', status=$status where id = $email_notification_id");
             $i++;
         }
 
@@ -64,39 +93,25 @@ class EmailNotificationController extends Controller
                     $job->from($input['from_address'], $input['from_name']);
                     $job->to($input['to'])->subject($input['subject']);
                 });*/
-            }
-            else if ($value['module'] == 'Todos') {
+            } else if ($value['module'] == 'Todos') {
                 // get todos subject and description
                 $todos = ToDos::find($module_id);
-                $user_name = User::getUserNameByEmail($input['to']);
                 $input['todo_subject'] = $todos->subject;
                 $input['description'] = $todos->description;
+
+                $user_name = User::getUserNameByEmail($input['to']);
                 $input['uname'] = $user_name;
+
                 $input['todo_id'] = $module_id;
 
-                \Mail::send('adminlte::emails.todomail', $input, function ($message) use($input) {
+                \Mail::send('adminlte::emails.todomail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
                 });
+
+                \DB::statement("UPDATE emails_notification SET status=$status where id = $email_notification_id");
             }
 
-            foreach ($mail_res as $key) {
-                $id = $key->id;
-            }
-
-            $status = 1;
-
-            DB::statement("UPDATE emails_notification SET status=$status where id = $id");
-
-            /*if ($value['module'] == 'Job Open') {
-
-                $job = EmailsNotifications::getShowJobs($value['id']);
-
-                return view('adminlte::emails.emailNotification', compact('mail','job'));
-            }
-            else{
-                return view('adminlte::emails.emailNotification', compact('mail'));
-            }*/
         }
     }
 }

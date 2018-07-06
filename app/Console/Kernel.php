@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\DailyReport',
         'App\Console\Commands\WeeklyReport',
         'App\Console\Commands\ReportTest',
+        'App\Console\Commands\EveryMinute',
     ];
 
     /**
@@ -29,8 +30,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-        $schedule->command('report:daily')->dailyAt('20:00');
-        $schedule->command('report:weekly')->weeklyOn(6, '20:00');
+        //$schedule->command('report:daily')->dailyAt('20:00');
+        //$schedule->command('report:weekly')->weeklyOn(6, '20:00');
     }
 
     /**

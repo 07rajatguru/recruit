@@ -218,6 +218,21 @@ class User extends Authenticatable
 
     }
 
+    public static function getUserNameByEmail($email){
+        $user_name = '';
+
+        $user_query = User::query();
+        $user_query = $user_query->where('email','like',$email);
+        $user_query = $user_query->first();
+
+        if(isset($user_query)){
+            $user_name = $user_query->name;
+        }
+
+        return $user_name;
+
+    }
+
     public static function getLoggedinUserRole($user){
 
         $roles = $user->roles->toArray();
@@ -289,6 +304,21 @@ class User extends Authenticatable
         }
 
         return $user_name;
+    }
+
+    public static function getUserEmailById($user_id){
+
+        $user_email = '';
+
+        $user_query = User::query();
+        $user_query = $user_query->where('id','=',$user_id);
+        $user_query = $user_query->first();
+
+        if(isset($user_query)){
+            $user_email = $user_query->email;
+        }
+
+        return $user_email;
     }
 
     public static function getUsersReportToEmail($key){

@@ -34,22 +34,27 @@ class NotificationMailListener
         $module = $event->module;
         $sender_name = $event->sender_name;
         $to = $event->to;
+        $cc = $event->cc;
         $subject = $event->subject;
         $message = $event->message;
         $module_id = $event->module_id;
 
         $header = '<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
-                <tr>
+               <tr>
                     <td>
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: rgba(157,92,172,0.9); height: 70px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                             <tr>
                                 <td align="center">
-                                    Adler Talent Solutions Pvt. Ltd.
+                                    <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
+                                        <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
+                                            <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:100%;height: 120px;padding-top: 16px; vertical-align: middle;">
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
-                </tr>';
+               </tr>';
 
 
         $footer = '<tr style="height: 45px; background-color: #dddddd;">
@@ -63,6 +68,7 @@ class NotificationMailListener
         $emailnotification->module = $module;
         $emailnotification->sender_name = $sender_name;
         $emailnotification->to = $to;
+        $emailnotification->cc = $cc;
         $emailnotification->subject = $subject;
         $emailnotification->message = $body;
         $emailnotification->module_id = $module_id;

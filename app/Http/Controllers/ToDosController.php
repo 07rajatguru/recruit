@@ -8,6 +8,7 @@ use App\CandidateStatus;
 use App\ClientBasicinfo;
 use App\Date;
 use App\Events\NotificationEvent;
+use App\Events\NotificationMail;
 use App\Interview;
 use App\JobOpen;
 use App\Status;
@@ -521,15 +522,12 @@ class ToDosController extends Controller
         $toDos->status = $status;
         $toDos->type = $type;
 
-        //$toDos-//>reminder = //$reminder;
         $toDos->priority = $priority;
         $toDos->description = $description;
-        //$toDos->assigned_by = $assigned_by;
 
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
-            //print_r($validator->errors());exit;
             return redirect('todos/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
@@ -572,19 +570,40 @@ class ToDosController extends Controller
 
         }
 
-        /*if($toDosStored) {
+        if($toDos_id>0) {
             $toDos_id = $toDos->id;
-            if($candidate != $user_id){
-                $module_id = $toDos_id;
-                $module = 'Task is created for you';
-                $message = "Create New Task";
-                $link = route('todos.index');
-//                $link = route('jobopen.show',$job_id);
-
-
-                event(new NotificationEvent($module_id, $module, $message, $link, $candidate));
+            $task_owner_name = User::getUserNameById($task_owner);
+            $user_arr = array();
+            foreach ($users as $key=>$value){
+                if($value!=$task_owner){
+                    $user_arr[]= $value;
+                }
             }
-        }*/
+
+            if(isset($user_arr) && sizeof($user_arr)>0){
+                $module_id = $toDos_id;
+                $module = 'Todos';
+                $message = "New task has been assigned to you by $task_owner_name";
+                $link = route('todos.index');
+
+                event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+                // TODO : Email Notification : data store in database
+                foreach ($users as $k=>$v){
+                    $user_email = User::getUserEmailById($v);
+                    $cc_email = User::getUserEmailById($task_owner);
+                    $module = "Todos";
+                    $sender_name = $user_id;
+                    $to = $user_email;
+                    $cc = $cc_email;
+                    $subject = $message;
+                    $message = "";
+                    $module_id = $toDos_id;
+                }
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
+        }
 
         return redirect()->route('todos.index')->with('success','ToDo Created Successfully');
     }
@@ -743,6 +762,9 @@ class ToDosController extends Controller
                     }
                     $todo_reminder->save();
             }
+
+
+
 
         }
         return redirect()->route('todos.index')->with('success','ToDo Updated Successfully');

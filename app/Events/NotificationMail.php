@@ -24,7 +24,7 @@ class NotificationMail
      *
      * @return void
      */
-    public function __construct($module, $sender_name, $to, $subject, $message, $module_id)
+    public function __construct($module, $sender_name, $to, $subject, $message, $module_id,$cc)
     {
         //
         $this->module = $module;
@@ -33,6 +33,7 @@ class NotificationMail
         $this->subject = $subject;
         $this->message = $message;
         $this->module_id = $module_id;
+        $this->cc = $cc;
     }
 
     /**
