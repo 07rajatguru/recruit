@@ -39,7 +39,7 @@ class EveryMinute extends Command
      */
     public function handle()
     {
-        $status = 1;
+
 
         $mail_res = \DB::table('emails_notification')
             ->select('emails_notification.*', 'emails_notification.id as id')
@@ -76,6 +76,8 @@ class EveryMinute extends Command
 
         $input['mail'] = $mail;
 
+        $status = 1;
+        
         foreach ($mail as $key => $value) {
             $input['to'] = $value['to'];
             $input['cc'] = $value['cc'];
