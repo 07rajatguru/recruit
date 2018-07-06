@@ -312,7 +312,7 @@ return [
 
         [
            'text'        => 'Training Material',
-           'icon'        => 'users',
+           'icon'        => 'graduation-cap',
            'submenu' => [
                [
                    'text' => 'Create New Training Material',
@@ -328,7 +328,7 @@ return [
        ],
        [
            'text'        => 'Process Manual',
-           'icon'        => 'users',
+           'icon'        => 'eye',
            'submenu' => [
                [
                    'text' => 'Add Process Manual',
