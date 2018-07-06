@@ -242,7 +242,7 @@
 
            // $("#about").wysihtml5();
             $("#from").datetimepicker({
-                format:'DD-MM-YYYY HH:mm:ss'
+                format:'DD-MM-YYYY h:mm A'
             });
             $("#to").datetimepicker({
                 format:'DD-MM-YYYY HH:mm:ss'
