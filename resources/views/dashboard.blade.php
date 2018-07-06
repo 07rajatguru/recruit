@@ -101,10 +101,10 @@
                         <table class="table no-margin">
                             <thead>
                             <tr>
-                                <th>Posting Title</th>
+                                <th width="180px">Posting Title</th>
                                 <th>Candidate Name</th>
                                 <th>Candidate Contact No.</th>
-                                <th>Time</th>
+                                <th width="160px">Time</th>
                             </tr>
                             </thead>
                             <tbody>
