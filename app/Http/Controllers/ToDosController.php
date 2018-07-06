@@ -597,11 +597,11 @@ class ToDosController extends Controller
                     $to = $user_email;
                     $cc = $cc_email;
                     $subject = $message;
-                    $message = "";
+                    $body_message = "";
                     $module_id = $toDos_id;
                 }
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
             }
         }
 
