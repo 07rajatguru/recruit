@@ -285,7 +285,7 @@ return [
             [
                 'text'        => 'Attendance',
                 'url'         => '/home',
-                'icon'        => 'folder-open',
+                'icon'        => 'signal',
             ],
 
         /*[
