@@ -225,7 +225,7 @@ return [
          ],
             [
                 'text'        => 'Bills',
-                'icon'        => 'users',
+                'icon'        => 'money',
                 'submenu' => [
                     [
                         'text' => 'Create Forecasting',
