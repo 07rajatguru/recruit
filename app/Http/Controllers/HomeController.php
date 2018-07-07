@@ -121,7 +121,35 @@ class HomeController extends Controller
         else{
             $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCount($user->id,0);
         }
-       // print_r($candidatejoin);exit;
+
+        //get CVs Associated on this month
+        if(in_array($user_role_id,$access_roles_id)){
+            $month = date('m');
+            $associated = DB::table('job_associate_candidates')->whereRaw('MONTH(date) = ?',[$month])->count();
+        }
+        else{
+            $month = date('m');
+            $associated = DB::table('job_associate_candidates')->whereRaw('MONTH(date) = ?',[$month])
+                                               ->where('associate_by',$user->id)
+                                               ->count();
+        }
+
+        //get No. of interviews attended this month
+        if(in_array($user_role_id,$access_roles_id)){
+            $month = date('m');
+            $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
+                                                      ->where('status','=','Attended')
+                                                      ->count();
+        }
+        else{
+            $month = date('m');
+            $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
+                                               ->where('interview_owner_id',$user->id)
+                                               ->where('status','=','Attended')
+                                               ->count();
+        }        
+
+        //print_r($interview_attend);exit;
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
@@ -130,6 +158,8 @@ class HomeController extends Controller
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
         $viewVariable['candidatejoinCount'] = $candidatecount;
+        $viewVariable['associatedCount'] = $associated;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
 
         return view('dashboard',$viewVariable);
     }
