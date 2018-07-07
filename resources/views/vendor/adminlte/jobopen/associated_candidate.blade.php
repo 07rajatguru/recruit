@@ -381,7 +381,7 @@
             });
 
             $("#interview_date").datetimepicker({
-                format:'DD-MM-YYYY HH:mm:ss'
+                format:'DD-MM-YYYY h:mm A'
             });
 
             $("#joining_date").datetimepicker({

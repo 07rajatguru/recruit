@@ -63,6 +63,8 @@ class Interview extends Model
 
         $interviewStatus['Yes'] = 'Yes';
         $interviewStatus['No'] = 'No';
+        $interviewStatus['Attended'] = 'Attended';
+        $interviewStatus['Not Attended'] = 'Not Attended';
 
         return $interviewStatus;
     }
