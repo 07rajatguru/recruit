@@ -43,19 +43,40 @@ class WeeklyReport extends Command
     {
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'rajlalwani@adlertalent.com';
-        $cc_address = 'tarikapanjwani@gmail.com';
+        // $to_address = 'rajlalwani@adlertalent.com';
+        // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
-
-        $input['from_name'] = $from_name;
-        $input['from_address'] = $from_address;
-        $input['to'] = $to_address;
-        $input['cc'] = $cc_address;
-        $input['app_url'] = $app_url;
 
         $users = User::getAllUsersEmails('recruiter');
 
         foreach ($users as $key => $value) {
+
+            //Get Reports to Email
+            $report_res = User::getUsersReportToEmail($key);
+            $report_email = $report_res->email;
+
+            //Get Floor Incharge Email
+            $floor_res = User::getUsersFloorInchargeEmail($key);
+            $floor_incharge_email = $floor_res->email;
+            //print_r($report_email);exit;
+
+            $to_array = array();
+            $to_array[] = $value;
+
+            $cc_array = array();
+            $cc_array[] = $report_email;
+            $cc_array[] = $floor_incharge_email;
+            $cc_array[] = 'tarikapanjwani@gmail.com';
+            $cc_array[] = 'rajlalwani@adlertalent.com';
+
+            $input['from_name'] = $from_name;
+            $input['from_address'] = $from_address;
+            // $input['to'] = $to_address;
+            // $input['cc'] = $cc_address;
+            $input['app_url'] = $app_url;
+            $input['to_array'] = array_unique($to_array);
+            $input['cc_array'] = array_unique($cc_array);
+
 
             $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($key);
             $associate_weekly = $associate_weekly_response['associate_data'];
@@ -78,8 +99,8 @@ class WeeklyReport extends Command
 
 
             \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
-                $message->from($input['from_address'], $input['from_name'])->cc($input['cc']);
-                $message->to($input['to'])->cc($input['cc'])->subject('Weekly Activity Report -'.$input['value']);
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to_array'])->cc($input['cc_array'])->subject('Weekly Activity Report -'.$input['value']);
             });
         }
     }

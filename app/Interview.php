@@ -215,7 +215,7 @@ class Interview extends Model
 
         $query = Interview::query();
         $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'interview.interview_date as interview_date');
-        $query = $query->where('interview.interviewer_id',$user_id);
+        $query = $query->where('interview.interview_owner_id',$user_id);
         $query = $query->where('interview.interview_date','>=',date('Y-m-d',strtotime('Monday this week')));
         $query = $query->where('interview.interview_date','<=',date('Y-m-d',strtotime("$date +6days")));
         $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
