@@ -108,7 +108,7 @@
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
                             <strong>Industry <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('industry_id', $industry,null, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '11' )) !!}
+                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '11' )) !!}
                             @if ($errors->has('industry_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('industry_id') }}</strong>
