@@ -219,6 +219,7 @@ class ClientController extends Controller
             $client['tan'] = $value->tan;
 
             $user_id = $value->account_manager_id;
+            $industry_id = $value->industry_id;
         }
         $client['id'] = $id;
 
@@ -247,7 +248,7 @@ class ClientController extends Controller
          $users = User::getAllUsers();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id'));
     }
 
     public function store(Request $request){
