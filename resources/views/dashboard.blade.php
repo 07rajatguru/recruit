@@ -58,7 +58,7 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-green">
+            <div class="small-box bg-maroon">
                 <div class="inner">
                     <h3>{{ $associatedCount or 0}}</h3>
                     <p>No. of CVS associated this month</p>
@@ -97,7 +97,7 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-yellow">
+            <div class="small-box bg-purple">
                 <div class="inner">
                     <h3> {{ $interviewAttendCount or 0}} </h3>
                     <p>No. of interviews attended this month</p>
