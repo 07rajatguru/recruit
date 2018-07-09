@@ -870,7 +870,7 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsersWithInactive('recruiter');
         
         /*$users_res = User::orderBy('name', 'ASC')->get();
         $users = array();

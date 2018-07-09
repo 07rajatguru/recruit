@@ -247,7 +247,7 @@ class ClientController extends Controller
 
         $client = (object)$client;
         // For account manager 
-         $users = User::getAllUsers();
+         $users = User::getAllUsersWithInactive();
 
         $action = "edit" ;
         return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id'));
