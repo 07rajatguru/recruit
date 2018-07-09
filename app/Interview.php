@@ -77,7 +77,7 @@ class Interview extends Model
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
             'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');

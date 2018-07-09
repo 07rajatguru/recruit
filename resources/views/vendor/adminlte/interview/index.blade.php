@@ -60,6 +60,7 @@
                {{-- <th>Client</th>--}}
                 <th>Interview Date</th>
                 <th>Location</th>
+                <th>Status</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -86,7 +87,7 @@
              {{--   <td>{{ $interView->client_name or ''}}</td>--}}
                 <td>{{ date('d-m-Y h:i A',strtotime($interView->interview_date)) }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView->location or ''}}</td>
-
+                <td>{{ $interView->status or '' }}</td>
                 <td>
                     <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
                     <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',$interView['id']) }}"></a>
