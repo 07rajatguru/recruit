@@ -682,6 +682,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@index'
     ]);
 
+    Route::get('todaytomorrow',[
+        'as' => 'interview.todaytomorrow',
+        'uses' => 'InterviewController@todaytomorrow'
+    ]);
+
     Route::get('interview/create', [
         'as' => 'interview.create',
         'uses' => 'InterviewController@create'

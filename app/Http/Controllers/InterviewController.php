@@ -40,6 +40,27 @@ class InterviewController extends Controller
         return view('adminlte::interview.index', array('interViews' => $interViews),compact('count'));
     }
 
+    public function todaytomorrow(){
+
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $todaytomorrow = Interview::getTodayTomorrowsInterviews(1,$user->id);
+        }
+        else{
+            $todaytomorrow = Interview::getTodayTomorrowsInterviews(0,$user->id);
+        }
+
+        $count = sizeof($todaytomorrow);
+
+        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow'));
+    }
+
     public function create(){
 
         $user = \Auth::user();
