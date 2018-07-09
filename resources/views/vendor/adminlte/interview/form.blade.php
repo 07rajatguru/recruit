@@ -20,6 +20,7 @@
     @if($action == 'edit')
         {!! Form::model($interview,['method' => 'PUT', 'files' => true, 'route' => ['interview.update', $interview['id']],'id'=>'interview_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
         {!! Form::hidden('candidateId', $interview['id'], array('id'=>'candidateId')) !!}
+        {!! Form::hidden('source', $source, array('id'=>'source')) !!}
     @else
         {!! Form::open(['files' => true, 'route' => 'interview.store','id'=>'interview_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
     @endif

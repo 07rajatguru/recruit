@@ -13,10 +13,6 @@
             <div class="pull-left">
                 <h2>Today & Tomorrow Interview ({{ $count }})</h2>
             </div>
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
-            </div>
-
         </div>
     </div>
 

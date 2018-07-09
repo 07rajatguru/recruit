@@ -206,7 +206,7 @@ class InterviewController extends Controller
         //$to_address[] = $client_owner_email;
 
         $to_address[] = 'tarikapanjwani@gmail.com';
-        $to_address[] = 'adler.rgl@gmail.com';
+       // $to_address[] = 'adler.rgl@gmail.com';
 
         $input['to'] = $to_address;
 
@@ -300,7 +300,7 @@ class InterviewController extends Controller
 
     }
 
-    public function edit($id){
+    public function edit($id,$source){
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -348,7 +348,7 @@ class InterviewController extends Controller
         $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->interview_date);
         $viewVariable['toDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->to);
 
-        return view('adminlte::interview.edit', $viewVariable,compact('user_id'));
+        return view('adminlte::interview.edit', $viewVariable,compact('user_id','source'));
 
     }
 

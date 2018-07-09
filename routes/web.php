@@ -702,7 +702,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@show'
     ]);
 
-    Route::get('interview/{id}/edit', [
+    Route::get('interview/{id}/edit/{source}', [
         'as' => 'interview.edit',
         'uses' => 'InterviewController@edit'
     ]);
