@@ -373,7 +373,7 @@ class InterviewController extends Controller
 
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id, $source){
         $user = \Auth::user();
 
         $user_id = $user->id;
@@ -394,6 +394,8 @@ class InterviewController extends Controller
         $status = $request->get('status');
         $about = $request->get('about');
         $interview_owner_id = $user_id;
+
+        $source = $request->get('source');
 
         $interview = Interview::find($id);
        // if(isset($interview_name))
@@ -520,7 +522,16 @@ class InterviewController extends Controller
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
         });*/
 
-        return redirect()->route('interview.index')->with('success','Interview Updated Successfully');
+        if ($source == 'index') {
+            return redirect()->route('interview.index')->with('success','Interview Updated Successfully');
+        }
+        else if ($source == 'tti') {
+            return redirect()->route('interview.todaytomorrow')->with('success','Interview Updated Successfully');
+        }
+        else {
+            return redirect()->route('interview.attendedinterview')->with('success','Interview Updated Successfully');
+        }
+
     }
 
     public function show($id){
@@ -564,12 +575,19 @@ class InterviewController extends Controller
         return view('adminlte::interview.show', $interview);
     }
 
-    public function destroy($id){
+    public function destroy($id,$source){
 
         $interviewDelete = Interview::where('id',$id)->delete();
 
-        return redirect()->route('interview.index')->with('success','Interview Deleted Successfully');
-
+        if ($source == 'index') {
+            return redirect()->route('interview.index')->with('success','Interview Deleted Successfully');
+        }
+        else if ($source == 'tti') {
+            return redirect()->route('interview.todaytomorrow')->with('success','Interview Deleted Successfully');
+        }
+        else {
+            return redirect()->route('interview.attendedinterview')->with('success','Interview Deleted Successfully');
+        }
     }
 
     public function getClientInfos(){

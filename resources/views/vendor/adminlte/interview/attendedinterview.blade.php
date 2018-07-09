@@ -85,7 +85,7 @@
                 <td>
                     <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$attendedinterview['id']) }}"></a>
                     <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($attendedinterview['id'],'ai')) }}"></a>
-                    @include('adminlte::partials.deleteModal', ['data' => $attendedinterview, 'name' => 'interview','display_name'=>'Interview'])
+                    @include('adminlte::partials.deleteInterview', ['data' => $attendedinterview, 'name' => 'interview','display_name'=>'Interview'])
                 </td>
 
             </tr>

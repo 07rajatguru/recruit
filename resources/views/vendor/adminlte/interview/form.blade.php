@@ -8,7 +8,17 @@
             @endif
         </div>
         <div class="pull-right">
+        @if( $action == 'edit')
+            @if( $source == 'index')
+                <a class="btn btn-primary" href="{{ route('interview.index') }}"> Back</a>
+            @elseif( $source == 'tti')
+                <a class="btn btn-primary" href="{{ route('interview.todaytomorrow') }}"> Back</a>
+            @else( $source == 'ai')
+                <a class="btn btn-primary" href="{{ route('interview.attendedinterview') }}"> Back</a>
+            @endif
+        @else
             <a class="btn btn-primary" href="{{ route('interview.index') }}"> Back</a>
+        @endif
         </div>
 
     </div>
@@ -18,7 +28,7 @@
 @if(isset($action))
 
     @if($action == 'edit')
-        {!! Form::model($interview,['method' => 'PUT', 'files' => true, 'route' => ['interview.update', $interview['id']],'id'=>'interview_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
+        {!! Form::model($interview,['method' => 'PUT', 'files' => true, 'route' => ['interview.update', $interview['id'],'source'],'id'=>'interview_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
         {!! Form::hidden('candidateId', $interview['id'], array('id'=>'candidateId')) !!}
         {!! Form::hidden('source', $source, array('id'=>'source')) !!}
     @else

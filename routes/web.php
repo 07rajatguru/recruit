@@ -713,12 +713,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@edit'
     ]);
 
-    Route::put('interview/{id}', [
+    Route::put('interview/{id}/{source}', [
         'as' => 'interview.update',
         'uses' => 'InterviewController@update'
     ]);
 
-    Route::delete('interview/{id}', [
+    Route::delete('interview/{id}/{source}', [
         'as' => 'interview.destroy',
         'uses' => 'InterviewController@destroy'
     ]);
