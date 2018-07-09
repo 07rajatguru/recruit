@@ -166,8 +166,10 @@ class ClientController extends Controller
             }
         }
 
+        $industry_id = '';
+
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id'));
     }
 
     public function edit($id)
