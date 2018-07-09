@@ -169,7 +169,7 @@ class LeadController extends Controller
         $referredby = $lead->referredby;
         $lead_status = $lead->lead_status;
         //print_r($lead_s); exit;
-        $users=User::getAllUsers();
+        $users=User::getAllUsersWithInactive();
         $leadsarr = array();
         $leads_info = \DB::table('lead_management')
         ->get();

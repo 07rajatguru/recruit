@@ -68,6 +68,27 @@ class User extends Authenticatable
         return $userArr;
     }
 
+    public static function getAllUsersWithInactive($type=NULL){
+
+        $user_query = User::query();
+
+        if($type!=NULL){
+            $user_query = $user_query->where('type','=',$type);
+        }
+
+        $user_query = $user_query->orderBy('name');
+        $users = $user_query->get();
+
+        $userArr = array();
+        if(isset($users) && sizeof($users)){
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->name;
+            }
+        }
+
+        return $userArr;
+    }
+
     public static function getAllUsersEmails($type=NULL){
 
         $status = 'Inactive';
@@ -124,6 +145,29 @@ class User extends Authenticatable
 
         return $userArr;
     }
+
+    public static function getAllUsersCopyWithInactive($type=NULL){
+        
+        $user_query = User::query();
+
+        if($type!=NULL){
+            $user_query = $user_query->where('type','=',$type);
+        }
+
+        $user_query = $user_query->orderBy('name');
+        $users = $user_query->get();
+
+        $userArr = array();
+        $userArr[0] = '';
+        if(isset($users) && sizeof($users)){
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->name;
+            }
+        }
+
+        return $userArr;
+    }
+
      public static function getTypeArray(){
         $type = array();
         $type['admin'] = 'Admin Team';
