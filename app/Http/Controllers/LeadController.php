@@ -303,8 +303,10 @@ class LeadController extends Controller
             $lead->save();
         //print_r($billing_state);exit;
 
+        $industry_id = '';
+
         $action = "copy" ;
-         return view('adminlte::client.create',compact('name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin'));
+         return view('adminlte::client.create',compact('name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id'));
      }
 
      public function clonestore(Request $request,$id){
