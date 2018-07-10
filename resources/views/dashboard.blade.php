@@ -100,7 +100,7 @@
             <div class="small-box bg-purple">
                 <div class="inner">
                     <h3> {{ $interviewAttendCount or 0}} </h3>
-                    <p>No. of interviews attended this month</p>
+                    <p>Interviews attended this month</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
