@@ -37,7 +37,9 @@ class InterviewController extends Controller
 
         $count = sizeof($interViews);
 
-        return view('adminlte::interview.index', array('interViews' => $interViews),compact('count'));
+        $source = 'index';
+
+        return view('adminlte::interview.index', array('interViews' => $interViews),compact('count','source'));
     }
 
     public function todaytomorrow(){
@@ -58,7 +60,9 @@ class InterviewController extends Controller
 
         $count = sizeof($todaytomorrow);
 
-        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow'));
+        $source = 'tti';
+
+        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source'));
     }
 
     public function attendedinterview(){
@@ -79,7 +83,9 @@ class InterviewController extends Controller
 
         $count = sizeof($attended_interview);
 
-        return view('adminlte::interview.attendedinterview',compact('count','attended_interview'));
+        $source = 'ai';
+
+        return view('adminlte::interview.attendedinterview',compact('count','attended_interview','source'));
     }
 
     public function create(){

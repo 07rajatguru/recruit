@@ -8,7 +8,7 @@
 
     <div class="modal-dialog">
         <div class="modal-content">
-            {!! Form::open(['method' => 'DELETE', 'route' => ["$name.destroy", $data['id'],'index']])!!}
+            {!! Form::open(['method' => 'DELETE', 'route' => ["$name.destroy", $data['id'],$source]])!!}
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
