@@ -98,7 +98,7 @@ class Interview extends Model
 
     public static function getTodayTomorrowsInterviews($all=0,$user_id){
 
-        $from_date = date("Y-m-d H:i:s");
+        $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
         $query = Interview::query();
