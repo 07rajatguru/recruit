@@ -146,9 +146,11 @@ class Interview extends Model
             'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
         $query = $query->where('interview.status','=','Attended');
         $query = $query->where(\DB::raw('MONTH(interview_date)'),'=',$month);
-        $query = $query->where('interview_owner_id',$user_id);
         $query = $query->orderby('interview.interview_date','desc');
     
+        if($all==0){
+            $query = $query->where('interview_owner_id',$user_id);
+        }
         $response = $query->get();
 
         return $response;
