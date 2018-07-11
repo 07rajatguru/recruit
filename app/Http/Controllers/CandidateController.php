@@ -847,6 +847,41 @@ class CandidateController extends Controller
 
                 }
             }
+
+            $candidateDetails['job'] = array();
+            $i = 0;
+            $candidateJob = JobAssociateCandidates::join('job_openings','job_openings.id','=','job_associate_candidates.job_id')
+                                ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
+                                ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country')
+                                ->where('job_associate_candidates.candidate_id',$id)
+                                ->get();
+
+            if (isset($candidateJob) && sizeof($candidateJob) > 0) {
+                foreach ($candidateJob as $candidateJobs) {
+                    $candidateDetails['job'][$i]['posting_title'] = $candidateJobs->posting_title;
+                    $candidateDetails['job'][$i]['company_name'] = $candidateJobs->company_name;
+
+                    $location ='';
+                    if($candidateJobs->city!=''){
+                        $location .= $candidateJobs->city;
+                    }
+                    if($candidateJobs->state!=''){
+                        if($location=='')
+                            $location .= $candidateJobs->state;
+                        else
+                            $location .= ", ".$candidateJobs->state;
+                    }
+                    if($candidateJobs->country!=''){
+                        if($location=='')
+                            $location .= $candidateJobs->country;
+                        else
+                            $location .= ", ".$candidateJobs->country;
+                    }
+                    $candidateDetails['job'][$i]['location'] = $location;
+
+                   $i++; 
+                }
+            }
         }
 
         $candidate_upload_type['Others'] = 'Others';
