@@ -35,7 +35,7 @@
             <div class="small-box bg-red">
                 <div class="inner">
                     <h3>{{ $clientCount or 0 }}</h3>
-                    <p>Clients added this month</p>
+                    <p>No. of Clients added this month</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
@@ -48,7 +48,7 @@
             <div class="small-box bg-green">
                 <div class="inner">
                     <h3>{{ $jobCount or 0 }}</h3>
-                    <p>Current Job Openings</p>
+                    <p>No. of Current Job Openings</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
@@ -79,7 +79,7 @@
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/todaytomorrow" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -105,7 +105,7 @@
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/attendedinterview" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
