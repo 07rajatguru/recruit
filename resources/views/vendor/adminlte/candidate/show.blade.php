@@ -232,6 +232,7 @@
                             <th>Company Name</th>
                             <th>Location</th>
                             <th>MB</th>
+                            <th>Date/Time</th>
                         </tr>
 
                         @if(isset($candidateDetails['job']) && sizeof($candidateDetails['job']) > 0)
@@ -241,6 +242,7 @@
                                     <td>{{ $value['company_name'] }}</td>
                                     <td>{{ $value['location'] }}</td>
                                     <td>{{ $value['managed_by'] }}</td>
+                                    <td>{{ date('d-m-Y h:i A',strtotime($value['datetime'])) }}</td>
                                 </tr>
                             @endforeach
                         @endif
