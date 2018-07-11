@@ -852,7 +852,8 @@ class CandidateController extends Controller
             $i = 0;
             $candidateJob = JobAssociateCandidates::join('job_openings','job_openings.id','=','job_associate_candidates.job_id')
                                 ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
-                                ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country')
+                                ->join('users','users.id','=','job_openings.hiring_manager_id')
+                                ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by')
                                 ->where('job_associate_candidates.candidate_id',$id)
                                 ->get();
 
@@ -878,6 +879,7 @@ class CandidateController extends Controller
                             $location .= ", ".$candidateJobs->country;
                     }
                     $candidateDetails['job'][$i]['location'] = $location;
+                    $candidateDetails['job'][$i]['managed_by'] = $candidateJobs->managed_by;
 
                    $i++; 
                 }
