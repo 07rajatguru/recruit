@@ -850,12 +850,14 @@ class CandidateController extends Controller
 
             $candidateDetails['job'] = array();
             $i = 0;
+
             $candidateJob = JobAssociateCandidates::join('job_openings','job_openings.id','=','job_associate_candidates.job_id')
                                 ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
                                 ->join('users','users.id','=','job_openings.hiring_manager_id')
                                 ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date')
                                 ->where('job_associate_candidates.candidate_id',$id)
                                 ->get();
+
 
             if (isset($candidateJob) && sizeof($candidateJob) > 0) {
                 foreach ($candidateJob as $candidateJobs) {
@@ -878,9 +880,11 @@ class CandidateController extends Controller
                         else
                             $location .= ", ".$candidateJobs->country;
                     }
+                    $date_time = strtotime($candidateJobs->date);
+                    date_default_timezone_set("Asia/kolkata");
                     $candidateDetails['job'][$i]['location'] = $location;
                     $candidateDetails['job'][$i]['managed_by'] = $candidateJobs->managed_by;
-                    $candidateDetails['job'][$i]['datetime'] = $candidateJobs->date;
+                    $candidateDetails['job'][$i]['datetime'] = date('d-m-Y h:i A',$date_time);
 
                    $i++; 
                 }
