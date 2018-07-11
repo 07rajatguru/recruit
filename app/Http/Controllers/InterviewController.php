@@ -233,7 +233,7 @@ class InterviewController extends Controller
         //$to_address[] = $client_owner_email;
 
         $to_address[] = 'tarikapanjwani@gmail.com';
-       // $to_address[] = 'adler.rgl@gmail.com';
+        $to_address[] = 'adler.rgl@gmail.com';
 
         $input['to'] = $to_address;
 
