@@ -13,14 +13,16 @@
     <tr>
         <td>
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
-                <tr>
+                <tr style="background-color:white;">
+                    <td colspan="2"></td>
                     <td align="center">
                         <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:90%;height: 90px;padding-top: 16px; vertical-align: middle;">
+                                <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:80%;height: 90px;padding-top: 16px; vertical-align: middle;">
                             </a>
                         </div>
                     </td>
+                    <td colspan="2"></td>
                 </tr>
             </table>
         </td>
@@ -33,7 +35,7 @@
                         <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$uname}},</p></b>
 
                         <p><b>Subject : </b>{{ $todo_subject }}</p>
-                        <p><b>Description: </b>{{ $description }}</p>
+                        <p><b>Description: </b>{!! $description !!}</p>
                     </td>
                 </tr>
             </table>

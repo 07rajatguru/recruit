@@ -226,7 +226,7 @@
             });
 //            $('#typeList').select2();
               $('#assigned_by').select2();
-
+            $("#description").wysihtml5();
 
             $("#users_all").click(function () {
                 $('.users_ids').prop('checked', this.checked);

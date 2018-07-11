@@ -13,14 +13,16 @@
     <tr>
         <td>
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
-                <tr>
+                <tr style="background-color:white;">
+                    <td colspan="2"></td>
                     <td align="center">
                         <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:100%;height: 120px;padding-top: 16px; vertical-align: middle;">
+                                <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:80%;height: 90px;padding-top: 16px; vertical-align: middle;">
                             </a>
                         </div>
                     </td>
+                    <td colspan="2"></td>
                 </tr>
             </table>
         </td>
@@ -30,14 +32,10 @@
         <tr>
             <td>
                 <b><p>Dear Sir,</p></b>
+                <i><p>Greetings from Adler Talent Solutions !</p></i>
+                <p><u>Please find interview schedule as below for your kind reference:</u></p>
             </td>
         </tr>
-        <tr>
-            <td>
-                <p><u> Please find below Interview Schedule:</u></p>
-            </td>
-        </tr>
-
         <tr>
             <td>
                 <table width="100%" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
@@ -75,7 +73,12 @@
                 </table>
             </td>
         </tr>
-
+        <tr>
+            <td>
+                <p>Hope this works.</p>
+                <p>Thanks.</p>
+            </td>
+        </tr>
     </table>
         <tr>
             <td>
