@@ -36,7 +36,7 @@
                 </tr>
                 <tr>
                     <td width="600">
-                        <table cellpadding="3" cellspacing="0" border="1" border-color="#000000">
+                        <table width="580" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                             <tr style="background-color: #7598d9">
                                 <td align="center"><b>Sr.<br/>No.</b></td>
                                 <td align="center"><b>Position</b></td>
@@ -82,7 +82,7 @@
     </tr>
     <tr>
         <td width="600" >
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+            <table width="600" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                 <tr style="height: 45px; background-color: #dddddd;">
                     <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
                 </tr>
