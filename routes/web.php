@@ -65,6 +65,8 @@ Route::post('candidate/createform',[
     ]);
 
 
+
+
 Route::group(['middleware' => ['auth']], function () {
 
     Route::any('/dashboard', array (
@@ -1212,6 +1214,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('userreport/export',[
         'as' => 'userreport.export',
         'uses' => 'UserwiseReportController@export'
+    ]);
+
+    Route::any('/dailyreportindex',[
+        'as' => 'report.dailyreportindex',
+        'uses' => 'ReportController@dailyreportIndex'
     ]);
     
 });

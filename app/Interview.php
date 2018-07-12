@@ -269,6 +269,38 @@ class Interview extends Model
 
     }
 
+    public static function getDailyReportInterviewIndex($users_id,$date){
+
+        $query = Interview::query();
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->select('job_openings.posting_title as posting_title','job_openings.city as location','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','candidate_basicinfo.full_name as cname','candidate_basicinfo.city as ccity','candidate_basicinfo.mobile as cmobile','candidate_basicinfo.email as cemail');
+        $query = $query->where('interview_owner_id',$users_id);
+        $query = $query->where(\DB::raw('date(interview_date)'),$date);
+
+        $interview_res = $query->get();
+
+        $response = array();
+        $i = 0;
+        foreach ($interview_res as $key => $value) {
+            $response[$i]['posting_title'] = $value->posting_title;
+            $response[$i]['location'] = $value->location;
+            $datearray = explode(' ', $value->date);
+            $response[$i]['interview_date'] = $datearray[0];
+            $response[$i]['interview_time'] = $datearray[1];
+            $response[$i]['interview_location'] = $value->interview_location;
+            $response[$i]['interview_type'] = $value->interview_type;
+            $response[$i]['cname'] = $value->cname;
+            $response[$i]['ccity'] = $value->ccity;
+            $response[$i]['cmobile'] = $value->cmobile;
+            $response[$i]['cemail'] = $value->cemail;
+            $i++;
+        }
+
+       // print_r($response);exit;
+        return $response;
+    }
+
     public static function getWeeklyReportInterview($user_id){
 
         $date = date('Y-m-d',strtotime('Monday this week'));

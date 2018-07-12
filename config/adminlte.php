@@ -307,6 +307,11 @@ return [
                    'url'  => 'userreport',
                    'icon' => 'circle-o',
                ],
+               [
+                   'text' => 'Daily report',
+                   'url'  => 'dailyreportindex',
+                   'icon' => 'circle-o',
+               ],
            ],
         ],*/
 
