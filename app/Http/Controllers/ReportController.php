@@ -30,7 +30,7 @@ class ReportController extends Controller
             $users_id = $_POST['users_id'];
         }
         else{
-            $users_id = '';
+            $users_id = $user_id;
         }
 
         if (isset($_POST['date']) && $_POST['date']!=0) {
