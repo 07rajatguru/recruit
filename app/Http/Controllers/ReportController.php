@@ -52,6 +52,38 @@ class ReportController extends Controller
         return view('adminlte::reports.dailyreport',compact('date','users','user_id','users_id','associate_daily','associate_count','lead_count','interview_daily','interview_count'));
     }
 
+    public function weeklyreportIndex(){
+
+        $user_id = \Auth::user()->id;
+
+        $superAdminUserID = getenv('SUPERADMINUSERID');
+        $managerUserID = getenv('MANAGERUSERID');
+
+        $access_roles_id = array($superAdminUserID,$managerUserID);
+        if(in_array($user_id,$access_roles_id)){
+            $users = User::getAllUsers('recruiter');
+        }
+        else{
+            $users = User::getAssignedUsers($user_id,'recruiter');
+        }
+
+        if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
+            $users_id = $_POST['users_id'];
+        }
+        else{
+            $users_id = $user_id;
+        }
+
+        if (isset($_POST['date']) && $_POST['date']!=0) {
+            $date = $_POST['date'];
+        }
+        else{
+            $date = date('Y-m-d');
+        }
+
+        return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','date'));
+    }
+
 
     public function dailyreport(){
 

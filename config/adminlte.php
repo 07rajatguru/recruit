@@ -309,7 +309,12 @@ return [
                ],
                [
                    'text' => 'Daily report',
-                   'url'  => 'dailyreportindex',
+                   'url'  => 'daily-report',
+                   'icon' => 'circle-o',
+               ],
+               [
+                   'text' => 'Weekly report',
+                   'url'  => 'weekly-report',
                    'icon' => 'circle-o',
                ],
            ],

@@ -1220,5 +1220,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'report.dailyreportindex',
         'uses' => 'ReportController@dailyreportIndex'
     ]);
+
+    Route::any('/weekly-report',[
+        'as' => 'report.weeklyreportindex',
+        'uses' => 'ReportController@weeklyreportIndex'
+    ]);
     
 });
