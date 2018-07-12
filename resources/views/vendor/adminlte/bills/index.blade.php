@@ -117,7 +117,7 @@
                    @endif
                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
                    <td>{{ $value['cname'] }}</td>
-                   <td>{{ $value['date_of_joining'] }}</td>
+                   <td data-th="Lastrun" data-order="{{$value['date_of_joining_ts']}}">{{ $value['date_of_joining'] }}</td>
                    <td>{{ $value['fixed_salary'] }}</td>
                    <td>{{ $value['efforts'] }}</td>
                    <td>{{ $value['candidate_contact_number'] }}</td>
@@ -139,6 +139,7 @@
                            @section('customscripts')
                                <script type="text/javascript">
                                    $(document).ready(function(){
+
                                        var table = $('#jo_table').DataTable( {
                                           columnDefs: [  {
                                                'targets': 0,
@@ -150,6 +151,7 @@
                                                        + $('<div/>').text(data).html() + '">';
                                                }*/
                                            } ],
+
                                            /*scrollY: "300px",
                                            scrollX:  true,
                                            scrollCollapse: true,
@@ -163,6 +165,7 @@
                                        } );
 
                                        new jQuery.fn.dataTable.FixedHeader( table );
+
 
                                        $('#example-select-all').on('click', function(){
                                            // Check/uncheck all checkboxes in the table
