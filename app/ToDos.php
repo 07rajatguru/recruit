@@ -70,6 +70,7 @@ class ToDos extends Model
             $todo_array[$i]['subject'] = $todos->subject;
             $todo_array[$i]['am_name'] = $todos->name;
             $todo_array[$i]['due_date'] = $todos->due_date;
+            $todo_array[$i]['due_date_ts'] = $todos->due_date;
             $todo_array[$i]['status'] = $todos->status;
             $todo_array[$i]['status_ids'] = $todos->status_id;
             $todo_array[$i]['task_owner'] = $todos->task_owner;           
@@ -164,6 +165,7 @@ class ToDos extends Model
             $todo_array[$i]['subject'] = $todos->subject;
             $todo_array[$i]['am_name'] = $todos->name;
             $todo_array[$i]['due_date'] = $todos->due_date;
+            $todo_array[$i]['due_date_ts'] = $todos->due_date;
             $todo_array[$i]['status'] = $todos->status;
             $todo_array[$i]['status_ids'] = $todos->status_id;
             $todo_array[$i]['task_owner'] = $todos->task_owner;     
@@ -215,6 +217,7 @@ class ToDos extends Model
             $todo_array[$i]['subject'] = $todos->subject;
             $todo_array[$i]['am_name'] = $todos->name;
             $todo_array[$i]['due_date'] = $todos->due_date;
+            $todo_array[$i]['due_date_ts'] = $todos->due_date;
             $todo_array[$i]['status'] = $todos->status;
             $todo_array[$i]['status_ids'] = $todos->status_id;
             $todo_array[$i]['task_owner'] = $todos->task_owner;           

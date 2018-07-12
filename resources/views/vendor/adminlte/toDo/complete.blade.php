@@ -77,7 +77,7 @@
 
                 <td>{{ $todo['assigned_to'] }}</td>
 
-                <td>{{ $todo['due_date'] }}</td>
+                <td data-th="Lastrun" data-order="{{$todo['due_date_ts']}}">{{ $todo['due_date'] }}</td>
 
                 <td>{{ $todo['status'] }}</td>
 

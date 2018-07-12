@@ -93,7 +93,23 @@ class Interview extends Model
 
         $response = $query->get();
 
-        return $response;
+        $interview = array();
+        $i=0;
+        foreach ($response as $key => $value) {
+            $interview[$i]['id'] = $value->id;
+            $interview[$i]['client_name'] = $value->client_name;
+            $interview[$i]['posting_title'] = $value->posting_title;
+            $interview[$i]['city'] = $value->city;
+            $interview[$i]['candidate_fname'] = $value->candidate_fname;
+            $interview[$i]['contact'] = $value->contact;
+            $interview[$i]['interview_date'] = $value->interview_date;
+            $interview[$i]['interview_date_ts'] = strtotime($value->interview_date);
+            $interview[$i]['location'] = $value->location;
+            $interview[$i]['status'] = $value->status;
+            $i++;
+        }
+
+        return $interview;
     }
 
     public static function getTodayTomorrowsInterviews($all=0,$user_id){
