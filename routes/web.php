@@ -1216,7 +1216,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserwiseReportController@export'
     ]);
 
-    Route::any('/dailyreportindex',[
+    Route::any('/daily-report',[
         'as' => 'report.dailyreportindex',
         'uses' => 'ReportController@dailyreportIndex'
     ]);
