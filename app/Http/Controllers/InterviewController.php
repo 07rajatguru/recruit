@@ -229,11 +229,11 @@ class InterviewController extends Controller
         $cname = $candidate_response->full_name;
 
         $to_address = array();
-        //$to_address[] = $candidate_owner_email;
-        //$to_address[] = $client_owner_email;
+        $to_address[] = $candidate_owner_email;
+        $to_address[] = $client_owner_email;
 
-        $to_address[] = 'tarikapanjwani@gmail.com';
-        $to_address[] = 'rajlalwani@adlertalent.com';
+        $to_address[] = 'saloni@trajinfotech.com';
+       // $to_address[] = 'rajlalwani@adlertalent.com';
 
         $input['to'] = $to_address;
 
