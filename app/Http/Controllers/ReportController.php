@@ -37,7 +37,7 @@ class ReportController extends Controller
             $date = $_POST['date'];
         }
         else{
-            $date = '';
+            $date = date('Y-m-d');
         }
 
         $associate_res = JobAssociateCandidates::getDailyReportAssociateIndex($users_id,$date);
