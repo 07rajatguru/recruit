@@ -242,7 +242,7 @@
                                     <td>{{ $value['company_name'] }}</td>
                                     <td>{{ $value['location'] }}</td>
                                     <td>{{ $value['managed_by'] }}</td>
-                                    <td>{{ date('d-m-Y h:i A',strtotime($value['datetime'])) }}</td>
+                                    <td>{{ $value['datetime'] }}</td>
                                 </tr>
                             @endforeach
                         @endif
