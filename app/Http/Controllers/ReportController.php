@@ -10,55 +10,38 @@ use App\Interview;
 
 class ReportController extends Controller
 {
-    /*public function FunctionName($value='')
-    {
-        $from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
-        $to_address = 'meet@trajinfotech.com';
+   
+    public function dailyreportIndex(){
+
+        $user_id = \Auth::user()->id;
 
         $users = User::getAllUsers('recruiter');
 
-
-        foreach ($users as $key => $value) {
-
-            // data of cvs associated
-            $from_date = date("Y-m-d 00:00:00");
-            $to_date = date("Y-m-d 23:59:59");
-            $status = 'CVs sent';
-            
-            $query = JobAssociateCandidates::query();
-            $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
-            $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-            //$query = $query->join('interview','interview.posting_title','=','job_openings.id');
-            $query = $query->select(/*\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.*','job_associate_candidates.date as date','job_openings.posting_title as posting_title','client_basicinfo.display_name as company','job_openings.city as location','job_openings.hiring_manager_id as user_ids');
-            $query = $query->where('date','>',"$from_date");
-            $query = $query->where('date','<',"$to_date");
-            $query = $query->where('job_associate_candidates.associate_by','=',$key);
-
-            $associate_res = $query->get();
-
-            $response = array();
-            $i = 0;
-            foreach ($associate_res as $key => $value) {
-               // $response[$i]['id'] = $value->id;
-                $response[$i]['date'] = $value->date;
-                $response[$i]['posting_title'] = $value->posting_title;
-                $response[$i]['company'] = $value->company;
-                $response[$i]['location'] = $value->location;
-                $response[$i]['associate_candidate_count'] = $value->count;
-                $response[$i]['status'] = $status;
-                $i++;
-            }
-            //print_r($response);exit;
-            return $response;    
-
-            // count of cvs associated
-
-
-            // interview schedule    
-
+        if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
+            $users_id = $_POST['users_id'];
         }
-    }*/
+        else{
+            $users_id = '';
+        }
+
+        if (isset($_POST['date']) && $_POST['date']!=0) {
+            $date = $_POST['date'];
+        }
+        else{
+            $date = '';
+        }
+
+        $associate_res = JobAssociateCandidates::getDailyReportAssociateIndex($users_id,$date);
+        $associate_daily = $associate_res['associate_data'];
+        $associate_count = $associate_res['cvs_cnt'];
+
+        $lead_count = Lead::getDailyReportLeadCountIndex($users_id,$date);
+
+        $interview_daily = Interview::getDailyReportInterviewIndex($users_id,$date);
+        $interview_count = sizeof($interview_daily);
+
+        return view('adminlte::reports.dailyreport',compact('users','user_id','associate_daily','associate_count','lead_count','interview_daily','interview_count'));
+    }
 
 
     public function dailyreport(){

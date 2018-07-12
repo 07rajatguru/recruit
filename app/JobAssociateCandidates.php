@@ -92,6 +92,54 @@ class JobAssociateCandidates extends Model
 
     }
 
+    public static function getDailyReportAssociateIndex($users_id,$date){
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->select('job_openings.posting_title','client_basicinfo.name as cname',\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),
+                'job_openings.city','job_openings.state','job_openings.country');
+        $query = $query->where('job_associate_candidates.associate_by',$users_id);
+        $query = $query->where(\DB::raw('date(job_associate_candidates.created_at)'),$date);
+        $query = $query->groupBy('job_openings.id');
+        $query_response = $query->get();
+
+        $response['associate_data'] = array();
+        $i = 0;
+        $cnt= 0;
+        foreach ($query_response as $key1 => $value1) {
+            $cnt += $value1->count;
+            $response['associate_data'][$i]['date'] = $date;
+            $response['associate_data'][$i]['posting_title'] = $value1->posting_title;
+            $response['associate_data'][$i]['company'] = $value1->cname;
+
+            $location ='';
+            if($value1->city!=''){
+                $location .= $value1->city;
+            }
+            if($value1->state!=''){
+                if($location=='')
+                    $location .= $value1->state;
+                else
+                    $location .= ", ".$value1->state;
+            }
+            if($value1->country!=''){
+                if($location=='')
+                    $location .= $value1->country;
+                else
+                    $location .= ", ".$value1->country;
+            }
+
+            $response['associate_data'][$i]['location'] = $location;
+            $response['associate_data'][$i]['associate_candidate_count'] = $value1->count;
+            $response['associate_data'][$i]['status'] = 'CVs sent';
+            $i++;
+        }
+        $response['cvs_cnt'] = $cnt;
+        //print_r($response);exit;
+        return $response;   
+    }
+
     public static function getWeeklyReportAssociate($user_id){
 
         $date = date('Y-m-d',strtotime('Monday this week'));

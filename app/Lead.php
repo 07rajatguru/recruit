@@ -166,6 +166,19 @@ class Lead extends Model
         return $lead_cnt;
     }
 
+    public static function getDailyReportLeadCountIndex($users_id,$date){
+
+        $query = Lead::query();
+        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->where('account_manager_id',$users_id);
+        $query = $query->where('lead_management.account_manager_id','=',$users_id);
+        $query = $query->where(\DB::raw('date(created_at)'),$date);
+
+        $lead_cnt = $query->count();
+
+        return $lead_cnt;
+    }
+
     public static function getWeeklyReportLeadCount($user_id){
 
         $date = date('Y-m-d',strtotime('Monday this week'));
