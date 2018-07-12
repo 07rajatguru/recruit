@@ -52,7 +52,7 @@
                         <p><b>Interview Venue : </b></p>
                         <p>{{ $interview_location }}</p>
                         <p><b>Contact Person :</b>{{$contact_person}}</p>
-                        <p><u>Please carry a copy of your updated resume at the time of interview.Request you to acknowledge the receipt of this mail.</u></p>
+                        <p style="color:red;"><u>Please carry a copy of your updated resume at the time of interview.Request you to acknowledge the receipt of this mail.</u></p>
                         <p>For any query/discussion, feel free to connect with me anytime.</p>
                         <p>Thanks</p>
                     </td>
