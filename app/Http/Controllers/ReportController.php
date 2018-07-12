@@ -15,7 +15,16 @@ class ReportController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        $users = User::getAllUsers('recruiter');
+        $superAdminUserID = getenv('SUPERADMINUSERID');
+        $managerUserID = getenv('MANAGERUSERID');
+
+        $access_roles_id = array($superAdminUserID,$managerUserID);
+        if(in_array($user_id,$access_roles_id)){
+            $users = User::getAllUsers('recruiter');
+        }
+        else{
+            $users = User::getAssignedUsers($user_id,'recruiter');
+        }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
             $users_id = $_POST['users_id'];
