@@ -158,7 +158,7 @@
             var users_id = $("#users_id").val();
             var date = $("#date").val();
 
-            var url = '/dailyreportindex';
+            var url = '/daily-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
