@@ -25,7 +25,7 @@
 
     		<div class="box-body col-xs-4 col-sm-4 col-md-4">
     			<div class="form-group">
-		        	{{Form::text('date',null , array('id'=>'date', 'placeholder' => 'Date', 'class'=>'form-control'))}}
+		        	{{Form::text('date',$date , array('id'=>'date', 'placeholder' => 'Date', 'class'=>'form-control','autocomplete'=>'off'))}}
 	        	</div>
     		</div>
 
