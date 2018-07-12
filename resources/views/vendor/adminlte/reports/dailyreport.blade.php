@@ -19,7 +19,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
         	<div class="box-body col-xs-4 col-sm-4 col-md-4">
         		<div class="form-group">
-		        	{{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control'))}}
+		        	{{Form::select('users_id',$users,$users_id, array('id'=>'users_id','class'=>'form-control'))}}
 	        	</div>
     		</div>
 

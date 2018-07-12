@@ -49,7 +49,7 @@ class ReportController extends Controller
         $interview_daily = Interview::getDailyReportInterviewIndex($users_id,$date);
         $interview_count = sizeof($interview_daily);
 
-        return view('adminlte::reports.dailyreport',compact('date','users','user_id','associate_daily','associate_count','lead_count','interview_daily','interview_count'));
+        return view('adminlte::reports.dailyreport',compact('date','users','user_id','users_id','associate_daily','associate_count','lead_count','interview_daily','interview_count'));
     }
 
 
