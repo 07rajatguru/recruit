@@ -414,4 +414,16 @@ class User extends Authenticatable
 
         return $userArr;
     }
+
+    public static function getReportsToUsersEmail($key){
+
+        $user_query = User::query();
+        $user_query = $user_query->select('users.id','u1.email as remail','u2.email as femail');
+        $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
+        $user_query = $user_query->join('users as u2','u2.id','=','users.floor_incharge');
+        $user_query = $user_query->where('users.id',$key);
+        $user = $user_query->first();
+
+        return $user;
+    }
 }

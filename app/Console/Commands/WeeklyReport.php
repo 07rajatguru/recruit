@@ -51,14 +51,19 @@ class WeeklyReport extends Command
 
         foreach ($users as $key => $value) {
 
-            //Get Reports to Email
+            /*//Get Reports to Email
             $report_res = User::getUsersReportToEmail($key);
             $report_email = $report_res->email;
 
             //Get Floor Incharge Email
             $floor_res = User::getUsersFloorInchargeEmail($key);
             $floor_incharge_email = $floor_res->email;
-            //print_r($report_email);exit;
+            //print_r($report_email);exit;*/
+
+            $res = User::getReportsToUsersEmail($key);
+            $report_email = $res->remail;
+            $floor_incharge_email = $res->femail;
+
 
             $to_array = array();
             $to_array[] = $value;
@@ -76,6 +81,7 @@ class WeeklyReport extends Command
             $input['app_url'] = $app_url;
             $input['to_array'] = array_unique($to_array);
             $input['cc_array'] = array_unique($cc_array);
+            //print_r($input['cc_array']);exit;
 
 
             $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($key);
