@@ -37,95 +37,105 @@
     	</div>
     </div>
 
-    <table width="100%" cellspacing="0">
-    	<tr>
-            <td colspan="7">
-                <u><b><h1>No of CVs Associated : {{ $associate_count or '0'}}</h1></b></u>
-            </td>
-        </tr>
-    </table>
-    <div class = "table-responsive">
-    	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
-        	<thead>
-        	<tr>
-        		<th>No</th>
-        		<th>Date</th>
-        		<th>Position Name</th>
-        		<th>Company Name</th>
-        		<th>Location</th>
-        		<th>No of Resumes <br/>associted</th>
-        		<th>Status</th>
-        	</tr>
-        	</thead>
-        	<?php $i = 0;?>
-        	    @foreach($associate_daily as $key => $value)
-        		<tr>
-        			<td>{{++$i}}</td>
-        			<td>{{ date('jS F,y',strtotime($value['date'])) }}</td>
-        			<td>{{ $value['posting_title'] }}</td>
-        			<td>{{ $value['company'] }}</td>
-        			<td>{{ $value['location'] }}</td>
-        			<td>{{ $value['associate_candidate_count'] }}</td>
-        			<td>{{ $value['status'] }}</td>
-        		</tr>
-        	    @endforeach
-        </table>
-    </div>
+	<div style="padding: 10px;">
 
-    <table width="100%" cellspacing="0">
-    	<tr>
-            <td colspan="7">
-                <u><b><h1>No of Interview Scheduled : {{ $interview_count or '0'}}</h1></b></u>
-            </td>
-        </tr>
-    </table>
-    <div class = "table-responsive">
-    	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_interview_table">
-        	<thead>
-        	<tr>
-        		<th>No</th>
-        		<th>Position</th>
-        		<th>Position Location</th>
-        		<th>Name of the candidate</th>
-        		<th>Interview Date</th>
-        		<th>Interview Time</th>
-        		<th>Candidate Location</th>
-        		<th>Mode of Interview</th>
-        		<th>Skype ID</th>
-        		<th>Contact No.</th>
-        		<th>Email ID</th>
-        		<th>Confirmed</th>
-        		<th>Source</th>
-        	</tr>
-        	</thead>
-            <?php $i=0;?>
-                @foreach($interview_daily as $key=>$value)
-                    <tr>
-                        <td>{{ ++$i }}</td>
-                        <td>{{ $value['posting_title'] }}</td>
-                        <td>{{ $value['interview_location'] }}</td>
-                        <td>{{ $value['cname'] }}</td>
-                        <td>{{ $value['interview_date'] }}</td>
-                        <td>{{ $value['interview_time'] }}</td>
-                        <td>{{ $value['ccity'] }}</td>
-                        <td>{{ $value['interview_type'] }}</td>
-                        <td>{{ '' }}</td>
-                        <td>{{ $value['cmobile'] }}</td>
-                        <td>{{ $value['cemail'] }}</td>
-                        <td>{{ 'Yes' }}</td>
-                        <td>{{ 'Adler' }}</td>
-                    </tr>
-                @endforeach
-        </table>
-    </div>
+		<table width="100%" cellspacing="0">
+			<tr>
+				<td colspan="7">
+					<u><b><h3>No of CVs Associated : {{ $associate_count or '0'}}</h3></b></u>
+				</td>
+			</tr>
+		</table>
 
-        <table width="100%" cellspacing="0">
-    	<tr>
-            <td colspan="7">
-                <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
-            </td>
-        </tr>
-    </table>
+		<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
+			<thead>
+			<tr style="background-color: #f39c12;">
+				<th>No</th>
+				<th>Date</th>
+				<th>Position Name</th>
+				<th>Company Name</th>
+				<th>Location</th>
+				<th>No of Resumes <br/>associted</th>
+				<th>Status</th>
+			</tr>
+			</thead>
+            <?php $i = 0;?>
+			@foreach($associate_daily as $key => $value)
+				<tr>
+					<td>{{++$i}}</td>
+					<td>{{ date('jS F,y',strtotime($value['date'])) }}</td>
+					<td>{{ $value['posting_title'] }}</td>
+					<td>{{ $value['company'] }}</td>
+					<td>{{ $value['location'] }}</td>
+					<td>{{ $value['associate_candidate_count'] }}</td>
+					<td>{{ $value['status'] }}</td>
+				</tr>
+			@endforeach
+		</table>
+
+		<table width="100%" cellspacing="0">
+			<tr>
+				<td colspan="7">
+					<u><b><h3>No of Interview Scheduled : {{ $interview_count or '0'}}</h3></b></u>
+				</td>
+			</tr>
+		</table>
+
+		<div class = "table-responsive">
+			<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_interview_table">
+				<thead>
+				<tr style="background-color: #7598d9">
+					<th>No</th>
+					<th>Position</th>
+					<th>Position Location</th>
+					<th>Name of the candidate</th>
+					<th>Interview Date</th>
+					<th>Interview Time</th>
+					<th>Candidate Location</th>
+					<th>Mode of Interview</th>
+					<th>Skype ID</th>
+					<th>Contact No.</th>
+					<th>Email ID</th>
+					<th>Confirmed</th>
+					<th>Source</th>
+				</tr>
+				</thead>
+                <?php $i=0;?>
+				@foreach($interview_daily as $key=>$value)
+					<tr>
+						<td>{{ ++$i }}</td>
+						<td>{{ $value['posting_title'] }}</td>
+						<td>{{ $value['interview_location'] }}</td>
+						<td>{{ $value['cname'] }}</td>
+						<td>{{ $value['interview_date'] }}</td>
+						<td>{{ $value['interview_time'] }}</td>
+						<td>{{ $value['ccity'] }}</td>
+						<td>{{ $value['interview_type'] }}</td>
+						<td>{{ '' }}</td>
+						<td>{{ $value['cmobile'] }}</td>
+						<td>{{ $value['cemail'] }}</td>
+						<td>{{ 'Yes' }}</td>
+						<td>{{ 'Adler' }}</td>
+					</tr>
+				@endforeach
+			</table>
+		</div>
+
+		<table width="100%" cellspacing="0">
+			<tr>
+				<td colspan="7">
+					<u><b><h3>No of Leads added : {{$lead_count or '0'}}</h3></b></u>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+
+
+
+
+
+
 
 @stop
 

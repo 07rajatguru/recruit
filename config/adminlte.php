@@ -288,11 +288,11 @@ return [
                 'icon'        => 'signal',
             ],
 
-        /*[
+        [
            'text'        => 'Report',
            'icon'        => 'file',
            'submenu' => [
-               [
+               /*[
                    'text' => 'Selection report',
                    'url'  => 'selectionreport',
                    'icon' => 'circle-o',
@@ -306,19 +306,19 @@ return [
                    'text' => 'Userwise report',
                    'url'  => 'userreport',
                    'icon' => 'circle-o',
-               ],
-               [
+               ],*/
+               /*[
                    'text' => 'Daily report',
                    'url'  => 'daily-report',
                    'icon' => 'circle-o',
-               ],
-               [
+               ],*/
+              /* [
                    'text' => 'Weekly report',
                    'url'  => 'weekly-report',
                    'icon' => 'circle-o',
-               ],
+               ],*/
            ],
-        ],*/
+        ],
 
         [
            'text'        => 'Training Material',
