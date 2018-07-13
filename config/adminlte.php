@@ -307,11 +307,11 @@ return [
                    'url'  => 'userreport',
                    'icon' => 'circle-o',
                ],*/
-               [
+               /*[
                    'text' => 'Daily report',
                    'url'  => 'daily-report',
                    'icon' => 'circle-o',
-               ],
+               ],*/
               /* [
                    'text' => 'Weekly report',
                    'url'  => 'weekly-report',
