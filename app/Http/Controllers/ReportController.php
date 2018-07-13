@@ -74,14 +74,33 @@ class ReportController extends Controller
             $users_id = $user_id;
         }
 
-        if (isset($_POST['date']) && $_POST['date']!=0) {
-            $date = $_POST['date'];
+
+        if (isset($_POST['to_date']) && $_POST['to_date']!=0) {
+            $to_date = $_POST['to_date'];
         }
         else{
-            $date = date('Y-m-d');
+            $to_date = date('Y-m-d');
+        }
+        if (isset($_POST['from_date']) && $_POST['from_date']!=0) {
+            $from_date = $_POST['from_date'];
+        }
+        else{
+            $from_date = date('Y-m-d',strtotime("$to_date -6days"));
         }
 
-        return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','date'));
+        $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociateIndex($users_id,$from_date,$to_date);
+        $associate_weekly = $associate_weekly_response['associate_data'];
+        $associate_count = $associate_weekly_response['cvs_cnt'];
+        //print_r($associate_weekly_response);exit;
+
+        $lead_count = Lead::getWeeklyReportLeadCountIndex($users_id,$from_date,$to_date);
+
+        $interview_weekly_response = Interview::getWeeklyReportInterviewIndex($users_id,$from_date,$to_date);
+        $interview_weekly = $interview_weekly_response['interview_data'];
+        $interview_count = $interview_weekly_response['interview_cnt'];
+
+
+        return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','from_date','to_date','associate_weekly','associate_count','lead_count','interview_weekly','interview_count'));
     }
 
 

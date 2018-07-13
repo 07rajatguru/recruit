@@ -22,9 +22,15 @@
 	        	</div>
     		</div>
 
-    		<div class="box-body col-xs-4 col-sm-4 col-md-4">
+    		<div class="box-body col-xs-3 col-sm-3 col-md-3">
     			<div class="form-group">
-		        	{{Form::text('date',$date , array('id'=>'date', 'placeholder' => 'Date', 'class'=>'form-control','autocomplete'=>'off'))}}
+		        	{{Form::text('from_date',$from_date , array('id'=>'from_date', 'placeholder' => 'From Date', 'class'=>'form-control','autocomplete'=>'off'))}}
+	        	</div>
+    		</div>
+
+    		<div class="box-body col-xs-3 col-sm-3 col-md-3">
+    			<div class="form-group">
+		        	{{Form::text('to_date',$to_date , array('id'=>'to_date', 'placeholder' => 'To Date', 'class'=>'form-control','autocomplete'=>'off'))}}
 	        	</div>
     		</div>
 
@@ -39,7 +45,7 @@
     <table width="100%" cellspacing="0">
     	<tr>
             <td colspan="7">
-                <u><b><h1>No of CVs Associated in this week: {{ '0'}}</h1></b></u>
+                <u><b><h1>No of CVs Associated in this week: {{ $associate_count or '0'}}</h1></b></u>
             </td>
         </tr>
     </table>
@@ -52,18 +58,20 @@
         			<th>No of resumes associated</th>
         		</tr>
         	</thead>
+        	<?php $i=0;?>
         	<tbody>
-        		<?php $i=0;?>
+        	@foreach($associate_weekly as $key => $value)
         		<tr>
-        			<td>{{++$i}}</td>
-        			<td></td>
-        			<td></td>
+        			<td>{{ ++$i }}</td>
+        			<td>{{ date('l (jS F,y) ',strtotime($value['associate_date'])) }}</td>
+        			<td>{{ $value['associate_candidate_count'] }}</td>
         		</tr>
+        	@endforeach
         	</tbody>
         		<tr>
         			<td></td>
         			<td>Total Associated</td>
-        			<td>{{ '0' }}</td>
+        			<td>{{ $associate_count or '0' }}</td>
         		</tr>
         		<tr>
         			<td></td>
@@ -73,7 +81,7 @@
         		<tr>
         			<td></td>
         			<td>No. of resumes not achieved</td>
-        			<td>{{ '0' }}</td>
+        			<td><?php if($associate_count<40):?>{{	$associate_count-40 }}<?php endif ?></td>
         		</tr>
         </table>
     </div>
@@ -96,16 +104,18 @@
         	</thead>
         	<?php $i=0;?>
         	<tbody>
+        		@foreach($interview_weekly as $key => $value)
         		<tr>
         			<td>{{ ++$i }}</td>
-        			<td></td>
-        			<td></td>
+        			<td>{{ date('l (jS F,y) ',strtotime($value['interview_date'])) }}</td>
+        			<td>{{ $value['interview_daily_count'] }}</td>
         		</tr>
+        		@endforeach
         	</tbody>
         	<tr>
         		<td></td>
         		<td>Total</td>
-        		<td>{{'0'}}</td>
+        		<td>{{ $interview_count or '0'}}</td>
         	</tr>
         </table>
     </div>
@@ -113,7 +123,7 @@
     <table width="100%" cellspacing="0">
     	<tr>
             <td colspan="7">
-                <u><b><h1>No of Leads added : {{'0'}}</h1></b></u>
+                <u><b><h1>No of Leads added : {{ $lead_count or '0'}}</h1></b></u>
             </td>
         </tr>
     </table>
@@ -137,11 +147,34 @@
 
 			$("#users_id").select2();
 
-			$("#date").datepicker({
+			$("#from_date").datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
             });
             //$('#date').datepicker().datepicker('setDate', 'today');
+
+            $("#to_date").datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+            });
 		});
+
+		function select_data(){
+			var users_id = $("#users_id").val();
+			var from_date = $("#from_date").val();
+			var to_date = $("#to_date").val();
+
+			var url = '/weekly-report';
+
+			var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="users_id" value="'+users_id+'" />' +
+                '<input type="text" name="from_date" value="'+from_date+'" />' +
+                '<input type="text" name="to_date" value="'+to_date+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+		}
 	</script>
 @endsection
