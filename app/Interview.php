@@ -292,15 +292,24 @@ class Interview extends Model
 
     }
 
-    public static function getWeeklyReportInterview($user_id){
+    public static function getWeeklyReportInterview($user_id,$from_date=NULL,$to_date=NULL){
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
         $query = Interview::query();
         $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'interview.interview_date as interview_date');
         $query = $query->where('interview.interview_owner_id',$user_id);
-        $query = $query->where('interview.interview_date','>=',date('Y-m-d',strtotime('Monday this week')));
-        $query = $query->where('interview.interview_date','<=',date('Y-m-d',strtotime("$date +6days")));
+
+        if ($from_date == NULL && $to_date == NULL) {
+            $query = $query->where('interview.interview_date','>=',date('Y-m-d',strtotime('Monday this week')));
+            $query = $query->where('interview.interview_date','<=',date('Y-m-d',strtotime("$date +6days")));
+        }
+
+        if ($from_date != '' && $from_date != '') {
+            $query = $query->where(\DB::raw('date(interview.interview_date)'),'>=',$from_date);
+            $query = $query->where(\DB::raw('date(interview.interview_date)'),'<=',$to_date);
+        }
+
         $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
         $query_response = $query->get();
 
@@ -319,31 +328,6 @@ class Interview extends Model
         return $response;  
 
 
-    }
-
-    public static function getWeeklyReportInterviewIndex($users_id,$from_date,$to_date){
-
-        $query = Interview::query();
-        $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'interview.interview_date as interview_date');
-        $query = $query->where('interview.interview_owner_id',$users_id);
-        $query = $query->where(\DB::raw('date(interview.interview_date)'),'>=',$from_date);
-        $query = $query->where(\DB::raw('date(interview.interview_date)'),'<=',$to_date);
-        $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
-        $query_response = $query->get();
-
-        $response['interview_data'] = array();
-        $i = 0;
-        $cnt= 0;
-        foreach ($query_response as $key => $value) {
-            $cnt += $value->count;
-            $datearry = explode(' ', $value->interview_date);
-            $response['interview_data'][$i]['interview_date'] = $datearry[0];
-            $response['interview_data'][$i]['interview_daily_count'] = $value->count;
-            $i++;
-        }
-        $response['interview_cnt'] = $cnt;
-        //print_r($response);exit;
-        return $response;
     }
 
     public static function getInterviewids($interview_id){

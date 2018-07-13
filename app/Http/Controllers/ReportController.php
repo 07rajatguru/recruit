@@ -68,10 +68,10 @@ class ReportController extends Controller
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
-            $users_id = $_POST['users_id'];
+            $user_id = $_POST['users_id'];
         }
         else{
-            $users_id = $user_id;
+            $user_id = $user_id;
         }
 
 
@@ -88,14 +88,14 @@ class ReportController extends Controller
             $from_date = date('Y-m-d',strtotime("$to_date -6days"));
         }
 
-        $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociateIndex($users_id,$from_date,$to_date);
+        $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($user_id,$from_date,$to_date);
         $associate_weekly = $associate_weekly_response['associate_data'];
         $associate_count = $associate_weekly_response['cvs_cnt'];
         //print_r($associate_weekly_response);exit;
 
-        $lead_count = Lead::getWeeklyReportLeadCountIndex($users_id,$from_date,$to_date);
+        $lead_count = Lead::getWeeklyReportLeadCount($user_id,$from_date,$to_date);
 
-        $interview_weekly_response = Interview::getWeeklyReportInterviewIndex($users_id,$from_date,$to_date);
+        $interview_weekly_response = Interview::getWeeklyReportInterview($user_id,$from_date,$to_date);
         $interview_weekly = $interview_weekly_response['interview_data'];
         $interview_count = $interview_weekly_response['interview_cnt'];
 

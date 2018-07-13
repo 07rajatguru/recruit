@@ -84,15 +84,15 @@ class WeeklyReport extends Command
             //print_r($input['cc_array']);exit;
 
 
-            $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($key);
+            $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($key,NULL,NULL);
             $associate_weekly = $associate_weekly_response['associate_data'];
             $associate_count = $associate_weekly_response['cvs_cnt'];
 
-            $interview_weekly_response = Interview::getWeeklyReportInterview($key);
+            $interview_weekly_response = Interview::getWeeklyReportInterview($key,NULL,NULL);
             $interview_weekly = $interview_weekly_response['interview_data'];
             $interview_count = $interview_weekly_response['interview_cnt'];
 
-            $lead_count = Lead::getWeeklyReportLeadCount($key);
+            $lead_count = Lead::getWeeklyReportLeadCount($key,NULL,NULL);
 
             $user_name = User::getUserNameById($key);
 

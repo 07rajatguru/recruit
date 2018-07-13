@@ -173,28 +173,23 @@ class Lead extends Model
         return $lead_cnt;
     }
 
-    public static function getWeeklyReportLeadCount($user_id){
+    public static function getWeeklyReportLeadCount($user_id,$from_date=NULL,$to_date=NULL){
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
         $query = Lead::query();
         $query = $query->select('lead_management.*','lead_management.created_at');
-        $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
-        $query = $query->where('created_at','<=',date('Y-m-d',strtotime("$date +6days")));
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
 
-        $lead_cnt = $query->count();
+        if ($from_date == NULL && $to_date == NULL) {
+            $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
+            $query = $query->where('created_at','<=',date('Y-m-d',strtotime("$date +6days")));
+        }
 
-        return $lead_cnt;   
-    }
-
-    public static function getWeeklyReportLeadCountIndex($users_id,$from_date,$to_date){
-
-        $query = Lead::query();
-        $query = $query->select('lead_management.*','lead_management.created_at');
-        $query = $query->where(\DB::raw('date(created_at)'),'>=',$from_date);
-        $query = $query->where(\DB::raw('date(created_at)'),'<=',$to_date);
-        $query = $query->where('lead_management.account_manager_id','=',$users_id);
+        if ($from_date != '' && $to_date != '') {
+            $query = $query->where(\DB::raw('date(created_at)'),'>=',$from_date);
+            $query = $query->where(\DB::raw('date(created_at)'),'<=',$to_date);
+        }
 
         $lead_cnt = $query->count();
 
