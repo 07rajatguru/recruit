@@ -78,13 +78,14 @@ class DailyReport extends Command
             $input['to_array'] = array_unique($to_array);
             $input['cc_array'] = array_unique($cc_array);
 
-            $associate_response = JobAssociateCandidates::getDailyReportAssociate($key);
+            $associate_response = JobAssociateCandidates::getDailyReportAssociate($key,NULL);
+            //print_r($associate_response);exit;
             $associate_daily = $associate_response['associate_data'];
             $associate_count = $associate_response['cvs_cnt'];
 
-            $lead_count = Lead::getDailyReportLeadCount($key);
+            $lead_count = Lead::getDailyReportLeadCount($key,NULL);
 
-            $interview_daily = Interview::getDailyReportInterview($key);
+            $interview_daily = Interview::getDailyReportInterview($key,NULL);
             $user_name = User::getUserNameById($key);
 
             $input['value'] = $user_name;

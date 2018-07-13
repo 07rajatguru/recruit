@@ -27,10 +27,10 @@ class ReportController extends Controller
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
-            $users_id = $_POST['users_id'];
+            $user_id = $_POST['users_id'];
         }
         else{
-            $users_id = $user_id;
+            $user_id = $user_id;
         }
 
         if (isset($_POST['date']) && $_POST['date']!=0) {
@@ -40,13 +40,13 @@ class ReportController extends Controller
             $date = date('Y-m-d');
         }
 
-        $associate_res = JobAssociateCandidates::getDailyReportAssociateIndex($users_id,$date);
+        $associate_res = JobAssociateCandidates::getDailyReportAssociate($user_id,$date);
         $associate_daily = $associate_res['associate_data'];
         $associate_count = $associate_res['cvs_cnt'];
 
-        $lead_count = Lead::getDailyReportLeadCountIndex($users_id,$date);
+        $lead_count = Lead::getDailyReportLeadCount($user_id,$date);
 
-        $interview_daily = Interview::getDailyReportInterviewIndex($users_id,$date);
+        $interview_daily = Interview::getDailyReportInterview($user_id,$date);
         $interview_count = sizeof($interview_daily);
 
         return view('adminlte::reports.dailyreport',compact('date','users','user_id','users_id','associate_daily','associate_count','lead_count','interview_daily','interview_count'));

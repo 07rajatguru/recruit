@@ -150,29 +150,23 @@ class Lead extends Model
         return $response;
     }
 
-    public static function getDailyReportLeadCount($user_id){
+    public static function getDailyReportLeadCount($user_id,$date=NULL){
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
 
         $query = Lead::query();
         $query = $query->select('lead_management.*','lead_management.created_at');
-        $query = $query->where('created_at','>=',"$from_date");
-        $query = $query->where('created_at','<=',"$to_date");
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
 
-        $lead_cnt = $query->count();
+        if ($date == NULL) {
+            $query = $query->where('created_at','>=',"$from_date");
+            $query = $query->where('created_at','<=',"$to_date");
+        }
 
-        return $lead_cnt;
-    }
-
-    public static function getDailyReportLeadCountIndex($users_id,$date){
-
-        $query = Lead::query();
-        $query = $query->select('lead_management.*','lead_management.created_at');
-        $query = $query->where('account_manager_id',$users_id);
-        $query = $query->where('lead_management.account_manager_id','=',$users_id);
-        $query = $query->where(\DB::raw('date(created_at)'),$date);
+        if ($date != '') {
+            $query = $query->where(\DB::raw('date(created_at)'),$date);
+        }
 
         $lead_cnt = $query->count();
 
