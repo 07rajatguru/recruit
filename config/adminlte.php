@@ -288,10 +288,10 @@ return [
                 'icon'        => 'signal',
             ],
 
-        [
+        /*[
            'text'        => 'Report',
            'icon'        => 'file',
-           'submenu' => [
+           'submenu' => [*/
                /*[
                    'text' => 'Selection report',
                    'url'  => 'selectionreport',
@@ -317,8 +317,8 @@ return [
                    'url'  => 'weekly-report',
                    'icon' => 'circle-o',
                ],*/
-           ],
-        ],
+         /*  ],
+        ],*/
 
         [
            'text'        => 'Training Material',
