@@ -326,7 +326,7 @@ class HomeController extends Controller
                     $color= '#00e500';
                 }
                 else if ($total>=480 && $total<540){
-                    $color= '#FFFF99';
+                    $color= '#CCCC00';
                 }
                 else{
                     $color= '#963838';
