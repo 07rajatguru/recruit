@@ -313,7 +313,7 @@ return [
                    'icon' => 'circle-o',
                ],
               /*[
-                   'text' => 'Weekly report',
+                   'text' => 'Weekly/Monthly report',
                    'url'  => 'weekly-report',
                    'icon' => 'circle-o',
                ],*/

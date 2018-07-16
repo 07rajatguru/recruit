@@ -11,7 +11,7 @@
 	<div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Weekly Report</h2>
+                <h2>Weekly/Monthly Report</h2>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
             </tr>
         </table>
         <div class = "table-responsive">
-        	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="weekly_report_cv_table">
+        	<table class="table table-striped table-bordered nowrap" cellspacing="0" style="width:50%;" id="weekly_report_cv_table">
             	<thead>
             		<tr style="background-color: #C4D79B;">
             			<th style="text-align: center;">Sr. No.</th>
@@ -95,7 +95,7 @@
             </tr>
         </table>
         <div class = "table-responsive">
-        	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="weekly_report_interview_table">
+        	<table  style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0"  id="weekly_report_interview_table">
             	<thead>
             		<tr style="background-color: #C4D79B;">
             			<th style="text-align: center;">Sr. No.</th>
