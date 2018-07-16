@@ -32,10 +32,7 @@
                         <b><p>Dear Sir,</p></b>
                         <i><p>Greetings from Adler Talent Solutions !</p></i>
                         <p><u>Please find interview schedule as below for your kind reference:</u></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="600">
+                        <p>
                         <table width="580" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                             <tr style="background-color: #7598d9">
                                 <td align="center"><b>Sr.<br/>No.</b></td>
@@ -69,10 +66,7 @@
                                 <td align="center"><b>{{'Adler'}}</b></td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="600">
+                        </p>
                         <p>Hope this works.</p>
                         <p>Thanks.</p>
                     </td>
