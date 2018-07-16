@@ -25,11 +25,14 @@ class UsersLog extends Model
         if($user_id>0){
             $query = $query->where('users.id','=',$user_id);
         }
+        else{
+            $query = $query->whereNotIn('role_id',$superadmin);
+        }
 
         $query = $query->groupBy('users_log.date','users.id','users.name');
         $query = $query->select('users.id' ,'users.name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
        // $query = $query->whereNotIn('status',$status_array);
-        $query = $query->whereNotIn('role_id',$superadmin);
+
 
         $response = $query->get();
 //print_r($response);exit;
