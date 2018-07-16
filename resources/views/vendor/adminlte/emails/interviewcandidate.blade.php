@@ -29,8 +29,8 @@
         </td>
     </tr>
     <tr>
-        <td width="600" >
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+        <td width="600"  style="background-color: green; !important;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #D8BFD8; padding: 50px 54px;">
                 <tr>
                     <td>
                         <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$cname}},</p></b>
@@ -51,7 +51,7 @@
                         <p><b>Interview Time : </b> {{date('h:i A',strtotime($interview_time))  }}</p>
                         <p><b>Interview Venue : </b></p>
                         <p>{{ $interview_location }}</p>
-                        <p><b>Contact Person :</b>{{$contact_person}}</p>
+                        <p><b>Contact Person : </b>{{$contact_person}}</p>
                         <p style="color:red;"><u>Please carry a copy of your updated resume at the time of interview.<br/>Request you to acknowledge the receipt of this mail.</u></p>
                         <p>For any query/discussion, feel free to connect with me anytime.</p>
                         <p>Thanks</p>
