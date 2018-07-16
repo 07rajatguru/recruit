@@ -335,8 +335,8 @@ class HomeController extends Controller
                 $events[] = Calendar::event(
                     $title,
                     true,
-                    new \DateTime('2018-07-11'),
-                    new \DateTime('2018-07-11'),
+                    $v->date,
+                    $v->date,
                     null,
                     [
                         'color' => $color,
