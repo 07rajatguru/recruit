@@ -185,7 +185,9 @@ return [
         Collective\Html\HtmlServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class
+        Barryvdh\Debugbar\ServiceProvider::class,
+
+        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
     ],
 
     /*
@@ -239,6 +241,7 @@ return [
         'HTML'=> Collective\Html\FormFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => 'Barryvdh\Debugbar\Facade',
+        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
     ],
 
 ];

@@ -79,6 +79,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@index'
     ));
 
+    Route::get('/userattendance', array (
+        'middleware' => 'auth',
+        'uses' => 'HomeController@userAttendance'
+    ));
+
     Route::post('home/calender',[
         'as' => 'home.calender',
         'uses' => 'HomeController@calenderevent'

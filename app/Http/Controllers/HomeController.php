@@ -13,6 +13,7 @@ use App\ClientBasicinfo;
 use App\JobOpen;
 use Excel;
 use DB;
+use Calendar;
 
 class HomeController extends Controller
 {
@@ -293,6 +294,59 @@ class HomeController extends Controller
         $viewVariable['interviewCount'] = sizeof($interviews);
 
         return view('home', $viewVariable);
+    }
+
+    public function userAttendance(){
+
+        $user =  \Auth::user();
+        $loggedin_userid = \Auth::user()->id;
+        $month = date("n");
+        $year = \date("Y");
+
+        // get logged in user attendance for current month
+        $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
+
+        $date = new Date();
+
+        if($response->count()>0){
+            foreach ($response as $k=>$v) {
+                $title = '';
+
+                $login_time = $date->converttime($v->login);
+                $logout_time = $date->converttime($v->logout);
+
+                $total = ($logout_time - $login_time) / 60;
+
+                $title = "Login : ". date('h:i A',$login_time);
+                $title .= "\n Logout : ". date('h:i A',$logout_time);
+                $title .= "\n Total : ".date('H:i', mktime(0,$total));
+
+                $color = '';
+                if($total>=540){
+                    $color= '#00e500';
+                }
+                else if ($total>=480 && $total<540){
+                    $color= '#FFFF99';
+                }
+                else{
+                    $color= '#963838';
+                }
+                // "Login:9:30 PM \n Logout:6:30 PM \n Total : 9 "
+                $events[] = Calendar::event(
+                    $title,
+                    true,
+                    new \DateTime('2018-07-11'),
+                    new \DateTime('2018-07-11'),
+                    null,
+                    [
+                        'color' => $color,
+                    ]
+                );
+            }
+        }
+
+        $calendar = Calendar::addEvents($events);
+        return view('userattendance', compact('calendar'));
     }
 
     public function export(){
