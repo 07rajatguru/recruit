@@ -19,8 +19,10 @@ class UsersLog extends Model
         $query = UsersLog::query();
         $query = $query->join('users','users.id','=','users_log.user_id');
         $query = $query->join('role_user','role_user.user_id','=','users.id');
-        $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
-        $query = $query->where(\DB::raw('year(date)'),'=', $year);
+        if($month!=0 && $year!=0){
+            $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
+            $query = $query->where(\DB::raw('year(date)'),'=', $year);
+        }
 
         if($user_id>0){
             $query = $query->where('users.id','=',$user_id);
