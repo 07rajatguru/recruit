@@ -304,7 +304,7 @@ class HomeController extends Controller
         $year = \date("Y");
 
         // get logged in user attendance for current month
-        $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
+        $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
 
         $date = new Date();
 
