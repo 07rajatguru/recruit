@@ -326,10 +326,10 @@ class HomeController extends Controller
                 // red : F08080 : less than 8 hours
                 $color = '';
                 if($total>=540){
-                    $color= '#FFFACD';
+                    $color= '#B0E0E6';
                 }
                 else if ($total>=480 && $total<540){
-                    $color= '#B0E0E6';
+                    $color= '#FFFACD';
                 }
                 else{
                     $color= '#F08080';
