@@ -321,15 +321,18 @@ class HomeController extends Controller
                 $title .= "\n Logout : ". date('h:i A',$logout_time);
                 $title .= "\n Total : ".date('H:i', mktime(0,$total));
 
+                // light yellow : FFFACD - between 8-9 hours
+                // blue : B0E0E6 : more than or euqal to 9 hours
+                // red : F08080 : less than 8 hours
                 $color = '';
                 if($total>=540){
-                    $color= '#00e500';
+                    $color= '#FFFACD';
                 }
                 else if ($total>=480 && $total<540){
-                    $color= '#CCCC00';
+                    $color= '#B0E0E6';
                 }
                 else{
-                    $color= '#963838';
+                    $color= '#F08080';
                 }
                 // "Login:9:30 PM \n Logout:6:30 PM \n Total : 9 "
                 $events[] = Calendar::event(

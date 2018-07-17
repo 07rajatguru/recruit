@@ -279,7 +279,7 @@ tr.disabled > td a {
     margin:0;
     padding: 5px 0 0 0px;
     color:#666666;
-    font-family: 'SanFranciscoDisplayRegular;
+    font-family: 'SanFranciscoDisplayRegular';
     font-size: 14px;
 }
 
@@ -295,7 +295,7 @@ tr.disabled > td a {
 
 .navbar-nav>.tasks-menu>.dropdown-menu>li.footer>a {
     color:#666666;
-    font-family: 'SanFranciscoDisplayRegular;
+    font-family: 'SanFranciscoDisplayRegular';
     font-size: 14px;
 }
 
@@ -318,4 +318,8 @@ tr.disabled > td a {
 /* Handle on hover */
 .dropdown-menu ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.fc-title{
+    color:black;
 }
