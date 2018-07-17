@@ -1714,6 +1714,14 @@ class JobOpenController extends Controller
 
         $interviewStored = $interview->save();
 
+        $interview_id = $interview->id;
+        $candidate_id = $request->get('candidate_id');
+        $posting_title = $request->get('job_id');
+
+        $candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$interview_id);
+
+        $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
+
         return redirect('jobs/'.$job_id.'/associated_candidates')->with('success','Interview scheduled successfully');
 
     }

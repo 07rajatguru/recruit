@@ -207,7 +207,15 @@ class InterviewController extends Controller
 
         // Interview Candidate Mail
 
-        $from_name = getenv('FROM_NAME');
+        $candidate_id = $request->get('candidate_id');
+        $posting_title = $request->get('posting_title');
+
+        $candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$interview_id);
+
+        // Interview Schedule Mail
+        $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
+
+        /*$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
 
@@ -232,7 +240,7 @@ class InterviewController extends Controller
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
 
-        $to_address[] = 'tarikapanjwani@gmail.com';
+        //$to_address[] = 'tarikapanjwani@gmail.com';
        // $to_address[] = 'rajlalwani@adlertalent.com';
 
         $input['to'] = $to_address;
@@ -258,12 +266,12 @@ class InterviewController extends Controller
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
-        });
+        });*/
 
         // Interview Schedule Mail
         
 
-        $from_name = getenv('FROM_NAME');
+        /*$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
         
@@ -320,8 +328,8 @@ class InterviewController extends Controller
            /* $message->attach($input['file'], [
                         'as' => 'file.pdf',
                         'mime' => 'application/pdf',
-                    ]);*/
-        });
+                    ]);
+        });*/
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
 
