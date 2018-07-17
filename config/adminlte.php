@@ -284,7 +284,7 @@ return [
           
             [
                 'text'        => 'Attendance',
-                'url'         => '/home',
+                'url'         => '/userattendance',
                 'icon'        => 'signal',
             ],
 
@@ -380,6 +380,11 @@ return [
                 [
                     'text' => 'Roles',
                     'url'  => 'roles',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Attendance',
+                    'url'  => 'home',
                     'icon' => 'circle-o',
                 ],
                 [
