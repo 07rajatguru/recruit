@@ -340,6 +340,8 @@ class Interview extends Model
             $query = $query->where(\DB::raw('month(interview.interview_date)'),'=',$month);
             $query = $query->where(\DB::raw('year(interview.interview_date)'),'=',$year);
         }
+
+        $query = $query->where('status','like','Attended');
         $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
         $query_response = $query->get();
 
