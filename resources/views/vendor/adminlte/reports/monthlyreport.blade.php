@@ -91,7 +91,7 @@
         <table width="100%" cellspacing="0">
         	<tr>
                 <td colspan="7">
-                    <u><b><h3>No of Interview Scheduled : {{ $interview_count or '0'}}</h3></b></u>
+                    <u><b><h3>No of Interview Attended : {{ $interview_count or '0'}}</h3></b></u>
                 </td>
             </tr>
         </table>
