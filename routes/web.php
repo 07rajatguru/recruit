@@ -1230,5 +1230,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'report.weeklyreportindex',
         'uses' => 'ReportController@weeklyreportIndex'
     ]);
+
+    Route::any('/monthly-report',[
+        'as' => 'report.monthlyreportindex',
+        'uses' => 'ReportController@monthlyreportIndex'
+    ]);
     
 });

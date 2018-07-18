@@ -139,4 +139,32 @@ class JobAssociateCandidates extends Model
         return $response;  
 
     }
+
+    public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL){
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.created_at as created_at');
+        $query = $query->where('job_associate_candidates.associate_by',$user_id);
+
+        if ($month != '' && $year != '') {
+            $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
+            $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
+        }
+        $query = $query->groupBy(\DB::raw('date(job_associate_candidates.created_at)'));
+        $query_response = $query->get();
+
+        $response['associate_data'] = array();
+        $i = 0;
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+            $cnt += $value->count;
+            $datearry = explode(' ', $value->created_at);
+            $response['associate_data'][$i]['associate_date'] = $datearry[0];
+            $response['associate_data'][$i]['associate_candidate_count'] = $value->count;
+            $i++;
+        }
+        $response['cvs_cnt'] = $cnt;
+        //print_r($response);exit;
+        return $response;  
+    }
 }

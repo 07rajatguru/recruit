@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Weekly Report')
+@section('title', 'Monthly Report')
 
 @section('content_header')
     <h1></h1>
@@ -11,7 +11,7 @@
 	<div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Weekly Report</h2>
+            	<h2>Monthly Report</h2>
             </div>
         </div>
 
@@ -21,16 +21,16 @@
 		        	{{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control'))}}
 	        	</div>
     		</div>
-
-    		<div class="box-body col-xs-3 col-sm-3 col-md-3">
-    			<div class="form-group">
-		        	{{Form::text('from_date',$from_date , array('id'=>'from_date', 'placeholder' => 'From Date', 'class'=>'form-control','autocomplete'=>'off'))}}
+    	
+        	<div class="box-body col-xs-3 col-sm-3 col-md-3">
+        		<div class="form-group">
+		        	{{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control'))}}
 	        	</div>
     		</div>
 
-    		<div class="box-body col-xs-3 col-sm-3 col-md-3">
-    			<div class="form-group">
-		        	{{Form::text('to_date',$to_date , array('id'=>'to_date', 'placeholder' => 'To Date', 'class'=>'form-control','autocomplete'=>'off'))}}
+        	<div class="box-body col-xs-3 col-sm-3 col-md-3">
+        		<div class="form-group">
+		        	{{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
 	        	</div>
     		</div>
 
@@ -39,6 +39,7 @@
     				{!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
     			</div>
     		</div>
+
     	</div>
     </div>
 
@@ -61,15 +62,15 @@
             	</thead>
             	<?php $i=0;?>
             	<tbody>
-            	@foreach($associate_weekly as $key => $value)
+            		@foreach($associate_monthly as $key => $value)
             		<tr style="text-align: center;">
             			<td>{{ ++$i }}</td>
             			<td>{{ date('l (jS F,y) ',strtotime($value['associate_date'])) }}</td>
             			<td>{{ $value['associate_candidate_count'] }}</td>
             		</tr>
-            	@endforeach
+            		@endforeach
             	</tbody>
-            		<tr style="text-align: center;">
+            	<tr style="text-align: center;">
             			<td></td>
             			<td>Total Associated</td>
             			<td>{{ $associate_count or '0' }}</td>
@@ -82,7 +83,7 @@
             		<tr style="text-align: center;">
             			<td></td>
             			<td>No. of resumes not achieved</td>
-            			<td><?php if($associate_count<40):?>{{	$associate_count-40 }}<?php endif ?></td>
+            			<td></td>
             		</tr>
             </table>
         </div>
@@ -105,7 +106,7 @@
             	</thead>
             	<?php $i=0;?>
             	<tbody>
-            		@foreach($interview_weekly as $key => $value)
+            		@foreach($interview_monthly as $key => $value)
             		<tr style="text-align: center;">
             			<td>{{ ++$i }}</td>
             			<td>{{ date('l (jS F,y) ',strtotime($value['interview_date'])) }}</td>
@@ -116,7 +117,7 @@
             	<tr style="text-align: center;">
             		<td></td>
             		<td>Total</td>
-            		<td>{{ $interview_count or '0'}}</td>
+            		<td>{{ $interview_count or '0' }}</td>
             	</tr>
             </table>
         </div>
@@ -135,47 +136,24 @@
 @section('customscripts')
 	<script type="text/javascript">
 		$(document).ready(function(){
-			/*var table = jQuery("#weekly_report_cv_table").DataTable({
-				responsive: true,
-				"pageLength": 100,
-				stateSave: true
-			});
-			var table = jQuery("#weekly_report_interview_table").DataTable({
-				responsive: true,
-				"pageLength": 100,
-				stateSave: true
-			});
-			new jQuery.fn.dataTable.FixedHeader( table );*/
-
 			$("#users_id").select2();
-
-			$("#from_date").datepicker({
-                format: "yyyy-mm-dd",
-                autoclose: true,
-            });
-            //$('#date').datepicker().datepicker('setDate', 'today');
-
-            $("#to_date").datepicker({
-                format: "yyyy-mm-dd",
-                autoclose: true,
-            });
 		});
 
 		function select_data(){
 			var users_id = $("#users_id").val();
-			var from_date = $("#from_date").val();
-			var to_date = $("#to_date").val();
+			var month = $("#month").val();
+			var year = $("#year").val();
 
-			var url = '/weekly-report';
+			var url = '/monthly-report';
 
-			var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="users_id" value="'+users_id+'" />' +
-                '<input type="text" name="from_date" value="'+from_date+'" />' +
-                '<input type="text" name="to_date" value="'+to_date+'" />' +
-                '</form>');
+			var form = $('<form action="'+url+ '" method="post">' +
+					'<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' + 
+					'<input type="text" name="users_id" value="'+users_id+'" />' + 
+					'<input type="text" name="month" value="'+month+'" />' + 
+					'<input type="text" name="year" value="'+year+'" />' + 
+					'</form>'); 
 
-            $('body').append(form);
+			$('body').append(form);
             form.submit();
 		}
 	</script>

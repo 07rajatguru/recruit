@@ -330,6 +330,34 @@ class Interview extends Model
 
     }
 
+    public static function getMonthlyReportInterview($user_id,$month,$year){
+
+        $query = Interview::query();
+        $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'interview.interview_date as interview_date');
+        $query = $query->where('interview.interview_owner_id',$user_id);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(interview.interview_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(interview.interview_date)'),'=',$year);
+        }
+        $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
+        $query_response = $query->get();
+
+        $response['interview_data'] = array();
+        $i = 0;
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+            $cnt += $value->count;
+            $datearry = explode(' ', $value->interview_date);
+            $response['interview_data'][$i]['interview_date'] = $datearry[0];
+            $response['interview_data'][$i]['interview_daily_count'] = $value->count;
+            $i++;
+        }
+        $response['interview_cnt'] = $cnt;
+
+        return $response;  
+    }
+
     public static function getInterviewids($interview_id){
 
         $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')

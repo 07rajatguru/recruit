@@ -195,5 +195,21 @@ class Lead extends Model
 
         return $lead_cnt;   
     }
+
+    public static function getMonthlyReportLeadCount($user_id,$month=NULL,$year=NULL){
+
+        $query = Lead::query();
+        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->where('lead_management.account_manager_id','=',$user_id);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(created_at)'),'=',$year);
+        }
+
+        $lead_cnt = $query->count();
+
+        return $lead_cnt;
+    }
 }
 

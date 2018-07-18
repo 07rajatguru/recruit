@@ -103,6 +103,70 @@ class ReportController extends Controller
         return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','from_date','to_date','associate_weekly','associate_count','lead_count','interview_weekly','interview_count'));
     }
 
+    public function monthlyreportIndex(){
+
+        $user_id = \Auth::user()->id;
+
+        $superAdminUserID = getenv('SUPERADMINUSERID');
+        $managerUserID = getenv('MANAGERUSERID');
+
+        $access_roles_id = array($superAdminUserID,$managerUserID);
+        if(in_array($user_id,$access_roles_id)){
+            $users = User::getAllUsers('recruiter');
+        }
+        else{
+            $users = User::getAssignedUsers($user_id,'recruiter');
+        }
+
+        // Month data
+        $month_array = array();
+        for ($i=1; $i <=12 ; $i++) { 
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Year Data
+        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+        $ending_year = date('Y',strtotime('+5 year'));
+
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) { 
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
+            $user_id = $_POST['users_id'];
+        }
+        else{
+            $user_id = $user_id;
+        }
+
+        if (isset($_POST['month']) && $_POST['month']!=0) {
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year']!=0) {
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date('Y');
+        }
+
+        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+        $associate_monthly = $associate_monthly_response['associate_data'];
+        $associate_count = $associate_monthly_response['cvs_cnt'];
+
+        $lead_count = Lead::getMonthlyReportLeadCount($user_id,$month,$year);
+
+        $interview_monthly_response = Interview::getMonthlyReportInterview($user_id,$month,$year);
+        $interview_monthly = $interview_monthly_response['interview_data'];
+        $interview_count = $interview_monthly_response['interview_cnt'];
+
+        return view('adminlte::reports.monthlyreport',compact('users','user_id','month_array','year_array','month','year','associate_monthly','associate_count','lead_count','interview_monthly','interview_count'));
+    }
+
 
     public function dailyreport(){
 
