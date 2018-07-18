@@ -47,7 +47,7 @@
         <table width="100%" cellspacing="0">
         	<tr>
                 <td colspan="7">
-                    <u><b><h3>No of CVs Associated in this week: {{ $associate_count or '0'}}</h3></b></u>
+                    <u><b><h3>No of CVs Associated in this month: {{ $associate_count or '0'}}</h3></b></u>
                 </td>
             </tr>
         </table>
