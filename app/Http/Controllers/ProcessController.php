@@ -67,7 +67,7 @@ class ProcessController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsers();
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
         
@@ -141,7 +141,7 @@ class ProcessController extends Controller
 
     public function edit($id){
 
-     	$users = User::getAllUsers('recruiter');
+     	$users = User::getAllUsers();
      	$process = ProcessManual::find($id);
        
         $action = "edit" ;
@@ -194,7 +194,7 @@ class ProcessController extends Controller
         
         $process = ProcessManual::find($id);
         $process->title = $request->input('title');
-        $process->owner_id = $user_id;
+        //$process->owner_id = $user_id;
         $processStored  = $process->save();
 
         $file = $request->file('file');
