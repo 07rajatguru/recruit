@@ -312,6 +312,11 @@ return [
                    'url'  => 'daily-report',
                    'icon' => 'circle-o',
                ],
+               [
+                   'text' => 'Monthly report',
+                   'url'  => 'userwise-monthly-report',
+                   'icon' => 'circle-o',
+               ]
               /*[
                    'text' => 'Weekly/Monthly report',
                    'url'  => 'weekly-report',
