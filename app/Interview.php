@@ -449,8 +449,8 @@ class Interview extends Model
         $cname = $candidate_response->full_name;
 
         $to_address = array();
-       // $to_address[] = $candidate_owner_email;
-       // $to_address[] = $client_owner_email;
+       $to_address[] = $candidate_owner_email;
+       $to_address[] = $client_owner_email;
 
         $to_address[] = 'tarikapanjwani@gmail.com';
        // $to_address[] = 'rajlalwani@adlertalent.com';
@@ -498,8 +498,8 @@ class Interview extends Model
         $cname = $candidate_response->full_name;
 
         $to_address = array();
-        //$to_address[] = $candidate_owner_email;
-        //$to_address[] = $client_owner_email;
+        $to_address[] = $candidate_owner_email;
+        $to_address[] = $client_owner_email;
         $to_address[] = 'tarikapanjwani@gmail.com';
         
         $input['from_name'] = $from_name;
