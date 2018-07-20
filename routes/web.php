@@ -1235,5 +1235,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'report.monthlyreportindex',
         'uses' => 'ReportController@monthlyreportIndex'
     ]);
-    
+
+    Route::any('/userwise-monthly-report',[
+        'as' => 'report.monthlyreportindex',
+        'uses' => 'ReportController@userWiseMonthlyReport'
+    ]);
+
 });

@@ -330,6 +330,34 @@ class Interview extends Model
 
     }
 
+    public static function getUserWiseMonthlyReportInterview($users,$month,$year){
+
+        $u_keys = array_keys($users);
+
+        $query = Interview::query();
+        $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'interview.interview_owner_id');
+        $query = $query->whereIn('interview.interview_owner_id',$u_keys);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(interview.interview_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(interview.interview_date)'),'=',$year);
+        }
+
+        $query = $query->where('status','like','Attended');
+        $query = $query->groupBy('interview.interview_owner_id');
+
+        $query_response = $query->get();
+
+        $interview_count = array();
+        if($query_response->count()>0){
+            foreach ($query_response  as $k=>$v){
+                $interview_count[$v->interview_owner_id] = $v->count;
+            }
+        }
+
+        return $interview_count;
+    }
+
     public static function getMonthlyReportInterview($user_id,$month,$year){
 
         $query = Interview::query();
@@ -421,8 +449,8 @@ class Interview extends Model
         $cname = $candidate_response->full_name;
 
         $to_address = array();
-        $to_address[] = $candidate_owner_email;
-        $to_address[] = $client_owner_email;
+       // $to_address[] = $candidate_owner_email;
+       // $to_address[] = $client_owner_email;
 
         $to_address[] = 'tarikapanjwani@gmail.com';
        // $to_address[] = 'rajlalwani@adlertalent.com';
@@ -470,8 +498,8 @@ class Interview extends Model
         $cname = $candidate_response->full_name;
 
         $to_address = array();
-        $to_address[] = $candidate_owner_email;
-        $to_address[] = $client_owner_email;
+        //$to_address[] = $candidate_owner_email;
+        //$to_address[] = $client_owner_email;
         $to_address[] = 'tarikapanjwani@gmail.com';
         
         $input['from_name'] = $from_name;

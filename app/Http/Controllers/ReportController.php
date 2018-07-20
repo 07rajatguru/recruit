@@ -103,6 +103,85 @@ class ReportController extends Controller
         return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','from_date','to_date','associate_weekly','associate_count','lead_count','interview_weekly','interview_count'));
     }
 
+    public function userWiseMonthlyReport(){
+
+        // Month data
+        $month_array = array();
+        for ($i=1; $i <=12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Year Data
+        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+        $ending_year = date('Y',strtotime('+5 year'));
+
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month']!=0) {
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year']!=0) {
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date('Y');
+        }
+
+        $user_id = \Auth::user()->id;
+
+        $superAdminUserID = getenv('SUPERADMINUSERID');
+        $managerUserID = getenv('MANAGERUSERID');
+
+        $access_roles_id = array($superAdminUserID,$managerUserID);
+        if(in_array($user_id,$access_roles_id)){
+            $users = User::getAllUsers('recruiter');
+        }
+        else{
+            $users = User::getAssignedUsers($user_id,'recruiter');
+        }
+
+        $associate_monthly_response = JobAssociateCandidates::getUserWiseAssociatedCVS($users,$month,$year);
+
+        $response = array();
+
+        // set 0 value for all users
+        foreach ($users as $k=>$v) {
+            $response[$k]['cvs'] = 0;
+            $response[$k]['leadcount'] = 0;
+            $response[$k]['interviews'] = 0;
+            $response[$k]['uname'] = $users[$k];
+        }
+
+
+        foreach ($associate_monthly_response as $k=>$v) {
+            $response[$k]['cvs'] = $v;
+        }
+
+        $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
+        if(sizeof($lead_count)>0){
+            foreach ($lead_count as $k=>$v) {
+                $response[$k]['leadcount'] = $v;
+            }
+        }
+
+        $interview_count = Interview::getUserWiseMonthlyReportInterview($users,$month,$year);
+        if(sizeof($interview_count)>0){
+            foreach ($interview_count as $k=>$v) {
+                $response[$k]['interviews'] = $v;
+            }
+        }
+
+       // print_r($response);exit;
+        return view('adminlte::reports.userwise-monthlyreport',compact('month_array','year_array','month','year','response'));
+    }
+
     public function monthlyreportIndex(){
 
         $user_id = \Auth::user()->id;

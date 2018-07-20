@@ -196,6 +196,33 @@ class Lead extends Model
         return $lead_cnt;   
     }
 
+    public static function getUserWiseMonthlyReportLeadCount($users,$month,$year){
+
+        $u_keys = array_keys($users);
+
+        $query = Lead::query();
+        $query = $query->select(\DB::raw("COUNT(lead_management.id) as count"),'lead_management.account_manager_id');
+        $query = $query->whereIn('lead_management.account_manager_id',$u_keys);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(created_at)'),'=',$year);
+        }
+
+        $query = $query->groupBy('lead_management.account_manager_id');
+
+        $lead_res = $query->get();
+
+        $lead_count = array();
+        if($lead_res->count()>0){
+            foreach ($lead_res  as $k=>$v){
+                $lead_count[$v->account_manager_id] = $v->count;
+            }
+        }
+
+        return $lead_count;
+    }
+
     public static function getMonthlyReportLeadCount($user_id,$month=NULL,$year=NULL){
 
         $query = Lead::query();

@@ -140,6 +140,29 @@ class JobAssociateCandidates extends Model
 
     }
 
+    public static function getUserWiseAssociatedCVS($users,$month,$year){
+
+        $u_keys = array_keys($users);
+        //print_r($u_keys);exit;
+        $query = JobAssociateCandidates::query();
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.associate_by as uid','job_associate_candidates.created_at as created_at');
+        $query = $query->whereIn('job_associate_candidates.associate_by',$u_keys);
+
+        if ($month != '' && $year != '') {
+            $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
+            $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
+        }
+        $query = $query->groupBy('job_associate_candidates.associate_by');
+        //$query = $query->select('');
+        $query_response = $query->get();
+
+        $cvs_associated_res = array();
+        foreach ($query_response as $key => $value) {
+            $cvs_associated_res[$value->uid] = $value->count;
+        }
+        return $cvs_associated_res;
+    }
+
     public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL){
 
         $query = JobAssociateCandidates::query();

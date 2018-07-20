@@ -19,51 +19,43 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
-        	<div class="box-body col-xs-4 col-sm-4 col-md-4">
+        	<div class="box-body col-xs-3 col-sm-3 col-md-3">
         		<div class="form-group">
 		        	{{Form::select('select',$select,2 , array('id'=>'select','class'=>'form-control','onchange'=>'getSelect()'))}}
 	        	</div>
     		</div>
 
-    		<div class="form-group custom">
-    			<div class="box-body col-xs-3 col-sm-3 col-md-3">
-        			<div class="form-group">
-		        		{{Form::text('from_date',null , array('id'=>'from_date', 'placeholder' => 'From Date', 'class'=>'form-control'))}}
-	        		</div>
-    			</div>
+            <div class="box-body col-xs-3 col-sm-3 col-md-3 custom_from_date">
+                <div class="form-group">
+                    {{Form::text('from_date',null , array('id'=>'from_date', 'placeholder' => 'From Date', 'class'=>'form-control'))}}
+                </div>
+            </div>
 
-    			<div class="box-body col-xs-3 col-sm-3 col-md-3">
-	        		<div class="form-group">
-			        	{{Form::text('to_date',null , array('id'=>'to_date', 'placeholder' => 'To Date', 'class'=>'form-control'))}}
-	    	    	</div>
-    			</div>
-    		</div>
+            <div class="box-body col-xs-3 col-sm-3 col-md-3 custom_to_date">
+                <div class="form-group">
+                    {{Form::text('to_date',null , array('id'=>'to_date', 'placeholder' => 'To Date', 'class'=>'form-control'))}}
+                </div>
+            </div>
 
-    		<div class="form-group month">
-    			<div class="box-body col-xs-3 col-sm-3 col-md-3">
-    				<div class="form-group">
-    					{{Form::select('month', $month_array, null, array('id'=>'month', 'class'=>'form-control'))}}
-    				</div>
-    			</div>
-    		</div>
+            <div class="box-body col-xs-3 col-sm-3 col-md-3 month">
+                <div class="form-group">
+                    {{Form::select('month', $month_array, null, array('id'=>'month', 'class'=>'form-control'))}}
+                </div>
+            </div>
 
-    		<div class="form-group quater">
-    			<div class="box-body col-xs-3 col-sm-3 col-md-3">
-    				<div class="form-group">
-    					{{Form::select('quater', $quater, 0, array('id'=>'quater', 'class'=>'form-control'))}}
-    				</div>
-    			</div>
-    		</div>
+            <div class="box-body col-xs-3 col-sm-3 col-md-3 quater">
+                <div class="form-group">
+                    {{Form::select('quater', $quater, 0, array('id'=>'quater', 'class'=>'form-control'))}}
+                </div>
+            </div>
 
-    		<div class="form-group year">
-    			<div class="box-body col-xs-3 col-sm-3 col-md-3">
-    				<div class="form-group">
-    					{{Form::select('year', $year_array, $default, array('id'=>'year', 'class'=>'form-control'))}}
-    				</div>
-    			</div>
-    		</div>
+            <div class="box-body col-xs-2 col-sm-2 col-md-2 year">
+                <div class="form-group">
+                    {{Form::select('year', $year_array, $default, array('id'=>'year', 'class'=>'form-control'))}}
+                </div>
+            </div>
 
-    		<div class="box-body col-xs-2 col-sm-2 col-md-2">
+    		<div class="box-body col-xs-3 col-sm-3 col-md-3">
     			<div class="form-group">
     				{!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
     			</div>
@@ -144,31 +136,36 @@
 			var selectlist = $("#select").val();
 
 			if (selectlist == 0){
-				$(".custom").show();
+				$(".custom_from_date").show();
+                $(".custom_to_date").show();
 				$(".month").hide();
 				$(".year").hide();
 				$(".quater").hide();
 			}
 			else if(selectlist == 1){
-				$(".custom").hide();
+                $(".custom_from_date").hide();
+                $(".custom_to_date").hide();
 				$(".month").show();
 				$(".year").show();
 				$(".quater").hide();
 			}
 			else if(selectlist == 2){
-				$(".custom").hide();
+                $(".custom_from_date").hide();
+                $(".custom_to_date").hide();
 				$(".month").hide();
 				$(".year").show();
 				$(".quater").show();
 			}
 			else if(selectlist == 3){
-				$(".custom").hide();
+                $(".custom_from_date").hide();
+                $(".custom_to_date").hide();
 				$(".month").hide();
 				$(".year").show();
 				$(".quater").hide();
 			}
 			else{
-				$(".custom").hide();
+                $(".custom_from_date").hide();
+                $(".custom_to_date").hide();
 				$(".month").hide();
 				$(".year").hide();
 				$(".quater").hide();
