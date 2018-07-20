@@ -36,26 +36,29 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <table border="1" cellpadding="3" cellspacing="1" style="padding: 50px 54px;text-align: center;" width="60%">
-                <tr style="background-color: #f39c12;font-weight: bold;">
-                    <td>Sr. No.</td>
-                    <td>User</td>
-                    <td>No. of Cvs Associated</td>
-                    <td>No. of Interviews Attended</td>
-                    <td>No. of leads added</td>
-                </tr>
-
-                <?php $i=1; ?>
-                @foreach($response as $k=>$v)
-                <tr>
-                    <td>{!! $i !!}</td>
-                    <td>{!! $v['uname'] !!}</td>
-                    <td>{!! $v['cvs'] !!}</td>
-                    <td>{!! $v['interviews'] !!}</td>
-                    <td>{!! $v['leadcount'] !!}</td>
-                </tr>
-                <?php $i++; ?>
-                @endforeach
+            <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;" width="75%" id="userwise-monthly-report">
+                <thead>
+                    <tr style="background-color: #f39c12;font-weight: bold;">
+                        <td>Sr. No.</td>
+                        <td>User</td>
+                        <td>No. of Cvs Associated</td>
+                        <td>No. of Interviews Attended</td>
+                        <td>No. of leads added</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $i=1; ?>
+                    @foreach($response as $k=>$v)
+                    <tr>
+                        <td>{!! $i !!}</td>
+                        <td>{!! $v['uname'] !!}</td>
+                        <td>{!! $v['cvs'] !!}</td>
+                        <td>{!! $v['interviews'] !!}</td>
+                        <td>{!! $v['leadcount'] !!}</td>
+                    </tr>
+                    <?php $i++; ?>
+                    @endforeach
+                </tbody>
             </table>
         </div>
 
@@ -68,6 +71,7 @@
 
         $(document).ready(function(){
             $("#users_id").select2();
+            $('#userwise-monthly-report').DataTable();
         });
 
         function select_data(){
