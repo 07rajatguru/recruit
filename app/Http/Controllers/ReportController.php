@@ -154,7 +154,6 @@ class ReportController extends Controller
         // set 0 value for all users
         foreach ($users as $k=>$v) {
             $response[$k]['cvs'] = 0;
-            $response[$k]['leadcount'] = 0;
             $response[$k]['interviews'] = 0;
             $response[$k]['uname'] = $users[$k];
         }
@@ -162,13 +161,6 @@ class ReportController extends Controller
 
         foreach ($associate_monthly_response as $k=>$v) {
             $response[$k]['cvs'] = $v;
-        }
-
-        $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
-        if(sizeof($lead_count)>0){
-            foreach ($lead_count as $k=>$v) {
-                $response[$k]['leadcount'] = $v;
-            }
         }
 
         $interview_count = Interview::getUserWiseMonthlyReportInterview($users,$month,$year);

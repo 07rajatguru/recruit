@@ -42,8 +42,11 @@
                         <td>Sr. No.</td>
                         <td>User</td>
                         <td>No. of Cvs Associated</td>
+                        <td>Benchmarks of cvs</td>
+                        <td>Benchmarks not achieved in cvs </td>
                         <td>No. of Interviews Attended</td>
-                        <td>No. of leads added</td>
+                        <td>Benchmarks of Interviews</td>
+                        <td>Benchmarks not achieved in Interviews </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,8 +56,25 @@
                         <td>{!! $i !!}</td>
                         <td>{!! $v['uname'] !!}</td>
                         <td>{!! $v['cvs'] !!}</td>
+                        <td>150</td>
+                        <?php
+                            $not_ach = $v['cvs'] -150
+                        ?>
+                        @if($not_ach<0)
+                            <td style="color:red;">{!! $not_ach !!}</td>
+                        @else
+                            <td style="color:green;">{!! $not_ach !!}</td>
+                        @endif
                         <td>{!! $v['interviews'] !!}</td>
-                        <td>{!! $v['leadcount'] !!}</td>
+                        <td>38</td>
+                        <?php
+                            $not_ach_in = $v['interviews'] - 38
+                        ?>
+                        @if($not_ach<0)
+                            <td style="color:red;">{!! $not_ach_in !!}</td>
+                        @else
+                            <td style="color:green;">{!! $not_ach_in !!}</td>
+                        @endif
                     </tr>
                     <?php $i++; ?>
                     @endforeach
