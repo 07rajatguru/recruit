@@ -71,7 +71,9 @@
 
         $(document).ready(function(){
             $("#users_id").select2();
-            $('#userwise-monthly-report').DataTable();
+            $('#userwise-monthly-report').DataTable({
+                "pageLength": 100
+            });
         });
 
         function select_data(){
