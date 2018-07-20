@@ -141,7 +141,7 @@ class ReportController extends Controller
 
         $access_roles_id = array($superAdminUserID,$managerUserID);
         if(in_array($user_id,$access_roles_id)){
-            $users = User::getAllUsers('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
         else{
             $users = User::getAssignedUsers($user_id,'recruiter');
