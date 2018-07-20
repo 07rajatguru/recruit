@@ -47,23 +47,19 @@ class WeeklyReport extends Command
         // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter');
+        //$users = User::getAllUsersEmails('recruiter');
 
+        $users[4] = 'kazvin@adlertalent.com';
         foreach ($users as $key => $value) {
 
-            /*//Get Reports to Email
-            $report_res = User::getUsersReportToEmail($key);
-            $report_email = $report_res->email;
-
-            //Get Floor Incharge Email
-            $floor_res = User::getUsersFloorInchargeEmail($key);
-            $floor_incharge_email = $floor_res->email;
-            //print_r($report_email);exit;*/
-
+            $report_email = '';
+            $floor_incharge_email = '';
             $res = User::getReportsToUsersEmail($key);
-            $report_email = $res->remail;
-            $floor_incharge_email = $res->femail;
 
+            if(isset($res->remail) && $res->remail!='')
+                $report_email = $res->remail;
+            if(isset($res->femail) && $res->femail!='')
+                $floor_incharge_email = $res->femail;
 
             $to_array = array();
             $to_array[] = $value;
@@ -76,15 +72,13 @@ class WeeklyReport extends Command
 
             $input['from_name'] = $from_name;
             $input['from_address'] = $from_address;
-            // $input['to'] = $to_address;
-            // $input['cc'] = $cc_address;
             $input['app_url'] = $app_url;
             $input['to_array'] = array_unique($to_array);
             $input['cc_array'] = array_unique($cc_array);
-            //print_r($input['cc_array']);exit;
 
 
             $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($key,NULL,NULL);
+
             $associate_weekly = $associate_weekly_response['associate_data'];
             $associate_count = $associate_weekly_response['cvs_cnt'];
 
@@ -93,7 +87,6 @@ class WeeklyReport extends Command
             $interview_count = $interview_weekly_response['interview_cnt'];
 
             $lead_count = Lead::getWeeklyReportLeadCount($key,NULL,NULL);
-
             $user_name = User::getUserNameById($key);
 
             $input['value'] = $user_name;
