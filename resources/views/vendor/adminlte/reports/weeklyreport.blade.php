@@ -166,17 +166,29 @@
 			var from_date = $("#from_date").val();
 			var to_date = $("#to_date").val();
 
-			var url = '/weekly-report';
+            var date1 = new Date(from_date);
+            var date2 = new Date(to_date);
+            var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-			var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="users_id" value="'+users_id+'" />' +
-                '<input type="text" name="from_date" value="'+from_date+'" />' +
-                '<input type="text" name="to_date" value="'+to_date+'" />' +
-                '</form>');
+            var total_days= diffDays+1;
 
-            $('body').append(form);
-            form.submit();
+            if(total_days<=7){
+                var url = '/weekly-report';
+
+                var form = $('<form action="' + url + '" method="post">' +
+                    '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                    '<input type="text" name="users_id" value="'+users_id+'" />' +
+                    '<input type="text" name="from_date" value="'+from_date+'" />' +
+                    '<input type="text" name="to_date" value="'+to_date+'" />' +
+                    '</form>');
+
+                $('body').append(form);
+                form.submit();
+			}
+			else if (total_days>7) {
+                alert("Select 7 days date range");
+			}
 		}
 	</script>
 @endsection
