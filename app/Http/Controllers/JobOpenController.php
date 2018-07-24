@@ -1701,6 +1701,7 @@ class JobOpenController extends Controller
         $data['about'] = '';
         $data['status'] = $request->get('status');
         $data['interview_owner_id'] = $user_id;
+        $data['location'] = $request->get('location');
 
         $job_id = $request->get('job_id');
 
