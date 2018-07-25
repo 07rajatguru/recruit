@@ -64,7 +64,7 @@
         @endforeach
         </tbody>
     </table>
-    {!! $data->render() !!}
+  {{--!! $data->render() !!--}}
 @endsection
 @section('customscripts')
     <script type="text/javascript">

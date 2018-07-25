@@ -67,6 +67,18 @@
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
+                            
+
+                            <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
+                            <strong>Select Client: <span class = "required_fields">*</span></strong>
+                            {!! Form::select('client_id', $client,null, array('id'=>'client_id','class' => 'form-control')) !!}
+                            @if ($errors->has('client_id'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('client_id') }}</strong>
+                                </span>
+                            @endif
+                            </div>
+                            
                             <div class="form-group {{ $errors->has('amount') ? 'has-error' : '' }}">
                                 <strong>Amount:<span class = "required_fields">*</span></strong>
                                 {!! Form::text('amount', null, array('id'=>'amount','placeholder' => 'Amount','class' => 'form-control', 'tabindex' => '2' )) !!}
@@ -159,6 +171,8 @@
     <script>
         $(document).ready(function(){
             $( "#head" ).select2();
+
+            $("#client_id").select2();
 
             $("#date").datepicker({
                 format: "dd-mm-yyyy",
