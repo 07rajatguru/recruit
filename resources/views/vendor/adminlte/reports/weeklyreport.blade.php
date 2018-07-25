@@ -53,7 +53,7 @@
         <div class = "table-responsive">
         	<table class="table table-striped table-bordered nowrap" cellspacing="0" style="width:50%;" id="weekly_report_cv_table">
             	<thead>
-            		<tr style="background-color: #C4D79B;">
+            		<tr style="background-color: #f39c12;">
             			<th style="text-align: center;">Sr. No.</th>
             			<th style="text-align: center;">Day(Date)</th>
             			<th style="text-align: center;">No of resumes associated</th>
@@ -97,7 +97,7 @@
         <div class = "table-responsive">
         	<table  style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0"  id="weekly_report_interview_table">
             	<thead>
-            		<tr style="background-color: #C4D79B;">
+            		<tr style="background-color: #7598d9;">
             			<th style="text-align: center;">Sr. No.</th>
             			<th style="text-align: center;">Day(Date)</th>
             			<th style="text-align: center;">No of Interviews</th>
