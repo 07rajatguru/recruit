@@ -9,6 +9,7 @@ use App\AccountingHeads;
 use App\Date;
 use App\User;
 use App\ExpenseDoc;
+use App\ClientBasicinfo;
 
 class ExpenseController extends Controller
 {
@@ -19,9 +20,6 @@ class ExpenseController extends Controller
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
-
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
         $expense = Expense::getAllExpense();
         //print_r($expense);exit;
     	
@@ -38,11 +36,53 @@ class ExpenseController extends Controller
         $pmode = '';
         $ptype = '';
         $expense_head = '';
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            // get all clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
+        }
+        else{
+            // get logged in user clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
+
+        $client = array();
+
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+            }
+        }
+
+        // get all users
+       
+        //print_r($users);exit;
+      //  $team_mates = $user_id;
+
+        // job opening status
+        /*$job_open_status = JobOpen::getJobOpenStatus();*/
+
+        // job type
+       // $job_type = Expense::getJobTypes();
+
+        // job priority
+       // $job_priorities = JobOpen::getJobPriorities();
+
+
         //print_r($head);exit;
 
         $action = 'add';
 
-        return view('adminlte::expense.create',compact('action','payment_mode','payment_type','head','pmode','ptype','expense_head'));
+        return view('adminlte::expense.create',compact('action','payment_mode','payment_type','head','pmode','ptype','expense_head','client'));
     }
 
     public function store(Request $request){
