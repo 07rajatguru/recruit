@@ -38,15 +38,15 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;" width="75%" id="userwise-monthly-report">
                 <thead>
-                    <tr style="background-color: #f39c12;font-weight: bold;">
-                        <td>Sr. No.</td>
-                        <td>User</td>
-                        <td>No. of Cvs Associated</td>
-                        <td>Benchmarks of cvs</td>
-                        <td>Benchmarks not achieved in cvs </td>
-                        <td>No. of Interviews Attended</td>
-                        <td>Benchmarks of Interviews</td>
-                        <td>Benchmarks not achieved in Interviews </td>
+                    <tr style="font-weight: bold;">
+                        <td style="background-color: #FF5733">Sr. No.</td>
+                        <td style="background-color: #FF5733">User</td>
+                        <td style="background-color: #f39c12;">No. of Cvs Associated</td>
+                        <td style="background-color: #f39c12;">Benchmarks of cvs</td>
+                        <td style="background-color: #f39c12;">Benchmarks not achieved in cvs </td>
+                        <td style="background-color: #00B0F0;">No. of Interviews Attended</td>
+                        <td style="background-color: #00B0F0;">Benchmarks of Interviews</td>
+                        <td style="background-color: #00B0F0;">Benchmarks not achieved in Interviews </td>
                     </tr>
                 </thead>
                 <tbody>
