@@ -62,18 +62,8 @@
                     <div class="modal-content">
                         {!! Form::open(['method' => 'POST','files' => true, 'route' => ["jobopen.scheduleinterview" ]])!!}
                         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                            <div class="box-header with-border col-md-6 ">
-                                <h3 class="box-title">Schedule Interview</h3>
-
-                                <!-- <div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
-                                    <strong>Interview Name: <span class = "required_fields">*</span> </strong>
-                                    {!! Form::text('interview_name', null, array('id'=>'interview_name','placeholder' => 'Interview Name','class' => 'form-control', 'tabindex' => '1' )) !!}
-                                    @if ($errors->has('interview_name'))
-                                        <span class="help-block">
-                                <strong>{{ $errors->first('interview_name') }}</strong>
-                                </span>
-                                    @endif
-                                </div> -->
+                            <h3 class="box-title">Schedule Interview</h3>
+                            <div class="col-md-6 ">
 
                                 {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 {!! Form::hidden('client_id', $client_id, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '1' )) !!}
@@ -95,22 +85,35 @@
                                     @endif
                                 </div>
 
-                                <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                    <strong>Type:</strong>
-                                    {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '6' )) !!}
-                                    @if ($errors->has('type'))
-                                        <span class="help-block">
-                                <strong>{{ $errors->first('type') }}</strong>
-                                </span>
-                                    @endif
-                                </div>
-
                                 <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                                     <strong>Status:</strong>
                                     {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '10' )) !!}
                                     @if ($errors->has('status'))
                                         <span class="help-block">
                                 <strong>{{ $errors->first('status') }}</strong>
+                                </span>
+                                    @endif
+                                </div>
+
+                                <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
+                                    <strong>Interview Venue:</strong>
+                                    {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '8' , 'rows' => '3')) !!}
+                                    @if ($errors->has('location'))
+                                        <span class="help-block">
+                                <strong>{{ $errors->first('location') }}</strong>
+                                </span>
+                                    @endif
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                    <strong>Type:</strong>
+                                    {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '6' )) !!}
+                                    @if ($errors->has('type'))
+                                        <span class="help-block">
+                                <strong>{{ $errors->first('type') }}</strong>
                                 </span>
                                     @endif
                                 </div>
@@ -126,6 +129,7 @@
                                 </div>
 
                             </div>
+
                             <div class="form-group">
                                 <div class="col-sm-2">&nbsp;</div>
                                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">

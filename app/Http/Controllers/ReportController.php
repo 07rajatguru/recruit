@@ -61,7 +61,7 @@ class ReportController extends Controller
 
         $access_roles_id = array($superAdminUserID,$managerUserID);
         if(in_array($user_id,$access_roles_id)){
-            $users = User::getAllUsers('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
         else{
             $users = User::getAssignedUsers($user_id,'recruiter');
@@ -71,7 +71,12 @@ class ReportController extends Controller
             $user_id = $_POST['users_id'];
         }
         else{
-            $user_id = $user_id;
+            if(in_array($user_id,$users)){
+                $user_id = $user_id;
+            }
+            else{
+                $user_id = key($users);
+            }
         }
 
 
