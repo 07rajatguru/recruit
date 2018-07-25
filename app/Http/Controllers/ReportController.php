@@ -71,7 +71,12 @@ class ReportController extends Controller
             $user_id = $_POST['users_id'];
         }
         else{
-            $user_id = $user_id;
+            if(in_array($user_id,$users)){
+                $user_id = $user_id;
+            }
+            else{
+                $user_id = key($users);
+            }
         }
 
 
