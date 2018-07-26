@@ -21,7 +21,7 @@
                         <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
                             {{--<a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">        <img class="site-logo" width="60px" height="80px" src="http://adlertalent.com/wp-content/uploads/2016/06/logo.png" alt="Adler Talent Solutions Pvt. Ltd." style=" padding-top: 16px;   vertical-align: middle;"> <span>Adler Talent Solutions Pvt. Ltd.</span> </a>--}}
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img width="1000" class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:100%;height: 150px;padding-top: 16px;   vertical-align: middle;">
+                                <img width="800" class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:100%;height: 150px;padding-top: 16px;   vertical-align: middle;">
                             </a>
                         </div>
                     </td>
@@ -30,7 +30,7 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td width="800">
             <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;"  id="userwise-monthly-report">
                 <thead>
                 <tr style="font-weight: bold;">
@@ -78,7 +78,7 @@
         </td>
     </tr>
     <tr style="height: 45px; background-color: #dddddd;">
-        <td>
+        <td width="800">
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                 <tr >
                     <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
