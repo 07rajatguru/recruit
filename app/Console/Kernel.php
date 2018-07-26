@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\WeeklyReport',
         'App\Console\Commands\ReportTest',
         'App\Console\Commands\EveryMinute',
+        'App\Console\Commands\MonthlyReport',
     ];
 
     /**
