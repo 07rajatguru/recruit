@@ -65,7 +65,7 @@
                         <?php
                         $not_ach_in = $v['interviews'] - 38
                         ?>
-                        @if($not_ach<0)
+                        @if($not_ach_in<0)
                             <td style="color:red;">{!! $not_ach_in !!}</td>
                         @else
                             <td style="color:green;">{!! $not_ach_in !!}</td>
