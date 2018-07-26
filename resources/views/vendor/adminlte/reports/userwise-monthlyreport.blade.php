@@ -41,9 +41,9 @@
                     <tr style="font-weight: bold;">
                         <td style="background-color: #FA8258">Sr. No.</td>
                         <td style="background-color: #FA8258">User</td>
-                        <td style="background-color: #f39c12;">No. of Cvs Associated</td>
-                        <td style="background-color: #f39c12;">Benchmarks of cvs</td>
-                        <td style="background-color: #f39c12;">Benchmarks not achieved in cvs </td>
+                        <td style="background-color: #F7D358;">No. of Cvs Associated</td>
+                        <td style="background-color: #F7D358;">Benchmarks of cvs</td>
+                        <td style="background-color: #F7D358;">Benchmarks not achieved in cvs </td>
                         <td style="background-color: #BDBDBD;">No. of Interviews Attended</td>
                         <td style="background-color: #BDBDBD;">Benchmarks of Interviews</td>
                         <td style="background-color: #BDBDBD;">Benchmarks not achieved in Interviews </td>
