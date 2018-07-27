@@ -167,7 +167,10 @@ class JobAssociateCandidates extends Model
 
         $query = JobAssociateCandidates::query();
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.created_at as created_at');
-        $query = $query->where('job_associate_candidates.associate_by',$user_id);
+
+        if($user_id>0){
+            $query = $query->where('job_associate_candidates.associate_by',$user_id);
+        }
 
         if ($month != '' && $year != '') {
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);

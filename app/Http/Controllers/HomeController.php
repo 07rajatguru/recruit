@@ -11,6 +11,7 @@ use App\User;
 use App\Date;
 use App\ClientBasicinfo;
 use App\JobOpen;
+use App\JobAssociateCandidates;
 use Excel;
 use DB;
 use Calendar;
@@ -131,15 +132,15 @@ class HomeController extends Controller
         }
 
         //get CVs Associated on this month
+        $month = date('m');
+        $year = date('Y');
         if(in_array($user_role_id,$access_roles_id)){
-            $month = date('m');
-            $associated = DB::table('job_associate_candidates')->whereRaw('MONTH(date) = ?',[$month])->count();
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
         }
         else{
-            $month = date('m');
-            $associated = DB::table('job_associate_candidates')->whereRaw('MONTH(date) = ?',[$month])
-                                               ->where('associate_by',$user->id)
-                                               ->count();
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user->id,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
         }
 
         //get No. of interviews attended this month
@@ -166,7 +167,7 @@ class HomeController extends Controller
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
         $viewVariable['candidatejoinCount'] = $candidatecount;
-        $viewVariable['associatedCount'] = $associated;
+        $viewVariable['associatedCount'] = $associate_count;
         $viewVariable['interviewAttendCount'] = $interview_attend;
 
         return view('dashboard',$viewVariable);
