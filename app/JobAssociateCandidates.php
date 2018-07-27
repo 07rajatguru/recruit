@@ -176,7 +176,7 @@ class JobAssociateCandidates extends Model
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
             $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
         }
-        $query = $query->groupBy(\DB::raw('date(job_associate_candidates.created_at)'));
+        //$query = $query->groupBy(\DB::raw('date(job_associate_candidates.created_at)'));
         $query_response = $query->get();
 
         $response['associate_data'] = array();
