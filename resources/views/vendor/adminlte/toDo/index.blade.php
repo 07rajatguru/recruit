@@ -112,6 +112,7 @@
         jQuery(document).ready(function(){
             var table = jQuery('#todos_table').DataTable( {
                 responsive: true,
+                "bStateSave": true,
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );
