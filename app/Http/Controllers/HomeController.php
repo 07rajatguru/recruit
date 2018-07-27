@@ -114,6 +114,13 @@ class HomeController extends Controller
             $interviews = Interview::getDashboardInterviews(0,$user->id);
         }
 
+        if(in_array($user_role_id,$access_roles_id)){
+            $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user->id);
+        }
+        else{
+            $interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user->id);
+        }
+
         //get candidate join list on this month
         if(in_array($user_role_id,$access_roles_id)){
             $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCount($user->id,1);
@@ -155,7 +162,7 @@ class HomeController extends Controller
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
-        $viewVariable['interviewCount'] = sizeof($interviews);
+        $viewVariable['interviewCount'] = sizeof($interviews_cnt);
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
         $viewVariable['candidatejoinCount'] = $candidatecount;
