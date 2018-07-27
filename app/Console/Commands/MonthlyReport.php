@@ -76,20 +76,31 @@ class MonthlyReport extends Command
                 }
             }
 
+            $user_name = User::getUserNameById($k1);
+
             $input = array();
             $input['from_name'] = $from_name;
             $input['from_address'] = $from_address;
-            $input['value'] = $v1;
+            $input['value'] = $user_name;
             $input['response'] = $response;
             $input['app_url'] = $app_url;
-            $input['to_array']= 'saloni@trajinfotech.com';
-            $input['cc_array']= 'tarikapanjwani@gmail.com';
+            $input['to_array']= $v1;
 
-            \Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
+            $cc_array = array();
+            $cc_array[] = 'tarikapanjwani@gmail.com';
+            $cc_array[] = 'rajlalwani@adlertalent.com';
+            $input['cc_array']= $cc_array;
+
+            /*\Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F")." ".date("Y"));
-            });
+            });*/
 
+            echo "Name : ". $user_name;
+            echo "\n";
+            print_r($input['to_array']);
+            echo "\n";
+            echo "===";
         }
         exit;
     }
