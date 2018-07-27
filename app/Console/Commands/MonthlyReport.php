@@ -98,7 +98,7 @@ class MonthlyReport extends Command
 
             echo "Name : ". $user_name;
             echo "\n";
-            print_r($input['to_array']);
+            print_r($users);
             echo "\n";
             echo "===";
         }
