@@ -52,8 +52,18 @@ class MonthlyReport extends Command
         $month = date('m');
         $year = date('Y');
 
+        $superAdminUserID = getenv('SUPERADMINUSERID');
+        $managerUserID = getenv('MANAGERUSERID');
+
         foreach ($users_all as $k1=>$v1) {
-            $users = User::getAssignedUsers($k1,'recruiter');
+
+            $access_roles_id = array($superAdminUserID,$managerUserID);
+            if(in_array($k1,$access_roles_id)){
+                $users = User::getAllUsers('recruiter');
+            }
+            else{
+                $users = User::getAssignedUsers($k1,'recruiter');
+            }
 
             $response = array();
 
