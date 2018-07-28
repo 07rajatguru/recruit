@@ -53,9 +53,10 @@ class MonthlyReport extends Command
         if($month==12){
             $year = date('Y',strtotime('last year'));
         }
+        else{
+            $year = date('Y');
+        }
 
-        echo $month."=".$year;exit;
-        
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
 
