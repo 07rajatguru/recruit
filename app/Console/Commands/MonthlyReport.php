@@ -49,9 +49,13 @@ class MonthlyReport extends Command
 
         $users_all = User::getAllUsersEmails('recruiter');
 
-        $month = date('m');
-        $year = date('Y');
+        $month = date('m',strtotime('last month'));
+        if($month==12){
+            $year = date('Y',strtotime('last year'));
+        }
 
+        echo $month."=".$year;exit;
+        
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
 
