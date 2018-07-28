@@ -101,17 +101,11 @@ class MonthlyReport extends Command
             $cc_array[] = 'rajlalwani@adlertalent.com';
             $input['cc_array']= $cc_array;
 
-            /*\Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
+            \Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F")." ".date("Y"));
-            });*/
+            });
 
-            echo "Name : ". $user_name;
-            echo "\n";
-            print_r($users);
-            echo "\n";
-            echo "===";
         }
-        exit;
     }
 }
