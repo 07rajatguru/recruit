@@ -63,10 +63,12 @@ class RoleController extends Controller
         $role->save();
 
 
-        foreach ($request->input('permission') as $key => $value) {
-            $role->attachPermission($value);
+        $permissions = $request->input('permission');
+        if(isset($permissions)) {
+            foreach ($request->input('permission') as $key => $value) {
+                $role->attachPermission($value);
+            }
         }
-
 
         return redirect()->route('roles.index')->with('success','Role created successfully');
 
@@ -120,7 +122,7 @@ class RoleController extends Controller
         $this->validate($request, [
             'display_name' => 'required',
             'description' => 'required',
-            'permission' => 'required',
+            //'permission' => 'required',
         ]);
 
 
@@ -132,9 +134,12 @@ class RoleController extends Controller
         DB::table("permission_role")->where("permission_role.role_id",$id)
             ->delete();
 
+        $permissions = $request->input('permission');
+        if(isset($permissions)) {
+            foreach ($request->input('permission') as $key => $value) {
+                $role->attachPermission($value);
+            }
 
-        foreach ($request->input('permission') as $key => $value) {
-            $role->attachPermission($value);
         }
 
 
