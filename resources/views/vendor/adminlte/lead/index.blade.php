@@ -60,15 +60,24 @@
             <tr >
                 <td>{{ ++$i }}</td>
                  <td>
-                    <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'lead','display_name'=>'lead'])
+                     @if($value['access'])
+                        <a class="fa fa-edit" title="Edit" href="{{ route('lead.edit',$value['id']) }}"></a>
+                     @endif
+
+                     @if($value['access'])
+                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'lead','display_name'=>'lead'])
+                     @endif
 
                     @if ($value['convert_client'] == 0)
-                    <a title="Convert lead to client"  class="fa fa-clone" href="{{ route('lead.clone',$value['id']) }}"></a>
+                        @if($value['access'])
+                            <a title="Convert lead to client"  class="fa fa-clone" href="{{ route('lead.clone',$value['id']) }}"></a>
+                        @endif
                     @endif
 
                     @if ($value['convert_client'] == 0)
-                    @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead'])
+                        @if($value['access'])
+                            @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead'])
+                        @endif
                     @endif
                     
                 </td>
