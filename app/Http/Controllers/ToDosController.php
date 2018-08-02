@@ -464,7 +464,7 @@ class ToDosController extends Controller
             $i = 1;
             foreach ($job_response as $k=>$v){
                 $typeArr[$i]['id'] = $v['id'];
-                $typeArr[$i]['value'] = $v['posting_title']." - ".$v['company_name'];
+                $typeArr[$i]['value'] = $v['client']." - ".$v['location'];
                 $i++;
             }
 
@@ -890,7 +890,7 @@ class ToDosController extends Controller
             $i = 0;
             foreach ($job_response as $k=>$v){
                 $typeArr[$i]['id'] = $v['id'];
-                $typeArr[$i]['value'] = $v['posting_title']." - ".$v['company_name'];
+                $typeArr[$i]['value'] = $v['client']." - ".$v['location'];
                 $i++;
             }
 
@@ -1009,7 +1009,7 @@ class ToDosController extends Controller
             $i = 0;
             foreach ($job_response as $k=>$v){
                 $typeArr[$i]['id'] = $v['id'];
-                $typeArr[$i]['value'] = $v['posting_title']." - ".$v['company_name'];
+                $typeArr[$i]['value'] = $v['client']." - ".$v['location'];
                 $i++;
             }
         }
