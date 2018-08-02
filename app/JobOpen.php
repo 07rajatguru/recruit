@@ -517,6 +517,13 @@ class JobOpen extends Model
         $job_client = env('CLOSEDBYCLIENT');
         $job_us = env('CLOSEDBYUS');
 
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job_open_query = JobOpen::query();
@@ -623,8 +630,17 @@ class JobOpen extends Model
 
             // Admin/super admin have access to all details
             if($all==1){
+
+                // Strategy and coordinator role dont have all access
+                if($isStrategy){
+                    $jobs_list[$i]['access'] = '0';
+                }
+                else{
+                    $jobs_list[$i]['access'] = '1';
+                }
+
                 $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
-                $jobs_list[$i]['access'] = '1';
+                //$jobs_list[$i]['access'] = '1';
             }
             else{
                 if(isset($value->hiring_manager_id) && $value->hiring_manager_id==$user_id ){
