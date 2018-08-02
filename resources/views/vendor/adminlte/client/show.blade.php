@@ -48,17 +48,29 @@
                          <tr>
                             <th scope="row"  >HR/Coordinator Name</th>
                             <td>{{ $client['coordinator_name'] }}</td>
-                             <th>Contact Number</th>
-                             <td>{{ $client['mobile'] }}</td>
+
+                             @if($isSuperAdmin || $isAdmin)
+                                 <th>Contact Number</th>
+                                 <td>{{ $client['mobile'] }}</td>
+                             @elseif($client['client_owner'])
+                                 <th>Contact Number</th>
+                                 <td colspan="3">{{ $client['mobile'] }}</td>
+                             @else
+                                 <th>Contact Number</th>
+                                 <td colspan="3"></td>
+                             @endif
                         </tr>
 
                         <tr>
                             @if($isSuperAdmin || $isAdmin)
                                 <th>Email</th>
                                 <td>{{ $client['mail'] }}</td>
-                            @else
+                            @elseif($client['client_owner'])
                                 <th>Email</th>
                                 <td colspan="3">{{ $client['mail'] }}</td>
+                            @else
+                                <th>Email</th>
+                                <td colspan="3"></td>
                             @endif
                             @if($isSuperAdmin || $isAdmin)
                                 <th>Source</th>

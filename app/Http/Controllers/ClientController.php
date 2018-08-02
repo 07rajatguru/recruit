@@ -34,9 +34,10 @@ class ClientController extends Controller
         $user_obj = new User();
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
 
         // if Super Admin get clients of all companies
-        if($isSuperAdmin || $isAdmin){
+        if($isSuperAdmin || $isAdmin || $isStrategy){
             $clients = \DB::table('client_basicinfo')
                 ->join('client_address','client_address.client_id','=','client_basicinfo.id')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
@@ -139,7 +140,7 @@ class ClientController extends Controller
         }*/
         
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count'));
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','isStrategy'));
     }
 
     public function create()
@@ -477,6 +478,7 @@ class ClientController extends Controller
         $user_obj = new User();
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $user_id = $user->id;
 
         $client_basicinfo_model = new ClientBasicinfo();
@@ -486,7 +488,7 @@ class ClientController extends Controller
         $client_basicinfo  = \DB::table('client_basicinfo')
             ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
             ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
-            ->select('client_basicinfo.*', 'users.name as am_name', 'industry.name as ind_name')
+            ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id', 'industry.name as ind_name')
             ->where('client_basicinfo.id','=',$id)
             ->get();
 
@@ -505,6 +507,13 @@ class ClientController extends Controller
             $client['tds'] = $value->tds;
             $client['coordinator_name'] = $value->coordinator_name;
             $client['tan'] = $value->tan;
+
+            if($value->am_id==$user->id){
+                $client['client_owner'] = true;
+            }
+            else {
+                $client['client_owner'] = false;
+            }
         }
 
         $client_address = \DB::table('client_address')
@@ -548,7 +557,7 @@ class ClientController extends Controller
         $client_upload_type['Others'] = 'Others';
 
         //print_r($client);exit;
-        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin'));
+        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy'));
     }
 
     public function attachmentsDestroy($docid){

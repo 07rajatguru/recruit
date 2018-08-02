@@ -276,6 +276,14 @@ class User extends Authenticatable
         return false;
     }
 
+    public  static function isStrategyCoordination($user_role_id){
+        $admin_role_id = env('STRATEGY');
+        if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        return false;
+    }
+
     public static function getUserIdByName($name){
         $user_id = 0;
 
