@@ -142,13 +142,29 @@
                             @endif
                           </div>
                         </div>
+
+                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                            <div  class="form-group {{ $errors->has('start_date') ? 'has-error' : '' }}">
+                                <strong>Start Date: </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    {!! Form::text('start_date', isset($start_date) ? $start_date : null, array('id'=>'start_date','placeholder' => 'Start Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                                </div>
+                                @if ($errors->has('start_date'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('start_date') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">                   
-                          <div class="form-group {{ $errors->has('reminder') ? 'has-error' : '' }}">
-                            <strong>Reminder:</strong>
-                            {!! Form::select('reminder', $reminder,$reminder_id, array('id'=>'reminder','class' => 'form-control' )) !!}
-                            @if ($errors->has('reminder'))
+                          <div class="form-group {{ $errors->has('frequency_type') ? 'has-error' : '' }}">
+                            <strong>Frequency Type:</strong>
+                            {!! Form::select('frequency_type', $frequency_type,$reminder_id, array('id'=>'frequency_type','class' => 'form-control' )) !!}
+                            @if ($errors->has('frequency_type'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('reminder') }}</strong>
+                                <strong>{{ $errors->first('frequency_type') }}</strong>
                             </span>
                             @endif
                           </div> 
@@ -222,8 +238,13 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $("#due_date").datetimepicker({
+                format: "DD-MM-YYYY HH:mm:ss",
+            });
+
+            $("#start_date").datetimepicker({
                 format: "DD-MM-YYYY HH:mm:ss"
             });
+
 //            $('#typeList').select2();
               $('#assigned_by').select2();
             $("#description").wysihtml5();

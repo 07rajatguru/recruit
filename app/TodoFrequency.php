@@ -8,20 +8,21 @@ class TodoFrequency extends Model
 {
     public $table = "todo_frequency";
 
-    public static function gettodobyfrequency($reminder){
+    public static function gettodobyfrequency(){
      	$query = TodoFrequency::query();
      	$query = $query->join('to_dos','to_dos.id','=','todo_frequency.todo_id');
         $query = $query->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.status as status','to_dos.description as desc','to_dos.type as type','to_dos.due_date as due_date');
+        $query = $query->where('todo_frequency.reminder_date','=',date('Y-m-d'));
         
-        if ($reminder == 1) {
-        	$query = $query->where('todo_frequency.reminder','=',1);
+        /*if ($reminder == 1) {
+        	$query = $query->where('todo_frequency.reminder_date','=',date('Y-m-d', strtotime('tomorrow')));
         }
         elseif ($reminder == 2) {
         	$query = $query->where('todo_frequency.reminder','=',2);
         }
         elseif ($reminder == 3) {
         	$query = $query->where('todo_frequency.reminder','=',3);
-        }
+        }*/
         $todo_reminder = $query->get();
 
         $to_dos = array();
