@@ -470,7 +470,7 @@ class ToDosController extends Controller
 
         }
 
-        $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview',/*'3' => 'Client',*/'4' => 'Candidate', '5' => 'Other');
+        $todoTypeArr = array(/*'1' => 'Job Opening',*/ '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
         $selected_users = array();
 
