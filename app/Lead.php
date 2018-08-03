@@ -55,6 +55,9 @@ class Lead extends Model
 
     public static function getAllLeads($all=0,$user_id){
 
+        $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id = env('STRATEGY');
+
         $cancel_lead = 0;
         $query = Lead::query();
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
@@ -87,6 +90,17 @@ class Lead extends Model
             $response[$i]['referredby'] = $value->referredby;
             $response[$i]['convert_client'] = $value->convert_client;
             $response[$i]['lead_status'] = $value->lead_status;
+
+            $response[$i]['access'] = false;
+            if($strategy_role_id){
+                if($user_id==$value->account_manager_id){
+                    $response[$i]['access'] = true;
+                }
+            }
+            else{
+                $response[$i]['access'] = true;
+            }
+
             $i++;
         }
 

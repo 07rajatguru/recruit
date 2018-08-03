@@ -62,7 +62,7 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 
-                    <?php if($isSuperAdmin || $isAdmin || $client['client_visibility']) { ?>
+                    <?php if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility']) { ?>
                         <a title="Show" class="fa fa-circle"  href="{{ route('client.show',$client['id']) }}"></a>
                      <?php } ?>
 

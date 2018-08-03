@@ -21,8 +21,9 @@ class LeadController extends Controller
         $user_role_id = User::getLoggedinUserRole($user);
 
         $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id =  env('STRATEGY');
 
-        $access_roles_id = array($superadmin_role_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $leads = Lead::getAllLeads(1,$user->id);
             $convert_client = Lead::getConvertedClient(1,$user->id);
