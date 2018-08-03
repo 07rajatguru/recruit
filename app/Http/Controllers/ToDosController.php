@@ -470,7 +470,7 @@ class ToDosController extends Controller
 
         }
 
-        $todoTypeArr = array(/*'1' => 'Job Opening',*/ '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
+        $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
         $selected_users = array();
 
@@ -890,7 +890,7 @@ class ToDosController extends Controller
             $i = 0;
             foreach ($job_response as $k=>$v){
                 $typeArr[$i]['id'] = $v['id'];
-                $typeArr[$i]['value'] = $v['client']." - ".$v['location'];
+                $typeArr[$i]['value'] = $v['company_name']." - ".$v['posting_title']." - ".$v['location'];
                 $i++;
             }
 
