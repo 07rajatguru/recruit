@@ -144,6 +144,20 @@
                         </div>
                         @endif
 
+                        @if($isSuperAdmin || $isAdmin)
+                        <div class="form-group">
+                            <strong>Percentage charged below AM position </strong>
+                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Percentage charged below AM position','class' => 'form-control', 'tabindex' => '17' )) !!}
+                        </div>
+                        @endif
+
+                        @if($isSuperAdmin || $isAdmin)
+                        <div class="form-group">
+                            <strong>Percentage charged above AM position </strong>
+                            {!! Form::text('percentage_charged_above', null, array('id'=>'percentage_charged_above','placeholder' => 'Percentage charged above AM position','class' => 'form-control', 'tabindex' => '17' )) !!}
+                        </div>
+                        @endif
+
                     </div>
                 </div>
 

@@ -41,6 +41,8 @@ class ToDos extends Model
         $repetition['1'] = 'Daily';
         $repetition['2'] = 'Weekly';
         $repetition['3'] = 'Monthly';
+        $repetition['4'] = 'Quarterly';
+        $repetition['5'] = 'Yearly';
 
         return $repetition;
     }

@@ -30,7 +30,74 @@ class ToDosController extends Controller
         //echo '<pre>'; print_r($todo_frequency);exit;
 
         foreach ($todo_frequency as $key => $value) {
-            $toDos = new ToDos();
+
+            $inprogress = env('INPROGRESS');
+
+            $todo_frequency_data = ToDos::join('todo_frequency','todo_frequency.todo_id','=','to_dos.id')
+                                   ->select('to_dos.id','todo_frequency.reminder as reminder','to_dos.due_date','to_dos.start_date')
+                                   ->where('todo_frequency.todo_id','=',$value['id'])
+                                   ->get();
+
+            $i = 0;
+            foreach ($todo_frequency_data as $key1 => $value1) {
+                $reminder[$i] = $value1->reminder;
+                $due_date[$i] = $value1->due_date;
+                $start_date[$i] = $value1->start_date;
+                
+                if ($reminder[$i] == 1) {
+
+                    $todos = ToDos::find($value['id']);
+                    $todos->status = $inprogress;
+                    $todos->due_date = date('Y-m-d',strtotime("$due_date[$i] tomorrow"));
+                    $todos->start_date = date('Y-m-d',strtotime("$start_date[$i] tomorrow"));
+                    $todos->save();
+
+                    $reminder_date = date('Y-m-d',strtotime("$start_date[$i] tomorrow"));
+
+                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
+                    $todo_reminder_id = $todo_reminder->todo_id;
+
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
+                    //print_r($todo_reminder_id);exit;
+                }
+
+                if ($reminder[$i] == 2) {
+
+                    $todos = ToDos::find($value['id']);
+                    $todos->status = $inprogress;
+                    $todos->due_date = date('Y-m-d',strtotime("$due_date[$i] +1 week"));
+                    $todos->start_date = date('Y-m-d',strtotime("$start_date[$i] +1 week"));
+                    $todos->save();
+
+                    $reminder_date = date('Y-m-d',strtotime("$start_date[$i] +1 week"));
+
+                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
+                    $todo_reminder_id = $todo_reminder->todo_id;
+
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
+                    //print_r($todo_reminder_id);exit;
+                }
+
+                if ($reminder[$i] == 3) {
+
+                    $todos = ToDos::find($value['id']);
+                    $todos->status = $inprogress;
+                    $todos->due_date = date('Y-m-d',strtotime("$due_date[$i] +1 month"));
+                    $todos->start_date = date('Y-m-d',strtotime("$start_date[$i] +1 month"));
+                    $todos->save();
+
+                    $reminder_date = date('Y-m-d',strtotime("$start_date[$i] +1 month"));
+
+                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
+                    $todo_reminder_id = $todo_reminder->todo_id;
+
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
+                    //print_r($todo_reminder_id);exit;
+                }
+                $i++;
+            }
+        }
+            /*$toDos = new ToDos();
             $toDos->subject = $value['subject'];
             $toDos->task_owner = $value['task_owner'];
             $toDos->due_date = date("Y-m-d h:i:s");
@@ -87,7 +154,7 @@ class ToDosController extends Controller
                // }
                 }
             }
-        }
+        }*/
         
 
 
@@ -432,7 +499,7 @@ class ToDosController extends Controller
         $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
-        $reminder = ToDos::getReminder();
+        $frequency_type = ToDos::getReminder();
         $in_progress = env('INPROGRESS');
         $yet_to_start = env('YETTOSTART');
 
@@ -481,7 +548,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
-        $viewVariable['reminder'] = $reminder;
+        $viewVariable['frequency_type'] = $frequency_type;
         $viewVariable['selected_users'] = $selected_users;
         $viewVariable['assigned_by'] = $users;
         $viewVariable['assigned_by_id'] = $user_id;
@@ -511,7 +578,8 @@ class ToDosController extends Controller
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
-        $reminder = $request->reminder;
+        $frequency_type = $request->frequency_type;
+        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->$start_date);
       //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
@@ -552,18 +620,18 @@ class ToDosController extends Controller
                 }
             }
 
-            if (isset($reminder) && $reminder!='') {
+            if (isset($frequency_type) && $frequency_type!='') {
                     $todo_reminder = new TodoFrequency();
                     $todo_reminder->todo_id = $toDos_id;
-                    $todo_reminder->reminder = $reminder;
-                    if ($reminder == 1) {
-                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    $todo_reminder->reminder = $frequency_type;
+                    if ($frequency_type == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date tomorrow"));
                     }
-                    elseif ($reminder == 2) {
-                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    elseif ($frequency_type == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 week"));
                     }
-                    elseif ($reminder == 3) {
-                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    elseif ($frequency_type == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 month"));
                     }
                     $todo_reminder->save();
             }
@@ -629,7 +697,7 @@ class ToDosController extends Controller
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
-        $reminder = ToDos::getReminder();
+        $frequency_type = ToDos::getReminder();
 
         // get assigned users list
         $assigned_users = TodoAssignedUsers::where('todo_id','=',$id)->get();
@@ -657,7 +725,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type'] = $todoTypeArr;
         $viewVariable['priority'] = $priority;
-        $viewVariable['reminder'] = $reminder;
+        $viewVariable['frequency_type'] = $frequency_type;
         $viewVariable['assigned_by'] = $users;
         $viewVariable['assigned_by_id'] = $toDos->task_owner;
         $viewVariable['action'] = 'edit';
@@ -668,6 +736,7 @@ class ToDosController extends Controller
         $viewVariable['type_list'] = $toDos->typeList;
         $viewVariable['status_id'] = $toDos->status;
         $viewVariable['reminder_id'] = $reminder_id;
+        $viewVariable['start_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->start_date);
         //echo $reminder_id;exit;
 //echo $toDos->typeList;exit;
         return view('adminlte::toDo.edit', $viewVariable);
@@ -690,9 +759,10 @@ class ToDosController extends Controller
         $status = $request->get('status');
         $priority = $request->get('priority');
         $description = $request->get('description');
-        $reminder = $request->get('reminder');
+        $frequency_type = $request->get('frequency_type');
        // $assigned_by = $request->get('assigned_by');
         $users = $request->user_ids;
+        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->get('start_date'));
         
         $toDos = ToDos::find($id);
         if(isset($task_owner))
@@ -715,11 +785,13 @@ class ToDosController extends Controller
             $toDos->description = $description;
        /* if(isset($assigned_by))
             $toDos->assigned_by =$assigned_by;*/
+        if (isset($start_date)) 
+            $toDos->start_date = $start_date;
 
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
-            return redirect('todos/edit')->withInput(Input::all())->withErrors($validator->errors());
+            return redirect('todos/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
 
         $toDosUpdated = $toDos->save();
@@ -747,18 +819,18 @@ class ToDosController extends Controller
                 }
             }
 
-            if (isset($reminder) && $reminder!='') {
+            if (isset($frequency_type) && $frequency_type!='') {
                     $todo_reminder = new TodoFrequency();
                     $todo_reminder->todo_id = $todo_id;
-                    $todo_reminder->reminder = $reminder;
-                    if ($reminder == 1) {
-                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('tomorrow'));
+                    $todo_reminder->reminder = $frequency_type;
+                    if ($frequency_type == 1) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date tomorrow"));
                     }
-                    elseif ($reminder == 2) {
-                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 week'));
+                    elseif ($frequency_type == 2) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +1 week"));
                     }
-                    elseif ($reminder == 3) {
-                        $todo_reminder->reminder_date = date("Y-m-d", strtotime('+1 month'));
+                    elseif ($frequency_type == 3) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +1 month"));
                     }
                     $todo_reminder->save();
             }
