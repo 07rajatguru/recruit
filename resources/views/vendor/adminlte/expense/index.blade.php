@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Expense')
 
 @section('content_header')
     <h1></h1>
@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Expense</h2>
+                <h2>Expense List ({{ $count }})</h2>
             </div>
 
             <div class="pull-right">
@@ -33,10 +33,10 @@
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Paid To</th>
-                <th>Expense Head</th>
+                <th>Expense<br/> Head</th>
                 <th>Remarks</th>
-                <th>Payment Mode</th>
-                <th>Payment Type</th>
+                <th>Payment<br/> Mode</th>
+                <th>Payment<br/> Type</th>
                 <th>Number</th>
                 <th width="280px">Action</th>
             </tr>
@@ -48,19 +48,21 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $value['date'] or '' }}</td>
-                <td>{{ $value['amount'] or '' }}</td>
+                <td>{{ $value['paid_amount'] or '' }}</td>
                 <td>{{ $value['paid_to'] or '' }}</td>
                 <td>{{ $value['expense_head'] or '' }}</td>
                 <td>{{ $value['remarks'] or '' }}</td>
-                <td>{{ $value['payment_mode'] or '' }}</td>
-                <td>{{ $value['payment_type'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['payment_mode'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['payment_type'] or '' }}</td>
                 <td>{{ $value['number'] or '' }}</td>
-                <td>            
+                <td>  
+
+                    <a title="Show" class="fa fa-circle"  href="{{ route('expense.show',$value['id']) }}"></a>          
                     <a class="fa fa-edit" href="{{ route('expense.edit',$value['id']) }}" title="Edit"></a>
 
-                    <?php if($isSuperAdmin) {?>
-                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'Expense'])
-                    <?php   }?>
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense'])
+
+                   
                 </td>
             </tr>
         @endforeach

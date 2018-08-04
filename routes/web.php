@@ -1174,6 +1174,24 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ExpenseController@store'
     ]);
 
+    Route::get('expense/importExport', 
+        'ExpenseController@importExport'
+    );
+
+    Route::post('expense/importExcel', 
+        'ExpenseController@importExcel'
+    );
+
+    Route::get('expense/getvendorinfo', [
+        'as' => 'expense.getvendorinfo',
+        'uses' => 'ExpenseController@getVendorInfo'
+    ]);
+
+    Route::get('expense/{id}', [
+        'as' => 'expense.show',
+        'uses' => 'ExpenseController@show'
+    ]);
+
     Route::get('expense/{id}/edit', [
         'as' => 'expense.edit',
         'uses' => 'ExpenseController@edit'
@@ -1188,6 +1206,8 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'expense.destroy',
         'uses' => 'ExpenseController@destroy'
     ]);
+
+    
 
     // Reports Routes
 
@@ -1240,5 +1260,51 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'report.monthlyreportindex',
         'uses' => 'ReportController@userWiseMonthlyReport'
     ]);
+
+    Route::get('vendors', [
+        'as' => 'vendor.index',
+        'uses' => 'VendorController@index',
+        
+    ]);
+
+    Route::get('vendor/create', [
+        'as' => 'vendor.create',
+        'uses' => 'VendorController@create',
+        
+    ]);
+
+    Route::post('vendor/create', [
+        'as' => 'vendor.store',
+        'uses' => 'VendorController@store',
+    ]);
+
+    Route::get('vendor/importExport', 
+        'VendorController@importExport'
+    );
+
+    Route::post('vendor/importExcel', 
+        'VendorController@importExcel'
+    );
+
+    Route::get('vendor/{id}', [
+        'as' => 'vendor.show',
+        'uses' => 'VendorController@show'
+    ]);
+    Route::get('vendor/{id}/edit', [
+        'as' => 'vendor.edit',
+        'uses' => 'VendorController@edit',
+        
+    ]);
+
+    Route::delete('vendor/{id}', [
+        'as' => 'vendor.destroy',
+        'uses' => 'VendorController@destroy',
+    ]);
+
+    Route::patch('vendor/{id}', [
+        'as' => 'vendor.update',
+        'uses' => 'VendorController@update',
+    ]);
+
 
 });

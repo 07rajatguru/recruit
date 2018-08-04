@@ -10,10 +10,17 @@ class Expense extends Model
 
     public static $rules = array(
         'date' => 'required',
+        'vendor_id'=>'required',
+        'gst_no'=>'required',
+        'pan_no'=>'required',
         'amount' => 'required',
-        'paid_to' => 'required',
+        'gst'=>'required',
+        'cgst'=>'required',
+        'sgst'=>'required',
+        'igst'=>'required',
+        'bill_amount' => 'required',
+        'paid_amount' => 'required',
         'head' => 'required',
-        'remarks' => 'required',
         'pmode' => 'required',
         'ptype' => 'required'
     );
@@ -22,10 +29,17 @@ class Expense extends Model
     {
         return [
             'date.required' => 'Date is required field',
+            'vendor_id'=>'Paid To is required field.',
+            'gst_no'=>'GST No. is required field.',
+            'pan_no'=>'PAN No. is required field.',
+            'gst'=>'GST(%) is required field.',
+            'cgst'=>'CGST is required field.',
+            'sgst'=>'SGST is required field.',
+            'igst'=>'IGST is required field.',
+            'bill_amount' => 'Bill Amount is required field.',
+            'paid_amount' => 'Paid Amount is required field.',
             'amount.required' => 'Amount is required field',
-            'paid_to.required' => 'Paid To is required field',
             'head.required' => 'Expense Head is required field',
-            'remarks.required' => 'Remarks is required field',
             'pmode.required' => 'Payment Mode is required field',
             'ptype.required' => 'Payment Type is required field'
         ];
@@ -33,8 +47,8 @@ class Expense extends Model
 
     public static function getPaymentMode(){
     	$pmode = array(''=>'Select Payment Mode');
-    	$pmode['petty cash-accounts'] = 'Petty cash-Accounts';
-    	$pmode['petty cash-director'] = 'Petty cash-Director';
+    	$pmode['Petty cash-Accounts'] = 'Petty cash-Accounts';
+    	$pmode['Petty cash-Director'] = 'Petty cash-Director';
     	$pmode['AMEX'] = 'AMEX';
     	$pmode['ICICI Bank'] = 'ICICI Bank';
     	$pmode['HDFC Bank'] = 'HDFC Bank';
@@ -45,19 +59,30 @@ class Expense extends Model
     }
 
     public static function getPaymentType(){
-    	$ptype = array(''=>'Select Payment Type');
-    	$ptype['neft'] = 'NEFT';
-    	$ptype['imps'] = 'IMPS';
-    	$ptype['cheque'] = 'Cheque';
 
-    	return $ptype;
+    	$ptype = array(''=>'Select Payment Type');
+    	$ptype['NEFT'] = 'NEFT';
+    	$ptype['IMPS'] = 'IMPS';
+    	$ptype['Cheque'] = 'Cheque';
+        $ptype['RTGS']='RTGS';
+    	
+        return $ptype;
+    }
+
+    public static function getInputTax(){
+
+        $ptype = array(''=>'Select Input Tax');
+        $ptype['YES'] = 'YES';
+        $ptype['NO'] = 'NO';
+        return $ptype;
     }
 
     public static function getAllExpense(){
 
         $query = Expense::query();
         $query = $query->join('accounting_heads','accounting_heads.id','=','expense.expense_head');
-        $query = $query->select('expense.*','accounting_heads.name as aname');
+        $query=$query->join('vendor_basicinfo','vendor_basicinfo.id','=','expense.vendor_id');
+        $query = $query->select('expense.*','accounting_heads.name as aname','vendor_basicinfo.name as vname');
         $resource = $query->get();
 
         $expenseArray = array();
@@ -65,8 +90,8 @@ class Expense extends Model
         foreach ($resource as $res) {
             $expenseArray[$i]['id'] = $res->id;
             $expenseArray[$i]['date'] = $res->date;
-            $expenseArray[$i]['amount'] = $res->amount;
-            $expenseArray[$i]['paid_to'] = $res->paid_to;
+            $expenseArray[$i]['paid_amount'] = $res->paid_amount;
+            $expenseArray[$i]['paid_to'] = $res->vname;
             $expenseArray[$i]['expense_head'] = $res->aname;
             $expenseArray[$i]['remarks'] = $res->remarks;
             $expenseArray[$i]['payment_mode'] = $res->payment_mode;

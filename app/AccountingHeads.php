@@ -22,4 +22,20 @@ class AccountingHeads extends Model
 
         return $head;
 	}
+
+	public static function getHead($expensehead)
+     {
+        $head_query = AccountingHeads::query();
+        $head_query = $head_query->where('name','like',$expensehead);
+
+        $head_query = $head_query->select('id');
+        $head=$head_query->first();
+
+        if(isset($head))
+        {
+            $head_id=$head->id;
+        }
+    
+        return $head_id;
+     }
 }
