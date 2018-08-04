@@ -579,7 +579,7 @@ class ToDosController extends Controller
         $description = $request->description;
         $users = $request->user_ids;
         $frequency_type = $request->frequency_type;
-        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->$start_date);
+        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->start_date);
       //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
@@ -592,7 +592,7 @@ class ToDosController extends Controller
 
         $toDos->priority = $priority;
         $toDos->description = $description;
-
+        $toDos->start_date = $start_date;
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
@@ -632,6 +632,12 @@ class ToDosController extends Controller
                     }
                     elseif ($frequency_type == 3) {
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 month"));
+                    }
+                    elseif ($frequency_type == 4) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +3 month"));
+                    }
+                    elseif ($frequency_type == 5) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 year"));   
                     }
                     $todo_reminder->save();
             }
@@ -831,6 +837,12 @@ class ToDosController extends Controller
                     }
                     elseif ($frequency_type == 3) {
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +1 month"));
+                    }
+                    elseif ($frequency_type == 4) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +3 month"));
+                    }
+                    elseif ($frequency_type == 5) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 year"));   
                     }
                     $todo_reminder->save();
             }
