@@ -79,18 +79,28 @@ class ReportController extends Controller
             }
         }
 
+        $date = date('l');
+        if ($date == "Friday" || $date == "Saturday" || $date == "Sunday") {
+            $to_date_default = date('Y-m-d',strtotime("$date  thursday next week"));
+            $from_date_default = date('Y-m-d',strtotime("$to_date_default -6days"));
+        }
+        else{
+            $from_date_default = date('Y-m-d',strtotime("$date friday last week"));
+            $to_date_default = date('Y-m-d',strtotime("$from_date_default +6days"));
+        }
+            //print_r($from_date_default.'  '.$to_date_default);exit;
 
         if (isset($_POST['to_date']) && $_POST['to_date']!=0) {
             $to_date = $_POST['to_date'];
         }
         else{
-            $to_date = date('Y-m-d');
+            $to_date = $to_date_default;
         }
         if (isset($_POST['from_date']) && $_POST['from_date']!=0) {
             $from_date = $_POST['from_date'];
         }
         else{
-            $from_date = date('Y-m-d',strtotime("$to_date -6days"));
+            $from_date = $from_date_default;
         }
 
         $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($user_id,$from_date,$to_date);
