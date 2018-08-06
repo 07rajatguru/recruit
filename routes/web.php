@@ -680,6 +680,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@undoshortlisted',
     ]);
 
+    // get list of associated cvs
+    Route::get('associatedcvs', [
+        'as' => 'jobopen.associatedcvs',
+        'uses' => 'JobOpenController@associatedCVS',
+        //'middleware' => ['permission:industry-edit']
+    ]);
 
 
 

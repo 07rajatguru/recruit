@@ -1093,7 +1093,7 @@ class ToDosController extends Controller
             $i = 0;
             foreach ($job_response as $k=>$v){
                 $typeArr[$i]['id'] = $v['id'];
-                $typeArr[$i]['value'] = $v['client']." - ".$v['location'];
+                $typeArr[$i]['value'] =  $v['company_name']." - ".$v['posting_title']." - ".$v['location'];//$v['client']." - ".$v['location'];
                 $i++;
             }
         }
