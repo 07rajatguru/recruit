@@ -646,15 +646,17 @@ class ToDosController extends Controller
 
         if($toDos_id>0) {
             $toDos_id = $toDos->id;
-            $task_owner_name = User::getUserNameById($task_owner);
+
+           // $task_owner_name = User::getUserNameById($task_owner);
             $user_arr = array();
             foreach ($users as $key=>$value){
                 if($value!=$task_owner){
                     $user_arr[]= $value;
+
+                    $assigned_to = User::getUserNameById($user_arr);
+                    $assigned_to_array = explode(" ", $assigned_to);
+                    $assigned_to_name = $assigned_to_array[0];
                 }
-                $assigned_to = User::getUserNameById($user_arr);
-                $assigned_to_array = explode(" ", $assigned_to);
-                $assigned_to_name = $assigned_to_array[0];
             }
             //print_r($assigned_to_name);exit;
 
@@ -859,6 +861,7 @@ class ToDosController extends Controller
     }
 
     public function destroy($id){
+        TodoFrequency::where('todo_id',$id)->delete();
         AssociatedTypeList::where('todo_id',$id)->delete();
         TodoAssignedUsers::where('todo_id',$id)->delete();
         $todo = ToDos::where('id',$id)->delete();

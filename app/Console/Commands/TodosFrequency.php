@@ -154,20 +154,25 @@ class TodosFrequency extends Command
                     //print_r($todo_reminder_id);exit;
                 }
 
-                $task_owner_name = User::getUserNameById($task_owner);
+                //$task_owner_name = User::getUserNameById($task_owner);
+                //echo $task_owner_name;exit;
                 $user_arr = array();
                 foreach ($userid as $key1=>$value1){
                     if($value1!=$task_owner){
                         $user_arr[]= $value1;
+
+                        $assigned_to = User::getUserNameById($user_arr);
+                        $assigned_to_array = explode(" ", $assigned_to);
+                        $assigned_to_name = $assigned_to_array[0];
                     }
                 }
 
                 if(isset($user_arr) && sizeof($user_arr)>0){
                     $module_id = $value['id'];
                     $module = 'Todos';
-                    $message = "New task has been assigned to you by $task_owner_name";
+                    $message = "$assigned_to_name; New task has been assigned to you";
                     $link = route('todos.index');
-
+//echo $message;exit;
                     event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
                     // TODO : Email Notification : data store in database
@@ -181,9 +186,10 @@ class TodosFrequency extends Command
                         $subject = $message;
                         $body_message = "";
                         $module_id = $value['id'];
+
+                        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
                     }
 
-                    event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
                 }
             }
     }
