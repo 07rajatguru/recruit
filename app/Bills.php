@@ -199,6 +199,7 @@ class Bills extends Model
             $bills[$i]['candidate_contact_number'] = $value->candidate_contact_number;
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+            $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
             $bills[$i]['fixed_salary'] = $value->fixed_salary;
             $bills[$i]['percentage_charged'] = $value->percentage_charged;

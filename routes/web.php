@@ -827,6 +827,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'billattachments.upload',
         'uses' => 'BillsController@upload',
     ]);
+    Route::post('recovery/sendconfirmationmail/{id}',[
+        'as' => 'recovery.sendconfirmationmail',
+        'uses' => 'BillsController@SendConfirmationMail'
+    ]);
 
 
 
