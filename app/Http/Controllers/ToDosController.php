@@ -652,12 +652,16 @@ class ToDosController extends Controller
                 if($value!=$task_owner){
                     $user_arr[]= $value;
                 }
+                $assigned_to = User::getUserNameById($user_arr);
+                $assigned_to_array = explode(" ", $assigned_to);
+                $assigned_to_name = $assigned_to_array[0];
             }
+            //print_r($assigned_to_name);exit;
 
             if(isset($user_arr) && sizeof($user_arr)>0){
                 $module_id = $toDos_id;
                 $module = 'Todos';
-                $message = "New task has been assigned to you by $task_owner_name";
+                $message = "$assigned_to_name; New task has been assigned to you";
                 $link = route('todos.index');
 
                 event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
@@ -673,9 +677,9 @@ class ToDosController extends Controller
                     $subject = $message;
                     $body_message = "";
                     $module_id = $toDos_id;
-                }
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+                }
             }
         }
 
