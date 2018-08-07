@@ -294,4 +294,40 @@ class ToDos extends Model
         return $todo_ids;
 
     }
+
+    public static function getTodoFrequencyCheck(){
+
+        $in_progress = env('INPROGRESS');
+        $yet_to_start = env('YETTOSTART');
+        $todo_status = array($in_progress,$yet_to_start);
+
+        $status_check = ToDos::query();
+        //$status_check = $status_check->join('todo_associated_users', 'todo_associated_users.todo_id', '=','to_dos.id');
+        $status_check = $status_check->select('to_dos.*');
+        $status_check = $status_check->whereIn('to_dos.status',$todo_status);
+        //$status_check = $status_check->limit(1);
+        $status_check_res = $status_check->get();
+
+        $todos = array();
+        $i = 0;
+        foreach ($status_check_res as $key => $value) {
+            $todos[$i]['id'] = $value->id;
+            $todos[$i]['task_owner'] = $value->task_owner;
+            $am_name = ToDos::getAssociatedusersById($value->id);
+            $name_str = '';
+            foreach ($am_name as $k=>$v){
+                if($name_str==''){
+                    $name_str = $k;
+                }
+                else{
+                    $name_str .= ', '. $k ;
+                }
+            }
+            $todos[$i]['assigned_to'] = $name_str;
+            $i++;
+        }
+
+        //echo "<pre>"; print_r($todos);exit;
+        return $todos;
+    }
 }
