@@ -154,9 +154,44 @@ class TodosFrequency extends Command
                     //print_r($todo_reminder_id);exit;
                 }
 
+                foreach ($userid as $key1=>$value1){
+                    if($value1!=$task_owner){
+                        $user_arr= $value1;
+
+                        $assigned_to = User::getUserNameById($value1);
+                        $assigned_to_array = explode(" ", $assigned_to);
+                        $assigned_to_name = $assigned_to_array[0];
+                    //print_r($assigned_to_name);exit;
+
+                        if(isset($user_arr) && sizeof($user_arr)>0){
+                            $module_id = $value['id'];
+                            $module = 'Todos';
+                            $message = "$assigned_to_name; New task has been assigned to you";
+                            $link = route('todos.index');
+
+                            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+                            // TODO : Email Notification : data store in database
+                            //foreach ($users as $k=>$v){
+                                $user_email = User::getUserEmailById($value1);
+                                $cc_email = User::getUserEmailById($task_owner);
+                                $module = "Todos";
+                                $sender_name = $task_owner;
+                                $to = $user_email;
+                                $cc = $cc_email;
+                                $subject = $message;
+                                $body_message = "";
+                                $module_id = $value['id'];
+
+                                event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+                            //}
+                        }
+                    }
+                }
+
                 //$task_owner_name = User::getUserNameById($task_owner);
                 //echo $task_owner_name;exit;
-                $user_arr = array();
+                /*$user_arr = array();
                 foreach ($userid as $key1=>$value1){
                     if($value1!=$task_owner){
                         $user_arr[]= $value1;
@@ -190,7 +225,7 @@ class TodosFrequency extends Command
                         event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
                     }
 
-                }
+                }*/
             }
     }
 }
