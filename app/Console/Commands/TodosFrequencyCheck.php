@@ -61,7 +61,7 @@ class TodosFrequencyCheck extends Command
                     if(isset($user_arr) && $user_arr>0){
                         $module_id = $value['id'];
                         $module = 'Todos';
-                        $message = "ALERT Reminder : $assigned_to_name; New task has been assigned to you";
+                        $message = "ALERT Reminder ! $assigned_to_name; New task has been assigned to you";
                         $link = route('todos.index');
 
                         //echo "here:".$user_arr;
