@@ -695,4 +695,21 @@ class Bills extends Model
 
         return $data;
     }
+
+    public static function getJoinConfirmationMail($id){
+
+        $join_mail = Bills::query();
+        $join_mail = $join_mail->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name');
+        $join_mail = $join_mail->where('bills.id',$id);
+        $join_mail_res = $join_mail->get();
+
+        $join_confirmation_mail = array();
+        $i = 0;
+        foreach ($join_mail_res as $key => $value) {
+            $join_confirmation_mail[$i]['company_name'] = $value->company_name;
+            $join_confirmation_mail[$i]['designation_offered'] = $value->designation_offered;
+            $join_confirmation_mail[$i]['candidate_name'] = $value->candidate_name;
+        }
+    }
 }
