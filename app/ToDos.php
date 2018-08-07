@@ -330,4 +330,38 @@ class ToDos extends Model
         //echo "<pre>"; print_r($todos);exit;
         return $todos;
     }
+
+    public static function getShowTodo($id){
+
+        $todo_show = ToDos::query();
+        $todo_show = $todo_show->join('users', 'users.id', '=', 'to_dos.task_owner');
+        $todo_show = $todo_show->join('status','status.id','=', 'to_dos.status');
+        $todo_show = $todo_show->select('to_dos.*', 'users.name as name','status.name as status');
+        $todo_show = $todo_show->where('to_dos.id',$id);
+        $todo_show_res = $todo_show->first();
+
+        $todo = array();
+        if (isset($todo_show_res) && sizeof($todo_show_res)>0) {
+            $todo['task_owner'] = $todo_show_res->name;
+            $todo['subject'] = $todo_show_res->subject;
+            $todo['due_date'] = $todo_show_res->due_date;
+            $todo['start_date'] = $todo_show_res->start_date;
+            $todo['status'] = $todo_show_res->status;
+            $todo['description'] = strip_tags($todo_show_res->description);
+            $am_name = ToDos::getAssociatedusersById($todo_show_res->id);
+            $name_str = '';
+            foreach ($am_name as $k=>$v){
+                if($name_str==''){
+                    $name_str = $v;
+                }
+                else{
+                    $name_str .= ', '. $v ;
+                }
+            }
+            $todo['assigned_to'] = $name_str;
+        }
+
+        return $todo;
+        
+    }
 }

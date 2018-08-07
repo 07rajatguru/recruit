@@ -907,10 +907,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@getSelectedTypeList',
     ]);
 
-   /* Route::get('todos/{id}', [
+    Route::get('todos/{id}', [
         'as' => 'todos.show',
         'uses' => 'ToDosController@show'
-    ]);*/
+    ]);
     Route::get('todos/{id}/edit', [
         'as' => 'todos.edit',
         'uses' => 'ToDosController@edit',

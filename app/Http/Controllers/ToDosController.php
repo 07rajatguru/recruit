@@ -692,7 +692,8 @@ class ToDosController extends Controller
     {
        $dateClass = new Date();
 
-       $todo =ToDos::find($id);
+       $todo = ToDos::getShowTodo($id);
+       
        return view('adminlte::toDo.show')->with('toDos', $todo);
     }
 
