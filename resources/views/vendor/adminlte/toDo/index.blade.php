@@ -74,7 +74,7 @@
                 <td>
 
                     {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
-                    @if($todo['task_owner'] == $user_id)
+                    @if(($todo['task_owner'] == $user_id) || $isSuperAdmin || getenv('STRATEGY'))
                         <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @endif
                     <?php if($isSuperAdmin) { ?>
@@ -96,8 +96,6 @@
                 <td data-th="Lastrun" data-order="{{$todo['due_date_ts']}}">{{ $todo['due_date'] }}</td>
 
                 <td>{{ $todo['status'] }}</td>
-
-
 
             </tr>
 
