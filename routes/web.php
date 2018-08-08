@@ -692,6 +692,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@undoshortlisted',
     ]);
 
+    // get list of associated cvs
+    Route::get('associatedcvs', [
+        'as' => 'jobopen.associatedcvs',
+        'uses' => 'JobOpenController@associatedCVS',
+        //'middleware' => ['permission:industry-edit']
+    ]);
 
 
 
@@ -833,6 +839,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'billattachments.upload',
         'uses' => 'BillsController@upload',
     ]);
+    Route::post('recovery/sendconfirmationmail/{id}',[
+        'as' => 'recovery.sendconfirmationmail',
+        'uses' => 'BillsController@SendConfirmationMail'
+    ]);
 
 
 
@@ -909,10 +919,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@getSelectedTypeList',
     ]);
 
-   /* Route::get('todos/{id}', [
+    Route::get('todos/{id}', [
         'as' => 'todos.show',
         'uses' => 'ToDosController@show'
-    ]);*/
+    ]);
     Route::get('todos/{id}/edit', [
         'as' => 'todos.edit',
         'uses' => 'ToDosController@edit',

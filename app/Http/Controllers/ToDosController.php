@@ -579,7 +579,7 @@ class ToDosController extends Controller
         $description = $request->description;
         $users = $request->user_ids;
         $frequency_type = $request->frequency_type;
-        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->$start_date);
+        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->start_date);
       //  $assigned_by = $request->assigned_by;
 
         $toDos = new ToDos();
@@ -592,7 +592,7 @@ class ToDosController extends Controller
 
         $toDos->priority = $priority;
         $toDos->description = $description;
-
+        $toDos->start_date = $start_date;
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
@@ -633,6 +633,12 @@ class ToDosController extends Controller
                     elseif ($frequency_type == 3) {
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 month"));
                     }
+                    elseif ($frequency_type == 4) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +3 month"));
+                    }
+                    elseif ($frequency_type == 5) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 year"));   
+                    }
                     $todo_reminder->save();
             }
 
@@ -640,36 +646,38 @@ class ToDosController extends Controller
 
         if($toDos_id>0) {
             $toDos_id = $toDos->id;
-            $task_owner_name = User::getUserNameById($task_owner);
-            $user_arr = array();
+
             foreach ($users as $key=>$value){
                 if($value!=$task_owner){
-                    $user_arr[]= $value;
+                    $user_arr = trim($value);
+
+                    $assigned_to = User::getUserNameById($value);
+                    $assigned_to_array = explode(" ", $assigned_to);
+                    $assigned_to_name = $assigned_to_array[0];
+
+                    if(isset($user_arr) && $user_arr>0){
+                        $module_id = $toDos_id;
+                        $module = 'Todos';
+                        $message = "$assigned_to_name: New task has been assigned to you";
+                        $link = route('todos.index');
+
+                        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+                        // TODO : Email Notification : data store in database
+                        $user_email = User::getUserEmailById($value);
+                        $cc_email = User::getUserEmailById($task_owner);
+                        $module = "Todos";
+                        $sender_name = $user_id;
+                        $to = $user_email;
+                        $cc = $cc_email;
+                        $subject = $message;
+                        $body_message = "";
+                        $module_id = $toDos_id;
+
+                        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+                    }
                 }
-            }
-
-            if(isset($user_arr) && sizeof($user_arr)>0){
-                $module_id = $toDos_id;
-                $module = 'Todos';
-                $message = "New task has been assigned to you by $task_owner_name";
-                $link = route('todos.index');
-
-                event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
-
-                // TODO : Email Notification : data store in database
-                foreach ($users as $k=>$v){
-                    $user_email = User::getUserEmailById($v);
-                    $cc_email = User::getUserEmailById($task_owner);
-                    $module = "Todos";
-                    $sender_name = $user_id;
-                    $to = $user_email;
-                    $cc = $cc_email;
-                    $subject = $message;
-                    $body_message = "";
-                    $module_id = $toDos_id;
-                }
-
-                event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
             }
         }
 
@@ -680,8 +688,42 @@ class ToDosController extends Controller
     {
        $dateClass = new Date();
 
-       $todo =ToDos::find($id);
-       return view('adminlte::toDo.show')->with('toDos', $todo);
+       $toDos = ToDos::getShowTodo($id);
+       $frequency_type = $toDos['frequency_type'];
+       if ($frequency_type == 1) {
+           $frequency_type = 'Daily';
+       }
+       else if ($frequency_type == 2) {
+           $frequency_type = 'Weekly';
+       }
+       else if ($frequency_type == 3) {
+           $frequency_type = 'Monthly';
+       }
+       else if ($frequency_type == 4) {
+           $frequency_type = 'Quarterly';
+       }
+       else if ($frequency_type == 5) {
+           $frequency_type = 'Yearly';
+       }
+
+       $type = $toDos['type'];
+       if ($type == 1) {
+           $type = 'Job Opening';
+       }
+       else if ($type == 2) {
+           $type = 'Interview';
+       }
+       else if ($type == 3) {
+           $type = 'Client';
+       }
+       else if ($type == 4) {
+           $type = 'Candidate';
+       }
+       else if ($type == 5) {
+           $type = 'Other';
+       }
+       
+       return view('adminlte::toDo.show',compact('toDos','frequency_type','type'));
     }
 
     public function edit($id)
@@ -832,6 +874,12 @@ class ToDosController extends Controller
                     elseif ($frequency_type == 3) {
                         $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +1 month"));
                     }
+                    elseif ($frequency_type == 4) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date  +3 month"));
+                    }
+                    elseif ($frequency_type == 5) {
+                        $todo_reminder->reminder_date = date("Y-m-d", strtotime("$start_date +1 year"));   
+                    }
                     $todo_reminder->save();
             }
 
@@ -843,6 +891,7 @@ class ToDosController extends Controller
     }
 
     public function destroy($id){
+        TodoFrequency::where('todo_id',$id)->delete();
         AssociatedTypeList::where('todo_id',$id)->delete();
         TodoAssignedUsers::where('todo_id',$id)->delete();
         $todo = ToDos::where('id',$id)->delete();
@@ -979,8 +1028,8 @@ class ToDosController extends Controller
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
-                    $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$typeDetail->city;
+                    $typeArr[$i]['id'] = $typeDetail['id'];
+                    $typeArr[$i]['value'] = $typeDetail['client_name']." - ".$typeDetail['posting_title']." - ".$typeDetail['city'];
                     $i++;
                 }
             } else {
@@ -1081,7 +1130,7 @@ class ToDosController extends Controller
             $i = 0;
             foreach ($job_response as $k=>$v){
                 $typeArr[$i]['id'] = $v['id'];
-                $typeArr[$i]['value'] = $v['client']." - ".$v['location'];
+                $typeArr[$i]['value'] =  $v['company_name']." - ".$v['posting_title']." - ".$v['location'];//$v['client']." - ".$v['location'];
                 $i++;
             }
         }
@@ -1093,7 +1142,7 @@ class ToDosController extends Controller
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->interview_name;
+                    $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$typeDetail->city;
                     $i++;
                 }
             } /*else {

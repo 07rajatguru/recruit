@@ -860,4 +860,8 @@ class BillsController extends Controller
 
     }
 
+    public function SendConfirmationMail($id){
+        
+    }
+
 }

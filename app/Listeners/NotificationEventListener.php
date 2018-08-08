@@ -27,8 +27,9 @@ class NotificationEventListener
      */
     public function handle(NotificationEvent $event)
     {
+
         //
-        $user_id = \Auth::user()->id;
+       // $user_id = \Auth::user()->id;
 
         $module_id = $event->module_id;
         $module = $event->module;
@@ -39,7 +40,7 @@ class NotificationEventListener
         if(isset($user_arr) && sizeof($user_arr) > 0){
             if(is_array($user_arr)){
                 foreach ($user_arr as $userId) {
-                    if($user_id != $userId){
+                    //if($user_id != $userId){
                         $notifications = new Notifications();
                         $notifications->module_id = $module_id;
                         $notifications->module = $module;
@@ -48,10 +49,10 @@ class NotificationEventListener
                         $notifications->read = 0;
                         $notifications->link = $link;
                         $notifications->save();
-                    }
+                    //}
                 }
             } else {
-                if($user_id != $user_arr){
+                //if($user_id != $user_arr){
                     $notifications = new Notifications();
                     $notifications->module_id = $module_id;
                     $notifications->module = $module;
@@ -60,7 +61,7 @@ class NotificationEventListener
                     $notifications->read = 0;
                     $notifications->link = $link;
                     $notifications->save();
-                }
+               // }
             }
         }
     }

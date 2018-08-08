@@ -294,4 +294,122 @@ class ToDos extends Model
         return $todo_ids;
 
     }
+
+    public static function getTodoFrequencyCheck(){
+
+        $in_progress = env('INPROGRESS');
+        $yet_to_start = env('YETTOSTART');
+        $todo_status = array($in_progress,$yet_to_start);
+
+        $status_check = ToDos::query();
+        //$status_check = $status_check->join('todo_associated_users', 'todo_associated_users.todo_id', '=','to_dos.id');
+        $status_check = $status_check->select('to_dos.*');
+        $status_check = $status_check->whereIn('to_dos.status',$todo_status);
+        //$status_check = $status_check->limit(1);
+        $status_check_res = $status_check->get();
+
+        $todos = array();
+        $i = 0;
+        foreach ($status_check_res as $key => $value) {
+            $todos[$i]['id'] = $value->id;
+            $todos[$i]['task_owner'] = $value->task_owner;
+            $am_name = ToDos::getAssociatedusersById($value->id);
+            $name_str = '';
+            foreach ($am_name as $k=>$v){
+                if($name_str==''){
+                    $name_str = $k;
+                }
+                else{
+                    $name_str .= ', '. $k ;
+                }
+            }
+            $todos[$i]['assigned_to'] = $name_str;
+            $i++;
+        }
+
+        //echo "<pre>"; print_r($todos);exit;
+        return $todos;
+    }
+
+    public static function getShowTodo($id){
+
+        $todo_show = ToDos::query();
+        $todo_show = $todo_show->join('users', 'users.id', '=', 'to_dos.task_owner');
+        $todo_show = $todo_show->join('status','status.id','=', 'to_dos.status');
+        $todo_show = $todo_show->leftjoin('todo_frequency','todo_frequency.todo_id','=','to_dos.id');
+        $todo_show = $todo_show->select('to_dos.*', 'users.name as name','status.name as status','todo_frequency.reminder as frequency_type','todo_frequency.reminder_date as frequency_date');
+        $todo_show = $todo_show->where('to_dos.id',$id);
+        $todo_show_res = $todo_show->first();
+
+        $todo = array();
+        if (isset($todo_show_res) && sizeof($todo_show_res)>0) {
+            $todo['task_owner'] = $todo_show_res->name;
+            $todo['subject'] = $todo_show_res->subject;
+            $todo['due_date'] = $todo_show_res->due_date;
+            $todo['start_date'] = $todo_show_res->start_date;
+            $todo['status'] = $todo_show_res->status;
+            $todo['type'] = $todo_show_res->type;
+            $todo['description'] = strip_tags($todo_show_res->description);
+            $am_name = ToDos::getAssociatedusersById($todo_show_res->id);
+            $name_str = '';
+            foreach ($am_name as $k=>$v){
+                if($name_str==''){
+                    $name_str = $v;
+                }
+                else{
+                    $name_str .= ', '. $v ;
+                }
+            }
+            $todo['assigned_to'] = $name_str;
+            $todo['frequency_type'] = $todo_show_res->frequency_type;
+            $todo['frequency_date'] = $todo_show_res->frequency_date;
+            $type_list = ToDos::getTypeListById($todo_show_res->id,$todo_show_res->type);
+            $todo['typelist'] = str_replace(array('[',']','"'),'  ', (string) $type_list);
+        }
+        
+        return $todo;
+    }
+
+    public static function getTypeListById($id,$type){
+
+        $type_list = AssociatedTypeList::getAssociatedListByTodoId($id);
+        $jobopen = array();
+        $i = 0;
+        if ($type == 1) {
+            $job_response = JobOpen::getJobsByIds(0,explode(',',$type_list));
+            foreach ($job_response as $k=>$v){
+                $jobopen[$i] =  $v['company_name']." - ".$v['posting_title']." - ".$v['location'];
+                $i++;
+            }   
+        }
+        else if ($type == 2) {
+            $interview_res = Interview::getInterviewsByIds(explode(',',$type_list));
+            foreach ($interview_res as $k=>$v){
+                $jobopen[$i] =  $v->client_name." - ".$v->posting_title." - ".$v->city;
+                $i++;
+            }
+                
+        }
+        else if ($type == 3) {
+            $client_res = ClientBasicinfo::getClientsByIds(0,explode(',',$type_list));
+            foreach ($client_res as $k=>$v){
+                $jobopen[$i] =  $v->name." - ".$v->coordinator_name;
+                $i++;
+            }
+                
+        }
+        else if ($type == 4) {
+            $candidate_res = CandidateBasicInfo::getAllCandidatesById(explode(',',$type_list));
+            foreach ($candidate_res as $k=>$v){
+                $jobopen[$i] =  $v->full_name;
+                $i++;
+            }
+                
+        }
+        else{
+            $jobopen = '';
+        }
+
+        return json_encode($jobopen);
+    }
 }

@@ -108,7 +108,7 @@ class MonthlyReport extends Command
 
             \Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
                 $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F")." ".date("Y"));
+                $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F",strtotime("last month"))." ".date("Y"));
             });
 
         }

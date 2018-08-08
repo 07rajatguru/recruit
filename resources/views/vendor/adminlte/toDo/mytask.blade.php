@@ -83,14 +83,14 @@
 
                 <td>
 
-                   {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
+                    <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>
                     @if($todo['task_owner'] == $user_id)
                         <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @endif
                     {{--@include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])--}}
-                    @if($todo['status_ids']!=$todo_status)
+                    {{--@if($todo['status_ids']!=$todo_status)
                     @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
-                    @endif
+                    @endif--}}
 
                 </td>
 

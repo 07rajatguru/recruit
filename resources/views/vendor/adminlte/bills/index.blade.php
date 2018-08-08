@@ -107,6 +107,9 @@
                                 @if($value['cancel_bill']==0)
                                   @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                                 @endif
+                                @if($isSuperAdmin && $value['cancel_bill']==0)
+                                  @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery'])
+                                @endif
                         @endif
                     @endif
 

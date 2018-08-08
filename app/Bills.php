@@ -199,6 +199,7 @@ class Bills extends Model
             $bills[$i]['candidate_contact_number'] = $value->candidate_contact_number;
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+            $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
             $bills[$i]['fixed_salary'] = $value->fixed_salary;
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
@@ -693,5 +694,22 @@ class Bills extends Model
         //print_r($userwise_res);exit;
 
         return $data;
+    }
+
+    public static function getJoinConfirmationMail($id){
+
+        $join_mail = Bills::query();
+        $join_mail = $join_mail->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name');
+        $join_mail = $join_mail->where('bills.id',$id);
+        $join_mail_res = $join_mail->get();
+
+        $join_confirmation_mail = array();
+        $i = 0;
+        foreach ($join_mail_res as $key => $value) {
+            $join_confirmation_mail[$i]['company_name'] = $value->company_name;
+            $join_confirmation_mail[$i]['designation_offered'] = $value->designation_offered;
+            $join_confirmation_mail[$i]['candidate_name'] = $value->candidate_name;
+        }
     }
 }

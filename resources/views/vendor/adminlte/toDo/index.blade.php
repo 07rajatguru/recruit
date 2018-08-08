@@ -73,16 +73,16 @@
 
                 <td>
 
-                    {{--  <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>--}}
-                    @if($todo['task_owner'] == $user_id)
+                    <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>
+                    @if(($todo['task_owner'] == $user_id) || $isSuperAdmin || getenv('STRATEGY'))
                         <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @endif
                     <?php if($isSuperAdmin) { ?>
                         @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
                     <?php  }?>
-                    @if($todo['status_ids']!=$todo_status)
+                    {{--@if($todo['status_ids']!=$todo_status)
                         @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
-                    @endif
+                    @endif--}}
                     @include('adminlte::partials.todostatus', ['data' => $todo, 'name' => 'todos','display_name'=>'More Information'])
 
                 </td>
@@ -96,8 +96,6 @@
                 <td data-th="Lastrun" data-order="{{$todo['due_date_ts']}}">{{ $todo['due_date'] }}</td>
 
                 <td>{{ $todo['status'] }}</td>
-
-
 
             </tr>
 

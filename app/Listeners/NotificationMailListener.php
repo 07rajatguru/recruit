@@ -29,7 +29,7 @@ class NotificationMailListener
     public function handle(NotificationMail $event)
     {
         //
-        $user_id = \Auth::user()->id;
+        //$user_id = \Auth::user()->id;
 
         $module = $event->module;
         $sender_name = $event->sender_name;
