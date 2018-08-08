@@ -38,20 +38,20 @@ class NotificationEventListener
         $user_arr = $event->user_arr;
 
         if(isset($user_arr) && sizeof($user_arr) > 0){
-           // if(is_array($user_arr)){
-              //  foreach ($user_arr as $userId) {
+            if(is_array($user_arr)){
+                foreach ($user_arr as $userId) {
                     //if($user_id != $userId){
                         $notifications = new Notifications();
                         $notifications->module_id = $module_id;
                         $notifications->module = $module;
                         $notifications->message = $message;
-                        $notifications->user_id = $user_arr;
+                        $notifications->user_id = $userId;
                         $notifications->read = 0;
                         $notifications->link = $link;
                         $notifications->save();
                     //}
-               // }
-           /* } else {
+                }
+            } else {
                 //if($user_id != $user_arr){
                     $notifications = new Notifications();
                     $notifications->module_id = $module_id;
@@ -62,7 +62,7 @@ class NotificationEventListener
                     $notifications->link = $link;
                     $notifications->save();
                // }
-            }*/
+            }
         }
     }
 }
