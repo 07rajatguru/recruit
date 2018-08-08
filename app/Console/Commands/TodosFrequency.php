@@ -166,7 +166,7 @@ class TodosFrequency extends Command
                         if(isset($user_arr) && sizeof($user_arr)>0){
                             $module_id = $value['id'];
                             $module = 'Todos';
-                            $message = "$assigned_to_name; New task has been assigned to you";
+                            $message = "$assigned_to_name: New task has been assigned to you";
                             $link = route('todos.index');
 
                             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));

@@ -658,7 +658,7 @@ class ToDosController extends Controller
                     if(isset($user_arr) && $user_arr>0){
                         $module_id = $toDos_id;
                         $module = 'Todos';
-                        $message = "$assigned_to_name; New task has been assigned to you";
+                        $message = "$assigned_to_name: New task has been assigned to you";
                         $link = route('todos.index');
 
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
