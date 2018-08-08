@@ -647,18 +647,15 @@ class ToDosController extends Controller
         if($toDos_id>0) {
             $toDos_id = $toDos->id;
 
-           // $task_owner_name = User::getUserNameById($task_owner);
-            //$user_arr = array();
             foreach ($users as $key=>$value){
                 if($value!=$task_owner){
-                    $user_arr= $value;
+                    $user_arr = trim($value);
 
                     $assigned_to = User::getUserNameById($value);
                     $assigned_to_array = explode(" ", $assigned_to);
                     $assigned_to_name = $assigned_to_array[0];
-                //print_r($assigned_to_name);exit;
 
-                    if(isset($user_arr) && sizeof($user_arr)>0){
+                    if(isset($user_arr) && $user_arr>0){
                         $module_id = $toDos_id;
                         $module = 'Todos';
                         $message = "$assigned_to_name; New task has been assigned to you";
@@ -667,19 +664,18 @@ class ToDosController extends Controller
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
                         // TODO : Email Notification : data store in database
-                        //foreach ($users as $k=>$v){
-                            $user_email = User::getUserEmailById($value);
-                            $cc_email = User::getUserEmailById($task_owner);
-                            $module = "Todos";
-                            $sender_name = $user_id;
-                            $to = $user_email;
-                            $cc = $cc_email;
-                            $subject = $message;
-                            $body_message = "";
-                            $module_id = $toDos_id;
+                        $user_email = User::getUserEmailById($value);
+                        $cc_email = User::getUserEmailById($task_owner);
+                        $module = "Todos";
+                        $sender_name = $user_id;
+                        $to = $user_email;
+                        $cc = $cc_email;
+                        $subject = $message;
+                        $body_message = "";
+                        $module_id = $toDos_id;
 
-                            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
-                        //}
+                        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
                     }
                 }
             }

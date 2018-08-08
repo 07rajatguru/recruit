@@ -51,20 +51,20 @@ class TodosFrequencyCheck extends Command
 
             foreach ($userid as $key1=>$value1){
                 if($value1!=$task_owner){
-            //print_r($value1);exit;
-                    $user_arr= $value1;
+
+                    $user_arr = trim($value1);
 
                     $assigned_to = User::getUserNameById($value1);
                     $assigned_to_array = explode(" ", $assigned_to);
                     $assigned_to_name = $assigned_to_array[0];
-                    //print_r($assigned_to_name);exit;
 
-                    if(isset($user_arr) && sizeof($user_arr)>0){
+                    if(isset($user_arr) && $user_arr>0){
                         $module_id = $value['id'];
                         $module = 'Todos';
-                        $message = "ALERT Reminder : $assigned_to_name; New task has been assigned to you";
+                        $message = "ALERT Reminder ! $assigned_to_name; New task has been assigned to you";
                         $link = route('todos.index');
 
+                        //echo "here:".$user_arr;
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
                         // TODO : Email Notification : data store in database
