@@ -12,6 +12,7 @@ use App\Date;
 use Illuminate\Support\Facades\Input;
 use DB;
 use Excel;
+use App\Utils;
 
 class VendorController extends Controller
 {
@@ -328,7 +329,30 @@ class VendorController extends Controller
             $vendor['nicr_no']=$value->nicr_no;      
 
         }
-        return view('adminlte::vendor.show',compact('vendor'));
+
+        $i=0;
+        $vendor['doc']=array();
+
+        $vendor_doc=\DB::table('vendor_doc')
+                    ->select('vendor_doc.*')
+                    ->where('vendor_id','=',$id)
+                    ->get();
+
+
+        $utils = new Utils();
+
+        foreach($vendor_doc as $key=>$value)
+        {
+            $vendor['doc'][$i]['name'] = $value->name ;
+            $vendor['doc'][$i]['id'] = $value->id;
+            $vendor['doc'][$i]['url'] = "../".$value->file;
+            $vendor['doc'][$i]['size'] = $utils->formatSizeUnits($value->size);
+            $i++;
+        }
+
+        $vendor_upload_type['Others'] = 'Others';
+
+        return view('adminlte::vendor.show',compact('vendor','vendor_upload_type'));
     }   
     public function update(Request $request, $id)
     {     
@@ -389,13 +413,117 @@ class VendorController extends Controller
     }
 
 
-    public function destroy($id){
+    public function destroy($id)
+    {
+        $vendor_expense=\DB::table('vendor_basicinfo')
+        ->leftjoin('expense','expense.vendor_id','=','vendor_basicinfo.id')
+        ->select('vendor_basicinfo.*','expense.vendor_id as v_id')
+        ->where('vendor_id','=',$id)->first();
 
-        $vendor_bank=VendorBankDetails::where('vendor_id','=',$id)->delete();
-        $vendor_doc=VendorDoc::where('vendor_id','=',$id)->delete();
-        $vendor = VendorBasicInfo::where('id',$id)->delete();
+       /* print_r($vendor_expense);
+        exit;*/
 
+
+        if(isset($vendor_expense))
+        {
+               return redirect()->route('vendor.index')->with('error','Cannot Delete Vendor Because Expense is Added for the same.');
+        }
+        else
+        {
+            $vendor_attach=\DB::table('vendor_doc')->select('file','vendor_id')->where('vendor_id','=',$id)->first();
+
+            if(isset($vendor_attach))
+            {
+                $path="uploads/vendor/" . $vendor_attach->vendor_id;
+
+                $files=glob($path . "/*");
+
+                foreach($files as $file)
+                {
+                    if(is_file($file))
+                    {
+                        unlink($file);
+                    }
+                }
+
+                $vendor_id=$vendor_attach->vendor_id;
+                $path1="uploads/vendor/". $vendor_id . "/";
+                rmdir($path1);
+
+                $vendor_bank=VendorBankDetails::where('vendor_id','=',$id)->delete();
+                $vendor_doc=VendorDoc::where('vendor_id','=',$id)->delete();
+                $vendor = VendorBasicInfo::where('id',$id)->delete();
+            }
+        
+            else
+            {
+                 $vendor = VendorBasicInfo::where('id',$id)->delete();
+            }
+        }
+        
         return redirect()->route('vendor.index')->with('success','Vendor Deleted Successfully');
+    }
+
+
+    public function upload(Request $request)
+    {
+        $vendor_upload_type = $request->vendor_upload_type;
+        $file = $request->file('file');
+        $id = $request->id;
+
+        if (isset($file) && $file->isValid()) 
+        {
+            $doc_name = $file->getClientOriginalName();
+            $doc_filesize = filesize($file);
+
+            $dir_name = "uploads/vendor/".$id."/";
+            $others_doc_key = "uploads/vendor/".$id."/".$doc_name;
+
+            if (!file_exists($dir_name)) 
+            {
+                mkdir("uploads/vendor/$id", 0777,true);
+            }
+
+            if(!$file->move($dir_name, $doc_name))
+            {
+                return false;
+            }
+            else
+            {
+                $vendor_doc = new VendorDoc();
+                $vendor_doc->vendor_id = $id;
+                $vendor_doc->file = $others_doc_key;
+                $vendor_doc->name = $doc_name;
+                $vendor_doc->size = $doc_filesize;
+                $vendor_doc->created_at = date('Y-m-d');
+                $vendor_doc->updated_at = date('Y-m-d');
+                $vendor_doc->save();
+
+            }
+
+        }
+
+        return redirect()->route('vendor.show',[$id])->with('success','Attachment Uploaded Successfully');
+
+    }
+    public function attachmentsDestroy($docid)
+    {
+        $vendor_attach=\DB::table('vendor_doc')
+        ->select('vendor_doc.*')
+        ->where('id','=',$docid)->first();
+
+        if(isset($vendor_attach))
+        {
+            $path="uploads/vendor/".$vendor_attach->vendor_id . "/" . $vendor_attach->name;
+
+            unlink($path);
+
+            $id=$vendor_attach->vendor_id;
+    
+            $vendor_doc=VendorDoc::where('id','=',$docid)->delete();
+        }
+
+        return redirect()->route('vendor.show',[$id])->with('success','Attachment Deleted Successfully');
     }
 
     public function importExport(){

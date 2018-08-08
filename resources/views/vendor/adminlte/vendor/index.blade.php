@@ -58,7 +58,7 @@
 
                         <a title="Edit" class="fa fa-edit" href="{{ route('vendor.edit',$vendor['id']) }}"></a>
 
-                        @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor'])
+                        @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor',''])
                 </td>
             </tr>
         @endforeach

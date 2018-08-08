@@ -120,6 +120,40 @@ class ClientBasicinfo extends Ardent
 
     }
 
+
+     public static function getClientEmailByID($id)
+     {
+
+        $client_email='';
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->where('id','=',$id);
+        $client_query = $client_query->first();
+
+        if(isset($client_query))
+        {
+            $client_email=$client_query->mail;
+        }
+        return $client_email;
+
+     }
+
+
+     public static function getClientNameByID($id)
+     {
+
+        $client_name='';
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->where('id','=',$id);
+        $client_query = $client_query->first();
+
+        if(isset($client_query))
+        {
+            $client_name=$client_query->name;
+        }
+        return $client_name;
+
+     }
+
     public function beforeValidate ()
     {
         // In case of update, ignore current user's ID for unique check of Username and Email Address

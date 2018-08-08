@@ -11,6 +11,7 @@ use App\User;
 use App\ExpenseDoc;
 use App\VendorBasicInfo;
 use Excel;
+use App\Utils;
 
 class ExpenseController extends Controller
 {
@@ -25,6 +26,7 @@ class ExpenseController extends Controller
         //print_r($expense);exit;
     	
         $count=sizeof($expense);
+
         return view('adminlte::expense.index',compact('expense','isSuperAdmin','count'));
     }
 
@@ -426,10 +428,37 @@ class ExpenseController extends Controller
         return redirect()->route('expense.index')->with('success', 'Expense Updated Successfully');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
 
-        $expense_doc=ExpenseDoc::where('expence_id','=',$id)->delete();
-        $expense = Expense::where('id',$id)->delete();
+        
+        $expense_attach=\DB::table('expense_doc')->select('file','expence_id')->where('expence_id','=',$id)->first();
+
+        if(isset($expense_attach))
+        {
+            $path="uploads/expense/".$expense_attach->expence_id;
+ 
+            $files=glob($path . "/*");
+
+            foreach($files as $file)
+            {
+                if(is_file($file))
+                {
+                    unlink($file);
+                }
+            }
+
+            $expense_id=$expense_attach->expence_id;
+            $path1="uploads/expense/". $expense_id . "/";
+            rmdir($path1);
+            $expense_doc=ExpenseDoc::where('expence_id','=',$id)->delete();
+            $expense = Expense::where('id',$id)->delete();
+        }
+        else 
+        {
+            $expense = Expense::where('id',$id)->delete();
+        }
+     
 
         return redirect()->route('expense.index')->with('success','Expense Deleted Successfully');
     }
@@ -484,9 +513,91 @@ class ExpenseController extends Controller
             $expense['tds_date']=$value->tds_payment_date;      
 
         }
-        return view('adminlte::expense.show',compact('expense'));
+
+        $i=0;
+        $expense['doc']=array();
+
+        $expense_doc=\DB::table('expense_doc')
+                    ->select('expense_doc.*')
+                    ->where('expence_id','=',$id)
+                    ->get();
+
+
+        $utils = new Utils();
+
+        foreach($expense_doc as $key=>$value)
+        {
+            $expense['doc'][$i]['name'] = $value->name ;
+            $expense['doc'][$i]['id'] = $value->id;
+            $expense['doc'][$i]['url'] = "../".$value->file;
+            $expense['doc'][$i]['size'] = $utils->formatSizeUnits($value->size);
+            $i++;
+        }
+
+        $expense_upload_type['Others'] = 'Others';
+        return view('adminlte::expense.show',compact('expense','expense_upload_type'));
     }  
 
+    public function upload(Request $request)
+    {
+        $expense_upload_type = $request->expense_upload_type;
+        $file = $request->file('file');
+        $id = $request->id;
+
+        if (isset($file) && $file->isValid()) 
+        {
+            $doc_name = $file->getClientOriginalName();
+            $doc_filesize = filesize($file);
+
+            $dir_name = "uploads/expense/".$id."/";
+            $others_doc_key = "uploads/expense/".$id."/".$doc_name;
+
+            if (!file_exists($dir_name)) 
+            {
+                mkdir("uploads/expense/$id", 0777,true);
+            }
+
+            if(!$file->move($dir_name, $doc_name))
+            {
+                return false;
+            }
+            else
+            {
+                $expense_doc = new ExpenseDoc();
+                $expense_doc->expence_id = $id;
+                $expense_doc->file = $others_doc_key;
+                $expense_doc->name = $doc_name;
+                $expense_doc->size = $doc_filesize;
+                $expense_doc->created_at = date('Y-m-d');
+                $expense_doc->updated_at = date('Y-m-d');
+                $expense_doc->save();
+            }
+
+        }
+
+        return redirect()->route('expense.show',[$id])->with('success','Attachment Uploaded Successfully');
+
+    }
+
+    public function attachmentsDestroy($docid)
+    {
+
+        $expense_attach=\DB::table('expense_doc')
+        ->select('expense_doc.*')
+        ->where('id','=',$docid)->first();
+
+        if(isset($expense_attach))
+        {
+            $path="uploads/expense/".$expense_attach->expence_id . "/" . $expense_attach->name;
+
+            unlink($path);
+
+            $id=$expense_attach->expence_id;
+    
+            $expense_doc=ExpenseDoc::where('id','=',$docid)->delete();
+        }
+        return redirect()->route('expense.show',[$id])->with('success','Attachment Deleted Successfully');
+    }
     public function importExport()
     {
         return view('adminlte::expense.import');

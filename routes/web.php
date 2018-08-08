@@ -366,11 +366,21 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@create',
         // 'middleware' => ['permission:industry-create']
     ]);
+
+     Route::post('client/emailnotification', [
+        'as' => 'client.index',
+        'uses' => 'ClientController@postClientEmails',
+        //'middleware' => ['permission:industry-edit']
+    ]);
+     
     Route::get('client', [
         'as' => 'client.index',
         'uses' => 'ClientController@index',
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]);
+
+   
+
     Route::post('client/create', [
         'as' => 'client.store',
         'uses' => 'ClientController@store',
@@ -414,6 +424,8 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@delete',
         //    'middleware' => ['permission:industry-delete']
     ]);
+
+    
 
 
     // Candidate
@@ -1207,7 +1219,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ExpenseController@destroy'
     ]);
 
-    
+    Route:: post('expenseattachments/upload/{id}',[
+        'as' => 'expenseattachments.upload',
+        'uses' => 'ExpenseController@upload'
+    ]);
+
+    Route::delete('expense/destroy/{id}',[
+        'as' =>'expenseattachments.destroy',
+        'uses' =>'ExpenseController@attachmentsDestroy'
+    ]);
+
 
     // Reports Routes
 
@@ -1306,5 +1327,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'VendorController@update',
     ]);
 
+    Route:: post('vendorattachments/upload/{id}',[
+        'as' => 'vendorattachments.upload',
+        'uses' => 'VendorController@upload'
+    ]);
 
+    Route::delete('vendor/destroy/{id}',[
+        'as' =>'vendorattachments.destroy',
+        'uses' =>'VendorController@attachmentsDestroy'
+    ]);
 });

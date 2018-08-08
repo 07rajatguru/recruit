@@ -17,6 +17,7 @@ use App\Lead;
 use Excel;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
+use App\EmailsNotifications;
 
 class ClientController extends Controller
 {
@@ -220,6 +221,9 @@ class ClientController extends Controller
             $client['tds'] = $value->tds;
             $client['coordinator_name'] = $value->coordinator_name;
             $client['tan'] = $value->tan;
+            $client['percentage_charged_below']=$value->percentage_charged_below;
+
+            $client['percentage_charged_above']=$value->percentage_charged_above;
 
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
@@ -269,6 +273,8 @@ class ClientController extends Controller
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
+        $client_basic_info->percentage_charged_below=$input['percentage_charged_below'];
+        $client_basic_info->percentage_charged_above=$input['percentage_charged_above'];
         //$client_basic_info->fax = $input['fax'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
@@ -507,6 +513,8 @@ class ClientController extends Controller
             $client['tds'] = $value->tds;
             $client['coordinator_name'] = $value->coordinator_name;
             $client['tan'] = $value->tan;
+            $client['percentage_charged_below']=$value->percentage_charged_below;
+            $client['percentage_charged_above']=$value->percentage_charged_above;
 
             if($value->am_id==$user->id){
                 $client['client_owner'] = true;
@@ -562,9 +570,20 @@ class ClientController extends Controller
 
     public function attachmentsDestroy($docid){
 
-        $clientDocDelete = ClientDoc::where('id',$docid)->delete();
+        $client_attach=\DB::table('client_doc')
+        ->select('client_doc.*')
+        ->where('id','=',$docid)->first();
 
-        $clientid = $_POST['clientid'];
+        if(isset($client_attach))
+        {
+            $path="uploads/clients/".$client_attach->client_id . "/" . $client_attach->name;
+
+            unlink($path);
+
+            $clientid=$client_attach->client_id;
+    
+            $client_doc=ClientDoc::where('id','=',$docid)->delete();
+        }
 
         return redirect()->route('client.show',[$clientid])->with('success','Attachment deleted Successfully');
     }
@@ -675,6 +694,8 @@ class ClientController extends Controller
         $client_basicinfo->mail = $input->mail;
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
+        $client_basicinfo->percentage_charged_below=$input->percentage_charged_below;
+        $client_basicinfo->percentage_charged_above=$input->percentage_charged_above;
         //$client_basicinfo->fax = $input->fax;
         $client_basicinfo->industry_id = $input->industry_id;
         $client_basicinfo->website = $input->website;
@@ -757,6 +778,63 @@ class ClientController extends Controller
 
     }
 
+    public function postClientEmails()
+    {
+        $user =  \Auth::user();
+
+        $user_id=$user->id;
+
+        $client_ids = $_POST['client_ids'];
+
+        $client_ids_array=explode(",",$client_ids);
+
+      /*  $client_info=\DB::table('client_basicinfo')
+        ->select('client_basicinfo.*')
+        ->where()
+        ->get();*/
+
+        foreach($client_ids_array as $key => $value)
+        {
+            $client_email=ClientBasicinfo::getClientEmailByID($value);
+
+          //  echo $client_email;
+
+            $client_name=ClientBasicinfo::getClientNameByID($value);
+
+          //  echo $client_name;
+
+            $message="New Work Assigned To You By $client_name";
+
+           // echo $message;
+
+          //  exit;
+
+            /*$email_notification= new EmailsNotifications();
+            $email_notification->module='Client';
+            $email_notification->sender_name=$user_id;
+            $email_notification->to=$client_email;
+            $email_notification->cc='rajlalwani@adlertalent.com';
+            $email_notification->bcc="";
+            $email_notification->subject=$message;
+            $email_notification->message="";
+            $email_notification->sent_date=date("Y-m-d H:i:s");
+            $email_notification->status='0';
+            $email_notification->module_id=$value;*/
+
+            $module='Client';
+            $sender_name=$user_id;
+            $to=$client_email;
+            $cc='rajlalwani@adlertalent.com';
+            $subject=$message;
+            $body_message="";
+            $module_id=$value;
+            
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+            
+        }
+
+        return redirect()->route('client.index')->with('success','Successfully');
+    }
     public function importExport(){
 
         return view('adminlte::client.import');

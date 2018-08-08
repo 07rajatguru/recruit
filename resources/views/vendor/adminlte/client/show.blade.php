@@ -111,6 +111,14 @@
                             <th>About</th>
                             <td colspan="3">{!! $client['description'] !!}</td>
                         </tr>
+                         @if($isSuperAdmin || $isAdmin)
+                        <tr>
+                            <th>Percentage Charged Below AM Position</th>
+                            <td>{{ $client['percentage_charged_below'] }}</td>
+                            <th>Percentage Charged Above AM Position</th>
+                            <td>{{ $client['percentage_charged_above'] }}</td>
+                        </tr>
+                        @endif
                     </table>
                 </div>
 

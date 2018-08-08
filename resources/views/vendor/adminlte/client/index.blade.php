@@ -15,6 +15,7 @@
             </div>
 
             <div class="pull-right">
+                <a class="btn btn-success" onclick="client_emails_notification();"> Submit</a>
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
             </div>
         </div>
@@ -36,12 +37,13 @@
 
     @endif
 
+ 
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="client_table">
         <thead>
             <tr>
-                <th>No</th>
+                <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Client Owner</th>
-                <th>Company Name</th>
+                <th>Company Name</th>   
                 <th>HR/Coordinator Name</th>
                 {{--<th>Client Email</th>
                 <th>Client Phone No.</th>--}}
@@ -53,7 +55,7 @@
        <?php $i=0; ?>
         @foreach ($client_array as $key => $client)
             <tr>
-                <td>{{ ++$i }}</td>
+                <td>{{ Form::checkbox('client', $client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
                 <td>{{ $client['am_name'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
                 <td>{{ $client['hr_name'] }}</td>
@@ -85,17 +87,65 @@
         </tbody>
     </table>
 
+        <input type="hidden" id="token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-            var table = jQuery('#client_table').DataTable( {
-                responsive: true,
-                "pageLength": 100
+      jQuery( document ).ready(function() {
+
+        var table = jQuery('#client_table').DataTable( {
+                    responsive: true,
+                    "pageLength": 100
             } );
+
+            $('#allcb').change(function(){
+                if($(this).prop('checked')){
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', true);
+                    });
+                }else{
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+            $('.others_client').change(function() {
+                if ($(this).prop('checked')) {
+                    if ($('.others_client:checked').length == $('.others_client').length) {
+                        $("#allcb").prop('checked', true);
+                    }
+                }
+                else{
+                    $("#allcb").prop('checked', false);
+                }
+            });
 
             new jQuery.fn.dataTable.FixedHeader( table );
         });
+
+        function client_emails_notification(){
+            var client_ids = new Array();
+            var token = $("#token").val();
+
+                $("input:checkbox[name=client]:checked").each(function(){
+                    client_ids.push($(this).val());
+
+
+                });
+
+                var url = '/client/emailnotification';
+
+                if(client_ids.length > 0){
+                    var form = $('<form action="' + url + '" method="post">' +
+                            '<input type="hidden" name="_token" value="'+token+'" />' +
+                            '<input type="text" name="client_ids" value="'+client_ids+'" />' +
+                            '</form>');
+
+                    $('body').append(form);
+                    form.submit();
+                }
+            
+        }
     </script>
 @endsection

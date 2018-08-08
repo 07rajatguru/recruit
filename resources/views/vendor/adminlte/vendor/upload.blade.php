@@ -14,12 +14,12 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group {{ $errors->has('client_upload_type') ? 'has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('vendor_upload_type') ? 'has-error' : '' }}">
                         <strong>Select type</strong>
-                        {!! Form::select('client_upload_type', $client_upload_type,null, array('id'=>'client_upload_type','class' => 'form-control')) !!}
-                        @if ($errors->has('client_upload_type'))
+                        {!! Form::select('vendor_upload_type', $vendor_upload_type,null, array('id'=>'vendor_upload_type','class' => 'form-control')) !!}
+                        @if ($errors->has('vendor_upload_type'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('client_upload_type') }}</strong>
+                                <strong>{{ $errors->first('vendor_upload_type') }}</strong>
                             </span>
                         @endif
                     </div>

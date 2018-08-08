@@ -204,9 +204,9 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('paid_amount') ? 'has-error' : '' }}">
-                            <strong>Total Amount Paid : <span class = "required_fields">*</span> </strong>
+                            <strong>Paid Amount: <span class = "required_fields">*</span> </strong>
                             
-                            {!! Form::text('paid_amount', null,array('id'=>'paid_amount','placeholder' => 'Amount Paid','class' => 'form-control', 'tabindex' => '12' )) !!}
+                            {!! Form::text('paid_amount', null,array('id'=>'paid_amount','placeholder' => 'Paid Amount','class' => 'form-control', 'tabindex' => '12' )) !!}
                            
                             @if ($errors->has('paid_amount'))
                                 <span class="help-block">
@@ -497,8 +497,13 @@
 
         function prefilledtds()  
         {
-           var c_tds=$("#amount").val()*$("#tds").val()/100;
+           var c_tds=$("#bill_amount").val()*$("#tds").val()/100;
            $("#tds_deduct").val(c_tds);
+
+           var total_amount=$("#bill_amount").val();
+           var deduct_amount=$("#tds_deduct").val();
+           var paid=parseFloat(total_amount)-parseFloat(deduct_amount);
+           $("#paid_amount").val(paid);
         }
 
     

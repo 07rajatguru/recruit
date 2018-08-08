@@ -145,5 +145,49 @@
 
             </div>
         </div>
+
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header  col-md-6 ">
+                    <h3 class="box-title">Attachments</h3>
+                    &nbsp;&nbsp;
+                    @include('adminlte::vendor.upload', ['data' => $vendor, 'name' => 'vendorattachments'])
+                </div>
+
+                <div class="box-header  col-md-8 ">
+
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <table class="table table-bordered">
+                    <tr>
+                        <th></th>
+                        <th>File Name</th>
+                        <th>Size</th>
+                    </tr>
+                        @if(sizeof($vendor['doc'])>0)
+                            @foreach($vendor['doc'] as $key=>$value)
+                                <tr>
+                                    <td>
+                                        <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                        &nbsp;
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $vendor['id'], 'name' => 'vendorattachments' ,'display_name'=> 'Attachments'])
+                                    </td>
+
+                                    <td>
+                                    <a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}
+                                    </a>
+                                    </td>
+                                    <td>{{ $value['size'] }}</td>
+                         
+                                </tr>
+                            @endforeach
+                        @endif
+                    </table>
+                </div>
+
+            </div>
+        </div>
     </div>
 @endsection
