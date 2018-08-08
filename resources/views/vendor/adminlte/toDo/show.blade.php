@@ -16,7 +16,7 @@
                     <h2>To Do's Details</h2>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-primary" href="{{ route('todos.index') }}"> Back</a>
+                    <a class="btn btn-primary" href="{{ url()->previous() }}"> Back</a>
                 </div>
 
             </div>
@@ -43,20 +43,28 @@
                                 <th scope="row">User:</th>
                                 <td>{{ $toDos['assigned_to'] }}</td>
                                 <th>Due Date:</th>
-                                <td>{{ $toDos['due_date'] }}</td>
+                                <td>{{ date('d-m-Y h:i A',strtotime($toDos['due_date'])) }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Status :</th>
                                 <td>{{ $toDos['status'] }}</td>
                                 <th scope="row">Start Date :</th>
-                                <td>{{ $toDos['start_date'] }}</td>
+                                <td>{{ date('d-m-Y h:i A',strtotime($toDos['start_date'])) }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Type:</th>
-                                <td></td>
+                                <td>{{ $type }}</td>
                                 <th>Type List:</th>
-                                <td></td>
+                                <td>{{ $toDos['typelist'] }}</td>
                             </tr>
+                            @if(isset($toDos['frequency_type']) && sizeof($toDos['frequency_type'])>0)
+                            <tr>
+                                <th scope="row">Frequency Type:</th>
+                                <td>{{ $frequency_type }}</td>
+                                <th>Frequency Date:</th>
+                                <td>{{ date('d-m-Y',strtotime($toDos['frequency_date'])) }}</td>
+                            </tr>
+                            @endif
                             <tr>
                                 <th scope="row">Remarks :</th>
                                 <td>{{ $toDos['description'] }}</td>

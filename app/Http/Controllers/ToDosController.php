@@ -688,9 +688,42 @@ class ToDosController extends Controller
     {
        $dateClass = new Date();
 
-       $todo = ToDos::getShowTodo($id);
+       $toDos = ToDos::getShowTodo($id);
+       $frequency_type = $toDos['frequency_type'];
+       if ($frequency_type == 1) {
+           $frequency_type = 'Daily';
+       }
+       else if ($frequency_type == 2) {
+           $frequency_type = 'Weekly';
+       }
+       else if ($frequency_type == 3) {
+           $frequency_type = 'Monthly';
+       }
+       else if ($frequency_type == 4) {
+           $frequency_type = 'Quarterly';
+       }
+       else if ($frequency_type == 5) {
+           $frequency_type = 'Yearly';
+       }
+
+       $type = $toDos['type'];
+       if ($type == 1) {
+           $type = 'Job Opening';
+       }
+       else if ($type == 2) {
+           $type = 'Interview';
+       }
+       else if ($type == 3) {
+           $type = 'Client';
+       }
+       else if ($type == 4) {
+           $type = 'Candidate';
+       }
+       else if ($type == 5) {
+           $type = 'Other';
+       }
        
-       return view('adminlte::toDo.show')->with('toDos', $todo);
+       return view('adminlte::toDo.show',compact('toDos','frequency_type','type'));
     }
 
     public function edit($id)
@@ -995,8 +1028,8 @@ class ToDosController extends Controller
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
-                    $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$typeDetail->city;
+                    $typeArr[$i]['id'] = $typeDetail['id'];
+                    $typeArr[$i]['value'] = $typeDetail['client_name']." - ".$typeDetail['posting_title']." - ".$typeDetail['city'];
                     $i++;
                 }
             } else {
@@ -1109,7 +1142,7 @@ class ToDosController extends Controller
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->interview_name;
+                    $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$typeDetail->city;
                     $i++;
                 }
             } /*else {
