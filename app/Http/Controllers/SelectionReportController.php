@@ -76,7 +76,7 @@ class SelectionReportController extends Controller
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                 $selection[$i]['billing'] = (float)$billing;
                 $selection[$i]['gst'] = (float)$gst;
                 $selection[$i]['invoice'] = (float)$invoice;
@@ -123,7 +123,7 @@ class SelectionReportController extends Controller
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                 $selection[$i]['billing'] = (float)$billing;
                 $selection[$i]['gst'] = (float)$gst;
                 $selection[$i]['invoice'] = (float)$invoice;
@@ -172,7 +172,7 @@ class SelectionReportController extends Controller
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                     $selection[$i]['billing'] = (float)$billing;
                     $selection[$i]['gst'] = (float)$gst;
                     $selection[$i]['invoice'] = (float)$invoice;
@@ -210,7 +210,7 @@ class SelectionReportController extends Controller
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                     $selection[$i]['billing'] = (float)$billing;
                     $selection[$i]['gst'] = (float)$gst;
                     $selection[$i]['invoice'] = (float)$invoice;
@@ -248,7 +248,7 @@ class SelectionReportController extends Controller
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                     $selection[$i]['billing'] = (float)$billing;
                     $selection[$i]['gst'] = (float)$gst;
                     $selection[$i]['invoice'] = (float)$invoice;
@@ -286,7 +286,7 @@ class SelectionReportController extends Controller
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                     $selection[$i]['billing'] = (float)$billing;
                     $selection[$i]['gst'] = (float)$gst;
                     $selection[$i]['invoice'] = (float)$invoice;
@@ -330,7 +330,7 @@ class SelectionReportController extends Controller
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = $value->fixed_salary;
+                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
                 $selection[$i]['billing'] = (float)$billing;
                 $selection[$i]['gst'] = (float)$gst;
                 $selection[$i]['invoice'] = (float)$invoice;
