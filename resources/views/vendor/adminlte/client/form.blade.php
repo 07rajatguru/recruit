@@ -148,15 +148,15 @@
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
-                            <strong>Percentage charged below AM position </strong>
-                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Percentage charged below AM position','class' => 'form-control', 'tabindex' => '17' )) !!}
+                            <strong>Charged Below AM Position(%) </strong>
+                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Percentage charged below AM position','class' => 'form-control', 'tabindex' => '18' )) !!}
                         </div>
                         @endif
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
-                            <strong>Percentage charged above AM position </strong>
-                            {!! Form::text('percentage_charged_above', null, array('id'=>'percentage_charged_above','placeholder' => 'Percentage charged above AM position','class' => 'form-control', 'tabindex' => '17' )) !!}
+                            <strong>Charged Above AM Position(%) </strong>
+                            {!! Form::text('percentage_charged_above', null, array('id'=>'percentage_charged_above','placeholder' => 'Percentage charged above AM position','class' => 'form-control', 'tabindex' => '19' )) !!}
                         </div>
                         @endif
 
@@ -210,6 +210,23 @@
                         <div class="form-group">
                             <strong>About:</strong>
                             {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '12' )) !!}
+                        </div>
+
+                        <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                            <strong>Status: <span class = "required_fields">*</span></strong>
+                            
+                            {!! Form::radio('status','1',true) !!}
+                            <label>Active</label>
+                            
+                            {!! Form::radio('status','0') !!}
+                            <label>Inactive</label>
+
+                            @if ($errors->has('status'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('status') }}</strong>
+                                </span>
+                            @endif
+                            
                         </div>
 
 
@@ -399,12 +416,9 @@
                     "industry_id": {
                         required: true
                     },
-                    /*"gst_no" : {
+                    "status" : {
                         required: true
-                    },
-                    "tds" : {
-                        required: true
-                    },*/
+                    }
                     "coordinator_name" : {
                         required: true
                     }
@@ -422,12 +436,9 @@
                     "industry_id": {
                         required: "Industry is required."
                     },
-                   /* "gst_no": {
-                        required: "GST Number is required."
-                    },
-                    "tds": {
-                        required: "TDS is required."
-                    },*/
+                    "status": {
+                        required: "Status is required."
+                    }
                     "coordinator_name" :{
                         required: "HR / Coordinator name is required."
                     }

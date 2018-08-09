@@ -225,6 +225,8 @@ class ClientController extends Controller
 
             $client['percentage_charged_above']=$value->percentage_charged_above;
 
+            $client['status']=$value->status;
+
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
         }
@@ -273,9 +275,36 @@ class ClientController extends Controller
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
-        $client_basic_info->percentage_charged_below=$input['percentage_charged_below'];
-        $client_basic_info->percentage_charged_above=$input['percentage_charged_above'];
-        //$client_basic_info->fax = $input['fax'];
+
+        if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '' )
+        {
+            $client_basic_info->percentage_charged_below=$input['percentage_charged_below'];
+        }
+        else
+        {
+            $client_basic_info->percentage_charged_below=NULL;
+        }
+        
+        if(isset($input['percentage_charged_above']) && $input['percentage_charged_above']!='' )
+        {
+            $client_basic_info->percentage_charged_above=$input['percentage_charged_above'];
+        }
+        else
+        {
+             $client_basic_info->percentage_charged_above=NULL;
+        }
+        
+        $status = $input['status'];
+
+        if($status=='1')
+        {
+            $client_basic_info->status='1';
+        }
+        else
+        {
+            $client_basic_info->status='0';
+        }
+
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
         //$client_basic_info->source = $input['source'];
@@ -694,10 +723,38 @@ class ClientController extends Controller
         $client_basicinfo->mail = $input->mail;
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
-        $client_basicinfo->percentage_charged_below=$input->percentage_charged_below;
-        $client_basicinfo->percentage_charged_above=$input->percentage_charged_above;
+
+        if(isset($input->percentage_charged_below) && $input->percentage_charged_below!= '' )
+        {
+            $client_basicinfo->percentage_charged_below=$input->percentage_charged_below;
+        }
+        else
+        {
+            $client_basicinfo->percentage_charged_below=NULL;
+        }
+        
+        if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='' )
+        {
+            $client_basicinfo->percentage_charged_above=$input->percentage_charged_above;
+        }
+        else
+        {
+             $client_basicinfo->percentage_charged_above=NULL;
+        }
+        
         //$client_basicinfo->fax = $input->fax;
         $client_basicinfo->industry_id = $input->industry_id;
+
+        $status=$input->status;
+
+        if($status=='1')
+        {
+            $client_basicinfo->status='1';
+        }
+        else
+        {
+            $client_basicinfo->status='0';
+        }
         $client_basicinfo->website = $input->website;
         if(isset($input->source) && $input->source!=''){
             $client_basicinfo->source = $input->source;
