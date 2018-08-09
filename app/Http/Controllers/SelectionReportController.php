@@ -68,7 +68,7 @@ class SelectionReportController extends Controller
                 if($percentage_charged<=0)
                     $percentage_charged = 1;
 
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                 $gst = ((float)$billing * 18 ) / 100;
                 $invoice = (float)$billing+(float)$gst;
                 $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -115,7 +115,7 @@ class SelectionReportController extends Controller
                 if($percentage_charged<=0)
                     $percentage_charged = 1;
 
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                 $gst = ((float)$billing * 18 ) / 100;
                 $invoice = (float)$billing+(float)$gst;
                 $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -164,7 +164,7 @@ class SelectionReportController extends Controller
                     if($percentage_charged<=0)
                         $percentage_charged = 1;
 
-                    $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                     $gst = ((float)$billing * 18 ) / 100;
                     $invoice = (float)$billing+(float)$gst;
                     $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -202,7 +202,7 @@ class SelectionReportController extends Controller
                     if($percentage_charged<=0)
                         $percentage_charged = 1;
 
-                    $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                     $gst = ((float)$billing * 18 ) / 100;
                     $invoice = (float)$billing+(float)$gst;
                     $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -240,7 +240,7 @@ class SelectionReportController extends Controller
                     if($percentage_charged<=0)
                         $percentage_charged = 1;
 
-                    $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                     $gst = ((float)$billing * 18 ) / 100;
                     $invoice = (float)$billing+(float)$gst;
                     $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -278,7 +278,7 @@ class SelectionReportController extends Controller
                     if($percentage_charged<=0)
                         $percentage_charged = 1;
 
-                    $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                     $gst = ((float)$billing * 18 ) / 100;
                     $invoice = (float)$billing+(float)$gst;
                     $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -321,8 +321,8 @@ class SelectionReportController extends Controller
 
                 if($percentage_charged<=0)
                     $percentage_charged = 1;
-                
-                $billing = ($fixed_salary * ((float)$percentage_charged)) / 100;
+
+                $billing = ((float)$fixed_salary * ((float)$percentage_charged)) / 100;
                 $gst = (((float)$billing) * 18 ) / 100;
                 $invoice = ((float)$billing)+((float)$gst);
                 $payment = ((((float)$billing) * 90) / 100) + ((((float)$billing) * 18) / 100);
