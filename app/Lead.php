@@ -92,15 +92,12 @@ class Lead extends Model
             $response[$i]['lead_status'] = $value->lead_status;
 
             $response[$i]['access'] = false;
-            if($strategy_role_id){
-                if($user_id==$value->account_manager_id){
-                    $response[$i]['access'] = true;
-                }
-            }
-            else{
+            if($user_id==$value->account_manager_id){
                 $response[$i]['access'] = true;
             }
-
+            else if ($superadmin_role_id || $strategy_role_id) {
+                $response[$i]['access'] = true;
+            }
             $i++;
         }
 
