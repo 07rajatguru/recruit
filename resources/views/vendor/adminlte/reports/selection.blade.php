@@ -74,7 +74,7 @@
     		    <th>Candidate Name</th>
     		    <th>Company Name</th>
     		    <th>Position/Dept</th>
-    		    <th>Salary offered(fixed)</th>
+    		    <th>Salary offered (fixed)</th>
     		    <th>Billing(Salary <br/> Offered*Percentage <br/> Charged)</th>
     		    <th>GST @ 18% (Billing <br/> amount*18/100)</th>
     		    <th>Invoice <br/> Raised <br/> (Billing+GST)</th>
@@ -90,9 +90,9 @@
             <tr>
     		    <td>{{ ++$i }}</td>
     		    <td>{{ $selections['candidate_name'] or '' }}</td>
-    		    <td>{{ $selections['company_name'] or '' }}</td>
-    		    <td>{{ $selections['position'] or '' }}</td>
-    		    <td>{{ $selections['fixed_salary'] or '' }}</td>
+    		    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $selections['company_name'] or '' }}</td>
+    		    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $selections['position'] or '' }}</td>
+    		    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $selections['fixed_salary'] or '' }}</td>
     		    <td>{{ $selections['billing'] or '' }}</td>
     		    <td>{{ $selections['gst'] or '' }}</td>
     		    <td>{{ $selections['invoice'] or '' }}</td>
