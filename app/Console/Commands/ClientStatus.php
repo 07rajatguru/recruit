@@ -49,10 +49,16 @@ class ClientStatus extends Command
         ->select('client_basicinfo.*','job_openings.created_at as create_date')
         ->get();*/
 
-        $job_open=\DB::table('job_openings')
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->leftJoin('job_openings','job_openings.client_id','=','client_basicinfo.id');
+        $client_query = $client_query->select('job_openings.*','client_basicinfo.id as Client_Id');
+        $job_open = $client_query->get();
+
+        //print_r($job_open);exit;
+        /*$job_open=\DB::table('job_openings')
         ->leftjoin('client_basicinfo','job_openings.client_id','=','client_basicinfo.id')
         ->select('job_openings.*','client_basicinfo.id as Client_Id')
-        ->get();
+        ->get();*/
 
         $job=array();
 
@@ -80,6 +86,12 @@ class ClientStatus extends Command
 
                         echo "Active";
                    }
+                }
+                else{
+
+                    DB::statement("UPDATE  client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+
+                    echo "Inacitve";
                 }
             }
         }
