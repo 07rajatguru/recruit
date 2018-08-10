@@ -58,7 +58,11 @@
                 <td>{{ $client['am_name'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
                 <td>{{ $client['hr_name'] }}</td>
-                <td>{{ $client['status']}} </td>
+                @if($client['status']=='Active')
+                    <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
+                @else
+                    <td ><span class="label label-sm label-danger">{{$client['status']}} </span></td>
+                @endif
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 
