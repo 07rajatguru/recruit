@@ -217,6 +217,7 @@ class ClientBasicinfo extends Ardent
     {
 
         $type = array();
+        $type['']='Select';
         $type['Mr.'] = 'Mr.';
         $type['Mrs.'] = 'Mrs.';
         $type['Miss'] = 'Miss';

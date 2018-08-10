@@ -170,38 +170,24 @@
                     <strong>HR/Coordinator Name: <span class = "required_fields">*</span></strong>
                     <div class="">
 
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                        <div class="">
-                               <div class="form-group {{ $errors->has('co_category') ? 'has-error' : '' }}">
-                                
+                            <div class="col-md-4 form-group {{ $errors->has('co_category') ? 'has-error' : '' }}" style="margin-left: -15px;">
                                 {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
 
                                 @if ($errors->has('co_category'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('co_category') }}</strong>
-                                </span>
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('co_category') }}</strong>
+                                    </span>
                                 @endif
-                                </div>
-                        </div>
-                    </div>
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                        <div class="">
-                  
-                                <div class="form-group {{ $errors->has('coordinator_name') ? 'has-error' : '' }}">
+                            </div>
+
+                            <div class="col-md-8 form-group {{ $errors->has('coordinator_name') ? 'has-error' : '' }}" style="margin-left: -15px;">
                                 {!! Form::text('coordinator_name', null, array('id'=>'coordinator_name','placeholder' => 'HR/Coordinator Name','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @if ($errors->has('coordinator_name'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('coordinator_name') }}</strong>
-                                </span>
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('coordinator_name') }}</strong>
+                                    </span>
                                 @endif
-                                </div>  
-                        </div>  
-                    </div>
-                    </div>
-                </div>
-
-                <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <div class="">
+                            </div>
                     
                         <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
                             <strong>Email: <span class = "required_fields">*</span></strong>
