@@ -54,30 +54,33 @@ class ClientStatus extends Command
         ->select('job_openings.*','client_basicinfo.id as Client_Id')
         ->get();
 
-
-        
         $job=array();
 
-        foreach($job_open as $key=>$value)
+        if(isset($job_open))
         {
-            $client_id=$value->Client_Id;
-
-            $created_at=$value->created_at;
-
-            if(isset($created_at))
+            foreach($job_open as $key=>$value)
             {
-               $date1=date('Y-m-d',strtotime("-30 days"));
-               
-               if($created_at < $date1)
-               {
-                    DB::statement("UPDATE  client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+                $client_id=$value->Client_Id;
 
-                    echo "Updated";
-               }
-               else
-               {
-                    echo "YES";
-               }
+                $created_at=$value->created_at;
+
+                if(isset($created_at))
+                {
+                   $date1=date('Y-m-d',strtotime("-30 days"));
+                   
+                   if($created_at < $date1)
+                   {
+                        DB::statement("UPDATE  client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+
+                        echo "Inacitve";
+                   }
+                   else
+                   {
+                        DB::statement("UPDATE  client_basicinfo SET `status`='1' WHERE `id`='$client_id'");
+
+                        echo "Active";
+                   }
+                }
             }
         }
 
