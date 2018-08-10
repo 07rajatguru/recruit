@@ -60,7 +60,7 @@
 
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                             <strong>Display Name: </strong>
-                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4'  )) !!}
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -71,7 +71,7 @@
 
                         <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Contact Number','class' => 'form-control', 'tabindex' => '5'  )) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Contact Number','class' => 'form-control', 'tabindex' => '6'  )) !!}
                             {!! Form::hidden('client_id', null, array('id'=>'client_id','placeholder' => 'Contact Number','class' => 'form-control' )) !!}
                             @if ($errors->has('mobile'))
                                 <span class="help-block">
@@ -82,7 +82,7 @@
 
                         <div class="form-group {{ $errors->has('other_number') ? 'has-error' : '' }}">
                             <strong>Other Number:</strong>
-                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '7'  )) !!}
+                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8'  )) !!}
                             @if ($errors->has('other_number'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('other_number') }}</strong>
@@ -93,9 +93,9 @@
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager:</strong>
                             @if(isset($isSuperAdmin) && $isSuperAdmin==1)
-                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '9' )) !!}
+                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10' )) !!}
                             @else
-                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled', 'tabindex' => '9' )) !!}
+                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled', 'tabindex' => '12' )) !!}
                             @endif
                             @if ($errors->has('account_manager_id'))
                                 <span class="help-block">
@@ -108,7 +108,7 @@
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
                             <strong>Industry <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '11' )) !!}
+                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '14' )) !!}
                             @if ($errors->has('industry_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('industry_id') }}</strong>
@@ -118,7 +118,7 @@
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
                             <strong>Source:</strong>
-                            {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control', 'tabindex' => '13' )) !!}
+                            {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control', 'tabindex' => '16' )) !!}
                             @if ($errors->has('source'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('source') }}</strong>
@@ -134,49 +134,74 @@
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>GST Number</strong>
-                            {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control', 'tabindex' => '15' )) !!}
+                            {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control', 'tabindex' => '18' )) !!}
                         </div>
                         @endif
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>TDS </strong>
-                            {!! Form::text('tds', null, array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control', 'tabindex' => '17' )) !!}
+                            {!! Form::text('tds', null, array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control', 'tabindex' => '20' )) !!}
                         </div>
                         @endif
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>Charged Below AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Percentage charged below AM position','class' => 'form-control', 'tabindex' => '18' )) !!}
+                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Charged Below AM Position','class' => 'form-control', 'tabindex' => '22' )) !!}
                         </div>
                         @endif
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>Charged Above AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_above', null, array('id'=>'percentage_charged_above','placeholder' => 'Percentage charged above AM position','class' => 'form-control', 'tabindex' => '19' )) !!}
+                            {!! Form::text('percentage_charged_above', null, array('id'=>'percentage_charged_above','placeholder' => 'Charged Above AM Position','class' => 'form-control', 'tabindex' => '24' )) !!}
                         </div>
                         @endif
 
                     </div>
                 </div>
 
+
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <strong>HR/Coordinator Name: <span class = "required_fields">*</span></strong>
                     <div class="">
 
-                        <div class="form-group {{ $errors->has('coordinator_name') ? 'has-error' : '' }}">
-                            <strong>HR/Coordinator Name: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('coordinator_name', null, array('id'=>'coordinator_name','placeholder' => 'HR/Coordinator Name','class' => 'form-control', 'tabindex' => '2' )) !!}
-                            @if ($errors->has('coordinator_name'))
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                               <div class="form-group {{ $errors->has('co_category') ? 'has-error' : '' }}">
+                                
+                                {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
+
+                                @if ($errors->has('co_category'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('co_category') }}</strong>
+                                </span>
+                                @endif
+                                </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                  
+                                <div class="form-group {{ $errors->has('coordinator_name') ? 'has-error' : '' }}">
+                                {!! Form::text('coordinator_name', null, array('id'=>'coordinator_name','placeholder' => 'HR/Coordinator Name','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                @if ($errors->has('coordinator_name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('coordinator_name') }}</strong>
                                 </span>
-                            @endif
-                        </div>
+                                @endif
+                                </div>  
+                        </div>  
+                    </div>
+                    </div>
+                </div>
 
+                <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <div class="">
+                    
                         <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
                             <strong>Email: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '4' )) !!}
+                            {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '5' )) !!}
                             @if ($errors->has('mail'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('mail') }}</strong>
@@ -186,7 +211,7 @@
 
                         <div class="form-group {{ $errors->has('s_mail') ? 'has-error' : '' }}">
                             <strong>Secondary Email: </strong>
-                            {!! Form::text('s_email', null, array('id'=>'s_email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '6' )) !!}
+                            {!! Form::text('s_email', null, array('id'=>'s_email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7' )) !!}
                             @if ($errors->has('s_email'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('s_email') }}</strong>
@@ -196,18 +221,18 @@
 
                         <div class="form-group">
                             <strong>Website:</strong>
-                            {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '8' )) !!}
+                            {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '9' )) !!}
                         </div>
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>TAN:</strong>
-                            {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control', 'tabindex' => '10' )) !!}
+                            {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control', 'tabindex' => '11' )) !!}
                         </div>
                         @endif
 
                         <div class="form-group">
                             <strong>About:</strong>
-                            {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '12' )) !!}
+                            {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '13' )) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">

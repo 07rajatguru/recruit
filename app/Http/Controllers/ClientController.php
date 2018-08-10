@@ -80,8 +80,23 @@ class ClientController extends Controller
             $client_array[$i]['id'] = $client->id;
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
+            $client_array[$i]['status']=$client->status;
+            
+
+            if(isset($client_array[$i]['status']))
+            {
+                if($client_array[$i]['status']== '1')
+                {
+                  $client_array[$i]['status']='Active';
+                }
+                else
+                {
+                  $client_array[$i]['status']='Inactive';
+                }
+            }
+            
             $client_array[$i]['mobile']= $client->mobile;
-            $client_array[$i]['hr_name'] = $client->coordinator_name;
+            $client_array[$i]['hr_name'] = $client->coordinator_prefix . " " . $client->coordinator_name;
 
             $address ='';
             if($client->area!=''){
@@ -146,6 +161,10 @@ class ClientController extends Controller
 
     public function create()
     {
+
+        $co_prefix=ClientBasicinfo::getcoprefix();
+        $co_category='';
+
         $generate_lead = '1';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -171,13 +190,15 @@ class ClientController extends Controller
         $industry_id = '';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category'));
     }
 
     public function edit($id)
     {
 
         $generate_lead = '1';
+
+        $co_prefix=ClientBasicinfo::getcoprefix();
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -220,6 +241,7 @@ class ClientController extends Controller
             $client['gst_no'] = $value->gst_no;
             $client['tds'] = $value->tds;
             $client['coordinator_name'] = $value->coordinator_name;
+            $co_category=$value->coordinator_prefix;
             $client['tan'] = $value->tan;
             $client['percentage_charged_below']=$value->percentage_charged_below;
 
@@ -257,7 +279,7 @@ class ClientController extends Controller
          $users = User::getAllUsersWithInactive();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id','co_prefix','co_category'));
     }
 
     public function store(Request $request){
@@ -266,6 +288,8 @@ class ClientController extends Controller
         $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
         $input = $request->all();
+
+        $co_prefix=$input['co_category'];
 
         $client_basic_info = new ClientBasicinfo();
         $client_basic_info->name = $input['name'];
@@ -325,7 +349,10 @@ class ClientController extends Controller
             $client_basic_info->tan = $input['tan'];
         else
             $client_basic_info->tan = '';
+
         $client_basic_info->coordinator_name = $input['coordinator_name'];
+
+        $client_basic_info->coordinator_prefix= $co_prefix;
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
@@ -766,6 +793,8 @@ class ClientController extends Controller
         //$client_basicinfo->gst_no = $input->gst_no;
         //$client_basicinfo->tds = $input->tds;
         $client_basicinfo->coordinator_name = $input->coordinator_name;
+
+        $client_basicinfo->coordinator_prefix=$input->co_category;
         $client_basicinfo->account_manager_id = $input->account_manager;
 
         if(isset($input->gst_no) && $input->gst_no!='')

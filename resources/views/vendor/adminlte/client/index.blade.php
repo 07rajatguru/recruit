@@ -45,8 +45,7 @@
                 <th>Client Owner</th>
                 <th>Company Name</th>   
                 <th>HR/Coordinator Name</th>
-                {{--<th>Client Email</th>
-                <th>Client Phone No.</th>--}}
+                <th>Status</th>
                 <th>Client Address</th>
                 <th width="280px">Action</th>
             </tr>
@@ -59,8 +58,7 @@
                 <td>{{ $client['am_name'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
                 <td>{{ $client['hr_name'] }}</td>
-                {{--<td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['mail']}}</td>
-                <td>{{ $client['mobile'] }}</td>--}}
+                <td>{{ $client['status']}} </td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 

@@ -213,4 +213,14 @@ class ClientBasicinfo extends Ardent
         return $client;
     }
 
+    public static function getcoprefix()
+    {
+
+        $type = array();
+        $type['Mr.'] = 'Mr.';
+        $type['Mrs.'] = 'Mrs.';
+        $type['Miss'] = 'Miss';
+        return $type;
+    }
+
 }
