@@ -242,11 +242,44 @@
                         <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                             <strong>Status: <span class = "required_fields">*</span></strong>
                             
+                            @if($action=='edit')
+
+                            @if($client_status== '1')
+
                             {!! Form::radio('status','1',true) !!}
                             <label>Active</label>
                             
                             {!! Form::radio('status','0') !!}
                             <label>Inactive</label>
+
+                
+                            @elseif($client_status== '0')
+
+                            {!! Form::radio('status','1') !!}
+                            <label>Active</label>
+                            
+                            {!! Form::radio('status','0',true) !!}
+                            <label>Inactive</label>
+
+                            @else
+
+                            {!! Form::radio('status','1') !!}
+                            <label>Active</label>
+                            
+                            {!! Form::radio('status','0') !!}
+                            <label>Inactive</label>
+
+                            @endif
+
+                            @else
+
+                            {!! Form::radio('status','1',true) !!}
+                            <label>Active</label>
+                            
+                            {!! Form::radio('status','0') !!}
+                            <label>Inactive</label>
+
+                            @endif  
 
                             @if ($errors->has('status'))
                                 <span class="help-block">

@@ -367,7 +367,7 @@
 
         $(document).ready(function() {
 
-            $('#clientForm').on('keyup keypress', function(e) {
+            $('#vendorForm').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
                 if (keyCode === 13) {
                     e.preventDefault();
@@ -375,7 +375,7 @@
                 }
             });
 
-            $("#clientForm").validate({
+            $("#vendorForm").validate({
                 rules: {
                     "name": {
                         required: true

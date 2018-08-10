@@ -247,8 +247,10 @@ class ClientController extends Controller
 
             $client['percentage_charged_above']=$value->percentage_charged_above;
 
-            $client['status']=$value->status;
+            $client_status=$value->status;
 
+            /*echo $client_status;
+            exit;*/
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
         }
@@ -279,7 +281,7 @@ class ClientController extends Controller
          $users = User::getAllUsersWithInactive();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id','co_prefix','co_category'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status'));
     }
 
     public function store(Request $request){
@@ -567,7 +569,7 @@ class ClientController extends Controller
             $client['description'] = $value->description;
             $client['gst_no'] = $value->gst_no;
             $client['tds'] = $value->tds;
-            $client['coordinator_name'] = $value->coordinator_name;
+            $client['coordinator_name'] = $value->coordinator_prefix. " " .$value->coordinator_name;
             $client['tan'] = $value->tan;
             $client['percentage_charged_below']=$value->percentage_charged_below;
             $client['percentage_charged_above']=$value->percentage_charged_above;
@@ -778,7 +780,7 @@ class ClientController extends Controller
         {
             $client_basicinfo->status='1';
         }
-        else
+        if($status=='0')
         {
             $client_basicinfo->status='0';
         }
