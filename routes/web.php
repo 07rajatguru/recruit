@@ -760,12 +760,14 @@ Route::group(['middleware' => ['auth']], function () {
     // Bills Module
     Route::get('forecasting/create', [
         'as' => 'bills.create',
-        'uses' => 'BillsController@create'
+        'uses' => 'BillsController@create',
+        'middleware' => ['permission:bnm-create']
     ]);
 
     Route::get('forecasting', [
         'as' => 'forecasting.index',
-        'uses' => 'BillsController@index'
+        'uses' => 'BillsController@index',
+        'middleware' => ['permission:bills-list']
     ]);
 
     Route::get('forecasting/cancel', [
@@ -785,17 +787,20 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('forecasting/{id}/edit', [
         'as' => 'forecasting.edit',
-        'uses' => 'BillsController@edit'
+        'uses' => 'BillsController@edit',
+        'middleware' => ['permission:bnm-edit']
     ]);
 
     Route::patch('forecasting/{id}', [
         'as' => 'forecasting.update',
-        'uses' => 'BillsController@update'
+        'uses' => 'BillsController@update',
+        'middleware' => ['permission:bnm-edit']
     ]);
 
     Route::post('forecasting/store', [
         'as' => 'forecasting.store',
-        'uses' => 'BillsController@store'
+        'uses' => 'BillsController@store',
+        'middleware' => ['permission:bills-list']
     ]);
 
     Route::get('recovery/{id}/generaterecovery', [
@@ -810,7 +815,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::delete('forecasting/{id}', [
         'as' => 'forecasting.destroy',
-        'uses' => 'BillsController@delete'
+        'uses' => 'BillsController@delete',
+        'middleware' => ['permission:bnm-delete']
     ]);
 
     Route::get('forecasting/{id}', [

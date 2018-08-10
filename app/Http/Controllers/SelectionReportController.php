@@ -158,7 +158,7 @@ class SelectionReportController extends Controller
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
-                    $fixed_salary = $value->fixed_salary;
+                    $fixed_salary = (float)$value->fixed_salary;
                     $percentage_charged = (float)$value->percentage_charged;
 
                     if($percentage_charged<=0)
@@ -172,7 +172,7 @@ class SelectionReportController extends Controller
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
+                    $selection[$i]['fixed_salary'] = number_format($fixed_salary,2);
                     $selection[$i]['billing'] = (float)$billing;
                     $selection[$i]['gst'] = (float)$gst;
                     $selection[$i]['invoice'] = (float)$invoice;

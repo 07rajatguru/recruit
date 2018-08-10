@@ -474,6 +474,7 @@ class ToDosController extends Controller
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
         $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
@@ -489,7 +490,7 @@ class ToDosController extends Controller
 
         $count = sizeof($todos);
 
-        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin','status','count'));
+        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin','status','count','isStrategyCoordination'));
 
     }
 
@@ -920,6 +921,11 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
         
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
@@ -933,7 +939,7 @@ class ToDosController extends Controller
         }
 
         $count = sizeof($todos);
-        return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id','count'));
+        return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
 
     }
 
@@ -942,6 +948,11 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
         
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
@@ -956,7 +967,7 @@ class ToDosController extends Controller
 
         $count = sizeof($todos);
 
-        return view('adminlte::toDo.mytask', array('todos' => $todos),compact('todo_status','user_id','count'));
+        return view('adminlte::toDo.mytask', array('todos' => $todos),compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
     }
 
     public function status(Request $request){
