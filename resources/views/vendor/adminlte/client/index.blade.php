@@ -15,8 +15,13 @@
             </div>
 
             <div class="pull-right">
-                {{--<a class="btn btn-success" onclick="client_emails_notification();"> Submit</a>--}}
+                
+                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal">Submit
+                </button> 
+
+
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
+
             </div>
         </div>
     </div>
@@ -54,15 +59,20 @@
        <?php $i=0; ?>
         @foreach ($client_array as $key => $client)
             <tr>
-                <td>{{ Form::checkbox('client', $client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
+                <td>{{ Form::checkbox('client',$client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
+
                 <td>{{ $client['am_name'] }}</td>
+
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
+
                 <td>{{ $client['hr_name'] }}</td>
+
                 @if($client['status']=='Active')
                     <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
                 @else
                     <td ><span class="label label-sm label-danger">{{$client['status']}} </span></td>
                 @endif
+
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 
@@ -89,6 +99,32 @@
         </tbody>
     </table>
 
+<div class="modal fade searchmodal" id="searchmodal" aria-        labelledby="searchmodal" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Send Mail To Clients</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                     Are You Sure You Want to Send Mail To Clients ?
+                    
+                   
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" onclick="client_emails_notification()">
+                Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+         
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
         <input type="hidden" id="token" value="{{ csrf_token() }}">
 @stop
 
@@ -96,6 +132,7 @@
     <script type="text/javascript">
       jQuery( document ).ready(function() {
 
+       
         var table = jQuery('#client_table').DataTable( {
                     responsive: true,
                     "pageLength": 100
@@ -126,7 +163,8 @@
             new jQuery.fn.dataTable.FixedHeader( table );
         });
 
-        function client_emails_notification(){
+function client_emails_notification()
+{
             var client_ids = new Array();
             var token = $("#token").val();
 
@@ -148,6 +186,6 @@
                     form.submit();
                 }
             
-        }
+}
     </script>
 @endsection
