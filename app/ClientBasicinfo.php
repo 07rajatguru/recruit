@@ -148,9 +148,25 @@ class ClientBasicinfo extends Ardent
 
         if(isset($client_query))
         {
-            $client_name=$client_query->name;
+            $client_name=$client_query->coordinator_prefix." " .$client_query->coordinator_name;
         }
         return $client_name;
+
+     }
+
+       public static function getCompanyOfClientByID($id)
+     {
+
+        $client_company='';
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->where('id','=',$id);
+        $client_query = $client_query->first();
+
+        if(isset($client_query))
+        {
+            $client_company=$client_query->name;
+        }
+        return $client_company;
 
      }
 
@@ -194,6 +210,24 @@ class ClientBasicinfo extends Ardent
         }
 
         return $client;
+    }
+
+    public static function getClientInfo($client_ids)
+    {
+            $query=\DB::table('client_basicinfo')
+                ->select('client_basicinfo.*')
+                ->where('client_basicinfo.id','=',$client_ids)
+                ->get();
+
+            /*print_r($qyery);
+            exit;*/
+            
+            foreach($response as $k=>$v)
+            {
+                $client['coordinator_name'] = $v->coordinator_prefix." " .$v->coordinator_name;
+            }
+            return $client;
+
     }
 
         public static function getClientAboutByJobId($job_id){
