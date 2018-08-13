@@ -12,8 +12,6 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Client List ({{ $count }}) </h2>
-                <h4 class="label label-sm label-success">Active Clients({{ $active }})</h4>
-                <h4 class="label label-sm label-danger">Passive Clients({{ $passive }})</h4>
             </div>
 
             <div class="pull-right">
@@ -27,6 +25,21 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="col-md-2">
+                <div style="height:40px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div>
+            </div>
+            &nbsp;
+            <div class="col-md-2">
+                <div style="height:40px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div>
+            </div>
+
+        </div>
+    </div>
+
+    <br>
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
