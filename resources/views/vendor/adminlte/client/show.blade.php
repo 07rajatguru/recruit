@@ -109,7 +109,9 @@
 
                         <tr>
                             <th>About</th>
-                            <td colspan="3">{!! $client['description'] !!}</td>
+                            <td>{{ $client['description'] }}</td>
+                            <th> Client Status</th>
+                            <td>{{ $client['status'] }}</td>
                         </tr>
                          @if($isSuperAdmin || $isAdmin)
                         <tr>

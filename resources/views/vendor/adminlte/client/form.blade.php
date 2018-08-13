@@ -236,7 +236,7 @@
                             <label>Active</label>
                             
                             {!! Form::radio('status','0') !!}
-                            <label>Inactive</label>
+                            <label>Passive</label>
 
                 
                             @elseif($client_status== '0')
@@ -245,7 +245,7 @@
                             <label>Active</label>
                             
                             {!! Form::radio('status','0',true) !!}
-                            <label>Inactive</label>
+                            <label>Passive</label>
 
                             @else
 
@@ -253,7 +253,7 @@
                             <label>Active</label>
                             
                             {!! Form::radio('status','0') !!}
-                            <label>Inactive</label>
+                            <label>Passive</label>
 
                             @endif
 
@@ -263,7 +263,7 @@
                             <label>Active</label>
                             
                             {!! Form::radio('status','0') !!}
-                            <label>Inactive</label>
+                            <label>Passive</label>
 
                             @endif  
 

@@ -11,7 +11,9 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Client List ({{ $count }})</h2>
+                <h2>Client List ({{ $count }}) </h2>
+                <h4 class="label label-sm label-success">Active Clients({{ $active }})</h4>
+                <h4 class="label label-sm label-danger">Passive Clients({{ $passive }})</h4>
             </div>
 
             <div class="pull-right">

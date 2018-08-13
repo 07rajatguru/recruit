@@ -91,7 +91,7 @@ class ClientController extends Controller
                 }
                 else
                 {
-                  $client_array[$i]['status']='Inactive';
+                  $client_array[$i]['status']='Passive';
                 }
             }
             
@@ -136,6 +136,8 @@ class ClientController extends Controller
             }
             $i++;
         }
+
+        
          
        
         /*$client_doc = \DB::table('client_doc')
@@ -155,8 +157,35 @@ class ClientController extends Controller
             
         }*/
         
+      /*  $clients=ClientBasicinfo::get();
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','isStrategy'));
+        $client_select=array();
+
+        foreach($clients as $client)
+        {
+            $client_select[$client->id]=$client->id;
+            $client_select[$client->name]=$client->coordinator_prefix . " " . $client->coordinator_name;
+        }
+
+
+*/
+
+        $active_client=\DB::table('client_basicinfo')
+                ->select('client_basicinfo.*')
+                ->where('status','=','1')
+                ->get();
+
+        $active=sizeof($active_client);
+
+
+        $passive_client=\DB::table('client_basicinfo')
+                ->select('client_basicinfo.*')
+                ->where('status','=','0')
+                ->get();
+
+        $passive=sizeof($passive_client);
+    
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy'));
     }
 
     public function create()
@@ -193,6 +222,25 @@ class ClientController extends Controller
         return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category'));
     }
 
+
+    public function postClientNames()
+    {
+
+       
+
+        $client_ids = $_GET['client_ids'];
+
+        echo $client_ids;
+        
+        exit;
+
+        $client_ids_array=explode(",",$client_ids);
+
+        $client = ClientBasicinfo::getClientInfo($client_ids);
+
+        echo json_encode($client);exit;
+
+    }
     public function edit($id)
     {
 
@@ -571,6 +619,20 @@ class ClientController extends Controller
             $client['tds'] = $value->tds;
             $client['coordinator_name'] = $value->coordinator_prefix. " " .$value->coordinator_name;
             $client['tan'] = $value->tan;
+            $client['status']=$value->status;
+
+            if(isset($client['status']))
+            {
+                if($client['status'] == '1')
+                {
+                    $client['status']='Active';
+                }
+                else
+                {
+                    $client['status']='Passive';
+                }
+            }
+
             $client['percentage_charged_below']=$value->percentage_charged_below;
             $client['percentage_charged_above']=$value->percentage_charged_above;
 
@@ -866,6 +928,7 @@ class ClientController extends Controller
 
     }
 
+   
     public function postClientEmails()
     {
         $user =  \Auth::user();
@@ -876,6 +939,8 @@ class ClientController extends Controller
 
         $client_ids_array=explode(",",$client_ids);
 
+
+
       /*  $client_info=\DB::table('client_basicinfo')
         ->select('client_basicinfo.*')
         ->where()
@@ -885,18 +950,20 @@ class ClientController extends Controller
         {
             $client_email=ClientBasicinfo::getClientEmailByID($value);
 
-          //  echo $client_email;
+           // echo $client_email;
 
             $client_name=ClientBasicinfo::getClientNameByID($value);
 
-          //  echo $client_name;
+          /// echo $client_name;
 
-            $message="New Work Assigned To You By $client_name";
+            $client_company=ClientBasicinfo::getCompanyOfClientByID($value);
 
-           // echo $message;
+           // echo $client_company;
+            
 
-          //  exit;
-
+            $message="Open Position List - $client_company";
+            
+        
             /*$email_notification= new EmailsNotifications();
             $email_notification->module='Client';
             $email_notification->sender_name=$user_id;
@@ -912,9 +979,11 @@ class ClientController extends Controller
             $module='Client';
             $sender_name=$user_id;
             $to=$client_email;
+           // $cc=$client_email;
             $cc='rajlalwani@adlertalent.com';
             $subject=$message;
-            $body_message="";
+            $body_message="Dear $client_name, <br><br>Greetings From $client_company! <br><br> Request You to Kindly Advise on the list of Priority Positions for this Week to Focus Upon Accordingly.<br><br>Awaiting your revert to expedite accordingly.<br><br>Thanks.";
+           
             $module_id=$value;
             
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
