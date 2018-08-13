@@ -16,8 +16,8 @@
 
             <div class="pull-right">
                 
-                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal">Submit
-                </button> 
+                 {{--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal">Submit
+                </button> --}}
 
 
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
