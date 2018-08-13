@@ -12,7 +12,7 @@
             <input type="hidden" id="id" name="id" value="{!! $data['id'] !!}">
             <div class="modal-body">
                 <strong>Select Todo Status :</strong> <br>
-                {!! Form::select('todostatus', $status,null, array('id'=>'todostatus','class' => 'form-control')) !!}
+                {!! Form::select('todostatus', $status,$data['status_ids'], array('id'=>'todostatus','class' => 'form-control')) !!}
             </div>
 
 
