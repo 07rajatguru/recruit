@@ -464,7 +464,7 @@
                     },
                     "status" : {
                         required: true
-                    }
+                    },
                     "coordinator_name" : {
                         required: true
                     }
@@ -484,7 +484,7 @@
                     },
                     "status": {
                         required: "Status is required."
-                    }
+                    },
                     "coordinator_name" :{
                         required: "HR / Coordinator name is required."
                     }
