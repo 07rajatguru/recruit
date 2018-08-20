@@ -254,7 +254,7 @@ class ClientBasicinfo extends Ardent
         $type['']='Select';
         $type['Mr.'] = 'Mr.';
         $type['Mrs.'] = 'Mrs.';
-        $type['Miss'] = 'Miss';
+        $type['Ms.'] = 'Ms.';
         return $type;
     }
 

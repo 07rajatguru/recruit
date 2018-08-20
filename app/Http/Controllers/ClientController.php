@@ -76,12 +76,21 @@ class ClientController extends Controller
 
         $client_array = array();
         $i = 0;
+        $active = 0;
+        $passive = 0;
         foreach($clients as $client){
+
             $client_array[$i]['id'] = $client->id;
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['status']=$client->status;
             
+            if($client->status == 1 ){
+                $active++;
+            }
+            else if ($client->status == 0){
+                $passive++;
+            }
 
             if(isset($client_array[$i]['status']))
             {
@@ -137,40 +146,7 @@ class ClientController extends Controller
             $i++;
         }
 
-        
-         
-       
-        /*$client_doc = \DB::table('client_doc')
-                    ->leftjoin('client_basicinfo','client_basicinfo.id','=','client_doc.client_id')       
-                    ->select('client_doc.id','client_basicinfo.id','client_doc.file','client_doc.category')
-                   // ->where('client_doc.client_id',$client->id)
-                    ->get();
-                    //print_r($client_doc);exit;
-
-        $i= 1;
-        $clientdoc = array();
-        foreach ($client_doc as $key=>$value){
-            $clientdoc[$i]['id'] = $value->id;
-            $clientdoc[$i]['url'] = "../".$value->file ;
-            //print_r($clientdoc);exit;
-            $i++;
-            
-        }*/
-        
-      /*  $clients=ClientBasicinfo::get();
-
-        $client_select=array();
-
-        foreach($clients as $client)
-        {
-            $client_select[$client->id]=$client->id;
-            $client_select[$client->name]=$client->coordinator_prefix . " " . $client->coordinator_name;
-        }
-
-
-*/
-
-        $active_client=\DB::table('client_basicinfo')
+        /*$active_client=\DB::table('client_basicinfo')
                 ->select('client_basicinfo.*')
                 ->where('status','=','1')
                 ->get();
@@ -183,7 +159,7 @@ class ClientController extends Controller
                 ->where('status','=','0')
                 ->get();
 
-        $passive=sizeof($passive_client);
+        $passive=sizeof($passive_client);*/
     
         return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy'));
     }
