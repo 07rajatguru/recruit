@@ -267,7 +267,11 @@ class LeadController extends Controller
 
 	 }
 
-     public function clone($id){
+     public function clone($id)
+     {
+
+        $co_prefix=ClientBasicinfo::getcoprefix();
+        $co_category='';
 
         $generate_lead = '0';
         $industry_res = Industry::orderBy('id','DESC')->get();
@@ -307,10 +311,12 @@ class LeadController extends Controller
         $industry_id = '';
 
         $action = "copy" ;
+
          $co_prefix=ClientBasicinfo::getcoprefix();
          $co_category='';
 
          return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id'));
+
      }
 
      public function clonestore(Request $request,$id){
@@ -365,6 +371,20 @@ class LeadController extends Controller
         else
             $client_basic_info->tan = '';
         $client_basic_info->coordinator_name = $input['coordinator_name'];
+        $client_basic_info->coordinator_prefix= $input['co_category'];
+
+        $status = $input['status'];
+
+        if($status=='1')
+        {
+            $client_basic_info->status='1';
+        }
+        else
+        {
+            $client_basic_info->status='0';
+        }
+
+        
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 

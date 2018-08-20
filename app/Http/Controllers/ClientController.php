@@ -206,10 +206,10 @@ class ClientController extends Controller
 
         $client_ids = $_GET['client_ids'];
 
-        echo $client_ids;
+       /* echo $client_ids;
         
         exit;
-
+*/
         $client_ids_array=explode(",",$client_ids);
 
         $client = ClientBasicinfo::getClientInfo($client_ids);
@@ -315,7 +315,7 @@ class ClientController extends Controller
         $user_email = \Auth::user()->email;
         $input = $request->all();
 
-        $co_prefix=$input['co_category'];
+        /*$co_prefix=$input['co_category'];*/
 
         $client_basic_info = new ClientBasicinfo();
         $client_basic_info->name = $input['name'];
@@ -325,6 +325,7 @@ class ClientController extends Controller
         $client_basic_info->description = $input['description'];
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
+        $client_basic_info->website = $input['website'];
 
         if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '' )
         {
@@ -378,7 +379,7 @@ class ClientController extends Controller
 
         $client_basic_info->coordinator_name = $input['coordinator_name'];
 
-        $client_basic_info->coordinator_prefix= $co_prefix;
+        $client_basic_info->coordinator_prefix= $input['co_category'];
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
