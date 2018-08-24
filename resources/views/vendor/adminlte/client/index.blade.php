@@ -29,11 +29,11 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-2">
-                <div style="height:40px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div>
+                <div style="height:40px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div>
             </div>
             &nbsp;
             <div class="col-md-2">
-                <div style="height:40px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div>
+                <div style="height:40px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div>
             </div>
 
         </div>
@@ -106,6 +106,10 @@
                             <a target="_blank" href="{{$client['url']}}"><i  class="fa fa-fw fa-download"></i></a>
                         @endif
                     <?php  }?>
+
+                    <?php if($isSuperAdmin || $isStrategy ) { ?>
+                    @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
+                    <?php }?>
 
                 </td>
 

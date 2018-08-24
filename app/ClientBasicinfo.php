@@ -258,4 +258,20 @@ class ClientBasicinfo extends Ardent
         return $type;
     }
 
+    public static function getAccountManagerArray()
+    {
+        $account_manager=User::all();
+
+        $account_managerarr=array();
+
+        if(isset($account_manager) && sizeof($account_manager)>0)
+        {
+            foreach($account_manager as $value)
+            {
+                $account_managerarr[$value->id]=$value->name;
+            }
+        }
+
+        return $account_managerarr;
+    }
 }

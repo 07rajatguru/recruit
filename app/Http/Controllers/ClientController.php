@@ -37,6 +37,10 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
 
+
+        $account_manager=ClientBasicinfo::getAccountManagerArray();
+
+
         // if Super Admin get clients of all companies
         if($isSuperAdmin || $isAdmin || $isStrategy){
             $clients = \DB::table('client_basicinfo')
@@ -84,6 +88,7 @@ class ClientController extends Controller
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['status']=$client->status;
+            $client_array[$i]['account_mangr_id']=$client->account_manager_id;
             
             if($client->status == 1 ){
                 $active++;
@@ -146,6 +151,18 @@ class ClientController extends Controller
             $i++;
         }
 
+
+
+       /* $selected_acc_mnger=$request->get('account_manager');
+
+        if(isset($selected_acc_mnger))
+        {
+            echo $selected_acc_mnger;
+            exit;
+        }*/
+
+        
+
         /*$active_client=\DB::table('client_basicinfo')
                 ->select('client_basicinfo.*')
                 ->where('status','=','1')
@@ -161,7 +178,7 @@ class ClientController extends Controller
 
         $passive=sizeof($passive_client);*/
     
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy'));
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager'));
     }
 
     public function create()
@@ -647,7 +664,8 @@ class ClientController extends Controller
                     ->get();
 
         $utils = new Utils();
-        foreach ($client_doc as $key=>$value){
+        foreach ($client_doc as $key=>$value)
+        {
             $client['doc'][$i]['name'] = $value->name ;
             $client['doc'][$i]['id'] = $value->id;
             $client['doc'][$i]['url'] = "../".$value->file ;//$utils->getUrlAttribute($value->file);
@@ -655,7 +673,8 @@ class ClientController extends Controller
             $client['doc'][$i]['uploaded_by'] = $value->upload_name ;
             $client['doc'][$i]['size'] = $utils->formatSizeUnits($value->size);
             $i++;
-            if (array_search($value->category, $client_upload_type)) {
+            if(array_search($value->category, $client_upload_type)) 
+            {
                 unset($client_upload_type[array_search($value->category, $client_upload_type)]);
             }
         }
@@ -968,6 +987,28 @@ class ClientController extends Controller
         }
 
         return redirect()->route('client.index')->with('success','Successfully');
+    }
+
+    public function getAccountManager(Request $request)
+    {
+        $account_manager=$request->get('account_manager');
+
+        $id = $request->get('id');
+
+        $act_man=ClientBasicinfo::find($id);
+
+        $a_m='';
+
+        if(isset($act_man))
+        {
+            $a_m=$account_manager;
+        }
+
+        $act_man->account_manager_id=$a_m;
+        
+        $act_man->save();
+
+       return redirect()->route('client.index')->with('success', 'Client Account Manager Updated successfully');
     }
     public function importExport(){
 
