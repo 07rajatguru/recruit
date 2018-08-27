@@ -367,8 +367,14 @@ Route::group(['middleware' => ['auth']], function () {
         // 'middleware' => ['permission:industry-create']
     ]);
 
-     Route::post('client/emailnotification', [
-        'as' => 'client.index',
+    Route::get('client/clientemail', [
+        'as' => 'client.clientemail',
+        'uses' => 'ClientController@postClientNames',
+        //'middleware' => ['permission:industry-edit']
+    ]);
+
+    Route::post('client/emailnotification', [
+        'as' => 'client.emailnotification',
         'uses' => 'ClientController@postClientEmails',
         //'middleware' => ['permission:industry-edit']
     ]);
@@ -424,9 +430,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@delete',
         //    'middleware' => ['permission:industry-delete']
     ]);
-
     
-
+    Route::post('client/account_manager',[
+        'as' => 'client.account_manager',
+        'uses' => 'ClientController@getAccountManager',
+    ]);
 
     // Candidate
     Route::get('candidate', [
