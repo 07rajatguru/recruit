@@ -38,7 +38,7 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
 
 
-        $account_manager=ClientBasicinfo::getAccountManagerArray();
+        $account_manager=User::getAllUsers();
 
 
         // if Super Admin get clients of all companies
