@@ -213,9 +213,9 @@ class JobOpen extends Model
 
     public static function getClosedJobs($all=0,$user_id){
 
-        $job_onhold = env('ONHOLD');
-        $job_client = env('CLOSEDBYCLIENT');
-        $job_us = env('CLOSEDBYUS');
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
 
         $job_status = array($job_onhold,$job_us,$job_client);
  
