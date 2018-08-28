@@ -108,7 +108,7 @@
                     <?php  }?>
 
                     <?php if($isSuperAdmin || $isStrategy ) { ?>
-                    @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
+                        @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
                     <?php }?>
 
                 </td>
@@ -151,10 +151,12 @@
     <script type="text/javascript">
       jQuery( document ).ready(function() {
 
-       
         var table = jQuery('#client_table').DataTable( {
                     responsive: true,
-                    "pageLength": 100
+                    "pageLength": 100,
+                    "aoColumnDefs": [
+                        { "bSearchable": false, "aTargets": [ 6 ]}
+                    ]
             } );
 
             $('#allcb').change(function(){
