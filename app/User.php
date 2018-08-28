@@ -277,7 +277,7 @@ class User extends Authenticatable
     }
 
     public  static function isStrategyCoordination($user_role_id){
-        $admin_role_id = env('STRATEGY');
+        $admin_role_id = getenv('STRATEGY');
         if ($admin_role_id == $user_role_id) {
             return true;
         }
