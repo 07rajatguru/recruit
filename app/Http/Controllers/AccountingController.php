@@ -35,6 +35,7 @@ class AccountingController extends Controller
         $accounting = new AccountingHeads();
         
         $accounting->name = $request->input('name');
+        $accounting->description = $request->input('description');
         $accountingStored  = $accounting->save();
 
         return redirect()->route('accounting.index')->with('success','Accounting Head Created Successfully');
@@ -44,7 +45,7 @@ class AccountingController extends Controller
 
     	$users = User::getAllUsers();
      	$accounting = AccountingHeads::find($id);
-       
+
         $action = "edit" ;
 
         return view('adminlte::accounting.edit',compact('users','accounting','action'));
@@ -56,6 +57,7 @@ class AccountingController extends Controller
         
         $accounting = AccountingHeads::find($id);
         $accounting->name = $request->input('name');
+        $accounting->description = $request->input('description');
         $accountingStored  = $accounting->save();
 
        return redirect()->route('accounting.index')->with('success','Accounting Head Updated Successfully');
