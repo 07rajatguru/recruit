@@ -29,15 +29,27 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="">
+
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         <strong>Accounting Name: <span class = "required_fields">*</span></strong>
-                        {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Accounting Name','class' => 'form-control','required' )) !!}
+                        {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Accounting Name','tabindex' => '1','class' => 'form-control','required' )) !!}
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
                                 </span>
                         @endif
                     </div>
+
+                    <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
+                                <strong>Description:<span class = "required_fields">*</span></strong>
+                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '2','required' )) !!}
+                                @if ($errors->has('description'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('description') }}</strong>
+                                </span>
+                                @endif
+                    </div>
+
                    
                 </div>
             </div>

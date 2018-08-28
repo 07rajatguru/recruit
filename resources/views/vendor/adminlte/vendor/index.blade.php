@@ -11,7 +11,7 @@
         <div class="col-lg-12 margin-tb">
              <div class="pull-left">
                 <h2>Vendor List ({{ $count }})</h2>
-            </div>
+             </div>
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('vendor.create') }}"> Create New Vendor</a>
             </div>
