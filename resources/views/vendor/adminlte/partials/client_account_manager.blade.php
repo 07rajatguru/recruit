@@ -1,5 +1,3 @@
-
-
 <a data-toggle="modal" href="#modal-status-{!! $data['id'] !!}" class="fa fa-sun-o" title="Status"></a>
 <div id="modal-status-{!! $data['id'] !!}" class="modal text-left fade">
 	<div class="modal-dialog">
@@ -14,7 +12,6 @@
             <input type="hidden" id="id" name="id" value="{!! $data['id'] !!}">
             <div class="modal-body">
                 <strong>Select Account Manager :</strong> <br>
-
                 {!! Form::select('account_manager', $account_manager,$data['account_mangr_id'], array('id'=>'account_manager','class' => 'form-control account_manager')) !!}
             </div>
 
@@ -27,14 +24,4 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-@section('customscripts')
-    <script>
-        $(document).ready(function(){
-
-            $(".account_manager").select2();
-        });
-
-    </script>
-@endsection
 
