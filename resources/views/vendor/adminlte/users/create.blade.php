@@ -51,7 +51,7 @@
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('email', null, array('id'=>'name','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>
@@ -59,9 +59,20 @@
                                 @endif
                             </div>
 
+
+                            <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
+                                <strong>Secondary Gmail: </strong>
+                                {!! Form::text('semail', null, array('id'=>'semail','placeholder' => 'Secondary Email','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                @if ($errors->has('semail'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('semail') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                             <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                                 <strong>Password: <span class = "required_fields">*</span> </strong>
-                                {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control')) !!}
+                                {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control','tabindex' => '4' )) !!}
                                 @if ($errors->has('password'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('password') }}</strong>
@@ -71,7 +82,7 @@
 
                             <div class="form-group {{ $errors->has('confirm-password') ? 'has-error' : '' }}">
                                 <strong>Confirm Password: </strong>
-                                {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}
+                                {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control','tabindex' => '5' )) !!}
                                 @if ($errors->has('confirm-password'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('confirm-password') }}</strong>
@@ -81,7 +92,7 @@
 
                             <div class="form-group {{ $errors->has('reports_to') ? 'has-error' : '' }}">
                                 <strong>Reports To :</strong>
-                                {!! Form::select('reports_to', $reports_to,null, array('id'=>'reports_to','class' => 'form-control')) !!}
+                                {!! Form::select('reports_to', $reports_to,null, array('id'=>'reports_to','class' => 'form-control','tabindex' => '6' )) !!}
                                 @if ($errors->has('reports_to'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('reports_to') }}</strong>
@@ -91,7 +102,7 @@
 
                             <div class="form-group {{ $errors->has('floor_incharge') ? 'has-error' : '' }}">
                                 <strong>Floor Incharge :</strong>
-                                {!! Form::select('floor_incharge', $floor_incharge,null, array('id'=>'floor_incharge','class' => 'form-control')) !!}
+                                {!! Form::select('floor_incharge', $floor_incharge,null, array('id'=>'floor_incharge','class' => 'form-control','tabindex' => '7' )) !!}
                                 @if ($errors->has('floor_incharge'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('floor_incharge') }}</strong>
@@ -101,7 +112,7 @@
 
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
                                 <strong>Select Compnay :</strong>
-                                {!! Form::select('company_id', $companies,null, array('id'=>'company_id','class' => 'form-control')) !!}
+                                {!! Form::select('company_id', $companies,null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8' )) !!}
                                 @if ($errors->has('company_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('company_id') }}</strong>
@@ -111,7 +122,7 @@
 
                             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
                                 <strong> Role : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('roles[]', $roles,[], array('class' => 'form-control')) !!}
+                                {!! Form::select('roles[]', $roles,[], array('class' => 'form-control','tabindex' => '9' )) !!}
                                 @if ($errors->has('roles'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('roles') }}</strong>
@@ -121,7 +132,7 @@
 
                              <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong> Type : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('type', $type,null, array('class' => 'form-control')) !!}
+                                {!! Form::select('type', $type,null, array('class' => 'form-control','tabindex' => '10' )) !!}
                                 @if ($errors->has('type'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('type') }}</strong>

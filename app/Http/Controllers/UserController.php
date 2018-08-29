@@ -86,6 +86,7 @@ class UserController extends Controller
         $status = $request->input('status');
        // print_r($status);exit;
 
+        $user->secondary_email=$request->input('semail');
         $user->reports_to = $reports_to;
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
@@ -139,6 +140,7 @@ class UserController extends Controller
         $userRole = $user->roles->pluck('id','id')->toArray();
         $userReportsTo = $user->reports_to;
         $userFloorIncharge = $user->floor_incharge;
+        $semail=$user->secondary_email;
 
         $companies = Companies::getCompanies();
         $companies = array_fill_keys(array(''),'Select Company')+$companies;
@@ -148,7 +150,7 @@ class UserController extends Controller
       
     
 
-        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge'));
+        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail'));
 
     }
 
@@ -207,6 +209,7 @@ class UserController extends Controller
         $type = $request->input('type');
         $status = $request->input('status');
 
+        $user->secondary_email=$request->input('semail');
         $user->reports_to = $reports_to; 
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
