@@ -496,7 +496,7 @@ class ToDosController extends Controller
 
     public function create(){
 
-        $candidate = CandidateBasicInfo::getCandidateArray();
+        //$candidate = CandidateBasicInfo::getCandidateArray();
         $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
@@ -543,7 +543,7 @@ class ToDosController extends Controller
         $selected_users = array();
 
         $viewVariable = array();
-        $viewVariable['candidate'] = $candidate;
+        //$viewVariable['candidate'] = $candidate;
         $viewVariable['client'] = $typeArr;
         $viewVariable['status'] = $status;
         $viewVariable['users'] = $users;
@@ -665,8 +665,12 @@ class ToDosController extends Controller
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
                         // TODO : Email Notification : data store in database
-                        $user_email = User::getUserEmailById($value);
-                        $cc_email = User::getUserEmailById($task_owner);
+                        //$user_email = User::getUserEmailById($value);
+                        //$cc_email = User::getUserEmailById($task_owner);
+
+                        $user_email = User::getUserSecondaryEmailById($value);
+                        $cc_email = User::getUserSecondaryEmailById($task_owner);
+
                         $module = "Todos";
                         $sender_name = $user_id;
                         $to = $user_email;

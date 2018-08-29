@@ -146,6 +146,34 @@ class User extends Authenticatable
         return $userArr;
     }
 
+    public static function getAllUsersSecondaryEmails($type=NULL)
+    {
+        $status = 'Inactive';
+        $superadmin = getenv('SUPERADMINUSERID');
+        $status_array = array($status);
+        $super_array = array($superadmin);
+
+        $user_query = User::query();
+
+        if($type!=NULL){
+            $user_query = $user_query->where('type','=',$type);
+        }
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('id',$super_array);
+        $user_query = $user_query->orderBy('name');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+        if(isset($users) && sizeof($users)){
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->secondary_email;
+            }
+        }
+
+        return $userArr;
+    }
+
     public static function getAllUsersCopy($type=NULL){
         $status = 'Inactive';
         $status_array = array($status);
@@ -397,6 +425,21 @@ class User extends Authenticatable
 
         if(isset($user_query)){
             $user_email = $user_query->email;
+        }
+
+        return $user_email;
+    }
+
+    public static function getUserSecondaryEmailById($user_id)
+    {
+        $user_email = '';
+
+        $user_query = User::query();
+        $user_query = $user_query->where('id','=',$user_id);
+        $user_query = $user_query->first();
+
+        if(isset($user_query)){
+            $user_email = $user_query->secondary_email;
         }
 
         return $user_email;
