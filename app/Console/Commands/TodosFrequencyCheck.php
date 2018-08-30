@@ -39,6 +39,8 @@ class TodosFrequencyCheck extends Command
      *
      * @return mixed
      */
+
+    // not using because multiple mails are being sent
     public function handle()
     {
         $todo_status = ToDos::getTodoFrequencyCheck();

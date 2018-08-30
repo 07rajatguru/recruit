@@ -47,18 +47,17 @@ class DailyReport extends Command
        // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersSecondaryEmails('recruiter');
         
         foreach ($users as $key => $value) {
 
             //Get Reports to Email
             $report_res = User::getUsersReportToEmail($key);
-            $report_email = $report_res->email;
+            $report_email = $report_res->secondary_email;
 
             //Get Floor Incharge Email
             $floor_res = User::getUsersFloorInchargeEmail($key);
-            $floor_incharge_email = $floor_res->email;
-            //print_r($report_email);exit;
+            $floor_incharge_email = $floor_res->secondary_email;
 
             $to_array = array();
             $to_array[] = $value;
@@ -66,8 +65,7 @@ class DailyReport extends Command
             $cc_array = array();
             $cc_array[] = $report_email;
             $cc_array[] = $floor_incharge_email;
-            //$cc_array[] = 'tarikapanjwani@gmail.com';
-            $cc_array[] = 'rajlalwani@adlertalent.com';
+            $cc_array[] = 'adler.rgl@gmail.com';
         
             $input = array();
             $input['from_name'] = $from_name;
