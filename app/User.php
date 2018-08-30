@@ -118,6 +118,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
+
     public static function getAllUsersEmails($type=NULL){
 
         $status = 'Inactive';
@@ -498,7 +499,7 @@ class User extends Authenticatable
     public static function getReportsToUsersEmail($key){
 
         $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email as remail','u2.email as femail');
+        $user_query = $user_query->select('users.id','u1.email as remail','u2.email as femail','u1.secondary_email as rsemail','u2.secondary_email as fsemail');
         $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
         $user_query = $user_query->join('users as u2','u2.id','=','users.floor_incharge');
         $user_query = $user_query->where('users.id',$key);

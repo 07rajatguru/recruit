@@ -43,23 +43,20 @@ class WeeklyReport extends Command
     {
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        // $to_address = 'rajlalwani@adlertalent.com';
-        // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersSecondaryEmails('recruiter');
 
-        //$users[4] = 'kazvin@adlertalent.com';
         foreach ($users as $key => $value) {
 
             $report_email = '';
             $floor_incharge_email = '';
             $res = User::getReportsToUsersEmail($key);
 
-            if(isset($res->remail) && $res->remail!='')
-                $report_email = $res->remail;
-            if(isset($res->femail) && $res->femail!='')
-                $floor_incharge_email = $res->femail;
+            if(isset($res->rsemail) && $res->rsemail!='')
+                $report_email = $res->rsemail;
+            if(isset($res->fsemail) && $res->fsemail!='')
+                $floor_incharge_email = $res->fsemail;
 
             $to_array = array();
             $to_array[] = $value;
@@ -68,7 +65,7 @@ class WeeklyReport extends Command
             $cc_array[] = $report_email;
             $cc_array[] = $floor_incharge_email;
             $cc_array[] = 'tarikapanjwani@gmail.com';
-            $cc_array[] = 'rajlalwani@adlertalent.com';
+            $cc_array[] = 'adler.rgl@gmail.com';
 
             $input['from_name'] = $from_name;
             $input['from_address'] = $from_address;

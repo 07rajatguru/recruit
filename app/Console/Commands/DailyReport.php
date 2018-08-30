@@ -47,7 +47,7 @@ class DailyReport extends Command
        // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersSecondaryEmails('recruiter');
         
         foreach ($users as $key => $value) {
 
