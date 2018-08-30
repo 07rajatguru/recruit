@@ -164,7 +164,7 @@
                     responsive: true,
                     "pageLength": 100,
                     "aoColumnDefs": [
-                        { "bSearchable": false, "aTargets": [ 6 ]}
+                        { "bSearchable": false, "aTargets": [ 7 ]}
                     ]
             } );
 
