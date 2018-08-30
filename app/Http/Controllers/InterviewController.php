@@ -180,8 +180,6 @@ class InterviewController extends Controller
             return redirect('interview/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
-        /**/
-
         $interviewStored = $interview->save();
         $interview_id = $interview->id;
 
@@ -189,21 +187,20 @@ class InterviewController extends Controller
 
         $client_owner_id = $interviewDetails->client_owner_id;
         $candidate_owner_id = $interviewDetails->candidate_owner_id;
-            //print_r($candidate_owner_id);exit;
 
         // Notifications : On adding new Interview notify Super Admin, Client Owner & Candidate Owner via notification
-            $module_id = $interview_id;
-            $module = 'Interview';
-            $message = $user_name . " has scheduled interview";
-            $link = route('interview.show',$interview_id);
+        $module_id = $interview_id;
+        $module = 'Interview';
+        $message = $user_name . " has scheduled interview";
+        $link = route('interview.show',$interview_id);
 
-            $super_admin_userid = getenv('SUPERADMINUSERID');
-            $user_arr = array();
-            $user_arr[] = $super_admin_userid;
-            $user_arr[] = $client_owner_id;
-            $user_arr[] = $candidate_owner_id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $user_arr = array();
+        $user_arr[] = $super_admin_userid;
+        $user_arr[] = $client_owner_id;
+        $user_arr[] = $candidate_owner_id;
 
-            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         // Interview Candidate Mail
 
@@ -215,121 +212,6 @@ class InterviewController extends Controller
         // Interview Schedule Mail
         $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
 
-        /*$from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
-        $app_url = getenv('APP_URL');
-
-        $input['from_name'] = $from_name;
-        $input['from_address'] = $from_address;
-        //$input['to'] = $user_email;
-        $input['app_url'] = $app_url;
-
-
-        $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateowneremail;
-
-        $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientowneremail;
-
-        // Candidate details
-        $candidate_id = $request->get('candidate_id');
-        $candidate_response  = CandidateBasicInfo::find($candidate_id);
-        $cname = $candidate_response->full_name;
-
-        $to_address = array();
-        $to_address[] = $candidate_owner_email;
-        $to_address[] = $client_owner_email;
-
-        //$to_address[] = 'tarikapanjwani@gmail.com';
-       // $to_address[] = 'rajlalwani@adlertalent.com';
-
-        $input['to'] = $to_address;
-
-        // job Details
-        $posting_title = $request->get('posting_title');
-        $job_details = JobOpen::getJobById($posting_title);
-
-        $input['cname'] = $cname;
-        $input['city'] = $job_details['city'];
-        $input['company_name'] = $job_details['company_name'];
-        $input['company_url'] =$job_details['company_url'];
-        $input['client_desc'] = $job_details['client_desc'];
-        $input['job_designation'] = $job_details['posting_title'];
-        $input['job_location'] = $job_details['job_location'];
-        $input['job_description'] = $job_details['job_description'];
-        $input['interview_date'] = $job_details['interview_date'];
-        $input['interview_day'] = '';
-        $input['interview_time'] = $job_details['interview_time'];
-        $input['interview_location'] = $job_details['interview_location'];
-        $input['contact_person'] = $job_details['contact_person'];
-
-        \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
-            $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
-        });*/
-
-        // Interview Schedule Mail
-        
-
-        /*$from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
-        $app_url = getenv('APP_URL');
-        
-        $input['from_name'] = $from_name;
-        $input['from_address'] = $from_address;
-        $input['to_address'] = $to_address;
-        $input['app_url'] = $app_url;
-
-        // Candidate details
-
-        $candidate_id = $request->get('candidate_id');
-        $candidate_response  = CandidateBasicInfo::find($candidate_id);
-        $cname = $candidate_response->full_name;
-        $ccity = $candidate_response->city;
-        $cmobile = $candidate_response->mobile;
-        $cemail = $candidate_response->email;
-
-        // Candidate Attachment
-        $attachment = CandidateUploadedResume::getCandidateAttachment($candidate_id);
-        if (isset($attachment) && $attachment!='') {
-            $file = $attachment->file_name;
-        }
-        $file_path = 'uploads/candidate/3/1401306.pdf';
-            //print_r($file_path);exit;
-
-        // job Details
-
-        $posting_title = $request->get('posting_title');
-        $job_details = JobOpen::getJobById($posting_title);
-
-        $input['cname'] = $cname;
-        $input['ccity'] = $ccity;
-        $input['cmobile'] = $cmobile;
-        $input['cemail'] = $cemail;
-        $input['city'] = $job_details['city'];
-        $input['company_name'] = $job_details['company_name'];
-        $input['company_url'] =$job_details['company_url'];
-        $input['client_desc'] = $job_details['client_desc'];
-        $input['job_designation'] = $job_details['posting_title'];
-        $input['job_location'] = $job_details['job_location'];
-        $input['job_description'] = $job_details['job_description'];
-        $input['interview_date'] = $job_details['interview_date'];
-        $input['interview_day'] = '';
-        $input['interview_time'] = $job_details['interview_time'];
-        $input['interview_location'] = $job_details['interview_location'];
-        $input['interview_type'] =$job_details['interview_type'];
-        $input['file'] = $file_path;
-
-        //return view('adminlte::emails.interviewschedule',compact('app_url','input'));
-
-        \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
-            $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' position in '. $input['city']);
-           /* $message->attach($input['file'], [
-                        'as' => 'file.pdf',
-                        'mime' => 'application/pdf',
-                    ]);
-        });*/
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
 
