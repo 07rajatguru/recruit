@@ -101,9 +101,7 @@ class EveryMinute extends Command
                 $input['todo_subject'] = $todos->subject;
                 $input['description'] = $todos->description;
 
-               // $user_name = User::getUserNameByEmail($input['to']);
-
-                $user_name = User::getUserSecondaryEmailById($input['to']);
+                 $user_name = User::getUserNameByEmail($input['to']);
 
                 $input['uname'] = $user_name;
 
