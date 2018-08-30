@@ -2092,8 +2092,7 @@ class JobOpenController extends Controller
 
         $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year);
 
-
-        return view ('adminlte::jobopen.associatedcvs');
+        return view ('adminlte::jobopen.associatedcvs',compact('response'));
     }
 
 }

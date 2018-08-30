@@ -707,8 +707,6 @@ Route::group(['middleware' => ['auth']], function () {
         //'middleware' => ['permission:industry-edit']
     ]);
 
-
-
     // Interview Module
     Route::get('interview', [
         'as' => 'interview.index',
