@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Number of cvs associated this month ( {{ date("M, Y") }} )</h2>
+                <h2>Number of cvs associated this month ( {{ date("M, Y") }} ) - {{$count}}</h2>
             </div>
         </div>
     </div>
