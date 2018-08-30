@@ -496,7 +496,7 @@ class ToDosController extends Controller
 
     public function create(){
 
-        //$candidate = CandidateBasicInfo::getCandidateArray();
+        $candidate = CandidateBasicInfo::getCandidateArray();
         $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
@@ -543,7 +543,7 @@ class ToDosController extends Controller
         $selected_users = array();
 
         $viewVariable = array();
-        //$viewVariable['candidate'] = $candidate;
+        $viewVariable['candidate'] = $candidate;
         $viewVariable['client'] = $typeArr;
         $viewVariable['status'] = $status;
         $viewVariable['users'] = $users;

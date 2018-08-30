@@ -273,6 +273,9 @@ class LeadController extends Controller
         $co_prefix=ClientBasicinfo::getcoprefix();
         $co_category='';
 
+        $client_cat=ClientBasicinfo::getCategory();
+        $client_category='';
+
         $generate_lead = '0';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -284,6 +287,8 @@ class LeadController extends Controller
         $user_obj = new User();
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
         $user_id = $user->id;
 
         // For account manager
@@ -315,7 +320,7 @@ class LeadController extends Controller
          $co_prefix=ClientBasicinfo::getcoprefix();
          $co_category='';
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id'));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category'));
 
      }
 
@@ -384,7 +389,14 @@ class LeadController extends Controller
             $client_basic_info->status='0';
         }
 
-        
+        if(isset($input['client_category']))
+        {
+            $client_basic_info->category=$input['client_category'];
+        }
+        else
+        {
+            $client_basic_info->category='';
+        } 
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
