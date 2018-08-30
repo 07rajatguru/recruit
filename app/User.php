@@ -448,7 +448,7 @@ class User extends Authenticatable
     public static function getUsersReportToEmail($key){
 
         $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email');
+        $user_query = $user_query->select('users.id','u1.email','u1.secondary_email');
         $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
         $user_query = $user_query->where('users.id','=',$key);
         $user_report = $user_query->first();
@@ -459,7 +459,7 @@ class User extends Authenticatable
     public static function getUsersFloorInchargeEmail($key){
 
         $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email');
+        $user_query = $user_query->select('users.id','u1.email','u1.secondary_email');
         $user_query = $user_query->join('users as u1','u1.id','=','users.floor_incharge');
         $user_query = $user_query->where('users.id','=',$key);
         $user_floor_incharge = $user_query->first();
