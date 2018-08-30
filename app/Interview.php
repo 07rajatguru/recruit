@@ -407,7 +407,7 @@ class Interview extends Model
         $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
         $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->where('interview.id','=',$interview_id);
-        $query = $query->select('users.email as candidateowneremail');
+        $query = $query->select('users.email as candidateowneremail','users.secondary_email as candidateownersemail');
         $res = $query->first();
 
         return $res;
@@ -420,7 +420,7 @@ class Interview extends Model
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->join('users','users.id','=','client_basicinfo.account_manager_id');
         $query = $query->where('interview.id','=',$interview_id);
-        $query = $query->select('users.email as clientowneremail');
+        $query = $query->select('users.email as clientowneremail','users.secondary_email as clientownersemail');
         $response = $query->first();
 
         return $response;
@@ -439,10 +439,10 @@ class Interview extends Model
 
 
         $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateowneremail;
+        $candidate_owner_email = $candidate_email->candidateownersemail;
 
         $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientowneremail;
+        $client_owner_email = $client_email->clientownersemail;
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
@@ -488,10 +488,10 @@ class Interview extends Model
         $app_url = getenv('APP_URL');
 
         $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateowneremail;
+        $candidate_owner_email = $candidate_email->candidateownersemail;
 
         $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientowneremail;
+        $client_owner_email = $client_email->clientownersemail;
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
