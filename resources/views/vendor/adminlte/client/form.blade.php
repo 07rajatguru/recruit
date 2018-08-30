@@ -188,6 +188,19 @@
                                     </span>
                                 @endif
                             </div>
+
+                            @if($isSuperAdmin || $isStrategy)
+                            <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
+                                <strong>Select Category: <span class = "required_fields">*</span></strong>
+                                {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '7' )) !!}
+
+                                @if ($errors->has('client_category'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('client_category') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            @endif
                     
                         <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
                             <strong>Email: <span class = "required_fields">*</span></strong>

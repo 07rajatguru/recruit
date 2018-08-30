@@ -87,8 +87,10 @@ class ClientController extends Controller
             $client_array[$i]['id'] = $client->id;
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
+            $client_array[$i]['category']=$client->category;
             $client_array[$i]['status']=$client->status;
             $client_array[$i]['account_mangr_id']=$client->account_manager_id;
+
             
             if($client->status == 1 ){
                 $active++;
@@ -187,6 +189,9 @@ class ClientController extends Controller
         $co_prefix=ClientBasicinfo::getcoprefix();
         $co_category='';
 
+        $client_cat=ClientBasicinfo::getCategory();
+        $client_category='';
+
         $generate_lead = '1';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -198,6 +203,7 @@ class ClientController extends Controller
         $user_obj = new User();
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $user_id = $user->id;
 
         // For account manager
@@ -212,21 +218,14 @@ class ClientController extends Controller
         $industry_id = '';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category'));
+        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy'));
     }
 
 
     public function postClientNames()
     {
-
-       
-
         $client_ids = $_GET['client_ids'];
 
-       /* echo $client_ids;
-        
-        exit;
-*/
         $client_ids_array=explode(",",$client_ids);
 
         $client = ClientBasicinfo::getClientInfo($client_ids);
@@ -240,6 +239,7 @@ class ClientController extends Controller
         $generate_lead = '1';
 
         $co_prefix=ClientBasicinfo::getcoprefix();
+        $client_cat=ClientBasicinfo::getCategory();
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -248,6 +248,7 @@ class ClientController extends Controller
         $user_obj = new User();
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
 
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -290,6 +291,7 @@ class ClientController extends Controller
 
             $client_status=$value->status;
 
+            $client_category=$value->category;
             /*echo $client_status;
             exit;*/
             $user_id = $value->account_manager_id;
@@ -322,7 +324,7 @@ class ClientController extends Controller
          $users = User::getAllUsersWithInactive();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status'));
+        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category'));
     }
 
     public function store(Request $request){
@@ -397,6 +399,16 @@ class ClientController extends Controller
         $client_basic_info->coordinator_name = $input['coordinator_name'];
 
         $client_basic_info->coordinator_prefix= $input['co_category'];
+
+        if(isset($input['client_category']))
+        {
+            $client_basic_info->category=$input['client_category'];
+        }
+        else
+        {
+            $client_basic_info->category='';
+        }
+        
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
@@ -614,6 +626,7 @@ class ClientController extends Controller
             $client['coordinator_name'] = $value->coordinator_prefix. " " .$value->coordinator_name;
             $client['tan'] = $value->tan;
             $client['status']=$value->status;
+            $client['category']=$value->category;
 
             if(isset($client['status']))
             {
@@ -870,6 +883,15 @@ class ClientController extends Controller
         else
             $client_basicinfo->tan = '';
 
+        if(isset($input->client_category))
+        {
+            $client_basicinfo->category=$input->client_category;
+        }
+        else
+        {
+            $client_basicinfo->category='';
+        }
+        
         if($client_basicinfo->save()){
 
             // update client address

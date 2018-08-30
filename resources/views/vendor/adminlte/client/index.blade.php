@@ -65,6 +65,11 @@
                 <th>Client Owner</th>
                 <th>Company Name</th>   
                 <th>HR/Coordinator Name</th>
+                
+                <?php if($isSuperAdmin || $isStrategy ) { ?>
+                <th>Client Category</th>
+                <?php }?>
+
                 <th>Status</th>
                 <th>Client Address</th>
                 <th width="280px">Action</th>
@@ -81,6 +86,10 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
 
                 <td>{{ $client['hr_name'] }}</td>
+
+                <?php if($isSuperAdmin || $isStrategy ) { ?>
+                <td>{{ $client['category']}}</td>
+                <?php }?>
 
                 @if($client['status']=='Active')
                     <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>

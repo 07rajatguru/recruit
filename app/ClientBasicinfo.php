@@ -257,4 +257,15 @@ class ClientBasicinfo extends Ardent
         $type['Ms.'] = 'Ms.';
         return $type;
     }
+
+    public static function getCategory()
+    {
+
+        $type = array();
+        $type['']='Select Category';
+        $type['Paramount'] = 'Paramount';
+        $type['Moderate'] = 'Moderate';
+        $type['Standard'] = 'Standard';
+        return $type;
+    }
 }

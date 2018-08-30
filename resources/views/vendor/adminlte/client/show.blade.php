@@ -121,6 +121,14 @@
                             <td>{{ $client['percentage_charged_above'] }}</td>
                         </tr>
                         @endif
+
+                        @if($isSuperAdmin || $isStrategy)
+                         <tr>
+                            <th>Client Category</th>
+                            <td>{{ $client['category'] }}</td>
+                        </tr>
+                        @endif
+                        
                     </table>
                 </div>
 
