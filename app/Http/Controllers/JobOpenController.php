@@ -2090,7 +2090,28 @@ class JobOpenController extends Controller
         $month = date("m");
         $year = date("Y");
 
-        $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year);
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
+        if(in_array($user_role_id,$access_roles_id)){
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year);
+        }
+        else{
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year);
+        }
 
         return view ('adminlte::jobopen.associatedcvs',compact('response'));
     }
