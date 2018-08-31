@@ -31,6 +31,7 @@
             <tr>
                 <th>No</th>
                 <th>Accounting Name</th>
+                <th>Description</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -41,6 +42,7 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $value['name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['description'] }}</td>
                 <td>            
                     <a class="fa fa-edit" title="Edit" href="{{route('accounting.edit',$value['id']) }}"></a>
                    
