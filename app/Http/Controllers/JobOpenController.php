@@ -421,6 +421,8 @@ class JobOpenController extends Controller
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
+        $secondary_email = \Auth::user()->secondary_email;
+
         $input = $request->all();
 
         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
@@ -629,8 +631,8 @@ class JobOpenController extends Controller
 
             $module = "Job Open";
             $sender_name = $user_id;
-            $to = $user_email;
-            $cc = $user_email;
+            $to = $secondary_email;
+            $cc = $secondary_email;
             $subject = "Job Open - ".$posting_title;
             $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
             $module_id = $job_id;
