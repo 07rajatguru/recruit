@@ -38,7 +38,9 @@ class NotificationMailListener
         $subject = $event->subject;
         $message = $event->message;
         $module_id = $event->module_id;
+        
 
+     
         $header = '<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
                <tr>
                     <td>

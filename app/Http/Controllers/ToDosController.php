@@ -496,7 +496,7 @@ class ToDosController extends Controller
 
     public function create(){
 
-        $candidate = CandidateBasicInfo::getCandidateArray();
+       // $candidate = CandidateBasicInfo::getCandidateArray();
         $users = User::getAllUsers();
         $status = Status::getStatusArray();
         $priority = ToDos::getPriority();
@@ -543,7 +543,7 @@ class ToDosController extends Controller
         $selected_users = array();
 
         $viewVariable = array();
-        $viewVariable['candidate'] = $candidate;
+       // $viewVariable['candidate'] = $candidate;
         $viewVariable['client'] = $typeArr;
         $viewVariable['status'] = $status;
         $viewVariable['users'] = $users;
@@ -557,6 +557,7 @@ class ToDosController extends Controller
         $viewVariable['type_list'] ='';
         $viewVariable['status_id'] = $yet_to_start;
         $viewVariable['reminder_id'] = '';
+        $viewVariable['cc_user_id'] = '' ;
 
         return view('adminlte::toDo.create', $viewVariable);
     }
@@ -576,9 +577,12 @@ class ToDosController extends Controller
        // $typeList = $request->typeList;
         $typelist = $request->to;
         $status = $request->status;
+
+        $cc_user_id=$request->cc_user;
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
+
         $frequency_type = $request->frequency_type;
         $start_date = $dateClass->changeDMYHMStoYMDHMS($request->start_date);
       //  $assigned_by = $request->assigned_by;
@@ -594,6 +598,7 @@ class ToDosController extends Controller
         $toDos->priority = $priority;
         $toDos->description = $description;
         $toDos->start_date = $start_date;
+        $toDos->cc_user = $cc_user_id;
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
@@ -656,7 +661,8 @@ class ToDosController extends Controller
                     $assigned_to_array = explode(" ", $assigned_to);
                     $assigned_to_name = $assigned_to_array[0];
 
-                    if(isset($user_arr) && $user_arr>0){
+                    if(isset($user_arr))
+                    {
                         $module_id = $toDos_id;
                         $module = 'Todos';
                         $message = "$assigned_to_name: New task has been assigned to you";
@@ -669,21 +675,34 @@ class ToDosController extends Controller
                         //$cc_email = User::getUserEmailById($task_owner);
 
                         $user_email = User::getUserSecondaryEmailById($value);
+
                         $cc_email = User::getUserSecondaryEmailById($task_owner);
+
+                        $cc_user_email=User::getUserSecondaryEmailById($cc_user_id);
+
+                        $cc_users_array=array($cc_email,$cc_user_email);
+
+                        if(isset($cc_users_array) && sizeof($cc_users_array) > 0)
+                        {
+                            foreach($cc_users_array as $key => $val)
+                            {
+                                $cc_array = trim($val);
+                            }
+                        }
 
                         $module = "Todos";
                         $sender_name = $user_id;
                         $to = $user_email;
-                        $cc = $cc_email;
+                        $cc = $cc_array;
                         $subject = $message;
                         $body_message = "";
                         $module_id = $toDos_id;
 
                         event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
-
                     }
                 }
             }
+
         }
 
         return redirect()->route('todos.index')->with('success','ToDo Created Successfully');
@@ -739,7 +758,7 @@ class ToDosController extends Controller
 
         $toDos = ToDos::find($id);
 
-        $candidate = CandidateBasicInfo::getCandidateArray();
+        //$candidate = CandidateBasicInfo::getCandidateArray();
         $users = User::getAllUsers();
         //$client = ClientBasicinfo::getClientArray();
         $status = Status::getStatusArray();
@@ -766,7 +785,7 @@ class ToDosController extends Controller
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['task_owner'] = $toDos->task_owner;
-        $viewVariable['candidate'] = $candidate;
+        //$viewVariable['candidate'] = $candidate;
         $viewVariable['client'] = array();
         $viewVariable['status'] = $status;
         $viewVariable['users'] = $users;
@@ -782,6 +801,7 @@ class ToDosController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['type_list'] = $toDos->typeList;
         $viewVariable['status_id'] = $toDos->status;
+        $viewVariable['cc_user_id'] = $toDos->cc_user;
         $viewVariable['reminder_id'] = $reminder_id;
         $viewVariable['start_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->start_date);
         //echo $reminder_id;exit;
@@ -804,6 +824,7 @@ class ToDosController extends Controller
         $type = $request->get('type');
         $typelist = $request->get('to');
         $status = $request->get('status');
+        $cc_user_id = $request->get('cc_user');
         $priority = $request->get('priority');
         $description = $request->get('description');
         $frequency_type = $request->get('frequency_type');
@@ -824,6 +845,8 @@ class ToDosController extends Controller
             $toDos->type =$type;
         if(isset($status))
             $toDos->status = $status;
+        if(isset($cc_user_id))
+            $toDos->cc_user = $cc_user_id;
         if(isset($priority))
             $toDos->priority = $priority;
         //if(isset($reminder))

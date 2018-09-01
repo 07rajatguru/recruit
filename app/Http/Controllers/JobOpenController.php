@@ -422,6 +422,7 @@ class JobOpenController extends Controller
         $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
         $secondary_email = \Auth::user()->secondary_email;
+        $superadminuserid = getenv('SUPERADMINUSERID');
 
         $input = $request->all();
 
@@ -629,10 +630,22 @@ class JobOpenController extends Controller
 
             // Email Notification : data store in datebase
 
+            $superadminsecondemail=User::getUserSecondaryEmailById($superadminuserid);
+
+            $cc_users_array=array($secondary_email,$superadminsecondemail);
+
+            $cc_users=array();
+
+
+            foreach($cc_users_array as $keu => $val)
+            {
+                $cc_users[] = $val;
+            }
+
             $module = "Job Open";
             $sender_name = $user_id;
-            $to = $secondary_email;
-            $cc = $secondary_email;
+            $to = $user_arr;
+            $cc = $cc_users;
             $subject = "Job Open - ".$posting_title;
             $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
             $module_id = $job_id;

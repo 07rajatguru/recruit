@@ -18,6 +18,7 @@ class NotificationMail
     public $subject;
     public $message;
     public $module_id;
+    public $cc;
 
     /**
      * Create a new event instance.
@@ -30,10 +31,11 @@ class NotificationMail
         $this->module = $module;
         $this->sender_name = $sender_name;
         $this->to = $to;
+        $this->cc = $cc;
         $this->subject = $subject;
         $this->message = $message;
         $this->module_id = $module_id;
-        $this->cc = $cc;
+        
     }
 
     /**

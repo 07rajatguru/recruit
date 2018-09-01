@@ -37,7 +37,8 @@ class NotificationEventListener
         $link = $event->link;
         $user_arr = $event->user_arr;
 
-        if(isset($user_arr) && sizeof($user_arr) > 0){
+        if(isset($user_arr))
+        {
             if(is_array($user_arr)){
                 foreach ($user_arr as $userId) {
                     //if($user_id != $userId){
