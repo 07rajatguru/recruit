@@ -15,13 +15,28 @@
 	<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
     	<tr>
         	<td>
-            	<table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: rgba(157,92,172,0.9); height: 70px;">
+            	<!-- <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: rgba(157,92,172,0.9); height: 70px;">
                 	<tr>
                     	<td align="center">
                         	Adler Talent Solutions Pvt. Ltd.
                     	</td>
                 	</tr>
-            	</table>
+            	</table> -->
+
+                <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                <tr>
+                    <td align="center">
+                       <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
+                {{--<a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
+                <img class="site-logo" width="60px" height="80px" src="http://adlertalent.com/wp-content/uploads/2016/06/logo.png" alt="Adler Talent Solutions Pvt. Ltd." style=" padding-top: 16px;   vertical-align: middle;">
+                <span>Adler Talent Solutions Pvt. Ltd.</span> </a>--}}
+   <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
+                            <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:70%;height: 120px;padding-top: 16px;   vertical-align: middle;">
+                        </a>
+                       </div>
+                    </td>
+                </tr>
+            </table>
         	</td>
     	</tr>
     	<tr>
@@ -63,7 +78,7 @@
                 <tr>
 		            <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Work Experience (In years)</th>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">{{ $job['work_experience'] }}</td>
-			        <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Salary</th>
+			        <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Salary(In Lacs)</th>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{{ $job['salary'] }}</td>
                 </tr>
                 <tr>
@@ -101,7 +116,7 @@
             </table>
 
 
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+            <!-- <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
             	<td colspan="7">
 					<h3 class="box-title">Attachments</h3>
 				</td>
@@ -127,12 +142,14 @@
                         </tr>
                     @endforeach
                 @endif
-			</table>
+			</table> -->
 
 			<table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
 				<tr>
 					<td align="center" style="padding: 0px;">
-						<button type="button" formtarget="_blank" onclick="location.href = '{{ route('jobopen.show',$job['module_id']) }}';">Show</button>
+						<!-- <button type="button" formtarget="_blank" onclick="location.href = '{{ route('jobopen.show',$job['module_id']) }}';">Show</button> -->
+
+                        <a class="btn btn-primary" formtarget="_blank" href="{{ route('jobopen.show',$job['module_id']) }}">Show</a>
 					</td>
 				</tr>
 			</table>

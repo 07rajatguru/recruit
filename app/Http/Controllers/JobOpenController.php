@@ -439,6 +439,7 @@ class JobOpenController extends Controller
         $client_id = $input['client_id'];
         $no_of_positions = $input['no_of_positions'];
         $date_open = $input['date_opened'];
+        $target_date=$input['target_date'];
         //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
         $job_type = $input['job_type'];
         $job_description = $input['job_description'];
@@ -501,7 +502,9 @@ class JobOpenController extends Controller
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;
         $job_open->no_of_positions = $no_of_positions;
-        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
+        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open);
+        $job_open->target_date = $dateClass->changeDMYtoYMD($target_date);
+         //'2016-01-01';//$formatted_date_open;
         $job_open->job_type = $job_type;
         $job_open->job_description = $job_description;
         //$job_open->work_experience_from = $work_experience_from;
@@ -622,15 +625,17 @@ class JobOpenController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-            /*// Email Notification : data store in datebase
+            // Email Notification : data store in datebase
+
             $module = "Job Open";
             $sender_name = $user_id;
             $to = $user_email;
+            $cc = $user_email;
             $subject = "Job Open - ".$posting_title;
             $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
             $module_id = $job_id;
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id));*/
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         }
 
@@ -639,7 +644,8 @@ class JobOpenController extends Controller
 
     public function show($id)
     {
-        $job_open = array();
+        $dateClass = new Date();
+        $job_open=array();
 
         $job_open_detail = \DB::table('job_openings')
             ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
@@ -651,13 +657,93 @@ class JobOpenController extends Controller
 
         $job_open['id'] = $id;
 
-        foreach ($job_open_detail as $key => $value) {
+        $check_visible_users=\DB::table('job_visible_users')
+            ->select('users.id','users.name')
+            ->join('users','users.id','=','job_visible_users.user_id')
+            ->where('job_visible_users.job_id',$id)
+            ->get();
+   
+        foreach ($job_open_detail as $key => $value) 
+        {
+            $user = \Auth::user();
+            $user_id = $user->id;
 
-            // value get in 2 decimal point
-            if ($value->lacs_from >= '100') {
+            $user_role_id = User::getLoggedinUserRole($user);
+
+            $admin_role_id = env('ADMIN');
+            $director_role_id = env('DIRECTOR');
+            $manager_role_id = env('MANAGER');
+            $superadmin_role_id = env('SUPERADMIN');
+
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+
+            /*if(in_array($user_role_id,$access_roles_id))
+            {
+                $job_open['access'] = '1';
+            }
+            else
+            {
+                if($value->hiring_manager_id==$user_id)
+                {
+                    $job_open['access'] = '1';
+                }
+                else
+                {
+                    $cnt = 0;
+
+                    foreach($check_visible_users as $key => $value)
+                    {
+                        $job_open['users_ids'][$cnt] = $value->id;
+
+                        if($job_open['users_ids'][$cnt]==$user_id)
+                        {
+                            $job_open['access'] = '1';
+
+                        }
+                        else
+                        {
+                            $job_open['access'] = '0';
+                            return view('adminlte::jobopen.403');
+                        }
+                        $cnt++;
+                    }    
+                }
+            }*/
+
+            $cnt = 0;
+
+            foreach($check_visible_users as $key => $val)
+            {
+                $job_open['users_ids'][$cnt] = $val->id;
+                $cnt++;
+            }
+
+            $users_array=$job_open['users_ids'];
+
+            if(in_array($user_role_id,$access_roles_id))
+            {
+                $job_open['access'] = '1';
+            }
+            else if($value->hiring_manager_id==$user_id)
+            {
+                $job_open['access'] = '1';
+            }
+            else if(in_array($user_id,$users_array))
+            {
+                $job_open['access'] = '1';
+            }
+            else
+            {
+                $job_open['access'] = '0';
+                return view('adminlte::jobopen.403');
+            }
+
+            if ($value->lacs_from >= '100') 
+            {
                 $min_ctc = '100+';
             }
-            else{
+            else
+            {
                 $lacs_from = $value->lacs_from*100000;
                 $thousand_from = $value->thousand_from*1000;
                 $mictc = $lacs_from+$thousand_from;
@@ -665,10 +751,12 @@ class JobOpenController extends Controller
                 $min_ctc = number_format($minctc,2);
             }
 
-            if ($value->lacs_to >= '100') {
+            if ($value->lacs_to >= '100') 
+            {
                 $max_ctc = '100+';
             }
-            else{
+            else
+            {
                 $lacs_to = $value->lacs_to*100000;
                 $thousand_to = $value->thousand_to*1000;
                 $mactc = $lacs_to+$thousand_to;
@@ -687,8 +775,8 @@ class JobOpenController extends Controller
             $job_open['hiring_manager_name'] = $value->hiring_manager_name;
             //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
             $job_open['no_of_positions'] = $value->no_of_positions;
-            $job_open['target_date'] = $value->target_date;
-            $job_open['date_opened'] = $value->date_opened;
+            $job_open['target_date'] = $dateClass->changeYMDtoDMY($value->target_date);
+            $job_open['date_opened'] = $dateClass->changeYMDtoDMY($value->date_opened);
             $job_open['job_type'] = $value->job_type;
             $job_open['industry_name'] = $value->industry_name;
             $job_open['description'] = strip_tags($value->job_description);
@@ -699,31 +787,6 @@ class JobOpenController extends Controller
             $job_open['city'] = $value->city;
             $job_open['education_qualification'] = $value->qualifications;
 
-
-            $user = \Auth::user();
-            $user_id = $user->id;
-            $user_role_id = User::getLoggedinUserRole($user);
-
-            $admin_role_id = env('ADMIN');
-            $director_role_id = env('DIRECTOR');
-            $manager_role_id = env('MANAGER');
-            $superadmin_role_id = env('SUPERADMIN');
-
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-
-            if(in_array($user_role_id,$access_roles_id)){
-                $job_open['access'] = '1';
-            }
-            else{
-                if($value->hiring_manager_id==$user_id){
-                    $job_open['access'] = '1';
-                }
-                else{
-                    $job_open['access'] = '0';
-                }
-            }
-
-
             // already added posting,massmail and job search options
             $selected_posting = array();
             $selected_mass_mail = array();
@@ -732,27 +795,28 @@ class JobOpenController extends Controller
             $mo_posting = '';
             $mo_mass_mail='';
             $mo_job_search = '';
-            if(isset($value->posting) && $value->posting!=''){
+            if(isset($value->posting) && $value->posting!='')
+            {
                 $mo_posting = $value->posting;
                 $selected_posting = explode(",",$mo_posting);
             }
-            if(isset($value->mass_mail) && $value->mass_mail!=''){
+            if(isset($value->mass_mail) && $value->mass_mail!='')
+            {
                 $mo_mass_mail = $value->mass_mail;
                 $selected_mass_mail = explode(",",$mo_mass_mail);
             }
-            if(isset($value->job_search) && $value->job_search!=''){
+            if(isset($value->job_search) && $value->job_search!='')
+            {
                 $mo_job_search = $value->job_search;
                 $selected_job_search = explode(",",$mo_job_search);
             }
+
         }
 
-        $job_visible_users = \DB::table('job_visible_users')
-            ->select('users.id','users.name')
-            ->join('users','users.id','=','job_visible_users.user_id')
-            ->where('job_visible_users.job_id',$id)
-            ->get();
         $count = 0;
-        foreach ($job_visible_users as $key => $value) {
+
+        foreach ($check_visible_users as $key => $value) 
+        {
             $job_open['users'][$count] = $value->name;
             $count++;
         }
@@ -788,7 +852,7 @@ class JobOpenController extends Controller
         $job_status = JobOpen::getJobStatus();
 
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
-                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status));
+                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status));   
     }
 
     public function edit($id)
@@ -900,9 +964,10 @@ class JobOpenController extends Controller
         $work_exp_from = $job_open->work_exp_from;
         $work_exp_to = $job_open->work_exp_to;
         //print_r($job_open);exit;
-        $target_date = '';//$dateClass->changeYMDtoDMY($job_open->target_date);
+       // $target_date = '';
+        //$dateClass->changeYMDtoDMY($job_open->target_date);
         $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
-
+        $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
        /* $team_mates = array();
         if(isset($job_visible_users) && sizeof($job_visible_users)>0){
@@ -947,6 +1012,7 @@ class JobOpenController extends Controller
         $client_id = $input['client_id'];
         $no_of_positions = $input['no_of_positions'];
         $date_open = $input['date_opened'];
+        $target_date = $input['target_date'];
         //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
         $job_type = $input['job_type'];
         $job_description = $input['job_description'];
@@ -1008,7 +1074,10 @@ class JobOpenController extends Controller
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;
         $job_open->no_of_positions = $no_of_positions;
-        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
+        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open);
+         //'2016-01-01';//$formatted_date_open;
+
+        $job_open->target_date = $dateClass->changeDMYtoYMD($target_date);
         $job_open->job_type = $job_type;
         $job_open->job_description = $job_description;
         //$job_open->work_experience_from = $work_experience_from;

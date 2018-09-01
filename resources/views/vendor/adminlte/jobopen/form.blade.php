@@ -441,6 +441,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 
+<input type="hidden" id="action" name="action" value="{!! $action !!}">
 </div>
 
 {!! Form::close() !!}
@@ -450,6 +451,7 @@
 
         $(document).ready(function() {
 
+            var action={!! json_encode($action) !!};
             $('#jobsForm').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
                 if (keyCode === 13) {
@@ -521,12 +523,17 @@
                 autoclose: true,
 
             });
+
+
             $('#date_opened').datepicker().datepicker('setDate', 'today');
            // $('#target_date').datepicker().datepicker('setDate', 'today');
 
-            var date2 = $('#date_opened').datepicker('getDate');
-            date2.setMonth(date2.getMonth()+1);
-            $('#target_date').datepicker('setDate', date2);
+            if(action=="add")
+            {
+                var date2 = $('#date_opened').datepicker('getDate');
+                date2.setMonth(date2.getMonth()+1);
+                $('#target_date').datepicker('setDate', date2);
+            }
 
 
             $("#hiring_manager_id").select2();

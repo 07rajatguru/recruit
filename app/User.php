@@ -507,4 +507,17 @@ class User extends Authenticatable
 
         return $user;
     }
+
+    public static function getRoleIdByUserId($user_id)
+    {
+        $query = User::query();
+        $query = $query->join('role_user','role_user.user_id','=','users.id');
+        $query = $query->select('role_user.role_id as role_id');
+       // $query = $query->whereNotIn('status',$status_array);
+        $query = $query->where('users.id',$user_id);
+
+        $response = $query->first();
+
+        return $response;
+    }
 }

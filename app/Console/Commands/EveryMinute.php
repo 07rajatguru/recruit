@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\ToDos;
 use App\User;
+use App\EmailsNotifications;
 
 class EveryMinute extends Command
 {
@@ -78,30 +79,58 @@ class EveryMinute extends Command
 
         $status = 1;
         
+        /*print_r($mail);
+        exit;*/
         foreach ($mail as $key => $value) {
+
             $input['to'] = $value['to'];
             $input['cc'] = $value['cc'];
             $input['subject'] = $value['subject'];
             $input['message'] = $value['message'];
             $input['app_url'] = $app_url;
             $module_id = $value['module_id'];
-            if ($value['module'] == 'Job Open') {
 
-                /*$job = EmailsNotifications::getShowJobs($value['id']);
+            if ($value['module'] == 'Job Open') 
+            {
+                $id=$value['id'];
+
+                $job = EmailsNotifications::getShowJobs($id);
 
                 $input['job'] = $job;
 
                 \Mail::send('adminlte::emails.emailNotification', $input, function ($job) use($input) {
                     $job->from($input['from_address'], $input['from_name']);
                     $job->to($input['to'])->subject($input['subject']);
-                });*/
-            } else if ($value['module'] == 'Todos') {
+                });
+
+                /*$jobopen=JobOpen::find($module_id);
+                $input['jobopen_subject'] = $jobopen->subject;
+                $input['description'] = $jobopen->description;
+
+                $user_name = User::getUserNameByEmail($input['to']);
+                $input['uname'] = $user_name;
+                $input['jobopen_id'] = $module_id;
+
+                \Mail::send('adminlte::emails.todomail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                });
+*/
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                
+            } 
+            else if ($value['module'] == 'Todos') 
+            {
+
                 // get todos subject and description
+
+
                 $todos = ToDos::find($module_id);
+
                 $input['todo_subject'] = $todos->subject;
                 $input['description'] = $todos->description;
 
-                 $user_name = User::getUserNameByEmail($input['to']);
+                $user_name = User::getUserNameByEmail($input['to']);
 
                 $input['uname'] = $user_name;
 
@@ -112,7 +141,9 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET status=$status where id = $email_notification_id");
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+
             }
 
         }

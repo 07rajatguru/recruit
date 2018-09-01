@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class EmailsNotifications extends Model
 {
     //
@@ -31,17 +32,18 @@ class EmailsNotifications extends Model
 
     public static function getShowJobs($id){
 
+        
         $query = EmailsNotifications::query();
         $query = $query->join('job_openings','job_openings.id','=','emails_notification.module_id');
         $query = $query->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id');
         $query = $query->join('users', 'users.id', '=', 'job_openings.hiring_manager_id');
         $query = $query->join('industry', 'industry.id', '=', 'job_openings.industry_id');
-        $query = $query->select('emails_notification.module_id as module_id','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name');
+        $query = $query->select('emails_notification.module_id as module_id','emails_notification.sender_name as sender_name','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name');
         $query = $query->where('emails_notification.id',$id);
         $query_res = $query->get();
 
         $job_open = array();
-
+        $dateClass = new Date();
         foreach ($query_res as $key => $value) {
 
             $job_open['module_id'] = $value->module_id;
@@ -80,8 +82,8 @@ class EmailsNotifications extends Model
             $job_open['hiring_manager_name'] = $value->hiring_manager_name;
             //$job_open['hiring_manager_id'] = $value->hiring_manager_id;
             $job_open['no_of_positions'] = $value->no_of_positions;
-            $job_open['target_date'] = $value->target_date;
-            $job_open['date_opened'] = $value->date_opened;
+            $job_open['target_date'] = $dateClass->changeYMDtoDMY($value->target_date);
+            $job_open['date_opened'] = $dateClass->changeYMDtoDMY($value->date_opened);
             $job_open['job_type'] = $value->job_type;
             $job_open['industry_name'] = $value->industry_name;
             $job_open['description'] = strip_tags($value->job_description);
@@ -91,11 +93,18 @@ class EmailsNotifications extends Model
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
             $job_open['education_qualification'] = $value->qualifications;
+            $job_open['sender_name']=$value->sender_name;
 
+            /*$user = \Auth::user();
+            $user_id = $user->id;*/
 
-            $user = \Auth::user();
-            $user_id = $user->id;
-            $user_role_id = User::getLoggedinUserRole($user);
+            $user_id = $job_open['sender_name'];
+
+            //$user_role_id = User::getLoggedinUserRole($user);
+
+            $user_role=User::getRoleIdByUserId($user_id);
+
+            $user_role_id=$user_role->role_id;
 
             $admin_role_id = env('ADMIN');
             $director_role_id = env('DIRECTOR');
@@ -144,6 +153,8 @@ class EmailsNotifications extends Model
             ->join('emails_notification','emails_notification.module_id','=','job_visible_users.job_id')
             ->where('emails_notification.id',$id)
             ->get();
+
+
         $count = 0;
         foreach ($job_visible_users as $key => $value) {
             $job_open['users'][$count] = $value->name;
@@ -181,8 +192,7 @@ class EmailsNotifications extends Model
         $job_search = JobOpen::getJobSearchOptions();
         $job_status = JobOpen::getJobStatus();
         }
-
-        //print_r($job_open);exit;
+        
         return $job_open; 
     }
 }
