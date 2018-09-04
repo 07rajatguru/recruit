@@ -30,14 +30,15 @@ class BillsController extends Controller
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
+        $accountant_role_id = env('ACCOUNTANT');
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
+        /*$userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);*/
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $bnm = Bills::getAllBills(0,1,$user_id);
             $access = true;
@@ -99,6 +100,7 @@ class BillsController extends Controller
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
+        $accountant_role_id = env('ACCOUNTANT');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -106,7 +108,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $bnm = Bills::getAllBills(1,1,$user_id);
             $access = true;
@@ -135,6 +137,7 @@ class BillsController extends Controller
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
+        $accountant_role_id = env('ACCOUNTANT');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -142,7 +145,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $bnm = Bills::getCancelBills(1,1,$user_id);
             $access = true;
