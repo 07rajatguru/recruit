@@ -92,6 +92,12 @@ class EveryMinute extends Command
 
             if ($value['module'] == 'Job Open') 
             {
+
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
                 $id=$value['id'];
 
                 $job = EmailsNotifications::getShowJobs($id);
@@ -100,8 +106,8 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.emailNotification', $input, function ($job) use($input) {
                     $job->from($input['from_address'], $input['from_name']);
-                    $job->to($input['to'])->subject($input['subject']);
-                });
+                    $job->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                        });  
 
                 /*$jobopen=JobOpen::find($module_id);
                 $input['jobopen_subject'] = $jobopen->subject;
@@ -124,6 +130,10 @@ class EveryMinute extends Command
 
                 // get todos subject and description
 
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
 
                 $todos = ToDos::find($module_id);
 
@@ -137,13 +147,11 @@ class EveryMinute extends Command
                 $input['todo_id'] = $module_id;
 
                 \Mail::send('adminlte::emails.todomail', $input, function ($message) use ($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
-                });
-
-
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                        });              
+               
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
-
             }
 
         }

@@ -587,6 +587,28 @@ class ToDosController extends Controller
         $start_date = $dateClass->changeDMYHMStoYMDHMS($request->start_date);
       //  $assigned_by = $request->assigned_by;
 
+/*
+        $cc_email = User::getUserSecondaryEmailById($task_owner);
+
+        $cc_user_email=User::getUserSecondaryEmailById($cc_user_id);
+
+        $cc_users_array=array($cc_email,$cc_user_email);
+
+
+        $i=0;
+
+        if(isset($cc_users_array) && sizeof($cc_users_array) > 0)
+        {
+            foreach($cc_users_array as $key => $val)
+            {
+                $cc_array[$i] = trim($val);
+                $i++;
+            }
+        }
+
+        print_r($cc_array);
+        exit;
+*/
         $toDos = new ToDos();
         $toDos->subject = $subject;
         $toDos->task_owner = $task_owner;
@@ -653,6 +675,7 @@ class ToDosController extends Controller
         if($toDos_id>0) {
             $toDos_id = $toDos->id;
 
+
             foreach ($users as $key=>$value){
                 if($value!=$task_owner){
                     $user_arr = trim($value);
@@ -682,18 +705,22 @@ class ToDosController extends Controller
 
                         $cc_users_array=array($cc_email,$cc_user_email);
 
+
+                        /*$i=0;
+
                         if(isset($cc_users_array) && sizeof($cc_users_array) > 0)
                         {
                             foreach($cc_users_array as $key => $val)
                             {
-                                $cc_array = trim($val);
+                                $cc_array[$i] = trim($val);
+                                $i++;
                             }
-                        }
+                        }*/
 
                         $module = "Todos";
                         $sender_name = $user_id;
                         $to = $user_email;
-                        $cc = $cc_array;
+                        $cc = implode(",",$cc_users_array);
                         $subject = $message;
                         $body_message = "";
                         $module_id = $toDos_id;
@@ -702,7 +729,6 @@ class ToDosController extends Controller
                     }
                 }
             }
-
         }
 
         return redirect()->route('todos.index')->with('success','ToDo Created Successfully');

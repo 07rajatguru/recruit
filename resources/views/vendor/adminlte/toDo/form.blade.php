@@ -64,6 +64,21 @@
                         @endif
                     </div>
 
+
+                    <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                        <strong>Type:</strong>
+                        @if($action == 'edit')
+                        {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        @else
+                        {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        @endif
+                        @if ($errors->has('type'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('type') }}</strong>
+                                </span>
+                        @endif
+                    </div>
+
                 </div>
             </div>
 
@@ -94,22 +109,19 @@
                         @endif
                     </div>
 
-                </div>
-            </div>
-                <div style="width:50%;" class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                        <strong>Type:</strong>
-                        @if($action == 'edit')
-                        {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
-                        @else
-                        {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
-                        @endif
-                        @if ($errors->has('type'))
+                    <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                        <strong>Select CC:</strong>
+                        {!! Form::select('cc_user',$users,$cc_user_id, array('id'=>'cc_user','class' => 'form-control' )) !!}
+                        @if ($errors->has('cc_user'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('type') }}</strong>
+                                <strong>{{ $errors->first('cc_user') }}</strong>
                                 </span>
                         @endif
                     </div>
 
+                </div>
+            </div>
+             
                     <div class="form-group type_list" >
 
                         <div class="col-sm-5">
