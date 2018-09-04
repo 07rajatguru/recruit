@@ -421,7 +421,7 @@ class JobOpenController extends Controller
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
-        $secondary_email = \Auth::user()->secondary_email;
+        $loggedin_secondary_email = \Auth::user()->secondary_email;
         $superadminuserid = getenv('SUPERADMINUSERID');
 
         $input = $request->all();
@@ -618,39 +618,42 @@ class JobOpenController extends Controller
 
             $user_arr = array();
 
-            if(isset($users) && sizeof($users)>0){
-                foreach ($users as $key=>$value){
-                    if($user_id!=$value){
-                        $user_arr[] = $value;
+            if(isset($users) && sizeof($users)>0)
+            {
+                foreach ($users as $key=>$value)
+                {
+                    if($user_id!=$value)
+                    {
+                        $module_id = $job_id;
+                        $module = 'Job Openings';
+                        $message = $user_name . " added new job";
+                        $link = route('jobopen.show',$job_id);
+                        $user_arr =trim($value);
+
+                        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+                        $user_email = User::getUserSecondaryEmailById($value);
+
+
+            
+            // Email Notification : data store in datebase
+
+                        $superadminsecondemail=User::getUserSecondaryEmailById($superadminuserid);
+
+                        $cc_users_array=array($loggedin_secondary_email,$superadminsecondemail);
+
+                        $module = "Job Open";
+                        $sender_name = $user_id;
+                        $to = $user_email;
+                        $cc = implode(",",$cc_users_array);
+                        $subject = "Job Open - ".$posting_title;
+                        $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
+                        $module_id = $job_id;
+
+                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                     }
                 }
             }
-
-            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
-
-            // Email Notification : data store in datebase
-
-            $superadminsecondemail=User::getUserSecondaryEmailById($superadminuserid);
-
-            $cc_users_array=array($secondary_email,$superadminsecondemail);
-
-            $cc_users=array();
-
-
-            foreach($cc_users_array as $keu => $val)
-            {
-                $cc_users[] = $val;
-            }
-
-            $module = "Job Open";
-            $sender_name = $user_id;
-            $to = $user_arr;
-            $cc = $cc_users;
-            $subject = "Job Open - ".$posting_title;
-            $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
-            $module_id = $job_id;
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         }
 

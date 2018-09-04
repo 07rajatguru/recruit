@@ -449,9 +449,10 @@
 @section('customscripts')
     <script type="text/javascript">
 
+        var action={!! json_encode($action) !!};
         $(document).ready(function() {
 
-            var action={!! json_encode($action) !!};
+            
             $('#jobsForm').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
                 if (keyCode === 13) {
