@@ -54,15 +54,14 @@
                         <tr>
                             <th scope="row">Posting Title</th>
                             <td>{{ $jobopen['posting_title'] }}</td>
-                            <th>Job Opening ID</th>
-                            <td>{{ $jobopen['job_id'] }}</td>
-                        </tr>
-                        <tr>
                             <th scope="row">Client Name</th>
                             <td colspan="3">{{ $jobopen['client_name'] }}</td>
+                        </tr>
+                       <!--  <tr>
+                            
                            {{-- <th>Job Opening Status</th>
                             <td>{{ $jobopen['job_opening_status'] }}</td> --}}
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th scope="row">Hiring Manager</th>
                             <td>{{ $jobopen['hiring_manager_name'] }}</td>
@@ -76,37 +75,56 @@
                             <td>{{ $jobopen['date_opened'] }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Job Type</th>
-                            <td>{{ $jobopen['job_type'] }}</td>
                             <th>Industry</th>
                             <td>{{ $jobopen['industry_name'] }}</td>
+                            <th scope="row" >Education Qualification</th>
+                            <td colspan="3">{{ $jobopen['education_qualification']}}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Work Experience (In years)</th>
-                            <td>{{ $jobopen['work_experience'] }}</td>
-                            <th>Salary</th>
-                            <td>{{ $jobopen['salary'] }}</td>
+                            <th scope="row">Job Type</th>
+                            <td>{{ $jobopen['job_type'] }}</td>
+                            <th scope="row" >Desired Candidates</th>
+                            <td colspan="3">{{ $jobopen['desired_candidate'] }}</td>
+                        </tr>
+                         <tr>
+                            <th scope="row" >Users who can access the job</th>
+                            <td colspan="3">{{ implode(",",$jobopen['users']) }}</td>
                         </tr>
                         <tr>
                             <th scope="row" >Job Description</th>
                             <td colspan="3">{{ $jobopen['description'] }}</td>
                         </tr>
-                        <tr>
-                            <th scope="row" >Desired Candidates</th>
-                            <td colspan="3">{{ $jobopen['desired_candidate'] }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" >Users who can access the job</th>
-                            <td colspan="3">{{ implode(",",$jobopen['users']) }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" >Education Qualification</th>
-                            <td colspan="3">{{ $jobopen['education_qualification']}}</td>
-                        </tr>
+ 
                      </table>
 
                 </div>
             </div>
+        </div>
+
+         <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+
+                <div class="box-header col-md-6 ">
+                    <h3 class="box-title">Additional Information</h3>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Work Experience From</th>
+                            <td>{{ $jobopen['work_experience_from'] }}</td>
+                            <th>Work Experience To</th>
+                            <td>{{ $jobopen['work_experience_to'] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Salary From</th>
+                            <td>{{ $jobopen['min_salary'] }}</td>
+                            <th>Salary To</th>
+                            <td>{{ $jobopen['max_salary'] }}</td>
+                        </tr>
+                    </table>
+                 </div>
+             </div>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">

@@ -782,7 +782,7 @@ class JobOpenController extends Controller
                 $max_ctc = number_format($maxctc,2);
             }
 
-            $salary = $min_ctc.'-'.$max_ctc;
+          //  $salary = $min_ctc.'-'.$max_ctc;
 
             $job_open['posting_title'] = $value->posting_title;
             $job_open['job_id'] = $value->job_id;
@@ -798,8 +798,10 @@ class JobOpenController extends Controller
             $job_open['job_type'] = $value->job_type;
             $job_open['industry_name'] = $value->industry_name;
             $job_open['description'] = strip_tags($value->job_description);
-            $job_open['work_experience'] = $value->work_exp_from . "-" . $value->work_exp_to;
-            $job_open['salary'] = $salary;
+            $job_open['work_experience_from'] = $value->work_exp_from;
+            $job_open['work_experience_to']= $value->work_exp_to;
+            $job_open['min_salary'] = $min_ctc;
+            $job_open['max_salary'] = $max_ctc;
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
