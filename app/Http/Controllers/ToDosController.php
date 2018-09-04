@@ -557,7 +557,7 @@ class ToDosController extends Controller
         $viewVariable['type_list'] ='';
         $viewVariable['status_id'] = $yet_to_start;
         $viewVariable['reminder_id'] = '';
-        $viewVariable['cc_user_id'] = '' ;
+        $viewVariable['cc_user_id'] = '0' ;
 
         return view('adminlte::toDo.create', $viewVariable);
     }
@@ -830,8 +830,8 @@ class ToDosController extends Controller
         $viewVariable['cc_user_id'] = $toDos->cc_user;
         $viewVariable['reminder_id'] = $reminder_id;
         $viewVariable['start_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->start_date);
-        //echo $reminder_id;exit;
-//echo $toDos->typeList;exit;
+        
+
         return view('adminlte::toDo.edit', $viewVariable);
     }
 

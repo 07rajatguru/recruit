@@ -121,7 +121,8 @@
 
                 </div>
             </div>
-             
+             <input type="hidden" id="cc_user_id" name="cc_user_id" value="{{$cc_user_id}}">
+
                     <div class="form-group type_list" >
 
                         <div class="col-sm-5">
@@ -257,8 +258,18 @@
                 format: "DD-MM-YYYY HH:mm:ss"
             });
 
-//            $('#typeList').select2();
-              $('#assigned_by').select2();
+            var action = $("#action").val();
+            if(action=='add'){
+                $("#cc_user").prepend('<option value="0" selected="selected">Select</option>');
+            }
+            else{
+                var cc_user_id = $("#cc_user_id").val();
+                if(cc_user_id=='')
+                    $("#cc_user").prepend('<option value="0" selected="selected">Select</option>');
+            }
+
+            $('#cc_user').select2();
+            $('#assigned_by').select2();
             $("#description").wysihtml5();
 
             $("#users_all").click(function () {
