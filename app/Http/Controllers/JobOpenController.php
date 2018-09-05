@@ -667,9 +667,10 @@ class JobOpenController extends Controller
 
         $job_open_detail = \DB::table('job_openings')
             ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
+            ->join('client_address','client_address.client_id','=','client_basicinfo.id')
             ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
             ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
-            ->select('job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name')
+            ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name')
             ->where('job_openings.id', '=', $id)
             ->get();
 
@@ -786,7 +787,7 @@ class JobOpenController extends Controller
 
             $job_open['posting_title'] = $value->posting_title;
             $job_open['job_id'] = $value->job_id;
-            $job_open['client_name'] = $value->client_name;
+            $job_open['client_name'] = $value->client_name . "-" . $value->co_nm . "-" . $value->bill_city;
             $job_open['client_id'] = $value->client_id;
             //$job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['desired_candidate'] = $value->desired_candidate;

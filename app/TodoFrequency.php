@@ -11,7 +11,7 @@ class TodoFrequency extends Model
     public static function gettodobyfrequency(){
      	$query = TodoFrequency::query();
      	$query = $query->join('to_dos','to_dos.id','=','todo_frequency.todo_id');
-        $query = $query->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.status as status','to_dos.description as desc','to_dos.type as type','to_dos.due_date as due_date','to_dos.start_date as start_date');
+        $query = $query->select('todo_frequency.*','to_dos.id as id','to_dos.task_owner as task_owner','to_dos.subject as subject','to_dos.status as status','to_dos.description as desc','to_dos.type as type','to_dos.due_date as due_date','to_dos.start_date as start_date','to_dos.cc_user as cc_user');
         $query = $query->where('todo_frequency.reminder_date','=',date('Y-m-d'));
         
         /*if ($reminder == 1) {
@@ -37,6 +37,7 @@ class TodoFrequency extends Model
         	$to_dos[$i]['due_date'] = $todo_reminders->due_date;
             $to_dos[$i]['start_date'] = $todo_reminders->start_date;
             $to_dos[$i]['reminder'] = $todo_reminders->reminder;
+            $to_dos[$i]['cc_user'] = $todo_reminders->cc_user;
 
             $user_id = TodoFrequency::getAssociatedUserId($todo_reminders->id);
             $userid = '';

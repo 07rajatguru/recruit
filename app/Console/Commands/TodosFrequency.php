@@ -54,11 +54,13 @@ class TodosFrequency extends Command
                 $reminder = $value['reminder'];
                 $due_date = $value['due_date'];
                 $task_owner = $value['task_owner'];
+                $cc_user = $value['cc_user'];
                 $user_ids = $value['user_ids'];
                 //$start_date = $value->start_date;
 
                 $userid = explode(',', $user_ids);
                 
+                // Daily Reminder
                 if ($reminder == 1) {
 
                     $todos = ToDos::find($value['id']);
@@ -78,6 +80,7 @@ class TodosFrequency extends Command
                     //print_r($todo_reminder_id);exit;
                 }
 
+                // Weekly Reminder
                 if ($reminder == 2) {
 
                     $todos = ToDos::find($value['id']);
@@ -97,6 +100,7 @@ class TodosFrequency extends Command
                     //print_r($todo_reminder_id);exit;
                 }
 
+                // Monthly Reminder
                 if ($reminder == 3) {
 
                     $todos = ToDos::find($value['id']);
@@ -116,6 +120,8 @@ class TodosFrequency extends Command
                     //print_r($todo_reminder_id);exit;
                 }
 
+
+                // Quarterly Reminder
                 if ($reminder == 4) {
 
                     $todos = ToDos::find($value['id']);
@@ -135,6 +141,7 @@ class TodosFrequency extends Command
                     //print_r($todo_reminder_id);exit;
                 }
 
+                // Yearly Reminder
                 if ($reminder == 5) {
 
                     $todos = ToDos::find($value['id']);
@@ -158,12 +165,16 @@ class TodosFrequency extends Command
                     if($value1!=$task_owner){
                         $user_arr= $value1;
 
+                       
                         $assigned_to = User::getUserNameById($value1);
                         $assigned_to_array = explode(" ", $assigned_to);
                         $assigned_to_name = $assigned_to_array[0];
                     //print_r($assigned_to_name);exit;
 
-                        if(isset($user_arr) && sizeof($user_arr)>0){
+                        if(isset($user_arr)/* && sizeof($user_arr)>0*/){
+/*
+                             print_r($user_arr);
+                        exit;*/
                             $module_id = $value['id'];
                             $module = 'Todos';
                             $message = "$assigned_to_name: New task has been assigned to you";
@@ -175,10 +186,13 @@ class TodosFrequency extends Command
                             //foreach ($users as $k=>$v){
                                 $user_email = User::getUserSecondaryEmailById($value1);
                                 $cc_email = User::getUserSecondaryEmailById($task_owner);
+                                $cc_user_email=User::getUserSecondaryEmailById($cc_user);
+                                $cc_users_array=array($cc_email,$cc_user_email);
+
                                 $module = "Todos";
                                 $sender_name = $task_owner;
                                 $to = $user_email;
-                                $cc = $cc_email;
+                                $cc = implode(",",$cc_users_array);
                                 $subject = $message;
                                 $body_message = "";
                                 $module_id = $value['id'];
