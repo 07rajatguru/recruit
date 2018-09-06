@@ -640,13 +640,19 @@ class JobOpenController extends Controller
 
                         $superadminsecondemail=User::getUserSecondaryEmailById($superadminuserid);
 
-                        $cc_users_array=array($loggedin_secondary_email,$superadminsecondemail);
+                        $cc1 = "adler.rgl@gmail.com";
+                        $cc2 = "tarikapanjwani@gmail.com";
+
+                        $cc_users_array=array($loggedin_secondary_email,$superadminsecondemail,$cc1,$cc2);
 
                         $module = "Job Open";
                         $sender_name = $user_id;
                         $to = $user_email;
                         $cc = implode(",",$cc_users_array);
-                        $subject = "Job Open - ".$posting_title;
+
+                        $client_name = ClientBasicinfo::getClientNameByID($client_id);
+                        
+                        $subject = "Job Opening - ".$posting_title . "@" .$client_name;
                         $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                         $module_id = $job_id;
 

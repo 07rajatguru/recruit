@@ -59,7 +59,7 @@
             <th>Efforts</th>
             <th>Candidate Contact Number</th>
             <th>Job Location</th>
-            @if($isSuperAdmin)
+            @if($isSuperAdmin || $isAccountant)
               <th>Percentage Charged</th>
             @endif
             <th>Source</th>
