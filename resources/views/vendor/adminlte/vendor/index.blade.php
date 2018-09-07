@@ -13,7 +13,9 @@
                 <h2>Vendor List ({{ $count }})</h2>
              </div>
             <div class="pull-right">
+                @permission(('vendor-create'))
                 <a class="btn btn-success" href="{{ route('vendor.create') }}"> Create New Vendor</a>
+                @endpermission
             </div>
         </div>
     </div>
@@ -56,9 +58,13 @@
                 <td>
                         <a title="Show" class="fa fa-circle"  href="{{ route('vendor.show',$vendor['id']) }}"></a>
 
+                        @permission(('vendor-edit'))
                         <a title="Edit" class="fa fa-edit" href="{{ route('vendor.edit',$vendor['id']) }}"></a>
+                        @endpermission
 
+                        @permission(('vendor-delete'))
                         @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor',''])
+                        @endpermission
                 </td>
             </tr>
         @endforeach
