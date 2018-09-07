@@ -620,6 +620,7 @@ class JobOpenController extends Controller
 
             if(isset($users) && sizeof($users)>0)
             {
+                $user_emails = array();
                 foreach ($users as $key=>$value)
                 {
                     if($user_id!=$value)
@@ -632,11 +633,13 @@ class JobOpenController extends Controller
 
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-                        $user_email = User::getUserSecondaryEmailById($value);
+                        $email = User::getUserSecondaryEmailById($value);
 
+                        $user_emails[] = $email;
+                    }
+                }
 
-            
-            // Email Notification : data store in datebase
+                // Email Notification : data store in datebase
 
                         $superadminsecondemail=User::getUserSecondaryEmailById($superadminuserid);
 
@@ -647,7 +650,7 @@ class JobOpenController extends Controller
 
                         $module = "Job Open";
                         $sender_name = $user_id;
-                        $to = $user_email;
+                        $to = implode(",",$user_emails);
                         $cc = implode(",",$cc_users_array);
 
                         $client_name = ClientBasicinfo::getClientNameByID($client_id);
@@ -657,8 +660,6 @@ class JobOpenController extends Controller
                         $module_id = $job_id;
 
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-                    }
-                }
             }
 
         }

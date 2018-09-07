@@ -93,10 +93,15 @@ class EveryMinute extends Command
             if ($value['module'] == 'Job Open') 
             {
 
+
+                $to_array=array();
+                $to_array=explode(",",$input['to']);
+
                 $cc_array=array();
                 $cc_array=explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['to_array']=$to_array;
+                $input['cc_array']=array_unique($cc_array);
 
                 $id=$value['id'];
 
@@ -106,7 +111,7 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.emailNotification', $input, function ($job) use($input) {
                     $job->from($input['from_address'], $input['from_name']);
-                    $job->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                    $job->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                         });  
 
                 /*$jobopen=JobOpen::find($module_id);
