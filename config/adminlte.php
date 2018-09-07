@@ -396,6 +396,16 @@ return [
                     'text' => 'Accounting Head',
                     'url'  => 'accounting',
                     'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Vendor',
+                    'url'  => 'vendors',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Expense',
+                    'url'  => 'expense',
+                    'icon' => 'circle-o',
                 ]
                     /* [
                          'text' => 'Permissions',

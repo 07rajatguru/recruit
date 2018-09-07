@@ -20,7 +20,9 @@ class VendorController extends Controller
     public function index()
     {
         $vendor_array = array();
-        $vendors=VendorBasicInfo::select('id','name','mobile','mail','contact_point')->get();
+        $vendors=VendorBasicInfo::select('id','name','mobile','mail','contact_point');
+
+        $vendors=$vendors->orderBy('id','DESC')->get();
         $i = 0;
         foreach($vendors as $vendor){
 
@@ -57,7 +59,9 @@ class VendorController extends Controller
 
         $acc_type = VendorBasicInfo::getTypeArray();
 
-       return view('adminlte::vendor.create',compact('state','state_id','generate_lead','action','acc_type'));
+        $gst_charge = VendorBasicInfo::getGSTChargeArray();
+
+       return view('adminlte::vendor.create',compact('state','state_id','generate_lead','action','acc_type','gst_charge'));
     }
     public function edit($id)
     {
@@ -71,6 +75,8 @@ class VendorController extends Controller
         }
 
         $acc_type = VendorBasicInfo::getTypeArray();
+
+        $gst_charge = VendorBasicInfo::getGSTChargeArray();
 
         $vendor = array();
         $vendor_basicinfo  = \DB::table('vendor_basicinfo')
@@ -91,6 +97,7 @@ class VendorController extends Controller
             $vendor['contact'] = $value->contact_point;
             $vendor['designation'] = $value->designation;
             $vendor['organization'] = $value->organization_type;
+            $vendor['website'] = $value->website;
             $vendor['vendor_address'] = $value->address;
             $vendor['pincode'] = $value->pincode;
             $vendor['gst_no'] = $value->gst_in;
@@ -110,7 +117,7 @@ class VendorController extends Controller
         $vendor = (object)$vendor;
         $action = "edit" ;
 
-        return view('adminlte::vendor.edit',compact('action','state','vendor','state_id','acc_type'));
+        return view('adminlte::vendor.edit',compact('action','state','vendor','state_id','acc_type','gst_charge'));
     }
      public function store(Request $request)
     {
@@ -118,15 +125,38 @@ class VendorController extends Controller
         $vendor = new VendorBasicInfo;
         $vendor->name = Input::get('name');
         $vendor->address = Input::get('vendor_address');
-        $vendor->pincode = Input::get('pincode');
+
+        $pincode = Input::get('pincode');
+    
+        if(isset($pincode) && $pincode!='')
+        {
+            $vendor->pincode = $pincode;
+        }
+        else
+        {
+            $vendor->pincode = '0';
+        }
+        
         $vendor->mobile = Input::get('mobile');
         $vendor->landline = Input::get('landline');
         $vendor->mail = Input::get('email');
         $vendor->contact_point = Input::get('contact');
         $vendor->designation = Input::get('designation');
         $vendor->organization_type = Input::get('organization');
+        $vendor->website = Input::get('website');
         $vendor->gst_in = Input::get('gst_no');
-        $vendor->gst_charge=Input::get('gst_charge');
+
+        $gst_charge = Input::get('gst_charge');
+
+        if(isset($gst_charge) && $gst_charge!='')
+        {
+            $vendor->gst_charge = $gst_charge;
+        }
+        else
+        {
+            $vendor->gst_charge = '0';
+        }
+        
         $vendor->pan_no = Input::get('pan_no');
         $vendor->state_id = Input::get('state_id');
         $vendor->created_at = time();
@@ -149,7 +179,18 @@ class VendorController extends Controller
         $vendor_bank->acc_no = Input::get('account');
         $vendor_bank->acc_type = Input::get('acc_type');
         $vendor_bank->ifsc_code = Input::get('ifsc');
-        $vendor_bank->nicr_no = Input::get('nicr');
+
+        $nicr_no = Input::get('nicr');
+
+        if(isset($nicr_no) && $nicr_no!='')
+        {
+            $vendor_bank->nicr_no = $nicr_no;
+        }
+        else
+        {
+            $vendor_bank->nicr_no = '0';
+        }
+        
         $vendor_bank->vendor_id = $vendor_id;
 
         $validator = \Validator::make(Input::all(),$vendor_bank::$rules);
@@ -368,10 +409,33 @@ class VendorController extends Controller
         $vendor_basicinfo->contact_point=$input->contact;
         $vendor_basicinfo->designation=$input->designation;
         $vendor_basicinfo->organization_type=$input->organization;
+        $vendor_basicinfo->website=$input->website;
         $vendor_basicinfo->address=$input->vendor_address;
-        $vendor_basicinfo->pincode=$input->pincode;
+
+        $pincode = $input->pincode;
+    
+        if(isset($pincode) && $pincode!='')
+        {
+            $vendor_basicinfo->pincode = $pincode;
+        }
+        else
+        {
+           $vendor_basicinfo->pincode = '0';
+        }
+
         $vendor_basicinfo->gst_in=$input->gst_no;
-        $vendor_basicinfo->gst_charge=$input->gst_charge;
+
+        $gst_charge = $input->gst_charge;
+
+        if(isset($gst_charge) && $gst_charge!='')
+        {
+            $vendor_basicinfo->gst_charge = $gst_charge;
+        }
+        else
+        {
+            $vendor_basicinfo->gst_charge = '0';
+        }
+
         $vendor_basicinfo->pan_no=$input->pan_no;
         $vendor_basicinfo->state_id=$input->state_id;
 
@@ -399,8 +463,19 @@ class VendorController extends Controller
                 $vendor_bank->acc_no = $input->account;
                 $vendor_bank->acc_type = $input->acc_type;
                 $vendor_bank->ifsc_code = $input->ifsc;
-                $vendor_bank->nicr_no = $input->nicr;
-        }
+
+                $nicr_no =  $input->nicr;
+
+                if(isset($nicr_no) && $nicr_no!='')
+                {
+                   $vendor_bank->nicr_no = $nicr_no;
+                }
+                else
+                {
+                   $vendor_bank->nicr_no = '0';
+                }
+                    
+                }
 
         $validator = \Validator::make(Input::all(),$vendor_bank::$rules);
 
@@ -457,6 +532,7 @@ class VendorController extends Controller
         
             else
             {
+                  $vendor_bank=VendorBankDetails::where('vendor_id','=',$id)->delete();
                  $vendor = VendorBasicInfo::where('id',$id)->delete();
             }
         }

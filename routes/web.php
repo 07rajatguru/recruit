@@ -1195,17 +1195,21 @@ Route::group(['middleware' => ['auth']], function () {
     // Expense Route
     Route::get('expense',[
         'as' => 'expense.index',
-        'uses' => 'ExpenseController@index'
+        'uses' => 'ExpenseController@index',
+        'middleware' => ['permission:expense-list|expense-create|expense-edit|expense-delete']
+        
     ]);
 
     Route::get('expense/create',[
         'as' => 'expense.create',
-        'uses' => 'ExpenseController@create'
+        'uses' => 'ExpenseController@create',
+        'middleware' => ['permission:expense-create']
     ]);
 
     Route::post('expense/create',[
         'as' => 'expense.store',
-        'uses' => 'ExpenseController@store'
+        'uses' => 'ExpenseController@store',
+        'middleware' => ['permission:expense-create']
     ]);
 
     Route::get('expense/importExport', 
@@ -1228,17 +1232,20 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('expense/{id}/edit', [
         'as' => 'expense.edit',
-        'uses' => 'ExpenseController@edit'
+        'uses' => 'ExpenseController@edit',
+        'middleware' => ['permission:expense-edit']
     ]);
 
     Route::patch('expense/{id}', [
         'as' => 'expense.update',
-        'uses' => 'ExpenseController@update'
+        'uses' => 'ExpenseController@update',
+        'middleware' => ['permission:expense-edit']
     ]);
 
     Route::delete('expense/{id}', [
         'as' => 'expense.destroy',
-        'uses' => 'ExpenseController@destroy'
+        'uses' => 'ExpenseController@destroy',
+        'middleware' => ['permission:expense-delete']
     ]);
 
     Route:: post('expenseattachments/upload/{id}',[
@@ -1307,18 +1314,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',
+        'middleware' => ['permission:vendor-list|vendor-create|vendor-edit|vendor-delete']
         
     ]);
 
     Route::get('vendor/create', [
         'as' => 'vendor.create',
         'uses' => 'VendorController@create',
+        'middleware' => ['permission:vendor-create']
         
     ]);
 
     Route::post('vendor/create', [
         'as' => 'vendor.store',
         'uses' => 'VendorController@store',
+        'middleware' => ['permission:vendor-create']
     ]);
 
     Route::get('vendor/importExport', 
@@ -1336,17 +1346,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('vendor/{id}/edit', [
         'as' => 'vendor.edit',
         'uses' => 'VendorController@edit',
-        
+        'middleware' => ['permission:vendor-edit']
     ]);
 
     Route::delete('vendor/{id}', [
         'as' => 'vendor.destroy',
         'uses' => 'VendorController@destroy',
+        'middleware' => ['permission:vendor-delete']
     ]);
 
     Route::patch('vendor/{id}', [
         'as' => 'vendor.update',
         'uses' => 'VendorController@update',
+        'middleware' => ['permission:vendor-edit']
     ]);
 
     Route:: post('vendorattachments/upload/{id}',[

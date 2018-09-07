@@ -653,9 +653,10 @@ class JobOpenController extends Controller
                         $to = implode(",",$user_emails);
                         $cc = implode(",",$cc_users_array);
 
-                        $client_name = ClientBasicinfo::getClientNameByID($client_id);
+                        $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
+                        $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
                         
-                        $subject = "Job Opening - ".$posting_title . "@" .$client_name;
+                        $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
                         $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                         $module_id = $job_id;
 
@@ -794,7 +795,7 @@ class JobOpenController extends Controller
 
             $job_open['posting_title'] = $value->posting_title;
             $job_open['job_id'] = $value->job_id;
-            $job_open['client_name'] = $value->client_name . "-" . $value->co_nm . "-" . $value->bill_city;
+            $job_open['client_name'] = $value->client_name . "-" . $value->bill_city;
             $job_open['client_id'] = $value->client_id;
             //$job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['desired_candidate'] = $value->desired_candidate;

@@ -14,8 +14,7 @@ class VendorBankDetails extends Model
         'bank_address' => 'required',
         'account' => 'required',
         'acc_type' => 'required',
-        'ifsc' => 'required',
-        'nicr' => 'required',
+        'ifsc' => 'required'
 
     );
 
@@ -27,9 +26,7 @@ class VendorBankDetails extends Model
             'bank_address.required'  => 'Address required field',
             'account.required'=>'Account No is required field',
             'acc_type.required'=>'Type of account is required field',
-            'ifsc.required'=>'IFSC Code is required field',
-            'nicr.required'=>'NICR no is required field'
-
+            'ifsc.required'=>'IFSC Code is required field'
         ];
     }
 }
