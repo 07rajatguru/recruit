@@ -1263,32 +1263,39 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('recoveryreport',[
         'as' => 'recoveryreport.index',
-        'uses' => 'RecoveryReportController@index'
+        'uses' => 'RecoveryReportController@index',
+        'middleware' => ['permission:billrecovery-list']
     ]);
 
     Route::post('recoveryreport/export',[
         'as' => 'recoveryreport.export',
-        'uses' => 'RecoveryReportController@export'
+        'uses' => 'RecoveryReportController@export',
+        'middleware' => ['permission:billrecovery-list']
     ]);
 
     Route::any('/selectionreport',[
         'as' => 'selectionreport.index',
-        'uses' => 'SelectionReportController@index'
+        'uses' => 'SelectionReportController@index',
+        'middleware' => ['permission:billselection-list']
     ]);
 
     Route::post('selectionreport/export',[
         'as' => 'selectionreport.export',
-        'uses' => 'SelectionReportController@export'
+        'uses' => 'SelectionReportController@export',
+        'middleware' => ['permission:billselection-list']
     ]);
 
     Route::any('/userreport',[
         'as' => 'userreport.index',
-        'uses' => 'UserwiseReportController@index'
+        'uses' => 'UserwiseReportController@index',
+        'middleware' => ['permission:billuserwise-list']
+
     ]);
 
     Route::post('userreport/export',[
         'as' => 'userreport.export',
-        'uses' => 'UserwiseReportController@export'
+        'uses' => 'UserwiseReportController@export',
+        'middleware' => ['permission:billuserwise-list']
     ]);
 
     Route::any('/daily-report',[

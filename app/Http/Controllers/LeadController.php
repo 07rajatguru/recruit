@@ -24,11 +24,13 @@ class LeadController extends Controller
         $strategy_role_id =  env('STRATEGY');
 
         $access_roles_id = array($superadmin_role_id,$strategy_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if(in_array($user_role_id,$access_roles_id))
+        {
             $leads = Lead::getAllLeads(1,$user->id);
             $convert_client = Lead::getConvertedClient(1,$user->id);
         }
-        else{
+        else
+        {
             $leads = Lead::getAllLeads(0,$user->id);
             $convert_client = Lead::getConvertedClient(0,$user->id);
         }
@@ -160,20 +162,37 @@ class LeadController extends Controller
         $leadservices_status = Lead::getLeadService();
         $status = Lead::getLeadStatus();
         $lead = Lead::find($id);
-        $cancel_lead = $lead->cancel_lead;
-        $convert_client = $lead->convert_client;
-        if($convert_client == 1){
-            $generate_lead = 1;
-        }
 
-        $service = $lead->service;
-        $referredby = $lead->referredby;
-        $lead_status = $lead->lead_status;
-        //print_r($lead_s); exit;
-        $users=User::getAllUsersWithInactive();
-        $leadsarr = array();
-        $leads_info = \DB::table('lead_management')
-        ->get();
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+        $user_id=$user->id;
+
+        $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id =  env('STRATEGY');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+
+        if(in_array($user_role_id,$access_roles_id) || ($lead->referredby==$user_id))
+        {
+            $cancel_lead = $lead->cancel_lead;
+            $convert_client = $lead->convert_client;
+            if($convert_client == 1){
+                $generate_lead = 1;
+            }
+
+            $service = $lead->service;
+            $referredby = $lead->referredby;
+            $lead_status = $lead->lead_status;
+            //print_r($lead_s); exit;
+            $users=User::getAllUsersWithInactive();
+            $leadsarr = array();
+            $leads_info = \DB::table('lead_management')
+            ->get();
+        }
+        else
+        {
+            return view('errors.403');
+        }
 
         	        
 	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status'));

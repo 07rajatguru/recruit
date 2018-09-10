@@ -249,6 +249,9 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $user_id = $user->id;
+
+        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy);
 
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -263,11 +266,13 @@ class ClientController extends Controller
         $client_basicinfo  = \DB::table('client_basicinfo')
             ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
             ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
-            ->select('client_basicinfo.*', 'users.name as am_name', 'industry.name as ind_name')
+            ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','industry.name as ind_name')
             ->where('client_basicinfo.id','=',$id)
             ->get();
-
-        foreach ($client_basicinfo as $key=>$value){
+    foreach ($client_basicinfo as $key=>$value)
+    {
+        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id))
+        {
             $client['name'] = $value->name;
             $client['display_name']=$value->display_name;
             $client['source'] = $value->source;
@@ -297,13 +302,20 @@ class ClientController extends Controller
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
         }
+        else
+        {
+            return view('errors.403');
+        }
+    }
+        
         $client['id'] = $id;
 
         $client_address = \DB::table('client_address')
             ->where('client_id','=',$id)
             ->get();
 
-        foreach ($client_address as $key=>$value){
+        foreach ($client_address as $key=>$value)
+        {
             $client['billing_country'] = $value->billing_country;
             $client['billing_state'] = $value->billing_state;
             $client['billing_street1'] = $value->billing_street1;
@@ -319,7 +331,7 @@ class ClientController extends Controller
             $client['client_address_id'] = $value->id;
         }
 
-        $client = (object)$client;
+         $client = (object)$client;
         // For account manager 
          $users = User::getAllUsersWithInactive();
 
@@ -613,11 +625,10 @@ class ClientController extends Controller
             ->get();
 
         $client['id'] = $id;
-
-    if(in_array($role_id,$access_roles_id))
+   
+    foreach ($client_basicinfo as $key=>$value)
     {
-
-        foreach ($client_basicinfo as $key=>$value)
+        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id))
         {
             $client['name'] = $value->name;
             $client['source'] = $value->source;
@@ -659,6 +670,11 @@ class ClientController extends Controller
                 $client['client_owner'] = false;
             }
         }
+        else
+        {
+            return view('errors.403');
+        }
+    }
 
         $client_address = \DB::table('client_address')
                         ->where('client_id','=',$id)
@@ -701,14 +717,9 @@ class ClientController extends Controller
                 unset($client_upload_type[array_search($value->category, $client_upload_type)]);
             }
         }
-    }
-    else
-    {
-        return view('adminlte::jobopen.403');
-    }
-    
-    $client_upload_type['Others'] = 'Others';
 
+        $client_upload_type['Others'] = 'Others';
+    
         //print_r($client);exit;
         return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy'));
     }
