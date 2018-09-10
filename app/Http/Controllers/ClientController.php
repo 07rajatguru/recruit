@@ -599,6 +599,8 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $user_id = $user->id;
 
+        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy);
+
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
 
@@ -611,7 +613,12 @@ class ClientController extends Controller
             ->get();
 
         $client['id'] = $id;
-        foreach ($client_basicinfo as $key=>$value){
+
+    if(in_array($role_id,$access_roles_id))
+    {
+
+        foreach ($client_basicinfo as $key=>$value)
+        {
             $client['name'] = $value->name;
             $client['source'] = $value->source;
             $client['fax'] = $value->fax;
@@ -643,10 +650,12 @@ class ClientController extends Controller
             $client['percentage_charged_below']=$value->percentage_charged_below;
             $client['percentage_charged_above']=$value->percentage_charged_above;
 
-            if($value->am_id==$user->id){
+            if($value->am_id==$user->id)
+            {
                 $client['client_owner'] = true;
             }
-            else {
+            else 
+            {
                 $client['client_owner'] = false;
             }
         }
@@ -655,7 +664,8 @@ class ClientController extends Controller
                         ->where('client_id','=',$id)
                         ->get();
 
-        foreach ($client_address as $key=>$value){
+        foreach ($client_address as $key=>$value)
+        {
             $client['billing_country'] = $value->billing_country;
             $client['billing_state'] = $value->billing_state;
             $client['billing_street'] = $value->billing_street1."\n".$value->billing_street2;
@@ -691,13 +701,19 @@ class ClientController extends Controller
                 unset($client_upload_type[array_search($value->category, $client_upload_type)]);
             }
         }
-        $client_upload_type['Others'] = 'Others';
+    }
+    else
+    {
+        return view('adminlte::jobopen.403');
+    }
+    
+    $client_upload_type['Others'] = 'Others';
 
         //print_r($client);exit;
         return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy'));
     }
 
-    public function attachmentsDestroy($docid){
+        public function attachmentsDestroy($docid){
 
         $client_attach=\DB::table('client_doc')
         ->select('client_doc.*')

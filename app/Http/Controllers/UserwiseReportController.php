@@ -63,13 +63,18 @@ class UserwiseReportController extends Controller
             $date_class = new Date();
 
             $userwise_report = Bills::getUserwiseReport($user_id,'','',$month,$year);
+
             $userwise = array();
             $i = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
-              
+
+                if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+    
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
@@ -116,8 +121,12 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
-              
+
+                if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                              
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
@@ -164,8 +173,12 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
-              
+
+                if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                              
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
@@ -202,7 +215,11 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+
+                if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
@@ -240,7 +257,11 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                
+                if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
@@ -278,7 +299,11 @@ class UserwiseReportController extends Controller
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+                
+                if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
               
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
