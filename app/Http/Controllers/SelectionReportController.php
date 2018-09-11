@@ -39,7 +39,15 @@ class SelectionReportController extends Controller
 
         $selectdata = Input::get('select');
         $quaterdata = Input::get('quater');
-
+  
+        if($selectdata=='')
+        {
+            if($quaterdata=='')
+            {
+                $selectdata='2';
+                $quaterdata='0';
+            }
+        }
         // Custom wise
         if ($selectdata == 0) {
             if(isset($_POST['from_date']) && $_POST['from_date']!=''){
@@ -137,12 +145,14 @@ class SelectionReportController extends Controller
 
         // Quater wise
         else if ($selectdata == 2) {
+
             if(isset($_POST['year']) && $_POST['year']!=''){
                 $year = $_POST['year'];
             }
             else{
-                $year = '';
+                $year = '2018';
             }
+
 
             // Get Quater 1-4
 
@@ -150,11 +160,12 @@ class SelectionReportController extends Controller
 
                 $m1 = date('m-d',strtotime("first day of april"));
                 $m2 = date('m-d',strtotime("last day of june"));
-                //print_r($m1);exit;
+               // print_r($year);exit;
 
                 $date_class = new Date();
 
                 $selection_report = Bills::getSelectionReport($m1,$m2,'',$year);
+
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {

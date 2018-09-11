@@ -374,6 +374,11 @@ class Bills extends Model
 
         $select = Input::get('select');
 
+        if($select=='')
+        {
+            $select='2';
+        }
+
         $selection_query = Bills::query();
         $selection_query = $selection_query->join('job_openings','job_openings.id','=','bills.job_id');
         $selection_query = $selection_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
