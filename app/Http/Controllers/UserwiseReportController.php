@@ -16,6 +16,8 @@ class UserwiseReportController extends Controller
     	$user = \Auth::user();
         $user_id = $user->id;
 
+        $users = User::getAllUsers();
+
     	$select = array('0'=>'Custom','1'=>'Monthly','2'=>'Quarterly');
 
     	// Month data
@@ -41,8 +43,10 @@ class UserwiseReportController extends Controller
         $quater['2'] = 'Quarter 3(Oct-Dec)';
         $quater['3'] = 'Quarter 4(Jan-Mar)';
 
+        $userdata   = Input::get('user');
         $selectdata = Input::get('select');
         $quaterdata = Input::get('quater');
+      
         //print_r($selectdata);exit;
 
         // Custom wish
@@ -62,7 +66,8 @@ class UserwiseReportController extends Controller
 
             $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($user_id,'','',$month,$year);
+
+            $userwise_report = Bills::getUserwiseReport($userdata,'','',$month,$year);
 
             $userwise = array();
             $i = 0;
@@ -115,7 +120,7 @@ class UserwiseReportController extends Controller
 
             $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($user_id,'','',$month,$year);
+            $userwise_report = Bills::getUserwiseReport($userdata,'','',$month,$year);
             $userwise = array();
             $i = 0;
             foreach ($userwise_report as $key => $value) {
@@ -167,7 +172,7 @@ class UserwiseReportController extends Controller
 
             $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($user_id,$m1,$m2,'',$year);
+            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
             foreach ($userwise_report as $key => $value) {
@@ -209,7 +214,7 @@ class UserwiseReportController extends Controller
 
             $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($user_id,$m1,$m2,'',$year);
+            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
             foreach ($userwise_report as $key => $value) {
@@ -251,7 +256,7 @@ class UserwiseReportController extends Controller
 
             $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($user_id,$m1,$m2,'',$year);
+            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
             foreach ($userwise_report as $key => $value) {
@@ -293,7 +298,7 @@ class UserwiseReportController extends Controller
 
             $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($user_id,$m1,$m2,'',$year);
+            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
             foreach ($userwise_report as $key => $value) {
@@ -330,7 +335,7 @@ class UserwiseReportController extends Controller
         }
             //print_r($userwise);exit;
 
-    	return view("adminlte::reports.userwise",compact('select','month_array','quater','year_array','default','userwise_report','userwise'));
+    	return view("adminlte::reports.userwise",compact('users','select','month_array','quater','year_array','default','userwise_report','userwise'));
     }
 
     public function export(){
@@ -341,6 +346,7 @@ class UserwiseReportController extends Controller
                 $user = \Auth::user();
                 $user_id = $user->id;
 
+                $userdata   = Input::get('user');
                 $selectdata = Input::get('select');
                 $quaterdata = Input::get('quater');
                 
@@ -358,7 +364,7 @@ class UserwiseReportController extends Controller
                     else{
                         $year = '';
                     }
-                    $userwise_report = Bills::getUserwiseReportdata($user_id,'','',$month,$year);
+                    $userwise_report = Bills::getUserwiseReportdata($userdata,'','',$month,$year);
                 }
 
                 // Month wish
@@ -375,7 +381,7 @@ class UserwiseReportController extends Controller
                     else{
                         $year = '';
                     }
-                    $userwise_report = Bills::getUserwiseReportdata($user_id,'','',$month,$year);
+                    $userwise_report = Bills::getUserwiseReportdata($userdata,'','',$month,$year);
                 }
 
                 // Ouater wise
@@ -392,28 +398,28 @@ class UserwiseReportController extends Controller
 
                         $m1 = date('m-d',strtotime("first day of april"));
                         $m2 = date('m-d',strtotime("last day of june"));
-                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                        $userwise_report = Bills::getUserwiseReportdata($userdata,$m1,$m2,'',$year);
                     }
 
                     if ($quaterdata == 1) {
 
                         $m1 = date('m-d',strtotime("first day of july"));
                         $m2 = date('m-d',strtotime("last day of september"));
-                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                        $userwise_report = Bills::getUserwiseReportdata($userdata,$m1,$m2,'',$year);
                     }
 
                     if ($quaterdata == 2) {
 
                         $m1 = date('m-d',strtotime("first day of october"));
                         $m2 = date('m-d',strtotime("last day of december"));
-                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                        $userwise_report = Bills::getUserwiseReportdata($userdata,$m1,$m2,'',$year);
                     }
 
                     if ($quaterdata == 3) {
 
                         $m1 = date('m-d',strtotime("first day of january"));
                         $m2 = date('m-d',strtotime("last day of march"));
-                        $userwise_report = Bills::getUserwiseReportdata($user_id,$m1,$m2,'',$year);
+                        $userwise_report = Bills::getUserwiseReportdata($userdata,$m1,$m2,'',$year);
                     }
                 }
 

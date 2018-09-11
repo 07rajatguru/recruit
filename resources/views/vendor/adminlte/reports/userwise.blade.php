@@ -20,7 +20,14 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-        	<div class="box-body col-xs-4 col-sm-4 col-md-4">
+
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
+                <div class="form-group">
+                    {{Form::select('user',$users,null,array('id'=>'user','class'=>'form-control'))}}
+                </div>
+            </div>
+
+        	<div class="box-body col-xs-2 col-sm-2 col-md-2">
         		<div class="form-group">
 		        	{{Form::select('select',$select,2 , array('id'=>'select','class'=>'form-control','onchange'=>'getSelect()'))}}
 	        	</div>
@@ -161,6 +168,7 @@
 
 		function select_data(){
            
+            var user= $("#user").val();
             var select = $("#select").val();
             var month = $("#month").val();
             var from_date = $("#from_date").val();
@@ -173,6 +181,7 @@
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="user" value="'+user+'" />' +
                 '<input type="text" name="select" value="'+select+'" />'+
                 '<input type="text" name="from_date" value="'+from_date+'" />' +
                 '<input type="text" name="to_date" value="'+to_date+'" />' +
@@ -185,6 +194,7 @@
             if (select == 1){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="user" value="'+user+'" />' +
                 '<input type="text" name="select" value="'+select+'" />'+
                 '<input type="text" name="month" value="'+month+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
@@ -197,6 +207,7 @@
             else if (select == 2){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="user" value="'+user+'" />' +
                 '<input type="text" name="select" value="'+select+'" />'+
                 '<input type="text" name="quater" value="'+quater+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
@@ -209,6 +220,7 @@
 
         function export_data(){
            
+            var user= $("#user").val();           
             var select = $("#select").val();
             var month = $("#month").val();
             var from_date = $("#from_date").val();
@@ -221,6 +233,7 @@
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="user" value="'+user+'" />' +
                 '<input type="text" name="select" value="'+select+'" />'+
                 '<input type="text" name="from_date" value="'+from_date+'" />' +
                 '<input type="text" name="to_date" value="'+to_date+'" />' +
@@ -233,6 +246,7 @@
             if (select == 1){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="user" value="'+user+'" />' +
                 '<input type="text" name="select" value="'+select+'" />'+
                 '<input type="text" name="month" value="'+month+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
@@ -245,6 +259,7 @@
             else if (select == 2){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="user" value="'+user+'" />' +
                 '<input type="text" name="select" value="'+select+'" />'+
                 '<input type="text" name="quater" value="'+quater+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
