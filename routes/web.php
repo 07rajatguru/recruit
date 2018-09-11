@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/index', [
+    'uses' => 'IndexController@index'
+]);
+
 //Auth::routes();
 
 Route::get('/login', [
