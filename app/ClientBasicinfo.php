@@ -137,6 +137,8 @@ class ClientBasicinfo extends Ardent
 
      }
 
+     
+
 
      public static function getClientNameByID($id)
      {
@@ -154,7 +156,7 @@ class ClientBasicinfo extends Ardent
 
      }
 
-       public static function getCompanyOfClientByID($id)
+    public static function getCompanyOfClientByID($id)
      {
 
         $client_company='';
@@ -169,6 +171,24 @@ class ClientBasicinfo extends Ardent
         return $client_company;
 
      }
+
+    public static function getBillingCityOfClientByID($id)
+    {
+
+        $client_city='';
+        $client_query = ClientBasicinfo::query();
+        $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
+        $client_query = $client_query->select('client_address.billing_city as city');
+        $client_query = $client_query->where('client_basicinfo.id','=',$id);
+        $client_query = $client_query->first();
+
+        if(isset($client_query))
+        {
+            $client_city=$client_query->city;
+        }
+        return $client_city;
+     }
+
 
     public function beforeValidate ()
     {

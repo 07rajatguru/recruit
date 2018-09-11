@@ -63,7 +63,7 @@
                         @if($not_ach<0)
                             <td style="color:red;">{!! $not_ach !!}</td>
                         @else
-                            <td style="color:green;">{!! $not_ach !!}</td>
+                            <td style="background-color:green;">{!! $not_ach !!}</td>
                         @endif
                         <td>{!! $v['interviews'] !!}</td>
                         <td>38</td>
@@ -73,7 +73,7 @@
                         @if($not_ach<0)
                             <td style="color:red;">{!! $not_ach_in !!}</td>
                         @else
-                            <td style="color:green;">{!! $not_ach_in !!}</td>
+                            <td style="background-color:green;">{!! $not_ach_in !!}</td>
                         @endif
                     </tr>
                     <?php $i++; ?>

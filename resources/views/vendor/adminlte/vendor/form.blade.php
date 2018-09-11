@@ -43,9 +43,9 @@
                     <div class="">
 
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                            <strong>Vendor Name: <span class = "required_fields">*</span> </strong>
+                            <strong>Company Name: <span class = "required_fields">*</span> </strong>
                             
-                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Vendor Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1' )) !!}
                            
                             @if ($errors->has('name'))
                                 <span class="help-block">
@@ -116,6 +116,16 @@
                         @if ($errors->has('organization'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('organization') }}</strong>
+                            </span>
+                        @endif
+                       </div>
+
+                       <div class="form-group {{ $errors->has('website') ? 'has-error' : '' }}">
+                        <strong>Website:</strong>
+                        {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '8' )) !!}
+                        @if ($errors->has('website'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('website') }}</strong>
                             </span>
                         @endif
                        </div>
@@ -257,8 +267,8 @@
                        </div>
 
                        <div class="form-group {{ $errors->has('nicr') ? 'has-error' : '' }}">
-                        <strong>NICR No:<span class = "required_fields">*</span> </strong>
-                        {!! Form::text('nicr', null, array('id'=>'nicr','placeholder' => 'NICR No','class' => 'form-control', 'tabindex' => '18' )) !!}
+                        <strong>MICR Code: </strong>
+                        {!! Form::text('nicr', null, array('id'=>'nicr','placeholder' => 'MICR Code','class' => 'form-control', 'tabindex' => '18' )) !!}
                         @if ($errors->has('nicr'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('nicr') }}</strong>
@@ -281,7 +291,7 @@
                     <div class="">
 
                         <div class="form-group {{ $errors->has('gst_no') ? 'has-error' : '' }}">
-                            <strong>GST No: <span class = "required_fields">*</span> </strong>
+                            <strong>GST No: </strong>
                             
                             {!! Form::text('gst_no', null,array('id'=>'gst_no','placeholder' => 'GST No.','class' => 'form-control', 'tabindex' => '19' )) !!}
                            
@@ -294,7 +304,7 @@
 
 
                          <div class="form-group {{ $errors->has('pan_no') ? 'has-error' : '' }}">
-                                <strong>PAN Number:<span class = "required_fields">*</span> </strong>
+                                <strong>PAN Number: </strong>
                                 {!! Form::text('pan_no', null, array('id'=>'pan_no','placeholder' => 'PAN Number','class' => 'form-control', 'tabindex' => '21'  )) !!}
                                 @if ($errors->has('pan_no'))
                                     <span class="help-block">
@@ -309,10 +319,10 @@
                 <div class="">
 
                      <div class="form-group {{ $errors->has('gst_charge') ? 'has-error' : '' }}">
-                            <strong>GST Charge: <span class = "required_fields">*</span> </strong>
-                            
-                            {!! Form::text('gst_charge', null,array('id'=>'gst_charge','placeholder' => 'GST No.','class' => 'form-control', 'tabindex' => '20' )) !!}
-                           
+                            <strong>GST Charge(%): </strong>
+
+                                {!! Form::select('gst_charge', $gst_charge,null, array('id'=>'gst_charge','class' => 'form-control', 'tabindex' => '20' )) !!}
+
                             @if ($errors->has('gst_charge'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('gst_charge') }}</strong>
@@ -397,18 +407,6 @@
                     },
                     "ifsc": {
                         required: true
-                    },
-                    "nicr": {
-                        required: true
-                    },
-                     "gst_no": {
-                        required: true
-                    },
-                    "gst_charge": {
-                        required: true
-                    },
-                     "pan_no": {
-                        required: true
                     }
                 },
                 messages: {
@@ -432,20 +430,9 @@
                     },
                     "ifsc": {
                         required: "IFSC Code is required."
-                    },
-                    "nicr": {
-                        required: "NICR No is required."
-                    },
-                    "gst_no": {
-                        required: "GST No is required."
-                    },
-                    "gst_charge": {
-                        required: "GST Charge is required."
-                    },
-                     "pan_no": {
-                        required: "PAN No is required."
+                    }
+                });
             });
-
-        });
+    });
         </script>
     @endsection

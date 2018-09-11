@@ -382,7 +382,11 @@ class HomeController extends Controller
                 $year = date("Y");
             }
 
-            $response = UsersLog::getUsersAttendanceList(0,$month,$year);
+           $response = UsersLog::getUsersAttendanceList(0,$month,$year);
+           
+           /*print_r($response);
+           exit;*/
+
 
             /*$list = array();
             $date = new Date();
@@ -414,11 +418,45 @@ class HomeController extends Controller
                     $lists->total,
                 );
             }*/
-            $sheet->fromArray($response, null, 'A1', false, false);
 
-            $headings = array('User Name', 'Date', 'Login', 'Logout', 'Total');
+          
+            //$dt_header = array();
 
-            $sheet->prependRow(1, $headings);
+            for($d=1; $d<=31; $d++)
+            {
+                $time=mktime(12, 0, 0, $month, $d, $year);
+
+                $dt = date('j S', $time);
+
+                $dt_header = array($dt);
+
+               // $sheet->prependRow(1,$dt_header);
+                $sheet->fromArray($dt_header, null, 'B1', false, false);
+                   
+            }
+
+        //$sheet->fromArray($response, null, 'A2', false, false);
+
+          foreach($response as $key=>$value)
+           {
+               $heading1 = array($key);
+
+               $sheet->prependRow(2, $heading1);
+
+               $heading2 = array('Login');
+
+               $sheet->prependRow(3, $heading2);
+
+               $heading3 =array('Logout');
+
+               $sheet->prependRow(4, $heading3);
+
+               $heading4 =array('Total');
+
+               $sheet->prependRow(5, $heading4);
+
+           }
+           
         });
     })->export('xls');
         return view('home');

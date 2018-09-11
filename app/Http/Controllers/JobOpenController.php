@@ -653,9 +653,10 @@ class JobOpenController extends Controller
                         $to = implode(",",$user_emails);
                         $cc = implode(",",$cc_users_array);
 
-                        $client_name = ClientBasicinfo::getClientNameByID($client_id);
+                        $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
+                        $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
                         
-                        $subject = "Job Opening - ".$posting_title . "@" .$client_name;
+                        $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
                         $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                         $module_id = $job_id;
 
@@ -761,7 +762,7 @@ class JobOpenController extends Controller
             else
             {
                 $job_open['access'] = '0';
-                return view('adminlte::jobopen.403');
+                return view('errors.403');
             }
 
             if ($value->lacs_from >= '100') 
@@ -794,7 +795,7 @@ class JobOpenController extends Controller
 
             $job_open['posting_title'] = $value->posting_title;
             $job_open['job_id'] = $value->job_id;
-            $job_open['client_name'] = $value->client_name . "-" . $value->co_nm . "-" . $value->bill_city;
+            $job_open['client_name'] = $value->client_name . "-" . $value->bill_city;
             $job_open['client_id'] = $value->client_id;
             //$job_open['job_opening_status'] = $value->job_opening_status;
             $job_open['desired_candidate'] = $value->desired_candidate;
@@ -935,11 +936,14 @@ class JobOpenController extends Controller
         $user_role_id = User::getLoggedinUserRole($user);
         $user_id = $user->id;
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+
+        if(in_array($user_role_id,$access_roles_id))
+        {
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
         }
-        else{
+        else
+        {
             // get logged in user clients
             $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
         }
@@ -984,6 +988,12 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         $job_open = JobOpen::find($id);
+
+    if(in_array($user_role_id,$access_roles_id) || ($job_open->hiring_manager_id==$user_id))
+    {
+
+        
+        
         $user_id = $job_open->hiring_manager_id;
         $lacs_from = $job_open->lacs_from;
         $thousand_from = $job_open->thousand_from;
@@ -1010,6 +1020,12 @@ class JobOpenController extends Controller
                 $selected_users[] = $row->user_id;
             }
         }
+
+    }
+    else
+    {
+        return view('errors.403');
+    }
 
         $action = "edit";
 

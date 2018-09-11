@@ -8,7 +8,9 @@ class VendorBasicInfo extends Model
 {
     //
     public $table="vendor_basicinfo";
-    public static function getTypeArray(){
+
+    public static function getTypeArray()
+    {
         $type = array();
         $type[''] = 'Select Account Type';
         $type['Current'] = 'Current';
@@ -17,12 +19,22 @@ class VendorBasicInfo extends Model
         return $type;
     }
 
+    public static function getGSTChargeArray()
+    {
+        $type = array();
+        $type[''] = "Select GST Charge";
+        $type['0'] = '0';
+        $type['5'] = '5';
+        $type['12'] = '12';
+        $type['18'] = '18';
+        $type['28'] = '28';
+
+        return $type;
+    }
+
      public static $rules = array(
         'name' => 'required',
-        'mobile' => 'required',
-        'gst_no' => 'required',
-        'pan_no' => 'required',
-        'gst_charge' => 'required'
+        'mobile' => 'required'
 
     );
 
@@ -30,10 +42,7 @@ class VendorBasicInfo extends Model
     {
         return [
             'name.required' => 'Name is Required field',
-            'mobile.required'  => 'Mobile is required field',
-            'gst_no.required'=>'GST No. is required field',
-            'pan_no.required'=>'PAN No. is required field',
-            'gst_charge.required' => 'GST Chaege is required field'
+            'mobile.required'  => 'Mobile is required field'
         ];
     }
 

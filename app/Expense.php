@@ -65,6 +65,8 @@ class Expense extends Model
     	$ptype['IMPS'] = 'IMPS';
     	$ptype['Cheque'] = 'Cheque';
         $ptype['RTGS']='RTGS';
+        $ptype['Cash']='Cash';
+        $ptype['Enet']='Enet';
     	
         return $ptype;
     }

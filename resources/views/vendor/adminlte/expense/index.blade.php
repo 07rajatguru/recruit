@@ -14,7 +14,9 @@
             </div>
 
             <div class="pull-right">
+             @permission(('expense-create')) 
                 <a class="btn btn-success" href="{{ route('expense.create') }}"> Create New Expense</a>
+             @endpermission
             </div>
         </div>
     </div>
@@ -57,10 +59,15 @@
                 <td>{{ $value['number'] or '' }}</td>
                 <td>  
 
-                    <a title="Show" class="fa fa-circle"  href="{{ route('expense.show',$value['id']) }}"></a>          
-                    <a class="fa fa-edit" href="{{ route('expense.edit',$value['id']) }}" title="Edit"></a>
+                    <a title="Show" class="fa fa-circle"  href="{{ route('expense.show',$value['id']) }}"></a>
 
+                    @permission(('expense-edit'))          
+                    <a class="fa fa-edit" href="{{ route('expense.edit',$value['id']) }}" title="Edit"></a>
+                    @endpermission
+
+                    @permission(('expense-delete'))
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense'])
+                    @endpermission
 
                    
                 </td>

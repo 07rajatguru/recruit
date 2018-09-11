@@ -292,7 +292,7 @@ return [
            'text'        => 'Report',
            'icon'        => 'file',
            'submenu' => [
-               /*[
+               [
                    'text' => 'Selection report',
                    'url'  => 'selectionreport',
                    'icon' => 'circle-o',
@@ -306,7 +306,7 @@ return [
                    'text' => 'Userwise report',
                    'url'  => 'userreport',
                    'icon' => 'circle-o',
-               ],*/
+               ],
                [
                    'text' => 'Daily report',
                    'url'  => 'daily-report',
@@ -395,6 +395,16 @@ return [
                 [
                     'text' => 'Accounting Head',
                     'url'  => 'accounting',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Vendor',
+                    'url'  => 'vendors',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Expense',
+                    'url'  => 'expense',
                     'icon' => 'circle-o',
                 ]
                     /* [

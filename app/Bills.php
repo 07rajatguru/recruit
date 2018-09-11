@@ -331,7 +331,11 @@ class Bills extends Model
         foreach ($recovery_res as $key => $value) {
             $fixed_salary = $value->fixed_salary;
             $percentage_charged = (float)$value->percentage_charged;
-            $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+
+            if($percentage_charged<=0)
+                    $percentage_charged = 1;
+
+            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
 
             $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
 
@@ -525,7 +529,11 @@ class Bills extends Model
         foreach ($recovery_res as $key => $value) {
             $fixed_salary = $value->fixed_salary;
             $percentage_charged = (float)$value->percentage_charged;
-            $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+
+            if($percentage_charged<=0)
+                $percentage_charged = 1;
+
+            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
 
             $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
 
@@ -604,7 +612,11 @@ class Bills extends Model
 
             $fixed_salary = $value->fixed_salary;
             $percentage_charged = (float)$value->percentage_charged;
-            $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+
+            if($percentage_charged<=0)
+                $percentage_charged = 1;
+
+            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
             $gst = ((float)$billing * 18 ) / 100;
             $invoice = (float)$billing+(float)$gst;
             $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
@@ -668,7 +680,12 @@ class Bills extends Model
             foreach ($userwise_res as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
-                $billing = ($fixed_salary * (float)$percentage_charged) / 100;
+
+                if($percentage_charged<=0)
+                    $percentage_charged=1;
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
                 $efforts_str = '';
                 foreach ($efforts as $key1 => $value1) {
