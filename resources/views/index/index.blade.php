@@ -509,9 +509,9 @@
             <div class="well-text text-center">
               <div class="single-icon">
                 <a class="quate" href="#"><i class="fa fa-mobile"></i></a>
-                <p>
-                  Call: +1 5589 55488 55<br>
-                  <span>Monday-Friday (9am-5pm)</span>
+                <p style="font-size: 14px">
+                  Call: +91 8487050452<br>
+                  <span>Monday-Saturday (10am-7pm)</span>
                 </p>
               </div>
             </div>
@@ -521,9 +521,9 @@
             <div class="well-text text-center">
               <div class="single-icon">
                 <a class="quate" href="#"><i class="fa fa-envelope-o"></i></a>
-                <p>
-                  Email: info@example.com<br>
-                  <span>Web: www.example.com</span>
+                <p style="font-size: 14px">
+                  Email:  info@trajinfotech.com<br>
+                  <span>Web: www.trajinfotech.com</span>
                 </p>
               </div>
             </div>
@@ -533,9 +533,8 @@
             <div class="well-text text-center">
               <div class="single-icon">
                 <a class="quate" href="#"><i class="fa fa-map-marker"></i></a>
-                <p>
-                  Location: A108 Adam Street<br>
-                  <span>NY 535022, USA</span>
+                <p style="font-size: 14px">
+                  H-703, 7th Floor, TITANIUM CITY CENTER-Business Park, Near IOC Petrol pump, Prahaladnagar, Satellite, Ahmedabad 380015 Gujarat, India
                 </p>
               </div>
             </div>
@@ -546,7 +545,9 @@
             <!-- Start Map -->
             <!-- Uncomment below if you wan to use dynamic maps -->
             <!--<div id="google-map" data-latitude="40.713732" data-longitude="-74.0092704"></div>-->
-            <img src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x350&maptype=roadmap&markers=color:red%7Clabel:S%7C40.702147,-74.015794" alt="">
+            <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14689.295346656285!2d72.522698!3d23.011879!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x13092791eda764b8!2sTraj+Infotech+Pvt.+Ltd.!5e0!3m2!1sen!2sin!4v1500296945890" width="500" height="350" frameborder="0" style="border:0" allowfullscreen></iframe> -->
+
+            <iframe width="100%" height="400" src="https://maps.google.com/maps?width=100%&height=400&hl=en&q=Titanium%20City%20Center%2CAhmedabad+(Your%20Business%20Name)&ie=UTF8&t=&z=14&iwloc=B&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.mapsdirections.info/en/custom-google-maps/">Create a custom Google Map</a> by</iframe><br />
             <!-- End Map -->
           </div>
           <!-- End Google Map -->
@@ -556,25 +557,26 @@
             <div class="form contact-form">
               <div id="sendmessage">Your message has been sent. Thank you!</div>
               <div id="errormessage"></div>
-              <form action="" method="post" role="form" class="contactForm">
+              {!! Form::open(['route' => 'contact.us','method'=>'POST','id'=>'contactform']) !!}
+
                 <div class="form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" style="color: white" data-rule="minlen:4" data-msg="Please enter at least 4 Chars" />
                   <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"  style="color: white" data-rule="email" data-msg="Please enter a valid Email" />
                   <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"  style="color: white" data-rule="minlen:4" data-msg="Please enter at least 8 chars of Subject" />
                   <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                  <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+                  <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for Us" placeholder="Message"  style="color: white"></textarea>
                   <div class="validation"></div>
                 </div>
                 <div class="text-center"><button type="submit">Send Message</button></div>
-              </form>
+             {!! Form::close() !!}
             </div>
           </div>
           <!-- End Left contact -->
