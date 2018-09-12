@@ -88,7 +88,7 @@
                     <a class="page-scroll" href="#contact">Contact Us</a>
                   </li>
                   <li>
-                    <a class="page-scroll" href="#login">Login</a>
+                    <a class="page-scroll" href="/">Login</a>
                   </li>
                 </ul>
               </div>
@@ -540,65 +540,8 @@
               </div>
             </div>
           </div>
-        </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End Wellcome Area -->
-   <!-- Start contact Area -->
-  <div id="contact" class="contact-area">
-    <div class="contact-inner area-padding">
-      <div class="contact-overly"></div>
-      <div class="container ">
-        <div class="row">
-          <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="section-headline text-center">
-              <h2>Contact us</h2>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Start contact icon column -->
-          <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="contact-icon text-center">
-              <div class="single-icon">
-                <i class="fa fa-mobile"></i>
-                <p>
-                  Call: +1 5589 55488 55<br>
-                  <span>Monday-Friday (9am-5pm)</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <!-- Start contact icon column -->
-          <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="contact-icon text-center">
-              <div class="single-icon">
-                <i class="fa fa-envelope-o"></i>
-                <p>
-                  Email: info@example.com<br>
-                  <span>Web: www.example.com</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <!-- Start contact icon column -->
-          <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="contact-icon text-center">
-              <div class="single-icon">
-                <i class="fa fa-map-marker"></i>
-                <p>
-                  Location: A108 Adam Street<br>
-                  <span>NY 535022, USA</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
 
-          <!-- Start Google Map -->
+           <!-- Start Google Map -->
           <div class="col-md-6 col-sm-6 col-xs-12">
             <!-- Start Map -->
             <!-- Uncomment below if you wan to use dynamic maps -->
@@ -608,7 +551,7 @@
           </div>
           <!-- End Google Map -->
 
-          <!-- Start  contact -->
+           <!-- Start  contact -->
           <div class="col-md-6 col-sm-6 col-xs-12">
             <div class="form contact-form">
               <div id="sendmessage">Your message has been sent. Thank you!</div>
@@ -636,10 +579,12 @@
           </div>
           <!-- End Left contact -->
         </div>
+        </div>
       </div>
     </div>
   </div>
-  <!-- End Contact Area -->
+  <!-- End Wellcome Area -->
+  
   <!-- Start Footer bottom Area -->
   <footer>
     <div class="footer-area">
