@@ -332,8 +332,18 @@ class Bills extends Model
             $fixed_salary = $value->fixed_salary;
             $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged<=0)
-                    $percentage_charged = 1;
+            if($percentage_charged==0)
+            {
+                $billing = '0';
+                $expected_payment = '0';
+            }
+            else
+            {
+            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+
+            $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+            }
+
 
             $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
 
@@ -342,9 +352,9 @@ class Bills extends Model
             $recovery[$i]['candidate_name'] = $value->fname;
             $recovery[$i]['company_name'] = $value->company_name;
             $recovery[$i]['position'] = $value->designation_offered;
-            $recovery[$i]['salary_offered'] = $value->fixed_salary;
-            $recovery[$i]['billing'] = (float)$billing;
-            $recovery[$i]['expected_payment'] = (float)$expected_payment;
+            $recovery[$i]['salary_offered'] = number_format($value->fixed_salary);
+            $recovery[$i]['billing'] = round((float)$billing);
+            $recovery[$i]['expected_payment'] = round((float)$expected_payment);
             $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $recovery[$i]['contact_person'] = $value->client_name;
 
@@ -535,12 +545,17 @@ class Bills extends Model
             $fixed_salary = $value->fixed_salary;
             $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged<=0)
-                $percentage_charged = 1;
-
+            if($percentage_charged==0)
+            {
+                $billing = '0';
+                $expected_payment = '0';
+            }
+            else
+            {
             $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
 
             $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+            }
 
             $efforts = Bills::getEmployeeEffortsNameById($value->id);
             $efforts_str = '';
@@ -557,9 +572,9 @@ class Bills extends Model
             $recovery[$i]['candidate_name'] = $value->fname,
             $recovery[$i]['company_name'] = $value->company_name,
             $recovery[$i]['position'] = $value->designation_offered,
-            $recovery[$i]['salary_offered'] = $value->fixed_salary,
-            $recovery[$i]['billing'] = (float)$billing,
-            $recovery[$i]['expected_payment'] = (float)$expected_payment,
+            $recovery[$i]['salary_offered'] = number_format($value->fixed_salary),
+            $recovery[$i]['billing'] = round((float)$billing),
+            $recovery[$i]['expected_payment'] = round((float)$expected_payment),
             $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
             $recovery[$i]['efforts'] = $efforts_str,
             $recovery[$i]['contact_person'] = $value->client_name,
@@ -618,23 +633,30 @@ class Bills extends Model
             $fixed_salary = $value->fixed_salary;
             $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged<=0)
-                $percentage_charged = 1;
-
-            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-            $gst = ((float)$billing * 18 ) / 100;
-            $invoice = (float)$billing+(float)$gst;
-            $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+            if($percentage_charged==0)
+            {
+                $billing = '0';
+                $gst = '0';
+                $invoice = '0';
+                $payment = '0';
+            }
+            else
+            {
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                $gst = ((float)$billing * 18 ) / 100;
+                $invoice = (float)$billing+(float)$gst;
+                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+            }
 
             $data[] = array(
             $selection[$i]['candidate_name'] = $value->fname,
             $selection[$i]['company_name'] = $value->company_name,
             $selection[$i]['position'] = $value->position,
-            $selection[$i]['fixed_salary'] = $value->fixed_salary,
-            $selection[$i]['billing'] = (float)$billing,
-            $selection[$i]['gst'] = (float)$gst,
-            $selection[$i]['invoice'] = (float)$invoice,
-            $selection[$i]['payment'] = (float)$payment,
+            $selection[$i]['fixed_salary'] = number_format($value->fixed_salary),
+            $selection[$i]['billing'] = round((float)$billing),
+            $selection[$i]['gst'] = round((float)$gst),
+            $selection[$i]['invoice'] = round((float)$invoice),
+            $selection[$i]['payment'] = round((float)$payment),
             $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
             $selection[$i]['contact_person'] = $value->client_name,
             $selection[$i]['location'] = $value->job_location,
@@ -687,9 +709,13 @@ class Bills extends Model
                 $percentage_charged = (float)$value->percentage_charged;
 
                 if($percentage_charged<=0)
-                    $percentage_charged=1;
-
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                {
+                    $billing='0';
+                }
+                else
+                {
+                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                }
                 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
                 $efforts_str = '';
@@ -705,8 +731,8 @@ class Bills extends Model
                 $userwise[$i]['candidate_name'] = $value->fname,
                 $userwise[$i]['company_name'] = $value->company_name,
                 $userwise[$i]['position'] = $value->position,
-                $userwise[$i]['fixed_salary'] = $value->fixed_salary,
-                $userwise[$i]['billing'] = (float)$billing,
+                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary),
+                $userwise[$i]['billing'] = round((float)$billing),
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
                 $userwise[$i]['efforts'] = $efforts_str,
                 );

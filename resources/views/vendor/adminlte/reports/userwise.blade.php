@@ -79,7 +79,7 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="user_report_table">
     	<thead>
     		<tr>
-    			<td colspan="8" style="text-align: center;">KK</td>
+    			<td colspan="8" style="text-align: center;">{{ $user_name }}</td>
     		</tr>
             <tr>
     		    <th>No</th>

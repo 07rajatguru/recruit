@@ -71,12 +71,12 @@
     	<thead>
             <tr>
     		    <th>No</th>
-    		    <th>Candidate Name</th>
-    		    <th>Company Name</th>
-    		    <th>Position/Dept</th>
-    		    <th>Salary offered (fixed)</th>
-    		    <th>Billing(Salary <br/> Offered*Percentage <br/> Charged)</th>
-    		    <th>GST @ 18% (Billing <br/> amount*18/100)</th>
+    		    <th>Candidate <br/> Name</th>
+    		    <th>Company <br/> Name</th>
+    		    <th>Position <br/>/Dept</th>
+    		    <th>Salary <br/> Offered <br/>(Fixed)</th>
+    		    <th>Billing(Salary <br/> Offered <br/>*Percentage <br/> Charged)</th>
+    		    <th>GST @ <br/>18%(Billing <br/>Amount*18/100)</th>
     		    <th>Invoice <br/> Raised <br/> (Billing+GST)</th>
     		    <th>Payment Expected <br/> including GST <br/> (Billing*90/100)+GST</th>
     		    <th>Joining date</th>

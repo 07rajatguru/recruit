@@ -73,22 +73,30 @@ class SelectionReportController extends Controller
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged<=0)
-                    $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
 
                 $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                 $gst = ((float)$billing * 18 ) / 100;
                 $invoice = (float)$billing+(float)$gst;
                 $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
-                $selection[$i]['billing'] = (float)$billing;
-                $selection[$i]['gst'] = (float)$gst;
-                $selection[$i]['invoice'] = (float)$invoice;
-                $selection[$i]['payment'] = (float)$payment;
+                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary);
+                $selection[$i]['billing'] = round((float)$billing);
+                $selection[$i]['gst'] = round((float)$gst);
+                $selection[$i]['invoice'] = round((float)$invoice);
+                $selection[$i]['payment'] = round((float)$payment);
                 $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                 $selection[$i]['contact_person'] = $value->client_name;
                 $selection[$i]['location'] = $value->job_location;
@@ -120,22 +128,30 @@ class SelectionReportController extends Controller
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged<=0)
-                    $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
 
                 $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                 $gst = ((float)$billing * 18 ) / 100;
                 $invoice = (float)$billing+(float)$gst;
                 $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
-                $selection[$i]['billing'] = (float)$billing;
-                $selection[$i]['gst'] = (float)$gst;
-                $selection[$i]['invoice'] = (float)$invoice;
-                $selection[$i]['payment'] = (float)$payment;
+                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary);
+                $selection[$i]['billing'] = round((float)$billing);
+                $selection[$i]['gst'] = round((float)$gst);
+                $selection[$i]['invoice'] = round((float)$invoice);
+                $selection[$i]['payment'] = round((float)$payment);
                 $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                 $selection[$i]['contact_person'] = $value->client_name;
                 $selection[$i]['location'] = $value->job_location;
@@ -172,22 +188,30 @@ class SelectionReportController extends Controller
                     $fixed_salary = (float)$value->fixed_salary;
                     $percentage_charged = (float)$value->percentage_charged;
 
-                    if($percentage_charged<=0)
-                        $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
 
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                    $gst = ((float)$billing * 18 ) / 100;
-                    $invoice = (float)$billing+(float)$gst;
-                    $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                $gst = ((float)$billing * 18 ) / 100;
+                $invoice = (float)$billing+(float)$gst;
+                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = number_format($fixed_salary,2);
-                    $selection[$i]['billing'] = (float)$billing;
-                    $selection[$i]['gst'] = (float)$gst;
-                    $selection[$i]['invoice'] = (float)$invoice;
-                    $selection[$i]['payment'] = (float)$payment;
+                    $selection[$i]['fixed_salary'] = number_format($fixed_salary);
+                    $selection[$i]['billing'] = round((float)$billing);
+                    $selection[$i]['gst'] = round((float)$gst);
+                    $selection[$i]['invoice'] = round((float)$invoice);
+                    $selection[$i]['payment'] = round((float)$payment);
                     $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                     $selection[$i]['contact_person'] = $value->client_name;
                     $selection[$i]['location'] = $value->job_location;
@@ -210,8 +234,21 @@ class SelectionReportController extends Controller
                     $fixed_salary = $value->fixed_salary;
                     $percentage_charged = (float)$value->percentage_charged;
 
-                    if($percentage_charged<=0)
-                        $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
+
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                $gst = ((float)$billing * 18 ) / 100;
+                $invoice = (float)$billing+(float)$gst;
+                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                     $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
                     $gst = ((float)$billing * 18 ) / 100;
@@ -221,11 +258,11 @@ class SelectionReportController extends Controller
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
-                    $selection[$i]['billing'] = (float)$billing;
-                    $selection[$i]['gst'] = (float)$gst;
-                    $selection[$i]['invoice'] = (float)$invoice;
-                    $selection[$i]['payment'] = (float)$payment;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary);
+                    $selection[$i]['billing'] = round((float)$billing);
+                    $selection[$i]['gst'] = round((float)$gst);
+                    $selection[$i]['invoice'] = round((float)$invoice);
+                    $selection[$i]['payment'] = round((float)$payment);
                     $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                     $selection[$i]['contact_person'] = $value->client_name;
                     $selection[$i]['location'] = $value->job_location;
@@ -248,22 +285,30 @@ class SelectionReportController extends Controller
                     $fixed_salary = $value->fixed_salary;
                     $percentage_charged = (float)$value->percentage_charged;
 
-                    if($percentage_charged<=0)
-                        $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
 
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                    $gst = ((float)$billing * 18 ) / 100;
-                    $invoice = (float)$billing+(float)$gst;
-                    $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                $gst = ((float)$billing * 18 ) / 100;
+                $invoice = (float)$billing+(float)$gst;
+                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
-                    $selection[$i]['billing'] = (float)$billing;
-                    $selection[$i]['gst'] = (float)$gst;
-                    $selection[$i]['invoice'] = (float)$invoice;
-                    $selection[$i]['payment'] = (float)$payment;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary);
+                    $selection[$i]['billing'] = round((float)$billing);
+                    $selection[$i]['gst'] = round((float)$gst);
+                    $selection[$i]['invoice'] = round((float)$invoice);
+                    $selection[$i]['payment'] = round((float)$payment);
                     $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                     $selection[$i]['contact_person'] = $value->client_name;
                     $selection[$i]['location'] = $value->job_location;
@@ -286,22 +331,30 @@ class SelectionReportController extends Controller
                     $fixed_salary = $value->fixed_salary;
                     $percentage_charged = (float)$value->percentage_charged;
 
-                    if($percentage_charged<=0)
-                        $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
 
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                    $gst = ((float)$billing * 18 ) / 100;
-                    $invoice = (float)$billing+(float)$gst;
-                    $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                $gst = ((float)$billing * 18 ) / 100;
+                $invoice = (float)$billing+(float)$gst;
+                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
-                    $selection[$i]['billing'] = (float)$billing;
-                    $selection[$i]['gst'] = (float)$gst;
-                    $selection[$i]['invoice'] = (float)$invoice;
-                    $selection[$i]['payment'] = (float)$payment;
+                    $selection[$i]['fixed_salary'] = number_format($value->fixed_salary);
+                    $selection[$i]['billing'] = round((float)$billing);
+                    $selection[$i]['gst'] = round((float)$gst);
+                    $selection[$i]['invoice'] = round((float)$invoice);
+                    $selection[$i]['payment'] = round((float)$payment);
                     $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                     $selection[$i]['contact_person'] = $value->client_name;
                     $selection[$i]['location'] = $value->job_location;
@@ -330,22 +383,30 @@ class SelectionReportController extends Controller
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged<=0)
-                    $percentage_charged = 1;
+                if($percentage_charged==0)
+                {
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else
+                {
 
-                $billing = ((float)$fixed_salary * ((float)$percentage_charged)) / 100;
-                $gst = (((float)$billing) * 18 ) / 100;
-                $invoice = ((float)$billing)+((float)$gst);
-                $payment = ((((float)$billing) * 90) / 100) + ((((float)$billing) * 18) / 100);
+                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                $gst = ((float)$billing * 18 ) / 100;
+                $invoice = (float)$billing+(float)$gst;
+                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                }
 
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary,2);
-                $selection[$i]['billing'] = (float)$billing;
-                $selection[$i]['gst'] = (float)$gst;
-                $selection[$i]['invoice'] = (float)$invoice;
-                $selection[$i]['payment'] = (float)$payment;
+                $selection[$i]['fixed_salary'] = number_format($value->fixed_salary);
+                $selection[$i]['billing'] = round((float)$billing);
+                $selection[$i]['gst'] = round((float)$gst);
+                $selection[$i]['invoice'] = round((float)$invoice);
+                $selection[$i]['payment'] = round((float)$payment);
                 $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
                 $selection[$i]['contact_person'] = $value->client_name;
                 $selection[$i]['location'] = $value->job_location;

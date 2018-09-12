@@ -25,15 +25,15 @@
         	<thead>
         	<tr>
             	<th>No</th>
-            	<th>Candidate Name</th>
-            	<th>Company Name</th>
-            	<th>Position/Dept</th>
-            	<th>Salary offered <br/> (fixed)</th>
+            	<th>Candidate <br/>Name</th>
+            	<th>Company <br/>Name</th>
+            	<th>Position <br/>/Dept</th>
+            	<th>Salary <br/> Offered <br/> (fixed)</th>
             	<th>Billing</th>
-            	<th>Expected Payment <br/> (Billing*90/100)+ <br/> (Billing*18/100)</th>
+            	<th>Expected <br/>Payment <br/> (Billing <br/>*90/100)+ <br/> (Billing<br/>*18/100)</th>
             	<th>Joining <br/> Date</th>
             	<th>Efforts</th>
-            	<th>Contact Person</th>
+            	<th>Contact <br/>Person</th>
             	{{--<th>Remarks</th>--}}
 		    </tr>
         	</thead>

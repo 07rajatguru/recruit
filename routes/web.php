@@ -19,6 +19,11 @@ Route::get('/index', [
     'uses' => 'IndexController@index'
 ]);
 
+Route::post('/contactus', [
+     'as' => 'contact.us',
+     'uses' => 'IndexController@sendMail'
+]);
+
 //Auth::routes();
 
 Route::get('/login', [
