@@ -82,6 +82,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
         foreach($clients as $client){
 
             $client_array[$i]['id'] = $client->id;
@@ -97,6 +100,19 @@ class ClientController extends Controller
             }
             else if ($client->status == 0){
                 $passive++;
+            }
+
+            if($client->category == 'Paramount')
+            {
+                $para_cat++;
+            }
+            else if($client->category == 'Moderate')
+            {
+                $mode_cat++;
+            }
+            else if($client->category == 'Standard')
+            {
+                $std_cat++;
             }
 
             if(isset($client_array[$i]['status']))
@@ -170,17 +186,17 @@ class ClientController extends Controller
                 ->where('status','=','1')
                 ->get();
 
-        $active=sizeof($active_client);
+        $active=sizeof($active_client);*/
 
 
-        $passive_client=\DB::table('client_basicinfo')
-                ->select('client_basicinfo.*')
-                ->where('status','=','0')
+       /* $paramount_client=\DB::table('client_basicinfo')
+                ->select('client_basicinfo.category')
+                ->where('category','=','Standard')
                 ->get();
 
-        $passive=sizeof($passive_client);*/
-    
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager'));
+        $passive=sizeof($paramount_client);
+        */
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager','para_cat','mode_cat','std_cat'));
     }
 
     public function create()

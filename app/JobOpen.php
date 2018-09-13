@@ -87,11 +87,11 @@ class JobOpen extends Model
         $job_priorities['1'] = '#FF0000';
         $job_priorities['2'] = '#00B0F0';
         $job_priorities['3'] = '#FABF8F';
-        $job_priorities['4'] = '#B1A0C7';
-        $job_priorities['5'] = '#92D050';
-        $job_priorities['6'] = 'yellow';
+        $job_priorities['4'] = '#92D050';
+        $job_priorities['5'] = 'yellow';
+        $job_priorities['6'] = '#808080';
         $job_priorities['7'] = '#808080';
-        $job_priorities['8'] = '#808080';
+        $job_priorities['8'] = '#B1A0C7';
         $job_priorities['9'] = '#92D050';
         $job_priorities['10'] = '#FFFFFF';
 
@@ -623,6 +623,8 @@ class JobOpen extends Model
             $jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
+            $jobs_list[$i]['priority'] = $value->priority;
+
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
             }

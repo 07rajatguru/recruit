@@ -182,6 +182,66 @@ class JobOpenController extends Controller
             $job_response = JobOpen::getAllJobs(0,$user_id);
         }
 
+        $priority_0 = 0;
+        $priority_1 = 0;
+        $priority_2 = 0;
+        $priority_3 = 0;
+        $priority_4 = 0;
+        $priority_5 = 0;
+        $priority_6 = 0;
+        $priority_7 = 0;
+        $priority_8 = 0;
+        $priority_9 = 0;
+        $priority_10 = 0;
+
+        foreach ($job_response as $job_priority) 
+        {
+           if($job_priority['priority'] == 0) 
+           {
+                $priority_0++;
+           }
+           else if($job_priority['priority'] == 1) 
+           {
+                $priority_1++;
+           }
+            else if($job_priority['priority'] == 2) 
+           {
+                $priority_2++;
+           }
+            else if($job_priority['priority'] == 3) 
+           {
+                $priority_3++;
+           }
+            else if($job_priority['priority'] == 4) 
+           {
+                $priority_4++;
+           }
+            else if($job_priority['priority'] == 5) 
+           {
+                $priority_5++;
+           }
+            else if($job_priority['priority'] == 6) 
+           {
+                $priority_6++;
+           }
+            else if($job_priority['priority'] == 7) 
+           {
+                $priority_7++;
+           }
+            else if($job_priority['priority'] == 8) 
+           {
+                $priority_8++;
+           }
+            else if($job_priority['priority'] == 9) 
+           {
+                $priority_9++;
+           }
+            else if($job_priority['priority'] == 10) 
+           {
+                $priority_10++;
+           }
+        }
+
         $count = sizeof($job_response);
 
         $viewVariable = array();
@@ -190,8 +250,7 @@ class JobOpenController extends Controller
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
 
-        return view('adminlte::jobopen.index', $viewVariable);
-
+        return view('adminlte::jobopen.index', $viewVariable,compact('priority_0','priority_1','priority_2','priority_3','priority_4','priority_5','priority_6','priority_7','priority_8','priority_9','priority_10'));
 
     }
 
