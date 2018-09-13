@@ -49,7 +49,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             {{--<div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
                                 <strong>Interview Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('interview_name', null, array('id'=>'interview_name','placeholder' => 'Interview Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::text('interview_name', null, array('id'=>'interview_name','placeholder' => 'Interview Name','class' => 'form-control')) !!}
                                 @if ($errors->has('interview_name'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('interview_name') }}</strong>
@@ -59,7 +59,7 @@
 
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
                                 <strong>Posting Name:</strong>
-                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '3' , 'onchange' => 'getCandidate()' )) !!}
+                                {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '1' , 'onchange' => 'getCandidate()' )) !!}
                                 {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
                                 @if ($errors->has('posting_title'))
                                     <span class="help-block">
@@ -76,7 +76,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'from','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '5' )) !!}
+                                    {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'from','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '3' )) !!}
                                 </div>
                                 @if ($errors->has('from'))
                                     <span class="help-block">
@@ -87,8 +87,8 @@
 
                             <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                                 <strong>Status:</strong>
-                                {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '7' )) !!}
-                                {{--                                {!! Form::text('status', null, array('id'=>'status','placeholder' => 'Status','class' => 'form-control', 'tabindex' => '10' )) !!}--}}
+                                {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '5' )) !!}
+                                {{--  {!! Form::text('status', null, array('id'=>'status','placeholder' => 'Status','class' => 'form-control')) !!}--}}
                                 @if ($errors->has('status'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('status') }}</strong>
@@ -98,7 +98,7 @@
 
                             <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
                                 <strong>About Client:</strong>
-                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '9' )) !!}
+                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '7' )) !!}
                                 @if ($errors->has('about'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('about') }}</strong>
@@ -113,7 +113,7 @@
 
                             <div class="form-group {{ $errors->has('candidate_id') ? 'has-error' : '' }}">
                                 <strong>Candidate: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('candidate_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candidate_id') }}</strong>
@@ -146,7 +146,7 @@
 
                             {{--<div class="form-group {{ $errors->has('interview_owner_id') ? 'has-error' : '' }}">
                                 <strong>Interview Owner:</strong>
-                                {!! Form::select('interview_owner_id', $users,\Auth::user()->id, array('id'=>'interview_owner_id','class' => 'form-control', 'tabindex' => '12','disabeled' )) !!}
+                                {!! Form::select('interview_owner_id', $users,\Auth::user()->id, array('id'=>'interview_owner_id','class' => 'form-control', 'tabindex' => '8','disabeled' )) !!}
                                 @if ($errors->has('interview_owner_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('interview_owner_id') }}</strong>
@@ -166,7 +166,7 @@
 
                             <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
                                 <strong>Interview Venue:</strong>
-                                {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '8' , 'rows' => '3')) !!}
+                                {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
                                 @if ($errors->has('location'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('location') }}</strong>
@@ -176,7 +176,7 @@
 
                             <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
                                 <strong>Comments:</strong>
-                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '11', 'rows' => '8' )) !!}
+                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '10', 'rows' => '8' )) !!}
                                 @if ($errors->has('comments'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('comments') }}</strong>

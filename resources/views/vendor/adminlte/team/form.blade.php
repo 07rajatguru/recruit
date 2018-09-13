@@ -31,7 +31,7 @@
                 <div class="">
                     <div class="form-group {{ $errors->has('team_name') ? 'has-error' : '' }}">
                         <strong>Team Name: <span class = "required_fields">*</span></strong>
-                        {!! Form::text('team_name', null, array('id'=>'name','placeholder' => 'Team Name','class' => 'form-control' )) !!}
+                        {!! Form::text('team_name', null, array('id'=>'name','placeholder' => 'Team Name','class' => 'form-control','tabindex' => '1')) !!}
                         @if ($errors->has('team_name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('team_name') }}</strong>

@@ -77,6 +77,7 @@
         jQuery(document).ready(function(){
             var table = jQuery('#vendor_table').DataTable( {
                 responsive: true,
+                stateSave : true,
                 "pageLength": 100
             } );
 

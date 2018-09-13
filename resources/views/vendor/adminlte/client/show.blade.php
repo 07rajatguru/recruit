@@ -100,8 +100,6 @@
                         </tr>
                         @if($isSuperAdmin || $isAdmin)
                             <tr>
-                                <th>TDS</th>
-                                <td>{{ $client['tds'] }}</td>
                                 <th>TAN</th>
                                 <td>{{ $client['tan'] }}</td>
                             </tr>

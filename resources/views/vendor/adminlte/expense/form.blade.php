@@ -75,7 +75,7 @@
                             <div class="form-group {{ $errors->has('cgst') ? 'has-error' : '' }}" id="hcgst">
                             <strong>CGST : <span class = "required_fields">*</span></strong>
                             
-                            {!! Form::text('cgst', null,array('id'=>'cgst','placeholder' => 'CGST','class' => 'form-control', 'tabindex' => '7' )) !!}
+                            {!! Form::text('cgst', null,array('id'=>'cgst','placeholder' => 'CGST','class' => 'form-control')) !!}
                            
                             @if ($errors->has('cgst'))
                                 <span class="help-block">
@@ -87,7 +87,7 @@
                             <div class="form-group {{ $errors->has('bill_amount') ? 'has-error' : '' }}">
                             <strong>Total Bill Amount : <span class = "required_fields">*</span> </strong>
                             
-                            {!! Form::text('bill_amount', null,array('id'=>'bill_amount','placeholder' => 'Bill Amount','class' => 'form-control', 'tabindex' => '9' )) !!}
+                            {!! Form::text('bill_amount', null,array('id'=>'bill_amount','placeholder' => 'Bill Amount','class' => 'form-control', 'tabindex' => '7' )) !!}
                            
                             @if ($errors->has('bill_amount'))
                                 <span class="help-block">
@@ -98,7 +98,7 @@
 
                             <div class="form-group {{ $errors->has('tax') ? 'has-error' : '' }}">
                                 <strong>Input Tax Credit</strong>
-                                {!! Form::select('tax', $input_tax, $tax, array('id'=>'tax','class' => 'form-control', 'tabindex' => '11' )) !!}
+                                {!! Form::select('tax', $input_tax, $tax, array('id'=>'tax','class' => 'form-control', 'tabindex' => '9' )) !!}
                                 @if ($errors->has('tax'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('tax') }}</strong>
@@ -109,7 +109,7 @@
                              <div class="form-group {{ $errors->has('tds') ? 'has-error' : '' }}">
                             <strong>TDS:</strong>
                             
-                            {!! Form::text('tds', null,array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control', 'tabindex' => '13','onchange'=>'prefilledtds()')) !!}
+                            {!! Form::text('tds', null,array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control', 'tabindex' => '11','onchange'=>'prefilledtds()')) !!}
                            
                             @if ($errors->has('tds'))
                                 <span class="help-block">
@@ -120,7 +120,7 @@
 
                             <div class="form-group {{ $errors->has('tds_date') ? 'has-error' : '' }}">
                                 <strong>TDS Payment Date:</strong>
-                                {!! Form::text('tds_date', null, array('id'=>'tds_date','placeholder' => 'Date','class' => 'form-control', 'tabindex' => '15' )) !!}
+                                {!! Form::text('tds_date', null, array('id'=>'tds_date','placeholder' => 'Date','class' => 'form-control', 'tabindex' => '13' )) !!}
                                 @if ($errors->has('tds_date'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('tds_date') }}</strong>
@@ -130,7 +130,7 @@
 
                             <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
                                 <strong>Remarks:</strong>
-                                {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '17'  )) !!}
+                                {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '15'  )) !!}
                                 @if ($errors->has('remarks'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('remarks') }}</strong>
@@ -194,7 +194,7 @@
                             <div class="form-group {{ $errors->has('sgst') ? 'has-error' : '' }}" id="hsgst">
                             <strong>SGST : <span class = "required_fields">*</span></strong>
                             
-                            {!! Form::text('sgst', null,array('id'=>'sgst','placeholder' => 'SGST','class' => 'form-control', 'tabindex' => '10' )) !!}
+                            {!! Form::text('sgst', null,array('id'=>'sgst','placeholder' => 'SGST','class' => 'form-control')) !!}
                            
                             @if ($errors->has('sgst'))
                                 <span class="help-block">
@@ -206,7 +206,7 @@
                             <div class="form-group {{ $errors->has('paid_amount') ? 'has-error' : '' }}">
                             <strong>Paid Amount: <span class = "required_fields">*</span> </strong>
                             
-                            {!! Form::text('paid_amount', null,array('id'=>'paid_amount','placeholder' => 'Paid Amount','class' => 'form-control', 'tabindex' => '12' )) !!}
+                            {!! Form::text('paid_amount', null,array('id'=>'paid_amount','placeholder' => 'Paid Amount','class' => 'form-control', 'tabindex' => '10' )) !!}
                            
                             @if ($errors->has('paid_amount'))
                                 <span class="help-block">
@@ -217,7 +217,7 @@
 
                             <div class="form-group {{ $errors->has('head') ? 'has-error' : '' }}">
                                 <strong>Expense Head: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('head', $head, $expense_head, array('id'=>'head','class' => 'form-control', 'tabindex' => '14' )) !!}
+                                {!! Form::select('head', $head, $expense_head, array('id'=>'head','class' => 'form-control', 'tabindex' => '12' )) !!}
                                 @if ($errors->has('head'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('head') }}</strong>
@@ -228,7 +228,7 @@
                             <div class="form-group {{ $errors->has('tds_deduct') ? 'has-error' : '' }}">
                             <strong>TDS Detucted:</strong>
                             
-                            {!! Form::text('tds_deduct', null,array('id'=>'tds_deduct','placeholder' => 'TDS Detucted','class' => 'form-control', 'tabindex' => '16' )) !!}
+                            {!! Form::text('tds_deduct', null,array('id'=>'tds_deduct','placeholder' => 'TDS Detucted','class' => 'form-control', 'tabindex' => '14' )) !!}
                            
                             @if ($errors->has('tds_deduct'))
                                 <span class="help-block">
@@ -239,7 +239,7 @@
 
                              <div class="form-group {{ $errors->has('pmode') ? 'has-error' : '' }}">
                                 <strong>Payment Mode:<span class = "required_fields">*</span></strong>
-                                {!! Form::select('pmode', $payment_mode, $pmode, array('id'=>'pmode','class' => 'form-control', 'tabindex' => '18' )) !!}
+                                {!! Form::select('pmode', $payment_mode, $pmode, array('id'=>'pmode','class' => 'form-control', 'tabindex' => '16' )) !!}
                                 @if ($errors->has('pmode'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('pmode') }}</strong>
@@ -249,7 +249,7 @@
 
                             <div class="form-group {{ $errors->has('ptype') ? 'has-error' : '' }}">
                                 <strong>Payment Type:<span class = "required_fields">*</span></strong>
-                                  {!! Form::select('ptype', $payment_type, $ptype, array('id'=>'ptype','class' => 'form-control', 'tabindex' => '19' )) !!}
+                                  {!! Form::select('ptype', $payment_type, $ptype, array('id'=>'ptype','class' => 'form-control', 'tabindex' => '18' )) !!}
                                  @if ($errors->has('ptype'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('ptype') }}</strong>

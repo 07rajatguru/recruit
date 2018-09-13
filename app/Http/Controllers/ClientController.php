@@ -286,7 +286,7 @@ class ClientController extends Controller
             $client['website'] = $value->website;
             $client['description'] = $value->description;
             $client['gst_no'] = $value->gst_no;
-            $client['tds'] = $value->tds;
+            /*$client['tds'] = $value->tds;*/
             $client['coordinator_name'] = $value->coordinator_name;
             $co_category=$value->coordinator_prefix;
             $client['tan'] = $value->tan;
@@ -399,10 +399,10 @@ class ClientController extends Controller
             $client_basic_info->gst_no = $input['gst_no'];
         else
             $client_basic_info->gst_no = '';
-        if(isset($input['tds']) && $input['tds']!='')
+        /*if(isset($input['tds']) && $input['tds']!='')
             $client_basic_info->tds = $input['tds'];
         else
-            $client_basic_info->tds = '';
+            $client_basic_info->tds = '';*/
         if(isset($input['tan']) && $input['tan']!='')
             $client_basic_info->tan = $input['tan'];
         else
@@ -640,7 +640,7 @@ class ClientController extends Controller
             $client['website'] = $value->website;
             $client['description'] = $value->description;
             $client['gst_no'] = $value->gst_no;
-            $client['tds'] = $value->tds;
+            /*$client['tds'] = $value->tds;*/
             $client['coordinator_name'] = $value->coordinator_prefix. " " .$value->coordinator_name;
             $client['tan'] = $value->tan;
             $client['status']=$value->status;
@@ -901,10 +901,12 @@ class ClientController extends Controller
             $client_basicinfo->gst_no = $input->gst_no;
         else
             $client_basicinfo->gst_no = '';
-        if(isset($input->tds) && $input->tds!='')
+
+       /* if(isset($input->tds) && $input->tds!='')
             $client_basicinfo->tds = $input->tds;
         else
-            $client_basicinfo->tds = '';
+            $client_basicinfo->tds = '';*/
+        
         if(isset($input->tan) && $input->tan!='')
             $client_basicinfo->tan = $input->tan;
         else

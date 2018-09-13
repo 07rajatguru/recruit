@@ -74,6 +74,7 @@
         jQuery(document).ready(function(){
             var table = jQuery('#training_table').DataTable( {
                 responsive: true,
+                stateSave : true,
                 "pageLength": 100,
             } );
 

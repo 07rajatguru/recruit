@@ -74,6 +74,7 @@
         jQuery(document).ready(function(){
             var table = jQuery('#candidate_table').DataTable( {
                 responsive: true,
+                stateSave : true,
                 "autoWidth": false,
                 "pageLength": 100
             } );

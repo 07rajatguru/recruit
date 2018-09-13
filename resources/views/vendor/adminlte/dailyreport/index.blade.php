@@ -86,7 +86,8 @@
             });
 
             var table = jQuery('#dailyreport_table').DataTable( {
-                responsive: true
+                responsive: true,
+                stateSave : true
             } );
             new jQuery.fn.dataTable.FixedHeader( table );
         });

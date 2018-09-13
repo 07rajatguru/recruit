@@ -92,7 +92,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             var table = jQuery('#status_table').DataTable( {
-                responsive: true
+                responsive: true,
+                stateSave : true
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );

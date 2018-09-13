@@ -137,7 +137,7 @@ class InterviewController extends Controller
 
 
         $viewVariable = array();
-        $viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
+        //$viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
         $viewVariable['interviewer_id'] = $user_id;
         $viewVariable['hidden_candidate_id'] = 0;
      //   $viewVariable['client'] = $client;

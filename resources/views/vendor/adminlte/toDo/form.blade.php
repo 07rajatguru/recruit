@@ -46,7 +46,7 @@
 
                     <div class="form-group {{ $errors->has('assigned_by') ? 'has-error' : '' }}">
                         <strong>Task Owner: <span class = "required_fields">*</span> </strong>
-                        {!! Form::select('assigned_by', $assigned_by, $assigned_by_id, array('id'=>'assigned_by','class' => 'form-control', 'tabindex' => '0' )) !!}
+                        {!! Form::select('assigned_by', $assigned_by, $assigned_by_id, array('id'=>'assigned_by','class' => 'form-control','tabindex' => '1' )) !!}
                         @if ($errors->has('assigned_by'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('assigned_by') }}</strong>
@@ -56,7 +56,7 @@
 
                      <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                         <strong>Status:</strong>
-                        {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control' )) !!}
+                        {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control','tabindex' => '3')) !!}
                         @if ($errors->has('status'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('status') }}</strong>
@@ -68,9 +68,9 @@
                     <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                         <strong>Type:</strong>
                         @if($action == 'edit')
-                        {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '5', 'onchange' => 'getType()' )) !!}
                         @else
-                        {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'getType()' )) !!}
+                        {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '5', 'onchange' => 'getType()' )) !!}
                         @endif
                         @if ($errors->has('type'))
                             <span class="help-block">
@@ -86,7 +86,7 @@
                 <div class="">
                     <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
                         <strong>Subject: <span class = "required_fields">*</span> </strong>
-                        {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1' )) !!}
+                        {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '2' )) !!}
                         @if ($errors->has('subject'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('subject') }}</strong>
@@ -100,7 +100,7 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            {!! Form::text('due_date',  isset($due_date) ? $due_date : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                            {!! Form::text('due_date',  isset($due_date) ? $due_date : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '4'  )) !!}
                         </div>
                         @if ($errors->has('due_date'))
                             <span class="help-block">
@@ -111,7 +111,7 @@
 
                     <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                         <strong>Select CC:</strong>
-                        {!! Form::select('cc_user',$users,$cc_user_id, array('id'=>'cc_user','class' => 'form-control' )) !!}
+                        {!! Form::select('cc_user',$users,$cc_user_id, array('id'=>'cc_user','class' => 'form-control','tabindex' => '6')) !!}
                         @if ($errors->has('cc_user'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('cc_user') }}</strong>
@@ -147,7 +147,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">                   
                           <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                             <strong>Remarks:</strong>
-                            {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '8' )) !!}
+                            {!! Form::textarea('description', null, array('id'=>'description','rows'=>'5','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '7' )) !!}
                             @if ($errors->has('description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('description') }}</strong>
@@ -161,7 +161,7 @@
                                 <strong>Start Date: </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                    {!! Form::text('start_date', isset($start_date) ? $start_date : null, array('id'=>'start_date','placeholder' => 'Start Date','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                                    {!! Form::text('start_date', isset($start_date) ? $start_date : null, array('id'=>'start_date','placeholder' => 'Start Date','class' => 'form-control', 'tabindex' => '8'  )) !!}
                                 </div>
                                 @if ($errors->has('start_date'))
                                     <span class="help-block">
@@ -174,7 +174,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">                   
                           <div class="form-group {{ $errors->has('frequency_type') ? 'has-error' : '' }}">
                             <strong>Frequency Type:</strong>
-                            {!! Form::select('frequency_type', $frequency_type,$reminder_id, array('id'=>'frequency_type','class' => 'form-control' )) !!}
+                            {!! Form::select('frequency_type', $frequency_type,$reminder_id, array('id'=>'frequency_type','class' => 'form-control','tabindex' => '9')) !!}
                             @if ($errors->has('frequency_type'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('frequency_type') }}</strong>

@@ -10,10 +10,6 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Client List ({{ $count }}) </h2>
-            </div>
-
             <div class="pull-right">
                 
                  {{--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal">Submit
@@ -28,16 +24,25 @@
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
+
+            <div  class="pull-left">
+                <h2>Client List ({{ $count }}) </h2>
+            </div>
+      
             <div class="col-md-2">
-                <div style="height:40px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div>
+                <div style="height:40px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})
+                </div>
             </div>
             &nbsp;
+
             <div class="col-md-2">
-                <div style="height:40px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div>
+                <div style="height:40px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) 
+                </div>
             </div>
 
         </div>
     </div>
+
 
     <br>
 
@@ -163,6 +168,7 @@
         var table = jQuery('#client_table').DataTable( {
                     responsive: true,
                     "pageLength": 100,
+                    stateSave : true,
                     "aoColumnDefs": [
                         { "bSearchable": false, "aTargets": [ 7 ]}
                     ]

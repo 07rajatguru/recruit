@@ -35,7 +35,8 @@
     <script>
         $(document).ready(function(){
             var table = jQuery('#noti_table').DataTable( {
-                responsive: true
+                responsive: true,
+                stateSave : true,
             } );
             new jQuery.fn.dataTable.FixedHeader( table );
         });

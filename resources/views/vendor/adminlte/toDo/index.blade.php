@@ -110,6 +110,7 @@
         jQuery(document).ready(function(){
             var table = jQuery('#todos_table').DataTable( {
                 responsive: true,
+                stateSave : true,
                 "bStateSave": true,
             } );
 

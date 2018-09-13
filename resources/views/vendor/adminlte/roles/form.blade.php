@@ -31,7 +31,7 @@
                 <div class="">
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         <strong>Name: <span class = "required_fields">*</span></strong>
-                        {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                        {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '1')) !!}
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -41,7 +41,7 @@
 
                     <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
                         <strong>Display Name: <span class = "required_fields">*</span></strong>
-                        {!! Form::text('display_name', null, array('placeholder' => 'Display Name','class' => 'form-control')) !!}
+                        {!! Form::text('display_name', null, array('placeholder' => 'Display Name','class' => 'form-control','tabindex' => '2')) !!}
                         @if ($errors->has('display_name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('display_name') }}</strong>
@@ -51,7 +51,7 @@
 
                     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                         <strong>Description: <span class = "required_fields">*</span></strong>
-                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px')) !!}
+                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '3')) !!}
                         @if ($errors->has('description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('description') }}</strong>

@@ -110,7 +110,8 @@
 
             var table = jQuery('#interview_table').DataTable( {
                 responsive: true,
-                 "pageLength": 50,
+                stateSave : true,
+                "pageLength": 50,
 
             } );
             new jQuery.fn.dataTable.FixedHeader( table );
