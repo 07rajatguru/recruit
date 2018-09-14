@@ -394,7 +394,10 @@ Route::group(['middleware' => ['auth']], function () {
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]);
 
-   
+    Route::get('monthwiseclient', [
+        'as' => 'monthwiseclient.index',
+        'uses' => 'ClientController@getMonthWiseClient'
+    ]);
 
     Route::post('client/create', [
         'as' => 'client.store',

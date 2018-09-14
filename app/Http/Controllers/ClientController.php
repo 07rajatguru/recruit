@@ -1056,6 +1056,33 @@ class ClientController extends Controller
         return redirect()->route('client.index')->with('success','Successfully');
     }
 
+    public function getMonthWiseClient()
+    {
+
+        $user =  \Auth::user();
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        if($isSuperAdmin){
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1);
+            $count = sizeof($response);
+        }
+        else{
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0);
+            $count = sizeof($response);
+        }
+
+        return view('adminlte::client.monthwiseclient', array('clients' => $response,'count' => $count),compact('isSuperAdmin','isStrategy'));
+    }
+
     public function getAccountManager(Request $request)
     {
         $account_manager=$request->get('account_manager');

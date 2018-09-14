@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\User;
 use App\Bills;
+use App\Utils;
 use App\Date;
 use Excel;
 
@@ -72,6 +73,7 @@ class UserwiseReportController extends Controller
 
             $userwise = array();
             $i = 0;
+            $total = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
@@ -88,13 +90,19 @@ class UserwiseReportController extends Controller
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary);
-                $userwise[$i]['billing'] = round((float)$billing);
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
             	$efforts_str = '';
             	foreach ($efforts as $key => $value) {
+                    if($user_name == $key)
+                    {
+                        $t = ((float)$billing * (float)$value) / 100;
+                        $total += round($t);
+                        
+                    }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
                 	}
@@ -103,6 +111,8 @@ class UserwiseReportController extends Controller
                 	}
             	}
             	$userwise[$i]['efforts'] = $efforts_str;
+
+
             	//$userwise[$i]['remark'] = $value->remarks;
                 $i++;
             }
@@ -128,6 +138,7 @@ class UserwiseReportController extends Controller
             $userwise_report = Bills::getUserwiseReport($userdata,'','',$month,$year);
             $userwise = array();
             $i = 0;
+            $total = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
@@ -144,13 +155,19 @@ class UserwiseReportController extends Controller
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary);
-                $userwise[$i]['billing'] = round((float)$billing);
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
             	$efforts_str = '';
             	foreach ($efforts as $key => $value) {
+                    if($user_name == $key)
+                    {
+                        $t = ((float)$billing * (float)$value) / 100;
+                        $total += round($t);
+                        
+                    }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
                 	}
@@ -184,6 +201,7 @@ class UserwiseReportController extends Controller
             $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
+            $total = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
@@ -200,13 +218,19 @@ class UserwiseReportController extends Controller
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary);
-                $userwise[$i]['billing'] = round((float)$billing);
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
             	$efforts_str = '';
             	foreach ($efforts as $key => $value) {
+                    if($user_name == $key)
+                    {
+                        $t = ((float)$billing * (float)$value) / 100;
+                        $total += round($t);
+                        
+                    }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
                 	}
@@ -230,6 +254,7 @@ class UserwiseReportController extends Controller
             $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
+            $total = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
@@ -246,13 +271,19 @@ class UserwiseReportController extends Controller
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary);
-                $userwise[$i]['billing'] = round((float)$billing);
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
             	$efforts_str = '';
             	foreach ($efforts as $key => $value) {
+                    if($user_name == $key)
+                    {
+                        $t = ((float)$billing * (float)$value) / 100;
+                        $total += round($t);
+                        
+                    }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
                 	}
@@ -276,6 +307,7 @@ class UserwiseReportController extends Controller
             $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
+            $total = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
@@ -294,13 +326,19 @@ class UserwiseReportController extends Controller
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary);
-                $userwise[$i]['billing'] = round((float)$billing);
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
             	$efforts_str = '';
             	foreach ($efforts as $key => $value) {
+                    if($user_name == $key)
+                    {
+                        $t = ((float)$billing * (float)$value) / 100;
+                        $total += round($t);
+                        
+                    }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
                 	}
@@ -324,6 +362,7 @@ class UserwiseReportController extends Controller
             $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
             $userwise = array();
             $i = 0;
+            $total = 0;
             foreach ($userwise_report as $key => $value) {
                 $fixed_salary = $value->fixed_salary;
                 $percentage_charged = (float)$value->percentage_charged;
@@ -340,13 +379,19 @@ class UserwiseReportController extends Controller
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = number_format($value->fixed_salary);
-                $userwise[$i]['billing'] = round((float)$billing);
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
             	$efforts_str = '';
             	foreach ($efforts as $key => $value) {
+                    if($user_name == $key)
+                    {
+                        $t = ((float)$billing * (float)$value) / 100;
+                        $total += round($t);
+                        
+                    }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
                 	}
@@ -362,7 +407,7 @@ class UserwiseReportController extends Controller
         }
             //print_r($userwise);exit;
 
-    	return view("adminlte::reports.userwise",compact('users','select','month_array','quater','year_array','default','userwise_report','userwise','user_name'));
+    	return view("adminlte::reports.userwise",compact('users','select','month_array','quater','year_array','default','userwise_report','userwise','user_name','total'));
     }
 
     public function export(){

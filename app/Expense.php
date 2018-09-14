@@ -92,7 +92,7 @@ class Expense extends Model
         foreach ($resource as $res) {
             $expenseArray[$i]['id'] = $res->id;
             $expenseArray[$i]['date'] = $res->date;
-            $expenseArray[$i]['paid_amount'] = $res->paid_amount;
+            $expenseArray[$i]['paid_amount'] = Utils::IND_money_format($res->paid_amount);
             $expenseArray[$i]['paid_to'] = $res->vname;
             $expenseArray[$i]['expense_head'] = $res->aname;
             $expenseArray[$i]['remarks'] = $res->remarks;

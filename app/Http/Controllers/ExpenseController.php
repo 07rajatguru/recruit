@@ -331,7 +331,7 @@ class ExpenseController extends Controller
             $expense['remark'] = $value->remarks;
             $pmode = $value->payment_mode;
             $ptype = $value->type_of_payment;
-            $expense['reference'] = $value->reference_number;
+            $expense['reference_number'] = $value->reference_number;
             $expense['gstno'] = $value->gst_in;
             $expense['panno'] = $value->pan_no;
             $expense['gst'] = $value->gst;
@@ -492,7 +492,7 @@ class ExpenseController extends Controller
         foreach ($expense_info as $key=>$value){
 
             $expense['date'] = $value->date;
-            $expense['amount'] = $value->amount;
+            $expense['amount'] = Utils::IND_money_format($value->amount);
             $expense['name'] = $value->v_name;
             $expense['head'] = $value->expense_head;
             $expense['remark'] = $value->remarks;
@@ -505,9 +505,9 @@ class ExpenseController extends Controller
             $expense['cgst'] = $value->cgst;
             $expense['sgst'] = $value->sgst;
             $expense['igst'] = $value->igst;
-            $expense['total_bill'] = $value->total_bill_amount;
+            $expense['total_bill'] = Utils::IND_money_format($value->total_bill_amount);
             $expense['input_tax']=$value->input_tax;
-            $expense['paidamt']=$value->paid_amount;
+            $expense['paidamt']=Utils::IND_money_format($value->paid_amount);
             $expense['tds']=$value->tds_percentage;
             $expense['tds_deduct']=$value->tds_deducted;
             $expense['tds_date']=$value->tds_payment_date;      

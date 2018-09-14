@@ -189,7 +189,62 @@ class ClientBasicinfo extends Ardent
         return $client_city;
      }
 
+    public static function getMonthWiseClientByUserId($user_id,$all=0)
+    {
+        $month = date('m');
 
+        $query = ClientBasicinfo::query();
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->leftJoin('users','users.id','=','client_basicinfo.account_manager_id');
+        $query = $query->select('client_basicinfo.*','users.name as am_name','users.id as am_id','client_address.billing_city as city');
+        $query = $query->whereRaw('MONTH(client_basicinfo.created_at) = ?',[$month]);
+
+        if($all==0)
+        {
+            $query = $query->where(function($query) use ($user_id)
+            {
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+            });
+        }
+        $query = $query->orderBy('client_basicinfo.id','desc');
+        $query = $query->groupBy('client_basicinfo.id');
+        $response = $query->get();
+
+        //echo sizeof($response);
+        //print_r($response);
+        //exit;
+
+        $client=array();
+        $i=0;
+        foreach ($response as $key => $value) 
+        {
+            $client[$i]['id'] = $value->id;
+            $client[$i]['client_owner'] = $value->am_name;
+            $client[$i]['company_name'] = $value->name;
+            $client[$i]['coordinator_name'] = $value->coordinator_prefix . " " . $value->coordinator_name;
+            $client[$i]['client_category'] = $value->category;
+            $client[$i]['status'] = $value->status;
+            if(isset($client[$i]['status']))
+            {
+                if($client[$i]['status']== '1')
+                {
+                  $client[$i]['status']='Active';
+                }
+                else
+                {
+                  $client[$i]['status']='Passive';
+                }
+            }
+
+            $client[$i]['client_address'] = $value->city;
+            $i++;
+        }
+
+        /*print_r($client);
+        exit;*/
+        return $client;   
+    }
+    
     public function beforeValidate ()
     {
         // In case of update, ignore current user's ID for unique check of Username and Email Address
@@ -250,7 +305,7 @@ class ClientBasicinfo extends Ardent
 
     }
 
-        public static function getClientAboutByJobId($job_id){
+    public static function getClientAboutByJobId($job_id){
 
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');

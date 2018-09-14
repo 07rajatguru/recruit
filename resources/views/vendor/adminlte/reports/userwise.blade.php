@@ -79,16 +79,16 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="user_report_table">
     	<thead>
     		<tr>
-    			<td colspan="8" style="text-align: center;">{{ $user_name }}</td>
+    			<td colspan="8" style="text-align: center;">{{ $user_name }} - {{ $total }}</td>
     		</tr>
             <tr>
     		    <th>No</th>
-    		    <th>Candidate Name</th>
-    		    <th>Company Name</th>
+    		    <th>Candidate <br/>Name</th>
+    		    <th>Company <br/>Name</th>
     		    <th>Position/Dept</th>
-    		    <th>Salary offered(fixed)</th>
+    		    <th>Salary <br/>Offered(fixed)</th>
     		    <th>Billing</th>
-    		    <th>Joining date</th>
+    		    <th>Joining <br/>Date</th>
     		    <th>Efforts with</th>
     		    {{--<th>Remarks</th>--}}
             </tr>

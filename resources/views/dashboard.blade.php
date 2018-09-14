@@ -40,7 +40,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="client" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="monthwiseclient" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

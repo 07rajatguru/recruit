@@ -39,7 +39,7 @@
                 <th>Remarks</th>
                 <th>Payment<br/> Mode</th>
                 <th>Payment<br/> Type</th>
-                <th>Number</th>
+                <th>Reference <br/>Number</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>

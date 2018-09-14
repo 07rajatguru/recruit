@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Bills;
 use Excel;
+use App\Utils;
+
 
 class RecoveryReportController extends Controller
 {
