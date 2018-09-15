@@ -34,7 +34,7 @@
     </div>
 
      <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
+       {{-- <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box-body col-xs-1 col-sm-1 col-md-1" style="width: 7%; float:left; margin: 5px">
                 <div style="height:30px;width:70px;background-color:#FFFFFF;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">None ({{ $priority_0 }})
                 </div>
@@ -59,13 +59,13 @@
                 <div style="height:30px;width:190px;background-color:#92D050;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Identified Candidates ({{ $priority_4 }})
                 </div>
             </div>
-        </div>
+        </div>--}}
     </div>
 
     &nbsp;
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
+        {{--<div class="col-xs-12 col-sm-12 col-md-12">
 
             <div class="box-body col-xs-2 col-sm-2 col-md-2" style="width: 16%; float:left; margin: 5px">
                 <div style="height:30px;width:160px;background-color:yellow;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Revived Positions ({{ $priority_5 }})
@@ -91,20 +91,20 @@
                 <div style="height:30px;width:220px;background-color:#FFFFFF;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Closed By Client ({{ $priority_10 }})
                 </div>
             </div>
-        </div>
+        </div>--}}
     </div>
 
     &nbsp;
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
+        {{--<div class="col-xs-12 col-sm-12 col-md-12">
 
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <div style="height:30px;width:700px;background-color:#808080;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Constant Deliveries needed for very old positions where many deliveries are done but no result yet ({{ $priority_6 }})
                 </div>
             </div>
 
-        </div>
+        </div>--}}
     </div>
     
     &nbsp;
