@@ -58,7 +58,10 @@
                 <td>{{ $client['client_owner'] or ''}}</td>
                 <td>{{ $client['company_name'] or ''}}</td>
                 <td>{{ $client['coordinator_name'] or ''}}</td>
+                
+                <?php if($isSuperAdmin || $isStrategy) { ?>
                 <td>{{ $client['client_category'] or ''}}</td>
+                <?php }?>
 
                 @if($client['status']=='Active')
                     <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
