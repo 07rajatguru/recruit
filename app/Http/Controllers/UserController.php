@@ -6,9 +6,12 @@ use App\Companies;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use Illuminate\Support\Facades\Input;
 use App\Role;
 use DB;
 use Hash;
+use App\Date;
+use App\UserOthersInfo;
 
 class UserController extends Controller
 {
@@ -243,5 +246,86 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success','User deleted successfully');
 
+    }
+
+    public static function editProfile()
+    {
+        $dateClass = new Date();
+
+        $user_id = \Auth::user()->id;
+
+        $role_id = User::getRoleIdByUserId($user_id);
+
+        $user = array();
+
+        $user_info = \DB::table('users')
+         ->leftjoin('role_user','role_user.user_id','=','users.id')
+         ->leftjoin('roles','roles.id','=','role_user.role_id')
+         ->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id')
+         ->select('users.*','roles.display_name as designation','users_otherinfo.*')
+         ->where('users.id' ,'=',$user_id)
+         ->first();
+
+        $name = $user_info->name;
+        $email = $user_info->email;
+        $s_email = $user_info->secondary_email;
+        $designation = $user_info->designation;
+        $birth_date = $dateClass->changeYMDtoDMY($user_info->date_of_birth);
+        $join_date = $dateClass->changeYMDtoDMY($user_info->date_of_joining);
+        $salary = $user_info->fixed_salary;
+        $acc_no = $user_info->acc_no;
+        $bank_name = $user_info->bank_name;
+        $branch_name = $user_info->branch_name;
+        $ifsc_code = $user_info->ifsc_code;
+        $user_full_name = $user_info->bank_full_name;
+
+        return view('adminlte::users.editprofile',compact('name','email','s_email','designation','birth_date','join_date','salary','acc_no','bank_name','branch_name','ifsc_code','user_full_name','user_id'));
+    }
+
+    public static function profileStore()
+    {
+        $user_id = \Auth::user()->id;
+
+        $user_other_info = UserOthersInfo::getUserOtherInfo($user_id);
+
+        if(isset($user_other_info) && $user_other_info->user_id == $user_id)
+        {
+            $dateClass = new Date();
+
+            $users_otherinfo = UserOthersInfo::find($user_other_info->id);
+
+            //$users_otherinfo->user_id = $user_id;
+
+            $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD(Input::get('date_of_joining'));
+            $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD(Input::get('date_of_birth'));
+            $users_otherinfo->fixed_salary = Input::get('salary');
+            $users_otherinfo->acc_no = Input::get('account_no');
+            $users_otherinfo->bank_name = Input::get('bank_name');
+            $users_otherinfo->branch_name = Input::get('branch_name');
+            $users_otherinfo->ifsc_code = Input::get('ifsc');
+            $users_otherinfo->bank_full_name = Input::get('user_full_name');
+
+            $users_otherinfo->save();
+        }
+        else
+        {
+            $dateClass = new Date();
+
+            $users_otherinfo= new UserOthersInfo;
+
+            $users_otherinfo->user_id = $user_id;
+            $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD(Input::get('date_of_joining'));
+            $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD(Input::get('date_of_birth'));
+            $users_otherinfo->fixed_salary = Input::get('salary');
+            $users_otherinfo->acc_no = Input::get('account_no');
+            $users_otherinfo->bank_name = Input::get('bank_name');
+            $users_otherinfo->branch_name = Input::get('branch_name');
+            $users_otherinfo->ifsc_code = Input::get('ifsc');
+            $users_otherinfo->bank_full_name = Input::get('user_full_name');
+
+            $users_otherinfo->save();
+        }
+
+        return redirect('/dashboard');
     }
 }

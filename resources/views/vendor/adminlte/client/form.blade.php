@@ -60,7 +60,7 @@
 
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                             <strong>Display Name: </strong>
-                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4'  )) !!}
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','maxlength' => 7 )) !!}
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>

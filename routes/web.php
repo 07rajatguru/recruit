@@ -166,6 +166,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@index',
         'middleware' => ['permission:user-list|user-create|user-edit|user-delete']
     ]);
+
+    Route::get('users/editprofile',[
+        'as' => 'users.editprofile',
+        'uses' => 'UserController@editProfile'
+    ]);
     Route::get('users/create', [
         'as' => 'users.create',
         'uses' => 'UserController@create',
@@ -175,6 +180,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'users.store',
         'uses' => 'UserController@store',
         'middleware' => ['permission:user-create']
+    ]);
+
+    Route::post('users/profilestore',[
+        'as' => 'users.profilestore',
+        'uses' => 'UserController@profileStore'
     ]);
     Route::get('users/{id}', [
         'as' => 'users.show',
