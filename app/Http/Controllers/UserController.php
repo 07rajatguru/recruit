@@ -12,6 +12,7 @@ use DB;
 use Hash;
 use App\Date;
 use App\UserOthersInfo;
+use App\UsersDoc;
 
 class UserController extends Controller
 {
@@ -242,13 +243,41 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        User::find($id)->delete();
+        $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
+
+        if(isset($user_photo))
+        {
+            $path="uploads/users/" . $user_photo->user_id;
+            $files=glob($path . "/*");
+
+            foreach($files as $file_nm)
+            {
+                if(is_file($file_nm))
+                {
+                        unlink($file_nm);
+                }
+            }
+
+            $user_id = $user_photo->user_id;
+            $path1="uploads/users/" . $user_id . "/";
+            rmdir($path1);
+
+            $user_doc = UsersDoc::where('user_id','=',$id)->delete();
+            $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
+            $user = User::where('id','=',$id)->delete();
+        }
+        else
+        {
+            $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
+            $user = User::where('id','=',$id)->delete();
+        }
+
+      //  User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success','User deleted successfully');
-
     }
 
-    public static function editProfile()
+    public function editProfile()
     {
         $dateClass = new Date();
 
@@ -258,31 +287,30 @@ class UserController extends Controller
 
         $user = array();
 
-        $user_info = \DB::table('users')
-         ->leftjoin('role_user','role_user.user_id','=','users.id')
-         ->leftjoin('roles','roles.id','=','role_user.role_id')
-         ->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id')
-         ->select('users.*','roles.display_name as designation','users_otherinfo.*')
-         ->where('users.id' ,'=',$user_id)
-         ->first();
+        $user_info = User::getProfileInfo($user_id);
 
-        $name = $user_info->name;
-        $email = $user_info->email;
-        $s_email = $user_info->secondary_email;
-        $designation = $user_info->designation;
-        $birth_date = $dateClass->changeYMDtoDMY($user_info->date_of_birth);
-        $join_date = $dateClass->changeYMDtoDMY($user_info->date_of_joining);
-        $salary = $user_info->fixed_salary;
-        $acc_no = $user_info->acc_no;
-        $bank_name = $user_info->bank_name;
-        $branch_name = $user_info->branch_name;
-        $ifsc_code = $user_info->ifsc_code;
-        $user_full_name = $user_info->bank_full_name;
+        foreach($user_info as $key=>$value)
+        {
+            $user['id'] = $user_id;
+            $user['name'] = $value->name;
+            $user['email'] = $value->email;
+            $user['s_email'] = $value->secondary_email;
+            $user['designation'] = $value->designation;
+            $user['photo'] = $value->file;
+            $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
+            $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
+            $user['salary'] = $value->fixed_salary;
+            $user['acc_no'] = $value->acc_no;
+            $user['bank_name'] = $value->bank_name;
+            $user['branch_name'] = $value->branch_name;
+            $user['ifsc_code'] = $value->ifsc_code;
+            $user['user_full_name'] = $value->bank_full_name;
+        }
 
-        return view('adminlte::users.editprofile',compact('name','email','s_email','designation','birth_date','join_date','salary','acc_no','bank_name','branch_name','ifsc_code','user_full_name','user_id'));
+        return view('adminlte::users.editprofile',array('user' => $user));
     }
 
-    public static function profileStore()
+    public function profileStore()
     {
         $user_id = \Auth::user()->id;
 
@@ -290,6 +318,14 @@ class UserController extends Controller
 
         if(isset($user_other_info) && $user_other_info->user_id == $user_id)
         {
+            $user_basic_info = User::find($user_id);
+
+            $user_basic_info->name = Input::get('name');
+            $user_basic_info->email = Input::get('email');
+            $user_basic_info->secondary_email = Input::get('semail');
+
+            $user_basic_info->save();
+
             $dateClass = new Date();
 
             $users_otherinfo = UserOthersInfo::find($user_other_info->id);
@@ -309,6 +345,15 @@ class UserController extends Controller
         }
         else
         {
+
+            $user_basic_info = User::find($user_id);
+
+            $user_basic_info->name = Input::get('name');
+            $user_basic_info->email = Input::get('email');
+            $user_basic_info->secondary_email = Input::get('semail');
+
+            $user_basic_info->save();
+
             $dateClass = new Date();
 
             $users_otherinfo= new UserOthersInfo;
@@ -327,5 +372,96 @@ class UserController extends Controller
         }
 
         return redirect('/dashboard');
+    }
+
+    public function Upload(Request $request)
+    {
+        $file = $request->file('file');
+
+        $id = $request->id;
+        
+        /*$user_id = \Auth::user()->id;*/
+
+        $user_doc_info = UsersDoc::getUserPhotoInfo($id);
+
+        if(isset($user_doc_info) && $user_doc_info->user_id == $id)
+        {
+            $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
+
+            if(isset($user_photo))
+            {
+                $path="uploads/users/" . $user_photo->user_id;
+                $files=glob($path . "/*");
+
+                foreach($files as $file_nm)
+                {
+                    if(is_file($file_nm))
+                    {
+                        unlink($file_nm);
+                    }
+                }
+
+                $user_id = $user_photo->user_id;
+                $path1="uploads/users/" . $user_id . "/";
+                rmdir($path1);
+            }
+            if (isset($file) && $file->isValid()) 
+            {
+                $doc_name = $file->getClientOriginalName();
+                $doc_filesize = filesize($file);
+
+                $dir_name = "uploads/users/".$id."/";
+                $others_doc_key = "uploads/users/".$id."/".$doc_name;
+
+                if (!file_exists($dir_name)) 
+                {
+                    mkdir("uploads/users/$id", 0777,true);
+                }
+                if(!$file->move($dir_name, $doc_name))
+                {
+                    return false;
+                }
+                else
+                {
+                    $users_doc = UsersDoc::find($user_doc_info->id);
+                    $users_doc->user_id = $id;
+                    $users_doc->file = $others_doc_key;
+                    $users_doc->name = $doc_name;
+                    $users_doc->size = $doc_filesize;
+                    $users_doc->save();
+                }
+            } 
+        }
+        else
+        {
+                if (isset($file) && $file->isValid()) 
+                {
+                    $doc_name = $file->getClientOriginalName();
+                    $doc_filesize = filesize($file);
+
+                    $dir_name = "uploads/users/".$id."/";
+                    $others_doc_key = "uploads/users/".$id."/".$doc_name;
+
+                    if (!file_exists($dir_name)) 
+                    {
+                        mkdir("uploads/users/$id", 0777,true);
+                    }
+                    if(!$file->move($dir_name, $doc_name))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        $users_doc = new UsersDoc();
+                        $users_doc->user_id = $id;
+                        $users_doc->file = $others_doc_key;
+                        $users_doc->name = $doc_name;
+                        $users_doc->size = $doc_filesize;
+                        $users_doc->save();
+                    }
+                }
+        }
+   
+        return redirect()->route('users.editprofile')->with('success','Profile Photo Uploaded Successfully'); 
     }
 }
