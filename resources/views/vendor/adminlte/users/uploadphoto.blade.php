@@ -1,10 +1,10 @@
-<a data-toggle="modal" href="#modal-delete-{!! $data['id'] !!}" class="btn btn-success">
+<a data-toggle="modal" href="#modal-upload-{!! $data['user_id'] !!}" class="btn btn-success">
     Upload Profile Photo
 </a>
-<div id="modal-delete-{!! $data['id'] !!}" class="modal text-left fade">
+<div id="modal-upload-{!! $data['user_id'] !!}" class="modal text-left fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            {!! Form::open(['method' => 'POST','files' => true, 'route' => ["$name.upload", $data['id']] , 'id' => 'photo'])!!}
+            {!! Form::open(['method' => 'POST','files' => true, 'route' => ["$name.upload", $data['user_id']] , 'id' => 'photo'])!!}
 
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">

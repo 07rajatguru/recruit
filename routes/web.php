@@ -184,10 +184,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     //edit profile
     
-    Route::post('users/upload/{id}',[
-        'as' => 'users.upload',
-        'uses' => 'UserController@Upload'
-    ]);
     Route::get('users/editprofile',[
         'as' => 'users.editprofile',
         'uses' => 'UserController@editProfile'
@@ -196,7 +192,19 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'users.profilestore',
         'uses' => 'UserController@profileStore'
     ]);
-   
+    Route::post('userphoto/upload/{id}',[
+        'as' => 'userphoto.upload',
+        'uses' => 'UserController@UploadPhoto'
+    ]);
+    Route::delete('profilephoto/{id}',[
+        'as' =>'profilephoto.destroy',
+        'uses' =>'UserController@photoDestroy'
+    ]);
+    Route::delete('user/destroy/{id}',[
+        'as' =>'usersattachments.destroy',
+        'uses' =>'UserController@attachmentsDestroy'
+    ]);
+
     Route::get('users/{id}', [
         'as' => 'users.show',
         'uses' => 'UserController@show'

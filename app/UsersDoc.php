@@ -13,6 +13,7 @@ class UsersDoc extends Model
     {
     	$query = UsersDoc::query();
     	$query = $query->where('user_id','=',$user_id);
+        $query = $query->where('type','=','Photo');
     	$query = $query->select('users_doc.*');
 
     	$response = $query->first();
