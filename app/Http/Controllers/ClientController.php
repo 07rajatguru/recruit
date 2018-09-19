@@ -37,12 +37,25 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
 
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_array = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+            $count = sizeof($client_array);
+        }
+        else{
+            $client_array = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+            $count = sizeof($client_array);
+        }
+        //print_r($client_array);exit;
+
 
         $account_manager=User::getAllUsers('recruiter');
 
 
         // if Super Admin get clients of all companies
-        if($isSuperAdmin || $isAdmin || $isStrategy){
+        /*if($isSuperAdmin || $isAdmin || $isStrategy){
             $clients = \DB::table('client_basicinfo')
                 ->join('client_address','client_address.client_id','=','client_basicinfo.id')
                 ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
@@ -78,44 +91,44 @@ class ClientController extends Controller
             $client_visibility = true;
         }
 
-        $client_array = array();
+        $client_array = array();*/
         $i = 0;
         $active = 0;
         $passive = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
-        foreach($clients as $client){
+        foreach($client_array as $client){
 
-            $client_array[$i]['id'] = $client->id;
+           /* $client_array[$i]['id'] = $client->id;
             $client_array[$i]['name'] = $client->name;
             $client_array[$i]['am_name'] = $client->am_name;
             $client_array[$i]['category']=$client->category;
             $client_array[$i]['status']=$client->status;
-            $client_array[$i]['account_mangr_id']=$client->account_manager_id;
+            $client_array[$i]['account_mangr_id']=$client->account_manager_id;*/
 
             
-            if($client->status == 1 ){
+            if($client['status'] == 1 ){
                 $active++;
             }
-            else if ($client->status == 0){
+            else if ($client['status'] == 0){
                 $passive++;
             }
 
-            if($client->category == 'Paramount')
+            if($client['category'] == 'Paramount')
             {
                 $para_cat++;
             }
-            else if($client->category == 'Moderate')
+            else if($client['category'] == 'Moderate')
             {
                 $mode_cat++;
             }
-            else if($client->category == 'Standard')
+            else if($client['category'] == 'Standard')
             {
                 $std_cat++;
             }
 
-            if(isset($client_array[$i]['status']))
+            /*if(isset($client_array[$i]['status']))
             {
                 if($client_array[$i]['status']== '1')
                 {
@@ -125,9 +138,9 @@ class ClientController extends Controller
                 {
                   $client_array[$i]['status']='Passive';
                 }
-            }
+            }*/
             
-            $client_array[$i]['mobile']= $client->mobile;
+            /*$client_array[$i]['mobile']= $client->mobile;
             $client_array[$i]['hr_name'] = $client->coordinator_prefix . " " . $client->coordinator_name;
 
             $address ='';
@@ -166,7 +179,7 @@ class ClientController extends Controller
             else{
                 $client_array[$i]['url'] = '';
             }
-            $i++;
+            $i++;*/
         }
 
 
@@ -197,6 +210,57 @@ class ClientController extends Controller
         $passive=sizeof($paramount_client);
         */
         return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager','para_cat','mode_cat','std_cat'));
+    }
+
+    public function getAllClientsDetails(){
+
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+            //$count = sizeof($client_array);
+        }
+        else{
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+            //$count = sizeof($client_array);
+        }
+        //print_r($client_array);exit;
+        $account_manager=User::getAllUsers('recruiter');
+
+        $clients = array();
+        $i = 0;
+        foreach ($client_res as $key => $value) {
+            $action = '';
+
+            $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            if($isSuperAdmin || $isStrategy ){
+                $client_category = $value['category'];
+            }
+            if($value['status']=='Active')
+                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+            else
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span>';
+            $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address'],$action);
+            $clients[$i] = $data;
+        }
+
+        $json_data = array(
+            'draw' => intval(1),
+            'recordsTotal' => intval(100),
+            'recordsFiltered' => intval(100),
+            "data" => $clients
+        );
     }
 
     public function create()
