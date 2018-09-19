@@ -475,6 +475,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CandidateController@index'
     ]);
 
+    Route::get('candidate/all', [
+        'as' => 'candidate.all',
+        'uses' => 'CandidateController@getAllCandidates'
+    ]);
+
     Route::get('candidate/create', [
         'as' => 'candidate.create',
         'uses' => 'CandidateController@create'

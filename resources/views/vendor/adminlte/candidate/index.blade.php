@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Candidate List ({{ $count }})</h2>
+                <h2>Candidate List ({{ $count or 0 }})</h2>
             </div>
 
             <div class="pull-right">
@@ -44,7 +44,7 @@
             </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
+        {{--<tbody>
         @foreach ($candidates as $candidate)
             <tr>
                 <td>{{ ++$i }}</td>
@@ -53,9 +53,9 @@
                     <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>
              
 
-                  <?php if($isSuperAdmin) {?>
+                  @if($isSuperAdmin)
                     @include('adminlte::partials.deleteModal', ['data' => $candidate, 'name' => 'candidate','display_name'=>'Candidate'])
-                  <?php   }?>
+                  @endif
           
                 </td>
                 <td>{{ $candidate->fname or '' }}</td>
@@ -65,21 +65,38 @@
 
             </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#candidate_table').DataTable( {
+           /* var table = jQuery('#candidate_table').DataTable( {
                 responsive: true,
                 stateSave : true,
                 "autoWidth": false,
                 "pageLength": 100
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#candidate_table").dataTable({
+                "bProcessing": true,
+                "serverSide": true,
+                "ajax":{
+                    url :"/candidate/all", // json datasource
+                    type: "get",  // type of method  , by default would be get
+                    error: function(){  // error handling code
+                      //  $("#employee_grid_processing").css("display","none");
+                    }
+                },
+                "pageLength": 100,
+                "responsive": true,
+                "autoWidth": false,
+                "pagingType": "full_numbers",
+                "stateSave" : true,
+            });
         });
     </script>
 @endsection

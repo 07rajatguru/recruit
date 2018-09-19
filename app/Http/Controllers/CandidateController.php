@@ -48,7 +48,7 @@ class CandidateController extends Controller
 
     public function index(){
 
-        $user =  \Auth::user();
+        /*$user =  \Auth::user();
 
         // get role of logged in user
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -67,9 +67,54 @@ class CandidateController extends Controller
             ->orderBy('candidate_basicinfo.id','desc')
             ->get();
 
-        $count = sizeof($candidateDetails);
+        $count = sizeof($candidateDetails);*/
+        $count = CandidateBasicInfo::getAllCandidatesCount('');
         
-        return view('adminlte::candidate.index', array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),compact('isSuperAdmin'));
+        return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count'));
+    }
+
+    public function getAllCandidates(){
+
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+
+        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search);
+        $count = CandidateBasicInfo::getAllCandidatesCount($search);
+
+        $candidate_details = array();
+        $i = 0;$j = 0;
+        foreach ($response as $key => $value) {
+            $action = '';
+            $action .= '<a class="fa fa-circle" href="'.route('candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
+            $action .= '<a class="fa fa-edit" href="'.route('candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile']);
+            $candidate_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $candidate_details
+        );
+        //print_r($json_data);exit;
+
+        echo json_encode($json_data);exit;
     }
 
     public function candidatejoin(){

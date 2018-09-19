@@ -55,6 +55,52 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
+    public static function getAllCandidatesDetails($limit,$offset,$search){
+
+        $query = CandidateBasicInfo::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
+        $query = $query->orderBy('candidate_basicinfo.id','desc');
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+        if (isset($search) && $search != '') {
+            $query = $query->where('full_name','like','%$search%');
+        }
+        $res = $query->get();
+
+        $candidate = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $candidate[$i]['id'] = $value->id;
+            $candidate[$i]['full_name'] = $value->fname;
+            $candidate[$i]['owner'] = $value->owner;
+            $candidate[$i]['email'] = $value->email;
+            $candidate[$i]['mobile'] = $value->mobile;
+            $i++;
+        }
+
+        return $candidate;
+    }
+
+    public static function getAllCandidatesCount($search){
+
+        $query = CandidateBasicInfo::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
+        if (isset($search) && $search != '') {
+            $query = $query->where('full_name','like','%$search%');
+        }
+        $res = $query->count();
+
+        return $res;
+    }
+
      public static function CheckAssociation($id){
 
         $job_query = JobAssociateCandidates::query();
