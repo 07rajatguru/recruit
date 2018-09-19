@@ -483,6 +483,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CandidateController@index'
     ]);
 
+    Route::get('candidate/all', [
+        'as' => 'candidate.all',
+        'uses' => 'CandidateController@getAllCandidates'
+    ]);
+
     Route::get('candidate/create', [
         'as' => 'candidate.create',
         'uses' => 'CandidateController@create'
@@ -605,6 +610,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
+        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+    ]);
+    Route::get('jobs/all', [
+        'as' => 'jobopen.all',
+        'uses' => 'JobOpenController@getAllJobsDetails',
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]);
     Route::post('jobs', [

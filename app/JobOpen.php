@@ -512,7 +512,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobs($all=0,$user_id){
+    public static function getAllJobs($all=0,$user_id,$limit,$offset,$search){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -554,8 +554,19 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
-
-        
+        if (isset($limit) && $limit > 0) {
+            $job_open_query = $job_open_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $job_open_query = $job_open_query->offset($offset);
+        }
+        if (isset($search) && $search != '') {
+            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+        }
         $job_response = $job_open_query->get();
 //print_r($job_response);exit;
         $jobs_list = array();
@@ -619,7 +630,7 @@ class JobOpen extends Model
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
-            $jobs_list[$i]['close_date'] = $value->desired_candidate;
+            $jobs_list[$i]['close_date'] = $value->target_date;
             $jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
@@ -661,6 +672,48 @@ class JobOpen extends Model
 
         //print_r($jobs_list);exit;
         return $jobs_list;
+    }
+
+    public static function getAllJobsCount($all=0,$user_id,$search){
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
+                                                'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
+                                                'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
+                                                'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
+                                            );
+        $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        // assign jobs to logged in user
+        if($all==0){
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+            $job_open_query = $job_open_query->where('user_id','=',$user_id);
+        }
+        //whereIn('job_status',[1,2,3]);
+        //$job_open_query = $job_open_query->whereNotIn('priority',[4,9,10]);
+        $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
+
+        $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        if (isset($search) && $search != '') {
+            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+        }
+        $job_response = $job_open_query->get();
+
+        return sizeof($job_response);
     }
 
     public static function getJobById($job_id){
