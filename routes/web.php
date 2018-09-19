@@ -604,6 +604,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@index',
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]);
+    Route::get('jobs/all', [
+        'as' => 'jobopen.all',
+        'uses' => 'JobOpenController@getAllJobsDetails',
+        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+    ]);
     Route::post('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',

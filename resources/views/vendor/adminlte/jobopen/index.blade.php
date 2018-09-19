@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Openings List ({{ $count }})</h2>
+                <h2>Job Openings List ({{ $count or 0}})</h2>
             </div>
 
             <div class="pull-right">
@@ -133,7 +133,7 @@
         </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
+        {{--<tbody>
 
         @foreach($jobList as $key=>$value)
             <tr>
@@ -149,9 +149,9 @@
                     @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'More Information'])
                     @endif
 
-                    <?php if($isSuperAdmin) {?>
+                    @if($isSuperAdmin)
                     @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
-                    <?php   }?>
+                    @endif
                     @if(isset($value['access']) && $value['access']==1)
                         <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
                     @endif
@@ -176,7 +176,7 @@
 
             </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
     </div>
 @stop
@@ -184,7 +184,7 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
-            var table = jQuery('#jo_table').DataTable( {
+           /* var table = jQuery('#jo_table').DataTable( {
                 responsive: true,
                 "columnDefs": [
                     { "width": "10px", "targets": 0 },
@@ -199,7 +199,33 @@
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#jo_table").dataTable({
+                "bProcessing" : true,
+                "serverSide" : true,
+                "ajax":{
+                    url : "/jobs/all",
+                    type : "get",
+                    error: function(){
+
+                    }
+                },
+                "responsive": true,
+                "columnDefs": [
+                    { "width": "10px", "targets": 0 },
+                    { "width": "10px", "targets": 1 },
+                    { "width": "10px", "targets": 2 },
+                    { "width": "10px", "targets": 3 },
+                    { "width": "10px", "targets": 4 },
+                    { "width": "10px", "targets": 5 },
+                    { "width": "10px", "targets": 6 },
+                    { "width": "10px", "targets": 7 }
+                ],
+                "pageLength": 100,
+                "pagingType": "full_numbers",
+                stateSave: true
+            });
         });
     </script>
 @endsection
