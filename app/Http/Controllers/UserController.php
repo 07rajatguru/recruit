@@ -13,6 +13,7 @@ use Hash;
 use App\Date;
 use App\UserOthersInfo;
 use App\UsersDoc;
+use App\Utils;
 
 class UserController extends Controller
 {
@@ -287,16 +288,35 @@ class UserController extends Controller
 
         $user = array();
 
-        $user_info = User::getProfileInfo($user_id);
+        // profile photo
 
+        $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
+
+        if(isset($user_doc_info))
+        {
+            $user['id'] = $user_doc_info->id;
+            $user['photo'] = $user_doc_info->file;
+            $user['type'] = $user_doc_info->type;
+        }
+        else
+        {
+            $user['id'] = '';
+            $user['photo'] = '';
+            $user['type'] = '';
+        }
+
+        $user_info = User::getProfileInfo($user_id);
+        
         foreach($user_info as $key=>$value)
         {
-            $user['id'] = $user_id;
+            //$user['id'] = $value->photoid;
+            $user['user_id'] = $user_id;
             $user['name'] = $value->name;
             $user['email'] = $value->email;
             $user['s_email'] = $value->secondary_email;
             $user['designation'] = $value->designation;
-            $user['photo'] = $value->file;
+            //$user['photo'] = $value->file;
+            //$user['type'] = $value->type;
             $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
             $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
             $user['salary'] = $value->fixed_salary;
@@ -307,12 +327,37 @@ class UserController extends Controller
             $user['user_full_name'] = $value->bank_full_name;
         }
 
+        $j=0;
+
+        $user['doc'] = array();
+
+        $users_docs = \DB::table('users_doc')
+                      ->select('users_doc.*')
+                      ->where('user_id','=',$user_id)
+                      ->where('type','=','Others')
+                      ->get();
+
+        $utils = new Utils();
+
+        foreach($users_docs as $key=>$value)
+        {
+            $user['doc'][$j]['name'] = $value->name;
+            $user['doc'][$j]['id'] = $value->id;
+            $user['doc'][$j]['url'] = "../".$value->file;
+            $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+            $j++;
+        }
+
+        $user['id'] = $user_id;
+
         return view('adminlte::users.editprofile',array('user' => $user));
     }
 
-    public function profileStore()
+    public function profileStore(Request $request)
     {
         $user_id = \Auth::user()->id;
+
+        $upload_documents = $request->file('upload_documents');
 
         $user_other_info = UserOthersInfo::getUserOtherInfo($user_id);
 
@@ -335,17 +380,69 @@ class UserController extends Controller
             $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD(Input::get('date_of_joining'));
             $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD(Input::get('date_of_birth'));
             $users_otherinfo->fixed_salary = Input::get('salary');
-            $users_otherinfo->acc_no = Input::get('account_no');
+
+            $acc_no = Input::get('account_no');
+
+            if(isset($acc_no) && $acc_no!='')
+            {
+                $users_otherinfo->acc_no = $acc_no;
+            }
+            else
+            {
+                $users_otherinfo->acc_no = '0';
+            }
+           
+            $ifsc_code = Input::get('ifsc');
+
+            if(isset($ifsc_code) && $ifsc_code!='')
+            {
+                $users_otherinfo->ifsc_code = $ifsc_code;
+            }
+            else
+            {
+                $users_otherinfo->ifsc_code = '0';
+            }
+            
             $users_otherinfo->bank_name = Input::get('bank_name');
             $users_otherinfo->branch_name = Input::get('branch_name');
-            $users_otherinfo->ifsc_code = Input::get('ifsc');
             $users_otherinfo->bank_full_name = Input::get('user_full_name');
 
             $users_otherinfo->save();
+
+            if (isset($upload_documents) && sizeof($upload_documents) > 0)
+            {
+                foreach ($upload_documents as $k => $v) {
+                    if (isset($v) && $v->isValid()) {
+                        // echo "here";
+                        $file_name = $v->getClientOriginalName();
+                        $file_extension = $v->getClientOriginalExtension();
+                        $file_realpath = $v->getRealPath();
+                        $file_size = $v->getSize();
+
+                        $dir = 'uploads/users/' . $user_id . '/';
+
+                        if (!file_exists($dir) && !is_dir($dir)) {
+                            mkdir($dir, 0777, true);
+                            chmod($dir, 0777);
+                        }
+                        $v->move($dir, $file_name);
+
+                        $file_path = $dir . $file_name;
+
+                        $users_doc = new UsersDoc();
+                        $users_doc->user_id = $user_id;
+                        $users_doc->file = $file_path;
+                        $users_doc->name = $file_name;
+                        $users_doc->size = $file_size;
+                        $users_doc->type = "Others";
+                        $users_doc->save();
+                    }
+
+                }
+            }
         }
         else
         {
-
             $user_basic_info = User::find($user_id);
 
             $user_basic_info->name = Input::get('name');
@@ -362,89 +459,101 @@ class UserController extends Controller
             $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD(Input::get('date_of_joining'));
             $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD(Input::get('date_of_birth'));
             $users_otherinfo->fixed_salary = Input::get('salary');
-            $users_otherinfo->acc_no = Input::get('account_no');
+
+            $acc_no = Input::get('account_no');
+
+            if(isset($acc_no) && $acc_no!='')
+            {
+                $users_otherinfo->acc_no = $acc_no;
+            }
+            else
+            {
+                $users_otherinfo->acc_no = '0';
+            }
+           
+            $ifsc_code = Input::get('ifsc');
+
+            if(isset($ifsc_code) && $ifsc_code!='')
+            {
+                $users_otherinfo->ifsc_code = $ifsc_code;
+            }
+            else
+            {
+                $users_otherinfo->ifsc_code = '0';
+            }
+
             $users_otherinfo->bank_name = Input::get('bank_name');
             $users_otherinfo->branch_name = Input::get('branch_name');
-            $users_otherinfo->ifsc_code = Input::get('ifsc');
             $users_otherinfo->bank_full_name = Input::get('user_full_name');
 
             $users_otherinfo->save();
+
+
+            if (isset($upload_documents) && sizeof($upload_documents) > 0)
+            {
+                foreach ($upload_documents as $k => $v) {
+                    if (isset($v) && $v->isValid()) {
+                        // echo "here";
+                        $file_name = $v->getClientOriginalName();
+                        $file_extension = $v->getClientOriginalExtension();
+                        $file_realpath = $v->getRealPath();
+                        $file_size = $v->getSize();
+
+                        $dir = 'uploads/users/' . $user_id . '/';
+
+                        if (!file_exists($dir) && !is_dir($dir)) {
+                            mkdir($dir, 0777, true);
+                            chmod($dir, 0777);
+                        }
+                        $v->move($dir, $file_name);
+
+                        $file_path = $dir . $file_name;
+
+                        $users_doc = new UsersDoc();
+                        $users_doc->user_id = $user_id;
+                        $users_doc->file = $file_path;
+                        $users_doc->name = $file_name;
+                        $users_doc->size = $file_size;
+                        $users_doc->type = "Others";
+                        $users_doc->save();
+                    }
+
+                }
+            }
         }
 
         return redirect('/dashboard');
     }
 
-    public function Upload(Request $request)
+    public function UploadPhoto(Request $request)
     {
+        $user_id = \Auth::user()->id;
+           
+        $photo_attach = \DB::table('users_doc')
+        ->select('users_doc.*')
+        ->where('user_id','=',$user_id)
+        ->where('type','Photo')
+        ->first();
+
+        if(isset($photo_attach))
+        {
+            return redirect()->route('users.editprofile')->with('error','Please Remove Old Photo');
+        }
         $file = $request->file('file');
 
         $id = $request->id;
         
-        /*$user_id = \Auth::user()->id;*/
-
-        $user_doc_info = UsersDoc::getUserPhotoInfo($id);
-
-        if(isset($user_doc_info) && $user_doc_info->user_id == $id)
-        {
-            $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
-
-            if(isset($user_photo))
-            {
-                $path="uploads/users/" . $user_photo->user_id;
-                $files=glob($path . "/*");
-
-                foreach($files as $file_nm)
-                {
-                    if(is_file($file_nm))
-                    {
-                        unlink($file_nm);
-                    }
-                }
-
-                $user_id = $user_photo->user_id;
-                $path1="uploads/users/" . $user_id . "/";
-                rmdir($path1);
-            }
-            if (isset($file) && $file->isValid()) 
-            {
-                $doc_name = $file->getClientOriginalName();
-                $doc_filesize = filesize($file);
-
-                $dir_name = "uploads/users/".$id."/";
-                $others_doc_key = "uploads/users/".$id."/".$doc_name;
-
-                if (!file_exists($dir_name)) 
-                {
-                    mkdir("uploads/users/$id", 0777,true);
-                }
-                if(!$file->move($dir_name, $doc_name))
-                {
-                    return false;
-                }
-                else
-                {
-                    $users_doc = UsersDoc::find($user_doc_info->id);
-                    $users_doc->user_id = $id;
-                    $users_doc->file = $others_doc_key;
-                    $users_doc->name = $doc_name;
-                    $users_doc->size = $doc_filesize;
-                    $users_doc->save();
-                }
-            } 
-        }
-        else
-        {
-                if (isset($file) && $file->isValid()) 
+        if (isset($file) && $file->isValid()) 
                 {
                     $doc_name = $file->getClientOriginalName();
                     $doc_filesize = filesize($file);
 
-                    $dir_name = "uploads/users/".$id."/";
-                    $others_doc_key = "uploads/users/".$id."/".$doc_name;
+                    $dir_name = "uploads/users/".$id."/photo/";
+                    $others_doc_key = "uploads/users/".$id."/photo/".$doc_name;
 
                     if (!file_exists($dir_name)) 
                     {
-                        mkdir("uploads/users/$id", 0777,true);
+                        mkdir("uploads/users/$id/photo", 0777,true);
                     }
                     if(!$file->move($dir_name, $doc_name))
                     {
@@ -457,11 +566,58 @@ class UserController extends Controller
                         $users_doc->file = $others_doc_key;
                         $users_doc->name = $doc_name;
                         $users_doc->size = $doc_filesize;
+                        $users_doc->type = "Photo";
                         $users_doc->save();
                     }
                 }
-        }
    
         return redirect()->route('users.editprofile')->with('success','Profile Photo Uploaded Successfully'); 
+    }
+
+    public function photoDestroy($docid)
+    {
+        $photo_attach = \DB::table('users_doc')
+        ->select('users_doc.*')
+        ->where('id','=',$docid)
+        ->where('type','Photo')
+        ->first();
+
+        if(isset($photo_attach))
+        {
+            $path="uploads/users/" . $photo_attach->user_id . "/photo/" . $photo_attach->name;
+            unlink($path);
+
+            $id = $photo_attach->user_id;
+
+            $photo_doc = UsersDoc::where('id','=',$docid)->delete();
+
+        }
+
+        return redirect()->route('users.editprofile')->with('error','Profile Photo Deleted Successfully'); 
+    }
+
+    public function attachmentsDestroy($docid)
+    {
+        echo $docid;
+        exit;
+
+        $photo_attach = \DB::table('users_doc')
+        ->select('users_doc.*')
+        ->where('id','=',$docid)
+        ->where('type','Others')
+        ->first();
+
+        if(isset($photo_attach))
+        {
+            $path="uploads/users/" . $photo_attach->user_id . "/" . $photo_attach->name;
+            unlink($path);
+
+            $id = $photo_attach->user_id;
+
+            $photo_doc = UsersDoc::where('id','=',$docid)->delete();
+
+        }
+
+        return redirect()->route('users.editprofile')->with('error','Attachment Deleted Successfully'); 
     }
 }

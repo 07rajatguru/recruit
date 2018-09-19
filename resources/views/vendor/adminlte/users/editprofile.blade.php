@@ -11,15 +11,12 @@
 
 @if ($message = Session::get('success'))
     <div class="alert alert-success">
-
         <p>{{ $message }}</p>
-
     </div>
 @endif
 
 @if ($message = Session::get('error'))
-    <div class="alert alert-success">
-
+    <div class="alert alert-error">
         <p>{{ $message }}</p>
     </div>
 @endif
@@ -33,14 +30,15 @@
 
         <div class="pull-right">
             
-             @include('adminlte::users.upload', ['data' => $user, 'name' => 'users'])
+             @include('adminlte::users.uploadphoto', ['data' => $user, 'name' => 'userphoto'])
+              @include('adminlte::partials.deleteProfilePhoto', ['data' => $user,'id'=> $user['id'], 'name' => 'profilephoto' ,'display_name'=> 'ProfilePhoto'])
              <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
             
         </div>
     </div>
 </div>
 
-    {!! Form::open(array('route' => 'users.profilestore','method'=>'POST','id' => 'editprofile')) !!}
+    {!! Form::open(array('route' => 'users.profilestore','method'=>'POST','id' => 'editprofile','files' => true)) !!}
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -111,7 +109,13 @@
 
                             <div class="form-group">
                                 <strong>Profile Photo: </strong><br/>
-                                <img src= "../{!!$user['photo']!!}" height="172px" width="170px" />  
+
+                                @if($user['type'] == "Photo")
+                                <img src= "../{!!$user['photo']!!}" height="172px" width="170px" />
+                                @else
+                                <img src= "../{!!$user['photo']!!}" height="172px" width="170px" />
+                                @endif
+
                             </div>
                        
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
@@ -216,34 +220,48 @@
         </div>
     </div>
 
-    
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Attachment Information</h3>
-                </div>
-               
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Document 1:</strong>
-                        {!! Form::file('document1', null, array('id'=>'doc1','class' => 'form-control')) !!}
-                    </div>
+            <div class="box-header with-border col-md-6 ">
+                <h3 class="box-title">Attachment Information</h3>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Upload Documents:</strong>
+                    <input type="file" name="upload_documents[]" multiple class="form-control" />
                 </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Document 2:</strong>
-                        {!! Form::file('document2', null, array('id'=>'document2','class' => 'form-control')) !!}
-                    </div>
-                </div>
+                <table class="table table-bordered">
+                    <tr>
+                        <th></th>
+                        <th>File Name</th>
+                        <th>Size</th>
+                    </tr>
+                        @if(sizeof($user['doc'])>0)
+                            @foreach($user['doc'] as $key=>$value)
+                                <tr>
+                                    <td>
+                                        <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                        &nbsp;
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $user['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments'])
+                                    </td>
 
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Document 3:</strong>
-                        {!! Form::file('document3', null, array('id'=>'document3','class' => 'form-control')) !!}
-                    </div>
-                </div>
+                                    <td>
+                                    <a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}
+                                    </a>
+                                    </td>
+                                    <td>{{ $value['size'] }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+                </table>
+            </div>
+
         </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
         </div>

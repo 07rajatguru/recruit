@@ -391,7 +391,8 @@ class User extends Authenticatable
         $user_response = $query->get();
 
         $list = array();
-        if(sizeof($query)>0){
+        if(sizeof($user_response)>0)
+        {
             foreach ($user_response as $key => $value) {
                 $list[$value->name]= "";
             }
@@ -517,6 +518,21 @@ class User extends Authenticatable
         $query = $query->where('users.id',$user_id);
 
         $response = $query->first();
+
+        return $response;
+    }
+
+    public static function getProfileInfo($user_id)
+    {
+        $query = User::query();
+        $query = $query->leftjoin('role_user','role_user.user_id','=','users.id');
+        $query = $query->leftjoin('roles','roles.id','=','role_user.role_id');
+        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+        $query = $query->leftjoin('users_doc','users_doc.user_id','=','users.id');
+        $query = $query->select('users.name','users.email','users.secondary_email','roles.display_name as designation','users_otherinfo.*','users_doc.id as photoid','users_doc.file','users_doc.type');
+        $query = $query->where('users.id' ,'=',$user_id);
+       
+        $response = $query->get();
 
         return $response;
     }
