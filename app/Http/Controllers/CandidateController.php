@@ -85,8 +85,10 @@ class CandidateController extends Controller
         $offset = $_GET['start'];
         $draw = $_GET['draw'];
         $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
 
-        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search);
+        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order,$type);
         $count = CandidateBasicInfo::getAllCandidatesCount($search);
 
         $candidate_details = array();

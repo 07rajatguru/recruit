@@ -267,6 +267,8 @@ class JobOpenController extends Controller
         $offset = $_GET['start'];
         $draw = $_GET['draw'];
         $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -286,11 +288,11 @@ class JobOpenController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search);
+            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order,$type);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search);
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search);
+            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order,$type);
             $count = JobOpen::getAllJobsCount(0,$user_id,$search);
         }
 

@@ -42,7 +42,7 @@ class ClientBasicinfo extends Ardent
         ];
     }
 
-    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0){
+    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0,$order=0,$type=NULL){
 
         $client_visibility = false;
         $client_visibility_id = env('CLIENTVISIBILITY');
@@ -84,6 +84,25 @@ class ClientBasicinfo extends Ardent
             }
         }
         $query = $query->orderBy('client_basicinfo.id','desc');
+        if (isset($order) && $order >= 0) {
+            if (isset($type) && $type != '') {
+                if ($order == 1) {
+                    $query = $query->orderBy('users.name',$type);
+                }
+                else if ($order == 2) {
+                    $query = $query->orderBy('client_basicinfo.name',$type);
+                }
+                else if ($order == 3) {
+                    $query = $query->orderBy('client_basicinfo.coordinator_prefix',$type);
+                }
+                else if ($order == 4) {
+                    $query = $query->orderBy('client_basicinfo.status',$type);
+                }
+                else if ($order == 5) {
+                    $query = $query->orderBy('client_address.billing_street2',$type);
+                }
+            }
+        }
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
 

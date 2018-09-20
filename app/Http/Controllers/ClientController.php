@@ -218,6 +218,8 @@ class ClientController extends Controller
         $limit = $_GET['length'];
         $offset = $_GET['start'];
         $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
 
         $user =  \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -232,11 +234,11 @@ class ClientController extends Controller
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
         if($isSuperAdmin || $isAdmin || $isStrategy){
-            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order,$type);
             $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
         }
         else{
-            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order,$type);
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
         //print_r($client_array);exit;
