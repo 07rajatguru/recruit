@@ -42,7 +42,7 @@ class ClientBasicinfo extends Ardent
         ];
     }
 
-    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0,$order=0,$type=NULL){
+    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
 
         $client_visibility = false;
         $client_visibility_id = env('CLIENTVISIBILITY');
@@ -85,24 +85,9 @@ class ClientBasicinfo extends Ardent
             $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
             $query = $query->orwhere('client_address.billing_city','like',"%$search%");
         }
-        if (isset($order) && $order >= 0) {
-            if (isset($type) && $type != '') {
-                if ($order == 1) {
-                    $query = $query->orderBy('users.name',$type);
-                }
-                else if ($order == 2) {
-                    $query = $query->orderBy('client_basicinfo.name',$type);
-                }
-                else if ($order == 3) {
-                    $query = $query->orderBy('client_basicinfo.coordinator_prefix',$type);
-                }
-                else if ($order == 4) {
-                    $query = $query->orderBy('client_basicinfo.status',$type);
-                }
-                else if ($order == 5) {
-                    $query = $query->orderBy('client_address.billing_street2',$type);
-                }
-            }
+       // echo $order;exit;
+        if (isset($order) && $order !='') {
+            $query = $query->orderBy($order,$type);
         }
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
@@ -202,9 +187,10 @@ class ClientBasicinfo extends Ardent
         }
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');
-        $res = $query->get();
+        $query = $query->get();
+        $res = $query->count();
 
-        return sizeof($res);
+        return $res;
     }
 
     public static function getClientArray(){

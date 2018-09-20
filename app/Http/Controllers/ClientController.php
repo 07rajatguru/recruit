@@ -212,6 +212,52 @@ class ClientController extends Controller
         return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager','para_cat','mode_cat','std_cat'));
     }
 
+    public static function getOrderColumnName($order,$admin){
+        $order_column_name = '';
+        if($admin){
+            if (isset($order) && $order >= 0) {
+                if ($order == 1) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 2) {
+                    $order_column_name = "client_basicinfo.name";
+                }
+                else if ($order == 3) {
+                    $order_column_name = "client_basicinfo.coordinator_prefix";
+                }
+                else if ($order == 4) {
+                    $order_column_name = "client_basicinfo.category";
+                }
+                else if ($order == 5) {
+                    $order_column_name = "client_basicinfo.status";
+                }
+                else if ($order == 6) {
+                    $order_column_name = "client_address.billing_street2";
+                }
+            }
+        }
+        else{
+            if (isset($order) && $order >= 0) {
+                if ($order == 1) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 2) {
+                    $order_column_name = "client_basicinfo.name";
+                }
+                else if ($order == 3) {
+                    $order_column_name = "client_basicinfo.coordinator_prefix";
+                }
+                else if ($order == 4) {
+                    $order_column_name = "client_basicinfo.status";
+                }
+                else if ($order == 5) {
+                    $order_column_name = "client_address.billing_street2";
+                }
+            }
+        }
+        return $order_column_name;
+    }
+
     public function getAllClientsDetails(){
 
         $draw = $_GET['draw'];
@@ -234,11 +280,14 @@ class ClientController extends Controller
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
         if($isSuperAdmin || $isAdmin || $isStrategy){
-            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order,$type);
+            $order_column_name = self::getOrderColumnName($order,1);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
         }
         else{
-            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order,$type);
+
+            $order_column_name = self::getOrderColumnName($order,0);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
         //print_r($client_array);exit;
