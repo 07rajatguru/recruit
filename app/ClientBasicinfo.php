@@ -78,12 +78,13 @@ class ClientBasicinfo extends Ardent
                 $search = 1;
                 $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
             }
-            if ($search == 'Inactive' || $search == 'inactive') {
+            if ($search == 'Passive' || $search == 'passive') {
                 $search = 0;
                 $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
             }
+            $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
+            $query = $query->orwhere('client_address.billing_city','like',"%$search%");
         }
-        $query = $query->orderBy('client_basicinfo.id','desc');
         if (isset($order) && $order >= 0) {
             if (isset($type) && $type != '') {
                 if ($order == 1) {
