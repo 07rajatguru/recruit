@@ -159,7 +159,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
         //edit profile
-    Route::delete('profilephoto/{id}',[
+   /* Route::delete('profilephoto/{id}',[
         'as' =>'profilephoto.destroy',
         'uses' =>'UserController@photoDestroy'
     ]);
@@ -179,7 +179,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('userphoto/upload/{id}',[
         'as' => 'userphoto.upload',
         'uses' => 'UserController@UploadPhoto'
-    ]);
+    ]);*/
 
     // Admin > Users
     Route::get('users', [

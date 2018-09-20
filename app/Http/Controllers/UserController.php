@@ -244,7 +244,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
+      /*  $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
         if(isset($user_photo))
         {
@@ -272,13 +272,13 @@ class UserController extends Controller
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
-
-      //  User::find($id)->delete();
+*/
+        User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success','User deleted successfully');
     }
 
-    public function editProfile()
+    /*public function editProfile()
     {
         $dateClass = new Date();
 
@@ -350,8 +350,8 @@ class UserController extends Controller
 
         return view('adminlte::users.editprofile',array('user' => $user));
     }
-
-    public function profileStore(Request $request)
+*/
+    /*public function profileStore(Request $request)
     {
         $user_id = \Auth::user()->id;
 
@@ -521,9 +521,9 @@ class UserController extends Controller
         }
 
         return redirect('/dashboard');
-    }
+    }*/
 
-    public function UploadPhoto(Request $request)
+   /* public function UploadPhoto(Request $request)
     {
         $user_id = \Auth::user()->id;
            
@@ -570,9 +570,9 @@ class UserController extends Controller
                 }
    
         return redirect()->route('users.editprofile')->with('success','Profile Photo Uploaded Successfully'); 
-    }
+    }*/
 
-    public function photoDestroy($docid)
+    /*public function photoDestroy($docid)
     {
         $photo_attach = \DB::table('users_doc')
         ->select('users_doc.*')
@@ -593,8 +593,8 @@ class UserController extends Controller
 
         return redirect()->route('users.editprofile')->with('error','Profile Photo Deleted Successfully'); 
     }
-
-    public function attachmentsDestroy($docid)
+*/
+    /*public function attachmentsDestroy($docid)
     {
    
         $doc_attach = \DB::table('users_doc')
@@ -602,9 +602,6 @@ class UserController extends Controller
         ->where('id','=',$docid)
         ->where('type','=','Others')
         ->first();
-/*
-        print_r($doc_attach);
-        exit;*/
 
         if(isset($doc_attach))
         {
@@ -618,5 +615,5 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.editprofile')->with('error','Attachment Deleted Successfully'); 
-    }
+    }*/
 }
