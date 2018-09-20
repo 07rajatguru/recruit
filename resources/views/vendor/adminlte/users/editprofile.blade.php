@@ -63,7 +63,7 @@
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: </strong>
-                                {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '2' )) !!}
+                                {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '2','disabled')) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>
