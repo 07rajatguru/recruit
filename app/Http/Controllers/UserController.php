@@ -294,13 +294,11 @@ class UserController extends Controller
 
         if(isset($user_doc_info))
         {
-            $user['id'] = $user_doc_info->id;
             $user['photo'] = $user_doc_info->file;
             $user['type'] = $user_doc_info->type;
         }
         else
         {
-            $user['id'] = '';
             $user['photo'] = '';
             $user['type'] = '';
         }
@@ -309,7 +307,7 @@ class UserController extends Controller
         
         foreach($user_info as $key=>$value)
         {
-            //$user['id'] = $value->photoid;
+            //$user['id'] = $value->doc_id;
             $user['user_id'] = $user_id;
             $user['name'] = $value->name;
             $user['email'] = $value->email;
@@ -425,6 +423,8 @@ class UserController extends Controller
 
     public function profileStore(Request $request)
     {
+        $upload_profile_photo = $request->file('image');
+
         $user_id = \Auth::user()->id;
 
         $upload_documents = $request->file('upload_documents');
@@ -436,7 +436,6 @@ class UserController extends Controller
             $user_basic_info = User::find($user_id);
 
             $user_basic_info->name = Input::get('name');
-            $user_basic_info->email = Input::get('email');
             $user_basic_info->secondary_email = Input::get('semail');
 
             $user_basic_info->save();
@@ -479,6 +478,37 @@ class UserController extends Controller
 
             $users_otherinfo->save();
 
+            // stored photo
+            if (isset($upload_profile_photo) && $upload_profile_photo->isValid())
+            {
+            
+                $file_name = $upload_profile_photo->getClientOriginalName();
+                $file_extension = $upload_profile_photo->getClientOriginalExtension();
+                $file_realpath = $upload_profile_photo->getRealPath();
+                $file_size = $upload_profile_photo->getSize();
+
+                $dir = 'uploads/users/' . $user_id . '/photo/';
+
+                if (!file_exists($dir) && !is_dir($dir)) 
+                {
+                    mkdir($dir, 0777, true);
+                    chmod($dir, 0777);
+                }
+                $upload_profile_photo->move($dir, $file_name);
+
+                $file_path = $dir . $file_name;
+
+                $users_doc = new UsersDoc();
+                $users_doc->user_id = $user_id;
+                $users_doc->file = $file_path;
+                $users_doc->name = $file_name;
+                $users_doc->size = $file_size;
+                $users_doc->type = "Photo";
+                $users_doc->save();
+            }
+
+            //stored others documents
+
             if (isset($upload_documents) && sizeof($upload_documents) > 0)
             {
                 foreach ($upload_documents as $k => $v) {
@@ -516,7 +546,6 @@ class UserController extends Controller
             $user_basic_info = User::find($user_id);
 
             $user_basic_info->name = Input::get('name');
-            $user_basic_info->email = Input::get('email');
             $user_basic_info->secondary_email = Input::get('semail');
 
             $user_basic_info->save();
@@ -558,7 +587,35 @@ class UserController extends Controller
 
             $users_otherinfo->save();
 
+            // stored photo
+            if (isset($upload_profile_photo) && $upload_profile_photo->isValid())
+            {
+            
+                $file_name = $upload_profile_photo->getClientOriginalName();
+                $file_extension = $upload_profile_photo->getClientOriginalExtension();
+                $file_realpath = $upload_profile_photo->getRealPath();
+                $file_size = $upload_profile_photo->getSize();
 
+                $dir = 'uploads/users/' . $user_id . '/photo/';
+
+                if (!file_exists($dir) && !is_dir($dir)) 
+                {
+                    mkdir($dir, 0777, true);
+                    chmod($dir, 0777);
+                }
+                $upload_profile_photo->move($dir, $file_name);
+
+                $file_path = $dir . $file_name;
+
+                $users_doc = new UsersDoc();
+                $users_doc->user_id = $user_id;
+                $users_doc->file = $file_path;
+                $users_doc->name = $file_name;
+                $users_doc->size = $file_size;
+                $users_doc->type = "Photo";
+                $users_doc->save();
+            }
+            //stores attachmensts
             if (isset($upload_documents) && sizeof($upload_documents) > 0)
             {
                 foreach ($upload_documents as $k => $v) {
@@ -592,78 +649,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect('/dashboard');
-    }
-
-    public function UploadPhoto(Request $request)
-    {
-        $user_id = \Auth::user()->id;
-           
-        $photo_attach = \DB::table('users_doc')
-        ->select('users_doc.*')
-        ->where('user_id','=',$user_id)
-        ->where('type','=','Photo')
-        ->first();
-
-        if(isset($photo_attach))
-        {
-            return redirect()->route('users.editprofile')->with('error','Please Remove Old Photo');
-        }
-        $file = $request->file('file');
-
-        $id = $request->id;
-        
-        if (isset($file) && $file->isValid()) 
-                {
-                    $doc_name = $file->getClientOriginalName();
-                    $doc_filesize = filesize($file);
-
-                    $dir_name = "uploads/users/".$id."/photo/";
-                    $others_doc_key = "uploads/users/".$id."/photo/".$doc_name;
-
-                    if (!file_exists($dir_name)) 
-                    {
-                        mkdir("uploads/users/$id/photo", 0777,true);
-                    }
-                    if(!$file->move($dir_name, $doc_name))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        $users_doc = new UsersDoc();
-                        $users_doc->user_id = $id;
-                        $users_doc->file = $others_doc_key;
-                        $users_doc->name = $doc_name;
-                        $users_doc->size = $doc_filesize;
-                        $users_doc->type = "Photo";
-                        $users_doc->save();
-                    }
-                }
-   
-        return redirect()->route('users.editprofile')->with('success','Profile Photo Uploaded Successfully'); 
-    }
-
-    public function photoDestroy($docid)
-    {
-        $photo_attach = \DB::table('users_doc')
-        ->select('users_doc.*')
-        ->where('id','=',$docid)
-        ->where('type','=','Photo')
-        ->first();
-
-        if(isset($photo_attach))
-        {
-            $path="uploads/users/" . $photo_attach->user_id . "/photo/" . $photo_attach->name;
-            unlink($path);
-
-            $id = $photo_attach->user_id;
-
-            $photo_doc = UsersDoc::where('id','=',$docid)->delete();
-
-        }
-
-        return redirect()->route('users.editprofile')->with('success','Profile Photo Deleted Successfully'); 
+        return redirect()->route('users.editprofile')->with('success','Information Updates Successfully'); 
     }
 
     public function attachmentsDestroy($docid)
@@ -686,6 +672,6 @@ class UserController extends Controller
 
         }
 
-        return redirect()->route('users.editprofile')->with('success','Attachment Deleted Successfully'); 
+        return redirect()->route('users.myprofile')->with('success','Attachment Deleted Successfully'); 
     }
 }

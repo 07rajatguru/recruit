@@ -25,17 +25,14 @@
         <div class="col-lg-12 margin-tb">
 
            <div class="pull-left">
-                <h2>{{ $user['name'] }}</h2>
-            </div>
-            
-           <div class="pull-right">
-
                 @if($user['type'] == "Photo")
                     <img src= "../{!!$user['photo']!!}" height="100px" width="100px" />
                 @else
-                    <img src= "../{!!$user['photo']!!}" height="100px" width="100px" />
+                    <img src= "../../uploads/User_Default.jpg" height="100px" width="100px" />
                 @endif
-
+            </div>
+            
+           <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('users.editprofile') }}">Edit Profile</a>
             </div>
             
@@ -57,24 +54,28 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                      
-                         <tr>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ $user['name'] }}</td>
+                            <th>Designation</th>
+                            <td>{{ $user['designation'] }}</td>
+                        </tr>
+                        <tr>
                             <th>Email</th>
                             <td>{{ $user['email'] }}</td>
                             <th>Secondary Email</th>
                             <td>{{ $user['s_email'] }}</td>
-                         </tr>
-                         <tr>
-                            <th>Designation</th>
-                            <td>{{ $user['designation'] }}</td>
-                            <th>Fixed Salary</th>
-                            <td>{{ $user['salary'] }}</td>
-                         </tr>
-                         <tr>
+                        </tr>
+                        <tr>
                             <th>Birth Date</th>
                             <td>{{ $user['birth_date'] }}</td>
                             <th>Joining Date</th>
                             <td>{{ $user['join_date'] }}</td>
-                         </tr>
+                        </tr>
+                        <tr>
+                            <th>Fixed Salary</th>
+                            <td>{{ $user['salary'] }}</td>
+                        </tr>
 
                     </table>
                 </div>
@@ -94,12 +95,11 @@
                          <tr>
                             <th>Full Name</th>
                             <td>{{ $user['user_full_name'] }}</td>
-                         </tr>
-                         <tr>
                             <th>Bank Name</th>
                             <td>{{ $user['bank_name'] }}</td>
                             <th>Branch Name</th>
                             <td>{{ $user['branch_name'] }}</td>
+                         </tr>
                          <tr>
                             <th>Account Number</th>
                             <td>{{ $user['acc_no'] }}</td>
@@ -138,7 +138,7 @@
                                     <td>
                                         <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $user,'id'=> $user['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments'])
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $value['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments'])
                                     </td>
 
                                     <td>

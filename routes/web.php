@@ -172,14 +172,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'users.myprofile',
         'uses' => 'UserController@profileShow'
     ]);
-    Route::post('userphoto/upload/{id}',[
-        'as' => 'userphoto.upload',
-        'uses' => 'UserController@UploadPhoto'
-    ]);
-    Route::delete('profilephoto/{id}',[
-        'as' =>'profilephoto.destroy',
-        'uses' =>'UserController@photoDestroy'
-    ]);
     Route::delete('usersattachments/destroy/{id}',[
         'as' =>'usersattachments.destroy',
         'uses' =>'UserController@attachmentsDestroy'

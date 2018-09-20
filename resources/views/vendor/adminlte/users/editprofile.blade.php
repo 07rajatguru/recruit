@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'User')
+@section('title', 'User Profile')
 
 @section('content_header')
     <h1></h1>
@@ -29,9 +29,7 @@
 
 
         <div class="pull-right">
-            
-             @include('adminlte::users.uploadphoto', ['data' => $user, 'name' => 'userphoto'])
-              @include('adminlte::partials.deleteProfilePhoto', ['data' => $user,'id'=> $user['id'], 'name' => 'profilephoto' ,'display_name'=> 'ProfilePhoto'])
+
              <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
             
         </div>
@@ -107,15 +105,40 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
 
-                            <div class="form-group">
+                           <!--  <div class="form-group">
                                 <strong>Profile Photo: </strong><br/>
 
                                 @if($user['type'] == "Photo")
                                 <img src= "../{!!$user['photo']!!}" height="172px" width="170px" />
                                 @else
-                                <img src= "../{!!$user['photo']!!}" height="172px" width="170px" />
+                                <img src= "../../uploads/User_Default.jpg" height="100px" width="100px" />
                                 @endif
+                            </div> -->
 
+                            <div class="form-group" id="default_image">
+                                 <img src= "../../uploads/User_Default.jpg" height="150px" width="150px" />
+                            </div>
+
+                            <div class="form-group" id="image_div">
+                            
+                                <div class="form-group file_input_redesign upload_img1">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div style="width: 22px; height: 70px;display:none;" class="fileinput-new thumbnail" data-trigger="fileinput">
+                                            <span>Select Image</span>
+                                        </div>
+                                        <div id = "upload_images_div">
+                                            
+                                        </div>
+                                        <div>
+                                                <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Select Profile Photo</span>
+                                               <!--  <span class="fileinput-exists" style="">Change</span> -->
+                                                <input type="file" name="image" id="upload_img">
+                                                </span>
+                                                <!-- <a href="#" class="btn-default fileinput-exists" data-dismiss="fileinput">Remove</a> -->
+                                        </div>
+                                    </div>  
+                                </div>
                             </div>
                        
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
@@ -231,31 +254,6 @@
                     <strong>Upload Documents:</strong>
                     <input type="file" name="upload_documents[]" multiple class="form-control" />
                 </div>
-
-                <table class="table table-bordered">
-                    <tr>
-                        <th></th>
-                        <th>File Name</th>
-                        <th>Size</th>
-                    </tr>
-                        @if(sizeof($user['doc'])>0)
-                            @foreach($user['doc'] as $key=>$value)
-                                <tr>
-                                    <td>
-                                        <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
-                                        &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $user['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments'])
-                                    </td>
-
-                                    <td>
-                                    <a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}
-                                    </a>
-                                    </td>
-                                    <td>{{ $value['size'] }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                </table>
             </div>
 
         </div>
@@ -284,6 +282,18 @@
                     format: "dd-mm-yyyy",
                     autoclose: true,
             });
+
+
+            $("#upload_img").change(function(){
+            $('#upload_images_div').html("");
+            var total_file=document.getElementById("upload_img").files.length;
+            for(var i=0;i<total_file;i++)
+            {
+                $('#default_image').hide();
+                $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px'>");
+                $('#upload_images_div').append("<br/><br/>");
+            }
+    });
         });
     
     </script>
