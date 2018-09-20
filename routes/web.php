@@ -158,8 +158,29 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
 
+        //edit profile
+   /* Route::delete('profilephoto/{id}',[
+        'as' =>'profilephoto.destroy',
+        'uses' =>'UserController@photoDestroy'
+    ]);
+    Route::delete('usersattachments/destroy/{id}',[
+        'as' =>'usersattachments.destroy',
+        'uses' =>'UserController@attachmentsDestroy'
+    ]);
     
-    
+    Route::get('users/editprofile',[
+        'as' => 'users.editprofile',
+        'uses' => 'UserController@editProfile'
+    ]);
+    Route::post('users/profilestore',[
+        'as' => 'users.profilestore',
+        'uses' => 'UserController@profileStore'
+    ]);
+    Route::post('userphoto/upload/{id}',[
+        'as' => 'userphoto.upload',
+        'uses' => 'UserController@UploadPhoto'
+    ]);*/
+
     // Admin > Users
     Route::get('users', [
         'as' => 'users.index',
@@ -181,30 +202,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@store',
         'middleware' => ['permission:user-create']
     ]);
-
-    //edit profile
-    
-    Route::get('users/editprofile',[
-        'as' => 'users.editprofile',
-        'uses' => 'UserController@editProfile'
-    ]);
-    Route::post('users/profilestore',[
-        'as' => 'users.profilestore',
-        'uses' => 'UserController@profileStore'
-    ]);
-    Route::post('userphoto/upload/{id}',[
-        'as' => 'userphoto.upload',
-        'uses' => 'UserController@UploadPhoto'
-    ]);
-    Route::delete('profilephoto/{id}',[
-        'as' =>'profilephoto.destroy',
-        'uses' =>'UserController@photoDestroy'
-    ]);
-    Route::delete('user/destroy/{id}',[
-        'as' =>'usersattachments.destroy',
-        'uses' =>'UserController@attachmentsDestroy'
-    ]);
-
     Route::get('users/{id}', [
         'as' => 'users.show',
         'uses' => 'UserController@show'
@@ -224,6 +221,8 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@destroy',
         'middleware' => ['permission:user-delete']
     ]);
+
+
 
     // Admin > Roles
     Route::get('roles', [

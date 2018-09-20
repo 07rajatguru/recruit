@@ -244,7 +244,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
+      /*  $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
         if(isset($user_photo))
         {
@@ -272,13 +272,13 @@ class UserController extends Controller
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
-
-      //  User::find($id)->delete();
+*/
+        User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success','User deleted successfully');
     }
 
-    public function editProfile()
+    /*public function editProfile()
     {
         $dateClass = new Date();
 
@@ -348,12 +348,10 @@ class UserController extends Controller
             $j++;
         }
 
-        $user['id'] = $user_id;
-
         return view('adminlte::users.editprofile',array('user' => $user));
     }
-
-    public function profileStore(Request $request)
+*/
+    /*public function profileStore(Request $request)
     {
         $user_id = \Auth::user()->id;
 
@@ -523,16 +521,16 @@ class UserController extends Controller
         }
 
         return redirect('/dashboard');
-    }
+    }*/
 
-    public function UploadPhoto(Request $request)
+   /* public function UploadPhoto(Request $request)
     {
         $user_id = \Auth::user()->id;
            
         $photo_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('user_id','=',$user_id)
-        ->where('type','Photo')
+        ->where('type','=','Photo')
         ->first();
 
         if(isset($photo_attach))
@@ -572,14 +570,14 @@ class UserController extends Controller
                 }
    
         return redirect()->route('users.editprofile')->with('success','Profile Photo Uploaded Successfully'); 
-    }
+    }*/
 
-    public function photoDestroy($docid)
+    /*public function photoDestroy($docid)
     {
         $photo_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
-        ->where('type','Photo')
+        ->where('type','=','Photo')
         ->first();
 
         if(isset($photo_attach))
@@ -595,29 +593,27 @@ class UserController extends Controller
 
         return redirect()->route('users.editprofile')->with('error','Profile Photo Deleted Successfully'); 
     }
-
-    public function attachmentsDestroy($docid)
+*/
+    /*public function attachmentsDestroy($docid)
     {
-        echo $docid;
-        exit;
-
-        $photo_attach = \DB::table('users_doc')
+   
+        $doc_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
-        ->where('type','Others')
+        ->where('type','=','Others')
         ->first();
 
-        if(isset($photo_attach))
+        if(isset($doc_attach))
         {
-            $path="uploads/users/" . $photo_attach->user_id . "/" . $photo_attach->name;
+            $path="uploads/users/" . $doc_attach->user_id . "/" . $doc_attach->name;
             unlink($path);
 
-            $id = $photo_attach->user_id;
+            $id = $doc_attach->user_id;
 
-            $photo_doc = UsersDoc::where('id','=',$docid)->delete();
+            $doc = UsersDoc::where('id','=',$docid)->delete();
 
         }
 
         return redirect()->route('users.editprofile')->with('error','Attachment Deleted Successfully'); 
-    }
+    }*/
 }

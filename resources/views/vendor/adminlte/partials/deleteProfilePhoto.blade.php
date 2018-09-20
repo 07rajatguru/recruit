@@ -1,6 +1,6 @@
 <a data-toggle="modal" href="#modal-delete-{!! $data['id'] !!}" class="btn btn-danger" title="Delete">
 
-    Delete Profile Photo
+    Remove Profile Photo
 </a>
 <div id="modal-delete-{!! $data['id'] !!}" class="modal text-left fade">
 
