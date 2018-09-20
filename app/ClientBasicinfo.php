@@ -42,7 +42,7 @@ class ClientBasicinfo extends Ardent
         ];
     }
 
-    public static function getAllClients($all=0,$user_id,$rolePermissions){
+    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0){
 
         $client_visibility = false;
         $client_visibility_id = env('CLIENTVISIBILITY');
@@ -63,6 +63,25 @@ class ClientBasicinfo extends Ardent
         else if ($all == 0){
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
             $query = $query->where('account_manager_id',$user_id);
+        }
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+        if (isset($search) && $search != '') {
+            $query = $query->where('users.name','like',"%$search%");
+            $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
+            $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+            if ($search == 'Active' || $search == 'active') {
+                $search = 1;
+                $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+            }
+            if ($search == 'Inactive' || $search == 'inactive') {
+                $search = 0;
+                $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+            }
         }
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');
@@ -130,6 +149,42 @@ class ClientBasicinfo extends Ardent
         }
 
         return $client_array;
+    }
+
+    public static function getAllClientsCount($all=0,$user_id,$search=0){
+
+        $query = ClientBasicinfo::query();
+        $query = $query->join('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        if ($all == 1) {
+            $query = $query->leftJoin('client_doc',function($join){
+                                $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
+                                $join->where('client_doc.category','=','Client Contract');
+                            });
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+        }
+        else if ($all == 0){
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->where('account_manager_id',$user_id);
+        }
+        if (isset($search) && $search != '') {
+            $query = $query->where('users.name','like',"%$search%");
+            $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
+            $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+            if ($search == 'Active' || $search == 'active') {
+                $search = 1;
+                $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+            }
+            if ($search == 'Inactive' || $search == 'inactive') {
+                $search = 0;
+                $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+            }
+        }
+        $query = $query->orderBy('client_basicinfo.id','desc');
+        $query = $query->groupBy('client_basicinfo.id');
+        $res = $query->get();
+
+        return sizeof($res);
     }
 
     public static function getClientArray(){
