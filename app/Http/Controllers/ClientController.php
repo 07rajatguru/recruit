@@ -108,10 +108,10 @@ class ClientController extends Controller
             $client_array[$i]['account_mangr_id']=$client->account_manager_id;*/
 
             
-            if($client['status'] == 1 ){
+            if($client['status'] == 'Active' ){
                 $active++;
             }
-            else if ($client['status'] == 0){
+            else if ($client['status'] == 'Passive'){
                 $passive++;
             }
 
@@ -214,6 +214,11 @@ class ClientController extends Controller
 
     public function getAllClientsDetails(){
 
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+
         $user =  \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -227,12 +232,12 @@ class ClientController extends Controller
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
         if($isSuperAdmin || $isAdmin || $isStrategy){
-            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
-            //$count = sizeof($client_array);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search);
+            $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
         }
         else{
-            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
-            //$count = sizeof($client_array);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search);
+            $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
         //print_r($client_array);exit;
         $account_manager=User::getAllUsers('recruiter');
@@ -241,6 +246,25 @@ class ClientController extends Controller
         $i = 0;
         foreach ($client_res as $key => $value) {
             $action = '';
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility']){
+                $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+            }
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner']){
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($isSuperAdmin){
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+                if(isset($value['url']) && $value['url']!=''){
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
+            }
+            if($isSuperAdmin || $isStrategy ){
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
+                $account = $account_manager_view->render();
+                $action .= $account;
+            }
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
@@ -251,16 +275,25 @@ class ClientController extends Controller
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
             else
                 $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span>';
-            $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address'],$action);
+            if($isSuperAdmin || $isStrategy ){
+                $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address'],$action);
+            }
+            else{
+                $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address'],$action);
+            }
+
             $clients[$i] = $data;
+            $i++;
         }
 
         $json_data = array(
-            'draw' => intval(1),
-            'recordsTotal' => intval(100),
-            'recordsFiltered' => intval(100),
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
             "data" => $clients
         );
+
+        echo json_encode($json_data);exit;
     }
 
     public function create()

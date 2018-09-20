@@ -102,8 +102,8 @@
                 <th width="280px">Action</th>
             </tr>
         </thead>
-        <tbody>
-       <?php $i=0; ?>
+        {{--<tbody>
+      
         @foreach ($client_array as $key => $client)
             <tr>
                 <td>{{ Form::checkbox('client',$client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
@@ -114,9 +114,9 @@
 
                 <td>{{ $client['hr_name'] }}</td>
 
-                <?php if($isSuperAdmin || $isStrategy ) { ?>
-                <td>{{ $client['category']}}</td>
-                <?php }?>
+                @if($isSuperAdmin || $isStrategy )
+                    <td>{{ $client['category']}}</td>
+                @endif
 
                 @if($client['status']=='Active')
                     <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
@@ -127,31 +127,31 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
                 <td>
 
-                    <?php if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility']) { ?>
+                    @if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility'])
                         <a title="Show" class="fa fa-circle"  href="{{ route('client.show',$client['id']) }}"></a>
-                     <?php } ?>
+                    @endif
 
-                    {{-- Only Client Owner, Admin and Super admin have access to edit rights--}}
-                    <?php if($isSuperAdmin || $isAdmin || $client['client_owner']) { ?>
+                    {{-- Only Client Owner, Admin and Super admin have access to edit rights
+                    @if($isSuperAdmin || $isAdmin || $client['client_owner'])
                         <a title="Edit" class="fa fa-edit" href="{{ route('client.edit',$client['id']) }}"></a>
-                    <?php  }?>
+                    @endif
 
-                    <?php if($isSuperAdmin) { ?>
+                    @if($isSuperAdmin)
                     @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
                         @if(isset($client['url']) && $client['url']!='')
                             <a target="_blank" href="{{$client['url']}}"><i  class="fa fa-fw fa-download"></i></a>
                         @endif
-                    <?php  }?>
+                    @endif
 
-                    <?php if($isSuperAdmin || $isStrategy ) { ?>
+                    @if($isSuperAdmin || $isStrategy )
                         @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
-                    <?php }?>
+                    @endif
 
                 </td>
 
             </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
 
 <div class="modal fade searchmodal" id="searchmodal" aria-        labelledby="searchmodal" role="dialog">
@@ -187,14 +187,33 @@
     <script type="text/javascript">
       jQuery( document ).ready(function() {
 
-        var table = jQuery('#client_table').DataTable( {
+        /*var table = jQuery('#client_table').DataTable( {
                     responsive: true,
                     "pageLength": 100,
                     stateSave : true,
-                    "aoColumnDefs": [
+                    /*"aoColumnDefs": [
                         { "bSearchable": false, "aTargets": [ 7 ]}
                     ]
-            } );
+                     new jQuery.fn.dataTable.FixedHeader( table );
+            } );*/
+
+        $("#client_table").dataTable({
+            'bProcessing' : true,
+            'serverSide' : true,
+            "columnDefs": [ {orderable: false, targets: [0]},
+                        ],
+            "ajax" : {
+                'url' : '/client/all',
+                'type' : 'get',
+                error: function(){
+
+                }
+            },
+            responsive: true,
+            "pageLength": 100,
+            "pagingType": "full_numbers",
+            stateSave : true,
+        });
 
             $('#allcb').change(function(){
                 if($(this).prop('checked')){
@@ -217,16 +236,15 @@
                     $("#allcb").prop('checked', false);
                 }
             });
-
-            new jQuery.fn.dataTable.FixedHeader( table );
         });
 
 function client_emails_notification()
 {
             var client_ids = new Array();
             var token = $("#token").val();
+            var table = $("#client_table").dataTable();
 
-                $("input:checkbox[name=client]:checked").each(function(){
+                table.$("input:checkbox[name=client]:checked").each(function(){
                     client_ids.push($(this).val());
 
 
