@@ -512,7 +512,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0){
+    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type=NULL){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -553,7 +553,20 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
-        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        if (isset($order) && $order >= 0) {
+            if (isset($type) && $type != '') {
+                if ($order == 0) {
+                    $job_open_query = $job_open_query->orderBy('job_openings.updated_at',$type);
+                }
+                else if ($order == 2) {
+                    $job_open_query = $job_open_query->orderBy('users.name',$type);
+                }
+                else if ($order == 3) {
+                    $job_open_query = $job_open_query->orderBy('client_basicinfo.display_name',$type);
+                }
+            }
+        }
+
         if (isset($limit) && $limit > 0) {
             $job_open_query = $job_open_query->limit($limit);
         }

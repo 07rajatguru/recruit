@@ -133,7 +133,7 @@
         </tr>
         </thead>
         <?php $i=0; ?>
-        {{--<tbody>
+        <tbody>
 
         @foreach($jobList as $key=>$value)
             <tr>
@@ -176,7 +176,7 @@
 
             </tr>
         @endforeach
-        </tbody>--}}
+        </tbody>
     </table>
     </div>
 @stop
@@ -184,7 +184,7 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
-           /* var table = jQuery('#jo_table').DataTable( {
+            var table = jQuery('#jo_table').DataTable( {
                 responsive: true,
                 "columnDefs": [
                     { "width": "10px", "targets": 0 },
@@ -199,9 +199,9 @@
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );*/
+            new jQuery.fn.dataTable.FixedHeader( table );
 
-            $("#jo_table").dataTable({
+            /*$("#jo_table").dataTable({
                 "bProcessing" : true,
                 "serverSide" : true,
                 "ajax":{
@@ -225,7 +225,7 @@
                 "pageLength": 100,
                 "pagingType": "full_numbers",
                 stateSave: true
-            });
+            });*/
         });
     </script>
 @endsection

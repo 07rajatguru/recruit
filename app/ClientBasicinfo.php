@@ -42,7 +42,7 @@ class ClientBasicinfo extends Ardent
         ];
     }
 
-    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0){
+    public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
 
         $client_visibility = false;
         $client_visibility_id = env('CLIENTVISIBILITY');
@@ -78,12 +78,17 @@ class ClientBasicinfo extends Ardent
                 $search = 1;
                 $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
             }
-            if ($search == 'Inactive' || $search == 'inactive') {
+            if ($search == 'Passive' || $search == 'passive') {
                 $search = 0;
                 $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
             }
+            $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
+            $query = $query->orwhere('client_address.billing_city','like',"%$search%");
         }
-        $query = $query->orderBy('client_basicinfo.id','desc');
+       // echo $order;exit;
+        if (isset($order) && $order !='') {
+            $query = $query->orderBy($order,$type);
+        }
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
 
@@ -182,9 +187,10 @@ class ClientBasicinfo extends Ardent
         }
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');
-        $res = $query->get();
+        $query = $query->get();
+        $res = $query->count();
 
-        return sizeof($res);
+        return $res;
     }
 
     public static function getClientArray(){

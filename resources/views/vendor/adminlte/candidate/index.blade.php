@@ -84,6 +84,8 @@
             $("#candidate_table").dataTable({
                 "bProcessing": true,
                 "serverSide": true,
+                "columnDefs": [ {orderable: false, targets: [1]},
+                                ],
                 "ajax":{
                     url :"/candidate/all", // json datasource
                     type: "get",  // type of method  , by default would be get

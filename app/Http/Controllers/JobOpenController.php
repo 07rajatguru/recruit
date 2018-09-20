@@ -181,7 +181,7 @@ class JobOpenController extends Controller
             $count = JobOpen::getAllJobsCount(0,$user_id,'');
         }
 
-        /*$access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllJobs(1,$user_id);
         }
@@ -255,9 +255,9 @@ class JobOpenController extends Controller
         $viewVariable['jobList'] = $job_response;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
-        $viewVariable['count'] = $count;*/
+        $viewVariable['count'] = $count;
 
-        return view('adminlte::jobopen.index'/*, $viewVariable*/,compact('count'/*,'priority_0','priority_1','priority_2','priority_3','priority_4','priority_5','priority_6','priority_7','priority_8','priority_9','priority_10'*/));
+        return view('adminlte::jobopen.index', $viewVariable,compact('count','priority_0','priority_1','priority_2','priority_3','priority_4','priority_5','priority_6','priority_7','priority_8','priority_9','priority_10'));
 
     }
 
@@ -267,6 +267,8 @@ class JobOpenController extends Controller
         $offset = $_GET['start'];
         $draw = $_GET['draw'];
         $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -286,11 +288,11 @@ class JobOpenController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search);
+            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order,$type);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search);
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search);
+            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order,$type);
             $count = JobOpen::getAllJobsCount(0,$user_id,$search);
         }
 
