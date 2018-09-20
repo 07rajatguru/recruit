@@ -43,27 +43,27 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="col-md-2">
-                <div style="height:30px;background-color:#E9967A;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Paramount ({{ $para_cat }})
+    @if($isSuperAdmin || $isStrategy )
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+                <div class="col-md-2">
+                    <div style="height:30px;background-color:#E9967A;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Paramount ({{ $para_cat }})
+                    </div>
                 </div>
-            </div>
-            &nbsp;
+                &nbsp;
 
-            <div class="col-md-2">
-                <div style="height:30px;background-color:#D3D3D3;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Moderate ({{ $mode_cat }})
+                <div class="col-md-2">
+                    <div style="height:30px;background-color:#D3D3D3;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Moderate ({{ $mode_cat }})
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-md-2">
-                <div style="height:30px;background-color:#00CED1;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Standard ({{ $std_cat }})
+                <div class="col-md-2">
+                    <div style="height:30px;background-color:#00CED1;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Standard ({{ $std_cat }})
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    
+    @endif
 
 
     <br>
