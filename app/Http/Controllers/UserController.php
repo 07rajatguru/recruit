@@ -348,8 +348,6 @@ class UserController extends Controller
             $j++;
         }
 
-        $user['id'] = $user_id;
-
         return view('adminlte::users.editprofile',array('user' => $user));
     }
 
@@ -532,7 +530,7 @@ class UserController extends Controller
         $photo_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('user_id','=',$user_id)
-        ->where('type','Photo')
+        ->where('type','=','Photo')
         ->first();
 
         if(isset($photo_attach))
@@ -579,7 +577,7 @@ class UserController extends Controller
         $photo_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
-        ->where('type','Photo')
+        ->where('type','=','Photo')
         ->first();
 
         if(isset($photo_attach))
@@ -598,23 +596,24 @@ class UserController extends Controller
 
     public function attachmentsDestroy($docid)
     {
-        echo $docid;
-        exit;
-
-        $photo_attach = \DB::table('users_doc')
+   
+        $doc_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
-        ->where('type','Others')
+        ->where('type','=','Others')
         ->first();
+/*
+        print_r($doc_attach);
+        exit;*/
 
-        if(isset($photo_attach))
+        if(isset($doc_attach))
         {
-            $path="uploads/users/" . $photo_attach->user_id . "/" . $photo_attach->name;
+            $path="uploads/users/" . $doc_attach->user_id . "/" . $doc_attach->name;
             unlink($path);
 
-            $id = $photo_attach->user_id;
+            $id = $doc_attach->user_id;
 
-            $photo_doc = UsersDoc::where('id','=',$docid)->delete();
+            $doc = UsersDoc::where('id','=',$docid)->delete();
 
         }
 
