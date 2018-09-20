@@ -244,7 +244,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-      /*  $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
+      $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
         if(isset($user_photo))
         {
@@ -272,13 +272,85 @@ class UserController extends Controller
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
-*/
-        User::find($id)->delete();
+
+        //User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success','User deleted successfully');
     }
 
-    /*public function editProfile()
+    public function profileShow()
+    {
+        $dateClass = new Date();
+
+        $user_id = \Auth::user()->id;
+
+        $role_id = User::getRoleIdByUserId($user_id);
+
+        $user = array();
+
+        // profile photo
+
+        $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
+
+        if(isset($user_doc_info))
+        {
+            $user['id'] = $user_doc_info->id;
+            $user['photo'] = $user_doc_info->file;
+            $user['type'] = $user_doc_info->type;
+        }
+        else
+        {
+            $user['id'] = '';
+            $user['photo'] = '';
+            $user['type'] = '';
+        }
+
+        $user_info = User::getProfileInfo($user_id);
+        
+        foreach($user_info as $key=>$value)
+        {
+            //$user['id'] = $value->photoid;
+            $user['user_id'] = $user_id;
+            $user['name'] = $value->name;
+            $user['email'] = $value->email;
+            $user['s_email'] = $value->secondary_email;
+            $user['designation'] = $value->designation;
+            //$user['photo'] = $value->file;
+            //$user['type'] = $value->type;
+            $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
+            $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
+            $user['salary'] = $value->fixed_salary;
+            $user['acc_no'] = $value->acc_no;
+            $user['bank_name'] = $value->bank_name;
+            $user['branch_name'] = $value->branch_name;
+            $user['ifsc_code'] = $value->ifsc_code;
+            $user['user_full_name'] = $value->bank_full_name;
+        }
+
+        $j=0;
+
+        $user['doc'] = array();
+
+        $users_docs = \DB::table('users_doc')
+                      ->select('users_doc.*')
+                      ->where('user_id','=',$user_id)
+                      ->where('type','=','Others')
+                      ->get();
+
+        $utils = new Utils();
+
+        foreach($users_docs as $key=>$value)
+        {
+            $user['doc'][$j]['name'] = $value->name;
+            $user['doc'][$j]['id'] = $value->id;
+            $user['doc'][$j]['url'] = "../".$value->file;
+            $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+            $j++;
+        }
+
+        return view('adminlte::users.myprofile',array('user' => $user));
+    }
+    public function editProfile()
     {
         $dateClass = new Date();
 
@@ -350,8 +422,8 @@ class UserController extends Controller
 
         return view('adminlte::users.editprofile',array('user' => $user));
     }
-*/
-    /*public function profileStore(Request $request)
+
+    public function profileStore(Request $request)
     {
         $user_id = \Auth::user()->id;
 
@@ -521,9 +593,9 @@ class UserController extends Controller
         }
 
         return redirect('/dashboard');
-    }*/
+    }
 
-   /* public function UploadPhoto(Request $request)
+    public function UploadPhoto(Request $request)
     {
         $user_id = \Auth::user()->id;
            
@@ -570,9 +642,9 @@ class UserController extends Controller
                 }
    
         return redirect()->route('users.editprofile')->with('success','Profile Photo Uploaded Successfully'); 
-    }*/
+    }
 
-    /*public function photoDestroy($docid)
+    public function photoDestroy($docid)
     {
         $photo_attach = \DB::table('users_doc')
         ->select('users_doc.*')
@@ -591,10 +663,10 @@ class UserController extends Controller
 
         }
 
-        return redirect()->route('users.editprofile')->with('error','Profile Photo Deleted Successfully'); 
+        return redirect()->route('users.editprofile')->with('success','Profile Photo Deleted Successfully'); 
     }
-*/
-    /*public function attachmentsDestroy($docid)
+
+    public function attachmentsDestroy($docid)
     {
    
         $doc_attach = \DB::table('users_doc')
@@ -614,6 +686,6 @@ class UserController extends Controller
 
         }
 
-        return redirect()->route('users.editprofile')->with('error','Attachment Deleted Successfully'); 
-    }*/
+        return redirect()->route('users.editprofile')->with('success','Attachment Deleted Successfully'); 
+    }
 }
