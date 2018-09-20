@@ -168,11 +168,13 @@
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; /*height: 200px;*/">
                                                         <ul class="menu" style="overflow: hidden; width: 100%;/* height: 200px;*/">
+                                                          {{-- 
                                                             <li>
                                                                 <a href="{{ route('users.myprofile') }}">
                                                                 <i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;My Profile
                                                                 </a>
                                                             </li>
+                                                          --}}  
                                                             <li>
                                                                 @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
                                                                     <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
