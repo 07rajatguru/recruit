@@ -88,12 +88,26 @@ class JobOpen extends Model
         $job_priorities['2'] = '#00B0F0';
         $job_priorities['3'] = '#FABF8F';
         $job_priorities['4'] = '#B1A0C7';
+        $job_priorities['5'] = 'yellow';
+        $job_priorities['6'] = '';
+        $job_priorities['7'] = '#808080';
+        $job_priorities['8'] = '#92D050';
+        $job_priorities['9'] = '#92D050';
+        $job_priorities['10'] = '#FFFFFF'; 
+
+        /*$job_priorities['0'] = '';
+        $job_priorities['1'] = '#FF0000';
+        $job_priorities['2'] = '#00B0F0';
+        $job_priorities['3'] = '#FABF8F';
+        $job_priorities['4'] = '#B1A0C7';
         $job_priorities['5'] = '#92D050';
         $job_priorities['6'] = '#yellow';
         $job_priorities['7'] = '#808080';
         $job_priorities['8'] = '#808080';
         $job_priorities['9'] = '#92D050';
-        $job_priorities['10'] = '#FFFFFF';
+        $job_priorities['10'] = '#FFFFFF';*/
+
+
 
         return $job_priorities;
     }
