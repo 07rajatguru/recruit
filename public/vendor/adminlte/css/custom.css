@@ -323,7 +323,8 @@ tr.disabled > td a {
 .fc-title{
     color:black;
 }
-.sidebar-menu{
-    height: 600px !important;
+.Admin{
+    margin-top : -150px !important;
+    height: 200px !important;
     overflow-y: scroll !important;
 }
