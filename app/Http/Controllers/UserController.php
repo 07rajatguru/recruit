@@ -280,12 +280,17 @@ class UserController extends Controller
 
     public function profileShow()
     {
+        //superadmin
+        $users =  \Auth::user();
+        $userRole = $users->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $dateClass = new Date();
-
         $user_id = \Auth::user()->id;
-
-        $role_id = User::getRoleIdByUserId($user_id);
-
         $user = array();
 
         // profile photo
@@ -307,14 +312,11 @@ class UserController extends Controller
         
         foreach($user_info as $key=>$value)
         {
-            //$user['id'] = $value->doc_id;
-            $user['user_id'] = $user_id;
+            $user['id'] = $user_id;
             $user['name'] = $value->name;
             $user['email'] = $value->email;
             $user['s_email'] = $value->secondary_email;
             $user['designation'] = $value->designation;
-            //$user['photo'] = $value->file;
-            //$user['type'] = $value->type;
             $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
             $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
             $user['salary'] = $value->fixed_salary;
@@ -323,6 +325,20 @@ class UserController extends Controller
             $user['branch_name'] = $value->branch_name;
             $user['ifsc_code'] = $value->ifsc_code;
             $user['user_full_name'] = $value->bank_full_name;
+
+            $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
+            $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+            $user['spouse_name'] = $value->spouse_name;
+            $user['spouse_profession'] = $value->spouse_profession;
+            $user['spouse_contact_number'] = $value->spouse_contact_number;
+
+            $user['father_name'] = $value->father_name;
+            $user['father_profession'] = $value->father_profession;
+            $user['father_contact_number'] = $value->father_contact_number;
+
+            $user['mother_name'] = $value->mother_name;
+            $user['mother_profession'] = $value->mother_profession;
+            $user['mother_contact_number'] = $value->mother_contact_number;
         }
 
         $j=0;
@@ -346,16 +362,21 @@ class UserController extends Controller
             $j++;
         }
 
-        return view('adminlte::users.myprofile',array('user' => $user));
+        return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant'));
     }
     public function editProfile()
     {
+         //superadmin
+        $users =  \Auth::user();
+        $userRole = $users->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $dateClass = new Date();
-
         $user_id = \Auth::user()->id;
-
-        $role_id = User::getRoleIdByUserId($user_id);
-
         $user = array();
 
         // profile photo
@@ -364,13 +385,13 @@ class UserController extends Controller
 
         if(isset($user_doc_info))
         {
-            $user['id'] = $user_doc_info->id;
+            
             $user['photo'] = $user_doc_info->file;
             $user['type'] = $user_doc_info->type;
         }
         else
         {
-            $user['id'] = '';
+            
             $user['photo'] = '';
             $user['type'] = '';
         }
@@ -379,14 +400,11 @@ class UserController extends Controller
         
         foreach($user_info as $key=>$value)
         {
-            //$user['id'] = $value->photoid;
             $user['user_id'] = $user_id;
             $user['name'] = $value->name;
             $user['email'] = $value->email;
             $user['s_email'] = $value->secondary_email;
             $user['designation'] = $value->designation;
-            //$user['photo'] = $value->file;
-            //$user['type'] = $value->type;
             $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
             $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
             $user['salary'] = $value->fixed_salary;
@@ -395,6 +413,20 @@ class UserController extends Controller
             $user['branch_name'] = $value->branch_name;
             $user['ifsc_code'] = $value->ifsc_code;
             $user['user_full_name'] = $value->bank_full_name;
+
+            $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
+            $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+            $user['spouse_name'] = $value->spouse_name;
+            $user['spouse_profession'] = $value->spouse_profession;
+            $user['spouse_contact_number'] = $value->spouse_contact_number;
+
+            $user['father_name'] = $value->father_name;
+            $user['father_profession'] = $value->father_profession;
+            $user['father_contact_number'] = $value->father_contact_number;
+
+            $user['mother_name'] = $value->mother_name;
+            $user['mother_profession'] = $value->mother_profession;
+            $user['mother_contact_number'] = $value->mother_contact_number;
         }
 
         $j=0;
@@ -418,7 +450,7 @@ class UserController extends Controller
             $j++;
         }
 
-        return view('adminlte::users.editprofile',array('user' => $user));
+        return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant'));
     }
 
     public function profileStore(Request $request)
@@ -476,9 +508,26 @@ class UserController extends Controller
             $users_otherinfo->branch_name = Input::get('branch_name');
             $users_otherinfo->bank_full_name = Input::get('user_full_name');
 
+            $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD(Input::get('date_of_anni'));
+            $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD(Input::get('date_of_exit'));
+
+            $users_otherinfo->spouse_name = Input::get('spouse_name');
+            $users_otherinfo->spouse_profession = Input::get('spouse_profession');
+            $users_otherinfo->spouse_contact_number = Input::get('spouse_contact_no');
+
+            $users_otherinfo->father_name = Input::get('father_name');
+            $users_otherinfo->father_profession = Input::get('father_profession');
+            $users_otherinfo->father_contact_number = Input::get('father_contact_no');
+
+            $users_otherinfo->mother_name = Input::get('mother_name');
+            $users_otherinfo->mother_profession = Input::get('mother_profession');
+            $users_otherinfo->mother_contact_number = Input::get('mother_contact_no');
             $users_otherinfo->save();
 
             // stored photo
+
+            $user_photo_info = UsersDoc::getUserPhotoInfo($user_id);
+
             if (isset($upload_profile_photo) && $upload_profile_photo->isValid())
             {
             
@@ -487,6 +536,18 @@ class UserController extends Controller
                 $file_realpath = $upload_profile_photo->getRealPath();
                 $file_size = $upload_profile_photo->getSize();
 
+                $path="uploads/users/" . $user_id . '/photo';
+
+                $files=glob($path . "/*");
+
+                foreach($files as $file)
+                {
+                    if(is_file($file))
+                    {
+                        unlink($file);
+                    }
+                }
+          
                 $dir = 'uploads/users/' . $user_id . '/photo/';
 
                 if (!file_exists($dir) && !is_dir($dir)) 
@@ -498,13 +559,26 @@ class UserController extends Controller
 
                 $file_path = $dir . $file_name;
 
-                $users_doc = new UsersDoc();
-                $users_doc->user_id = $user_id;
-                $users_doc->file = $file_path;
-                $users_doc->name = $file_name;
-                $users_doc->size = $file_size;
-                $users_doc->type = "Photo";
-                $users_doc->save();
+                if(isset($user_photo_info))
+                {
+                    $users_doc = UsersDoc::find($user_photo_info->id);
+                    $users_doc->user_id = $user_id;
+                    $users_doc->file = $file_path;
+                    $users_doc->name = $file_name;
+                    $users_doc->size = $file_size;
+                    $users_doc->type = "Photo";
+                    $users_doc->save();
+                }
+                else
+                {
+                    $users_doc = new UsersDoc();
+                    $users_doc->user_id = $user_id;
+                    $users_doc->file = $file_path;
+                    $users_doc->name = $file_name;
+                    $users_doc->size = $file_size;
+                    $users_doc->type = "Photo";
+                    $users_doc->save();
+                }
             }
 
             //stored others documents
@@ -585,6 +659,21 @@ class UserController extends Controller
             $users_otherinfo->branch_name = Input::get('branch_name');
             $users_otherinfo->bank_full_name = Input::get('user_full_name');
 
+            $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD(Input::get('date_of_anni'));
+            $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD(Input::get('date_of_exit'));
+
+            $users_otherinfo->spouse_name = Input::get('spouse_name');
+            $users_otherinfo->spouse_profession = Input::get('spouse_profession');
+            $users_otherinfo->spouse_contact_number = Input::get('spouse_contact_no');
+
+            $users_otherinfo->father_name = Input::get('father_name');
+            $users_otherinfo->father_profession = Input::get('father_profession');
+            $users_otherinfo->father_contact_number = Input::get('father_contact_no');
+
+            $users_otherinfo->mother_name = Input::get('mother_name');
+            $users_otherinfo->mother_profession = Input::get('mother_profession');
+            $users_otherinfo->mother_contact_number = Input::get('mother_contact_no');
+
             $users_otherinfo->save();
 
             // stored photo
@@ -649,12 +738,49 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('users.editprofile')->with('success','Information Updates Successfully'); 
+        return redirect()->route('users.editprofile')->with('success','Profile Updated Successfully'); 
     }
 
+    public function Upload(Request $request)
+    {
+        $file = $request->file('file');
+
+        $id = $request->id;
+
+        if (isset($file) && $file->isValid()) 
+        {
+            $doc_name = $file->getClientOriginalName();
+            $doc_filesize = filesize($file);
+
+            $dir_name = "uploads/users/".$id."/";
+            $others_doc_key = "uploads/users/".$id."/".$doc_name;
+
+             if (!file_exists($dir_name)) 
+            {
+                mkdir("uploads/users/$id", 0777,true);
+            }
+
+            if(!$file->move($dir_name, $doc_name))
+            {
+                return false;
+            }
+            else
+            {
+                $users_doc = new UsersDoc();
+                $users_doc->user_id = $id;
+                $users_doc->file = $others_doc_key;
+                $users_doc->name = $doc_name;
+                $users_doc->size = $doc_filesize;
+                $users_doc->type = "Others";
+                $users_doc->save();
+            }
+        }
+
+         return redirect()->route('users.myprofile')->with('success','Attachment Uploaded Successfully'); 
+    }
     public function attachmentsDestroy($docid)
     {
-   
+
         $doc_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
