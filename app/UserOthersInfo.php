@@ -19,4 +19,23 @@ class UserOthersInfo extends Model
 
         return $response;
     }
+
+    public static function getLeaveType()
+    {
+        $type = array();
+        $type['']='Select Leave Type';
+        $type['Early'] = 'Early Go';
+        $type['Half'] = 'Half Day';
+        $type['Full'] = 'Full Day';
+        return $type;
+    }
+
+    public static function getLeaveCategory()
+    {
+        $type = array();
+        $type['']='Select Leave Category';
+        $type['Casual'] = 'Casual Leave';
+        $type['Medical'] = 'Medical Leave';
+        return $type;
+    }
 }

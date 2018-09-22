@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\ToDos;
 use App\User;
 use App\EmailsNotifications;
-
+use App\UserLeave;
 class EveryMinute extends Command
 {
     /**
@@ -92,8 +92,6 @@ class EveryMinute extends Command
 
             if ($value['module'] == 'Job Open') 
             {
-
-
                 $to_array=array();
                 $to_array=explode(",",$input['to']);
 
@@ -157,6 +155,30 @@ class EveryMinute extends Command
                         });              
                
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+            else if ($value['module'] == 'Leave') 
+            {
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']); 
+
+                $input['cc_array']=array_unique($cc_array);
+
+                $user_name = User::getUserNameById($module_id);
+
+                $input['uname'] = $user_name;
+
+                $leave = UserLeave::find($module_id);
+
+                $input['leave_message'] = $leave->message;
+
+                \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                        });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
+
+                \DB::statement("UPDATE user_leave SET `status`='$status' where `id` = '$module_id'"); 
             }
 
         }

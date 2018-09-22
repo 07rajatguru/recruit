@@ -14,6 +14,8 @@ use App\Date;
 use App\UserOthersInfo;
 use App\UsersDoc;
 use App\Utils;
+use App\UserLeave;
+use App\Events\NotificationMail;
 
 class UserController extends Controller
 {
@@ -799,5 +801,55 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.myprofile')->with('success','Attachment Deleted Successfully'); 
+    }
+
+    public function userLeave()
+    {
+         $leave_type = UserOthersInfo::getLeaveType();
+         $leave_category = UserOthersInfo::getLeaveCategory();
+         return view('adminlte::users.leave',compact('leave_type','leave_category'));
+    }
+
+    public function leaveStore(Request $request)
+    {
+         $user_id = \Auth::user()->id;
+         $dateClass = new Date();
+
+         $user_leave = new UserLeave();
+
+         $user_leave->user_id = $user_id;
+         $user_leave->subject = Input::get('subject');
+         $user_leave->from_date = $dateClass->changeDMYtoYMD(Input::get('from_date'));
+         $user_leave->to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
+         $user_leave->type_of_leave = Input::get('leave_type');
+         $user_leave->category = Input::get('leave_category');
+         $user_leave->message = "Kindly Approved My Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . " " .Input::get('leave_msg');
+         $user_leave->status = '0';
+
+         $user_leave->save();
+
+         $superadmin_userid = getenv('SUPERADMINUSERID');
+         $floor_incharge_id = User::getFloorInchargeById($user_id);
+         $reports_to_id = User::getReportsToById($user_id);
+
+         $superadmin_secondary_email=User::getUserSecondaryEmailById($superadmin_userid);
+         
+         $floor_incharge_secondary_email = User::getUserSecondaryEmailById($floor_incharge_id);
+
+         $reports_to_secondary_email = User::getUserSecondaryEmailById($reports_to_id);
+
+         $cc_users_array = array($floor_incharge_secondary_email,$superadmin_secondary_email);
+
+         $module = "Leave";
+         $sender_name = $user_id;
+         $to = $reports_to_secondary_email;
+         $cc = implode(",",$cc_users_array);
+         $subject = $user_leave->subject;
+         $body_message = $user_leave->message;
+         $module_id = $user_leave->id;
+
+         event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+         return redirect()->route('users.leave')->with('success',' Successfully');
     }
 }

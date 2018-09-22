@@ -226,7 +226,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-     public static function getTypeArray(){
+    public static function getTypeArray(){
         $type = array();
         $type['admin'] = 'Admin Team';
         $type['recruiter'] = 'Recruitment Team';
@@ -535,5 +535,41 @@ class User extends Authenticatable
         $response = $query->get();
 
         return $response;
+    }
+
+    public static function getFloorInchargeById($user_id)
+    {
+        $user_floor_incharge = '';
+
+        $query = User::query();
+        $query = $query->select('floor_incharge');
+      
+        $query = $query->where('users.id',$user_id);
+
+        $response = $query->first();
+
+        if(isset($response)){
+            $user_floor_incharge = $response->floor_incharge;
+        }
+
+        return $user_floor_incharge;
+    }
+
+    public static function getReportsToById($user_id)
+    {
+        $user_reports_to = '';
+
+        $query = User::query();
+        $query = $query->select('reports_to');
+      
+        $query = $query->where('users.id',$user_id);
+
+        $response = $query->first();
+
+        if(isset($response)){
+            $user_reports_to = $response->reports_to;
+        }
+
+        return $user_reports_to;
     }
 }

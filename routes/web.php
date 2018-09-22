@@ -158,7 +158,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
 
-        //edit profile
+    //User Profile
     
     Route::get('users/editprofile',[
         'as' => 'users.editprofile',
@@ -179,6 +179,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('usersattachments/destroy/{id}',[
         'as' =>'usersattachments.destroy',
         'uses' =>'UserController@attachmentsDestroy'
+    ]);
+    Route::get('users/leave',[
+        'as' => 'users.leave',
+        'uses' => 'UserController@userLeave'
+    ]);
+    Route::post('users/leavestore',[
+        'as' => 'users.leavestore',
+        'uses' => 'UserController@leaveStore'
     ]);
 
     // Admin > Users
