@@ -187,7 +187,7 @@
             var table = jQuery('#jo_table').DataTable( {
                 responsive: true,
                 "columnDefs": [
-                    { "width": "10px", "targets": 0 },
+                    { "width": "10px", "targets": 0, "order": 'desc' },
                     { "width": "10px", "targets": 1 },
                     { "width": "10px", "targets": 2 },
                     { "width": "10px", "targets": 3 },
@@ -201,31 +201,7 @@
             });
             new jQuery.fn.dataTable.FixedHeader( table );
 
-            /*$("#jo_table").dataTable({
-                "bProcessing" : true,
-                "serverSide" : true,
-                "ajax":{
-                    url : "/jobs/all",
-                    type : "get",
-                    error: function(){
-
-                    }
-                },
-                "responsive": true,
-                "columnDefs": [
-                    { "width": "10px", "targets": 0 },
-                    { "width": "10px", "targets": 1 },
-                    { "width": "10px", "targets": 2 },
-                    { "width": "10px", "targets": 3 },
-                    { "width": "10px", "targets": 4 },
-                    { "width": "10px", "targets": 5 },
-                    { "width": "10px", "targets": 6 },
-                    { "width": "10px", "targets": 7 }
-                ],
-                "pageLength": 100,
-                "pagingType": "full_numbers",
-                stateSave: true
-            });*/
+            
         });
     </script>
 @endsection

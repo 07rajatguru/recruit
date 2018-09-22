@@ -553,10 +553,12 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
-        if (isset($order) && $order >= 0) {
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+
+        /*if (isset($order) && $order >= 0) {
             if (isset($type) && $type != '') {
                 if ($order == 0) {
-                    $job_open_query = $job_open_query->orderBy('job_openings.updated_at',$type);
+                    $job_open_query = $job_open_query->orderBy('job_openings.updated_at','asc');
                 }
                 else if ($order == 2) {
                     $job_open_query = $job_open_query->orderBy('users.name',$type);
@@ -565,9 +567,9 @@ class JobOpen extends Model
                     $job_open_query = $job_open_query->orderBy('client_basicinfo.display_name',$type);
                 }
             }
-        }
+        }*/
 
-        if (isset($limit) && $limit > 0) {
+       /* if (isset($limit) && $limit > 0) {
             $job_open_query = $job_open_query->limit($limit);
         }
         if (isset($offset) && $offset > 0) {
@@ -579,7 +581,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
             $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
             $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
-        }
+        }*/
         $job_response = $job_open_query->get();
 //print_r($job_response);exit;
         $jobs_list = array();
@@ -687,7 +689,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobsCount($all=0,$user_id,$search){
+    /*public static function getAllJobsCount($all=0,$user_id,$search){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -727,7 +729,7 @@ class JobOpen extends Model
         $job_response = $job_open_query->get();
 
         return sizeof($job_response);
-    }
+    }*/
 
     public static function getJobById($job_id){
 

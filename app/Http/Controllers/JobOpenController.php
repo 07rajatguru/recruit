@@ -173,13 +173,13 @@ class JobOpenController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
+        /*$access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $count = JobOpen::getAllJobsCount(1,$user_id,'');
         }
         else{
             $count = JobOpen::getAllJobsCount(0,$user_id,'');
-        }
+        }*/
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
@@ -261,7 +261,7 @@ class JobOpenController extends Controller
 
     }
 
-    public function getAllJobsDetails(){
+    /*public function getAllJobsDetails(){
 
         $limit = $_GET['length'];
         $offset = $_GET['start'];
@@ -336,7 +336,7 @@ class JobOpenController extends Controller
         );
 
         echo json_encode($json_data);exit;
-    }
+    }*/
 
     /*public function index(Request $request)
     {
