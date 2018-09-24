@@ -111,11 +111,14 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'lead.create',
         'uses'=>'LeadController@create']);
 
-
-
     Route::get('lead',[
         'as'=>'lead.index',
         'uses'=>'LeadController@index']);
+
+    Route::get('/lead/all',[
+        'as' => 'lead.all',
+        'uses' => 'LeadController@getAllLeadsDetails'
+    ]);
 
     Route::get('lead/cancel', [
         'as' => 'lead.leadcancel',

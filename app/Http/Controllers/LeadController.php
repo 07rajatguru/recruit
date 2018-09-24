@@ -47,6 +47,74 @@ class LeadController extends Controller
 
     }
 
+    public function getAllLeadsDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id =  env('STRATEGY');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        if(in_array($user_role_id,$access_roles_id))
+        {
+            $leads_res = Lead::getAllLeads(1,$user->id);
+        }
+        else
+        {
+            $leads_res = Lead::getAllLeads(0,$user->id);
+        }
+
+        $lead = array();
+        $i = 0;$j = 0;
+        foreach ($leads_res as $key => $value) {
+            $action = '';
+
+            if($value['access']){
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).' }}" style="margin:2px;"></a>';
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            if ($value['convert_client'] == 0){
+                if($value['access']){
+                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'"></a>';
+                }
+            }
+
+            if($value['convert_client'] == 1){
+                $color='#32CD32';
+            }
+            else{
+                $color='';
+            }
+            $company_name = '<a style="background-color:'.$color.';white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
+
+            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['source'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['lead_status']);
+            $lead[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval(1000),
+            'recordsFiltered' => intval(1000),
+            "data" => $lead
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     public function cancellead()
     {
         $user = \Auth::user();

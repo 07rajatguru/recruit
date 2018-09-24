@@ -46,17 +46,17 @@
             </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
+        {{--<tbody>
             
             @foreach($leads as $key=>$value)
-            <?php
-            if($value['convert_client'] == 1) {
+            
+            @if($value['convert_client'] == 1) 
                 $color='#32CD32';
-            }
-            else{
+            
+            @else
                 $color='';
-            }
-                 ?>
+            @endif
+                 
             <tr >
                 <td>{{ ++$i }}</td>
                  <td>
@@ -102,7 +102,7 @@
                
                 </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
  
     </table>
    </div>
@@ -110,12 +110,30 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#lead_table').DataTable( {
+           /* var table = jQuery('#lead_table').DataTable( {
                 responsive: true,
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#lead_table").DataTable({
+                "bProcessing": true,
+                "serverSide": true,
+                "columnDefs": [ {orderable: false, targets: [1]},
+                                ],
+                "ajax":{
+                    url :"/lead/all", // json datasource
+                    type: "get",  // type of method  , by default would be get
+                    error: function(){  // error handling code
+                      //  $("#employee_grid_processing").css("display","none");
+                    }
+                },
+                "pageLength": 50,
+                "responsive": true,
+                "pagingType": "full_numbers",
+                "stateSave" : true,
+            });
         });
     </script>
 @endsection
