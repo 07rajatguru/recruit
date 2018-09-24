@@ -163,13 +163,13 @@ class EveryMinute extends Command
 
                 $input['cc_array']=array_unique($cc_array);
 
-                $user_name = User::getUserNameById($module_id);
-
-                $input['uname'] = $user_name;
-
                 $leave = UserLeave::find($module_id);
 
                 $input['leave_message'] = $leave->message;
+
+                $logged_in_user_id = $leave->user_id;
+
+                $input['logged_in_user_nm'] = User::getUserNameById($logged_in_user_id);
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                 $message->from($input['from_address'], $input['from_name']);
@@ -178,7 +178,7 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
 
-                \DB::statement("UPDATE user_leave SET `status`='$status' where `id` = '$module_id'"); 
+                /*\DB::statement("UPDATE user_leave SET `status`='$status' where `id` = '$module_id'"); */
             }
 
         }
