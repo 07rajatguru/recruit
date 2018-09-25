@@ -84,6 +84,7 @@
             $("#candidate_table").dataTable({
                 "bProcessing": true,
                 "serverSide": true,
+                "order": [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]},
                                 ],
                 "ajax":{
@@ -93,7 +94,7 @@
                       //  $("#employee_grid_processing").css("display","none");
                     }
                 },
-                "pageLength": 100,
+                "pageLength": 50,
                 "responsive": true,
                 "autoWidth": false,
                 "pagingType": "full_numbers",

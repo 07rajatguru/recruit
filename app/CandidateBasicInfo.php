@@ -55,30 +55,14 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type=NULL){
+    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc'){
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
         if (isset($order) && $order >= 0) {
-            if (isset($type) && $type != '') {
-                if ($order == 0) {
-                    $query = $query->orderBy('candidate_basicinfo.id',$type);
-                }
-                else if ($order == 2) {
-                    $query = $query->orderBy('candidate_basicinfo.full_name',$type);
-                }
-                else if ($order == 3) {
-                    $query = $query->orderBy('users.name',$type);
-                }
-                else if ($order == 4) {
-                    $query = $query->orderBy('candidate_basicinfo.email',$type);
-                }
-                else if ($order == 5) {
-                    $query = $query->orderBy('candidate_basicinfo.mobile',$type);
-                }
-            }
+           $query = $query->orderBy($order,$type);
         }
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);

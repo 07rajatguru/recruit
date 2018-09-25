@@ -73,6 +73,28 @@ class CandidateController extends Controller
         return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count'));
     }
 
+    public static function getCandidateOrderColumnName($order){
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "candidate_basicinfo.id";
+            }
+            else if ($order == 2) {
+                $order_column_name = "candidate_basicinfo.full_name";
+            }
+            else if ($order == 3) {
+                $order_column_name = "users.name";
+            }
+            else if ($order == 4) {
+                $order_column_name = "candidate_basicinfo.email";
+            }
+            else if ($order == 5) {
+                $order_column_name = "candidate_basicinfo.mobile";
+            }
+        }
+        return $order_column_name;
+    }
+
     public function getAllCandidates(){
 
         $user =  \Auth::user();
@@ -88,7 +110,8 @@ class CandidateController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
 
-        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order,$type);
+        $order_column_name = self::getCandidateOrderColumnName($order);
+        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type);
         $count = CandidateBasicInfo::getAllCandidatesCount($search);
 
         $candidate_details = array();

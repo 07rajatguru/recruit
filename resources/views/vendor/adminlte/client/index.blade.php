@@ -210,7 +210,7 @@
                 }
             },
             responsive: true,
-            "pageLength": 100,
+            "pageLength": 50,
             "pagingType": "full_numbers",
             stateSave : true,
         });
