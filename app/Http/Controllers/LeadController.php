@@ -26,25 +26,56 @@ class LeadController extends Controller
         $access_roles_id = array($superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id))
         {
-            $leads = Lead::getAllLeads(1,$user->id);
+            $count = Lead::getAllLeadsCount(1,$user->id);
             $convert_client = Lead::getConvertedClient(1,$user->id);
         }
         else
         {
-            $leads = Lead::getAllLeads(0,$user->id);
+            $count = Lead::getAllLeadsCount(0,$user->id);
             $convert_client = Lead::getConvertedClient(0,$user->id);
         }
-       // print_r($leads);exit;
 
         $convert_client_count = sizeof($convert_client);
         //print_r($convert_client_count);exit;
+        return view('adminlte::lead.index',compact(/*'leads','lead_count',*/'count','convert_client_count'));
 
-        $lead_count = 0;
+    }
 
-        $count = sizeof($leads);
-        //$lead = Lead::orderBy('id','DESC')->paginate(50);
-        return view('adminlte::lead.index',compact('leads','lead_count','count','convert_client_count'));
-
+     public static function getLeadOrderColumnName($order){
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "lead_management.id";
+            }
+            else if ($order == 2) {
+                $order_column_name = "lead_management.name";
+            }
+            else if ($order == 3) {
+                $order_column_name = "lead_management.coordinator_name";
+            }
+            else if ($order == 4) {
+                $order_column_name = "lead_management.mail";
+            }
+            else if ($order == 5) {
+                $order_column_name = "lead_management.mobile";
+            }
+            else if ($order == 6) {
+                $order_column_name = "lead_management.city";
+            }
+            else if ($order == 7) {
+                $order_column_name = "users.name";
+            }
+            else if ($order == 8) {
+                $order_column_name = "lead_management.website";
+            }
+            else if ($order == 9) {
+                $order_column_name = "lead_management.source";
+            }
+            else if ($order == 10) {
+                $order_column_name = "lead_management.designation";
+            }
+        }
+        return $order_column_name;
     }
 
     public function getAllLeadsDetails(){
@@ -56,6 +87,7 @@ class LeadController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
 
+        $order_column_name = self::getLeadOrderColumnName($order);
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
@@ -65,12 +97,14 @@ class LeadController extends Controller
         $access_roles_id = array($superadmin_role_id,$strategy_role_id);
         $access_roles_id = array($superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id))
-        {
-            $leads_res = Lead::getAllLeads(1,$user->id);
+        {   
+            $count = Lead::getAllLeadsCount(1,$user->id,$search);
+            $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
         }
         else
-        {
-            $leads_res = Lead::getAllLeads(0,$user->id);
+        {   
+            $count = Lead::getAllLeadsCount(0,$user->id,$search);
+            $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
         }
 
         $lead = array();
@@ -91,24 +125,18 @@ class LeadController extends Controller
                 }
             }
 
-            if($value['convert_client'] == 1){
-                $color='#32CD32';
-            }
-            else{
-                $color='';
-            }
-            $company_name = '<a style="background-color:'.$color.';white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
 
-            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['source'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['lead_status']);
+            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['source'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['lead_status'],$value['convert_client']);
             $lead[$i] = $data;
             $i++;
         }
 
         $json_data = array(
             'draw' => intval($draw),
-            'recordsTotal' => intval(1000),
-            'recordsFiltered' => intval(1000),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
             "data" => $lead
         );
 

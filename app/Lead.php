@@ -53,7 +53,7 @@ class Lead extends Model
         return $statusArray;
     }
 
-    public static function getAllLeads($all=0,$user_id){
+    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
 
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id = env('STRATEGY');
@@ -63,10 +63,47 @@ class Lead extends Model
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
-        $query = $query->orderBy('lead_management.id','desc');
+        if (isset($order) && $order != '') {
+            $query = $query->orderBy($order,$type);
+        }
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
 
         if($all==0){
             $query = $query->where('account_manager_id',$user_id);
+            if (isset($search) && $search != '') {
+                $query = $query->where(function($query) use ($search){
+                    $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                    $query = $query->orwhere('lead_management.city','like',"%$search%");
+                    $query = $query->orwhere('users.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.website','like',"%$search%");
+                    $query = $query->orwhere('lead_management.source','like',"%$search%");
+                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                });
+            }
+        }
+        else{
+            if (isset($search) && $search != '') {
+                $query = $query->where(function($query) use ($search){
+                    $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                    $query = $query->orwhere('lead_management.city','like',"%$search%");
+                    $query = $query->orwhere('users.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.website','like',"%$search%");
+                    $query = $query->orwhere('lead_management.source','like',"%$search%");
+                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                });
+            }
         }
 
         $response = $query->get();
@@ -100,6 +137,54 @@ class Lead extends Model
             }
             $i++;
         }
+
+        return $response;
+    }
+
+    public static function getAllLeadsCount($all=0,$user_id,$search=NULL){
+
+        $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id = env('STRATEGY');
+
+        $cancel_lead = 0;
+        $query = Lead::query();
+        $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
+        $query = $query->select('lead_management.*', 'users.name as referredby');
+        $query = $query->where('cancel_lead',$cancel_lead);
+
+        if($all==0){
+            $query = $query->where('account_manager_id',$user_id);
+            if (isset($search) && $search != '') {
+                $query = $query->where(function($query) use ($search){
+                    $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                    $query = $query->orwhere('lead_management.city','like',"%$search%");
+                    $query = $query->orwhere('users.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.website','like',"%$search%");
+                    $query = $query->orwhere('lead_management.source','like',"%$search%");
+                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                });
+            }
+        }
+        else{
+            if (isset($search) && $search != '') {
+                $query = $query->where(function($query) use ($search){
+                    $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                    $query = $query->orwhere('lead_management.city','like',"%$search%");
+                    $query = $query->orwhere('users.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.website','like',"%$search%");
+                    $query = $query->orwhere('lead_management.source','like',"%$search%");
+                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                });
+            }
+        }
+
+        $response = $query->count();
 
         return $response;
     }

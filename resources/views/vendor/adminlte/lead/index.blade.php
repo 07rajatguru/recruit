@@ -43,6 +43,7 @@
                 <th>Country</th>
                 <th>Remarks</th>
                 <th>Lead Status</th>
+                <th>Convert Client</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -117,11 +118,12 @@
             });
             new jQuery.fn.dataTable.FixedHeader( table );*/
 
+            
             $("#lead_table").DataTable({
                 "bProcessing": true,
                 "serverSide": true,
-                "columnDefs": [ {orderable: false, targets: [1]},
-                                ],
+                "order" : [0,'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]}],
                 "ajax":{
                     url :"/lead/all", // json datasource
                     type: "get",  // type of method  , by default would be get
@@ -133,7 +135,20 @@
                 "responsive": true,
                 "pagingType": "full_numbers",
                 "stateSave" : true,
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[19] == "1" )
+                    {
+                        $('td:eq(2)', Row).css('background-color', 'LimeGreen');
+                    }
+                    else
+                    {
+                        $('td:eq(2)', Row).css('background-color', 'white');
+                    }
+                }
             });
+            
+            var table = $('#lead_table').DataTable();
+            table.columns( [19] ).visible( false );
         });
     </script>
 @endsection
