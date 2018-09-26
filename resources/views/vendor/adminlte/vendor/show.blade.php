@@ -66,6 +66,8 @@
                          <tr>
                             <th>Type Of Organization</th>
                             <td>{{ $vendor['organization_type'] }}</td>
+                            <th>Website</th>
+                            <td>{{ $vendor['website'] }}</td>
                         </tr>
                     </table>
                 </div>
@@ -83,7 +85,7 @@
                     <table class="table table-bordered">
                         <tr>
                             <th>Vendor Address</th>
-                            <td>{{ $vendor['address'] }}</td>
+                            <td>{{ $vendor['vendor_address'] }}</td>
                             <th>Pincode</th>
                             <td>{{ $vendor['pincode'] }}</td>
                         </tr>
@@ -106,7 +108,7 @@
                             <th>Bank Name</th>
                             <td>{{ $vendor['bank_name'] }}</td>
                             <th>Bank Address</th>
-                            <td>{{ $vendor['address'] }}</td>
+                            <td>{{ $vendor['bank_address'] }}</td>
                         </tr>
                         <tr>
                             <th>Account Number</th>

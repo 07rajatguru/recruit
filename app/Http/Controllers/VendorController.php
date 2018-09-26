@@ -82,7 +82,7 @@ class VendorController extends Controller
         $vendor_basicinfo  = \DB::table('vendor_basicinfo')
             ->leftjoin('vendor_bank_details', 'vendor_bank_details.vendor_id', '=', 'vendor_basicinfo.id')
             ->leftjoin('state', 'state.state_id', '=', 'vendor_basicinfo.state_id')
-            ->select('vendor_basicinfo.*','state.state_nm as state_name','vendor_bank_details.*')
+            ->select('vendor_basicinfo.*','vendor_basicinfo.address as vendor_address','state.state_nm as state_name','vendor_bank_details.*','vendor_bank_details.address as bank_address')
             ->where('vendor_basicinfo.id','=',$id)
             ->get();
 
@@ -98,14 +98,14 @@ class VendorController extends Controller
             $vendor['designation'] = $value->designation;
             $vendor['organization'] = $value->organization_type;
             $vendor['website'] = $value->website;
-            $vendor['vendor_address'] = $value->address;
+            $vendor['vendor_address'] = $value->vendor_address;
             $vendor['pincode'] = $value->pincode;
             $vendor['gst_no'] = $value->gst_in;
             $vendor['gst_charge']=$value->gst_charge;
             $vendor['pan_no'] = $value->pan_no;
             $state_id=$value->state_id;
             $vendor['bank_name']=$value->bank_name;
-            $vendor['bank_address']=$value->address;
+            $vendor['bank_address']=$value->bank_address;
             $vendor['account']=$value->acc_no;
             $vendor['ifsc']=$value->ifsc_code;
             $vendor['acc_type']=$value->acc_type;
@@ -338,7 +338,7 @@ class VendorController extends Controller
         $vendor_basicinfo  = \DB::table('vendor_basicinfo')
             ->leftjoin('vendor_bank_details', 'vendor_bank_details.vendor_id', '=', 'vendor_basicinfo.id')
             ->leftjoin('state', 'state.state_id', '=', 'vendor_basicinfo.state_id')
-            ->select('vendor_basicinfo.*','state.state_nm as state_name','vendor_bank_details.*')
+            ->select('vendor_basicinfo.*','vendor_basicinfo.address as vendor_address','state.state_nm as state_name','vendor_bank_details.*','vendor_bank_details.address as bank_address')
             ->where('vendor_basicinfo.id','=',$id)
             ->get();
 
@@ -356,14 +356,15 @@ class VendorController extends Controller
             $vendor['contact_point'] = $value->contact_point;
             $vendor['designation'] = $value->designation;
             $vendor['organization_type'] = $value->organization_type;
-            $vendor['address'] = $value->address;
+            $vendor['website'] = $value->website;
+            $vendor['vendor_address'] = $value->vendor_address;
             $vendor['pincode'] = $value->pincode;
             $vendor['gst_in'] = $value->gst_in;
             $vendor['gst_charge']=$value->gst_charge;
             $vendor['pan_no'] = $value->pan_no;
             $vendor['state_nm'] = $value->state_name;
             $vendor['bank_name']=$value->bank_name;
-            $vendor['address']=$value->address;
+            $vendor['bank_address']=$value->bank_address;
             $vendor['acc_no']=$value->acc_no;
             $vendor['ifsc_code']=$value->ifsc_code;
             $vendor['acc_type']=$value->acc_type;
