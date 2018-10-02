@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\TodosFrequency',
         'App\Console\Commands\TodosFrequencyCheck',
         'App\Console\Commands\ClientStatus',
+        'App\Console\Commands\JobOpentoAll',
     ];
 
     /**

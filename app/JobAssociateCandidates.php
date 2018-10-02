@@ -252,4 +252,13 @@ class JobAssociateCandidates extends Model
         return $result;
     }
 
+    public static function getJobAssociatedCvsCount($job_id){
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->where('job_id',$job_id);
+        $res = $query->count();
+
+        return $res;
+    }
+
 }

@@ -55,7 +55,7 @@
             <th>Target Industries</th>
             <th>Desired Candidate</th>
             <th>Open Date</th>
-            <th>Target Date</th>
+            {{--<th>Target Date</th>--}}
 
         </tr>
         </thead>
@@ -94,8 +94,8 @@
                 <td>{{ $value['qual'] or ''}}</td>
                 <td>{{ $value['industry'] or ''}}</td>
                 <td>{{ $value['desired_candidate'] or ''}}</td>
-                <td>{{ $value['open_date'] or ''}}</td>
-                <td>{{ $value['close_date'] or ''}}</td>
+                <td>{{ $value['created_date'] or ''}}</td>
+                {{--<td>{{ $value['close_date'] or ''}}</td>--}}
 
 
             </tr>

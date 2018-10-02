@@ -239,7 +239,7 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
                                                 
                                             );
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
@@ -304,6 +304,7 @@ class JobOpen extends Model
             $jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
+            $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
             }
@@ -547,7 +548,7 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
@@ -664,7 +665,7 @@ class JobOpen extends Model
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
-
+            $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
             }
@@ -795,8 +796,35 @@ class JobOpen extends Model
             $response['interview_time'] = $datearray[1];
             $response['interview_location'] = $v->interview_location;
             $response['interview_type'] = $v->interview_type;
+            $response['client_id'] = $v->client_id;
+            $response['job_unique_id'] = $v->job_id;
         }
 
         return $response;
+    }
+
+    public static function getJobBeforeThreeday(){
+
+        $date = date('Y-m-d',strtotime('-2 days'));
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job = JobOpen::query();
+        $job = $job->select('job_openings.id','job_openings.created_at');
+        $job = $job->where('job_openings.created_at','like',"%$date%");
+        $job = $job->whereNotIn('priority',$job_status);
+        $job_res = $job->get();
+
+        $job_data = array();
+        $i = 0;
+        foreach ($job_res as $key => $value) {
+            $job_data[$i]['id'] = $value->id;
+            $job_data[$i]['created_at'] = $value->created_at;
+            $i++;
+        }
+        
+        return $job_res;
     }
 }
