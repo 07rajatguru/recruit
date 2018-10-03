@@ -760,7 +760,7 @@ class JobOpen extends Model
 
         $job_query = JobOpen::query();
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_query = $job_query->join('interview', 'interview.posting_title','=', 'job_openings.id');
+        $job_query = $job_query->leftjoin('interview', 'interview.posting_title','=', 'job_openings.id');
         $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person');
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
@@ -791,9 +791,11 @@ class JobOpen extends Model
             $response['job_location'] = $location;
             $response['contact_person'] = $v->contact_person;
             $response['job_description'] = $v->job_description;
-            $datearray = explode(' ', $v->date);
-            $response['interview_date'] = $datearray[0];
-            $response['interview_time'] = $datearray[1];
+            if (isset($v->date) && $v->date != '') {
+                $datearray = explode(' ', $v->date);
+                $response['interview_date'] = $datearray[0];
+                $response['interview_time'] = $datearray[1];
+            }
             $response['interview_location'] = $v->interview_location;
             $response['interview_type'] = $v->interview_type;
             $response['client_id'] = $v->client_id;
@@ -803,9 +805,10 @@ class JobOpen extends Model
         return $response;
     }
 
-    public static function getJobBeforeThreeday(){
+    public static function getJobBeforeTwoday(){
 
-        $date = date('Y-m-d',strtotime('-2 days'));
+        $date = date('Y-m-d h',strtotime('-48 hours'));
+        //print_r($date);exit;
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
         $job_us = getenv('CLOSEDBYUS');
