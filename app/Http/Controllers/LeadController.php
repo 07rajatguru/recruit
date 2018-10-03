@@ -113,7 +113,7 @@ class LeadController extends Controller
             $action = '';
 
             if($value['access']){
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).' }}" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
                 $delete = $delete_view->render();
                 $action .= $delete;

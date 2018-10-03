@@ -54,7 +54,7 @@
             <th>Edu Qualifications</th>
             <th>Target Industries</th>
             <th>Desired Candidate</th>
-            <th>Open Date</th>
+            <th>Added Date</th>
             {{--<th>Target Date</th>--}}
 
         </tr>

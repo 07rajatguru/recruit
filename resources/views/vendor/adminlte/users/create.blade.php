@@ -153,6 +153,19 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('account_manager') ? 'has-error' : '' }}">
+                                <strong> Account Manager : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('account_manager','Yes') !!}
+                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                                {!! Form::radio('account_manager','No', true) !!}
+                                {!! Form::label('No') !!}
+                                @if ($errors->has('account_manager'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('account_manager') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                         </div>
 
                     </div>

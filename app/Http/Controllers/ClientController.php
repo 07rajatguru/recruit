@@ -371,7 +371,7 @@ class ClientController extends Controller
         $user_id = $user->id;
 
         // For account manager
-         $users = User::getAllUsers();
+         $users = User::getAllUsers('recruiter','Yes');
 
         if(sizeof($industry_res)>0){
             foreach($industry_res as $r){

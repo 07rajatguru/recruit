@@ -72,7 +72,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsers($type=NULL){
+    public static function getAllUsers($type=NULL,$am=NULL){
         $status = 'Inactive';
 
         $status_array = array($status);
@@ -80,6 +80,10 @@ class User extends Authenticatable
 
         if($type!=NULL){
             $user_query = $user_query->where('type','=',$type);
+        }
+
+        if($am!=NULL){
+            $user_query = $user_query->where('account_manager','=',$am);
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
