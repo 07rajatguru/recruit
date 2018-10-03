@@ -91,12 +91,14 @@ class UserController extends Controller
         $floor_incharge = $request->input('floor_incharge');
         $type = $request->input('type');
         $status = $request->input('status');
-       // print_r($status);exit;
+        $account_manager = $request->input('account_manager');
+        //print_r($account_manager);exit;
 
         $user->secondary_email=$request->input('semail');
         $user->reports_to = $reports_to;
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
+        $user->account_manager = $account_manager;
         $users = $user->save();
 
        /* if(isset($user) && sizeof($user) > 0){
@@ -215,11 +217,13 @@ class UserController extends Controller
         $floor_incharge = $request->input('floor_incharge');
         $type = $request->input('type');
         $status = $request->input('status');
+        $account_manager = $request->input('account_manager');
 
         $user->secondary_email=$request->input('semail');
         $user->reports_to = $reports_to; 
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
+        $user->account_manager = $account_manager;
         $users = $user->save();    
 
        /* $user = User::find($id);

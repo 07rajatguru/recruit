@@ -188,6 +188,20 @@
 
         </div>
 
+        <div class="col-xs-12 col-sm-12 col-md-12">
+
+            <div class="form-group">
+
+                <strong>Account Manager:</strong>&nbsp;&nbsp;
+                {!! Form::radio('account_manager','Yes') !!}
+                {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                {!! Form::radio('account_manager','No') !!}
+                {!! Form::label('No') !!}
+
+            </div>
+
+        </div>
+
 
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
 
