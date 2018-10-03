@@ -1444,4 +1444,9 @@ Route::group(['middleware' => ['auth']], function () {
         'as' =>'vendorattachments.destroy',
         'uses' =>'VendorController@attachmentsDestroy'
     ]);
+
+    Route::get('test/email', [
+        'as' => 'user.testemail',
+        'uses' => 'UserController@testEmail',
+    ]);
 });
