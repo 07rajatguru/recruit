@@ -17,6 +17,7 @@ use App\JobAssociateCandidates;
 use App\JobCandidateJoiningdate;
 use Excel;
 use DB;
+use App\Bills;
     
 class CandidateController extends Controller
 {
@@ -44,6 +45,27 @@ class CandidateController extends Controller
            //print_r($fullname);exit;
 
 
+    }
+
+    public function candidatesalary(){
+
+        $candidate = JobCandidateJoiningdate::select('job_candidate_joining_date.job_id as job_id','job_candidate_joining_date.candidate_id as candidate_id')->get();
+
+        $ids = array();
+        $i = 0;
+        foreach ($candidate as $key => $value) {
+            $ids[$i]['job_id'] = $value->job_id;
+            $ids[$i]['candidate_id'] = $value->candidate_id;
+
+            $salary = Bills::getCandidatesalaryByJobidCandidateid($ids[$i]['job_id'],$ids[$i]['candidate_id']);
+
+            
+            //print_r($salary);exit;
+            $job_id = $ids[$i]['job_id'];
+            $candidate_id = $ids[$i]['candidate_id'];
+            DB::statement("UPDATE job_candidate_joining_date SET fixed_salary = '$salary' where job_id=$job_id and candidate_id=$candidate_id");
+            $i++;
+        }
     }
 
     public function index(){

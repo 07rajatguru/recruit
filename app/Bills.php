@@ -803,4 +803,19 @@ class Bills extends Model
 
         return $response;
     }
+
+    public static function getCandidatesalaryByJobidCandidateid($job_id,$candidate_id){
+
+        $salary_data = Bills::query();
+        $salary_data = $salary_data->where('job_id',$job_id);
+        $salary_data = $salary_data->where('candidate_id',$candidate_id);
+        $salary_data = $salary_data->select('fixed_salary');
+        $salary_res = $salary_data->first();
+
+        $salary = '';
+        if (isset($salary_res) && $salary_res != '') {
+            $salary = $salary_res->fixed_salary;
+        }
+        return $salary;
+    }
 }

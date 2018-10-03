@@ -357,13 +357,13 @@ class BillsController extends Controller
 
         }
 
-        JobCandidateJoiningdate::where('job_id','=',$job_id);
-        JobCandidateJoiningdate::where('candidate_id','=',$candidate_id)->delete();
+        JobCandidateJoiningdate::where('job_id','=',$job_id)->where('candidate_id','=',$candidate_id)->delete();
 
         $candidatejoindate = new JobCandidateJoiningdate();
         $candidatejoindate->job_id = $job_id;
         $candidatejoindate->candidate_id = $candidate_id;
         $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
+        $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
 
         return redirect()->route('forecasting.index')->with('success', 'Bills Created Successfully');
@@ -626,13 +626,13 @@ class BillsController extends Controller
             }
         }
 
-        JobCandidateJoiningdate::where('job_id','=',$job_id);
-        JobCandidateJoiningdate::where('candidate_id','=',$candidate_id)->delete();
+        JobCandidateJoiningdate::where('job_id','=',$job_id)->where('candidate_id','=',$candidate_id)->delete();
 
         $candidatejoindate = new JobCandidateJoiningdate();
         $candidatejoindate->job_id = $job_id;
         $candidatejoindate->candidate_id = $candidate_id;
         $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
+        $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
 
         if($status == 1){
