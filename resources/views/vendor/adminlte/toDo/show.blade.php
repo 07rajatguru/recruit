@@ -67,7 +67,7 @@
                             @endif
                             <tr>
                                 <th scope="row">Remarks :</th>
-                                <td>{{ $toDos['description'] }}</td>
+                                <td>{!! $toDos['description'] !!}</td>
                                
                             </tr>
                         </table>

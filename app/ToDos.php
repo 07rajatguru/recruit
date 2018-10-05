@@ -349,7 +349,7 @@ class ToDos extends Model
             $todo['start_date'] = $todo_show_res->start_date;
             $todo['status'] = $todo_show_res->status;
             $todo['type'] = $todo_show_res->type;
-            $todo['description'] = strip_tags($todo_show_res->description);
+            $todo['description'] = $todo_show_res->description;
             $am_name = ToDos::getAssociatedusersById($todo_show_res->id);
             $name_str = '';
             foreach ($am_name as $k=>$v){

@@ -540,6 +540,7 @@
             $("#hiring_manager_id").select2();
             $("#client_id").select2();
             $("#job_description").wysihtml5();
+            $("#desired_candidate").wysihtml5();
         });
 
         var placeSearch, autocomplete;

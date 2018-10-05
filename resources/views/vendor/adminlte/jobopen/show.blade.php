@@ -84,7 +84,7 @@
                             <th scope="row">Job Type</th>
                             <td>{{ $jobopen['job_type'] }}</td>
                             <th scope="row" >Desired Candidates</th>
-                            <td colspan="3">{{ $jobopen['desired_candidate'] }}</td>
+                            <td colspan="3">{!! $jobopen['desired_candidate'] !!}</td>
                         </tr>
                          <tr>
                             <th scope="row" >Users who can access the job</th>
@@ -92,7 +92,7 @@
                         </tr>
                         <tr>
                             <th scope="row" >Job Description</th>
-                            <td colspan="3">{{ $jobopen['description'] }}</td>
+                            <td colspan="3">{!! $jobopen['description'] !!}</td>
                         </tr>
  
                      </table>

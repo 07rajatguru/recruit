@@ -107,7 +107,7 @@
 
                         <tr>
                             <th>About</th>
-                            <td>{{ $client['description'] }}</td>
+                            <td>{!! $client['description'] !!}</td>
                             <th> Client Status</th>
                             <td>{{ $client['status'] }}</td>
                         </tr>
