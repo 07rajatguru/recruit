@@ -89,6 +89,8 @@ class JobOpentoAll extends Command
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                         //print_r($message);exit;
                     }
+                    $open_to_all = 1;
+                    \DB::statement("UPDATE job_openings SET open_to_all = $open_to_all where id = $job_id");
                 }
                 $i++;
             }
