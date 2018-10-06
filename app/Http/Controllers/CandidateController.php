@@ -621,6 +621,33 @@ class CandidateController extends Controller
         // check if candidate associate with any job
         $job_id = JobAssociateCandidates::getAssociatedJobIdByCandidateId($id);
 
+        $candidateModel = new CandidateBasicInfo();
+        $candidate_upload_type = $candidateModel->candidate_upload_type;
+
+        $i = 0;
+        $candidateDetails = array();
+        $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')
+            ->select('candidate_uploaded_resume.*', 'users.name as upload_name')
+            ->where('candidate_uploaded_resume.candidate_id',$id)
+            ->get();
+        $utils = new Utils();
+        if(isset($candidateFiles) && sizeof($candidateFiles) > 0){
+            foreach ($candidateFiles as $candidateFile) {
+                $candidateDetails[$i]['id'] = $candidateFile->id;
+                $candidateDetails[$i]['fileName'] = $candidateFile->file_name;
+                $candidateDetails[$i]['url'] = "../../".$candidateFile->file;
+                $candidateDetails[$i]['category'] = $candidateFile->file_type;
+                $candidateDetails[$i]['uploaded_by'] = $candidateFile->upload_name ;
+                $candidateDetails[$i]['size'] = $utils->formatSizeUnits($candidateFile->size);
+
+                if (array_search($candidateFile->file_type, $candidate_upload_type)) {
+                    unset($candidate_upload_type[array_search($candidateFile->file_type, $candidate_upload_type)]);
+                }
+                $i++;
+            }
+        }
+        $candidate_upload_type['Others'] = 'Others';
+
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
@@ -631,6 +658,8 @@ class CandidateController extends Controller
         $viewVariable['jobopen'] = $jobopen;
         $viewVariable['action'] = 'edit';
         $viewVariable['job_id'] = $job_id;
+        $viewVariable['candidateDetails'] = $candidateDetails;
+        $viewVariable['candidate_upload_type'] = $candidate_upload_type;
 
         //print_r($viewVariable);exit;
         return view('adminlte::candidate.edit',$viewVariable);
