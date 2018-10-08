@@ -11,6 +11,10 @@
             @else
                 {!! Form::hidden('id', $id, array('id'=>'id','placeholder' => 'id','class' => 'form-control' )) !!}
             @endif
+
+            @if($display_name == 'Candidate Attachment')
+                <input type="hidden" name="edit" id="edit" value="edit">
+            @endif
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h1 class="modal-title">Delete Data</h1>

@@ -809,46 +809,46 @@ class CandidateController extends Controller
                 }*/
                 $candidateOtherInfoUpdated = $candidateOtherInfo->save();
 
-                /*if($candidateOtherInfoUpdated){
-                    $file = $request->file('resume');
-                    $fileName = $file->getClientOriginalName();
-                    $fileExtention = $file->getClientOriginalExtension();
-                    $fileRealPath = $file->getRealPath();
-                    $fileSize = $file->getSize();
-                    $fileMimeType = $file->getMimeType();
+                if($candidateOtherInfoUpdated){
+                    $candidate_upload_type = $request->candidate_upload_type;
+                    $file = $request->file('file');
+                    if (isset($file) && $file->isValid()) {
+                        $fileName = $file->getClientOriginalName();
+                        $fileExtention = $file->getClientOriginalExtension();
+                        $fileRealPath = $file->getRealPath();
+                        $fileSize = $file->getSize();
+                        $fileMimeType = $file->getMimeType();
 
-                    $extention = File::extension($fileName);
+                        $extention = File::extension($fileName);
 
-                    $fileNameArray = explode('.',$fileName);
+                        $fileNameArray = explode('.',$fileName);
 
-                    $dir = 'uploads/candidate/'.$candidate_id.'/';
+                        $dir = 'uploads/candidate/'.$candidate_id.'/';
 
-                    if (!file_exists($dir) && !is_dir($dir)) {
+                        if (!file_exists($dir) && !is_dir($dir)) {
 
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-                    $temp_file_name = trim($fileNameArray[0]);
-                    $fileNewName = $temp_file_name.date('ymdhhmss').'.'.$extention;
-                    $file->move($dir,$fileNewName);
+                            mkdir($dir, 0777, true);
+                            chmod($dir, 0777);
+                        }
+                        $temp_file_name = trim($fileNameArray[0]);
+                        $fileNewName = $temp_file_name.date('ymdhhmss').'.'.$extention;
+                        $file->move($dir,$fileNewName);
 
-                    $fileNewPath = $dir.$fileNewName;
+                        $fileNewPath = $dir.$fileNewName;
 
-                    $candidateFileUpload = CandidateUploadedResume::where('candidate_id',$candidate_id)->first();
-                    if(!isset($candidateOtherInfo) && sizeof($candidateOtherInfo) == 0){
                         $candidateFileUpload = new CandidateUploadedResume();
+                        $candidateFileUpload->candidate_id = $candidate_id;
+                        $candidateFileUpload->uploaded_by = $user_id;
+                        $candidateFileUpload->file_name = $fileNewName;
+                        $candidateFileUpload->file_type = $candidate_upload_type;
+                        $candidateFileUpload->file = $fileNewPath;
+                        $candidateFileUpload->mime = $fileMimeType;
+                        $candidateFileUpload->uploaded_date = date('Y-m-d');
+                        $candidateFileUploadUpdated = $candidateFileUpload->save();
+
+                        return redirect('candidate/'.$candidate_id.'/edit');
                     }
-
-                    $candidateFileUpload->candidate_id = $candidate_id;
-                    $candidateFileUpload->uploaded_by = $user_id;
-                    $candidateFileUpload->file_name = $fileNewName;
-                    $candidateFileUpload->file_type = 'CandidateResume';
-                    $candidateFileUpload->file = $fileNewPath;
-                    $candidateFileUpload->mime = $fileMimeType;
-                    $candidateFileUpload->uploaded_date = date('Y-m-d');
-                    $candidateFileUploadUpdated = $candidateFileUpload->save();
-
-                }*/
+                }
                 $job_id = $request->input('jobopen');
                 JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->delete();
                 if(isset($job_id) && $job_id>0){
@@ -1097,6 +1097,11 @@ class CandidateController extends Controller
         $candidateFileDelete = CandidateUploadedResume::where('id',$fileId)->delete();
 
         $candidateId = $_POST['id'];
+
+        if (isset($_POST['edit']) && $_POST['edit'] != '') {
+            $action = $_POST['edit'];
+            return redirect()->route('candidate.edit',[$candidateId])->with('success','Attachment deleted Successfully');
+        }
 
         return redirect()->route('candidate.show',[$candidateId])->with('success','Attachment deleted Successfully');
     }

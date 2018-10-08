@@ -456,7 +456,7 @@
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Attachments</h3>
                 &nbsp;&nbsp;
-                {{--@include('adminlte::candidate.upload', ['data' => $candidate, 'name' => 'candidateattachments'])--}}
+                @include('adminlte::candidate.upload', ['data' => $candidate, 'name' => 'candidateattachments'])
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <table class="table table-bordered">
@@ -475,7 +475,7 @@
                                         <i class="fa fa-fw fa-download"></i>
                                     </a>
                                     &nbsp;
-                                    @include('adminlte::partials.confirm', ['data' => $value,'id'=> $candidate['id'], 'name' => 'candidateattachments' ,'display_name'=> 'Attachments'])
+                                    @include('adminlte::partials.confirm', ['data' => $value,'id'=> $candidate['id'], 'name' => 'candidateattachments' ,'display_name'=> 'Candidate Attachment'])
                                 </td>
                                 <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
                                 <td>{{ $value['uploaded_by'] }}</td>
