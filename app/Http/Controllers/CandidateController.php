@@ -47,6 +47,7 @@ class CandidateController extends Controller
 
     }
 
+    // Candidate Fix salary set to job_candidate_joining table from bills
     public function candidatesalary(){
 
         $candidate = JobCandidateJoiningdate::select('job_candidate_joining_date.job_id as job_id','job_candidate_joining_date.candidate_id as candidate_id')->get();

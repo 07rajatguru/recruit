@@ -805,9 +805,9 @@ class JobOpen extends Model
         return $response;
     }
 
-    public static function getJobBeforeTwoday(){
+    public static function getJobforOpentoAll(){
 
-        $date = date('Y-m-d h',strtotime('-48 hours'));
+        $date = date('Y-m-d h');
         //print_r($date);exit;
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -816,8 +816,9 @@ class JobOpen extends Model
 
         $job = JobOpen::query();
         $job = $job->select('job_openings.id','job_openings.created_at');
-        $job = $job->where('job_openings.created_at','like',"%$date%");
+        $job = $job->where('job_openings.open_to_all_date','like',"%$date%");
         $job = $job->whereNotIn('priority',$job_status);
+        $job = $job->where('open_to_all','=','0');
         $job_res = $job->get();
 
         $job_data = array();

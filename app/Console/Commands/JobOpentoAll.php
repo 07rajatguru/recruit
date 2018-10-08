@@ -45,7 +45,7 @@ class JobOpentoAll extends Command
     {
         $superadminuserid = getenv('SUPERADMINUSERID');
 
-        $job_data = JobOpen::getJobBeforeTwoday();
+        $job_data = JobOpen::getJobforOpentoAll();
         $job = array();
         $i = 0;
         if (isset($job_data) && $job_data != '') {
@@ -78,7 +78,7 @@ class JobOpentoAll extends Command
                         $client_name = ClientBasicinfo::getCompanyOfClientByID($job_details['client_id']);
                         $client_city = ClientBasicinfo::getBillingCityOfClientByID($job_details['client_id']);
 
-                        $module = "Job Open";
+                        $module = "Job Open to All";
                         $sender_name = $superadminuserid;
                         $to = implode(",",$user_emails);
                         $cc = implode(",",$cc_users_array);

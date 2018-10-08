@@ -636,6 +636,20 @@ class JobOpenController extends Controller
         if (isset($work_exp_to) && $work_exp_to == '')
             $work_exp_to = 0;
 
+        //From when Job Open to all Date set
+        $date = date('Y-m-d H:i:s');
+        $date_day = date('l',strtotime($date));
+        if ($date_day == 'Friday') {
+            $open_to_all = date('Y-m-d H:i:s',strtotime("$date +3 days"));
+        }
+        else if ($date_day == 'Saturday') {
+            $open_to_all = date('Y-m-d H:i:s',strtotime("$date +3 days"));
+        }
+        else{
+            $open_to_all = date('Y-m-d H:i:s',strtotime("$date +2 days"));
+        }
+        //print_r($open_to_all);exit;
+
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
         $job_open = new JobOpen();
@@ -669,6 +683,7 @@ class JobOpenController extends Controller
         $job_open->thousand_to = $thousand_to;
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
+        $job_open->open_to_all_date = $open_to_all;
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);

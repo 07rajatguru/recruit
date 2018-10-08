@@ -38,7 +38,7 @@
                 <th>No</th>
                 <th>Candidate Name</th>
                 <th>Position Name</th>
-                <th>Fixed Salary</th>
+                <th>Fixed Salary<br/>(in Lacs)</th>
                 {{--<th>Min CTC</th>
                 <th>Max CTC</th>--}}
                 <th>Joining <br/>Date</th>

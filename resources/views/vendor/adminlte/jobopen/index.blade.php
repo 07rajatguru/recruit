@@ -169,7 +169,7 @@
                 <td>{{ $value['no_of_positions'] or ''}}</td>
                 <td>{{ $value['qual'] or ''}}</td>
                 <td>{{ $value['industry'] or ''}}</td>
-                <td>{{ $value['desired_candidate'] or ''}}</td>
+                <td>{!! $value['desired_candidate'] or ''!!}</td>
                 <td>{{ $value['created_date'] or ''}}</td>
                 {{--<td>{{ $value['close_date'] or ''}}</td>--}}
 
