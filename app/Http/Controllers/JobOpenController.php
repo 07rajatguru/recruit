@@ -151,6 +151,38 @@ class JobOpenController extends Controller
 
     }
 
+    //Script for set open_to_all_date based on created_date
+    public function openToAllDate(){
+
+        $job_date = JobOpen::select('job_openings.id as id','job_openings.created_at as added_date')
+                                    ->limit(4)
+                                    ->get();
+
+        $i = 0;
+        foreach ($job_date as $key => $value) {
+            $id[$i] = $value->id;
+            $add_date[$i] = $value->added_date;
+
+            $job_id = $id[$i];
+            $added_date = $add_date[$i];
+
+            //From when Job Open to all Date set
+            $date_day = date('l',strtotime($added_date));
+            if ($date_day == 'Friday') {
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$added_date +3 days"));
+            }
+            else if ($date_day == 'Saturday') {
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$added_date +3 days"));
+            }
+            else{
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$added_date +2 days"));
+            }
+            DB::statement("UPDATE job_openings SET open_to_all_date = '$open_to_all' where id=$job_id");
+            $i++;
+            //print_r($open_to_all);exit;
+        }
+    }
+
     public function index(Request $request){
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs

@@ -623,6 +623,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('jobs/importExcel', 'JobOpenController@importExcel');
     Route::get('jobs/salary', 'JobOpenController@salary');
     Route::get('jobs/work', 'JobOpenController@work');
+    Route::get('jobs/opentoalldate', 'JobOpenController@openToAllDate');
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
