@@ -364,7 +364,13 @@ class ToDos extends Model
             $todo['frequency_type'] = $todo_show_res->frequency_type;
             $todo['frequency_date'] = $todo_show_res->frequency_date;
             $type_list = ToDos::getTypeListById($todo_show_res->id,$todo_show_res->type);
-            $todo['typelist'] = str_replace(array('[',']','"'),'  ', (string) $type_list);
+            if (isset($type_list) && $type_list != '') {
+                $todo['typelist'] = implode('<ol></ol>',$type_list);
+            }
+            else{
+                $todo['typelist'] = '';
+            }
+            //print_r($todo['typelist']);exit;
         }
         
         return $todo;
@@ -410,6 +416,6 @@ class ToDos extends Model
             $jobopen = '';
         }
 
-        return json_encode($jobopen);
+        return $jobopen;
     }
 }

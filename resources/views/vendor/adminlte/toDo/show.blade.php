@@ -55,7 +55,7 @@
                                 <th scope="row">Type:</th>
                                 <td>{{ $type }}</td>
                                 <th>Type List:</th>
-                                <td>{{ $toDos['typelist'] }}</td>
+                                <td>{!! $toDos['typelist'] !!}</td>
                             </tr>
                             @if(isset($toDos['frequency_type']) && sizeof($toDos['frequency_type'])>0)
                             <tr>
