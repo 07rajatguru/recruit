@@ -365,7 +365,7 @@ class ToDos extends Model
             $todo['frequency_date'] = $todo_show_res->frequency_date;
             $type_list = ToDos::getTypeListById($todo_show_res->id,$todo_show_res->type);
             if (isset($type_list) && $type_list != '') {
-                $todo['typelist'] = implode('<ol></ol>',$type_list);
+                $todo['typelist'] = $type_list;
             }
             else{
                 $todo['typelist'] = '';
@@ -380,11 +380,13 @@ class ToDos extends Model
 
         $type_list = AssociatedTypeList::getAssociatedListByTodoId($id);
         $jobopen = array();
+        $todo_type = "<ol>";
         $i = 0;
         if ($type == 1) {
             $job_response = JobOpen::getJobsByIds(0,explode(',',$type_list));
             foreach ($job_response as $k=>$v){
                 $jobopen[$i] =  $v['company_name']." - ".$v['posting_title']." - ".$v['location'];
+                $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }   
         }
@@ -392,6 +394,7 @@ class ToDos extends Model
             $interview_res = Interview::getInterviewsByIds(explode(',',$type_list));
             foreach ($interview_res as $k=>$v){
                 $jobopen[$i] =  $v->client_name." - ".$v->posting_title." - ".$v->city;
+                $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }
                 
@@ -400,6 +403,7 @@ class ToDos extends Model
             $client_res = ClientBasicinfo::getClientsByIds(0,explode(',',$type_list));
             foreach ($client_res as $k=>$v){
                 $jobopen[$i] =  $v->name." - ".$v->coordinator_name;
+                $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }
                 
@@ -408,6 +412,7 @@ class ToDos extends Model
             $candidate_res = CandidateBasicInfo::getAllCandidatesById(explode(',',$type_list));
             foreach ($candidate_res as $k=>$v){
                 $jobopen[$i] =  $v->full_name;
+                $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }
                 
@@ -415,7 +420,8 @@ class ToDos extends Model
         else{
             $jobopen = '';
         }
+        $todo_type .= "</ol>";
 
-        return $jobopen;
+        return $todo_type;
     }
 }
