@@ -999,6 +999,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@getSelectedTypeList',
     ]);
 
+    Route::get('todos/all', [
+        'as' => 'todos.list',
+        'uses' => 'ToDosController@getAjaxtodo',
+    ]);
+
     Route::get('todos/{id}', [
         'as' => 'todos.show',
         'uses' => 'ToDosController@show'
@@ -1046,10 +1051,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@readTodos',
     ]);
 
-    Route::get('todos/all', [
-        'as' => 'todos.list',
-        'uses' => 'ToDosController@getAjaxtodo',
-    ]);
+
 
     // To do's Routes End
 
