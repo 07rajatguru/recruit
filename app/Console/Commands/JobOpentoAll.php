@@ -82,7 +82,7 @@ class JobOpentoAll extends Command
                         $sender_name = $superadminuserid;
                         $to = implode(",",$user_emails);
                         $cc = implode(",",$cc_users_array);
-                        $subject = "Job Open to All - ". $job_details['posting_title'] . "@" .$client_name . "-" . $client_city;
+                        $subject = "Job opened by ". $job_details['user_name'] ."-" . $job_details['posting_title'] . "@" .$client_name . "-" . $client_city;
                         $message = "<tr><th>" . $job_details['posting_title'] . "/" . $job_details['job_unique_id'] . "</th></tr>";
                         $module_id = $job_id;
 
