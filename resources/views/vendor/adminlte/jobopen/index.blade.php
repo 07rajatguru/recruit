@@ -122,12 +122,13 @@
             <th>Location</th>
             <th>Min CTC<br/>(in Lacs)</th>
             <th>Max CTC<br/>(in Lacs)</th>
-            <th>HR/Coordinator Name</th>
-            <th>No. Of Positions</th>
+            <th>HR/Coordinator  <br/> Name</th>
+            <th>Added Date</th>
+            <th>No. Of <br/> Positions</th>
             <th>Edu Qualifications</th>
             <th>Target Industries</th>
             <th>Desired Candidate</th>
-            <th>Added Date</th>
+
             {{--<th>Target Date</th>--}}
 
         </tr>
@@ -165,12 +166,13 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or ''}}</td>
                 <td>{{ $value['min_ctc'] or ''}}</td>
                 <td>{{ $value['max_ctc'] or ''}}</td>
-                <td >{{ $value['coordinator_name'] or '' }}</td>
-                <td>{{ $value['no_of_positions'] or ''}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or '' }}</td>
+                <td>{{ $value['created_date'] or ''}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['no_of_positions'] or ''}}</td>
                 <td>{{ $value['qual'] or ''}}</td>
                 <td>{{ $value['industry'] or ''}}</td>
                 <td>{!! $value['desired_candidate'] or ''!!}</td>
-                <td>{{ $value['created_date'] or ''}}</td>
+
                 {{--<td>{{ $value['close_date'] or ''}}</td>--}}
 
 
@@ -194,7 +196,9 @@
                     { "width": "10px", "targets": 4 },
                     { "width": "10px", "targets": 5 },
                     { "width": "10px", "targets": 6 },
-                    { "width": "10px", "targets": 7 }
+                    { "width": "10px", "targets": 7 },
+                    { "width": "10px", "targets": 8 },
+                    { "width": "10px", "targets": 9 }
                 ],
                 "pageLength": 100,
                 stateSave: true
