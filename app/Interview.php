@@ -112,6 +112,72 @@ class Interview extends Model
         return $interview;
     }
 
+    // function for today, tomorrow, this week & Upcoming/Previous interview page
+    public static function getInterviewsByTime($all=0,$user_id,$time){
+
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status',
+            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
+            'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
+            'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
+        $query = $query->orderby('interview.interview_date','desc');
+
+        if($all==0){
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
+        }
+        if ($time == 'today') {
+            $today = date("Y-m-d");
+            $query = $query->where('interview_date','like',"%$today%");
+        }
+        if ($time == 'tomorrow') {
+            $tomorrow = date("Y-m-d",strtotime('tomorrow'));
+            $query = $query->where('interview_date','like',"%$tomorrow%");
+        }
+        if ($time == 'thisweek'){
+            $from_date = date("Y-m-d");
+            $to_date = date("Y-m-d",strtotime('+6 days'));
+            $query = $query->where('interview_date','>',"$from_date");
+            $query = $query->where('interview_date','<',"$to_date");
+        }
+        if ($time == 'upcomingprevious') {
+            $from_date = date("Y-m-d");
+            $to_date = date("Y-m-d",strtotime('+6 days'));
+
+            $timming = array($from_date,$to_date);
+
+            $query = $query->whereNotIn('interview_date',$timming);
+        }
+
+        $response = $query->get();
+
+        $interview = array();
+        $i=0;
+        foreach ($response as $key => $value) {
+            $interview[$i]['id'] = $value->id;
+            $interview[$i]['client_name'] = $value->client_name;
+            $interview[$i]['posting_title'] = $value->posting_title;
+            $interview[$i]['city'] = $value->city;
+            $interview[$i]['candidate_fname'] = $value->candidate_fname;
+            $interview[$i]['contact'] = $value->contact;
+            $interview[$i]['interview_date'] = $value->interview_date;
+            $interview[$i]['interview_date_ts'] = strtotime($value->interview_date);
+            $interview[$i]['location'] = $value->location;
+            $interview[$i]['status'] = $value->status;
+            $i++;
+        }
+
+        return $interview;
+    }
+
     public static function getTodayTomorrowsInterviews($all=0,$user_id){
 
         $from_date = date("Y-m-d 00:00:00");

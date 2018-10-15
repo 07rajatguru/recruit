@@ -786,6 +786,26 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@todaytomorrow'
     ]);
 
+    Route::get('interview/today', [
+        'as' => 'interview.today',
+        'uses' => 'InterviewController@today'
+    ]);
+
+    Route::get('interview/tomorrow', [
+        'as' => 'interview.tomorrow',
+        'uses' => 'InterviewController@tomorrow'
+    ]);
+
+    Route::get('interview/thisweek', [
+        'as' => 'interview.thisweek',
+        'uses' => 'InterviewController@thisweek'
+    ]);
+
+    Route::get('interview/upcomingprevious', [
+        'as' => 'interview.upcomingprevious',
+        'uses' => 'InterviewController@UpcomingPrevious'
+    ]);
+
     Route::get('attendedinterview',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview'

@@ -42,6 +42,106 @@ class InterviewController extends Controller
         return view('adminlte::interview.index', array('interViews' => $interViews),compact('count','source'));
     }
 
+    // Today Interview Page
+    public function today(){
+
+        $time = 'today';
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+        }
+        else{
+            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+        }
+
+        $count = sizeof($interViews);
+
+        $source = 'Todays';
+
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+    }
+
+    // Tomorrow Interview Page
+    public function tomorrow(){
+
+        $time = 'tomorrow';
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+        }
+        else{
+            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+        }
+
+        $count = sizeof($interViews);
+
+        $source = 'Tomorrows';
+
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+    }
+
+    // This Week Interview Page
+    public function thisweek(){
+
+        $time = 'thisweek';
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+        }
+        else{
+            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+        }
+
+        $count = sizeof($interViews);
+
+        $source = 'This Week';
+
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+    }
+
+    // Upcoming/Previous Interview Page
+    public function UpcomingPrevious(){
+
+        $time = 'upcomingprevious';
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+        }
+        else{
+            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+        }
+
+        $count = sizeof($interViews);
+
+        $source = 'Upcoming & Previous';
+
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+    }
+
     public function todaytomorrow(){
 
         $user = \Auth::user();
