@@ -38,11 +38,11 @@
                 <th>No</th>
                 <th>Candidate Name</th>
                 <th>Position Name</th>
-                <th>Fixed Salary<br/>(in Lacs)</th>
+                <th>Fixed Salary</th>
                 {{--<th>Min CTC</th>
                 <th>Max CTC</th>--}}
                 <th>Joining <br/>Date</th>
-                <th>Candidate <br/>Owner</th>
+                <th>Efforts</th>
                 <th>Candidate Email</th>
                 <th>Mobile <br/>Number</th>
             </tr>
@@ -59,7 +59,7 @@
                 {{--<td>{{ $candidate['min_ctc'] or ''}}</td>
                 <td>{{ $candidate['max_ctc'] or '' }}</td>--}}
                 <td>{{ date('d-m-Y', strtotime($candidate['date'])) }}</td>
-                <td>{{ $candidate['candidate_owner'] or '' }}</td>
+                <td>{{ $candidate['efforts'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['candidate_email'] or ''}}</td>
                 <td>{{ $candidate['candidate_mobile'] or ''}}</td>
             </tr>

@@ -659,10 +659,13 @@ class BillsController extends Controller
         $bills = array();
         $bill = Bills::find($id);
         $bills['status'] = $bill->status;
+        $bills['job_id'] = $bill->job_id;
+        $bills['candidate_id'] = $bill->candidate_id;
         $bill->cancel_bill = $cancel_bill;
         $bill_cancel = $bill->save();
 
         //print_r($bill_cancel);exit;
+        $candidate_join_delete = JobCandidateJoiningdate::where('job_id',$bills['job_id'])->where('candidate_id',$bills['candidate_id'])->delete();
 
         if($bills['status'] == 1){
             return redirect()->route('bills.recovery')->with('success', 'Recovery Canceled Successfully');
