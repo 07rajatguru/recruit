@@ -23,6 +23,7 @@
             </div>
 
             <div class="pull-right">
+                <a class="btn bg-maroon" href=""> Update Status</a>
                 <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
             </div>
 
@@ -114,6 +115,7 @@
         <thead>
         <tr>
             <th>No</th>
+            <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
             <th>Action</th>
             <th>MB</th>
             <th>Company Name</th>
@@ -139,6 +141,7 @@
         @foreach($jobList as $key=>$value)
             <tr>
                 <td>{{ ++$i }}</td>
+                <td>{{ Form::checkbox('client',$value['id'],null,array('class'=>'multiple_jobs' ,'id'=>$value['id'] )) }}</td>
                 <td>
                     <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
 
@@ -205,7 +208,28 @@
             });
             new jQuery.fn.dataTable.FixedHeader( table );
 
-            
+            $('#allcb').change(function(){
+                if($(this).prop('checked')){
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', true);
+                    });
+                }else{
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+            $('.multiple_jobs').change(function() {
+                if ($(this).prop('checked')) {
+                    if ($('.multiple_jobs:checked').length == $('.multiple_jobs').length) {
+                        $("#allcb").prop('checked', true);
+                    }
+                }
+                else{
+                    $("#allcb").prop('checked', false);
+                }
+            });
+
         });
     </script>
 @endsection
