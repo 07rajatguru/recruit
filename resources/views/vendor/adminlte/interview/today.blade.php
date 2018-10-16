@@ -15,10 +15,34 @@
             </div>
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
+                
+                <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
             </div>
 
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="col-md-2">
+                <a href="{{ route('interview.today') }}" style="text-decoration: none;color: black;"><div style="width:100px;height:40px;background-color:#8FB1D5;padding:9px 25px;font-weight: 600;border-radius: 22px;">Today</div></a>
+            </div>
+            &nbsp;
+            <div class="col-md-2">
+                <a href="{{ route('interview.tomorrow') }}" style="text-decoration: none;color: black;"><div style="width:100px;height:40px;background-color:#feb80a;padding:9px 17px;font-weight: 600;border-radius: 22px;">Tomorrow</div></a>
+            </div>
+            &nbsp;
+            <div class="col-md-2">
+                <a href="{{ route('interview.thisweek') }}" style="text-decoration: none;color: black;"><div style="width:120px;height:40px;background-color:#C4D79B;padding:9px 25px;font-weight: 600;border-radius: 22px;">This Week</div></a>
+            </div>
+            &nbsp;
+            <div class="col-md-2">
+                <a href="{{ route('interview.upcomingprevious') }}" style="text-decoration: none;color: black;"><div style="width:165px;height:40px;background-color:#ffffff;padding:9px 17px;font-weight: 600;border-radius: 22px;">Upcoming/Previous</div></a>
+            </div>
+
+        </div>
+    </div>
+
     <br/>
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
