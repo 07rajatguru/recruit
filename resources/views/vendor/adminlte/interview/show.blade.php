@@ -64,6 +64,12 @@
                             <th scope="row">About :</th>
                             <td>{{ isset($about)? $about : null }}</td>
                         </tr>
+                        @if(isset($skype_id) && $skype_id != '')
+                            <tr>
+                                <th scope="row">Skype Id :</th>
+                                <td>{{ isset($skype_id)? $skype_id : null }}</td>
+                            </tr>
+                        @endif
                     </table>
                 </div>
             </div>

@@ -42,6 +42,9 @@ class Interview extends Model
         $interview->about = $data['about'];
         $interview->comments = $data['comments'];
         $interview->interview_owner_id = $data['interview_owner_id'];
+        if (isset($data['skype_id']) && $data['skype_id'] != '') {
+            $interview->skype_id = $data['skype_id'];
+        }
 
         return $interview;
     }

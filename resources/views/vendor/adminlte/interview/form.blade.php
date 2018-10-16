@@ -134,7 +134,7 @@
 
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong>Type:</strong>
-                                {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4' )) !!}
+                                {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'skype()' )) !!}
                                 @if ($errors->has('type'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('type') }}</strong>
@@ -142,7 +142,15 @@
                                 @endif
                             </div>
 
-
+                            <div class="form-group skype {{ $errors->has('skype_id') ? 'has-error' : '' }}" style="display: none;">
+                                <strong>Skype Id:</strong>
+                                {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4' )) !!}
+                                @if ($errors->has('skype_id'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('skype_id') }}</strong>
+                                </span>
+                                @endif
+                            </div>
 
                             {{--<div class="form-group {{ $errors->has('interview_owner_id') ? 'has-error' : '' }}">
                                 <strong>Interview Owner:</strong>
@@ -176,7 +184,7 @@
 
                             <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
                                 <strong>Comments:</strong>
-                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '10', 'rows' => '8' )) !!}
+                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '10', 'rows' => '5' )) !!}
                                 @if ($errors->has('comments'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('comments') }}</strong>
@@ -264,8 +272,19 @@
              $("#interviewer_id").select2();
 
              getCandidate();
-
+             skype();
         });
+
+        function skype() {
+            var type = $("#type").val();
+            
+            if (type == 'General Interview') {
+                $(".skype").show();
+            }
+            else{
+                $(".skype").hide();
+            }
+        }
 
          function getCandidate(){
             var job_id = $("#posting_title").val();

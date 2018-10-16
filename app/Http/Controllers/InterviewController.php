@@ -271,6 +271,7 @@ class InterviewController extends Controller
         $data['status'] = $request->get('status');
         $data['about'] = $request->get('about');
         $data['interview_owner_id'] = $user_id;
+        $data['skype_id'] = $request->get('skype_id');
 
         $interview = Interview::createInterview($data);
 
@@ -390,6 +391,7 @@ class InterviewController extends Controller
         $status = $request->get('status');
         $about = $request->get('about');
         $interview_owner_id = $user_id;
+        $skype_id = $request->get('skype_id');
 
         $source = $request->get('source');
 
@@ -414,6 +416,9 @@ class InterviewController extends Controller
             $interview->comments = $comments;
         $interview->interview_owner_id = $interview_owner_id;
         $interview->interview_date = $interview_date;
+        if (isset($skype_id) && $skype_id != '') {
+            $interview->skype_id = $skype_id;
+        }
 
         $validator = \Validator::make(Input::all(),$interview::$rules);
 
@@ -567,6 +572,7 @@ class InterviewController extends Controller
         $interview['comments'] = $interviewDetails->comments;
         $interview['about'] = $interviewDetails->about;
         $interview['interviewOwner'] = $interviewOwner;
+        $interview['skype_id'] = $interviewDetails->skype_id;
 
         return view('adminlte::interview.show', $interview);
     }
