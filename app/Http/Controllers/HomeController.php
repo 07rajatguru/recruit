@@ -157,8 +157,7 @@ class HomeController extends Controller
                                                ->where('interview_owner_id',$user->id)
                                                ->where('status','=','Attended')
                                                ->count();
-        }        
-
+        }
         //print_r($interview_attend);exit;
 
         $viewVariable = array();
@@ -172,6 +171,28 @@ class HomeController extends Controller
         $viewVariable['interviewAttendCount'] = $interview_attend;
 
         return view('dashboard',$viewVariable);
+    }
+
+    public function OpentoAllJob(){
+
+        $user_id =  \Auth::user()->id;
+
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $manager_role_id = env('MANAGER');
+        $strategy_role_id = env('STRATEGY');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$strategy_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_opened = JobOpen::getOpenToAllJobs(1,$user_id,10);
+        }
+        else {
+            $job_opened = JobOpen::getOpenToAllJobs(0,$user_id,10);
+        }
+
+        return json_encode($job_opened);
     }
 
     /**

@@ -112,6 +112,57 @@
     </div>
 
     <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Below Jobs open to all</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                            <tr>
+                                <th>MB</th>
+                                <th>Company Name</th>
+                                <th>Position Title</th>
+                                <th>CA</th>
+                                <th>Location</th>
+                                <th>Min CTC<br/>(in Lacs)</th>
+                                <th>Max CTC<br/>(in Lacs)</th>
+                                <th>HR/Coordinator  <br/> Name</th>
+                                <th>Added Date</th>
+                                <th>No. Of <br/> Positions</th>
+                                {{--<th>Edu Qualifications</th>
+                                <th>Target Industries</th>
+                                <th>Desired Candidate</th>--}}
+                            </tr>
+                            </thead>
+                            <tbody id="job_open_to_all">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <a href="jobs/create" class="btn btn-sm btn-info btn-flat pull-left">Add New job</a>
+                    <a href="jobs/opentoall" class="btn btn-sm btn-default btn-flat pull-right">View All Jobs opened</a>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -391,8 +442,47 @@
 
              }
              });*/
+             opentoalljob();
 
         });
+
+        function opentoalljob(){
+
+            $.ajax({
+                url:'/dashboard/opentoalljob',
+                dataType:'json',
+                success: function(job_opened){
+                    if (job_opened.length > 0) {
+                        for (var i = 0; i <= job_opened.length; i++){
+                            var link = /jobs/+job_opened[i].id+/associated_candidates/;
+                            var html = '';
+                            html += '<tr>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].am_name+'</td>';
+                            html += '<td style="background-color: '+job_opened[i].color+'">'+job_opened[i].display_name+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].posting_title+'</td>';
+                            html += '<td><a title="Show Associated Candidates" href="'+link+'">'+job_opened[i].associate_candidate_cnt+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].location+'</td>';
+                            html += '<td>'+job_opened[i].min_ctc+'</td>';
+                            html += '<td>'+job_opened[i].max_ctc+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].coordinator_name+'</td>';
+                            html += '<td>'+job_opened[i].created_date+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].no_of_positions+'</td>';
+                            html += '</tr>';
+
+                            $("#job_open_to_all").append(html);
+                        }
+                    }
+                    else{
+                        var html = '';
+                        html += '<tr>';
+                        html += '<td>No Jobs open to all</td>';
+                        html += '</tr>';
+
+                        $("#job_open_to_all").append(html);
+                    }
+                }
+            });
+        }
 
     </script>
 

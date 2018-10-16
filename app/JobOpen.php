@@ -833,4 +833,154 @@ class JobOpen extends Model
         
         return $job_res;
     }
+
+    public static function getOpenToAllJobs($all=0,$user_id=0,$limit=0){
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name',                                      'job_openings.no_of_positions',
+                                                'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
+                                                'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
+                                                'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.open_to_all as open_to_all','job_openings.open_to_all_date as open_to_all_date'
+                                            );
+        $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        // assign jobs to logged in user
+        if($all==0){
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+            $job_open_query = $job_open_query->where('user_id','=',$user_id);
+        }
+
+        $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
+
+        $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+        $job_open_query = $job_open_query->where('open_to_all','=','1');
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+
+        if (isset($limit) && $limit > 0) {
+            $job_open_query = $job_open_query->limit($limit);
+        }
+        $job_response = $job_open_query->get();
+
+        $jobs_open_list = array();
+        $colors = self::getJobPrioritiesColor();
+        $i = 0;
+        foreach ($job_response as $key=>$value){
+            // value get in 2 decimal point
+            if ($value->lacs_from >= '100') {
+                $min_ctc = '100+';
+            }
+            else{
+                $lacs_from = $value->lacs_from*100000;
+                $thousand_from = $value->thousand_from*1000;
+                $mictc = $lacs_from+$thousand_from;
+                $minctc = $mictc/100000;
+                $min_ctc = number_format($minctc,2);
+            }
+
+            if ($value->lacs_to >= '100') {
+                $max_ctc = '100+';
+            }
+            else{
+                $lacs_to = $value->lacs_to*100000;
+                $thousand_to = $value->thousand_to*1000;
+                $mactc = $lacs_to+$thousand_to;
+                $maxctc = $mactc/100000;
+                $max_ctc = number_format($maxctc,2);
+            }
+            //echo $mactc;exit;
+            //$min_ctc = $value->lacs_from.".".$value->thousand_from;
+            $jobs_open_list[$i]['id'] = $value->id;
+            $jobs_open_list[$i]['job_id'] = $value->job_id;
+            $jobs_open_list[$i]['company_name'] = $value->company_name;
+            $jobs_open_list[$i]['display_name'] = $value->display_name;
+            $jobs_open_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
+            $jobs_open_list[$i]['no_of_positions'] = $value->no_of_positions;
+            $jobs_open_list[$i]['posting_title'] = $value->posting_title;
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
+            $jobs_open_list[$i]['location'] = $location;
+            $jobs_open_list[$i]['qual'] = $value->qualifications;
+            $jobs_open_list[$i]['min_ctc'] = $min_ctc;
+            $jobs_open_list[$i]['max_ctc'] = $max_ctc;
+            $jobs_open_list[$i]['industry'] = $value->industry_name;
+            $jobs_open_list[$i]['desired_candidate'] = $value->desired_candidate;
+            $jobs_open_list[$i]['open_date'] = $value->date_opened;
+            $jobs_open_list[$i]['close_date'] = $value->target_date;
+            $jobs_open_list[$i]['am_name'] = $value->am_name;
+            $jobs_open_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
+            $jobs_open_list[$i]['associate_candidate_cnt'] = $value->count;
+            $jobs_open_list[$i]['priority'] = $value->priority;
+            $jobs_open_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
+            if(isset($value->priority) && $value->priority!='') {
+                $jobs_open_list[$i]['color'] = $colors[$value->priority];
+            }
+            else
+                $jobs_open_list[$i]['color'] ='';
+
+            // Admin/super admin have access to all details
+            if($all==1){
+
+                // Strategy and coordinator role dont have all access
+                if($isStrategy){
+                    $jobs_open_list[$i]['access'] = '0';
+                }
+                else{
+                    $jobs_open_list[$i]['access'] = '1';
+                }
+
+                $jobs_open_list[$i]['coordinator_name'] = $value->coordinator_name;
+                //$jobs_open_list[$i]['access'] = '1';
+            }
+            else{
+                if(isset($value->hiring_manager_id) && $value->hiring_manager_id==$user_id ){
+                    $jobs_open_list[$i]['coordinator_name'] = $value->coordinator_name;
+                    $jobs_open_list[$i]['access'] = '1';
+                }
+                else{
+                    $jobs_open_list[$i]['coordinator_name'] = '';
+                    $jobs_open_list[$i]['access'] = '0';
+                }
+            }
+            $jobs_open_list[$i]['open_to_all'] = $value->open_to_all;
+            $jobs_open_list[$i]['open_to_all_date'] = $value->open_to_all_date;
+            
+            $i++;
+        }
+
+        //print_r($jobs_open_list);exit;
+        return $jobs_open_list;
+    }
 }

@@ -293,6 +293,50 @@ class JobOpenController extends Controller
 
     }
 
+    // Job open to all page
+    public function OpentoAll(Request $request){
+
+        // logged in user with role 'Administrator,Director,Manager can see all the open jobs
+        // Rest other users can only see the jobs assigned to them
+
+        $user = \Auth::user();
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getOpenToAllJobs(1,$user_id,0);
+        }
+        else{
+            $job_response = JobOpen::getOpenToAllJobs(0,$user_id,0);
+        }
+
+        $count = sizeof($job_response);
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
+        $viewVariable['isSuperAdmin'] = $isSuperAdmin;
+        $viewVariable['count'] = $count;
+
+        return view('adminlte::jobopen.opentoall', $viewVariable,compact('count'));
+
+    }
+
     /*public function getAllJobsDetails(){
 
         $limit = $_GET['length'];

@@ -83,6 +83,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@dashboard'
     ));
 
+    Route::get('/dashboard/opentoalljob',[
+        'as' => 'open.toall',
+        'uses' => 'HomeController@OpentoAllJob'
+    ]);
+
     Route::any('/home', array (
         'middleware' => 'auth',
         'uses' => 'HomeController@index'
@@ -639,6 +644,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@index',
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]); 
+
+    Route::get('jobs/opentoall', [
+        'as' => 'jobopen.toall',
+        'uses' => 'JobOpenController@OpentoAll'
+    ]);
     Route::post('jobs/create', [
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',
