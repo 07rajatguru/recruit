@@ -143,18 +143,17 @@ class Interview extends Model
             $query = $query->where('interview_date','like',"%$tomorrow%");
         }
         if ($time == 'thisweek'){
-            $from_date = date("Y-m-d");
-            $to_date = date("Y-m-d",strtotime('+6 days'));
+            $from_date = date("Y-m-d", strtotime('this week'));
+            $to_date = date("Y-m-d",strtotime("$from_date +6 days"));
             $query = $query->where('interview_date','>',"$from_date");
             $query = $query->where('interview_date','<',"$to_date");
         }
         if ($time == 'upcomingprevious') {
-            $from_date = date("Y-m-d");
-            $to_date = date("Y-m-d",strtotime('+6 days'));
+            $from_date = date("Y-m-d", strtotime('this week'));
+            $to_date = date("Y-m-d",strtotime("$from_date +6 days"));
 
-            $timming = array($from_date,$to_date);
-
-            $query = $query->whereNotIn('interview_date',$timming);
+            $query = $query->where('interview_date','<',"$from_date");
+            $query = $query->orwhere('interview_date','>',"$to_date");
         }
 
         $response = $query->get();
