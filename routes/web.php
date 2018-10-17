@@ -739,6 +739,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@status',
         //'middleware' => ['permission:industry-create']
     ]);
+
+    // Route for changes priority of multiple job
+    Route::post('jobs/mutijobpriority', [
+        'as' => 'jobopen.mutijobpriority',
+        'uses' => 'JobOpenController@MultipleJobPriority',
+    ]);
+
     Route::get('job/close', [
         'as' => 'jobopen.close',
         'uses' => 'JobOpenController@close',

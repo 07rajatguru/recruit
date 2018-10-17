@@ -2465,4 +2465,18 @@ class JobOpenController extends Controller
         return view ('adminlte::jobopen.associatedcvs',compact('response','count'));
     }
 
+    public  function MultipleJobPriority(){
+
+        $job_ids = $_POST['job_ids'];
+        $job_priority = $_POST['job_priority'];
+        $updated_at = date('Y-m-d H:i:s');
+        
+        $job_ids_array = explode(",", $job_ids);
+        foreach ($job_ids_array as $key => $value) {
+            DB::statement("UPDATE job_openings SET priority = '$job_priority', updated_at='$updated_at' where id=$value");
+        }
+
+        return redirect()->route('jobopen.index')->with('success', 'Job Priority updated successfully');
+    }
+
 }

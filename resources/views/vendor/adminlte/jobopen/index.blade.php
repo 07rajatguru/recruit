@@ -23,7 +23,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn bg-maroon" href=""> Update Status</a>
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
                 <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
             </div>
 
@@ -141,7 +141,11 @@
         @foreach($jobList as $key=>$value)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ Form::checkbox('client',$value['id'],null,array('class'=>'multiple_jobs' ,'id'=>$value['id'] )) }}</td>
+                @if(isset($value['access']) && $value['access']==1)
+                    <td>{{ Form::checkbox('job_ids',$value['id'],null,array('class'=>'multiple_jobs' ,'id'=>$value['id'] )) }}</td>
+                @else
+                    <td></td>
+                @endif
                 <td>
                     <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
 
@@ -184,6 +188,31 @@
         </tbody>
     </table>
     </div>
+
+<div id="modal-status" class="modal text-left fade priority" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Select Job Priority</h1>
+            </div>
+            {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
+            <div class="modal-body">
+                <strong>Select Job Priority :</strong> <br>
+                {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+            </div>
+
+            <input type="hidden" name="job_ids" id="job_ids" value="">
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+            {!! Form::close() !!}
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
@@ -231,5 +260,28 @@
             });
 
         });
+
+        function multipleJobId(){
+            var token = $('input[name="csrf_token"]').val();
+            var job_ids = new Array();
+
+            $("input:checkbox[name=job_ids]:checked").each(function(){
+                job_ids.push($(this).val());
+            });
+            alert(job_ids);
+
+            $(".priority").show();
+            $("#job_ids").val(job_ids);
+
+            /*$.ajax({
+                type : 'POST',
+                url : 'jobs/mutijobpriority',
+                data : {job_ids : job_ids, '_token':token},
+                dataType : 'json',
+                success: function(){
+
+                }
+            });*/
+        }
     </script>
 @endsection
