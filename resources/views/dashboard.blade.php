@@ -111,7 +111,7 @@
 
     </div>
 
-    <div class="row">
+    {{--<div class="row">
         <div class="col-lg-12 col-xs-12">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -139,9 +139,6 @@
                                 <th>HR/Coordinator  <br/> Name</th>
                                 <th>Added Date</th>
                                 <th>No. Of <br/> Positions</th>
-                                {{--<th>Edu Qualifications</th>
-                                <th>Target Industries</th>
-                                <th>Desired Candidate</th>--}}
                             </tr>
                             </thead>
                             <tbody id="job_open_to_all">
@@ -160,7 +157,7 @@
             </div>
 
         </div>
-    </div>
+    </div>--}}
 
     <div class="row">
         <div class="col-lg-6 col-xs-6">
@@ -442,11 +439,11 @@
 
              }
              });*/
-             opentoalljob();
+             /*opentoalljob();*/
 
         });
 
-        function opentoalljob(){
+        /*function opentoalljob(){
 
             $.ajax({
                 url:'/dashboard/opentoalljob',
@@ -482,7 +479,7 @@
                     }
                 }
             });
-        }
+        }*/
 
     </script>
 

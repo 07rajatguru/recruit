@@ -330,7 +330,7 @@ class ClientController extends Controller
                 $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address'],$action);
             }
             else{
-                $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address'],$action);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address']);
             }
 
             $clients[$i] = $data;

@@ -89,6 +89,7 @@
         <thead>
             <tr>
                 <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
+                <th>Action</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>   
                 <th>HR/Coordinator Name</th>
@@ -99,7 +100,6 @@
 
                 <th>Status</th>
                 <th>Client Address</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         {{--<tbody>
