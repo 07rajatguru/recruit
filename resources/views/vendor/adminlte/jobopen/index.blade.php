@@ -222,7 +222,7 @@
                 responsive: true,
                 "columnDefs": [
                     { "width": "10px", "targets": 0, "order": 'desc' },
-                    { "width": "10px", "targets": 1 },
+                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
                     { "width": "10px", "targets": 2 },
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
