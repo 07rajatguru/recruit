@@ -268,7 +268,7 @@
             $("input:checkbox[name=job_ids]:checked").each(function(){
                 job_ids.push($(this).val());
             });
-            alert(job_ids);
+            //alert(job_ids);
 
             $(".priority").show();
             $("#job_ids").val(job_ids);
