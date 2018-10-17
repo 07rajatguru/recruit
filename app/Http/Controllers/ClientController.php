@@ -327,7 +327,7 @@ class ClientController extends Controller
             else
                 $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span>';
             if($isSuperAdmin || $isStrategy ){
-                $data = array($checkbox,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address'],$action);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
             }
             else{
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address']);
