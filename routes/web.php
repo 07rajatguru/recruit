@@ -960,6 +960,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'recovery.sendconfirmationmail',
         'uses' => 'BillsController@SendConfirmationMail'
     ]);
+    //for relive bill
+    Route::get('recovery/{id}',[
+        'as' => 'recovery.relive',
+        'uses' => 'BillsController@reliveBill'
+    ]);
 
 
 

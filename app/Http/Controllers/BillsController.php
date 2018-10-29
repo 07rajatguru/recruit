@@ -677,6 +677,35 @@ class BillsController extends Controller
 
     }
 
+    public function reliveBill($id){
+
+        $relive_bill = 0;
+        $bills = array();
+        $bill = Bills::find($id);
+        $bills['status'] = $bill->status;
+        $bills['job_id'] = $bill->job_id;
+        $bills['candidate_id'] = $bill->candidate_id;
+        $bills['joining_date'] = $bill->date_of_joining;
+        $bills['fixed_salary'] = $bill->fixed_salary;
+        $bill->cancel_bill = $relive_bill;
+        $bill_cancel = $bill->save();
+        //print_r($bills);exit;
+
+        $candidatejoindate = new JobCandidateJoiningdate();
+        $candidatejoindate->job_id = $bills['job_id'];
+        $candidatejoindate->candidate_id = $bills['candidate_id'];
+        $candidatejoindate->joining_date = $bills['joining_date'];
+        $candidatejoindate->fixed_salary = $bills['fixed_salary'];
+        $candidatejoindate->save();
+
+        if($bills['status'] == 1){
+            return redirect()->route('bills.recovery')->with('success', 'Recovery Relived Successfully');
+        }
+        else{
+            return redirect()->route('forecasting.index')->with('success', 'Forecasting Relived Successfully');
+        }
+    }
+
     public function attachmentsDestroy($id){
 
         $billFileDetails = BillsDoc::find($id);

@@ -96,6 +96,11 @@
                             @endif
 
                         @endif
+                        @if($isSuperAdmin || $isAccountant)
+                          @if($value['cancel_bill']==1)
+                            @include('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting'])
+                          @endif
+                        @endif
                     @endif
 
                     @if($title=="Recovery")
@@ -110,6 +115,11 @@
                                 {{--@if($isSuperAdmin && $value['cancel_bill']==0)
                                   @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery'])
                                 @endif--}}
+                        @endif
+                        @if($isSuperAdmin || $isAccountant)
+                          @if($value['cancel_bill']==1)
+                            @include('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery'])
+                          @endif
                         @endif
                     @endif
 
