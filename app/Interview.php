@@ -45,6 +45,7 @@ class Interview extends Model
         if (isset($data['skype_id']) && $data['skype_id'] != '') {
             $interview->skype_id = $data['skype_id'];
         }
+        $interview->select_round = $data['round'];
 
         return $interview;
     }
@@ -70,6 +71,15 @@ class Interview extends Model
         $interviewStatus['Not Attended'] = 'Not Attended';
 
         return $interviewStatus;
+    }
+
+    public static function getSelectRound(){
+
+        $interviewround['1'] = 'Round 1';
+        $interviewround['2'] = 'Round 2';
+        $interviewround['3'] = 'Final Round';
+
+        return $interviewround;
     }
 
     public static function getAllInterviews($all=0,$user_id){

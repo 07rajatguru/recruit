@@ -246,6 +246,8 @@ class InterviewController extends Controller
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
+        $viewVariable['round'] = Interview::getSelectRound();
+        $viewVariable['interview_round'] = '';
         $viewVariable['action'] = 'add';
 
         return view('adminlte::interview.create', $viewVariable,compact('user_id'));
@@ -272,6 +274,7 @@ class InterviewController extends Controller
         $data['about'] = $request->get('about');
         $data['interview_owner_id'] = $user_id;
         $data['skype_id'] = $request->get('skype_id');
+        $data['round'] = $request->get('round');
 
         $interview = Interview::createInterview($data);
 
@@ -349,6 +352,7 @@ class InterviewController extends Controller
 
         $dateClass = new Date();
         $interview = Interview::find($id);
+        $interview_round = $interview->select_round;
 
         $viewVariable = array();
         $viewVariable['interview'] = $interview;
@@ -360,11 +364,13 @@ class InterviewController extends Controller
         $viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getInterviewStatus();
+        $viewVariable['round'] = Interview::getSelectRound();
         $viewVariable['users'] = User::getAllUsers();
         $viewVariable['about'] = $interview->about;
         $viewVariable['action'] = 'edit';
         $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->interview_date);
         $viewVariable['toDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->to);
+        $viewVariable['interview_round'] = $interview_round;
 
         return view('adminlte::interview.edit', $viewVariable,compact('user_id','source'));
 
@@ -392,10 +398,12 @@ class InterviewController extends Controller
         $about = $request->get('about');
         $interview_owner_id = $user_id;
         $skype_id = $request->get('skype_id');
+        $round = $request->get('round');
 
         $source = $request->get('source');
 
         $interview = Interview::find($id);
+        $pre_round = $interview->select_round;
        // if(isset($interview_name))
         //    $interview->interview_name = $interview_name;
         if(isset($candidate_id))
@@ -419,6 +427,9 @@ class InterviewController extends Controller
         if (isset($skype_id) && $skype_id != '') {
             $interview->skype_id = $skype_id;
         }
+        if (isset($round) && $round != '') {
+            $interview->select_round = $round;
+        }
 
         $validator = \Validator::make(Input::all(),$interview::$rules);
 
@@ -427,6 +438,14 @@ class InterviewController extends Controller
         }
 
         $interviewUpdated = $interview->save();
+
+        if ($pre_round != $round && $round > $pre_round) {
+            //print_r($pre_round.'-'.$round);exit;
+            $candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$id);
+
+            // Interview Schedule Mail
+            $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
+        }
 
         // Interview Schedule Mail
 
@@ -566,14 +585,28 @@ class InterviewController extends Controller
         $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.",".$interviewDetails->city;
         $interview['interviewer'] = $interviewDetails->interviewer_name;
         $interview['type'] = $interviewDetails->type;
-        $interview['interview_date'] = $dateClass->changeYMDtoDMY($interviewDetails->interview_date);
+        $interview['interview_date'] = $dateClass->changeYMDHMStoDMYHMS($interviewDetails->interview_date);
         $interview['location'] = $interviewDetails->location;
         $interview['status'] = $interviewDetails->status;
         $interview['comments'] = $interviewDetails->comments;
         $interview['about'] = $interviewDetails->about;
         $interview['interviewOwner'] = $interviewOwner;
         $interview['skype_id'] = $interviewDetails->skype_id;
-
+        $interview['round'] = $interviewDetails->select_round;
+        if ($interview['round'] == '1') {
+            $interview_round = 'Round 1';
+        }
+        else if ($interview['round'] == '2') {
+            $interview_round = 'Round 2';
+        }
+        else if ($interview['round'] == '3') {
+            $interview_round = 'Final Round';
+        }
+        else{
+            $interview_round = '';
+        }
+        $interview['interview_round'] = $interview_round;
+        
         return view('adminlte::interview.show', $interview);
     }
 

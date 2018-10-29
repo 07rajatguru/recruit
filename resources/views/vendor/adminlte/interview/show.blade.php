@@ -64,12 +64,14 @@
                             <th scope="row">About :</th>
                             <td>{{ isset($about)? $about : null }}</td>
                         </tr>
-                        @if(isset($skype_id) && $skype_id != '')
-                            <tr>
+                        <tr>
+                            <th scope="row">Interview Round :</th>
+                            <td>{{ isset($interview_round)? $interview_round : null }}</td>
+                            @if(isset($skype_id) && $skype_id != '')
                                 <th scope="row">Skype Id :</th>
                                 <td>{{ isset($skype_id)? $skype_id : null }}</td>
-                            </tr>
-                        @endif
+                            @endif
+                        </tr>
                     </table>
                 </div>
             </div>

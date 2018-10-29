@@ -96,6 +96,16 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('round') ? 'has-error' : '' }}">
+                                <strong>Select Round:</strong>
+                                {!! Form::select('round', $round, $interview_round, array('id'=>'round','class' => 'form-control' )) !!}
+                                @if ($errors->has('round'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('round') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
                             <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
                                 <strong>About Client:</strong>
                                 {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '7' )) !!}
