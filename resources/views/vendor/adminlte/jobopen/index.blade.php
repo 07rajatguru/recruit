@@ -33,6 +33,51 @@
             </div>
         </div>
     </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;font-weight: 600;border-radius: 22px;">-None-</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;">Urgent Positions</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;">New Positions</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;">Constant Deliveries needed</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">On Hold</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;">Revived Positions</div></a>
+            </div>
+        </div>
+        <br/><br/><br/>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;font-weight: 600;border-radius: 22px;">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;">No Deliveries Needed</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">Identified candidates</div></a>
+            </div>
+        </div>
+        <br/><br/><br/>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">Closed By Us</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">Closed By Client</div></a>
+            </div>
+        </div>
+    </div>
 
      <div class="row">
        {{-- <div class="col-xs-12 col-sm-12 col-md-12">
