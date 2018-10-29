@@ -58,19 +58,6 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-maroon">
-                <div class="inner">
-                    <h3>{{ $associatedCount or 0}}</h3>
-                    <p>No. of CVS associated this month</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="/associatedcvs" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-
-        <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3> {{ $interviewCount or 0}} </h3>
@@ -84,15 +71,15 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-yellow">
+            <div class="small-box bg-maroon">
                 <div class="inner">
-                    <h3> {{$candidatejoinCount}}</h3>
-                    <p>Candidate Joining this month</p>
+                    <h3>{{ $associatedCount or 0}}</h3>
+                    <p>No. of CVS associated this month</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
+                    <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="candidatejoin" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/associatedcvs" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -106,6 +93,19 @@
                     <i class="ion ion-stats-bars"></i>
                 </div>
                 <a href="/attendedinterview" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-xs-4">
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3> {{$candidatejoinCount}}</h3>
+                    <p>Candidate Joining this month</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="candidatejoin" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -129,16 +129,14 @@
                         <table class="table no-margin">
                             <thead>
                             <tr>
-                                <th>MB</th>
                                 <th>Company Name</th>
                                 <th>Position Title</th>
-                                <th>CA</th>
                                 <th>Location</th>
+                                <th>CA</th>
                                 <th>Min CTC<br/>(in Lacs)</th>
                                 <th>Max CTC<br/>(in Lacs)</th>
-                                <th>HR/Coordinator  <br/> Name</th>
                                 <th>Added Date</th>
-                                <th>No. Of <br/> Positions</th>
+                                <th>MB</th>
                             </tr>
                             </thead>
                             <tbody id="job_open_to_all">
@@ -454,16 +452,14 @@
                             var link = /jobs/+job_opened[i].id+/associated_candidates/;
                             var html = '';
                             html += '<tr>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].am_name+'</td>';
                             html += '<td style="background-color: '+job_opened[i].color+'">'+job_opened[i].display_name+'</td>';
                             html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].posting_title+'</td>';
-                            html += '<td><a title="Show Associated Candidates" href="'+link+'">'+job_opened[i].associate_candidate_cnt+'</td>';
                             html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].location+'</td>';
+                            html += '<td><a title="Show Associated Candidates" href="'+link+'">'+job_opened[i].associate_candidate_cnt+'</td>';
                             html += '<td>'+job_opened[i].min_ctc+'</td>';
                             html += '<td>'+job_opened[i].max_ctc+'</td>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].coordinator_name+'</td>';
                             html += '<td>'+job_opened[i].created_date+'</td>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].no_of_positions+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].am_name+'</td>';
                             html += '</tr>';
 
                             $("#job_open_to_all").append(html);
