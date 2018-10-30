@@ -19,12 +19,13 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Openings List ({{ $count or 0}})</h2>
+                <h2>{{$priority}} Job List ({{ $count or 0}})</h2>
             </div>
 
             <div class="pull-right">
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
                 <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
             </div>
 
             <div class="pull-right">

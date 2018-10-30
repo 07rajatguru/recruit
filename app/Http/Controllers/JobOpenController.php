@@ -337,6 +337,48 @@ class JobOpenController extends Controller
 
     }
 
+    // Function for priority wise job page
+    public function priorityWise($priority){
+
+        //print_r($priority);exit;
+        $user = \Auth::user();
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getPriorityWiseJobs(1,$user_id,$priority);
+        }
+        else{
+            $job_response = JobOpen::getPriorityWiseJobs(0,$user_id,$priority);
+        }
+
+        $count = sizeof($job_response);
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
+        $viewVariable['isSuperAdmin'] = $isSuperAdmin;
+        $viewVariable['count'] = $count;
+        $viewVariable['priority'] = $priority;
+
+        return view('adminlte::jobopen.prioritywisejob', $viewVariable);
+    }
+
     /*public function getAllJobsDetails(){
 
         $limit = $_GET['length'];
