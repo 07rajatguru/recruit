@@ -25,7 +25,7 @@ class JobCandidateJoiningdate extends Model
 
     public static function getJoiningCandidateByUserId($user_id,$all=0){
 
-        $month = date('m');
+        $month = date('Y-m');
 
         $query = JobCandidateJoiningdate::query();
         $query = $query->Join('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id');
@@ -34,7 +34,8 @@ class JobCandidateJoiningdate extends Model
         $query = $query->leftJoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id');
         $query = $query->leftjoin('bills','bills.candidate_id','=','job_candidate_joining_date.candidate_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner','candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid', 'job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_candidate_joining_date.fixed_salary as salary','bills.id as bill_id');
-        $query = $query->whereRaw('MONTH(joining_date) = ?',[$month]);
+        //$query = $query->whereRaw('MONTH(joining_date) = ?',[$month]);
+        $query = $query->where('joining_date','like',"%$month%");
 
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
@@ -104,7 +105,7 @@ class JobCandidateJoiningdate extends Model
 
     public static function getJoiningCandidateByUserIdCount($user_id,$all=0){
 
-        $month = date('m');
+        $month = date('Y-m');
 
         $query = JobCandidateJoiningdate::query();
         $query = $query->Join('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id');
@@ -113,7 +114,8 @@ class JobCandidateJoiningdate extends Model
         $query = $query->leftJoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner',
             'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid');
-        $query = $query->whereRaw('MONTH(joining_date) = ?',[$month]);
+        //$query = $query->whereRaw('MONTH(joining_date) = ?',[$month]);
+        $query = $query->where('joining_date','like',"%$month%");
 
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
