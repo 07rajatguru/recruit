@@ -7,6 +7,63 @@
 
 @stop
 
+<style type="text/css">
+    .select2-selection__rendered[title="Urgent Positions"] {
+      background-color: #FF0000;
+    }
+    .select2-selection__rendered[title="New Positions"] {
+      background-color: #00B0F0;
+    }
+    .select2-selection__rendered[title="Constant Deliveries needed"] {
+      background-color: #FABF8F;
+    }
+    .select2-selection__rendered[title="On Hold"] {
+      background-color: #B1A0C7;
+    }
+    .select2-selection__rendered[title="Revived Positions"] {
+      background-color: yellow;
+    }
+    .select2-selection__rendered[title="No Deliveries Needed"] {
+      background-color: #808080;
+    }
+    .select2-selection__rendered[title="Identified candidates"] {
+      background-color: #92D050;
+    }
+    .select2-selection__rendered[title="Closed By Us"] {
+      background-color: #92D050;
+    }
+    .select2-selection__rendered[title="Closed By Client"] {
+      background-color: #FFFFFF;
+    }
+
+    .select2-results__option[id*="Urgent Positions"] {
+      background-color: #FF0000;
+    }
+    .select2-results__option[id*="New Positions"] {
+      background-color: #00B0F0;
+    }
+    .select2-results__option[id*="Constant Deliveries needed"] {
+      background-color: #FABF8F;
+    }
+    .select2-results__option[id*="On Hold"] {
+      background-color: #B1A0C7;
+    }
+    .select2-results__option[id*="Revived Positions"] {
+      background-color: yellow;
+    }
+    .select2-results__option[id*="No Deliveries Needed"] {
+      background-color: #808080;
+    }
+    .select2-results__option[id*="Identified candidates"] {
+      background-color: #92D050;
+    }
+    .select2-results__option[id*="Closed By Us"] {
+      background-color: #92D050;
+    }
+    .select2-results__option[id*="Closed By Client"] {
+      background-color: #FFFFFF;
+    }
+</style>
 @section('content')
 
     @if ($message = Session::get('success'))
@@ -44,16 +101,16 @@
             <div class="col-md-3">
                 <select class="form-control" id="priority">
                     <option value="-None-">Select Job Priority</option>
-                    <option value="Urgent Positions">Urgent Positions</option>
-                    <option value="New Positions">New Positions</option>
-                    <option value="Constant Deliveries needed">Constant Deliveries needed</option>
-                    <option value="On Hold">On Hold</option>
-                    <option value="Revived Positions">Revived Positions</option>
+                    <option value="Urgent Positions" id="Urgent Positions">Urgent Positions</option>
+                    <option value="New Positions" id="New Positions">New Positions</option>
+                    <option value="Constant Deliveries needed" id="Constant Deliveries needed">Constant Deliveries needed</option>
+                    <option value="On Hold" id="On Hold">On Hold</option>
+                    <option value="Revived Positions" id="Revived Positions">Revived Positions</option>
                     <option value="Constant Deliveries needed for very old positions where many deliveries are done but no result yet">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</option>
-                    <option value="No Deliveries Needed">No Deliveries Needed</option>
-                    <option value="Identified candidates">Identified candidates</option>
-                    <option value="Closed By Us">Closed By Us</option>
-                    <option value="Closed By Client">Closed By Client</option>
+                    <option value="No Deliveries Needed" id="No Deliveries Needed">No Deliveries Needed</option>
+                    <option value="Identified candidates" id="Identified candidates">Identified candidates</option>
+                    <option value="Closed By Us" id="Closed By Us">Closed By Us</option>
+                    <option value="Closed By Client" id="Closed By Client">Closed By Client</option>
                 </select>
             </div>
 
@@ -332,6 +389,8 @@
                     $("#allcb").prop('checked', false);
                 }
             });
+
+        $("#priority").select2();
 
         });
 
