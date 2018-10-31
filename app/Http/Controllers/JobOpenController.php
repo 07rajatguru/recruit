@@ -338,8 +338,9 @@ class JobOpenController extends Controller
     }
 
     // Function for priority wise job page
-    public function priorityWise($priority){
+    public function priorityWise(){
 
+        $priority = $_POST['priority'];
         //print_r($priority);exit;
         $user = \Auth::user();
 

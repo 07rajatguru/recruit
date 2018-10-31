@@ -25,7 +25,7 @@
             <div class="pull-right">
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
                 <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
-                <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('jobopen.index') }}"> Back</a>
             </div>
 
             <div class="pull-right">
@@ -37,6 +37,35 @@
     <br/>
 
     <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-md-3">
+                <label >Search Open Jobs by selecting priority : </label>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-control" id="priority">
+                    <option value="-None-">Select Job Priority</option>
+                    <option value="Urgent Positions">Urgent Positions</option>
+                    <option value="New Positions">New Positions</option>
+                    <option value="Constant Deliveries needed">Constant Deliveries needed</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="Revived Positions">Revived Positions</option>
+                    <option value="Constant Deliveries needed for very old positions where many deliveries are done but no result yet">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</option>
+                    <option value="No Deliveries Needed">No Deliveries Needed</option>
+                    <option value="Identified candidates">Identified candidates</option>
+                    <option value="Closed By Us">Closed By Us</option>
+                    <option value="Closed By Client">Closed By Client</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button type="button" class="btn btn-success" onclick="prioritywise()">Submit</button></div>
+            <div class="col-md-3">
+
+            </div>
+        </div>
+    </div>
+    {{--<div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                 <a href="{{ route('jobopen.priority',$job_priority[0]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;font-weight: 600;border-radius: 22px;">-None-</div></a>
@@ -78,7 +107,7 @@
                 <a href="{{ route('jobopen.priority',$job_priority[10]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">Closed By Client</div></a>
             </div>
         </div>
-    </div>
+    </div>--}}
 
      <div class="row">
        {{-- <div class="col-xs-12 col-sm-12 col-md-12">
@@ -329,5 +358,20 @@
                 }
             });*/
         }
+
+        function prioritywise() {
+            var priority = $("#priority").val();
+
+            var url = '/jobs/priority/'+priority;
+
+            var form = $('<form action="'+url+ '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="priority" value="'+priority+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
     </script>
 @endsection

@@ -42,13 +42,23 @@
             </div>
 
             <div class="col-md-3">
-                <select class="form-control">
-                    <option >Select Job Priority</option>
+                <select class="form-control" id="priority">
+                    <option value="-None-">Select Job Priority</option>
+                    <option value="Urgent Positions">Urgent Positions</option>
+                    <option value="New Positions">New Positions</option>
+                    <option value="Constant Deliveries needed">Constant Deliveries needed</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="Revived Positions">Revived Positions</option>
+                    <option value="Constant Deliveries needed for very old positions where many deliveries are done but no result yet">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</option>
+                    <option value="No Deliveries Needed">No Deliveries Needed</option>
+                    <option value="Identified candidates">Identified candidates</option>
+                    <option value="Closed By Us">Closed By Us</option>
+                    <option value="Closed By Client">Closed By Client</option>
                 </select>
             </div>
 
-            <div class="col-md-3"><button type="button" class="btn btn-success">Submit</button></div>
-
+            <div class="col-md-3">
+                <button type="button" class="btn btn-success" onclick="prioritywise()">Submit</button></div>
             <div class="col-md-3">
 
             </div>
@@ -346,6 +356,20 @@
 
                 }
             });*/
+        }
+
+        function prioritywise() {
+            var priority = $("#priority").val();
+
+            var url = '/jobs/priority/'+priority;
+
+            var form = $('<form action="'+url+ '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="priority" value="'+priority+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
         }
     </script>
 @endsection
