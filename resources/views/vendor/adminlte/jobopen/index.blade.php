@@ -37,6 +37,25 @@
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-md-3">
+                <label >Search Open Jobs by selecting priority : </label>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-control">
+                    <option >Select Job Priority</option>
+                </select>
+            </div>
+
+            <div class="col-md-3"><button type="button" class="btn btn-success">Submit</button></div>
+
+            <div class="col-md-3">
+
+            </div>
+        </div>
+    </div>
+    {{--<div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                 <a href="{{ route('jobopen.priority',$job_priority[0]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;font-weight: 600;border-radius: 22px;">-None-</div></a>
             </div>
@@ -77,7 +96,7 @@
                 <a href="{{ route('jobopen.priority',$job_priority[10]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">Closed By Client</div></a>
             </div>
         </div>
-    </div>
+    </div>--}}
 
      <div class="row">
        {{-- <div class="col-xs-12 col-sm-12 col-md-12">
