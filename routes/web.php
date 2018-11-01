@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@OpentoAllJob'
     ]);
 
-    Route::get('/dashboard/monthwise',[
+    Route::any('/dashboard/monthwise',[
         'as' => 'dashboard.monthwise',
         'uses' => 'HomeController@dashboardMonthwise'
     ]);

@@ -137,3 +137,24 @@
     </div>
 
 @stop
+
+@section('customscripts')
+    <script type="text/javascript">
+
+        function filter_data(){
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+
+            var url = '/dashboard/monthwise';
+
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="month" value="'+month+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+    </script>
+@stop

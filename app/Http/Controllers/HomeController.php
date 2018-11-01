@@ -181,7 +181,7 @@ class HomeController extends Controller
             $month = $_POST['month'];
         }
         else{
-            $month = '10';//date("n");
+            $month = date("n");
         }
         if(isset($_POST['year']) && $_POST['year']!=''){
             $year = $_POST['year'];
@@ -203,7 +203,7 @@ class HomeController extends Controller
         $year_array[2020] = 2020;
 
         // Client Count
-        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
+        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])->count();
 
         // Job Count
         $job_response = JobOpen::getAllJobs(1,$user_id);
@@ -219,8 +219,9 @@ class HomeController extends Controller
 
         // Interview attended this month
         $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
-                                                      ->where('status','=','Attended')
-                                                      ->count();
+                                                    ->whereRaw('YEAR(interview_date) = ?',[$year])
+                                                    ->where('status','=','Attended')
+                                                    ->count();
 
         // Candidate Join this month
         $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
