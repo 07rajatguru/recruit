@@ -1030,7 +1030,7 @@ class JobOpen extends Model
         else if ($priority == 'Revived Positions') {
             $job_open_query = $job_open_query->where('priority','=','5');
         }
-        else if ($priority == 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet') {
+        else if ($priority == 'Constant Deliverie needed for very old positions where many deliveries are done but no result yet') {
             $job_open_query = $job_open_query->where('priority','=','6');
         }
         else if ($priority == 'No Deliveries Needed') {

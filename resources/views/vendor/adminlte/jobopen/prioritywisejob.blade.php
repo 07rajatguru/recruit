@@ -108,7 +108,7 @@
                     <option value="Constant Deliveries needed" id="Constant Deliveries needed">Constant Deliveries needed</option>
                     <option value="On Hold" id="On Hold">On Hold</option>
                     <option value="Revived Positions" id="Revived Positions">Revived Positions</option>
-                    <option value="Constant Deliveries needed for very old positions where many deliveries are done but no result yet">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</option>
+                    <option value="Constant Deliverie needed for very old positions where many deliveries are done but no result yet">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</option>
                     <option value="No Deliveries Needed" id="No Deliveries Needed">No Deliveries Needed</option>
                     <option value="Identified candidates" id="Identified candidates">Identified candidates</option>
                     <option value="Closed By Us" id="Closed By Us">Closed By Us</option>
