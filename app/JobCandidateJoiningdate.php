@@ -129,4 +129,30 @@ class JobCandidateJoiningdate extends Model
 
         return $response;
     }
+
+    // For dashboard monthwise data
+    public static function getJoiningCandidateByUserIdCountByMonthwise($user_id,$all=0,$month,$year){
+
+        $query = JobCandidateJoiningdate::query();
+        $query = $query->Join('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id');
+        $query = $query->leftJoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id');
+        $query = $query->leftJoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftJoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner',
+            'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid');
+        $query =$query->where(\DB::raw('month(joining_date)'),'=',$month);
+        $query =$query->where(\DB::raw('year(joining_date)'),'=',$year);
+
+        if($all==0){
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orWhere('job_openings.hiring_manager_id',$user_id);
+            });
+        }
+
+        $query = $query->orderBy('job_candidate_joining_date.id','desc');
+        $response = $query->count();
+
+        return $response;
+    }
 }

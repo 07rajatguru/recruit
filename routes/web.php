@@ -88,6 +88,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@OpentoAllJob'
     ]);
 
+    Route::get('/dashboard/monthwise',[
+        'as' => 'dashboard.monthwise',
+        'uses' => 'HomeController@dashboardMonthwise'
+    ]);
+
     Route::any('/home', array (
         'middleware' => 'auth',
         'uses' => 'HomeController@index'

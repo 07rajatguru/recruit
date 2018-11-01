@@ -173,6 +173,79 @@ class HomeController extends Controller
         return view('dashboard',$viewVariable);
     }
 
+    public function dashboardMonthwise(){
+
+        $user_id =  \Auth::user()->id;
+
+        if(isset($_POST['month']) && $_POST['month']!=''){
+            $month = $_POST['month'];
+        }
+        else{
+            $month = '10';//date("n");
+        }
+        if(isset($_POST['year']) && $_POST['year']!=''){
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date("Y");
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m));
+        }
+
+        $year_array = array();
+        $year_array[2016] = 2016;
+        $year_array[2017] = 2017;
+        $year_array[2018] = 2018;
+        $year_array[2019] = 2019;
+        $year_array[2020] = 2020;
+
+        // Client Count
+        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
+
+        // Job Count
+        $job_response = JobOpen::getAllJobs(1,$user_id);
+        $job = sizeof($job_response);
+
+        // Interview Count
+        $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
+        $interviews = sizeof($interviews_cnt);
+
+        // Cvs Associated this month
+        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+        $associate_count = $associate_monthly_response['cvs_cnt'];
+
+        // Interview attended this month
+        $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
+                                                      ->where('status','=','Attended')
+                                                      ->count();
+
+        // Candidate Join this month
+        $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+
+        $viewVariable = array();
+        $viewVariable['month'] = $month;
+        $viewVariable['month_list'] = $month_array;
+        $viewVariable['year'] = $year;
+        $viewVariable['year_list'] = $year_array;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['interviewCount'] = $interviews;
+        $viewVariable['associatedCount'] = $associate_count;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
+
+        $superadmin_role_id =  env('SUPERADMINUSERID');
+        if ($user_id != $superadmin_role_id) {
+            return view('errors.403');
+        }
+        else{
+            return view('dashboardmonthwise',$viewVariable);
+        }
+    }
+
     public function OpentoAllJob(){
 
         $user_id =  \Auth::user()->id;
