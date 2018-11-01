@@ -631,4 +631,55 @@ class Interview extends Model
         });
     }
 
+    public static function ScheduleMailMultiple($value){
+
+        $interview = Interview::find($value);
+
+        $candidate_email = Interview::getCandidateOwnerEmail($value);
+        $candidate_owner_email = $candidate_email->candidateownersemail;
+
+        $client_email = Interview::getClientOwnerEmail($value);
+        $client_owner_email = $client_email->clientownersemail;
+
+        // Candidate details
+        $candidate_response  = CandidateBasicInfo::find($interview['candidate_id']);
+        $cname = $candidate_response->full_name;
+
+        /*$to_address = array();
+        $to_address[] = $candidate_owner_email;
+        $to_address[] = $client_owner_email;*/
+
+        $candidate_response  = CandidateBasicInfo::find($interview['candidate_id']);
+        $cname = $candidate_response->full_name;
+        //$ccity = $candidate_response->city;
+        $cmobile = $candidate_response->mobile;
+        $cemail = $candidate_response->email;
+
+        $job_details = JobOpen::getJobById($interview['posting_title']);
+
+        $interview_details = array();
+        $interview_details['cname'] = $cname;
+        $interview_details['ccity'] = '';
+        $interview_details['cmobile'] = $cmobile;
+        $interview_details['cemail'] = $cemail;
+        $interview_details['city'] = $job_details['city'];
+        $interview_details['company_name'] = $job_details['company_name'];
+        $interview_details['company_url'] =$job_details['company_url'];
+        $interview_details['client_desc'] = $job_details['client_desc'];
+        $interview_details['job_designation'] = $job_details['posting_title'];
+        $interview_details['job_location'] = $job_details['job_location'];
+        $interview_details['job_description'] = $job_details['job_description'];
+        $interview_details['interview_date'] = $job_details['interview_date'];
+        $interview_details['interview_day'] = '';
+        $interview_details['interview_time'] = $job_details['interview_time'];
+        $interview_details['interview_location'] = $job_details['interview_location'];
+        $interview_details['interview_type'] =$job_details['interview_type'];
+        $interview_details['candidate_owner_email'] = $candidate_owner_email;
+        $interview_details['client_owner_email'] = $client_owner_email;
+        $interview_details['skype_id'] = $job_details['skype_id'];
+
+        return $interview_details;
+
+    }
+
 }

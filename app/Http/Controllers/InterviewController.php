@@ -636,4 +636,53 @@ class InterviewController extends Controller
 
     }
 
+    public function multipleInterviewScheduleMail(){
+
+        $interview_ids = $_POST['inter_ids'];
+        $subject = $_POST['subject'];
+        //print_r($subject);exit;
+
+        $interview_id_array = explode(",", $interview_ids);
+        $i = 0;
+        foreach ($interview_id_array as $key => $value) {
+
+            $interview[$i] = Interview::ScheduleMailMultiple($value);
+            $to_address_client = array();
+            $j = 0;
+            foreach ($interview as $key => $value) {
+                $to_address_client[$j] = $value['client_owner_email'];
+                $j++;
+            }
+            $to_address_candidate = array();
+            $k = 0;
+            foreach ($interview as $key => $value) {
+                $to_address_candidate[$k] = $value['candidate_owner_email'];
+                $k++;
+            }
+            $i++;
+        }
+        $to_address = array_merge($to_address_candidate,$to_address_client);
+        $to = implode(' ',$to_address);
+        //print_r($to);exit;
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+        $app_url = getenv('APP_URL');
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to_address'] = $to_address;
+        $input['app_url'] = $app_url;
+        $input['interview_details'] = $interview;
+        $input['subject'] = $subject;
+        // $input['company_name'] = $job_details['company_name'];
+        // $input['city'] = $job_details['city'];
+
+        \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to_address'])->subject($input['subject']);
+        });
+
+        return redirect('/interview');
+    }
+
 }

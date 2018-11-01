@@ -869,6 +869,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@getClientInfos'
     ]);
 
+    Route::post('interview/multipleinterviewschedule',[
+        'as' => 'interview.multipleinterviewschedule',
+        'uses' => 'InterviewController@multipleInterviewScheduleMail'
+    ]);
     /*Route::get('ajax/interviewcandidate', [
         'as' => 'interview.getCandidate',
         'uses' => 'InterviewController@getCandidate',

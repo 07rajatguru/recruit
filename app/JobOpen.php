@@ -762,7 +762,7 @@ class JobOpen extends Model
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_query = $job_query->leftjoin('interview', 'interview.posting_title','=', 'job_openings.id');
         $job_query = $job_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id');
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
 
@@ -802,6 +802,7 @@ class JobOpen extends Model
             $response['client_id'] = $v->client_id;
             $response['job_unique_id'] = $v->job_id;
             $response['user_name'] = $v->user_name;
+            $response['skype_id'] = $v->skype_id;
         }
 
         return $response;

@@ -14,6 +14,7 @@
                 <h2>Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
+                {{--<button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="multipleMail()"> Send Mail</button>--}}
                 <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
             </div>
 
@@ -53,6 +54,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>{{ Form::checkbox('interview[]',0 ,null,array('id'=>'allcb')) }}</th>
                 {{--<th>Interview Name</th>--}}
                 <th>Posting Title</th>
                 <th>Candidate</th>
@@ -81,6 +83,7 @@
          ?>
             <tr>
                 <td>{{ ++$i }}</td>
+                <td>{{ Form::checkbox('interview_ids',$interView['id'],null,array('class'=>'interview_ids' ,'id'=>$interView['id'] )) }}</td>
                 {{--<td style="background-color: {{ $color }}">{{ $interView['interview_name'] or '' }}</td>--}}
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView['client_name'] }} - {{ $interView['posting_title'] }} , {{$interView['city']}}</td>
                 <td>{{ $interView['candidate_fname'] }}</td>
@@ -99,6 +102,32 @@
         @endforeach
         </tbody>
     </table>
+
+
+<div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
+            </div>
+            {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule'])!!}
+            <div class="modal-body">
+                <h3>Are you sure want to Send Mail ?</h3> <br/>
+
+                <strong>Subject for Mail :</strong> <br>
+                {!! Form::text('subject',null, array('id'=>'subject','class' => 'form-control')) !!}
+            </div>
+            <input type="hidden" name="inter_ids" id="inter_ids" value="">
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+            {!! Form::close() !!}
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 @stop
 
 @section('customscripts')
@@ -116,6 +145,41 @@
 
             } );
             new jQuery.fn.dataTable.FixedHeader( table );
+
+            $('#allcb').change(function(){
+                if($(this).prop('checked')){
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', true);
+                    });
+                }else{
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+            $('.interview_ids').change(function() {
+                if ($(this).prop('checked')) {
+                    if ($('.interview_ids:checked').length == $('.interview_ids').length) {
+                        $("#allcb").prop('checked', true);
+                    }
+                }
+                else{
+                    $("#allcb").prop('checked', false);
+                }
+            });
         });
+
+        function multipleMail(){
+            var token = $('input[name="csrf_token"]').val();
+            var interview_ids = new Array();
+
+            $("input:checkbox[name=interview_ids]:checked").each(function(){
+                interview_ids.push($(this).val());
+            });
+            //alert(interview_ids);
+
+            $(".interview-mail").show();
+            $("#inter_ids").val(interview_ids);
+        }
     </script>
 @endsection
