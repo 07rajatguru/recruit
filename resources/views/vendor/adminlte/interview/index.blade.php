@@ -14,7 +14,7 @@
                 <h2>Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
-                {{--<button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="multipleMail()"> Send Mail</button>--}}
+                {{--<button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()"> Send Mail</button>--}}
                 <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
             </div>
 
@@ -112,22 +112,19 @@
                 <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
             </div>
             {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule'])!!}
-            <div class="modal-body">
-                <h3>Are you sure want to Send Mail ?</h3> <br/>
-
-                <strong>Subject for Mail :</strong> <br>
-                {!! Form::text('subject',null, array('id'=>'subject','class' => 'form-control')) !!}
+            <div class="modal-body check-id">
+                
             </div>
             <input type="hidden" name="inter_ids" id="inter_ids" value="">
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
             {!! Form::close() !!}
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
@@ -169,7 +166,33 @@
             });
         });
 
-        function multipleMail(){
+        function checkIdsforMail(){
+            var token = $('input[name="csrf_token"]').val();
+            var interview_ids = new Array();
+
+            $("input:checkbox[name=interview_ids]:checked").each(function(){
+                interview_ids.push($(this).val());
+            });
+
+            $("#inter_ids").val(interview_ids);
+            $(".check-id").empty();
+            $.ajax({
+                type: 'POST',
+                url: 'interview/checkidsmail',
+                data: { interview_ids:interview_ids, '_token':token },
+                success: function(msg){   
+                    $(".interview-mail").show();
+                    if (msg.success == 'success') {
+                        $(".check-id").append(msg.mail);
+                    }
+                    else{
+                        $(".check-id").append(msg.err);
+                    }
+                }
+            });
+        }
+
+        /*function multipleMail(){
             var token = $('input[name="csrf_token"]').val();
             var interview_ids = new Array();
 
@@ -180,6 +203,6 @@
 
             $(".interview-mail").show();
             $("#inter_ids").val(interview_ids);
-        }
+        }*/
     </script>
 @endsection

@@ -874,6 +874,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@getClientInfos'
     ]);
 
+    Route::post('interview/checkidsmail',[
+        'as' => 'interview.checkidsmail',
+        'uses' => 'InterviewController@CheckIdsforMail'
+    ]);
+
     Route::post('interview/multipleinterviewschedule',[
         'as' => 'interview.multipleinterviewschedule',
         'uses' => 'InterviewController@multipleInterviewScheduleMail'

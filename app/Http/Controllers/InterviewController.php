@@ -636,6 +636,29 @@ class InterviewController extends Controller
 
     }
 
+    // For check wherther interview selected for multiple mail or not
+    public function CheckIdsforMail(){
+
+        if (isset($_POST['interview_ids']) && $_POST['interview_ids'] != '') {
+            $interview_ids = $_POST['interview_ids'];
+        }
+
+        if (isset($interview_ids) && sizeof($interview_ids) > 0) {
+        
+            $view = \View::make('adminlte::partials.interviewsubjectfield');
+            $html = $view->render();
+
+            $msg['success'] = 'success';
+            $msg['mail'] = $html;
+        }
+        else{
+            $msg['err'] = '<b>Please select interview</b>';
+            $msg['msg'] = "fail";
+        }
+
+        return $msg;
+    }
+
     public function multipleInterviewScheduleMail(){
 
         $interview_ids = $_POST['inter_ids'];
