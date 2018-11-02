@@ -9,6 +9,7 @@ use App\JobVisibleUsers;
 use App\JobAssociateCandidates;
 use App\ClientBasicinfo;
 use App\Events\NotificationMail;
+use App\Events\NotificationEvent;
 
 class JobOpentoAll extends Command
 {
@@ -88,6 +89,16 @@ class JobOpentoAll extends Command
 
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                         //print_r($message);exit;
+
+                        foreach ($users as $key2=>$value2){
+                            $module_id = $job_id;
+                            $module = 'Job Open to All';
+                            $message = "Job opened by ". $job_details['user_name'] ."-" . $job_details['posting_title'] . "@" .$client_name . "-" . $client_city;
+                            $link = route('jobopen.show',$job_id);
+                            $user_arr = trim($key2);
+
+                            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+                        }
                     }
                     $open_to_all = 1;
                     \DB::statement("UPDATE job_openings SET open_to_all = $open_to_all where id = $job_id");

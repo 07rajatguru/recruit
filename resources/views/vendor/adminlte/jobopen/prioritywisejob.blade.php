@@ -7,7 +7,8 @@
 
 @stop
 
-<style type="text/css">
+@section('customs_css')
+<style>
     .select2-selection__rendered[title="Urgent Positions"] {
       background-color: #FF0000;
     }
@@ -64,6 +65,7 @@
       background-color: #FFFFFF;
     }
 </style>
+@endsection
 
 @section('content')
 
