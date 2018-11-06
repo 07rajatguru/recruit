@@ -2524,4 +2524,62 @@ class JobOpenController extends Controller
         return redirect()->route('jobopen.index')->with('success', 'Job Priority updated successfully');
     }
 
+    // For check wherther associated candidate selected for mail or not
+    public function CheckIds(){
+
+        if (isset($_POST['can_ids']) && $_POST['can_ids'] != '') {
+            $can_ids = $_POST['can_ids'];
+        }
+
+        if (isset($can_ids) && sizeof($can_ids) > 0) {
+
+            $html = '';
+            $html .= '<h3>Are you sure want send mail ?</h3>';
+
+            $msg['success'] = 'success';
+            $msg['mail'] = $html;
+        }
+        else{
+            $msg['err'] = '<b>Please select Candidate</b>';
+            $msg['msg'] = "fail";
+        }
+
+        return $msg;
+    }
+
+    // For send mail of associated candidate
+    public function AssociatedCandidateMail(){
+
+        $can_ids = $_POST['can_ids'];
+        $posting_title = $_POST['posting_title'];
+        $job_id = $_POST['job_id'];
+
+        $candidate_id = explode(",", $can_ids);
+        $i = 0;
+        foreach ($candidate_id as $key => $value) {
+            $candidate_detail[$i] = JobAssociateCandidates::getAssociatedCandidatesByJobCandidateId($job_id,$value);
+            $i++;
+        }
+        //print_r($candidate_detail);exit;
+
+        $to = 'meet@trajinfotech.com';
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+        $app_url = getenv('APP_URL');
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['to_address'] = $to;
+        $input['app_url'] = $app_url;
+        $input['candidate'] = $candidate_detail;
+        $input['subject'] = 'Shortlisted candidate of job openings ' .$posting_title;
+
+        \Mail::send('adminlte::emails.associatedcandidatemail', $input, function ($message) use($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to_address'])->subject($input['subject']);
+        });
+
+        return redirect('/jobs/'.$job_id.'/associated_candidates');
+    }
+
 }

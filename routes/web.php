@@ -803,6 +803,17 @@ Route::group(['middleware' => ['auth']], function () {
         //'middleware' => ['permission:industry-edit']
     ]);
 
+    // Associated candidate mail route
+    Route::post('/jobs/checkids',[
+        'as' => 'jobs.checkids',
+        'uses' => 'JobOpenController@CheckIds'
+    ]);
+
+    Route::post('/jobs/associatedcandidatemail',[
+        'as' => 'jobs.associatedcandidatemail',
+        'uses' => 'JobOpenController@AssociatedCandidateMail'
+    ]);
+
     // Interview Module
     Route::get('interview', [
         'as' => 'interview.index',

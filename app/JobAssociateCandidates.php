@@ -36,6 +36,7 @@ class JobAssociateCandidates extends Model
         $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid');
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+        $query = $query->orderBy('shortlisted','desc');
 
         $response = $query->get();
 //print_r($response);exit;
@@ -259,6 +260,32 @@ class JobAssociateCandidates extends Model
         $res = $query->count();
 
         return $res;
+    }
+
+    public static function getAssociatedCandidatesByJobCandidateId($job_id,$candidate_id){
+
+        $query = new JobAssociateCandidates();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
+        $query = $query->leftjoin('candidate_status','candidate_status.id', '=' , 'candidate_otherinfo.status_id');
+        $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid');
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+        $query = $query->where('job_associate_candidates.candidate_id','=',$candidate_id);
+        $query = $query->orderBy('shortlisted','desc');
+
+        $response = $query->first();
+
+        $candidate = array();
+        if (isset($response) && $response != '') {
+            $candidate['fname'] = $response->fname;
+            $candidate['email'] = $response->email;
+            $candidate['owner'] = $response->owner;
+            $candidate['shortlisted'] = $response->shortlisted;
+            $candidate['status'] = $response->status;
+        }
+
+        return $candidate;
     }
 
 }

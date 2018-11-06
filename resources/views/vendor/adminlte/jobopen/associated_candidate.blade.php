@@ -16,6 +16,7 @@
             </div>
 
             <div class="pull-right">
+                {{--<button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>--}}
                 <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
                {{-- <ul class="nav navbar-nav">
                     <li class="dropdown messages-menu">
@@ -281,7 +282,7 @@
 
     <table class="table table-bordered">
         <tr>
-           {{-- <th>{{ Form::checkbox('candidate[]',0 ,null,array('id'=>'allcb')) }}</th> --}}
+            <th>{{ Form::checkbox('candidate[]',0 ,null,array('id'=>'allcb')) }}</th>
             <th>Action</th>
             <th>Candidate Name</th>
             <th>Candidate Owner</th>
@@ -296,7 +297,7 @@
             $color='';
                  ?>
             <tr style="background-color: {{$color}}">
-             {{--   <td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td> --}}
+                <td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td> 
                 <td>
                     <ul class="nav navbar-nav">
                         <li class="dropdown messages-menu">
@@ -364,6 +365,29 @@
 
     </table>
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
+
+<div id="modal-mail" class="modal text-left fade candidate-mail" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Associated Candidate Mail</h1>
+            </div>
+            {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
+            <div class="modal-body check-id">
+                
+            </div>
+            <input type="hidden" name="can_ids" id="can_ids" value="">
+            <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+            <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+            {!! Form::close() !!}
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
    
 @stop
 
@@ -543,6 +567,33 @@
                 }
             }
         }*/
+
+        function associatedmail(){
+            var token = $("#token").val();           
+            var candidate_ids = new Array();
+            
+            $("input:checkbox[name=candidate]:checked").each(function(){
+                candidate_ids.push($(this).val());
+            });
+            //alert(candidate_ids);
+
+            $("#can_ids").val(candidate_ids);
+            $(".check-id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '/jobs/checkids',
+                data: { can_ids:candidate_ids, '_token':token },
+                success: function(msg){   
+                    $(".candidate-mail").show();
+                    if (msg.success == 'success') {
+                        $(".check-id").append(msg.mail);
+                    }
+                    else{
+                        $(".check-id").append(msg.err);
+                    }
+                }
+            });
+        }
 
     </script>
 @endsection
