@@ -44,7 +44,7 @@
         @foreach ($training as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $value['title'] }}</td>
+                <td><a target="_blank" href="{{ $value['file_url'] }}">{{ $value['title'] }}</td>
                 <td>
                   
                     <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>

@@ -12,14 +12,16 @@ class Training extends Model
 
              
         $training_open_query = Training::query();
-        $training_open_query = $training_open_query->select('training.*');
+        $training_open_query = $training_open_query->select('training.*','training_doc.file as url');
 
         if ($all==0) {
           $training_open_query = $training_open_query->join('training_visible_users','training_visible_users.training_id','=','training.id');
           $training_open_query = $training_open_query->where('user_id','=',$user_id);
         }
+        $training_open_query = $training_open_query->leftjoin('training_doc','training_doc.training_id','=','training.id');
 
         $training_open_query = $training_open_query->orderBy('id','asc');
+        $training_open_query = $training_open_query->groupBy('training.id');
         $training_response = $training_open_query->get();
 
         $training_list = array();
@@ -40,6 +42,7 @@ class Training extends Model
                   $training_list[$i]['access'] = '0';
                 }
             }
+            $training_list[$i]['file_url'] = $value->url;
             $i++;
         }
 
