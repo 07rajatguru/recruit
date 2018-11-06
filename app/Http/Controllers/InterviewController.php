@@ -441,7 +441,7 @@ class InterviewController extends Controller
 
         if ($pre_round != $round && $round > $pre_round) {
             //print_r($pre_round.'-'.$round);exit;
-            $candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$id);
+            //$candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$id);
 
             // Interview Schedule Mail
             $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
@@ -676,15 +676,15 @@ class InterviewController extends Controller
                 $to_address_client[$j] = $value['client_owner_email'];
                 $j++;
             }
-            $to_address_candidate = array();
+            /*$to_address_candidate = array();
             $k = 0;
             foreach ($interview as $key => $value) {
                 $to_address_candidate[$k] = $value['candidate_owner_email'];
                 $k++;
-            }
+            }*/
             $i++;
         }
-        $to_address = array_merge($to_address_candidate,$to_address_client);
+        $to_address = array_merge(/*$to_address_candidate,*/$to_address_client);
         $to = implode(' ',$to_address);
         //print_r($to);exit;
         $from_name = getenv('FROM_NAME');

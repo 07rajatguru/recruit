@@ -617,8 +617,9 @@ class Interview extends Model
         $input['interview_time'] = $job_details['interview_time'];
         $input['interview_location'] = $job_details['interview_location'];
         $input['interview_type'] =$job_details['interview_type'];
+        $input['skype_id'] = $job_details['skype_id'];
         $input['file'] = $file_path;
-
+        
         //return view('adminlte::emails.interviewschedule',compact('app_url','input'));
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
@@ -635,8 +636,8 @@ class Interview extends Model
 
         $interview = Interview::find($value);
 
-        $candidate_email = Interview::getCandidateOwnerEmail($value);
-        $candidate_owner_email = $candidate_email->candidateownersemail;
+        /*$candidate_email = Interview::getCandidateOwnerEmail($value);
+        $candidate_owner_email = $candidate_email->candidateownersemail;*/
 
         $client_email = Interview::getClientOwnerEmail($value);
         $client_owner_email = $client_email->clientownersemail;
@@ -674,7 +675,7 @@ class Interview extends Model
         $interview_details['interview_time'] = $job_details['interview_time'];
         $interview_details['interview_location'] = $job_details['interview_location'];
         $interview_details['interview_type'] =$job_details['interview_type'];
-        $interview_details['candidate_owner_email'] = $candidate_owner_email;
+        //$interview_details['candidate_owner_email'] = $candidate_owner_email;
         $interview_details['client_owner_email'] = $client_owner_email;
         $interview_details['skype_id'] = $job_details['skype_id'];
 

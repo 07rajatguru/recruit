@@ -59,7 +59,7 @@
                                 <td align="center">{{date('h:i A',strtotime($interview_time))  }}</td>
                                 <td align="center">{{$ccity}}</td>
                                 <td align="center">{{$interview_type}}</td>
-                                <td align="center">{{''}}</td>
+                                <td align="center">{{$skype_id}}</td>
                                 <td align="center">{{$cmobile}}</td>
                                 <td align="center">{{$cemail}}</td>
                                 <td align="center"><b>{{'Yes'}}</b></td>

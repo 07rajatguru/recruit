@@ -14,7 +14,7 @@
                 <h2>Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
-                {{--<button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()"> Send Mail</button>--}}
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()"> Send Mail</button>
                 <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
             </div>
 
