@@ -96,7 +96,7 @@
     </div>
     <br/>
 
-    <div class="row">
+    {{--<div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-md-3">
                 <label >Search Open Jobs by selecting priority : </label>
@@ -124,50 +124,46 @@
 
             </div>
         </div>
-    </div>
-    {{--<div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[0]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;font-weight: 600;border-radius: 22px;">-None-</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[1]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;">Urgent Positions</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[2]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;">New Positions</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[3]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;">Constant Deliveries needed</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[4]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">On Hold</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[5]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;">Revived Positions</div></a>
-            </div>
-        </div>
-        <br/><br/><br/>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[6]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;font-weight: 600;border-radius: 22px;">Constant Deliveries needed for very old positions where many deliveries are done but no result yet</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[7]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;">No Deliveries Needed</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[8]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">Identified candidates</div></a>
-            </div>
-        </div>
-        <br/><br/><br/>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[9]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">Closed By Us</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',$job_priority[10]) }}" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">Closed By Client</div></a>
-            </div>
-        </div>
     </div>--}}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[0]) }}" title="-None-" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_0 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[1]) }}" title="Urgent Positions" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_1 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[2]) }}" title="New Positions" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_2 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[3]) }}" title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_3 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[4]) }}" title="On Hold" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_4 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[5]) }}" title="Revived Positions" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_5 }}</div></a>
+            </div>
+        
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[6]) }}" title="Constant Deliveries needed for very old positions where many deliveries are done but no result yet" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_6 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[7]) }}" title="No Deliveries Needed" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_7 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[8]) }}" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_8 }}</div></a>
+            </div>
+        
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[9]) }}" title="Closed By Us" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_9 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[10]) }}" title="Closed By Client" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_10 }}</div></a>
+            </div>
+        </div>
+    </div>
 
      <div class="row">
        {{-- <div class="col-xs-12 col-sm-12 col-md-12">

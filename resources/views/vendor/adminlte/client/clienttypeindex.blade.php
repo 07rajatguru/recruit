@@ -133,7 +133,7 @@
         jQuery( document ).ready(function() {
             var table = jQuery('#clienttype_table').DataTable( {
                 responsive: true,
-                "pageLength": 100,
+                "pageLength": 50,
                 stateSave : true,
             });
         });

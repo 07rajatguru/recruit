@@ -680,7 +680,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@OpentoAll'
     ]);
 
-    Route::post('jobs/priority/{priority}',[
+    Route::get('jobs/priority/{priority}',[
         'as' => 'jobopen.priority',
         'uses' => 'JobOpenController@priorityWise'
     ]);
@@ -1549,5 +1549,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('test/email', [
         'as' => 'user.testemail',
         'uses' => 'UserController@testEmail',
+    ]);
+
+    // Admin > Holidays
+    Route::get('holidays', [
+        'as' => 'holidays.index',
+        'uses' => 'HolidaysController@index',
+        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+    ]);
+
+    Route::get('holidays/create', [
+        'as' => 'holidays.create',
+        'uses' => 'HolidaysController@create',
+        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+    ]);
+
+    Route::post('holidays/create', [
+        'as' => 'holidays.store',
+        'uses' => 'HolidaysController@store',
+        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
     ]);
 });

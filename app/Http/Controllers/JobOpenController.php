@@ -216,9 +216,11 @@ class JobOpenController extends Controller
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllJobs(1,$user_id);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
         }
         else{
             $job_response = JobOpen::getAllJobs(0,$user_id);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
 
         $priority_0 = 0;
@@ -233,7 +235,7 @@ class JobOpenController extends Controller
         $priority_9 = 0;
         $priority_10 = 0;
 
-        foreach ($job_response as $job_priority) 
+        foreach ($job_priority_data as $job_priority) 
         {
            if($job_priority['priority'] == 0) 
            {
@@ -338,9 +340,9 @@ class JobOpenController extends Controller
     }
 
     // Function for priority wise job page
-    public function priorityWise(){
+    public function priorityWise($priority){
 
-        $priority = $_POST['priority'];
+        //$priority = $_POST['priority'];
         //print_r($priority);exit;
         $user = \Auth::user();
 
@@ -363,12 +365,62 @@ class JobOpenController extends Controller
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getPriorityWiseJobs(1,$user_id,$priority);
+            $job_response_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
         }
         else{
             $job_response = JobOpen::getPriorityWiseJobs(0,$user_id,$priority);
+            $job_response_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
 
         $count = sizeof($job_response);
+
+        $priority_0 = 0;
+        $priority_1 = 0;
+        $priority_2 = 0;
+        $priority_3 = 0;
+        $priority_4 = 0;
+        $priority_5 = 0;
+        $priority_6 = 0;
+        $priority_7 = 0;
+        $priority_8 = 0;
+        $priority_9 = 0;
+        $priority_10 = 0;
+        foreach ($job_response_data as $job_priority) 
+        {
+            if($job_priority['priority'] == 0) {
+                $priority_0++;
+            }
+            else if($job_priority['priority'] == 1) {
+                $priority_1++;
+            }
+            else if($job_priority['priority'] == 2) {
+                $priority_2++;
+            }
+            else if($job_priority['priority'] == 3) {
+                $priority_3++;
+            }
+            else if($job_priority['priority'] == 4) {
+                $priority_4++;
+            }
+            else if($job_priority['priority'] == 5) {
+                $priority_5++;
+            }
+            else if($job_priority['priority'] == 6) {
+                $priority_6++;
+            }
+            else if($job_priority['priority'] == 7) {
+                $priority_7++;
+            }
+            else if($job_priority['priority'] == 8) {
+                $priority_8++;
+            }
+            else if($job_priority['priority'] == 9) {
+                $priority_9++;
+            }
+            else if($job_priority['priority'] == 10) {
+                $priority_10++;
+            }
+        }
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
@@ -376,6 +428,17 @@ class JobOpenController extends Controller
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
         $viewVariable['priority'] = $priority;
+        $viewVariable['priority_0'] = $priority_0;
+        $viewVariable['priority_1'] = $priority_1;
+        $viewVariable['priority_2'] = $priority_2;
+        $viewVariable['priority_3'] = $priority_3;
+        $viewVariable['priority_4'] = $priority_4;
+        $viewVariable['priority_5'] = $priority_5;
+        $viewVariable['priority_6'] = $priority_6;
+        $viewVariable['priority_7'] = $priority_7;
+        $viewVariable['priority_8'] = $priority_8;
+        $viewVariable['priority_9'] = $priority_9;
+        $viewVariable['priority_10'] = $priority_10;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
