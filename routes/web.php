@@ -1574,4 +1574,23 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HolidaysController@store',
         'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
     ]);
+
+    Route::get('holidays/edit/{id}', [
+        'as' => 'holidays.edit',
+        'uses' => 'HolidaysController@edit',
+        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+    ]);
+
+    Route::patch('holidays/update', [
+        'as' => 'holidays.update',
+        'uses' => 'HolidaysController@update',
+        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+    ]);
+
+    Route::delete('holidays/{id}', [
+        'as' => 'holidays.destroy',
+        'uses' => 'HolidaysController@destroy',
+        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+    ]);
+    
 });

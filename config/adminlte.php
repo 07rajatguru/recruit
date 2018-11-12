@@ -406,6 +406,11 @@ return [
                     'text' => 'Expense',
                     'url'  => 'expense',
                     'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Holiday',
+                    'url'  => 'holidays',
+                    'icon' => 'circle-o',
                 ]
                     /* [
                          'text' => 'Permissions',
