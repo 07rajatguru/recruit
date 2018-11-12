@@ -16,7 +16,7 @@
             </div>
 
             <div class="pull-right">
-                {{--<button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>--}}
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>
                 <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
                {{-- <ul class="nav navbar-nav">
                     <li class="dropdown messages-menu">
@@ -373,8 +373,31 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h1 class="modal-title">Associated Candidate Mail</h1>
             </div>
-            {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
+            
             <div class="modal-body check-id">
+                
+            </div>
+            <input type="hidden" name="candi_ids" id="candi_ids" value="">
+            <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+            <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="submit">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="modal-mail" class="modal text-left fade candidate-mail-user" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Select User for send mail</h2>
+            </div>
+            {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
+            <div class="modal-body mail_users">
                 
             </div>
             <input type="hidden" name="can_ids" id="can_ids" value="">
@@ -577,7 +600,7 @@
             });
             //alert(candidate_ids);
 
-            $("#can_ids").val(candidate_ids);
+            $("#candi_ids").val(candidate_ids);
             $(".check-id").empty();
             $.ajax({
                 type: 'POST',
@@ -587,9 +610,39 @@
                     $(".candidate-mail").show();
                     if (msg.success == 'success') {
                         $(".check-id").append(msg.mail);
+                        $('#submit').attr('onclick','usertosendmail()');
                     }
                     else{
                         $(".check-id").append(msg.err);
+                    }
+                }
+            });
+        }
+
+        function usertosendmail(){
+            var token = $("#token").val();           
+            var candidate_ids = new Array();
+            
+            $("input:checkbox[name=candidate]:checked").each(function(){
+                candidate_ids.push($(this).val());
+            });
+            //alert(candidate_ids);
+            var job_id = $("#job_id").val();
+            $("#can_ids").val(candidate_ids);
+            $(".mail_users").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '/jobs/usersforsendmail',
+                data: { job_id:job_id, '_token':token },
+                success: function(msg){   
+                    $(".candidate-mail").modal('hide');
+                    $(".candidate-mail-user").modal('show');
+                    if (msg.success == 'success') {
+                        $(".mail_users").append(msg.mail);
+                    }
+                    else{
+                        $(".mail_users").append(msg.err);
                     }
                 }
             });

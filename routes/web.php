@@ -834,6 +834,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@CheckIds'
     ]);
 
+    Route::post('/jobs/usersforsendmail',[
+        'as' => 'jobs.usersforsendmail',
+        'uses' => 'JobOpenController@UsersforSendMail'
+    ]);
+
     Route::post('/jobs/associatedcandidatemail',[
         'as' => 'jobs.associatedcandidatemail',
         'uses' => 'JobOpenController@AssociatedCandidateMail'

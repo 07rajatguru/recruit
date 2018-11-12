@@ -2609,6 +2609,24 @@ class JobOpenController extends Controller
 
         return $msg;
     }
+    // Users get for send mail
+    public function UsersforSendMail(){
+
+        if (isset($_POST['job_id']) && $_POST['job_id'] != '') {
+            $job_id = $_POST['job_id'];
+        }
+
+        $users = JobVisibleUsers::getAllUsersByJobId($job_id);
+        //print_r($users);exit;
+
+        $view = \View::make('adminlte::partials.jobvisibleuserforassociatemail',['users' => $users]);
+        $html = $view->render();
+
+        $msg['success'] = 'success';
+        $msg['mail'] = $html;
+
+        return $msg;
+    }
 
     // For send mail of associated candidate
     public function AssociatedCandidateMail(){
