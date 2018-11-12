@@ -347,6 +347,321 @@ class ClientController extends Controller
         echo json_encode($json_data);exit;
     }
 
+    public function ActiveClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,1);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,1);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Active';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+    }
+
+    public function PassiveClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,0);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,0);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Passive';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+    }
+
+    public function ParamountClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+        $category = 'Paramount';
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,NULL,$category);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,NULL,$category);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Paramount';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+    }
+
+    public function ModerateClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+        $category = 'Moderate';
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,NULL,$category);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,NULL,$category);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Moderate';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+    }
+
+    public function StandardClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+        $category = 'Standard';
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,NULL,$category);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,NULL,$category);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Standard';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+    }
+
     public function create()
     {
 

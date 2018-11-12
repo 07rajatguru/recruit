@@ -30,14 +30,12 @@
             </div>
       
             <div class="col-md-2">
-                <div style="height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})
-                </div>
+                <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div></a>
             </div>
             &nbsp;
 
             <div class="col-md-2">
-                <div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) 
-                </div>
+                <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div></a>
             </div>
 
         </div>
@@ -47,19 +45,16 @@
         <div class="row">
             <div class="col-lg-12 margin-tb">
                 <div class="col-md-2">
-                    <div style="height:30px;background-color:#E9967A;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Paramount ({{ $para_cat }})
-                    </div>
+                    <a href="{{ route('client.paramount') }}" style="text-decoration: none;color: black;"><div style="height:30px;background-color:#E9967A;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Paramount ({{ $para_cat }})</div></a>
                 </div>
                 &nbsp;
 
                 <div class="col-md-2">
-                    <div style="height:30px;background-color:#D3D3D3;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Moderate ({{ $mode_cat }})
-                    </div>
+                    <a href="{{ route('client.moderate') }}" style="text-decoration: none;color: black;"><div style="height:30px;background-color:#D3D3D3;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Moderate ({{ $mode_cat }})</div></a>
                 </div>
 
                 <div class="col-md-2">
-                    <div style="height:30px;background-color:#00CED1;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Standard ({{ $std_cat }})
-                    </div>
+                    <a href="{{ route('client.standard') }}" style="text-decoration: none;color: black;"><div style="height:30px;background-color:#00CED1;font-weight: 600;border-radius: 20px;padding:6px 0px 0px 6px;text-align: center;">Standard ({{ $std_cat }})</div></a>
                 </div>
             </div>
         </div>
@@ -154,7 +149,7 @@
         </tbody>--}}
     </table>
 
-<div class="modal fade searchmodal" id="searchmodal" aria-        labelledby="searchmodal" role="dialog">
+<div class="modal fade searchmodal" id="searchmodal" aria-labelledby="searchmodal" role="dialog">
 
     <div class="modal-dialog">
         <div class="modal-content">

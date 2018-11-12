@@ -443,6 +443,31 @@ Route::group(['middleware' => ['auth']], function () {
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]);
 
+    Route::get('client/active',[
+        'as' => 'client.active',
+        'uses' => 'ClientController@ActiveClient',
+    ]);
+
+    Route::get('client/passive',[
+        'as' => 'client.passive',
+        'uses' => 'ClientController@PassiveClient'
+    ]);
+
+    Route::get('client/paramount',[
+        'as' => 'client.paramount',
+        'uses' => 'ClientController@ParamountClient',
+    ]);
+
+    Route::get('client/moderate',[
+        'as' => 'client.moderate',
+        'uses' => 'ClientController@ModerateClient',
+    ]);
+
+    Route::get('client/standard',[
+        'as' => 'client.standard',
+        'uses' => 'ClientController@StandardClient',
+    ]);
+
     Route::get('client/all', [
         'as' => 'client.all',
         'uses' => 'ClientController@getAllClientsDetails',

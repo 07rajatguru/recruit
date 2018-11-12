@@ -516,4 +516,104 @@ class ClientBasicinfo extends Ardent
         $type['Standard'] = 'Standard';
         return $type;
     }
+
+    public static function getClientsByType($all=0,$user_id,$rolePermissions,$status,$category=NULL){
+
+        $client_visibility = false;
+        $client_visibility_id = env('CLIENTVISIBILITY');
+        if(isset($client_visibility_id) && in_array($client_visibility_id,$rolePermissions)){
+            $client_visibility = true;
+        }
+
+        $query = ClientBasicinfo::query();
+        $query = $query->join('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        if ($all == 1) {
+            $query = $query->leftJoin('client_doc',function($join){
+                                $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
+                                $join->where('client_doc.category','=','Client Contract');
+                            });
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+        }
+        else if ($all == 0){
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->where('account_manager_id',$user_id);
+
+        }
+        if (isset($status) && $status >= 0) {
+            $query = $query->where('client_basicinfo.status',$status);
+        }
+        if (isset($category) && $category != '') {
+            if ($category == 'Paramount') {
+                $query = $query->where('client_basicinfo.category','=',$category);
+            }
+            elseif ($category == 'Moderate') {
+                $query = $query->where('client_basicinfo.category','=',$category);
+            }
+            elseif ($category == 'Standard') {
+                $query = $query->where('client_basicinfo.category','=',$category);
+            }
+        }
+        $query = $query->groupBy('client_basicinfo.id');
+        $res = $query->get();
+
+        $client_array = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $client_array[$i]['id'] = $value->id;
+            $client_array[$i]['name'] = $value->name;
+            $client_array[$i]['am_name'] = $value->am_name;
+            $client_array[$i]['category']=$value->category;
+            $client_array[$i]['status']=$value->status;
+            $client_array[$i]['account_mangr_id']=$value->account_manager_id;
+            $client_array[$i]['mobile']= $value->mobile;
+            $client_array[$i]['hr_name'] = $value->coordinator_prefix . " " . $value->coordinator_name;
+            if(isset($client_array[$i]['status'])){
+                if($client_array[$i]['status']== '1'){
+                  $client_array[$i]['status']='Active';
+                }
+                else{
+                  $client_array[$i]['status']='Passive';
+                }
+            }
+            
+            $address ='';
+            if($value->area!=''){
+                $address .= $value->area;
+            }
+            if($value->city!=''){
+                if($address=='')
+                    $address .= $value->city;
+                else
+                    $address .= ", ".$value->city;
+            }
+
+            $client_array[$i]['address'] = $address;
+            if($value->am_id==$user_id){
+                $client_visibility_val = true;
+                $client_array[$i]['client_owner'] = true;
+            }
+            else {
+                $client_visibility_val = $client_visibility;
+                $client_array[$i]['client_owner'] = false;
+            }
+
+            if($client_visibility_val)
+                $client_array[$i]['mail'] = $value->mail;
+            else
+                $client_array[$i]['mail'] = '';//$utils->mask_email($value->mail,'X',80);
+
+            $client_array[$i]['client_visibility'] = $client_visibility_val;
+
+            if($all == 1){
+                $client_array[$i]['url'] = $value->file;
+            }
+            else{
+                $client_array[$i]['url'] = '';
+            }
+            $i++;
+        }
+
+        return $client_array;
+    }
 }
