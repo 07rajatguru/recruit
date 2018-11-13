@@ -47,17 +47,17 @@ class DailyReport extends Command
        // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersSecondaryEmails('recruiter');
+        $users = User::getAllUsersEmails('recruiter');
         
         foreach ($users as $key => $value) {
 
             //Get Reports to Email
             $report_res = User::getUsersReportToEmail($key);
-            $report_email = $report_res->secondary_email;
+            $report_email = $report_res->email;
 
             //Get Floor Incharge Email
             $floor_res = User::getUsersFloorInchargeEmail($key);
-            $floor_incharge_email = $floor_res->secondary_email;
+            $floor_incharge_email = $floor_res->email;
 
             $to_array = array();
             $to_array[] = $value;
