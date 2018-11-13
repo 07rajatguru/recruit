@@ -270,7 +270,7 @@
         });
 
         function getNotifications(){
-            var app_url = "{!! env('app_url') !!}";
+            var app_url = "{!! env('APP_URL'); !!}";
             jQuery.ajax({
                 url: app_url+'/notifications/all',
                 dataType:'json',
@@ -297,7 +297,7 @@
         }
         
         function readAllNotifications() {
-            var app_url = "{!! env('app_url') !!}";
+            var app_url = "{!! env('APP_URL'); !!}";
             jQuery.ajax({
                 url:app_url+'/notifications/read',
                 dataType:'json',
@@ -308,7 +308,7 @@
         }
 
         function getTodos(){
-            var app_url = "{!! env('app_url') !!}";
+            var app_url = "{!! env('APP_URL'); !!}";
             jQuery.ajax({
                 url:app_url+'/todos/all',
                 dataType:'json',
@@ -335,7 +335,7 @@
         }
 
         function readAllTodos() {
-            var app_url = "{!! env('app_url') !!}";
+            var app_url = "{!! env('APP_URL'); !!}";
             jQuery.ajax({
                 url:app_url+'todos/read',
                 dataType:'json',
