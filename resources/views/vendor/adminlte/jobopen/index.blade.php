@@ -327,9 +327,8 @@
                 <h1 class="modal-title">Select Job Priority</h1>
             </div>
             {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
-            <div class="modal-body">
-                <strong>Select Job Priority :</strong> <br>
-                {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+            <div class="modal-body checkid">
+                
             </div>
 
             <input type="hidden" name="job_ids" id="job_ids" value="">
@@ -395,6 +394,7 @@
 
         function multipleJobId(){
             var token = $('input[name="csrf_token"]').val();
+            var app_url = "{!! env('APP_URL'); !!}";
             var job_ids = new Array();
 
             $("input:checkbox[name=job_ids]:checked").each(function(){
@@ -402,18 +402,24 @@
             });
             //alert(job_ids);
 
-            $(".priority").show();
             $("#job_ids").val(job_ids);
+            $(".checkid").empty();
 
-            /*$.ajax({
+            $.ajax({
                 type : 'POST',
-                url : 'jobs/mutijobpriority',
+                url : app_url+'/jobs/checkJobId',
                 data : {job_ids : job_ids, '_token':token},
                 dataType : 'json',
-                success: function(){
-
+                success: function(msg){
+                    $(".priority").show();
+                    if (msg.success == 'success') {
+                        $(".checkid").append(msg.mail);
+                    }
+                    else{
+                        $(".checkid").append(msg.err);
+                    }
                 }
-            });*/
+            });
         }
 
         function prioritywise() {

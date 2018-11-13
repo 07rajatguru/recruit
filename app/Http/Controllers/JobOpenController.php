@@ -2573,6 +2573,29 @@ class JobOpenController extends Controller
         return view ('adminlte::jobopen.associatedcvs',compact('response','count'));
     }
 
+    public function checkJobId(){
+
+        if (isset($_POST['job_ids']) && $_POST['job_ids'] != '') {
+            $job_ids = $_POST['job_ids'];
+        }
+
+        if (isset($job_ids) && sizeof($job_ids) > 0) {
+            $job_priority = JobOpen::getJobPriorities();
+        
+            $view = \View::make('adminlte::partials.jobpriorityindex',['job_priority' => $job_priority]);
+            $html = $view->render();
+
+            $msg['success'] = 'success';
+            $msg['mail'] = $html;
+        }
+        else{
+            $msg['err'] = '<b>Please select job</b>';
+            $msg['msg'] = "fail";
+        }
+
+        return $msg;
+    }
+
     public  function MultipleJobPriority(){
 
         $job_ids = $_POST['job_ids'];

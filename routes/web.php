@@ -777,6 +777,11 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Route for changes priority of multiple job
+    Route::post('jobs/checkJobId',[
+        'as' => 'jobopen.checkjobid',
+        'uses' => 'JobOpenController@checkJobId'
+    ]);
+
     Route::post('jobs/mutijobpriority', [
         'as' => 'jobopen.mutijobpriority',
         'uses' => 'JobOpenController@MultipleJobPriority',
