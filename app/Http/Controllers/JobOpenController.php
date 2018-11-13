@@ -2634,6 +2634,8 @@ class JobOpenController extends Controller
         $can_ids = $_POST['can_ids'];
         $posting_title = $_POST['posting_title'];
         $job_id = $_POST['job_id'];
+        $user_ids = $_POST['user_ids'];
+        //print_r($user_ids);exit;
 
         $candidate_id = explode(",", $can_ids);
         $i = 0;
@@ -2641,9 +2643,14 @@ class JobOpenController extends Controller
             $candidate_detail[$i] = JobAssociateCandidates::getAssociatedCandidatesByJobCandidateId($job_id,$value);
             $i++;
         }
-        //print_r($candidate_detail);exit;
-
-        $to = 'meet@trajinfotech.com';
+        
+        $i = 0;
+        foreach ($user_ids as $key => $value) {
+            $user_email[$i] = User::getUserEmailById($value);
+            $i++;
+        }
+        //print_r($user_email);exit;
+        $to = $user_email;
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');

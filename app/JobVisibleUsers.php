@@ -13,15 +13,13 @@ class JobVisibleUsers extends Model
 
     	$query = JobVisibleUsers::query();
     	$query = $query->join('users','users.id','=','job_visible_users.user_id');
-    	$query = $query->select('users.name as uname');
+    	$query = $query->select('users.name as uname','users.id as uid');
     	$query = $query->where('job_visible_users.job_id','=',$job_id);
     	$res = $query->get();
 
     	$users_name = array();
-    	$i = 0;
     	foreach ($res as $key => $value) {
-    		$users_name[$i] = $value->uname;
-    		$i++;
+    		$users_name[$value->uid] = $value->uname;
     	}
 
     	return $users_name;
