@@ -204,9 +204,11 @@
 
         function associated_candidates(jobid) {
             var token = $("#token").val();
+            var app_url = "{!! env('APP_URL') !!}";
+
             jQuery.ajax ({
                 type: "POST",
-                url: "jobs/associated_candidates_count",
+                url: app_url+"jobs/associated_candidates_count",
                 data: "_token="+token+"&jobid="+jobid,
                 dataType: "json"
             }).done(function( response ) {
