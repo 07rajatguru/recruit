@@ -382,7 +382,7 @@ class LeadController extends Controller
 
 	 }
 
-     public function clone($id)
+     public function leadClone($id)
      {
 
         $co_prefix=ClientBasicinfo::getcoprefix();

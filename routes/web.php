@@ -157,7 +157,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('lead/{id}/clone', [
         'as' => 'lead.clone',
-        'uses' => 'LeadController@clone',
+        'uses' => 'LeadController@leadClone',
     ]);
     
     Route::post('lead/{id}', [
