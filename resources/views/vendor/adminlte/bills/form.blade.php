@@ -446,11 +446,12 @@
 
             var job_id = $("#jobopen").val();
             var candidate_id = $("#candidate_id").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
             if(job_id>0){
                 // get client data from job id
                 $.ajax({
-                    url:'/bills/getclientinfo',
+                    url:app_url+'/bills/getclientinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
@@ -472,7 +473,7 @@
 
                 // get candidate data
                 $.ajax({
-                    url:'/bills/getcandidateinfo',
+                    url:app_url+'/bills/getcandidateinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
