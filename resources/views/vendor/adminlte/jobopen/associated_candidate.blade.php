@@ -476,6 +476,7 @@
 
             var candidate_ids = new Array();
             var token = $("#token").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
             if (res) {
 
@@ -483,7 +484,7 @@
                     candidate_ids.push($(this).val());
                 });*/
 
-                var url = '/jobs/deassociate_candidate';
+                var url = app_url+'/jobs/deassociate_candidate';
 
                 if (candidate_id > 0) {
                     var form = $('<form action="' + url + '" method="post">' +
@@ -506,13 +507,14 @@
             var status_id = jQuery("#candiate_status_id > option:selected").val();
             var token = $("#token").val();
             var candidate_id = $("#candidate_id").val();
+            var app_url = "{!! env('APP_URL'); !!}";
            /* $("input:checkbox[name=candidate]:checked").each(function () {
                 candidate_ids.push($(this).val());
             });*/
 
             if (candidate_id > 0) {
 
-                var url = '/jobs/updatecandidatestatus';
+                var url = app_url+'/jobs/updatecandidatestatus';
 
                 var form = $('<form action="' + url + '" method="post">' +
                         '<input type="hidden" name="_token" value="' + token + '" />' +
@@ -535,10 +537,11 @@
             var joining_date = $("#joining_date").val();
             var candidate_id = $("#candidate_id").val();
             var token = $("#token").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
             if(joining_date!=''){
 
-                var url = '/jobs/addjoiningdate';
+                var url = app_url+'/jobs/addjoiningdate';
                 var form = $('<form action="' + url + '" method="post">' +
                     '<input type="hidden" name="_token" value="' + token + '" />' +
                     '<input type="text" name="jobid" value="' + jobid + '" />' +
@@ -594,6 +597,7 @@
         function associatedmail(){
             var token = $("#token").val();           
             var candidate_ids = new Array();
+            var app_url = "{!! env('APP_URL'); !!}";
             
             $("input:checkbox[name=candidate]:checked").each(function(){
                 candidate_ids.push($(this).val());
@@ -604,7 +608,7 @@
             $(".check-id").empty();
             $.ajax({
                 type: 'POST',
-                url: '/jobs/checkids',
+                url: app_url+'/jobs/checkids',
                 data: { can_ids:candidate_ids, '_token':token },
                 success: function(msg){   
                     $(".candidate-mail").show();
@@ -622,6 +626,7 @@
         function usertosendmail(){
             var token = $("#token").val();           
             var candidate_ids = new Array();
+            var app_url = "{!! env('APP_URL'); !!}";
             
             $("input:checkbox[name=candidate]:checked").each(function(){
                 candidate_ids.push($(this).val());
@@ -633,7 +638,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/jobs/usersforsendmail',
+                url: app_url+'/jobs/usersforsendmail',
                 data: { job_id:job_id, '_token':token },
                 success: function(msg){   
                     $(".candidate-mail").modal('hide');

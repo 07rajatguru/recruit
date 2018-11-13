@@ -95,6 +95,7 @@
         function associate_candidates(jobid){
             var candidate_ids = new Array();
             var token = $("#token").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
             if(jobid>0){
 
@@ -102,7 +103,7 @@
                     candidate_ids.push($(this).val());
                 });
 
-                var url = '/jobs/associate_candidate';
+                var url = app_url+'/jobs/associate_candidate';
 
                 if(candidate_ids.length > 0){
                     var form = $('<form action="' + url + '" method="post">' +
