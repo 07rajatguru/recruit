@@ -88,7 +88,7 @@
                 "columnDefs": [ {orderable: false, targets: [1]},
                                 ],
                 "ajax":{
-                    url :"/candidate/all", // json datasource
+                    url :"candidate/all", // json datasource
                     type: "get",  // type of method  , by default would be get
                     error: function(){  // error handling code
                       //  $("#employee_grid_processing").css("display","none");

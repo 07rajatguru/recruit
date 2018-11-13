@@ -198,7 +198,7 @@
             "columnDefs": [ {orderable: false, targets: [0]},
                         ],
             "ajax" : {
-                'url' : '/client/all',
+                'url' : 'client/all',
                 'type' : 'get',
                 error: function(){
 

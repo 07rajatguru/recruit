@@ -125,7 +125,7 @@
                 "order" : [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]}],
                 "ajax":{
-                    url :"/lead/all", // json datasource
+                    url :"lead/all", // json datasource
                     type: "get",  // type of method  , by default would be get
                     error: function(){  // error handling code
                       //  $("#employee_grid_processing").css("display","none");
