@@ -297,12 +297,13 @@
         }
 
          function getCandidate(){
+             var app_url = "{!! env('APP_URL') !!}";
             var job_id = $("#posting_title").val();
             var hidden_candidate_id = $("#hidden_candidate_id").val();
 
             if(job_id>0){
                 $.ajax({
-                    url:'/job/associatedcandidate',
+                    url:app_url+'/job/associatedcandidate',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
@@ -316,7 +317,7 @@
                 });
 
                  $.ajax({
-                    url:'/interview/getclientinfos',
+                     url:app_url+'/interview/getclientinfos',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
