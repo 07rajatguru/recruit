@@ -270,8 +270,9 @@
         });
 
         function getNotifications(){
+            var app_url = "{!! env('app_url') !!}";
             jQuery.ajax({
-                url:'notifications/all',
+                url: app_url+'/notifications/all',
                 dataType:'json',
                 success: function(data){
                     console.log(data);
@@ -296,8 +297,9 @@
         }
         
         function readAllNotifications() {
+            var app_url = "{!! env('app_url') !!}";
             jQuery.ajax({
-                url:'notifications/read',
+                url:app_url+'/notifications/read',
                 dataType:'json',
                 success: function(data){
                     $(".notification-number").html(0);
@@ -306,8 +308,9 @@
         }
 
         function getTodos(){
+            var app_url = "{!! env('app_url') !!}";
             jQuery.ajax({
-                url:'todos/all',
+                url:app_url+'/todos/all',
                 dataType:'json',
                 success: function(data){
                     console.log(data);
@@ -332,8 +335,9 @@
         }
 
         function readAllTodos() {
+            var app_url = "{!! env('app_url') !!}";
             jQuery.ajax({
-                url:'todos/read',
+                url:app_url+'todos/read',
                 dataType:'json',
                 success: function(data){
                     $(".todos-number").html(0);
