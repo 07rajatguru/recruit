@@ -133,7 +133,7 @@
 				<tr>
 					<td align="center" style="padding: 0px;">
 						<!-- <button type="button" formtarget="_blank" onclick="location.href = '{{ route('jobopen.show',$job['module_id']) }}';">Show</button> -->
-                        <a style="border: black; background-color: rgba(157,92,172,0.9);color: white;padding: 15px 50px 15px 50px; border-radius: 18px;font-size: 15px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{ route('jobopen.show',$job['module_id']) }}">Show</a>
+                        <a style="border: black; background-color: rgba(157,92,172,0.9);color: white;padding: 15px 50px 15px 50px; border-radius: 18px;font-size: 15px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/jobs/'.$job['module_id']}}">Show</a>
 					</td>
 				</tr>
 			</table>
