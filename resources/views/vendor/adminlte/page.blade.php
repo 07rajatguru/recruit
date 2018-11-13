@@ -271,7 +271,7 @@
 
         function getNotifications(){
             jQuery.ajax({
-                url:'/notifications/all',
+                url:'notifications/all',
                 dataType:'json',
                 success: function(data){
                     console.log(data);
@@ -297,7 +297,7 @@
         
         function readAllNotifications() {
             jQuery.ajax({
-                url:'/notifications/read',
+                url:'notifications/read',
                 dataType:'json',
                 success: function(data){
                     $(".notification-number").html(0);
@@ -307,7 +307,7 @@
 
         function getTodos(){
             jQuery.ajax({
-                url:'/todos/all',
+                url:'todos/all',
                 dataType:'json',
                 success: function(data){
                     console.log(data);
@@ -333,7 +333,7 @@
 
         function readAllTodos() {
             jQuery.ajax({
-                url:'/todos/read',
+                url:'todos/read',
                 dataType:'json',
                 success: function(data){
                     $(".todos-number").html(0);
