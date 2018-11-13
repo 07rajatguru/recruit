@@ -1502,7 +1502,7 @@ class JobOpenController extends Controller
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Updated Successfully');
     }
 
-    public function clone($id){
+    public function jobClone($id){
         $user = \Auth::user();
         $user_id = $user->id;
 

@@ -645,7 +645,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('jobs/clone/{id}', [
         'as' => 'jobopen.clone',
-        'uses' => 'JobOpenController@clone',
+        'uses' => 'JobOpenController@jobClone',
     ]);
 
 
