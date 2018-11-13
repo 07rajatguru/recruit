@@ -72,7 +72,9 @@
         });
 
         function export_data() {
-            var url = 'recoveryreport/export';
+            var app_url = "{!! env('APP_URL'); !!}";
+
+            var url = app_url+'/recoveryreport/export';
 
              var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

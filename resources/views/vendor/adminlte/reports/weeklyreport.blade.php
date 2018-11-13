@@ -165,6 +165,7 @@
 			var users_id = $("#users_id").val();
 			var from_date = $("#from_date").val();
 			var to_date = $("#to_date").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
             var date1 = new Date(from_date);
             var date2 = new Date(to_date);
@@ -174,7 +175,7 @@
             var total_days= diffDays+1;
 
             if(total_days<=7){
-                var url = '/weekly-report';
+                var url = app_url+'/weekly-report';
 
                 var form = $('<form action="' + url + '" method="post">' +
                     '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

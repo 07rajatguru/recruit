@@ -175,8 +175,9 @@
             var to_date = $("#to_date").val();
             var year = $("#year").val();
             var quater = $("#quater").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = '/userreport';
+            var url = app_url+'/userreport';
 
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +
@@ -227,8 +228,9 @@
             var to_date = $("#to_date").val();
             var year = $("#year").val();
             var quater = $("#quater").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = 'userreport/export';
+            var url = app_url+'userreport/export';
 
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +

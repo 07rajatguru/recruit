@@ -143,8 +143,9 @@
 			var users_id = $("#users_id").val();
 			var month = $("#month").val();
 			var year = $("#year").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-			var url = '/monthly-report';
+			var url = app_url+'/monthly-report';
 
 			var form = $('<form action="'+url+ '" method="post">' +
 					'<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' + 

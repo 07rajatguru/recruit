@@ -100,8 +100,9 @@
             var users_id = $("#users_id").val();
             var month = $("#month").val();
             var year = $("#year").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = '/userwise-monthly-report';
+            var url = app_url+'/userwise-monthly-report';
 
             var form = $('<form action="'+url+ '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

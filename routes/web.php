@@ -1446,7 +1446,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:billrecovery-list']
     ]);
 
-    Route::any('/selectionreport',[
+    Route::any('selectionreport',[
         'as' => 'selectionreport.index',
         'uses' => 'SelectionReportController@index',
         'middleware' => ['permission:billselection-list']
@@ -1458,7 +1458,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:billselection-list']
     ]);
 
-    Route::any('/userreport',[
+    Route::any('userreport',[
         'as' => 'userreport.index',
         'uses' => 'UserwiseReportController@index',
         'middleware' => ['permission:billuserwise-list']
@@ -1471,22 +1471,22 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:billuserwise-list']
     ]);
 
-    Route::any('/daily-report',[
+    Route::any('daily-report',[
         'as' => 'report.dailyreportindex',
         'uses' => 'ReportController@dailyreportIndex'
     ]);
 
-    Route::any('/weekly-report',[
+    Route::any('weekly-report',[
         'as' => 'report.weeklyreportindex',
         'uses' => 'ReportController@weeklyreportIndex'
     ]);
 
-    Route::any('/monthly-report',[
+    Route::any('monthly-report',[
         'as' => 'report.monthlyreportindex',
         'uses' => 'ReportController@monthlyreportIndex'
     ]);
 
-    Route::any('/userwise-monthly-report',[
+    Route::any('userwise-monthly-report',[
         'as' => 'report.monthlyreportindex',
         'uses' => 'ReportController@userWiseMonthlyReport'
     ]);

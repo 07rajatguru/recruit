@@ -180,8 +180,9 @@
             var from_date = $("#from_date").val();
             var to_date = $("#to_date").val();
             var quater = $("#quater").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = '/selectionreport';
+            var url = app_url+'/selectionreport';
 
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +
@@ -240,8 +241,9 @@
             var from_date = $("#from_date").val();
             var to_date = $("#to_date").val();
             var quater = $("#quater").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = 'selectionreport/export';
+            var url = app_url+'/selectionreport/export';
 
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +

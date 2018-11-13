@@ -167,8 +167,9 @@
 
             var users_id = $("#users_id").val();
             var date = $("#date").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = '/daily-report';
+            var url = app_url+'/daily-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
