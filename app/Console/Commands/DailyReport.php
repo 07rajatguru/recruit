@@ -41,11 +41,11 @@ class DailyReport extends Command
      */
     public function handle()
     {
-        $from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
+        $from_name = env('FROM_NAME');
+        $from_address = env('FROM_ADDRESS');
        // $to_address = 'saloni@trajinfotech.com';
        // $cc_address = 'tarikapanjwani@gmail.com';
-        $app_url = getenv('APP_URL');
+        $app_url = env('APP_URL');
 
         $users = User::getAllUsersEmails('recruiter');
         
