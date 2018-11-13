@@ -68,46 +68,46 @@
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
                                                         <ul class="menu" style=" width: 100%; height;150px">
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/lead/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/lead/create'}}">
                                                                     Add Lead
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/client/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/client/create'}}">
                                                                     Add Client
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/jobs/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/jobs/create'}}">
                                                                     Add Job Openings
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/candidate/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/candidate/create'}}">
                                                                     Add Candidate
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/interview/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/interview/create'}}">
                                                                     Add Interview
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/forecasting/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/forecasting/create'}}">
                                                                     Add Bills
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/todos/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/todos/create'}}">
                                                                     Add Todos
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="{{getenv('app_url').'/training/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/training/create'}}">
                                                                     Add Training
                                                                 </a>
                                                             </li><li>
-                                                                <a href="{{getenv('app_url').'/process/create'}}">
+                                                                <a href="{{getenv('APP_URL').'/process/create'}}">
                                                                     Add Process Manual
                                                                 </a>
                                                             </li>
