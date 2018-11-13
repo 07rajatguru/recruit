@@ -206,7 +206,7 @@
             var token = $("#token").val();
             jQuery.ajax ({
                 type: "POST",
-                url: "/jobs/associated_candidates_count",
+                url: "jobs/associated_candidates_count",
                 data: "_token="+token+"&jobid="+jobid,
                 dataType: "json"
             }).done(function( response ) {
