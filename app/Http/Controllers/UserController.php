@@ -45,7 +45,7 @@ class UserController extends Controller
 
         $roles = Role::pluck('display_name','id')->toArray();
         $reports_to = User::getUserArray($user_id);
-        $reports_to = array_fill_keys(array(''),'Select Reports to')+$reports_to;
+        $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
         $floor_incharge = User::getAllUsers();
         $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
@@ -141,7 +141,7 @@ class UserController extends Controller
         $roles = Role::pluck('display_name','id');
 
         $reports_to = User::getUserArray($id);
-        $reports_to = array_fill_keys(array(''),'Select Reports to')+$reports_to;
+        $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
         $floor_incharge = User::getAllUsers();
         $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
