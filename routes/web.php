@@ -125,7 +125,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'lead.index',
         'uses'=>'LeadController@index']);
 
-    Route::get('/lead/all',[
+    Route::get('lead/all',[
         'as' => 'lead.all',
         'uses' => 'LeadController@getAllLeadsDetails'
     ]);
