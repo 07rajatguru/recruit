@@ -47,9 +47,11 @@
             <tr>
                 
                 <td>{{ ++$i }}</td>
-                
-                <td>{{ $value['title'] }}</td>
-                
+                @if(isset($value['url']) && $value['url'] != '')
+                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['title'] }}</a></td>
+                @else
+                    <td>{{ $value['title'] }}</td>
+                @endif
                 <td>
                   
                     <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>

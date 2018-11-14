@@ -24,14 +24,14 @@ class ProcessManual extends Model
 
              
         $process_open_query = ProcessManual::query();
-        $process_open_query = $process_open_query->select('process_manual.*');
+        $process_open_query = $process_open_query->select('process_manual.*','process_doc.file as url');
         //echo '<pre>';print_r($process_open_query);exit;
         // assign jobs to logged in user
         if($all==0){
             $process_open_query = $process_open_query->join('process_visible_users','process_visible_users.process_id','=','process_manual.id');
             $process_open_query = $process_open_query->where('user_id','=',$user_id);
         }
-
+        $process_open_query = $process_open_query->leftjoin('process_doc','process_doc.process_id','=','process_manual.id');
         $process_open_query = $process_open_query->orderBy('process_manual.id','asc');
         $process_response = $process_open_query->get();
 
@@ -41,7 +41,7 @@ class ProcessManual extends Model
         foreach ($process_response as $key=>$value){
             $process_list[$i]['id'] = $value->id;
             $process_list[$i]['title'] = $value->title;
-           
+            $process_list[$i]['url'] = $value->url;
 
             // Admin/super admin have access to all details
             if($all==1){
