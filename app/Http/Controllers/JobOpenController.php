@@ -443,7 +443,47 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
 
-    /*public function getAllJobsDetails(){
+    public static function getJobOrderColumnName($order){
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "job_openings.updated_at";
+            }
+            else if ($order == 3) {
+                $order_column_name = "users.name";
+            }
+            else if ($order == 4) {
+                $order_column_name = "client_basicinfo.name";
+            }
+            else if ($order == 5) {
+                $order_column_name = "job_openings.posting_title";
+            }
+            else if ($order == 6) {
+                $order_column_name = "count";
+            }
+            else if ($order == 7) {
+                $order_column_name = "job_openings.city";
+            }
+            else if ($order == 8) {
+                $order_column_name = "job_openings.lacs_from";
+            }
+            else if($order == 9) {
+                $order_column_name = "job_openings.lacs_to";
+            }
+            else if ($order == 10) {
+                $order_column_name = "client_basicinfo.coordinator_name";
+            }
+            else if ($order == 11) {
+                $order_column_name = "job_openings.created_at";
+            }
+            else if ($order == 12) {
+                $order_column_name = "job_openings.no_of_positions";
+            }
+        }
+        return $order_column_name;
+    }
+
+    public function getAllJobsDetails(){
 
         $limit = $_GET['length'];
         $offset = $_GET['start'];
@@ -451,6 +491,8 @@ class JobOpenController extends Controller
         $search = $_GET['search']['value'];
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getJobOrderColumnName($order);
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -470,11 +512,11 @@ class JobOpenController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order,$type);
+            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search);
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order,$type);
+            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = JobOpen::getAllJobsCount(0,$user_id,$search);
         }
 
@@ -482,6 +524,7 @@ class JobOpenController extends Controller
         $i = 0;$j = 0;
         foreach ($job_response as $key => $value) {
             $action = '';
+            $checkbox = '';
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
             if(isset($value['access']) && $value['access']==1){
@@ -498,14 +541,15 @@ class JobOpenController extends Controller
             }
             if(isset($value['access']) && $value['access']==1){
                 $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
+                $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
             }
 
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
-            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none; background-color:'.$value['color'].';">'.$value['display_name'].'</a>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
-            $data = array(++$j,$action,$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['open_date'],$value['close_date']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
@@ -518,7 +562,7 @@ class JobOpenController extends Controller
         );
 
         echo json_encode($json_data);exit;
-    }*/
+    }
 
     /*public function index(Request $request)
     {

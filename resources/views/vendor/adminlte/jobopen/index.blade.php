@@ -266,7 +266,7 @@
         </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
+        {{--<tbody>
 
         @foreach($jobList as $key=>$value)
             <tr>
@@ -310,13 +310,13 @@
                 <td>{{ $value['industry'] or ''}}</td>
                 <td>{!! $value['desired_candidate'] or ''!!}</td>
 
-                {{--<td>{{ $value['close_date'] or ''}}</td>--}}
+                <td>{{ $value['close_date'] or ''}}</td>
 
 
             </tr>
         @endforeach
         </tbody>
-    </table>
+    </table>--}}
     </div>
 
 <div id="modal-status" class="modal text-left fade priority" style="display: none;">
@@ -347,7 +347,7 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
-            var table = jQuery('#jo_table').DataTable( {
+            /*var table = jQuery('#jo_table').DataTable( {
                 responsive: true,
                 "columnDefs": [
                     { "width": "10px", "targets": 0, "order": 'desc' },
@@ -364,7 +364,73 @@
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#jo_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0,'desc'],
+                "columnDefs": [ { "width": "10px", "targets": 0, "order": 'desc' },
+                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
+                    { "width": "10px", "targets": 2, "searchable": false, "orderable": false },
+                    { "width": "10px", "targets": 3 },
+                    { "width": "10px", "targets": 4 },
+                    { "width": "10px", "targets": 5 },
+                    { "width": "10px", "targets": 6 },
+                    { "width": "10px", "targets": 7 },
+                    { "width": "10px", "targets": 8 },
+                    { "width": "10px", "targets": 9 },
+                            ],
+                "ajax" : {
+                    'url' : 'jobs/all',
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[16] == "0" ){
+                        $('td:eq(4)', Row).css('background-color', '');
+                    }
+                    else if ( Data[16] == "1" ){
+                        $('td:eq(4)', Row).css('background-color', '#FF0000');
+                    }
+                    else if ( Data[16] == "2" ){
+                        $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                    }
+                    else if ( Data[16] == "3" ){
+                        $('td:eq(4)', Row).css('background-color', '#FABF8F');
+                    }
+                    else if ( Data[16] == "4" ){
+                        $('td:eq(4)', Row).css('background-color', '#B1A0C7');
+                    }
+                    else if ( Data[16] == "5" ){
+                        $('td:eq(4)', Row).css('background-color', 'yellow');
+                    }
+                    else if ( Data[16] == "6" ){
+                        $('td:eq(4)', Row).css('background-color', '');
+                    }
+                    else if ( Data[16] == "7" ){
+                        $('td:eq(4)', Row).css('background-color', '#808080');
+                    }
+                    else if ( Data[16] == "8" ){
+                        $('td:eq(4)', Row).css('background-color', '#92D050');
+                    }
+                    else if ( Data[16] == "9" ){
+                        $('td:eq(4)', Row).css('background-color', '#92D050');
+                    }
+                    else if ( Data[16] == "10" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFFFFF');
+                    }
+                    else{
+                        $('td:eq(4)', Row).css('background-color', '');
+                    }
+                }
+            });
 
             $('#allcb').change(function(){
                 if($(this).prop('checked')){
