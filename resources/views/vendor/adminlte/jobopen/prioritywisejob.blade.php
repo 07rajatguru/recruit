@@ -329,8 +329,11 @@
             </div>
             {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
             <div class="modal-body">
-                <strong>Select Job Priority :</strong> <br>
-                {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                <div class="status">
+                    <strong>Select Job Priority :</strong> <br>
+                    {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                </div>
+                <div class="error"></div>
             </div>
 
             <input type="hidden" name="job_ids" id="job_ids" value="">
@@ -354,7 +357,7 @@
                 "columnDefs": [
                     { "width": "10px", "targets": 0, "order": 'desc' },
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
-                    { "width": "10px", "targets": 2 },
+                    { "width": "10px", "targets": 2, "searchable": false, "orderable": false },
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
                     { "width": "10px", "targets": 5 },
@@ -396,6 +399,7 @@
 
         function multipleJobId(){
             var token = $('input[name="csrf_token"]').val();
+            var app_url = "{!! env('APP_URL'); !!}";
             var job_ids = new Array();
 
             $("input:checkbox[name=job_ids]:checked").each(function(){
@@ -403,18 +407,27 @@
             });
             //alert(job_ids);
 
-            $(".priority").show();
             $("#job_ids").val(job_ids);
+            //$(".checkid").empty();
 
-            /*$.ajax({
+            $.ajax({
                 type : 'POST',
-                url : 'jobs/mutijobpriority',
+                url : app_url+'/jobs/checkJobId',
                 data : {job_ids : job_ids, '_token':token},
                 dataType : 'json',
-                success: function(){
-
+                success: function(msg){
+                    $(".priority").show();
+                    if (msg.success == 'success') {
+                        //$(".checkid").append(msg.mail);
+                        $(".status").show();
+                        $(".error").empty();
+                    }
+                    else{
+                        $(".status").hide();
+                        $(".error").append(msg.err);
+                    }
                 }
-            });*/
+            });
         }
 
         function prioritywise() {

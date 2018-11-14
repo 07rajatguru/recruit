@@ -327,8 +327,12 @@
                 <h1 class="modal-title">Select Job Priority</h1>
             </div>
             {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
-            <div class="modal-body checkid">
-                
+            <div class="modal-body">
+                <div class="status">
+                    <strong>Select Job Priority :</strong> <br>
+                    {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                </div>
+                <div class="error"></div>
             </div>
 
             <input type="hidden" name="job_ids" id="job_ids" value="">
@@ -469,7 +473,7 @@
             //alert(job_ids);
 
             $("#job_ids").val(job_ids);
-            $(".checkid").empty();
+            //$(".checkid").empty();
 
             $.ajax({
                 type : 'POST',
@@ -479,10 +483,13 @@
                 success: function(msg){
                     $(".priority").show();
                     if (msg.success == 'success') {
-                        $(".checkid").append(msg.mail);
+                        //$(".checkid").append(msg.mail);
+                        $(".status").show();
+                        $(".error").empty();
                     }
                     else{
-                        $(".checkid").append(msg.err);
+                        $(".status").hide();
+                        $(".error").append(msg.err);
                     }
                 }
             });
