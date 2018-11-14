@@ -380,12 +380,12 @@ class User extends Authenticatable
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $superadmin = array($superadmin_role_id);
-        // $status = 'Inactive';
-        // $status_array = array($status);
+        $status = 'Inactive';
+        $status_array = array($status);
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->select('users.*','role_user.role_id as role_id');
-       // $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('status',$status_array);
         $query = $query->whereNotIn('role_id',$superadmin);
 
         if($user_id>0){

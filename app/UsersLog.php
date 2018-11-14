@@ -13,8 +13,8 @@ class UsersLog extends Model
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $superadmin = array($superadmin_role_id);
-        // $status = 'Inactive';
-        // $status_array = array($status);
+        $status = 'Inactive';
+        $status_array = array($status);
 
         $query = UsersLog::query();
         $query = $query->join('users','users.id','=','users_log.user_id');
@@ -33,7 +33,7 @@ class UsersLog extends Model
 
         $query = $query->groupBy('users_log.date','users.id','users.name');
         $query = $query->select('users.id' ,'users.name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
-       // $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('status',$status_array);
 
 
         $response = $query->get();
@@ -45,8 +45,8 @@ class UsersLog extends Model
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $superadmin = array($superadmin_role_id);
-        // $status = 'Inactive';
-        // $status_array = array($status);
+        $status = 'Inactive';
+        $status_array = array($status);
 
         $query = UsersLog::query();
         $query = $query->join('users','users.id','=','users_log.user_id');
@@ -59,7 +59,7 @@ class UsersLog extends Model
         }
         
         $query = $query->select('users_log.date as date','users.id' ,'role_user.role_id' ,'users.name as name' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
-       // $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('status',$status_array);
         $query = $query->groupBy('users_log.date','users.id');
         $query = $query->whereNotIn('role_id',$superadmin);
 
