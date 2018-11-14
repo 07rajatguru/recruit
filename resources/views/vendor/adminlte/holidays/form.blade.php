@@ -51,7 +51,7 @@
                         <div class="">
                             <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
                                 <strong>From Date: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('from_date',null, array('id'=>'from_date','class' => 'form-control','tabindex' => '3' )) !!}
+                                {!! Form::text('from_date',isset($from_date) ? $from_date : null, array('id'=>'from_date','class' => 'form-control','tabindex' => '3' )) !!}
                                 @if ($errors->has('from_date'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('from_date') }}</strong>
@@ -89,7 +89,7 @@
                         <div class="">
                             <div class="form-group {{ $errors->has('to_date') ? 'has-error' : '' }}">
                                 <strong>To Date: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('to_date',null, array('id'=>'to_date','class' => 'form-control','tabindex' => '4' )) !!}
+                                {!! Form::text('to_date',isset($to_date) ? $to_date : null, array('id'=>'to_date','class' => 'form-control','tabindex' => '4' )) !!}
                                 @if ($errors->has('to_date'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('to_date') }}</strong>
@@ -132,11 +132,11 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $("#from_date").datetimepicker({
-                format: "DD-MM-YYYY HH:mm:ss",
+                format: "DD-MM-YYYY",
             });
 
             $("#to_date").datetimepicker({
-                format: "DD-MM-YYYY HH:mm:ss"
+                format: "DD-MM-YYYY"
             });
             $("#users_all").click(function () {
                 $('.users_ids').prop('checked', this.checked);

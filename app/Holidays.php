@@ -38,9 +38,7 @@ class Holidays extends Model
     public static function getAllholidaysList(){
 
         $query = Holidays::query();
-        $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
-        $query = $query->join('users','users.id','=','holidays_users.user_id');
-        $query = $query->select('holidays.*','users.name as uname');
+        $query = $query->select('holidays.*');
         $res = $query->get();
 
         $holidays = array();
@@ -52,10 +50,42 @@ class Holidays extends Model
             $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
             $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
             $holidays[$i]['remarks'] = $value->remarks;
-            $holidays[$i]['users'] = $value->uname;
+
+            $name = Holidays::getUsersByHolidayId($value->id);
+            $user_name = '';
+            foreach ($name as $key => $value) {
+                if ($user_name == '') {
+                    $user_name = $value;
+                }
+                else{
+                    $user_name .= ','. $value;
+                }
+            }
+
+            $holidays[$i]['users'] = $user_name;
             $i++;
         }
 
         return $holidays;
+    }
+
+
+    public static function getUsersByHolidayId($id){
+
+        $query = Holidays::query();
+        $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
+        $query = $query->join('users','users.id','=','holidays_users.user_id');
+        $query = $query->select('holidays.*','users.name as uname','users.id as uid');
+        $query = $query->where('holiday_id',$id);
+        $query = $query->get();
+
+        $holidays_users = array();
+        $i = 0;
+        foreach($query as $k => $value){
+            $holidays_users[$value->uid] = $value->uname;
+            $i++;
+
+        }
+        return $holidays_users;
     }
 }

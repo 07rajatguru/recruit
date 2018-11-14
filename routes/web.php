@@ -1586,7 +1586,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
     ]);
 
-    Route::patch('holidays/update', [
+    Route::patch('holidays/{id}', [
         'as' => 'holidays.update',
         'uses' => 'HolidaysController@update',
         'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
