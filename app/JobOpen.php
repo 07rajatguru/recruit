@@ -591,11 +591,14 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->offset($offset);
         }
         if (isset($search) && $search != '') {
-            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+            });
         }
         $job_response = $job_open_query->get();
 //print_r($job_response);exit;
@@ -738,11 +741,14 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         if (isset($search) && $search != '') {
-            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+            });
         }
         $job_response = $job_open_query->get();
 
