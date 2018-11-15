@@ -8,6 +8,7 @@ use App\JobAssociateCandidates;
 use App\Lead;
 use App\Interview;
 use App\Holidays;
+use App\Events\NotificationMail;
 
 class DailyReport extends Command
 {
@@ -42,11 +43,11 @@ class DailyReport extends Command
      */
     public function handle()
     {
-        $from_name = env('FROM_NAME');
-        $from_address = env('FROM_ADDRESS');
+        // $from_name = env('FROM_NAME');
+        // $from_address = env('FROM_ADDRESS');
        // $to_address = 'saloni@trajinfotech.com';
        // $cc_address = 'tarikapanjwani@gmail.com';
-        $app_url = env('APP_URL');
+        // $app_url = env('APP_URL');
 
         $users = User::getAllUsersEmails('recruiter');
         
@@ -72,7 +73,7 @@ class DailyReport extends Command
                 $cc_array[] = 'rajlalwani@adlertalent.com';
                 $cc_array[] = 'saloni@trajinfotech.com';
 
-                $input = array();
+                /*$input = array();
                 $input['from_name'] = $from_name;
                 $input['from_address'] = $from_address;
                 // $input['to'] = $to_address;
@@ -100,7 +101,19 @@ class DailyReport extends Command
                 \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
-                });
+                });*/
+
+                $user_name = User::getUserNameById($key);
+
+                $module = "Daily Report";
+                $subject = 'Daily Activity Report - ' . $user_name . ' - ' . date("d-m-Y");
+                $message = "";
+                $to = implode(",",$to_array);
+                $cc = implode(",",$cc_array);
+                $module_id = 0;
+                $sender_name = $key;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
             }
         }
