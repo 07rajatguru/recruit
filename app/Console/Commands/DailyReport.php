@@ -54,70 +54,54 @@ class DailyReport extends Command
         $fixed_date = Holidays::getFixedLeaveDate();
         if (!in_array($date, $fixed_date)) {
             foreach ($users as $key => $value) {
-                // Check User On Optional Leave or not
-                $optional_date = Holidays::getUsersOptionalHolidaysDate($key);
-                $i = 0;
-                $count = 0;
-                if (isset($optional_date) && $optional_date != '') {
-                    foreach ($optional_date as $key1 => $value1) {
-                        $from_date[$i] = $value1['from_date'];
-                        $to_date[$i] = $value1['to_date'];
-                        if ($date >= $from_date[$i] && $date <= $to_date[$i]) {
-                            $count++;
-                        }
-                        $i++;
-                    }
-                }
-                //print_r($count);exit;
-                if ($count == 0) {
-                    //Get Reports to Email
-                    $report_res = User::getUsersReportToEmail($key);
-                    $report_email = $report_res->email;
 
-                    //Get Floor Incharge Email
-                    $floor_res = User::getUsersFloorInchargeEmail($key);
-                    $floor_incharge_email = $floor_res->email;
+                //Get Reports to Email
+                $report_res = User::getUsersReportToEmail($key);
+                $report_email = $report_res->email;
 
-                    $to_array = array();
-                    $to_array[] = $value;
+                //Get Floor Incharge Email
+                $floor_res = User::getUsersFloorInchargeEmail($key);
+                $floor_incharge_email = $floor_res->email;
 
-                    $cc_array = array();
-                    $cc_array[] = $report_email;
-                    $cc_array[] = $floor_incharge_email;
-                    $cc_array[] = 'adler.rgl@gmail.com';
-                    $cc_array[] = 'saloni@trajinfotech.com';
-                
-                    $input = array();
-                    $input['from_name'] = $from_name;
-                    $input['from_address'] = $from_address;
-                    // $input['to'] = $to_address;
-                    // $input['cc'] = $cc_address;
-                    $input['app_url'] = $app_url;
-                    $input['to_array'] = array_unique($to_array);
-                    $input['cc_array'] = array_unique($cc_array);
+                $to_array = array();
+                $to_array[] = $value;
 
-                    $associate_response = JobAssociateCandidates::getDailyReportAssociate($key,NULL);
-                    //print_r($associate_response);exit;
-                    $associate_daily = $associate_response['associate_data'];
-                    $associate_count = $associate_response['cvs_cnt'];
+                $cc_array = array();
+                $cc_array[] = $report_email;
+                $cc_array[] = $floor_incharge_email;
+                $cc_array[] = 'adler.rgl@gmail.com';
+                $cc_array[] = 'saloni@trajinfotech.com';
 
-                    $lead_count = Lead::getDailyReportLeadCount($key,NULL);
+                $input = array();
+                $input['from_name'] = $from_name;
+                $input['from_address'] = $from_address;
+                // $input['to'] = $to_address;
+                // $input['cc'] = $cc_address;
+                $input['app_url'] = $app_url;
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
 
-                    $interview_daily = Interview::getDailyReportInterview($key,NULL);
-                    $user_name = User::getUserNameById($key);
+                $associate_response = JobAssociateCandidates::getDailyReportAssociate($key,NULL);
+                //print_r($associate_response);exit;
+                $associate_daily = $associate_response['associate_data'];
+                $associate_count = $associate_response['cvs_cnt'];
 
-                    $input['value'] = $user_name;
-                    $input['associate_daily'] = $associate_daily;
-                    $input['associate_count'] = $associate_count;
-                    $input['lead_count'] = $lead_count;
-                    $input['interview_daily'] = $interview_daily;
+                $lead_count = Lead::getDailyReportLeadCount($key,NULL);
 
-                    \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
-                        $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
-                    });
+                $interview_daily = Interview::getDailyReportInterview($key,NULL);
+                $user_name = User::getUserNameById($key);
 
-                }
+                $input['value'] = $user_name;
+                $input['associate_daily'] = $associate_daily;
+                $input['associate_count'] = $associate_count;
+                $input['lead_count'] = $lead_count;
+                $input['interview_daily'] = $interview_daily;
+
+                \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                });
+
             }
         }
     }
