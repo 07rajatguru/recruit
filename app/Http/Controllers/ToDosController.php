@@ -697,11 +697,11 @@ class ToDosController extends Controller
                         //$user_email = User::getUserEmailById($value);
                         //$cc_email = User::getUserEmailById($task_owner);
 
-                        $user_email = User::getUserSecondaryEmailById($value);
+                        $user_email = User::getUserEmailById($value);
 
-                        $cc_email = User::getUserSecondaryEmailById($task_owner);
+                        $cc_email = User::getUserEmailById($task_owner);
 
-                        $cc_user_email=User::getUserSecondaryEmailById($cc_user_id);
+                        $cc_user_email=User::getUserEmailById($cc_user_id);
 
                         $cc_users_array=array($cc_email,$cc_user_email);
 
