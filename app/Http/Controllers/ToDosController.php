@@ -697,11 +697,11 @@ class ToDosController extends Controller
                         //$user_email = User::getUserEmailById($value);
                         //$cc_email = User::getUserEmailById($task_owner);
 
-                        $user_email = User::getUserSecondaryEmailById($value);
+                        $user_email = User::getUserEmailById($value);
 
-                        $cc_email = User::getUserSecondaryEmailById($task_owner);
+                        $cc_email = User::getUserEmailById($task_owner);
 
-                        $cc_user_email=User::getUserSecondaryEmailById($cc_user_id);
+                        $cc_user_email=User::getUserEmailById($cc_user_id);
 
                         $cc_users_array=array($cc_email,$cc_user_email);
 
@@ -716,11 +716,12 @@ class ToDosController extends Controller
                                 $i++;
                             }
                         }*/
-
+                        $cc_users_array = array_filter($cc_users_array);
                         $module = "Todos";
                         $sender_name = $user_id;
                         $to = $user_email;
                         $cc = implode(",",$cc_users_array);
+
                         $subject = $message;
                         $body_message = "";
                         $module_id = $toDos_id;

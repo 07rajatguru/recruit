@@ -515,10 +515,10 @@ class Interview extends Model
 
 
         $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateownersemail;
+        $candidate_owner_email = $candidate_email->candidateowneremail;
 
         $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientownersemail;
+        $client_owner_email = $client_email->clientowneremail;
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
@@ -564,10 +564,10 @@ class Interview extends Model
         $app_url = getenv('APP_URL');
 
         $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
-        $candidate_owner_email = $candidate_email->candidateownersemail;
+        $candidate_owner_email = $candidate_email->candidateowneremail;
 
         $client_email = Interview::getClientOwnerEmail($interview_id);
-        $client_owner_email = $client_email->clientownersemail;
+        $client_owner_email = $client_email->clientowneremail;
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
