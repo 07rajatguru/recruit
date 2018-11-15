@@ -34,6 +34,7 @@
                 <th>Email</th>
                 <th>Roles</th>
                 <th>Type</th>
+                <th>Status</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -50,8 +51,8 @@
                         @endforeach
                     @endif
                 </td>
-                <td>
-                   {{ $user->type }}
+                <td>{{ $user->type }}</td>
+                <td>{{ $user->status }}</td>
                 <td>
                     <a class="btn btn-info" href="{{ route('users.show',$user->id) }}">Show</a>
                     <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
