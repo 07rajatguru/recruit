@@ -716,11 +716,12 @@ class ToDosController extends Controller
                                 $i++;
                             }
                         }*/
-
+                        $cc_users_array = array_filter($cc_users_array);
                         $module = "Todos";
                         $sender_name = $user_id;
                         $to = $user_email;
                         $cc = implode(",",$cc_users_array);
+
                         $subject = $message;
                         $body_message = "";
                         $module_id = $toDos_id;
