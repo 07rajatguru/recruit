@@ -88,4 +88,41 @@ class Holidays extends Model
         }
         return $holidays_users;
     }
+
+    public static function getFixedLeaveDate(){
+
+        $query = Holidays::query();
+        $query = $query->select('from_date');
+        $query = $query->where('type','=','fixed');
+        $res = $query->get();
+
+        $fixed_date = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $fixed_date[$i] = $value->from_date;
+            $i++;
+        }
+
+        return $fixed_date;
+    }
+
+    public static function getUsersOptionalHolidaysDate($user_id){
+
+        $query = Holidays::query();
+        $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
+        $query = $query->select('from_date','to_date');
+        $query = $query->where('type','=','optional');
+        $query = $query->where('holidays_users.user_id',$user_id);
+        $res = $query->get();
+
+        $users_holiday_date = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $users_holiday_date[$i]['from_date'] = $value->from_date;
+            $users_holiday_date[$i]['to_date'] = $value->to_date;
+            $i++;
+        }
+
+        return $users_holiday_date;
+    }
 }
