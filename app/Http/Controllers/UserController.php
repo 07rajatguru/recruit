@@ -892,9 +892,13 @@ class UserController extends Controller
         $user = $request->users;
         $type = $request->type;
         $date_time = $request->date_time;
-
         $date_convert = $dateClass->changeDMYHMStoYMDHMS($date_time);
-        $date_array = explode(" ", $date_convert);
+
+        $dt = new \DateTime($date_convert, new \DateTimeZone('Asia/Kolkata'));
+        $dt->setTimeZone(new \DateTimeZone('UTC'));
+        $final_date = $dt->format("Y-m-d H:i:s") ;
+
+        $date_array = explode(" ", $final_date);
         $date = $date_array[0];
         $time = $date_array[1];
 
@@ -903,8 +907,8 @@ class UserController extends Controller
         $users_log->date = $date;
         $users_log->time = $time;
         $users_log->type = $type;
-        $users_log->created_at = gmdate("Y-m-d H:i:s");
-        $users_log->updated_at = gmdate("Y-m-d H:i:s");
+        $users_log->created_at = $final_date;
+        $users_log->updated_at = $final_date;
         $users_log->save();
 
         return redirect()->route('users.attendance')->with('success','Added Successfully');
