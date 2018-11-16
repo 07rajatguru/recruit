@@ -296,11 +296,13 @@
         function getType(){
             var selectedType = $("#type").val();
 
+            var app_url = "{!! env('APP_URL') !!}";
+
             if(selectedType!=5){
                 $(".type_list").show();
                 var typelist = $("#type_list").val();
                 $.ajax({
-                  url:'/ajax/todotype',
+                  url:app_url+'/ajax/todotype',
                   data:'selectedType='+selectedType,
                   dataType:'json',
                   success: function(data){
