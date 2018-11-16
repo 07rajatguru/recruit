@@ -35,6 +35,21 @@
 
         </div>
     </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[4]) }}" title="On Hold" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_4 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[9]) }}" title="Closed By Us" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_9 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a href="{{ route('jobopen.priority',$job_priority[10]) }}" title="Closed By Client" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_10 }}</div></a>
+            </div>
+        </div>
+    </div>
+    <br/>
     <div class = "table-responsive">
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>

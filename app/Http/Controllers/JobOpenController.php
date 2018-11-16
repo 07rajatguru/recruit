@@ -227,13 +227,10 @@ class JobOpenController extends Controller
         $priority_1 = 0;
         $priority_2 = 0;
         $priority_3 = 0;
-        $priority_4 = 0;
         $priority_5 = 0;
         $priority_6 = 0;
         $priority_7 = 0;
         $priority_8 = 0;
-        $priority_9 = 0;
-        $priority_10 = 0;
 
         foreach ($job_priority_data as $job_priority) 
         {
@@ -253,10 +250,6 @@ class JobOpenController extends Controller
            {
                 $priority_3++;
            }
-            else if($job_priority['priority'] == 4) 
-           {
-                $priority_4++;
-           }
             else if($job_priority['priority'] == 5) 
            {
                 $priority_5++;
@@ -273,14 +266,6 @@ class JobOpenController extends Controller
            {
                 $priority_8++;
            }
-            else if($job_priority['priority'] == 9) 
-           {
-                $priority_9++;
-           }
-            else if($job_priority['priority'] == 10) 
-           {
-                $priority_10++;
-           }
         }
 
         $count = sizeof($job_response);
@@ -291,7 +276,7 @@ class JobOpenController extends Controller
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
 
-        return view('adminlte::jobopen.index', $viewVariable,compact('count','priority_0','priority_1','priority_2','priority_3','priority_4','priority_5','priority_6','priority_7','priority_8','priority_9','priority_10'));
+        return view('adminlte::jobopen.index', $viewVariable,compact('count','priority_0','priority_1','priority_2','priority_3','priority_5','priority_6','priority_7','priority_8'));
 
     }
 
@@ -2406,18 +2391,43 @@ class JobOpenController extends Controller
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getClosedJobs(1,$user_id);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
         }
         else{
             $job_response = JobOpen::getClosedJobs(0,$user_id);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
 
         $count = sizeof($job_response);
+        $priority_4 = 0;
+        $priority_9 = 0;
+        $priority_10 = 0;
+
+        foreach ($job_priority_data as $job_priority) 
+        {
+           if($job_priority['priority'] == 4) 
+           {
+                $priority_4++;
+           }
+           else if($job_priority['priority'] == 9) 
+           {
+                $priority_9++;
+           }
+           else if($job_priority['priority'] == 10) 
+           {
+                $priority_10++;
+           }
+        }
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
+        $viewVariable['priority_4'] = $priority_4;
+        $viewVariable['priority_9'] = $priority_9;
+        $viewVariable['priority_10'] = $priority_10;
+
 
         return view('adminlte::jobopen.close',$viewVariable);   
     }
