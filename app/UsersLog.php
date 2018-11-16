@@ -103,4 +103,13 @@ class UsersLog extends Model
         return $data2;
     }
 
+    public static function getattendancetype(){
+
+        $type = array('' => 'Select Type');
+        $type['login'] = 'Login';
+        $type['logout'] = 'Logout';
+
+        return $type;
+    }
+
 }

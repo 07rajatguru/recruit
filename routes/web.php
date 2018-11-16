@@ -213,6 +213,17 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'users.upload',
         'uses' => 'UserController@Upload'
     ]);*/
+    Route::get('users/attendance',[
+        'as' => 'users.attendance',
+        'uses' => 'UserController@UserAttendanceAdd',
+        'middleware' => ['permission:user-create']
+    ]);
+
+    Route::post('users/attendance',[
+        'as' => 'users.attendancestore',
+        'uses' => 'UserController@UserAttendanceStore'
+    ]);
+    
     Route::get('users/create', [
         'as' => 'users.create',
         'uses' => 'UserController@create',
@@ -242,7 +253,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@destroy',
         'middleware' => ['permission:user-delete']
     ]);
-
 
 
     // Admin > Roles

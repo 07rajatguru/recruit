@@ -16,6 +16,7 @@ use App\UsersDoc;
 use App\Utils;
 use App\UserLeave;
 use App\Events\NotificationMail;
+use App\UsersLog;
 
 class UserController extends Controller
 {
@@ -875,5 +876,37 @@ class UserController extends Controller
         });
 
 
+    }
+
+    public function UserAttendanceAdd(){
+
+        $users = User::getAllUsers();
+        $type = UsersLog::getattendancetype();
+
+        return view('adminlte::users.attendanceadd',compact('users','type'));
+    }
+
+    public function UserAttendanceStore(Request $request){
+
+        $dateClass = new Date();
+        $user = $request->users;
+        $type = $request->type;
+        $date_time = $request->date_time;
+
+        $date_convert = $dateClass->changeDMYHMStoYMDHMS($date_time);
+        $date_array = explode(" ", $date_convert);
+        $date = $date_array[0];
+        $time = $date_array[1];
+
+        $users_log= new UsersLog();
+        $users_log->user_id = $user;
+        $users_log->date = $date;
+        $users_log->time = $time;
+        $users_log->type = $type;
+        $users_log->created_at = gmdate("Y-m-d H:i:s");
+        $users_log->updated_at = gmdate("Y-m-d H:i:s");
+        $users_log->save();
+
+        return redirect()->route('users.attendance')->with('success','Added Successfully');
     }
 }
