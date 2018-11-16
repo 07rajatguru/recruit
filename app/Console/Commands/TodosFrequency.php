@@ -184,14 +184,16 @@ class TodosFrequency extends Command
 
                             // TODO : Email Notification : data store in database
                             //foreach ($users as $k=>$v){
-                                $user_email = User::getUserSecondaryEmailById($value1);
-                                $cc_email = User::getUserSecondaryEmailById($task_owner);
-                                $cc_user_email=User::getUserSecondaryEmailById($cc_user);
+                                $user_email = User::getUserEmailById($value1);
+                                $cc_email = User::getUserEmailById($task_owner);
+                                $cc_user_email=User::getUserEmailById($cc_user);
                                 $cc_users_array=array($cc_email,$cc_user_email);
 
                                 $module = "Todos";
                                 $sender_name = $task_owner;
                                 $to = $user_email;
+
+                                $cc_users_array = array_filter($cc_users_array);
                                 $cc = implode(",",$cc_users_array);
                                 $subject = $message;
                                 $body_message = "";
