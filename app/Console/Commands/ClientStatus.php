@@ -47,7 +47,7 @@ class ClientStatus extends Command
         $job_open=\DB::table('client_basicinfo')
         ->leftjoin('job_openings','client_basicinfo.id','=','job_openings.client_id')
         ->leftjoin('job_associate_candidates','job_associate_candidates.job_id','=','job_openings.id')
-        ->select('job_openings.*','client_basicinfo.id as Client_Id','job_openings.created_at as created')
+        ->select('job_openings.*','client_basicinfo.id as Client_Id','job_associate_candidates.created_at as created')
         ->get();
 
         /*$client_query = ClientBasicinfo::query();
