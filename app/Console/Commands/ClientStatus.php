@@ -71,10 +71,10 @@ class ClientStatus extends Command
 
                 $date1=date('Y-m-d',strtotime("-30 days"));
 
-                if(isset($created_at) && isset($created)  )
+                if(isset($created_at) )
                 {
                    
-                   if($created < $date1)
+                   if(($created_at || $created) < $date1)
                    {
                         DB::statement("UPDATE  client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
 
