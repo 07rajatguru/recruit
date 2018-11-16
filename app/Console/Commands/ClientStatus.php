@@ -48,6 +48,8 @@ class ClientStatus extends Command
         ->leftjoin('job_openings','client_basicinfo.id','=','job_openings.client_id')
         ->leftjoin('job_associate_candidates','job_associate_candidates.job_id','=','job_openings.id')
         ->select('job_openings.*','client_basicinfo.id as Client_Id','job_associate_candidates.created_at as created')
+        ->orderBy('job_openings.created_at','desc')
+        ->groupBy('client_basicinfo.id')
         ->get();
 
         /*$client_query = ClientBasicinfo::query();
