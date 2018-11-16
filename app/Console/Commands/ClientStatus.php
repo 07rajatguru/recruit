@@ -44,22 +44,17 @@ class ClientStatus extends Command
     {
         //
 
-        /*$client_info=\DB::table('client_basicinfo')
+        $job_open=\DB::table('client_basicinfo')
         ->leftjoin('job_openings','client_basicinfo.id','=','job_openings.client_id')
-        ->select('client_basicinfo.*','job_openings.created_at as create_date')
-        ->get();*/
+        ->leftjoin('job_associate_candidates','job_associate_candidates.job_id','=','job_openings.id')
+        ->select('job_openings.*','client_basicinfo.id as Client_Id','job_openings.created_at as created')
+        ->get();
 
-        $client_query = ClientBasicinfo::query();
+        /*$client_query = ClientBasicinfo::query();
         $client_query = $client_query->leftJoin('job_openings','job_openings.client_id','=','client_basicinfo.id');
-        $client_query = $client_query->leftjoin('job_associate_candidates','job_associate_candidates.job_id','=','job_openings.id');
+        $client_query = $client_query->leftJoin('job_associate_candidates','job_associate_candidates.job_id','=','job_openings.id');
         $client_query = $client_query->select('job_openings.*','client_basicinfo.id as Client_Id','job_associate_candidates.created_at as created');
-        $job_open = $client_query->get();
-
-        //print_r($job_open);exit;
-        /*$job_open=\DB::table('job_openings')
-        ->leftjoin('client_basicinfo','job_openings.client_id','=','client_basicinfo.id')
-        ->select('job_openings.*','client_basicinfo.id as Client_Id')
-        ->get();*/
+        $job_open = $client_query->get();*/
 
         $job=array();
 
@@ -69,14 +64,15 @@ class ClientStatus extends Command
             {
                 $client_id=$value->Client_Id;
 
-                $created_at = $value->created_at;
-                $created = $value->created;
+                $created_at = $value->created_at; // job added date
+                $created = $value->created; // job candidate associate date
 
-                if(isset($created_at))
+                $date1=date('Y-m-d',strtotime("-30 days"));
+
+                if(isset($created_at) && isset($created)  )
                 {
-                   $date1=date('Y-m-d',strtotime("-30 days"));
                    
-                   if(($created_at || $created) < $date1)
+                   if($created < $date1)
                    {
                         DB::statement("UPDATE  client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
 
