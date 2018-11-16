@@ -1607,5 +1607,21 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HolidaysController@destroy',
         'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
     ]);
+
+    // Receipt module
+    Route::get('receipt/talent',[
+        'as' => 'receipt.talent',
+        'uses' => 'ReceiptController@receiptTalent'
+    ]);
+
+    Route::get('receipt/talent/import',[
+        'as' => 'receipt.talentimport',
+        'uses' => 'ReceiptController@receiptTalentImport'
+    ]);
+
+    Route::post('receipt/talent/import',[
+        'as' => 'receipt.talentimportstore',
+        'uses' => 'ReceiptController@receiptTalentImportStore'
+    ]);
     
 });
