@@ -357,7 +357,7 @@ return [
                ]
            ],
        ],
-       /*[
+       [
            'text'        => 'Finance',
            'icon'        => 'money',
            'submenu' => [
@@ -366,8 +366,29 @@ return [
                    'url'  => 'expense',
                    'icon' => 'circle-o',
                ],
+               [
+                   'text' => 'Receipt',
+                   'icon' => 'circle-o',
+                   'submenu' => [
+                      [
+                         'text' => 'Receipt Talent',
+                         'url'  => 'receipt/talent',
+                         'icon' => 'circle-o',
+                      ],
+                      [
+                         'text' => 'Receipt Temp',
+                         'url'  => 'expense',
+                         'icon' => 'circle-o',
+                      ],
+                      [
+                         'text' => 'Receipt Other',
+                         'url'  => 'expense',
+                         'icon' => 'circle-o',
+                      ],
+                   ],
+               ],
            ],
-       ],*/
+       ],
         [
             'text'        => 'Admin',
             'icon'        => 'user-secret',
