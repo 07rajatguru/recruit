@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Receipt Talent')
+@section('title', 'Receipt Other')
 
 @section('content_header')
 
@@ -11,12 +11,12 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Receipt Talent</h2>
+            <h2>Receipt Other</h2>
         </div>
 
         <div class="pull-right">
-        	<a class="btn btn-primary" href="{{ route('receipt.talentimport') }}"> Import Recepit Talent</a>
-            <a class="btn btn-success" href="{{ route('receipt.talentcreate') }}"> Create New Recepit Talent</a>
+        	<a class="btn btn-primary" href="{{ route('receipt.otherimport') }}"> Import Recepit Other</a>
+            <a class="btn btn-success" href=""> Create New Recepit Other</a>
         </div>
     </div>
 
@@ -35,7 +35,7 @@
 	</div>
 </div>
 
-<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="receipt_talent">
+<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="receipt_other">
     @if($bank == 'hdfc')
         <thead>
             <tr>
@@ -129,7 +129,7 @@
     <script type="text/javascript">
 
         $(document).ready(function(){
-            var table = jQuery('#receipt_talent').DataTable( {
+            var table = jQuery('#receipt_other').DataTable( {
                 responsive: true,
                 stateSave : true,
                 "bStateSave": true,
@@ -145,7 +145,7 @@
             var bank = $("#bank_type").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = app_url+'/receipt/talent';
+            var url = app_url+'/receipt/other';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

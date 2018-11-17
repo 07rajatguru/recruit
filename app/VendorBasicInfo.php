@@ -92,11 +92,12 @@ class VendorBasicInfo extends Model
     public static function getVendor($vendor)
      {
         $vendor_query = VendorBasicInfo::query();
-        $vendor_query = $vendor_query->where('name','like',$vendor);
+        $vendor_query = $vendor_query->where('name','like',"$vendor");
 
         $vendor_query = $vendor_query->select('id');
         $vendor=$vendor_query->first();
-
+        
+        $vendor_id = 0;
         if(isset($vendor))
         {
             $vendor_id=$vendor->id;

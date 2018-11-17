@@ -377,12 +377,12 @@ return [
                       ],
                       [
                          'text' => 'Receipt Temp',
-                         'url'  => 'expense',
+                         'url'  => 'receipt/temp',
                          'icon' => 'circle-o',
                       ],
                       [
                          'text' => 'Receipt Other',
-                         'url'  => 'expense',
+                         'url'  => 'receipt/other',
                          'icon' => 'circle-o',
                       ],
                    ],
