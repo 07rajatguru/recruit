@@ -216,6 +216,38 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
+            else if ($value['module'] == 'Weekly Report') {
+                $to_array=explode(",",$input['to']);
+                $cc_array=explode(",",$input['cc']);
+
+                $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($sender_id,NULL,NULL);
+
+                $associate_weekly = $associate_weekly_response['associate_data'];
+                $associate_count = $associate_weekly_response['cvs_cnt'];
+
+                $interview_weekly_response = Interview::getWeeklyReportInterview($sender_id,NULL,NULL);
+                $interview_weekly = $interview_weekly_response['interview_data'];
+                $interview_count = $interview_weekly_response['interview_cnt'];
+
+                $lead_count = Lead::getWeeklyReportLeadCount($sender_id,NULL,NULL);
+                $user_name = User::getUserNameById($sender_id);
+
+                $input['value'] = $user_name;
+                $input['associate_weekly'] = $associate_weekly;
+                $input['associate_count'] = $associate_count;
+                $input['interview_weekly'] = $interview_weekly;
+                $input['interview_count'] = $interview_count;
+                $input['lead_count'] = $lead_count;
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
+
+                \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Weekly Activity Report -'.$input['value']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
 
         }
     }

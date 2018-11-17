@@ -7,6 +7,7 @@ use App\JobAssociateCandidates;
 use App\Lead;
 use App\User;
 use App\Interview;
+use App\Events\NotificationMail;
 
 class WeeklyReport extends Command
 {
@@ -41,11 +42,11 @@ class WeeklyReport extends Command
      */
     public function handle()
     {
-        $from_name = getenv('FROM_NAME');
+        /*$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
-        $app_url = getenv('APP_URL');
+        $app_url = getenv('APP_URL');*/
 
-        $users = User::getAllUsersSecondaryEmails('recruiter');
+        $users = User::getAllUsersEmails('recruiter');
 
         foreach ($users as $key => $value) {
 
@@ -53,10 +54,10 @@ class WeeklyReport extends Command
             $floor_incharge_email = '';
             $res = User::getReportsToUsersEmail($key);
 
-            if(isset($res->rsemail) && $res->rsemail!='')
-                $report_email = $res->rsemail;
-            if(isset($res->fsemail) && $res->fsemail!='')
-                $floor_incharge_email = $res->fsemail;
+            if(isset($res->remail) && $res->remail!='')
+                $report_email = $res->remail;
+            if(isset($res->femail) && $res->femail!='')
+                $floor_incharge_email = $res->femail;
 
             $to_array = array();
             $to_array[] = $value;
@@ -64,10 +65,10 @@ class WeeklyReport extends Command
             $cc_array = array();
             $cc_array[] = $report_email;
             $cc_array[] = $floor_incharge_email;
-            //$cc_array[] = 'tarikapanjwani@gmail.com';
-            $cc_array[] = 'adler.rgl@gmail.com';
+            $cc_array[] = 'rajlalwani@adlertalent.com';
+            $cc_array[] = 'saloni@trajinfotech.com';
 
-            $input['from_name'] = $from_name;
+            /*$input['from_name'] = $from_name;
             $input['from_address'] = $from_address;
             $input['app_url'] = $app_url;
             $input['to_array'] = array_unique($to_array);
@@ -97,7 +98,22 @@ class WeeklyReport extends Command
             \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to_array'])->cc($input['cc_array'])->subject('Weekly Activity Report -'.$input['value']);
-            });
+            });*/
+
+            $user_name = User::getUserNameById($key);
+
+            $module = "Weekly Report";
+            $subject = 'Weekly Activity Report - ' . $user_name;
+            $message = "";
+            $to_array = array_filter($to_array);
+            $to = implode(",",$to_array);
+
+            $cc_array = array_filter($cc_array);
+            $cc = implode(",",$cc_array);
+            $module_id = 0;
+            $sender_name = $key;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
     }
 }
