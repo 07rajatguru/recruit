@@ -108,7 +108,10 @@ class DailyReport extends Command
                 $module = "Daily Report";
                 $subject = 'Daily Activity Report - ' . $user_name . ' - ' . date("d-m-Y");
                 $message = "";
+                $to_array = array_filter($to_array);
                 $to = implode(",",$to_array);
+
+                $cc_array = array_filter($cc_array);
                 $cc = implode(",",$cc_array);
                 $module_id = 0;
                 $sender_name = $key;
