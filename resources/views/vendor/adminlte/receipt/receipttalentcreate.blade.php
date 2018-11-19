@@ -9,6 +9,14 @@
 
 @section('content')
 
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -39,7 +47,10 @@
                     </div>
                 </div>
             </div>
+
             {{--Create HDFC Bank Receipt--}}
+        
+            {!! Form::open(array('route' => 'receipt.talentstore','method' => 'POST', 'id' => 'hdfc_form')) !!}
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12 hdfc" style="display: none;">
             	<div class="box-header with-border col-md-6">
                     <h3 class="box-title">Create HDFC Receipt</h3>
@@ -48,7 +59,7 @@
 	                <div class="box-body col-xs-6 col-sm-6 col-md-6">
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('ref_no') ? 'has-error' : '' }}">
-	                            <strong>Reference No:</strong>
+	                            <strong>Reference No:<span class = "required_fields">*</span></strong>
 	                            {!! Form::text('ref_no', null, array('id'=>'ref_no','class' => 'form-control')) !!}
 	                            @if ($errors->has('ref_no'))
 	                                <span class="help-block">
@@ -133,9 +144,17 @@
 	                    </div>
 	                </div>
 	            </div>
+	            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Submit
+                </button>
+             	</div>
         	</div>
 
+        	{!! Form::close() !!}
+
         	{{--Create ICICI Bank Receipt--}}
+        	
+            {!! Form::open(array('route' => 'receipt.talentstore','method' => 'POST', 'id' => 'icici_form')) !!}
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12 icici" style="display: none;">
             	<div class="box-header with-border col-md-6">
                     <h3 class="box-title">Create ICICI Receipt</h3>
@@ -144,7 +163,7 @@
 	                <div class="box-body col-xs-6 col-sm-6 col-md-6">
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('tran_id') ? 'has-error' : '' }}">
-	                            <strong>Transaction ID:</strong>
+	                            <strong>Transaction ID:<span class = "required_fields">*</span></strong>
 	                            {!! Form::text('tran_id', null, array('id'=>'tran_id','class' => 'form-control')) !!}
 	                            @if ($errors->has('tran_id'))
 	                                <span class="help-block">
@@ -241,9 +260,16 @@
 	                    </div>
 	                </div>
 	            </div>
+	            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Submit
+                </button>
+             	</div>
         	</div>
+        	{!! Form::close() !!}
 
         	{{--Create Other Bank Receipt--}}
+        
+            {!! Form::open(array('route' => 'receipt.talentstore','method' => 'POST', 'id' => 'other_form')) !!}
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12 other" style="display: none;">
             	<div class="box-header with-border col-md-6">
                     <h3 class="box-title">Create Other Receipt</h3>
@@ -252,7 +278,7 @@
 	                <div class="box-body col-xs-6 col-sm-6 col-md-6">
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('voucher_no') ? 'has-error' : '' }}">
-	                            <strong>Voucher No:</strong>
+	                            <strong>Voucher No:<span class = "required_fields">*</span></strong>
 	                            {!! Form::text('voucher_no', null, array('id'=>'voucher_no','class' => 'form-control')) !!}
 	                            @if ($errors->has('voucher_no'))
 	                                <span class="help-block">
@@ -325,7 +351,12 @@
 	                    </div>
 	                </div>
 	            </div>
+	            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Submit
+                </button>
+             	</div>
         	</div>
+        	{!! Form::close() !!}
         </div>
     </div>
 </div>
@@ -348,6 +379,45 @@
                 },
             }
         });*/
+
+        $("#hdfc_form").validate({
+            rules: {
+                "ref_no": {
+                    required: true
+                },
+            },
+            messages: {
+                "ref_no": {
+                    required: "Reference Number is Required Field."
+                },
+            }
+        });
+
+        $("#icici_form").validate({
+            rules: {
+                "tran_id": {
+                    required: true
+                },
+            },
+            messages: {
+                "tran_id": {
+                    required: "Transaction ID is Required Field."
+                },
+            }
+        });
+
+        $("#other_form").validate({
+            rules: {
+                "voucher_no": {
+                    required: true
+                },
+            },
+            messages: {
+                "voucher_no": {
+                    required: "Voucher Number is Required Field."
+                },
+            }
+        });
 
         $("#company_name_hdfc").select2();
         $("#company_name_icici").select2();

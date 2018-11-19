@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Receipt;
 use App\VendorBasicInfo;
 use Excel;
@@ -23,6 +24,9 @@ class ReceiptController extends Controller
     	$type = 'Talent';
 
     	$receipt_data = Receipt::getReceiptdata($bank,$type);
+
+    	/*print_r($receipt_data);
+    	exit;*/
 
     	return view('adminlte::receipt.receipttalentindex',compact('bank_type','receipt_data','bank'));
     }
@@ -255,8 +259,34 @@ class ReceiptController extends Controller
     	return view('adminlte::receipt.receipttalentcreate',compact('bank_type','vendors'));
     }
 
-    public function receiptTalentStore(){
-    	
+    public function receiptTalentStore(Request $request)
+    {
+    	$dateClass = new Date();
+
+    	/*$bank_type = $request->get('bank_type');
+    	echo $bank_type;
+    	exit;
+    	*/
+
+    	$receipt = new Receipt();
+    	$receipt->ref_no = $request->get('ref_no');
+   		//$receipt->trans_id = $request->get('tran_id');
+   		//$receipt->voucher_no = $request->get('voucher_no');
+   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+   		$receipt->description = $request->get('desc_hdfc');
+   		$receipt->name_of_company = $request->get('company_name_hdfc');
+   		$receipt->amount = $request->get('amount_hdfc');
+   		$receipt->remarks = $request->get('remarks_hdfc');
+
+   		$bank_type = 'hdfc';
+   		$receipt->bank_type = $bank_type;
+   		$type = 'talent';
+   		$receipt->type = $type;
+
+   		$receipt->save();
+
+        return redirect()->route('receipt.talent')->with('success', 'Receipt Generated Successfully');
     }
 
     public function receiptTemp(){

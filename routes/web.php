@@ -1629,6 +1629,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReceiptController@receiptTalentCreate'
     ]);
 
+    Route::post('receipt/talent/store',[
+        'as' => 'receipt.talentstore',
+        'uses' => 'ReceiptController@receiptTalentStore'
+    ]);
+
     Route::any('receipt/temp',[
         'as' => 'receipt.temp',
         'uses' => 'ReceiptController@receiptTemp'
