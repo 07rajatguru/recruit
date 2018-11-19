@@ -59,12 +59,12 @@
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('value_date') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('value_date_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Value Date:</strong>
-	                            {!! Form::text('value_date', null, array('id'=>'value_date','class' => 'form-control')) !!}
-	                            @if ($errors->has('value_date'))
+	                            {!! Form::text('value_date_hdfc', null, array('id'=>'value_date_hdfc','class' => 'form-control')) !!}
+	                            @if ($errors->has('value_date_hdfc'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('value_date') }}</strong>
+	                            <strong>{{ $errors->first('value_date_hdfc') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -83,12 +83,12 @@
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('desc') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('desc_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Description:</strong>
-	                            {!! Form::textarea('desc', null, array('id'=>'desc','class' => 'form-control','rows' => '5')) !!}
-	                            @if ($errors->has('desc'))
+	                            {!! Form::textarea('desc_hdfc', null, array('id'=>'desc_hdfc','class' => 'form-control','rows' => '5')) !!}
+	                            @if ($errors->has('desc_hdfc'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('desc') }}</strong>
+	                            <strong>{{ $errors->first('desc_hdfc') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -97,36 +97,36 @@
 
 	                <div class="box-body col-xs-6 col-sm-6 col-md-6">
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('company_name_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Company Name:</strong>
-	                            {!! Form::text('company_name', null, array('id'=>'company_name','class' => 'form-control')) !!}
-	                            @if ($errors->has('company_name'))
+	                            {!! Form::select('company_name_hdfc', $vendors, null, array('id'=>'company_name_hdfc','class' => 'form-control')) !!}
+	                            @if ($errors->has('company_name_hdfc'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('company_name') }}</strong>
+	                            <strong>{{ $errors->first('company_name_hdfc') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('amount') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('amount_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Amount:</strong>
-	                            {!! Form::text('amount', null, array('id'=>'amount','class' => 'form-control')) !!}
-	                            @if ($errors->has('amount'))
+	                            {!! Form::text('amount_hdfc', null, array('id'=>'amount_hdfc','class' => 'form-control')) !!}
+	                            @if ($errors->has('amount_hdfc'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('amount') }}</strong>
+	                            <strong>{{ $errors->first('amount_hdfc') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('remarks_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Remarks:</strong>
-	                            {!! Form::textarea('remarks', null, array('id'=>'remarks','class' => 'form-control','rows' => '5')) !!}
-	                            @if ($errors->has('remarks'))
+	                            {!! Form::textarea('remarks_hdfc', null, array('id'=>'remarks_hdfc','class' => 'form-control','rows' => '5')) !!}
+	                            @if ($errors->has('remarks_hdfc'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('remarks') }}</strong>
+	                            <strong>{{ $errors->first('remarks_hdfc') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -155,12 +155,12 @@
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('value_date') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('value_date_icici') ? 'has-error' : '' }}">
 	                            <strong>Value Date:</strong>
-	                            {!! Form::text('value_date', null, array('id'=>'value_date','class' => 'form-control')) !!}
-	                            @if ($errors->has('value_date'))
+	                            {!! Form::text('value_date_icici', null, array('id'=>'value_date_icici','class' => 'form-control')) !!}
+	                            @if ($errors->has('value_date_icici'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('value_date') }}</strong>
+	                            <strong>{{ $errors->first('value_date_icici') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -179,12 +179,12 @@
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('desc') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('desc_icici') ? 'has-error' : '' }}">
 	                            <strong>Description:</strong>
-	                            {!! Form::textarea('desc', null, array('id'=>'desc','class' => 'form-control','rows' => '5')) !!}
-	                            @if ($errors->has('desc'))
+	                            {!! Form::textarea('desc_icici', null, array('id'=>'desc_icici','class' => 'form-control','rows' => '5')) !!}
+	                            @if ($errors->has('desc_icici'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('desc') }}</strong>
+	                            <strong>{{ $errors->first('desc_icici') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -193,24 +193,24 @@
 
 	                <div class="box-body col-xs-6 col-sm-6 col-md-6">
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('company_name_icici') ? 'has-error' : '' }}">
 	                            <strong>Company Name:</strong>
-	                            {!! Form::text('company_name', null, array('id'=>'company_name','class' => 'form-control')) !!}
-	                            @if ($errors->has('company_name'))
+	                            {!! Form::select('company_name_icici', $vendors, null, array('id'=>'company_name_icici','class' => 'form-control')) !!}
+	                            @if ($errors->has('company_name_icici'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('company_name') }}</strong>
+	                            <strong>{{ $errors->first('company_name_icici') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('amount') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('amount_icici') ? 'has-error' : '' }}">
 	                            <strong>Amount:</strong>
-	                            {!! Form::text('amount', null, array('id'=>'amount','class' => 'form-control')) !!}
-	                            @if ($errors->has('amount'))
+	                            {!! Form::text('amount_icici', null, array('id'=>'amount_icici','class' => 'form-control')) !!}
+	                            @if ($errors->has('amount_icici'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('amount') }}</strong>
+	                            <strong>{{ $errors->first('amount_icici') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -229,12 +229,12 @@
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('remarks_icici') ? 'has-error' : '' }}">
 	                            <strong>Remarks:</strong>
-	                            {!! Form::textarea('remarks', null, array('id'=>'remarks','class' => 'form-control','rows' => '5')) !!}
-	                            @if ($errors->has('remarks'))
+	                            {!! Form::textarea('remarks_icici', null, array('id'=>'remarks_icici','class' => 'form-control','rows' => '5')) !!}
+	                            @if ($errors->has('remarks_icici'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('remarks') }}</strong>
+	                            <strong>{{ $errors->first('remarks_icici') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -263,24 +263,24 @@
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('value_date') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('value_date_other') ? 'has-error' : '' }}">
 	                            <strong>Value Date:</strong>
-	                            {!! Form::text('value_date', null, array('id'=>'value_date','class' => 'form-control')) !!}
-	                            @if ($errors->has('value_date'))
+	                            {!! Form::text('value_date_other', null, array('id'=>'value_date_other','class' => 'form-control')) !!}
+	                            @if ($errors->has('value_date_other'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('value_date') }}</strong>
+	                            <strong>{{ $errors->first('value_date_other') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('remarks_other') ? 'has-error' : '' }}">
 	                            <strong>Remarks:</strong>
-	                            {!! Form::textarea('remarks', null, array('id'=>'remarks','class' => 'form-control','rows' => '5')) !!}
-	                            @if ($errors->has('remarks'))
+	                            {!! Form::textarea('remarks_other', null, array('id'=>'remarks_other','class' => 'form-control','rows' => '5')) !!}
+	                            @if ($errors->has('remarks_other'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('remarks') }}</strong>
+	                            <strong>{{ $errors->first('remarks_other') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -289,24 +289,24 @@
 
 	                <div class="box-body col-xs-6 col-sm-6 col-md-6">
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('company_name_other') ? 'has-error' : '' }}">
 	                            <strong>Company Name:</strong>
-	                            {!! Form::text('company_name', null, array('id'=>'company_name','class' => 'form-control')) !!}
-	                            @if ($errors->has('company_name'))
+	                            {!! Form::select('company_name_other', $vendors, null, array('id'=>'company_name_other','class' => 'form-control')) !!}
+	                            @if ($errors->has('company_name_other'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('company_name') }}</strong>
+	                            <strong>{{ $errors->first('company_name_other') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
 	                    </div>
 
 	                    <div class="">
-	                        <div class="form-group {{ $errors->has('amount') ? 'has-error' : '' }}">
+	                        <div class="form-group {{ $errors->has('amount_other') ? 'has-error' : '' }}">
 	                            <strong>Amount:</strong>
-	                            {!! Form::text('amount', null, array('id'=>'amount','class' => 'form-control')) !!}
-	                            @if ($errors->has('amount'))
+	                            {!! Form::text('amount_other', null, array('id'=>'amount_other','class' => 'form-control')) !!}
+	                            @if ($errors->has('amount_other'))
 	                                <span class="help-block">
-	                            <strong>{{ $errors->first('amount') }}</strong>
+	                            <strong>{{ $errors->first('amount_other') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -334,7 +334,9 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        $("#recepit_talent_create").validate({
+
+    $(document).ready(function(){
+       /* $("#recepit_talent_create").validate({
             rules: {
                 "bank_type": {
                     required: true
@@ -345,7 +347,12 @@
                     required: "Bank Type is required."
                 },
             }
-        });
+        });*/
+
+        $("#company_name_hdfc").select2();
+        $("#company_name_icici").select2();
+        $("#company_name_other").select2();
+    });
 
         function select_bank() {
         	

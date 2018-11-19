@@ -105,4 +105,20 @@ class VendorBasicInfo extends Model
     
         return $vendor_id;
      }
+
+    public static function getAllVendorsName(){
+
+        $vendor_query = VendorBasicInfo::query();
+        $vendor_query = $vendor_query->select('vendor_basicinfo.name','vendor_basicinfo.address');
+        $vendor_res = $vendor_query->get();
+
+        $vendor_name = array();
+        $i = 0;
+        foreach ($vendor_res as $key => $value) {
+            $vendor_name[$i] = $value->name . '-' . $value->address;
+            $i++;
+        }
+
+        return $vendor_name;
+    }
 }
