@@ -120,12 +120,14 @@
                         </tr>
                         @endif
 
+                        <tr>
+                            <th>Display Name</th>
+                            <td>{{ $client['display_name'] }}</td>
                         @if($isSuperAdmin || $isStrategy)
-                         <tr>
                             <th>Client Category</th>
                             <td>{{ $client['category'] }}</td>
-                        </tr>
                         @endif
+                        </tr>
                         
                     </table>
                 </div>

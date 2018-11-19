@@ -1167,4 +1167,27 @@ class JobOpen extends Model
         //print_r($jobs_list);exit;
         return $jobs_list;
     }
+
+    public static function getJobIdByClientId($client_id){
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $query = JobOpen::query();
+        $query = $query->select('job_openings.id');
+        $query = $query->where('job_openings.client_id','=',$client_id);
+        $query = $query->whereNotIn('priority',$job_status);
+        $res = $query->get();
+
+        $job_id = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $job_id[$i] = $value->id;
+            $i++;
+        }
+
+        return $job_id;
+    }
 }

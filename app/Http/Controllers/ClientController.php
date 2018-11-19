@@ -18,6 +18,7 @@ use Excel;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
 use App\EmailsNotifications;
+use App\JobVisibleUsers;
 
 class ClientController extends Controller
 {
@@ -1124,6 +1125,7 @@ class ClientController extends Controller
             $client['tan'] = $value->tan;
             $client['status']=$value->status;
             $client['category']=$value->category;
+            $client['display_name'] = $value->display_name;
 
             if(isset($client['status']))
             {
@@ -1549,21 +1551,35 @@ class ClientController extends Controller
     public function getAccountManager(Request $request)
     {
         $account_manager=$request->get('account_manager');
-
         $id = $request->get('id');
 
         $act_man=ClientBasicinfo::find($id);
 
         $a_m='';
 
-        if(isset($act_man))
-        {
+        if(isset($act_man)){
             $a_m=$account_manager;
         }
 
         $act_man->account_manager_id=$a_m;
-        
         $act_man->save();
+
+        if ($act_man) {
+            $job_ids = JobOpen::getJobIdByClientId($id);
+            foreach ($job_ids as $key => $value) {
+
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id=$value");
+
+                $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
+
+                if ($check_job_user_id == false) {
+                    $job_visible_users = new JobVisibleUsers();
+                    $job_visible_users->job_id = $value;
+                    $job_visible_users->user_id = $a_m;
+                    $job_visible_users->save();
+                }
+            }
+        }
 
        return redirect()->route('client.index')->with('success', 'Client Account Manager Updated successfully');
     }

@@ -136,6 +136,28 @@
                 "pageLength": 50,
                 stateSave : true,
             });
+
+            $('#allcb').change(function(){
+                if($(this).prop('checked')){
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', true);
+                    });
+                }else{
+                    $('tbody tr td input[type="checkbox"]').each(function(){
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+            $('.others_client').change(function() {
+                if ($(this).prop('checked')) {
+                    if ($('.others_client:checked').length == $('.others_client').length) {
+                        $("#allcb").prop('checked', true);
+                    }
+                }
+                else{
+                    $("#allcb").prop('checked', false);
+                }
+            });
         });
 
     </script>

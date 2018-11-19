@@ -24,4 +24,20 @@ class JobVisibleUsers extends Model
 
     	return $users_name;
     }
+
+    // Check job id and user id added to database or not
+    public static function getCheckJobUserIdAdded($job_id,$user_id){
+
+        $query = JobVisibleUsers::query();
+        $query = $query->where('job_visible_users.job_id','=',$job_id);
+        $query = $query->where('job_visible_users.user_id','=',$user_id);
+        $res = $query->first();
+
+        if (isset($res) && $res != '') {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
