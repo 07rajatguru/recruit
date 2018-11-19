@@ -104,6 +104,9 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receipttalentimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.talentimport')->with('error','Please Select Excel file.');
+	    	}
     	}
     	else if ($bank_type_data == 'icici') {
     		if ($request->hasFile('import_file')) {
@@ -170,6 +173,9 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receipttalentimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.talentimport')->with('error','Please Select Excel file.');
+	    	}
     	}
     	else if ($bank_type_data == 'other') {
     		if ($request->hasFile('import_file')) {
@@ -231,14 +237,22 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receipttalentimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.talentimport')->with('error','Please Select Excel file.');
+	    	}
+    	}
+    	else {
+
+    		return redirect()->route('receipt.talentimport')->with('error','Please Select Excel file.');
     	}
     }
 
     public function receiptTalentCreate(){
 
     	$bank_type = Receipt::getBankType();
+    	$vendors = VendorBasicInfo::getAllVendorsName();
     	
-    	return view('adminlte::receipt.receipttalentcreate',compact('bank_type'));
+    	return view('adminlte::receipt.receipttalentcreate',compact('bank_type','vendors'));
     }
 
     public function receiptTalentStore(){
@@ -339,6 +353,9 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receipttempimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.tempimport')->with('error','Please Select Excel file.');
+	    	}
     	}
     	else if ($bank_type_data == 'icici') {
     		if ($request->hasFile('import_file')) {
@@ -405,6 +422,9 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receipttempimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.tempimport')->with('error','Please Select Excel file.');
+	    	}
     	}
     	else if ($bank_type_data == 'other') {
     		if ($request->hasFile('import_file')) {
@@ -466,6 +486,12 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receipttempimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.tempimport')->with('error','Please Select Excel file.');
+	    	}
+    	}
+    	else {
+    		return redirect()->route('receipt.tempimport')->with('error','Please Select Excel file.');
     	}
     }
 
@@ -571,6 +597,9 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receiptotherimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.otherimport')->with('error','Please Select Excel file.');
+	    	}
     	}
     	else if ($bank_type_data == 'icici') {
     		if ($request->hasFile('import_file')) {
@@ -637,6 +666,9 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receiptotherimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.otherimport')->with('error','Please Select Excel file.');
+	    	}
     	}
     	else if ($bank_type_data == 'other') {
     		if ($request->hasFile('import_file')) {
@@ -698,6 +730,12 @@ class ReceiptController extends Controller
 	    		}
 	    		return view('adminlte::receipt.receiptotherimport',compact('messages','bank_type'));
 	    	}
+	    	else {
+	    		return redirect()->route('receipt.otherimport')->with('error','Please Select Excel file.');
+	    	}
+    	}
+    	else {
+    		return redirect()->route('receipt.otherimport')->with('error','Please Select Excel file.');
     	}
     }
 

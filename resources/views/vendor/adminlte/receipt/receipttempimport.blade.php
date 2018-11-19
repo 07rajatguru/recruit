@@ -24,6 +24,12 @@
     </div>
 @endif
 
+@if ($message = Session::get('error'))
+    <div class="alert alert-error">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -58,7 +64,7 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        $("#recepit_talent_import").validate({
+        $("#recepit_temp_import").validate({
             rules: {
                 "bank_type": {
                     required: true
