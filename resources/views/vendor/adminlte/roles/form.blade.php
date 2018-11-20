@@ -61,6 +61,7 @@
 
                     <div class="form-group {{ $errors->has('permission') ? 'has-error' : '' }}" >
                         <strong>Permission <span class = "required_fields">*</span></strong>
+                        <input type="checkbox" id="all_roles"/> <strong>Select All</strong>
                         <br/>
                         @foreach($permission as $value)
                             @if($action == 'add')
@@ -115,6 +116,14 @@
                         required: "Select Users is required field."
                     }
                 }
+            });
+
+            $("#all_roles").click(function () {
+                $('.name').prop('checked', this.checked);
+            });
+
+            $(".name").click(function () {
+                $("#all_roles").prop('checked', ($('.name:checked').length == $('.name').length) ? true : false);
             });
         });
     </script>

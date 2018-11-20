@@ -79,11 +79,13 @@
 
                     @permission(('role-delete'))
 
-                    {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
+                    @include('adminlte::partials.deleteModalUser', ['data' => $role, 'name' => 'roles','display_name'=>'Role'])
+
+                    {{--{!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
 
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
 
-                    {!! Form::close() !!}
+                    {!! Form::close() !!}--}}
 
                     @endpermission
 

@@ -20,5 +20,11 @@ class DatabaseSeeder extends Seeder
         $this->call(CandidateStatusTableSeeder::class);
         $this->call(IndustryTableSeeder::class);
         $this->call(BillsSeeder::class);
+        $this->call(StatusTableSeeder::class);
+        $this->call(CandidateStatusUpdateTableSeeder::class);
+        $this->call(BillReportSeeder::class);
+        $this->call(VendorAndExpenseSeeder::class);
+        $this->call(StateTableSeeder::class);
+        $this->call(HolidayPermissionSeeder::class);
     }
 }
