@@ -82,10 +82,10 @@
                 <th>No</th>
                 <th>Transaction ID</th>
                 <th>Value Date</th>
-                <th>Txn Posted Date</th>
+                <th>Txn Posted <br/>Date</th>
                 <th>Company Name</th>
                 <th>Amount</th>
-                <th>CR/DR</th>
+                <th>CR/<br/>DR</th>
                 <th>Description</th>
                 <th>Remarks</th>
             </tr>

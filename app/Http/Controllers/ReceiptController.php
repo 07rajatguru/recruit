@@ -263,26 +263,54 @@ class ReceiptController extends Controller
     {
     	$dateClass = new Date();
 
-    	/*$bank_type = $request->get('bank_type');
-    	echo $bank_type;
-    	exit;
-    	*/
-
+        $bank_type = $request->get('bank_type');
+        $type = 'talent';
     	$receipt = new Receipt();
-    	$receipt->ref_no = $request->get('ref_no');
-   		//$receipt->trans_id = $request->get('tran_id');
-   		//$receipt->voucher_no = $request->get('voucher_no');
-   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
-   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
-   		$receipt->description = $request->get('desc_hdfc');
-   		$receipt->name_of_company = $request->get('company_name_hdfc');
-   		$receipt->amount = $request->get('amount_hdfc');
-   		$receipt->remarks = $request->get('remarks_hdfc');
 
-   		$bank_type = 'hdfc';
-   		$receipt->bank_type = $bank_type;
-   		$type = 'talent';
-   		$receipt->type = $type;
+    	//For HDFC
+
+    	if($bank_type == 'hdfc')
+    	{
+	    	$receipt->ref_no = $request->get('ref_no');
+	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	   		$receipt->description = $request->get('desc_hdfc');
+	   		$receipt->name_of_company = $request->get('company_name_hdfc');
+	   		$receipt->amount = $request->get('amount_hdfc');
+	   		$receipt->remarks = $request->get('remarks_hdfc');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+   		}
+
+
+   		//For ICICI
+
+   		if($bank_type == 'icici')
+    	{
+	   		$receipt->trans_id = $request->get('tran_id');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYtoYMD($request->get('txn_posted_date'));
+	   		$receipt->description = $request->get('desc_icici');
+	   		$receipt->name_of_company = $request->get('company_name_icici');
+	   		$receipt->amount = $request->get('amount_icici');
+	   		$receipt->cr = $request->get('cr_dr');
+	   		$receipt->remarks = $request->get('remarks_icici');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+	   	}
+
+   		// For Other
+   		if($bank_type == 'other')
+    	{
+	   		$receipt->voucher_no = $request->get('voucher_no');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		$receipt->remarks = $request->get('remarks_other');
+	   		$receipt->name_of_company = $request->get('company_name_other');
+	   		$receipt->amount = $request->get('amount_other');
+	   		$receipt->mode_of_receipt = $request->get('mode_of_receipt');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+   		}
 
    		$receipt->save();
 
@@ -299,9 +327,12 @@ class ReceiptController extends Controller
     	else {
     		$bank = 'hdfc';
     	}
-    	$type = 'Tamp';
+    	$type = 'Temp';
 
     	$receipt_data = Receipt::getReceiptdata($bank,$type);
+
+    	// print_r($receipt_data);
+    	// exit;
 
     	return view('adminlte::receipt.receipttempindex',compact('bank_type','receipt_data','bank'));
     }
@@ -527,10 +558,68 @@ class ReceiptController extends Controller
 
     public function receiptTempCreate(){
 
+    	$bank_type = Receipt::getBankType();
+    	$vendors = VendorBasicInfo::getAllVendorsName();
+
+    	return view('adminlte::receipt.receipttempcreate',compact('bank_type','vendors'));
     }
 
-    public function receiptTempStore(){
+    public function receiptTempStore(Request $request){
     	
+    	$dateClass = new Date();
+
+        $bank_type = $request->get('bank_type');
+        $type = 'temp';
+    	$receipt = new Receipt();
+		
+		//For HDFC
+
+    	if($bank_type == 'hdfc')
+    	{
+	    	$receipt->ref_no = $request->get('ref_no');
+	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	   		$receipt->description = $request->get('desc_hdfc');
+	   		$receipt->name_of_company = $request->get('company_name_hdfc');
+	   		$receipt->amount = $request->get('amount_hdfc');
+	   		$receipt->remarks = $request->get('remarks_hdfc');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+   		}
+
+
+   		//For ICICI
+
+   		if($bank_type == 'icici')
+    	{
+	   		$receipt->trans_id = $request->get('tran_id');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYtoYMD($request->get('txn_posted_date'));
+	   		$receipt->description = $request->get('desc_icici');
+	   		$receipt->name_of_company = $request->get('company_name_icici');
+	   		$receipt->amount = $request->get('amount_icici');
+	   		$receipt->cr = $request->get('cr_dr');
+	   		$receipt->remarks = $request->get('remarks_icici');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+	   	}
+
+   		// For Other
+   		if($bank_type == 'other')
+    	{
+	   		$receipt->voucher_no = $request->get('voucher_no');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		$receipt->remarks = $request->get('remarks_other');
+	   		$receipt->name_of_company = $request->get('company_name_other');
+	   		$receipt->amount = $request->get('amount_other');
+	   		$receipt->mode_of_receipt = $request->get('mode_of_receipt');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+   		}
+
+   		$receipt->save();
+		
+		return redirect()->route('receipt.temp')->with('success', 'Receipt Generated Successfully');	
     }
 
     public function receiptOther(){
@@ -771,9 +860,67 @@ class ReceiptController extends Controller
 
     public function receiptOtherCreate(){
 
+    	$bank_type = Receipt::getBankType();
+    	$vendors = VendorBasicInfo::getAllVendorsName();
+
+    	return view('adminlte::receipt.receiptothercreate',compact('bank_type','vendors'));
     }
 
-    public function receiptOtherStore(){
+    public function receiptOtherStore(Request $request){
     	
+    	$dateClass = new Date();
+
+        $bank_type = $request->get('bank_type');
+        $type = "other";
+        $receipt = new Receipt();
+
+    	//For HDFC
+
+    	if($bank_type == 'hdfc')
+    	{
+	    	$receipt->ref_no = $request->get('ref_no');
+	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	   		$receipt->description = $request->get('desc_hdfc');
+	   		$receipt->name_of_company = $request->get('company_name_hdfc');
+	   		$receipt->amount = $request->get('amount_hdfc');
+	   		$receipt->remarks = $request->get('remarks_hdfc');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+   		}
+
+
+   		//For ICICI
+
+   		if($bank_type == 'icici')
+    	{
+	   		$receipt->trans_id = $request->get('tran_id');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYtoYMD($request->get('txn_posted_date'));
+	   		$receipt->description = $request->get('desc_icici');
+	   		$receipt->name_of_company = $request->get('company_name_icici');
+	   		$receipt->amount = $request->get('amount_icici');
+	   		$receipt->cr = $request->get('cr_dr');
+	   		$receipt->remarks = $request->get('remarks_icici');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+	   	}
+
+   		// For Other
+   		if($bank_type == 'other')
+    	{
+	   		$receipt->voucher_no = $request->get('voucher_no');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		$receipt->remarks = $request->get('remarks_other');
+	   		$receipt->name_of_company = $request->get('company_name_other');
+	   		$receipt->amount = $request->get('amount_other');
+	   		$receipt->mode_of_receipt = $request->get('mode_of_receipt');
+	   		$receipt->bank_type = $bank_type;
+	   		$receipt->type = $type;
+   		}
+
+   		$receipt->save();
+
+   		return redirect()->route('receipt.other')->with('success', 'Receipt Generated Successfully');
     }
 }
