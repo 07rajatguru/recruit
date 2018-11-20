@@ -1609,6 +1609,8 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Receipt module
+
+    //Talent
     Route::any('receipt/talent',[
         'as' => 'receipt.talent',
         'uses' => 'ReceiptController@receiptTalent'
@@ -1634,6 +1636,8 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReceiptController@receiptTalentStore'
     ]);
 
+    //Temp
+
     Route::any('receipt/temp',[
         'as' => 'receipt.temp',
         'uses' => 'ReceiptController@receiptTemp'
@@ -1649,6 +1653,18 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReceiptController@receiptTempImportStore'
     ]);
 
+    Route::get('receipt/temp/create',[
+        'as' => 'receipt.tempcreate',
+        'uses' => 'ReceiptController@receiptTempCreate'
+    ]);
+
+    Route::post('receipt/temp/store',[
+        'as' => 'receipt.tempstore',
+        'uses' => 'ReceiptController@receiptTempStore'
+    ]);
+
+    //Other
+
     Route::any('receipt/other',[
         'as' => 'receipt.other',
         'uses' => 'ReceiptController@receiptOther'
@@ -1662,6 +1678,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('receipt/other/import',[
         'as' => 'receipt.otherimportstore',
         'uses' => 'ReceiptController@receiptOtherImportStore'
+    ]);
+
+    Route::get('receipt/other/create',[
+        'as' => 'receipt.othercreate',
+        'uses' => 'ReceiptController@receiptOtherCreate'
+    ]);
+
+    Route::post('receipt/other/store',[
+        'as' => 'receipt.otherstore',
+        'uses' => 'ReceiptController@receiptOtherStore'
     ]);
     
 });

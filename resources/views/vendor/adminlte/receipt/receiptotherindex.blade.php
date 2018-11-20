@@ -16,7 +16,7 @@
 
         <div class="pull-right">
         	<a class="btn btn-primary" href="{{ route('receipt.otherimport') }}"> Import Recepit Other</a>
-            <a class="btn btn-success" href=""> Create New Recepit Other</a>
+            <a class="btn btn-success" href="{{ route('receipt.othercreate') }}"> Create New Recepit Other</a>
         </div>
     </div>
 
@@ -70,10 +70,10 @@
                 <th>No</th>
                 <th>Transaction ID</th>
                 <th>Value Date</th>
-                <th>Txn Posted Date</th>
+                <th>Txn Posted <br/>Date</th>
                 <th>Company Name</th>
                 <th>Amount</th>
-                <th>CR/DR</th>
+                <th>CR/<br/>DR</th>
                 <th>Description</th>
                 <th>Remarks</th>
             </tr>

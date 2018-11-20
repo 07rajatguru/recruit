@@ -455,7 +455,7 @@ class VendorController extends Controller
 
             $vendor_bank=VendorBankDetails::where('vendor_id','=',$vendor_id)->first();
 
-            if(!isset($vendor_bank) && sizeof($vendor_bank) == 0){
+            if(!isset($vendor_bank)){
                     $vendor_bank = new VendorBankDetails();
                 }
                 $vendor_bank->vendor_id=$vendor_id;
