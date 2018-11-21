@@ -478,8 +478,13 @@ class ToDosController extends Controller
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
         $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user->id);
 
-        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $assigned_todo_ids = array(1,2);
+        $owner_todo_ids = array(2,3);
+        $cc_todo_ids = array(3,4);
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
 
         $todos = array();
         if(isset($todo_ids) && sizeof($todo_ids)>0){

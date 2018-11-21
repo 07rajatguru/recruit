@@ -295,6 +295,22 @@ class ToDos extends Model
 
     }
 
+    public static function getAllCCtodoIds($user_id){
+        $query = ToDos::query();
+        $query = $query->where('cc_user',$user_id);
+        $response = $query->get();
+
+        $todo_ids = array();
+        $i = 0;
+        foreach ($response as $k=>$v){
+            $todo_ids[$i] = $v->id;
+            $i++;
+        }
+
+        return $todo_ids;
+
+    }
+
     public static function getTodoFrequencyCheck(){
 
         $in_progress = env('INPROGRESS');
