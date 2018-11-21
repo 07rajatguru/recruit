@@ -1689,5 +1689,20 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'receipt.otherstore',
         'uses' => 'ReceiptController@receiptOtherStore'
     ]);
+
+    Route::get('receipt/edit/{id}',[
+        'as' => 'receipt.edit',
+        'uses' => 'ReceiptController@edit'
+    ]);
+
+    Route::patch('receipt/{id}',[
+        'as' => 'receipt.update',
+        'uses' => 'ReceiptController@update'
+    ]);
+
+    Route::delete('receipt/{id}',[
+        'as' => 'receipt.destroy',
+        'uses' => 'ReceiptController@ReceiptDestroy'
+    ]);
     
 });

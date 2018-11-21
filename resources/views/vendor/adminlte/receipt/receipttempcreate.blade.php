@@ -14,6 +14,9 @@
         .error{
             color:#f56954 !important;
         }
+        .select2 {
+			width:100%!important;
+		}
     </style>
 @endsection
 
@@ -110,7 +113,7 @@
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('desc_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Description:</strong>
-	                            {!! Form::textarea('desc_hdfc', null, array('id'=>'desc_hdfc','class' => 'form-control','rows' => '5','tabindex' => '4','placeholder' => 'Description')) !!}
+	                            {!! Form::textarea('desc_hdfc', null, array('id'=>'desc_hdfc','class' => 'form-control','rows' => '7','tabindex' => '4','placeholder' => 'Description')) !!}
 	                            @if ($errors->has('desc_hdfc'))
 	                                <span class="help-block">
 	                            <strong>{{ $errors->first('desc_hdfc') }}</strong>
@@ -224,6 +227,18 @@
 	                    </div>
 
 	                    <div class="">
+	                        <div class="form-group {{ $errors->has('cr_dr') ? 'has-error' : '' }}">
+	                            <strong>CR/DR:</strong>
+	                            {!! Form::text('cr_dr', null, array('id'=>'cr_dr','class' => 'form-control','tabindex' => '7','placeholder' => 'CR/DR')) !!}
+	                            @if ($errors->has('cr_dr'))
+	                                <span class="help-block">
+	                            <strong>{{ $errors->first('cr_dr') }}</strong>
+	                            </span>
+	                            @endif
+	                        </div>
+	                    </div>
+
+	                    <div class="">
 	                        <div class="form-group {{ $errors->has('desc_icici') ? 'has-error' : '' }}">
 	                            <strong>Description:</strong>
 	                            {!! Form::textarea('desc_icici', null, array('id'=>'desc_icici','class' => 'form-control','rows' => '5','tabindex' => '4','placeholder' => 'Description')) !!}
@@ -256,18 +271,6 @@
 	                            @if ($errors->has('amount_icici'))
 	                                <span class="help-block">
 	                            <strong>{{ $errors->first('amount_icici') }}</strong>
-	                            </span>
-	                            @endif
-	                        </div>
-	                    </div>
-
-	                    <div class="">
-	                        <div class="form-group {{ $errors->has('cr_dr') ? 'has-error' : '' }}">
-	                            <strong>CR/DR:</strong>
-	                            {!! Form::text('cr_dr', null, array('id'=>'cr_dr','class' => 'form-control','tabindex' => '7','placeholder' => 'CR/DR')) !!}
-	                            @if ($errors->has('cr_dr'))
-	                                <span class="help-block">
-	                            <strong>{{ $errors->first('cr_dr') }}</strong>
 	                            </span>
 	                            @endif
 	                        </div>
@@ -398,20 +401,6 @@
     <script type="text/javascript">
 
     $(document).ready(function(){
-       /* $("#recepit_talent_create").validate({
-            rules: {
-                "bank_type": {
-                    required: true
-                },
-            },
-            messages: {
-                "bank_type": {
-                    required: "Bank Type is required."
-                },
-            }
-        });*/
-
-
         $("#receipt_form").validate({
             rules: {
                 "ref_no": {
@@ -441,35 +430,40 @@
         $("#company_name_icici").select2();
         $("#company_name_other").select2();
 
+        $("#remarks_hdfc").wysihtml5();
+        $("#remarks_icici").wysihtml5();
+        $("#remarks_other").wysihtml5();
+
         // hdfc
         $("#date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
         });
+        $('#date').datepicker().datepicker('setDate', 'today');
 
         $("#value_date_hdfc").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
         });
+        $('#value_date_hdfc').datepicker().datepicker('setDate', 'today');
 
         // icici
-
-        $("#txn_posted_date").datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
+        $("#txn_posted_date").datetimepicker({
+                format:'DD-MM-YYYY h:mm A'
         });
 
         $("#value_date_icici").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
         });
-
+        $('#value_date_icici').datepicker().datepicker('setDate', 'today');
 
         // other
         $("#value_date_other").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
         });
+        $('#value_date_other').datepicker().datepicker('setDate', 'today');
     });
 
         function select_bank() {

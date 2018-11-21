@@ -35,11 +35,24 @@
 	</div>
 </div>
 
+@if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
+@if ($message = Session::get('error'))
+    <div class="alert alert-error">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="receipt_other">
     @if($bank == 'hdfc')
         <thead>
             <tr>
                 <th>No</th>
+                <th>Action</th>
                 <th>Date</th>
                 <th>Reference No</th>
                 <th>Value Date</th>
@@ -54,13 +67,17 @@
             @foreach($receipt_data as $key => $value)
             <tr>
                 <td>{{++$i}}</td>
+                <td>
+                    <a class="fa fa-edit" title="Edit" href="{{ route('receipt.edit',$value['id']) }}"></a>
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Other'])
+                </td>
                 <td>{{ $value['date'] }}</td>
                 <td>{{ $value['ref_no'] }}</td>
                 <td>{{ $value['value_date'] }}</td>
-                <td>{{ $value['company_name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['company_name'] }}</td>
                 <td>{{ $value['amount'] }}</td>
                 <td>{{ $value['description'] }}</td>
-                <td>{{ $value['remarks'] }}</td>            
+                <td>{!! $value['remarks'] !!}</td>            
             </tr>
             @endforeach
         </tbody>
@@ -68,6 +85,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Action</th>
                 <th>Transaction ID</th>
                 <th>Value Date</th>
                 <th>Txn Posted <br/>Date</th>
@@ -83,14 +101,18 @@
             @foreach($receipt_data as $key => $value)
             <tr>
                 <td>{{++$i}}</td>
+                <td>
+                    <a class="fa fa-edit" title="Edit" href="{{ route('receipt.edit',$value['id']) }}"></a>
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Other'])
+                </td>
                 <td>{{ $value['trans_id'] }}</td>
                 <td>{{ $value['value_date'] }}</td>
                 <td>{{ $value['txn_posted_date'] }}</td>
-                <td>{{ $value['company_name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['company_name'] }}</td>
                 <td>{{ $value['amount'] }}</td>
                 <td>{{ $value['cr'] }}</td>
                 <td>{{ $value['description'] }}</td>
-                <td>{{ $value['remarks'] }}</td>            
+                <td>{!! $value['remarks'] !!}</td>            
             </tr>
             @endforeach
         </tbody>
@@ -98,6 +120,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Action</th>
                 <th>Voucher No</th>
                 <th>Value Date</th>
                 <th>Company Name</th>
@@ -111,12 +134,16 @@
             @foreach($receipt_data as $key => $value)
             <tr>
                 <td>{{++$i}}</td>
+                <td>
+                    <a class="fa fa-edit" title="Edit" href="{{ route('receipt.edit',$value['id']) }}"></a>
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Other'])
+                </td>
                 <td>{{ $value['voucher_no'] }}</td>
                 <td>{{ $value['value_date'] }}</td>
-                <td>{{ $value['company_name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['company_name'] }}</td>
                 <td>{{ $value['amount'] }}</td>
                 <td>{{ $value['mode_of_receipt'] }}</td>
-                <td>{{ $value['remarks'] }}</td>            
+                <td>{!! $value['remarks'] !!}</td>            
             </tr>
             @endforeach
         </tbody>

@@ -133,7 +133,7 @@ class ReceiptController extends Controller
 		    					$remarks = $v['remarks_if_any'];
 
 		    					$value_date_form = $dateClass->changeDMYtoYMD($value_date);
-		    					$txn_posted_date_form = $dateClass->changeDMYtoYMD($txn_posted_date);
+		    					$txn_posted_date_form = $dateClass->changeDMYHMStoYMDHMS($txn_posted_date);
 
 		    					// Check transaction Id already exist or not, if exist then not added
 		    					$check_trans_no = Receipt::getCheckDuplicateEntry(NULL,$transaction_id,NULL);
@@ -268,9 +268,7 @@ class ReceiptController extends Controller
     	$receipt = new Receipt();
 
     	//For HDFC
-
-    	if($bank_type == 'hdfc')
-    	{
+    	if($bank_type == 'hdfc'){
 	    	$receipt->ref_no = $request->get('ref_no');
 	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
 	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
@@ -282,14 +280,11 @@ class ReceiptController extends Controller
 	   		$receipt->type = $type;
    		}
 
-
    		//For ICICI
-
-   		if($bank_type == 'icici')
-    	{
+   		if($bank_type == 'icici'){
 	   		$receipt->trans_id = $request->get('tran_id');
 	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYtoYMD($request->get('txn_posted_date'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
 	   		$receipt->description = $request->get('desc_icici');
 	   		$receipt->name_of_company = $request->get('company_name_icici');
 	   		$receipt->amount = $request->get('amount_icici');
@@ -300,8 +295,7 @@ class ReceiptController extends Controller
 	   	}
 
    		// For Other
-   		if($bank_type == 'other')
-    	{
+   		if($bank_type == 'other'){
 	   		$receipt->voucher_no = $request->get('voucher_no');
 	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
 	   		$receipt->remarks = $request->get('remarks_other');
@@ -330,9 +324,6 @@ class ReceiptController extends Controller
     	$type = 'Temp';
 
     	$receipt_data = Receipt::getReceiptdata($bank,$type);
-
-    	// print_r($receipt_data);
-    	// exit;
 
     	return view('adminlte::receipt.receipttempindex',compact('bank_type','receipt_data','bank'));
     }
@@ -439,7 +430,7 @@ class ReceiptController extends Controller
 		    					$remarks = $v['remarks_if_any'];
 
 		    					$value_date_form = $dateClass->changeDMYtoYMD($value_date);
-		    					$txn_posted_date_form = $dateClass->changeDMYtoYMD($txn_posted_date);
+		    					$txn_posted_date_form = $dateClass->changeDMYHMStoYMDHMS($txn_posted_date);
 
 		    					// Check transaction Id already exist or not, if exist then not added
 		    					$check_trans_no = Receipt::getCheckDuplicateEntry(NULL,$transaction_id,NULL);
@@ -573,9 +564,7 @@ class ReceiptController extends Controller
     	$receipt = new Receipt();
 		
 		//For HDFC
-
-    	if($bank_type == 'hdfc')
-    	{
+    	if($bank_type == 'hdfc'){
 	    	$receipt->ref_no = $request->get('ref_no');
 	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
 	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
@@ -587,14 +576,11 @@ class ReceiptController extends Controller
 	   		$receipt->type = $type;
    		}
 
-
    		//For ICICI
-
-   		if($bank_type == 'icici')
-    	{
+   		if($bank_type == 'icici'){
 	   		$receipt->trans_id = $request->get('tran_id');
 	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYtoYMD($request->get('txn_posted_date'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
 	   		$receipt->description = $request->get('desc_icici');
 	   		$receipt->name_of_company = $request->get('company_name_icici');
 	   		$receipt->amount = $request->get('amount_icici');
@@ -605,8 +591,7 @@ class ReceiptController extends Controller
 	   	}
 
    		// For Other
-   		if($bank_type == 'other')
-    	{
+   		if($bank_type == 'other'){
 	   		$receipt->voucher_no = $request->get('voucher_no');
 	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
 	   		$receipt->remarks = $request->get('remarks_other');
@@ -741,7 +726,7 @@ class ReceiptController extends Controller
 		    					$remarks = $v['remarks_if_any'];
 
 		    					$value_date_form = $dateClass->changeDMYtoYMD($value_date);
-		    					$txn_posted_date_form = $dateClass->changeDMYtoYMD($txn_posted_date);
+		    					$txn_posted_date_form = $dateClass->changeDMYHMStoYMDHMS($txn_posted_date);
 
 		    					// Check transaction Id already exist or not, if exist then not added
 		    					$check_trans_no = Receipt::getCheckDuplicateEntry(NULL,$transaction_id,NULL);
@@ -875,9 +860,7 @@ class ReceiptController extends Controller
         $receipt = new Receipt();
 
     	//For HDFC
-
-    	if($bank_type == 'hdfc')
-    	{
+    	if($bank_type == 'hdfc'){
 	    	$receipt->ref_no = $request->get('ref_no');
 	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
 	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
@@ -889,14 +872,11 @@ class ReceiptController extends Controller
 	   		$receipt->type = $type;
    		}
 
-
    		//For ICICI
-
-   		if($bank_type == 'icici')
-    	{
+   		if($bank_type == 'icici'){
 	   		$receipt->trans_id = $request->get('tran_id');
 	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYtoYMD($request->get('txn_posted_date'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
 	   		$receipt->description = $request->get('desc_icici');
 	   		$receipt->name_of_company = $request->get('company_name_icici');
 	   		$receipt->amount = $request->get('amount_icici');
@@ -907,8 +887,7 @@ class ReceiptController extends Controller
 	   	}
 
    		// For Other
-   		if($bank_type == 'other')
-    	{
+   		if($bank_type == 'other'){
 	   		$receipt->voucher_no = $request->get('voucher_no');
 	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
 	   		$receipt->remarks = $request->get('remarks_other');
@@ -922,5 +901,85 @@ class ReceiptController extends Controller
    		$receipt->save();
 
    		return redirect()->route('receipt.other')->with('success', 'Receipt Generated Successfully');
+    }
+
+    public function edit($id){
+
+    	$dateClass = new Date();
+    	$vendors = VendorBasicInfo::getAllVendorsName();
+
+    	$receipt = Receipt::find($id);
+    	$type = $receipt->type;
+    	$bank_type = $receipt->bank_type;
+    	$vendor_id = $receipt->name_of_company;
+    	$value_date = $dateClass->changeYMDtoDMY($receipt->value_date);
+    	$date = $dateClass->changeYMDtoDMY($receipt->date);
+    	$txn_posted_date = $dateClass->changeYMDtoDMY($receipt->txn_posted_date);
+
+    	return view('adminlte::receipt.edit',compact('vendors','type','bank_type','receipt','vendor_id','value_date','date','txn_posted_date'));
+    }
+
+    public function update(Request $request,$id){
+
+    	$dateClass = new Date();
+    	$bank_type = $request->bank_type;
+    	$type = $request->type;
+
+    	$receipt = Receipt::find($id);
+    	if ($bank_type == 'hdfc') {
+    		$receipt->ref_no = $request->get('ref_no');
+	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	   		$receipt->description = $request->get('description');
+	   		$receipt->name_of_company = $request->get('company_name');
+	   		$receipt->amount = $request->get('amount');
+	   		$receipt->remarks = $request->get('remarks');
+    	}
+    	else if ($bank_type == 'icici') {
+    		$receipt->trans_id = $request->get('trans_id');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		$receipt->description = $request->get('description');
+	   		$receipt->name_of_company = $request->get('company_name');
+	   		$receipt->amount = $request->get('amount');
+	   		$receipt->cr = $request->get('cr');
+	   		$receipt->remarks = $request->get('remarks');
+    	}
+    	else if ($bank_type == 'other') {
+    		$receipt->voucher_no = $request->get('voucher_no');
+	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+	   		$receipt->name_of_company = $request->get('company_name');
+	   		$receipt->amount = $request->get('amount');
+	   		$receipt->mode_of_receipt = $request->get('mode_of_receipt');
+	   		$receipt->remarks = $request->get('remarks');
+    	}
+    	$receipt->save();
+
+    	if ($type == 'Talent' || $type == 'talent') {
+    		return redirect()->route('receipt.talent')->with('success', 'Receipt Talent Updated Successfully');
+    	}
+    	else if ($type == 'Temp' || $type == 'temp') {
+    		return redirect()->route('receipt.temp')->with('success', 'Receipt Temp Updated Successfully');
+    	}
+    	else if ($type == 'Other' || $type == 'other') {
+    		return redirect()->route('receipt.other')->with('success', 'Receipt Other Updated Successfully');
+    	}
+    }
+
+    public function ReceiptDestroy($id){
+
+    	$type = Receipt::getTypeById($id);
+
+    	$receipt_delete = Receipt::where('id',$id)->delete();
+
+    	if ($type == 'Talent' || $type == 'talent') {
+    		return redirect()->route('receipt.talent')->with('success', 'Receipt Talent Deleted Successfully');
+    	}
+    	else if ($type == 'Temp' || $type == 'temp') {
+    		return redirect()->route('receipt.temp')->with('success', 'Receipt Temp Deleted Successfully');
+    	}
+    	else if ($type == 'Other' || $type == 'other') {
+    		return redirect()->route('receipt.other')->with('success', 'Receipt Other Deleted Successfully');
+    	}
     }
 }
