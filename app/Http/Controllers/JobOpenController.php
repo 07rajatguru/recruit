@@ -25,6 +25,7 @@ use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Events\NotificationMail;
+use App\Holidays;
 
 class JobOpenController extends Controller
 {
@@ -859,7 +860,18 @@ class JobOpenController extends Controller
         else{
             $open_to_all = date('Y-m-d H:i:s',strtotime("$date +2 days"));
         }
+        $change_date = date('Y-m-d',strtotime("$open_to_all"));
+        $fixed_date = Holidays::getFixedLeaveDate();
+        if (in_array($change_date, $fixed_date)) {
+            $open_to_all_day = date('l',strtotime("$open_to_all"));
+            if ($open_to_all_day == 'Saturday') {
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$open_to_all +2 days"));
+            }
+            else{
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$open_to_all +1 days"));   
+            }
         //print_r($open_to_all);exit;
+        }
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
