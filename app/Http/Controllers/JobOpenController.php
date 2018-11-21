@@ -1127,7 +1127,7 @@ class JobOpenController extends Controller
             }
             else if(in_array($user_id,$users_array))
             {
-                $job_open['access'] = '1';
+                $job_open['access'] = '0';
             }
             else
             {
@@ -1251,7 +1251,7 @@ class JobOpenController extends Controller
         $job_status = JobOpen::getJobStatus();
 
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
-                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status));   
+                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id));   
     }
 
     public function edit($id)

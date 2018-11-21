@@ -30,12 +30,16 @@
 
             <div class="pull-right">
                 <a class="btn bg-maroon" id="associated_candidates" href="{{ route('jobopen.associated_candidates_get',$jobopen['id']) }}">Associated Candidates (...)</a>
-                <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
+                @if($strategy_role_id == $user_role_id)
+                    <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+                @else
+                    <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
 
-                @if(isset($jobopen['access']) && $jobopen['access']=='1')
-                    <a class="btn btn-primary" href="{{ route('jobopen.edit',$jobopen['id']) }}">Edit</a>
+                    @if(isset($jobopen['access']) && $jobopen['access']=='1')
+                        <a class="btn btn-primary" href="{{ route('jobopen.edit',$jobopen['id']) }}">Edit</a>
+                    @endif
+                    @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
                 @endif
-                @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
             </div>
         </div>
 
