@@ -121,7 +121,11 @@ class LeadController extends Controller
 
             if ($value['convert_client'] == 0){
                 if($value['access']){
-                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'"></a>';
+                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
+
+                    $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                    $cancel = $cancel_view->render();
+                    $action .= $cancel;
                 }
             }
 
