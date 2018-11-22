@@ -802,6 +802,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@close',
         // 'middleware' => ['permission:industry-create']
     ]);
+
+    Route::get('job/allclose', [
+        'as' => 'jobopen.allclose',
+        'uses' => 'JobOpenController@getAllCloseJobDetails',
+    ]);
+
     Route::get('job/associatedcandidate', [
         'as' => 'jobopen.associatedcandidate',
         'uses' => 'JobOpenController@getAssociatedcandidates',

@@ -435,6 +435,9 @@ class JobOpenController extends Controller
             if ($order == 0) {
                 $order_column_name = "job_openings.updated_at";
             }
+            if ($order == 2) {
+                $order_column_name = "job_openings.priority";
+            }
             else if ($order == 3) {
                 $order_column_name = "users.name";
             }
@@ -2443,6 +2446,86 @@ class JobOpenController extends Controller
 
 
         return view('adminlte::jobopen.close',$viewVariable);   
+    }
+
+    public function getAllCloseJobDetails(){
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getJobOrderColumnName($order);
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+
+        $admin_role_id = getenv('ADMIN');
+        $director_role_id = getenv('DIRECTOR');
+        $manager_role_id = getenv('MANAGER');
+        $superadmin_role_id = getenv('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search);
+        }
+        else{
+            $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search);
+        }
+        $job_priority = JobOpen::getJobPriorities();
+        $jobs = array();
+        $i = 0;$j = 0;
+        foreach ($job_response as $key => $value) {
+            $action = '';
+            $checkbox = '';
+
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            if(isset($value['access']) && $value['access']==1){
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+        
+                /*$status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'More Information', 'job_priority' => $job_priority]);
+                $status = $status_view->render();
+                $action .= $status;*/
+            }
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+            if(isset($value['access']) && $value['access']==1){
+                $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
+                /*$checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';*/
+            }
+
+            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
+            $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $jobs[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $jobs
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function importExport(){
