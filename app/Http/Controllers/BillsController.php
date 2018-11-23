@@ -15,6 +15,7 @@ use App\User;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Utils;
+use App\Events\NotificationMail;
 
 class BillsController extends Controller
 {
@@ -366,6 +367,26 @@ class BillsController extends Controller
         $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
         $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
+
+        $user_email = \Auth::user()->email;
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+        $superadminemail = User::getUserEmailById($superadminuserid);
+        $accountantemail = User::getUserEmailById($accountantuserid);
+
+        $cc_users_array = array($superadminemail,$accountantemail);
+
+        $module = "Forecasting";
+        $sender_name = $user_id;
+        $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        
+        $subject = "Forecasting - ";
+        $message = "Forecasting - ";
+        $module_id = $bill_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         return redirect()->route('forecasting.index')->with('success', 'Bills Created Successfully');
     }
