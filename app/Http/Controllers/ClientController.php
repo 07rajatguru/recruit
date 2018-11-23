@@ -218,21 +218,24 @@ class ClientController extends Controller
         if($admin){
             if (isset($order) && $order >= 0) {
                 if ($order == 1) {
-                    $order_column_name = "users.name";
+                    $order_column_name = "client_basicinfo.id";
                 }
                 else if ($order == 2) {
-                    $order_column_name = "client_basicinfo.name";
+                    $order_column_name = "users.name";
                 }
                 else if ($order == 3) {
-                    $order_column_name = "client_basicinfo.coordinator_prefix";
+                    $order_column_name = "client_basicinfo.name";
                 }
                 else if ($order == 4) {
-                    $order_column_name = "client_basicinfo.category";
+                    $order_column_name = "client_basicinfo.coordinator_prefix";
                 }
                 else if ($order == 5) {
-                    $order_column_name = "client_basicinfo.status";
+                    $order_column_name = "client_basicinfo.category";
                 }
                 else if ($order == 6) {
+                    $order_column_name = "client_basicinfo.status";
+                }
+                else if ($order == 7) {
                     $order_column_name = "client_address.billing_street2";
                 }
             }
@@ -240,18 +243,21 @@ class ClientController extends Controller
         else{
             if (isset($order) && $order >= 0) {
                 if ($order == 1) {
-                    $order_column_name = "users.name";
+                    $order_column_name = "client_basicinfo.id";
                 }
                 else if ($order == 2) {
-                    $order_column_name = "client_basicinfo.name";
+                    $order_column_name = "users.name";
                 }
                 else if ($order == 3) {
-                    $order_column_name = "client_basicinfo.coordinator_prefix";
+                    $order_column_name = "client_basicinfo.name";
                 }
                 else if ($order == 4) {
-                    $order_column_name = "client_basicinfo.status";
+                    $order_column_name = "client_basicinfo.coordinator_prefix";
                 }
                 else if ($order == 5) {
+                    $order_column_name = "client_basicinfo.status";
+                }
+                else if ($order == 6) {
                     $order_column_name = "client_address.billing_street2";
                 }
             }

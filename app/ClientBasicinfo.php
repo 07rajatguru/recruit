@@ -195,17 +195,21 @@ class ClientBasicinfo extends Ardent
             $query = $query->where('account_manager_id',$user_id);
         }
         if (isset($search) && $search != '') {
-            $query = $query->where('users.name','like',"%$search%");
-            $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
-            $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
-            if ($search == 'Active' || $search == 'active') {
-                $search = 1;
-                $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-            }
-            if ($search == 'Inactive' || $search == 'inactive') {
-                $search = 0;
-                $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-            }
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('users.name','like',"%$search%");
+                $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
+                $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                if ($search == 'Active' || $search == 'active') {
+                    $search = 1;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                if ($search == 'Passive' || $search == 'passive') {
+                    $search = 0;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
+                $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+            });
         }
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');

@@ -195,6 +195,7 @@
         $("#client_table").dataTable({
             'bProcessing' : true,
             'serverSide' : true,
+            "order" : [1,'desc'],
             "columnDefs": [ {orderable: false, targets: [0]},
                         ],
             "ajax" : {
