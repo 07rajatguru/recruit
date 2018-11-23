@@ -72,6 +72,10 @@
                                 <td>{{ isset($skype_id)? $skype_id : null }}</td>
                             @endif
                         </tr>
+                        <tr>
+                            <th scope="row">Candidate Location:</th>
+                            <td>{{ isset($candidate_location)? $candidate_location : null }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

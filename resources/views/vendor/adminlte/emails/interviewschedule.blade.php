@@ -57,7 +57,7 @@
                                 <td align="center">{{$cname}}</td>
                                 <td align="center">{{date('d/m/Y',strtotime($interview_date)) }}</td>
                                 <td align="center">{{date('h:i A',strtotime($interview_time))  }}</td>
-                                <td align="center">{{$ccity}}</td>
+                                <td align="center">{{$candidate_location}}</td>
                                 <td align="center">{{$interview_type}}</td>
                                 <td align="center">{{$skype_id}}</td>
                                 <td align="center">{{$cmobile}}</td>

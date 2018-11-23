@@ -275,6 +275,7 @@ class InterviewController extends Controller
         $data['interview_owner_id'] = $user_id;
         $data['skype_id'] = $request->get('skype_id');
         $data['round'] = $request->get('round');
+        $data['candidate_location'] = $request->get('candidate_location');
 
         $interview = Interview::createInterview($data);
 
@@ -399,6 +400,7 @@ class InterviewController extends Controller
         $interview_owner_id = $user_id;
         $skype_id = $request->get('skype_id');
         $round = $request->get('round');
+        $candidate_location = $request->get('candidate_location');
 
         $source = $request->get('source');
 
@@ -429,6 +431,9 @@ class InterviewController extends Controller
         }
         if (isset($round) && $round != '') {
             $interview->select_round = $round;
+        }
+        if (isset($candidate_location) && $candidate_location != '') {
+            $interview->candidate_location = $candidate_location;
         }
 
         $validator = \Validator::make(Input::all(),$interview::$rules);
@@ -606,6 +611,7 @@ class InterviewController extends Controller
             $interview_round = '';
         }
         $interview['interview_round'] = $interview_round;
+        $interview['candidate_location'] = $interviewDetails->candidate_location;
         
         return view('adminlte::interview.show', $interview);
     }

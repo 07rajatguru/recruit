@@ -58,7 +58,7 @@
                                     <td align="center">{{$value['cname']}}</td>
                                     <td align="center">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
                                     <td align="center">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
-                                    <td align="center">{{$value['ccity']}}</td>
+                                    <td align="center">{{$value['candidate_location']}}</td>
                                     <td align="center">{{$value['interview_type']}}</td>
                                     <td align="center">{{$value['skype_id']}}</td>
                                     <td align="center">{{$value['cmobile']}}</td>

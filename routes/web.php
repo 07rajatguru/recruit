@@ -112,7 +112,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'home.export',
         'uses'=>'HomeController@export']);
 
-    
+    // test mail route
+    Route::get('/testmail',[
+        'as' => 'home.testmail',
+        'uses' => 'HomeController@testMail'
+    ]);
 
 
      //lead management route

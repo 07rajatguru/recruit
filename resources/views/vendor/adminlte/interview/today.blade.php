@@ -16,7 +16,7 @@
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
                 
-                <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('interview.index') }}"> Back</a>
             </div>
 
         </div>

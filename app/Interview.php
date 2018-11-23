@@ -46,6 +46,7 @@ class Interview extends Model
             $interview->skype_id = $data['skype_id'];
         }
         $interview->select_round = $data['round'];
+        $interview->candidate_location = $data['candidate_location'];
 
         return $interview;
     }
@@ -619,6 +620,7 @@ class Interview extends Model
         $input['interview_type'] =$job_details['interview_type'];
         $input['skype_id'] = $job_details['skype_id'];
         $input['file'] = $file_path;
+        $input['candidate_location'] = $job_details['candidate_location'];
         
         //return view('adminlte::emails.interviewschedule',compact('app_url','input'));
 
@@ -678,6 +680,7 @@ class Interview extends Model
         //$interview_details['candidate_owner_email'] = $candidate_owner_email;
         $interview_details['client_owner_email'] = $client_owner_email;
         $interview_details['skype_id'] = $job_details['skype_id'];
+        $interview_details['candidate_location'] = $job_details['candidate_location'];
 
         return $interview_details;
 
