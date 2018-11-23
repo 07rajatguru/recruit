@@ -39,6 +39,7 @@
                                 <td align="center"><b>Candidate Owner</b></td>
                                 <td align="center"><b>Candidate Email</b></td>
                                 <td align="center"><b>Candidate Status</b></td>
+                                <td align="center"><b>Candidate Mobile No.</b></td>
                                 <td align="center"><b>Round</b></td>
                             </tr>
                             <?php $i=0; ?>
@@ -49,6 +50,7 @@
                                     <td align="center">{{$value['owner']}}</td>
                                     <td align="center">{{$value['email']}}</td>
                                     <td align="center">{{$value['status']}}</td>
+                                    <td align="center">{{$value['mobile']}}</td>
                                     <td align="center">{{$value['shortlisted']}}</td>
                                 </tr>
                             @endforeach
