@@ -11,6 +11,7 @@ use App\ClientAddress;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use App\Events\NotificationEvent;
+use App\Events\NotificationMail;
 
 class LeadController extends Controller
 {
@@ -251,7 +252,31 @@ class LeadController extends Controller
         if($validator->fails()){
             return redirect('lead/create')->withInput(Input::all())->withErrors($validator->errors());
         }
-         return redirect()->route('lead.index')->with('success','Leads created successfully');
+
+        // For Lead Emails [data entry in email_notification table]
+        $lead_id = $lead->id;
+        $user_id = $user->id;
+        $user_email = $user->email;
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $strategyuserid = getenv('STRATEGYUSERID');
+
+        $superadminemail = User::getUserEmailById($superadminuserid);
+        $strategyemail = User::getUserEmailById($strategyuserid);
+
+        $cc_users_array = array($superadminemail,$strategyemail);
+
+        $module = "Lead";
+        $sender_name = $user_id;
+        $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        
+        $subject = "Lead - ". $company_name . "-" . $city;
+        $message = "Lead - ". $company_name . "-" . $city;
+        $module_id = $lead_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('lead.index')->with('success','Leads created successfully');
 
 	}
 	 public function edit($id){
@@ -425,6 +450,7 @@ class LeadController extends Controller
         $billing_city = $lead->city;
         $billing_state = $lead->state;
         $billing_country = $lead->country;
+        $user_id = $lead->referredby;
             $convert_client = 0;
             if($generate_lead==1){
                 $lead->convert_client = 1;

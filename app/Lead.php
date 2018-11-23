@@ -334,5 +334,54 @@ class Lead extends Model
 
         return $lead_cnt;
     }
+
+    public static function getLeadDetailsById($lead_id){
+        
+        $query = Lead::query();
+        $query = $query->join('users','users.id','=','lead_management.referredby');
+        $query = $query->select('lead_management.*','users.name as referredby');
+        $query = $query->where('lead_management.id','=',$lead_id);
+        $res = $query->first();
+
+        $lead = array();
+        if (isset($res) && $res != '') {
+            $lead['id'] = $res->id;
+            $lead['name'] = $res->name;
+            $lead['mail'] = $res->mail;
+            $lead['s_email'] = $res->s_email;
+            $lead['mobile'] = $res->mobile;
+            $lead['other_number'] = $res->other_number;
+            $lead['display_name'] = $res->display_name;
+            $lead['service'] = $res->service;
+            $lead['status'] = $res->status;
+            $lead['remarks'] = $res->remarks;
+            $lead['coordinator_name'] = $res->coordinator_name;
+            $lead['website'] = $res->website;
+            $lead['source'] = $res->source;
+            $lead['designation'] = $res->designation;
+            $lead['referredby'] = $res->referredby;
+
+            $location ='';
+            if($res->city!=''){
+                $location .= $res->city;
+            }
+            if($res->state!=''){
+                if($location=='')
+                    $location .= $res->state;
+                else
+                    $location .= ", ".$res->state;
+            }
+            if($res->country!=''){
+                if($location=='')
+                    $location .= $res->country;
+                else
+                    $location .= ", ".$res->country;
+            }
+            $lead['location'] = $location;
+            $lead['lead_status'] = $res->lead_status;
+        }
+
+        return $lead;
+    }
 }
 
