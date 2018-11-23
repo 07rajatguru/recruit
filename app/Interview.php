@@ -639,10 +639,10 @@ class Interview extends Model
         $interview = Interview::find($value);
 
         /*$candidate_email = Interview::getCandidateOwnerEmail($value);
-        $candidate_owner_email = $candidate_email->candidateownersemail;*/
+        $candidate_owner_email = $candidate_email->candidateowneremail;*/
 
         $client_email = Interview::getClientOwnerEmail($value);
-        $client_owner_email = $client_email->clientownersemail;
+        $client_owner_email = $client_email->clientowneremail;
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($interview['candidate_id']);
