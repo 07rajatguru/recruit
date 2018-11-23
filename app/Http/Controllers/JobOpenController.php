@@ -1027,10 +1027,10 @@ class JobOpenController extends Controller
 
                         $superadminsecondemail=User::getUserEmailById($superadminuserid);
 
-                        $cc1 = "adler.rgl@gmail.com";
-                        $cc2 = "tarikapanjwani@gmail.com";
+                        //$cc1 = "adler.rgl@gmail.com";
+                        //$cc2 = "tarikapanjwani@gmail.com";
 
-                        $cc_users_array=array($loggedin_email,$superadminsecondemail,$cc1,$cc2);
+                        $cc_users_array=array($loggedin_email,$superadminsecondemail);
 
                         $module = "Job Open";
                         $sender_name = $user_id;
