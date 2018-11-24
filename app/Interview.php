@@ -316,11 +316,10 @@ class Interview extends Model
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
-            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
-            'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title');
-        $query = $query->whereIn('interview.id',$ids);
-        $response = $query->get();
+            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
+            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
+        $query = $query->where('interview.id',$ids);
+        $response = $query->first();
 
         return $response;
     }
@@ -599,30 +598,42 @@ class Interview extends Model
         $file_path = 'uploads/candidate/3/1401306.pdf';
             //print_r($file_path);exit;
 
-        // job Details
-        $job_details = JobOpen::getJobById($posting_title);
+        $interview = Interview::getInterviewsByIds($interview_id);
+
+        $location ='';
+        if($interview->job_city!=''){
+            $location .= $interview->job_city;
+        }
+        if($interview->job_state!=''){
+            if($location=='')
+                $location .= $interview->job_state;
+            else
+                $location .= ", ".$interview->job_state;
+        }
+        if($interview->job_country!=''){
+            if($location=='')
+                $location .= $interview->job_country;
+            else
+                $location .= ", ".$interview->job_country;
+        }
+
+        $datearray = explode(' ', $interview->interview_date);
+        $interview_date = $datearray[0];
+        $interview_time = $datearray[1];
 
         $input['cname'] = $cname;
-        $input['ccity'] = $ccity;
+        $input['ccity'] = '';
         $input['cmobile'] = $cmobile;
         $input['cemail'] = $cemail;
-        $input['city'] = $job_details['city'];
-        $input['company_name'] = $job_details['company_name'];
-        $input['company_url'] =$job_details['company_url'];
-        $input['client_desc'] = $job_details['client_desc'];
-        $input['job_designation'] = $job_details['posting_title'];
-        $input['job_location'] = $job_details['job_location'];
-        $input['job_description'] = $job_details['job_description'];
-        $input['interview_date'] = $job_details['interview_date'];
-        $input['interview_day'] = '';
-        $input['interview_time'] = $job_details['interview_time'];
-        $input['interview_location'] = $job_details['interview_location'];
-        $input['interview_type'] =$job_details['interview_type'];
-        $input['skype_id'] = $job_details['skype_id'];
-        $input['file'] = $file_path;
-        $input['candidate_location'] = $job_details['candidate_location'];
-        
-        //return view('adminlte::emails.interviewschedule',compact('app_url','input'));
+        $input['job_designation'] = $interview->posting_title;
+        $input['job_location'] = $location;
+        $input['interview_date'] = $interview_date;
+        $input['interview_time'] = $interview_time;
+        $input['interview_type'] =$interview->interview_type;
+        $input['skype_id'] = $interview->skype_id;
+        $input['candidate_location'] = $interview->candidate_location;
+        $input['company_name'] = $interview->company_name;
+        $input['city'] = $interview->job_city;
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
@@ -658,29 +669,43 @@ class Interview extends Model
         $cmobile = $candidate_response->mobile;
         $cemail = $candidate_response->email;
 
-        $job_details = JobOpen::getJobById($interview['posting_title']);
+        $interview = Interview::getInterviewsByIds($value);
+
+        $location ='';
+        if($interview->job_city!=''){
+            $location .= $interview->job_city;
+        }
+        if($interview->job_state!=''){
+            if($location=='')
+                $location .= $interview->job_state;
+            else
+                $location .= ", ".$interview->job_state;
+        }
+        if($interview->job_country!=''){
+            if($location=='')
+                $location .= $interview->job_country;
+            else
+                $location .= ", ".$interview->job_country;
+        }
+
+        $datearray = explode(' ', $interview->interview_date);
+        $interview_date = $datearray[0];
+        $interview_time = $datearray[1];
 
         $interview_details = array();
         $interview_details['cname'] = $cname;
         $interview_details['ccity'] = '';
         $interview_details['cmobile'] = $cmobile;
         $interview_details['cemail'] = $cemail;
-        $interview_details['city'] = $job_details['city'];
-        $interview_details['company_name'] = $job_details['company_name'];
-        $interview_details['company_url'] =$job_details['company_url'];
-        $interview_details['client_desc'] = $job_details['client_desc'];
-        $interview_details['job_designation'] = $job_details['posting_title'];
-        $interview_details['job_location'] = $job_details['job_location'];
-        $interview_details['job_description'] = $job_details['job_description'];
-        $interview_details['interview_date'] = $job_details['interview_date'];
-        $interview_details['interview_day'] = '';
-        $interview_details['interview_time'] = $job_details['interview_time'];
-        $interview_details['interview_location'] = $job_details['interview_location'];
-        $interview_details['interview_type'] =$job_details['interview_type'];
+        $interview_details['job_designation'] = $interview->posting_title;
+        $interview_details['job_location'] = $location;
+        $interview_details['interview_date'] = $interview_date;
+        $interview_details['interview_time'] = $interview_time;
+        $interview_details['interview_type'] =$interview->interview_type;
         //$interview_details['candidate_owner_email'] = $candidate_owner_email;
         $interview_details['client_owner_email'] = $client_owner_email;
-        $interview_details['skype_id'] = $job_details['skype_id'];
-        $interview_details['candidate_location'] = $job_details['candidate_location'];
+        $interview_details['skype_id'] = $interview->skype_id;
+        $interview_details['candidate_location'] = $interview->candidate_location;
 
         return $interview_details;
 
