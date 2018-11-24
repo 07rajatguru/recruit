@@ -368,6 +368,7 @@ class BillsController extends Controller
         $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
 
+        // For forcasting mail [email_notification table entry every minute check]
         $user_email = \Auth::user()->email;
         $superadminuserid = getenv('SUPERADMINUSERID');
         $accountantuserid = getenv('ACCOUNTANTUSERID');
@@ -377,13 +378,15 @@ class BillsController extends Controller
 
         $cc_users_array = array($superadminemail,$accountantemail);
 
+        $c_name = CandidateBasicInfo::getCandidateNameById($candidate_name);
+
         $module = "Forecasting";
         $sender_name = $user_id;
         $to = $user_email;
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Forecasting - ";
-        $message = "Forecasting - ";
+        $subject = "Forecasting - " . $c_name;
+        $message = "Forecasting - " . $c_name;
         $module_id = $bill_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -656,6 +659,31 @@ class BillsController extends Controller
         $candidatejoindate->joining_date = $dateClass->changeDMYtoYMD($date_of_joining);
         $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
+
+        if ($status == 1) {
+            // For Recovery mail [email_notification table entry every minute check]
+            $user_email = \Auth::user()->email;
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            $accountantemail = User::getUserEmailById($accountantuserid);
+
+            $cc_users_array = array($superadminemail,$accountantemail);
+
+            $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
+
+            $module = "Recovery";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            
+            $subject = "Recovery - ". $c_name;
+            $message = "Recovery - ". $c_name;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
 
         if($status == 1){
             return redirect()->route('bills.recovery')->with('success', 'Recovery Updated Successfully');

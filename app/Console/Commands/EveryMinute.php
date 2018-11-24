@@ -10,6 +10,7 @@ use App\UserLeave;
 use App\JobAssociateCandidates;
 use App\Lead;
 use App\Interview;
+use App\Bills;
 
 class EveryMinute extends Command
 {
@@ -261,6 +262,48 @@ class EveryMinute extends Command
                 $input['lead_details'] = $lead_details;
 
                 \Mail::send('adminlte::emails.leadaddemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Forecasting') {
+                
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
+                $id = array($value['module_id']);
+
+                $bills_details = Bills::getBillsByIds($id);
+                //print_r($bills_details);exit;
+                $input['bills_details'] = $bills_details;
+
+                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Recovery') {
+                
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
+                $id = array($value['module_id']);
+
+                $bills_details = Bills::getBillsByIds($id);
+                //print_r($bills_details);exit;
+                $input['bills_details'] = $bills_details;
+
+                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });

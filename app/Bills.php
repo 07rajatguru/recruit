@@ -49,7 +49,8 @@ class Bills extends Model
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        $bills_query = $bills_query->select('bills.*','users.name as name');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->select('bills.*','users.name as name','candidate_basicinfo.full_name as c_name');
         $bills_query = $bills_query->whereIn('bills.id',$ids);
 
         $bills_res = $bills_query->get();
@@ -59,7 +60,7 @@ class Bills extends Model
         foreach ($bills_res as $key=>$value){
             $bills[$i]['id'] = $value->id;
             $bills[$i]['company_name'] = $value->company_name;
-            $bills[$i]['candidate_name'] = $value->candidate_name;
+            $bills[$i]['candidate_name'] = $value->c_name;
             $bills[$i]['candidate_contact_number'] = $value->candidate_contact_number;
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
@@ -75,7 +76,7 @@ class Bills extends Model
             $bills[$i]['status'] = $value->status;
 
             // get employee efforts
-            $efforts = Bills::getEmployeeEffortsById($value->id);
+            $efforts = Bills::getEmployeeEffortsNameById($value->id);
             $efforts_str = '';
             foreach ($efforts as $k=>$v){
                 if($efforts_str==''){

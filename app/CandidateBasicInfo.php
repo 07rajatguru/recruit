@@ -231,4 +231,18 @@ class CandidateBasicInfo extends Model
         return $candidate_cnt;
 
     }
+
+    public static function getCandidateNameById($candidate_id){
+
+        $query = CandidateBasicInfo::query();
+        $query = $query->where('id',$candidate_id);
+        $res = $query->first();
+
+        $candidate_name = '';
+        if (isset($res) && $res != '') {
+            $candidate_name = $res->full_name;
+        }
+
+        return $candidate_name;
+    }
 }
