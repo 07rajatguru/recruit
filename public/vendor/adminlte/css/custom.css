@@ -338,3 +338,12 @@ tr.disabled > td a {
 .sidebar-menu li>a>.fa-angle-left, .sidebar-menu li>a>.pull-right-container>.fa-angle-left{
     margin-right:-49px;
 }
+
+.sidebar-menu>li{
+    height: 35px;
+}
+
+.sidebar-menu li>a>.pull-right-container
+{
+    right:65px;
+}
