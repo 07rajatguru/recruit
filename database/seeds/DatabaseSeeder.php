@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StateTableSeeder::class);
         $this->call(HolidayPermissionSeeder::class);
         $this->call(HomePagePermissionSeeder::class);
+        $this->call(ReceiptPermissionSeeder::class);
     }
 }
