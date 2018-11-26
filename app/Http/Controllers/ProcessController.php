@@ -12,6 +12,7 @@ use App\ProcessDoc;
 use App\ProcessVisibleUser;
 use App\Utils;
 use DB;
+use App\Events\NotificationMail;
 
 class ProcessController extends Controller
 {
@@ -79,7 +80,8 @@ class ProcessController extends Controller
 
     	//$users = User::getAllUsers('recruiter');
 		$user_id = \Auth::user()->id;
-        
+        $title = $request->input('title');
+
         $process = new ProcessManual();
         $process->title = $request->input('title');
         $process->owner_id = $user_id;
@@ -90,50 +92,72 @@ class ProcessController extends Controller
         $process_id = $process->id;
 
         if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-                foreach ($upload_documents as $k => $v) {
-                    if (isset($v) && $v->isValid()) {
-                        // echo "here";
-                        $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
-                        $file_size = $v->getSize();
+            foreach ($upload_documents as $k => $v) {
+                if (isset($v) && $v->isValid()) {
+                    // echo "here";
+                    $file_name = $v->getClientOriginalName();
+                    $file_extension = $v->getClientOriginalExtension();
+                    $file_realpath = $v->getRealPath();
+                    $file_size = $v->getSize();
 
-                       
-                        $dir = 'uploads/process/' . $process_id . '/';
+                   
+                    $dir = 'uploads/process/' . $process_id . '/';
 
-                        if (!file_exists($dir) && !is_dir($dir)) {
-                            mkdir($dir, 0777, true);
-                            chmod($dir, 0777);
-                        }
-                        $v->move($dir, $file_name);
-
-                        $file_path = $dir . $file_name;
-
-                        $process_doc = new ProcessDoc();
-                        $process_doc->process_id = $process_id;
-                        $process_doc->file = $file_path;
-                        $process_doc->name = $file_name;
-                        $process_doc->size = $file_size;
-                        $process_doc->created_at = date('Y-m-d');
-                        $process_doc->updated_at = date('Y-m-d');
-					
-                        $process_doc->save();
+                    if (!file_exists($dir) && !is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                        chmod($dir, 0777);
                     }
+                    $v->move($dir, $file_name);
 
-                }
-            }
-        // insert in Process_Visible_Table
+                    $file_path = $dir . $file_name;
 
-            $users = $request->input('user_ids');
-            $process_id = $process->id;
-            if(isset($users) && sizeof($users)>0){
-                foreach ($users as $key=>$value){
-                    $process_visible_users = new ProcessVisibleUser();
-                    $process_visible_users->process_id = $process_id;
-                    $process_visible_users->user_id = $value;
-                    $process_visible_users->save();
+                    $process_doc = new ProcessDoc();
+                    $process_doc->process_id = $process_id;
+                    $process_doc->file = $file_path;
+                    $process_doc->name = $file_name;
+                    $process_doc->size = $file_size;
+                    $process_doc->created_at = date('Y-m-d');
+                    $process_doc->updated_at = date('Y-m-d');
+				
+                    $process_doc->save();
                 }
+
             }
+        }
+    // insert in Process_Visible_Table
+
+        $users = $request->input('user_ids');
+        $process_id = $process->id;
+        if(isset($users) && sizeof($users)>0){
+            foreach ($users as $key=>$value){
+                $process_visible_users = new ProcessVisibleUser();
+                $process_visible_users->process_id = $process_id;
+                $process_visible_users->user_id = $value;
+                $process_visible_users->save();
+            }
+        }
+
+        //Email Notification : data store in database
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        if (isset($users) && sizeof($users)>0) {
+            foreach ($users as $key => $value) {
+                $email = User::getUserEmailById($value);
+                $user_emails[] = $email;
+            }
+        }
+
+        $module = "Process Manual";
+        $sender_name = $user_id;
+        $to = implode(",",$user_emails);
+        $cc = $superadminemail;
+
+        $subject = "Process Manual - ". $title;
+        $message = "Process Manual - ". $title;
+        $module_id = $process_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
 //echo '<pre>';print_r($process_visible_users);die;
     	return redirect()->route('process.index')->with('success','Process Manual Created Successfully');

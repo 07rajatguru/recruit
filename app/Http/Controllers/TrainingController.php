@@ -12,7 +12,7 @@ use App\TrainingDoc;
 use App\TrainingVisibleUser;
 use App\Utils;
 use DB;
-
+use App\Events\NotificationMail;
 
 class TrainingController extends Controller
 {
@@ -72,6 +72,7 @@ class TrainingController extends Controller
 
     	
 		$user_id = \Auth::user()->id;
+        $title = $request->input('title');
         
         $training = new Training();
         $training->title = $request->input('title');
@@ -85,47 +86,69 @@ class TrainingController extends Controller
         $training_id = $training->id;
 
         if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-                foreach ($upload_documents as $k => $v) {
-                    if (isset($v) && $v->isValid()) {
-                        // echo "here";
-                        $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
-                        $file_size = $v->getSize();
+            foreach ($upload_documents as $k => $v) {
+                if (isset($v) && $v->isValid()) {
+                    // echo "here";
+                    $file_name = $v->getClientOriginalName();
+                    $file_extension = $v->getClientOriginalExtension();
+                    $file_realpath = $v->getRealPath();
+                    $file_size = $v->getSize();
 
-                        //$extention = File::extension($file_name);
+                    //$extention = File::extension($file_name);
 
-                        $dir = 'uploads/training/' . $training_id . '/';
+                    $dir = 'uploads/training/' . $training_id . '/';
 
-                        if (!file_exists($dir) && !is_dir($dir)) {
-                            mkdir($dir, 0777, true);
-                            chmod($dir, 0777);
-                        }
-                        $v->move($dir, $file_name);
-
-                        $file_path = $dir . $file_name;
-
-                        $training_doc = new TrainingDoc();
-                        $training_doc->training_id = $training_id;
-                        $training_doc->file = $file_path;
-                        $training_doc->name = $file_name;
-                        $training_doc->size = $file_size;
-                        $training_doc->created_at = date('Y-m-d');
-                        $training_doc->updated_at = date('Y-m-d');		
-                        $training_doc->save();
+                    if (!file_exists($dir) && !is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                        chmod($dir, 0777);
                     }
-                }
-            }  
+                    $v->move($dir, $file_name);
 
-            $users = $request->input('user_ids');
-            if (isset($users) && sizeof($users)>0) {
-                foreach ($users as $key => $value) {
-                    $training_visible_users = new TrainingVisibleUser;
-                    $training_visible_users->training_id = $training_id;
-                    $training_visible_users->user_id = $value;
-                    $training_visible_users->save();
+                    $file_path = $dir . $file_name;
+
+                    $training_doc = new TrainingDoc();
+                    $training_doc->training_id = $training_id;
+                    $training_doc->file = $file_path;
+                    $training_doc->name = $file_name;
+                    $training_doc->size = $file_size;
+                    $training_doc->created_at = date('Y-m-d');
+                    $training_doc->updated_at = date('Y-m-d');		
+                    $training_doc->save();
                 }
             }
+        }  
+
+        $users = $request->input('user_ids');
+        if (isset($users) && sizeof($users)>0) {
+            foreach ($users as $key => $value) {
+                $training_visible_users = new TrainingVisibleUser;
+                $training_visible_users->training_id = $training_id;
+                $training_visible_users->user_id = $value;
+                $training_visible_users->save();
+            }
+        }
+
+        //Email Notification : data store in database
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        if (isset($users) && sizeof($users)>0) {
+            foreach ($users as $key => $value) {
+                $email = User::getUserEmailById($value);
+                $user_emails[] = $email;
+            }
+        }
+
+        $module = "Training Material";
+        $sender_name = $user_id;
+        $to = implode(",",$user_emails);
+        $cc = $superadminemail;
+
+        $subject = "Training Material - ". $title;
+        $message = "Training Material - ". $title;
+        $module_id = $training_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         return redirect()->route('training.index')->with('success','Training Created Successfully');
     }
