@@ -717,6 +717,57 @@ class BillsController extends Controller
         //print_r($bill_cancel);exit;
         $candidate_join_delete = JobCandidateJoiningdate::where('job_id',$bills['job_id'])->where('candidate_id',$bills['candidate_id'])->delete();
 
+        if ($bills['status'] == 1) {
+            // For Cancel Recovery mail [email_notification table entry]
+            $user_id = \Auth::user()->id;
+            $user_email = \Auth::user()->email;
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            $accountantemail = User::getUserEmailById($accountantuserid);
+
+            $cc_users_array = array($superadminemail,$accountantemail);
+
+            $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
+
+            $module = "Cancel Recovery";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            
+            $subject = "Cancel Recovery - ". $c_name;
+            $message = "Cancel Recovery - ". $c_name;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
+        else if ($bills['status'] == 0) {
+            // For Cancel Forecasting mail [email_notification table entry]
+            $user_id = \Auth::user()->id;
+            $user_email = \Auth::user()->email;
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            $accountantemail = User::getUserEmailById($accountantuserid);
+
+            $cc_users_array = array($superadminemail,$accountantemail);
+
+            $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
+
+            $module = "Cancel Forecasting";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            
+            $subject = "Cancel Forecasting - ". $c_name;
+            $message = "Cancel Forecasting - ". $c_name;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
+
         if($bills['status'] == 1){
             return redirect()->route('bills.recovery')->with('success', 'Recovery Canceled Successfully');
         }
@@ -746,6 +797,57 @@ class BillsController extends Controller
         $candidatejoindate->joining_date = $bills['joining_date'];
         $candidatejoindate->fixed_salary = $bills['fixed_salary'];
         $candidatejoindate->save();
+
+        if ($bills['status'] == 1) {
+            // For Relive Recovery mail [email_notification table entry]
+            $user_id = \Auth::user()->id;
+            $user_email = \Auth::user()->email;
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            $accountantemail = User::getUserEmailById($accountantuserid);
+
+            $cc_users_array = array($superadminemail,$accountantemail);
+
+            $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
+
+            $module = "Relive Recovery";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            
+            $subject = "Relive Recovery - ". $c_name;
+            $message = "Relive Recovery - ". $c_name;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
+        else if ($bills['status'] == 0) {
+            // For Relive Forecasting mail [email_notification table entry]
+            $user_id = \Auth::user()->id;
+            $user_email = \Auth::user()->email;
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            $accountantemail = User::getUserEmailById($accountantuserid);
+
+            $cc_users_array = array($superadminemail,$accountantemail);
+
+            $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
+
+            $module = "Relive Forecasting";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            
+            $subject = "Relive Forecasting - ". $c_name;
+            $message = "Relive Forecasting - ". $c_name;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
 
         if($bills['status'] == 1){
             return redirect()->route('bills.recovery')->with('success', 'Recovery Relived Successfully');

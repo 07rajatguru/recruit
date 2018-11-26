@@ -311,6 +311,90 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
+            else if ($value['module'] == 'Cancel Forecasting') {
+                
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
+                $id = array($value['module_id']);
+
+                $bills_details = Bills::getBillsByIds($id);
+                //print_r($bills_details);exit;
+                $input['bills_details'] = $bills_details;
+
+                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Cancel Recovery') {
+                
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
+                $id = array($value['module_id']);
+
+                $bills_details = Bills::getBillsByIds($id);
+                //print_r($bills_details);exit;
+                $input['bills_details'] = $bills_details;
+
+                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Relive Forecasting') {
+                
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
+                $id = array($value['module_id']);
+
+                $bills_details = Bills::getBillsByIds($id);
+                //print_r($bills_details);exit;
+                $input['bills_details'] = $bills_details;
+
+                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Relive Recovery') {
+                
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']);
+
+                $input['cc_array']=$cc_array;
+
+                $id = array($value['module_id']);
+
+                $bills_details = Bills::getBillsByIds($id);
+                //print_r($bills_details);exit;
+                $input['bills_details'] = $bills_details;
+
+                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
             else if ($value['module'] == 'Training Material') {
 
                 $to_array = explode(",",$input['to']);
