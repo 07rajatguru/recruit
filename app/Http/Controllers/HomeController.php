@@ -292,6 +292,7 @@ class HomeController extends Controller
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $acct_role_id = env('ACCOUNTANT');
+        $developer_role_id = env('DEVELOPER');
 
         $loggedin_userid = \Auth::user()->id;
 
@@ -324,7 +325,7 @@ class HomeController extends Controller
         $year_array[2017] = 2017;
         $year_array[2018] = 2018;
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id,$developer_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $users = User::getOtherUsers();
         }
@@ -658,4 +659,25 @@ class HomeController extends Controller
         
         return json_encode($data);
     }
+
+    /*//Url for test mail with from name & from address
+    public function testMail(){
+
+        $user_id = \Auth::User()->id;
+
+        $user_name = "Saloni Lalwani";
+        $user_email = User::getUserEmailById($user_id);
+        //print_r($user_name);exit;
+
+        $input['to'] = 'meet@trajinfotech.com';
+        $input['cc'] = 'saloni@trajinfotech.com';
+        $input['from_address'] = $user_email;
+        $input['from_name'] = $user_name;
+
+        \Mail::send('adminlte::emails.sample', $input, function ($message) use ($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->cc($input['cc'])->subject('Test Mail');
+        });
+
+    }*/
 }
