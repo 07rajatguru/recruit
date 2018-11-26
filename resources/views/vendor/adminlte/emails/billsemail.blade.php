@@ -6,63 +6,63 @@
 </head>
 
 <body>
-	<table border="1" cellpadding="0" cellspacing="0" width="601" style="text-align: center;">
+	<table border="1" cellpadding="0" cellspacing="0" width="100%" style="text-align: center;">
 		@foreach($bills_details as $key => $value)
-		<tr style="background: rgb(146, 208, 80); height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;"><b>Company Name</b></p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;"><b>{{ $value['company_name'] }}</b></td>
+		<tr style="background: rgb(146, 208, 80); height: auto;width: auto;">
+			<td><b>Company Name</b></td>
+			<td><b>{{ $value['company_name'] }}</b></td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td style="background-color: yellow;"><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;"><b>Candidate Name</b></p></td>
-			<td style="background: rgb(228, 223, 236);"><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;"><b>{{ $value['candidate_name'] }}</b></p></td>
+		<tr style="height: auto;width: auto;">
+			<td style="background-color: yellow;"><b>Candidate Name</b></td>
+			<td style="background: rgb(228, 223, 236);"><b>{{ $value['candidate_name'] }}</b></td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Candidate Contact number (Cell Phone & home both)</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['candidate_contact_number'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Candidate Contact number (Cell Phone & home both)</td>
+			<td>{{ $value['candidate_contact_number'] }} {{ $value['candidate_other_no'] }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Designation offered</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['designation_offered'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Designation offered</td>
+			<td>{{ $value['designation_offered'] }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Joining Date</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ date('d-M-y',strtotime($value['date_of_joining'])) }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Joining Date</td>
+			<td>{{ date('d-M-Y',strtotime($value['date_of_joining'])) }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Job Location</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['job_location'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Job Location</td>
+			<td>{{ $value['job_location'] }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Fixed Salary</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['fixed_salary'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Fixed Salary</td>
+			<td>{{ $value['fixed_salary'] }} CTC</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Percentage Charged</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['percentage_charged'] }}%</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Percentage Charged</td>
+			<td>{{ $value['percentage_charged'] }}%</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Efforts</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['efforts'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Efforts</td>
+			<td>{{ $value['efforts'] }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Source (Naukri/Monster/Referral)</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['source'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Source (Naukri/Monster/Referral)</p></td>
+			<td>{{ $value['source'] }}</p></td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;"><b>Client Name</b></p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['client_name'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td><b>Client Name</b></p></td>
+			<td>{{ $value['client_name'] }}</p></td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Contact number (Cell phone & Office land line)</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['client_contact_number'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Contact number (Cell phone & Office land line)</td>
+			<td>{{ $value['client_contact_number'] }} {{ $value['client_other_no'] }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Client Email ID</p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['client_email_id'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Client Email ID</p></td>
+			<td>{{ $value['client_email_id'] }}</td>
 		</tr>
-		<tr style="height: 16pt;">
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">Address of communication </p></td>
-			<td><p style="margin-bottom: 10pt;line-height: 13.8pt;width: 200pt;">{{ $value['address_of_communication'] }}</p></td>
+		<tr style="height: auto;width: auto;">
+			<td>Address of communication </td>
+			<td>{{ $value['address_of_communication'] }}</td>
 		</tr>
 		@endforeach
 	</table>

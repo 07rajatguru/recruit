@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Input;
+use App\Utils;
 
 class Bills extends Model
 {
@@ -49,8 +50,10 @@ class Bills extends Model
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
-        $bills_query = $bills_query->select('bills.*','users.name as name','candidate_basicinfo.full_name as c_name');
+        $bills_query = $bills_query->select('bills.*','users.name as name','candidate_basicinfo.full_name as c_name','candidate_basicinfo.phone as candidate_other_no','client_basicinfo.other_number as client_other_no');
         $bills_query = $bills_query->whereIn('bills.id',$ids);
 
         $bills_res = $bills_query->get();
@@ -65,7 +68,7 @@ class Bills extends Model
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = $value->fixed_salary;
+            $bills[$i]['fixed_salary'] = Utils::IND_money_format($value->fixed_salary);
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
@@ -87,6 +90,8 @@ class Bills extends Model
                 }
             }
             $bills[$i]['efforts'] = $efforts_str;
+            $bills[$i]['candidate_other_no'] = '/'. $value->candidate_other_no;
+            $bills[$i]['client_other_no'] = '/'. $value->client_other_no;
             $i++;
         }
 
