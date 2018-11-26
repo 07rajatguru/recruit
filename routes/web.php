@@ -1623,96 +1623,114 @@ Route::group(['middleware' => ['auth']], function () {
     //Talent
     Route::any('receipt/talent',[
         'as' => 'receipt.talent',
-        'uses' => 'ReceiptController@receiptTalent'
+        'uses' => 'ReceiptController@receiptTalent',
+        'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::get('receipt/talent/import',[
         'as' => 'receipt.talentimport',
-        'uses' => 'ReceiptController@receiptTalentImport'
+        'uses' => 'ReceiptController@receiptTalentImport',
+        'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::post('receipt/talent/import',[
         'as' => 'receipt.talentimportstore',
-        'uses' => 'ReceiptController@receiptTalentImportStore'
+        'uses' => 'ReceiptController@receiptTalentImportStore',
+        'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::get('receipt/talent/create',[
         'as' => 'receipt.talentcreate',
-        'uses' => 'ReceiptController@receiptTalentCreate'
+        'uses' => 'ReceiptController@receiptTalentCreate',
+        'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::post('receipt/talent/store',[
         'as' => 'receipt.talentstore',
-        'uses' => 'ReceiptController@receiptTalentStore'
+        'uses' => 'ReceiptController@receiptTalentStore',
+        'middleware' => ['permission:receipt-talent']
     ]);
 
     //Temp
 
     Route::any('receipt/temp',[
         'as' => 'receipt.temp',
-        'uses' => 'ReceiptController@receiptTemp'
+        'uses' => 'ReceiptController@receiptTemp',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/temp/import',[
         'as' => 'receipt.tempimport',
-        'uses' => 'ReceiptController@receiptTempImport'
+        'uses' => 'ReceiptController@receiptTempImport',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/temp/import',[
         'as' => 'receipt.tempimportstore',
-        'uses' => 'ReceiptController@receiptTempImportStore'
+        'uses' => 'ReceiptController@receiptTempImportStore',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/temp/create',[
         'as' => 'receipt.tempcreate',
-        'uses' => 'ReceiptController@receiptTempCreate'
+        'uses' => 'ReceiptController@receiptTempCreate',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/temp/store',[
         'as' => 'receipt.tempstore',
-        'uses' => 'ReceiptController@receiptTempStore'
+        'uses' => 'ReceiptController@receiptTempStore',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     //Other
 
     Route::any('receipt/other',[
         'as' => 'receipt.other',
-        'uses' => 'ReceiptController@receiptOther'
+        'uses' => 'ReceiptController@receiptOther',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/other/import',[
         'as' => 'receipt.otherimport',
-        'uses' => 'ReceiptController@receiptOtherImport'
+        'uses' => 'ReceiptController@receiptOtherImport',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/other/import',[
         'as' => 'receipt.otherimportstore',
-        'uses' => 'ReceiptController@receiptOtherImportStore'
+        'uses' => 'ReceiptController@receiptOtherImportStore',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/other/create',[
         'as' => 'receipt.othercreate',
-        'uses' => 'ReceiptController@receiptOtherCreate'
+        'uses' => 'ReceiptController@receiptOtherCreate',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/other/store',[
         'as' => 'receipt.otherstore',
-        'uses' => 'ReceiptController@receiptOtherStore'
+        'uses' => 'ReceiptController@receiptOtherStore',
+        'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/edit/{id}',[
         'as' => 'receipt.edit',
-        'uses' => 'ReceiptController@edit'
+        'uses' => 'ReceiptController@edit',
+        'middleware' => ['permission:receipt-temp | receipt-talent | receipt-others']
     ]);
 
     Route::patch('receipt/{id}',[
         'as' => 'receipt.update',
-        'uses' => 'ReceiptController@update'
+        'uses' => 'ReceiptController@update',
+        'middleware' => ['permission:receipt-temp | receipt-talent | receipt-others']
     ]);
 
     Route::delete('receipt/{id}',[
         'as' => 'receipt.destroy',
-        'uses' => 'ReceiptController@ReceiptDestroy'
+        'uses' => 'ReceiptController@ReceiptDestroy',
+        'middleware' => ['permission:receipt-temp | receipt-talent | receipt-others']
     ]);
     
 });
