@@ -701,6 +701,12 @@ class ClientController extends Controller
             }
         }
 
+        // User Account Manager access check
+        $user_acc_manager = \Auth::user()->account_manager;
+        if ($user_acc_manager == 'No') {
+            return view('errors.clientpermission');
+        }
+
         $industry_id = '';
 
         $action = "add" ;
