@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(VendorAndExpenseSeeder::class);
         $this->call(StateTableSeeder::class);
         $this->call(HolidayPermissionSeeder::class);
+        $this->call(HomePagePermissionSeeder::class);
     }
 }
