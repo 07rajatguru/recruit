@@ -15,10 +15,18 @@ class ReportController extends Controller
 
         $user_id = \Auth::user()->id;
 
+        // get role of logged in user
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
 
-        $access_roles_id = array($superAdminUserID,$managerUserID);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsers('recruiter');
         }
@@ -59,7 +67,15 @@ class ReportController extends Controller
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
 
-        $access_roles_id = array($superAdminUserID,$managerUserID);
+        // get role of logged in user
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
@@ -154,7 +170,15 @@ class ReportController extends Controller
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
 
-        $access_roles_id = array($superAdminUserID,$managerUserID);
+        // get role of logged in user
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
