@@ -81,7 +81,7 @@
                 <td>{{ Form::checkbox('client',$client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
                 <td>
 
-                    @if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility'])
+                    @if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility'] || $isAccountant)
                         <a title="Show" class="fa fa-circle"  href="{{ route('client.show',$client['id']) }}"></a>
                     @endif
 

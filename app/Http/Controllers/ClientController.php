@@ -37,11 +37,12 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        if($isSuperAdmin || $isAdmin || $isStrategy){
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
             $client_array = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
             $count = sizeof($client_array);
         }
@@ -282,11 +283,12 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        if($isSuperAdmin || $isAdmin || $isStrategy){
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
             $order_column_name = self::getOrderColumnName($order,1);
             $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
@@ -298,13 +300,13 @@ class ClientController extends Controller
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
         //print_r($client_array);exit;
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
 
         $clients = array();
         $i = 0;
         foreach ($client_res as $key => $value) {
             $action = '';
-            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility']){
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility'] || $isAccountant){
                 $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
             }
             if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner']){
@@ -370,11 +372,12 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        if($isSuperAdmin || $isAdmin || $isStrategy){
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
             $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,1);
             $count = sizeof($client_array);
 
@@ -414,7 +417,7 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Active';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant'));
     }
 
     public function PassiveClient(){
@@ -433,11 +436,12 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        if($isSuperAdmin || $isAdmin || $isStrategy){
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
             $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,0);
             $count = sizeof($client_array);
 
@@ -477,7 +481,7 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Passive';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant'));
     }
 
     public function ParamountClient(){
@@ -1101,9 +1105,10 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
         $user_id = $user->id;
 
-        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy);
+        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy,$isAccountant);
 
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
