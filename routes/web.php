@@ -1410,13 +1410,16 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:expense-create']
     ]);
 
-    Route::get('expense/importExport', 
-        'ExpenseController@importExport'
-    );
+    Route::get('expense/importExport',[ 
+        'as' => 'expense.importExport',
+        'uses' => 'ExpenseController@importExport',
+        'middleware' => ['permission:expense-create']
+    ]);
 
-    Route::post('expense/importExcel', 
-        'ExpenseController@importExcel'
-    );
+    Route::post('expense/importExcel',[
+        'as' => 'expense.importExcel',
+        'uses' => 'ExpenseController@importExcel'
+    ]);
 
     Route::get('expense/getvendorinfo', [
         'as' => 'expense.getvendorinfo',

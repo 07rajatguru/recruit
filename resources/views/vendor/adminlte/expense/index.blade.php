@@ -15,6 +15,7 @@
 
             <div class="pull-right">
              @permission(('expense-create')) 
+                <a class="btn btn-primary" href="{{ route('expense.importExport') }}"> Import Expense</a>
                 <a class="btn btn-success" href="{{ route('expense.create') }}"> Create New Expense</a>
              @endpermission
             </div>

@@ -606,25 +606,21 @@ class ExpenseController extends Controller
     public function importExcel(Request $request)
     {
 
-        if($request->hasFile('import_file'))
-        {
+        if($request->hasFile('import_file')){
             $path = $request->file('import_file')->getRealPath();
 
             $data = Excel::load($path, function ($reader) {})->get();
 
             $messages = array();
 
-            if(!empty($data) && $data->count())
-            {
-                foreach($data->toArray() as $key => $value)
-                {
-                    if(!empty($value))
-                    {
-                        foreach($value as $v)
-                        {
+            if(!empty($data) && $data->count()){
+                foreach($data->toArray() as $key => $value){
+                    if(!empty($value)){
+                        print_r($value);exit;
+                        foreach($value as $v){
 
-                            $srno=$v['srno'];
-                            $date=$v['date'];
+                            $sr_no = $v['sr_no'];
+                            $date_of_expense=$v['date_of_expense'];
                             $amount=$v['amount'];
                             $paidto=$v['paidto'];
                             $expensehead=$v['expensehead'];
