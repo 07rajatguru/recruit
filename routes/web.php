@@ -1132,6 +1132,26 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@getAjaxtodo',
     ]);
 
+    Route::get('todos/daily', [
+        'as' => 'todos.daily',
+        'uses' => 'ToDosController@daily',
+    ]);
+
+    Route::get('todos/weekly', [
+        'as' => 'todos.weekly',
+        'uses' => 'ToDosController@weekly',
+    ]);
+
+    Route::get('todos/monthly', [
+        'as' => 'todos.monthly',
+        'uses' => 'ToDosController@monthly',
+    ]);
+
+    Route::get('todos/read', [
+        'as' => 'todos.read',
+        'uses' => 'ToDosController@readTodos',
+    ]);
+
     Route::get('todos/{id}', [
         'as' => 'todos.show',
         'uses' => 'ToDosController@show'
@@ -1158,28 +1178,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'todos.complete',
         'uses' => 'ToDosController@complete',
     ]);
-
-    Route::get('todos/daily', [
-        'as' => 'todos.daily',
-        'uses' => 'ToDosController@daily',
-    ]);
-
-    Route::get('todos/weekly', [
-        'as' => 'todos.weekly',
-        'uses' => 'ToDosController@weekly',
-    ]);
-
-    Route::get('todos/monthly', [
-        'as' => 'todos.monthly',
-        'uses' => 'ToDosController@monthly',
-    ]);
-
-    Route::get('todos/read', [
-        'as' => 'todos.read',
-        'uses' => 'ToDosController@readTodos',
-    ]);
-
-
 
     // To do's Routes End
 

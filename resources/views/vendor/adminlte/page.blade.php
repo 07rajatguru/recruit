@@ -337,7 +337,7 @@
         function readAllTodos() {
             var app_url = "{!! env('APP_URL'); !!}";
             jQuery.ajax({
-                url:app_url+'todos/read',
+                url:app_url+'/todos/read',
                 dataType:'json',
                 success: function(data){
                     $(".todos-number").html(0);
