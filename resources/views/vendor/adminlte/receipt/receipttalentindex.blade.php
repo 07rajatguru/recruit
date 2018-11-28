@@ -103,7 +103,7 @@
                 <td>{{++$i}}</td>
                 <td>
                     <a class="fa fa-edit" title="Edit" href="{{ route('receipt.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Temp'])
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Talent'])
                 </td>
                 <td>{{ $value['trans_id'] }}</td>
                 <td>{{ $value['value_date'] }}</td>
@@ -136,7 +136,7 @@
                 <td>{{++$i}}</td>
                 <td>
                     <a class="fa fa-edit" title="Edit" href="{{ route('receipt.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Other'])
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'receipt','display_name'=>'Receipt Talent'])
                 </td>
                 <td>{{ $value['voucher_no'] }}</td>
                 <td>{{ $value['value_date'] }}</td>

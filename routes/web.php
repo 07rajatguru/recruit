@@ -1721,19 +1721,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('receipt/edit/{id}',[
         'as' => 'receipt.edit',
         'uses' => 'ReceiptController@edit',
-        'middleware' => ['permission:receipt-temp | receipt-talent | receipt-others']
+        'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
     ]);
 
     Route::patch('receipt/{id}',[
         'as' => 'receipt.update',
         'uses' => 'ReceiptController@update',
-        'middleware' => ['permission:receipt-temp | receipt-talent | receipt-others']
+        'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
     ]);
 
     Route::delete('receipt/{id}',[
         'as' => 'receipt.destroy',
         'uses' => 'ReceiptController@ReceiptDestroy',
-        'middleware' => ['permission:receipt-temp | receipt-talent | receipt-others']
+        'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
     ]);
     
 });
