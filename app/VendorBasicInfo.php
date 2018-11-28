@@ -57,7 +57,7 @@ class VendorBasicInfo extends Model
     }
 
 
-     public static function getLoggedInUserVendors($user_id){
+     public static function getLoggedInUserVendors($all=0,$user_id){
 
         $vendor_query = VendorBasicInfo::query();
 

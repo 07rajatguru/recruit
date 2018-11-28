@@ -47,13 +47,13 @@ class Expense extends Model
 
     public static function getPaymentMode(){
     	$pmode = array(''=>'Select Payment Mode');
-    	$pmode['Petty cash-Accounts'] = 'Petty cash-Accounts';
-    	$pmode['Petty cash-Director'] = 'Petty cash-Director';
+    	$pmode['Petty Cash - Accounts'] = 'Petty Cash - Accounts';
+    	$pmode['Petty Cash - Director'] = 'Petty Cash - Director';
     	$pmode['AMEX'] = 'AMEX';
     	$pmode['ICICI Bank'] = 'ICICI Bank';
     	$pmode['HDFC Bank'] = 'HDFC Bank';
-    	$pmode['Paytm'] = 'Paytm';
-    	$pmode['Freecharge'] = 'Freecharge';
+    	$pmode['Paytm - AMEX'] = 'Paytm - AMEX';
+    	$pmode['Freecharge - AMEX'] = 'Freecharge - AMEX';
 
     	return $pmode;
     }
@@ -66,7 +66,8 @@ class Expense extends Model
     	$ptype['Cheque'] = 'Cheque';
         $ptype['RTGS']='RTGS';
         $ptype['Cash']='Cash';
-        $ptype['Enet']='Enet';
+        $ptype['Enet']='ENET';
+        $ptype['CMS']='CMS';
     	
         return $ptype;
     }
@@ -80,6 +81,7 @@ class Expense extends Model
     }
 
     public static function getAllExpense(){
+        $dateClass = new Date();
 
         $query = Expense::query();
         $query = $query->join('accounting_heads','accounting_heads.id','=','expense.expense_head');
@@ -91,7 +93,7 @@ class Expense extends Model
         $i = 0;
         foreach ($resource as $res) {
             $expenseArray[$i]['id'] = $res->id;
-            $expenseArray[$i]['date'] = $res->date;
+            $expenseArray[$i]['date'] = $dateClass->changeYMDtoDMY($res->date);
             $expenseArray[$i]['paid_amount'] = Utils::IND_money_format($res->paid_amount);
             $expenseArray[$i]['paid_to'] = $res->vname;
             $expenseArray[$i]['expense_head'] = $res->aname;

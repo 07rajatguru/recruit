@@ -493,12 +493,19 @@
             var ss_gst=$("#sgst").val();
             var total_bill=parseFloat(bill)+parseFloat(cc_gst)+parseFloat(ss_gst);
             $("#bill_amount").val(total_bill);
+            $("#paid_amount").val(total_bill);
         }
 
         function prefilledtds()  
-        {
-           var c_tds=$("#bill_amount").val()*$("#tds").val()/100;
-           $("#tds_deduct").val(c_tds);
+        {   
+            var tds = $("#tds").val();
+            if (tds > 0) {
+                var c_tds=$("#bill_amount").val()*$("#tds").val()/100;
+                $("#tds_deduct").val(c_tds);
+            }
+            else{
+                $("#tds_deduct").val(0);
+            }
 
            var total_amount=$("#bill_amount").val();
            var deduct_amount=$("#tds_deduct").val();

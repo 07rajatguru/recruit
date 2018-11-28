@@ -25,7 +25,7 @@
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
-                
+                <h2>Expense Detail</h2>
             </div>
 
            <div class="pull-right">

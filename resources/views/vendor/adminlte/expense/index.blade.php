@@ -33,6 +33,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Action</th>
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Paid To</th>
@@ -41,7 +42,6 @@
                 <th>Payment<br/> Mode</th>
                 <th>Payment<br/> Type</th>
                 <th>Reference <br/>Number</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
 
@@ -50,16 +50,7 @@
         @foreach($expense as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $value['date'] or '' }}</td>
-                <td>{{ $value['paid_amount'] or '' }}</td>
-                <td>{{ $value['paid_to'] or '' }}</td>
-                <td>{{ $value['expense_head'] or '' }}</td>
-                <td>{{ $value['remarks'] or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['payment_mode'] or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['payment_type'] or '' }}</td>
-                <td>{{ $value['number'] or '' }}</td>
                 <td>  
-
                     <a title="Show" class="fa fa-circle"  href="{{ route('expense.show',$value['id']) }}"></a>
 
                     @permission(('expense-edit'))          
@@ -68,10 +59,16 @@
 
                     @permission(('expense-delete'))
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense'])
-                    @endpermission
-
-                   
+                    @endpermission                   
                 </td>
+                <td>{{ $value['date'] or '' }}</td>
+                <td>{{ $value['paid_amount'] or '' }}</td>
+                <td>{{ $value['paid_to'] or '' }}</td>
+                <td>{{ $value['expense_head'] or '' }}</td>
+                <td>{{ $value['remarks'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['payment_mode'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['payment_type'] or '' }}</td>
+                <td>{{ $value['number'] or '' }}</td>
             </tr>
         @endforeach
         </tbody>

@@ -54,20 +54,17 @@ class ExpenseController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            // get all clients
-            $vendor_res = VendorBasicInfo::getLoggedInUserVendors(0);
+            // get all vendor
+            $vendor_res = VendorBasicInfo::getLoggedInUserVendors(1,$user_id);
         }
         else{
-            // get logged in user clients
-            $vendor_res = VendorBasicInfo::getLoggedInUserVendors($user_id);
+            // get logged in user vendor
+            $vendor_res = VendorBasicInfo::getLoggedInUserVendors(0,$user_id);
         }
 
         $vendor = array();
-
-        if (sizeof($vendor_res) > 0) 
-        {
-            foreach ($vendor_res as $v) 
-            {
+        if (sizeof($vendor_res) > 0) {
+            foreach ($vendor_res as $v) {
                 $vendor[$v->id] = $v->name." - ".$v->address;
             }
         }
@@ -323,7 +320,7 @@ class ExpenseController extends Controller
 
 
          foreach ($expense_info as $key=>$value){
-            $expense['date'] = $value->date;
+            $expense['date'] = $dateClass->changeYMDtoDMY($value->date);
             $expense['amount'] = $value->amount;
             $vendor_id=$value->vendor_id;
             $expense['name'] = $value->v_name;
@@ -343,7 +340,7 @@ class ExpenseController extends Controller
             $expense['paid_amount']=$value->paid_amount;
             $expense['tds']=$value->tds_percentage;
             $expense['tds_deduct']=$value->tds_deducted;
-            $expense['tds_date']=$value->tds_payment_date;  
+            $expense['tds_date']=$dateClass->changeYMDtoDMY($value->tds_payment_date);
 
         }
 
@@ -476,11 +473,14 @@ class ExpenseController extends Controller
     }
 
     public function show($id)
-    {
+    {   
+        $dateClass = new Date();
+
         $expense = array();
         $expense_info  = \DB::table('expense')
             ->leftjoin('vendor_basicinfo', 'expense.vendor_id', '=', 'vendor_basicinfo.id')
-            ->select('expense.*','vendor_basicinfo.name as v_name')
+            ->leftjoin('accounting_heads','accounting_heads.id','=','expense.expense_head')
+            ->select('expense.*','vendor_basicinfo.name as v_name','accounting_heads.name as expense_head_name')
             ->where('expense.id','=',$id)
             ->get();
 
@@ -491,10 +491,10 @@ class ExpenseController extends Controller
 
         foreach ($expense_info as $key=>$value){
 
-            $expense['date'] = $value->date;
+            $expense['date'] = $dateClass->changeYMDtoDMY($value->date);
             $expense['amount'] = Utils::IND_money_format($value->amount);
             $expense['name'] = $value->v_name;
-            $expense['head'] = $value->expense_head;
+            $expense['head'] = $value->expense_head_name;
             $expense['remark'] = $value->remarks;
             $expense['pmode'] = $value->payment_mode;
             $expense['ptype'] = $value->type_of_payment;
@@ -510,7 +510,7 @@ class ExpenseController extends Controller
             $expense['paidamt']=Utils::IND_money_format($value->paid_amount);
             $expense['tds']=$value->tds_percentage;
             $expense['tds_deduct']=$value->tds_deducted;
-            $expense['tds_date']=$value->tds_payment_date;      
+            $expense['tds_date']= $dateClass->changeYMDtoDMY($value->tds_payment_date);
 
         }
 
@@ -605,6 +605,7 @@ class ExpenseController extends Controller
 
     public function importExcel(Request $request)
     {
+        $dateClass = new Date();
 
         if($request->hasFile('import_file')){
             $path = $request->file('import_file')->getRealPath();
@@ -616,82 +617,84 @@ class ExpenseController extends Controller
             if(!empty($data) && $data->count()){
                 foreach($data->toArray() as $key => $value){
                     if(!empty($value)){
-                        print_r($value);exit;
+                        //print_r($value);exit;
                         foreach($value as $v){
 
                             $sr_no = $v['sr_no'];
-                            $date_of_expense=$v['date_of_expense'];
-                            $amount=$v['amount'];
-                            $paidto=$v['paidto'];
-                            $expensehead=$v['expensehead'];
-                            $remark=$v['remark'];
-                            $paymode=$v['paymode'];
-                            $paytype=$v['paytype'];
-                            $refno=$v['refno'];
-                            $vendor=$v['vendor'];
-                            $gstno=$v['gstno'];
-                            $panno=$v['panno'];
-                            $gst=$v['gst'];
-                            $igst=$v['igst'];
-                            $cgst=$v['cgst'];
-                            $sgst=$v['sgst'];
-                            $billamount=$v['billamount'];
-                            $paidamount=$v['paidamount'];
-                            $inputtax=$v['inputtax'];
-                            $tds=$v['tds'];
-                            $tdsdeduct=$v['tdsdeduct'];
-                            $tdsdate=$v['tdsdate'];
+                            $date_of_expense = $v['date_of_expense'];
+                            $paid_to = $v['paid_to'];
+                            $gstin_of_client = $v['gstin_of_client_not_mandatory'];
+                            $pan_number_for_tds = $v['pan_number_for_tds_not_mandatory'];
+                            $billing_amount = $v['billing_amount_excluding_gst'];
+                            $gst_charged = $v['gst_charged'];
+                            $igst = $v['igst_at_18'];
+                            $sgst = $v['sgst_at_9'];
+                            $cgst = $v['cgst_at_9'];
+                            $total_bill_amount = $v['total_bill_amount'];
+                            $input_tax_credit = $v['input_tax_credit_yesno'];
+                            $total_amount_paid = $v['total_amount_paid'];
+                            $tds_percentage = $v['tds_percentage'];
+                            $tds_deducted = $v['tds_deducted_if_any'];
+                            $tds_payment_date = $v['tds_payment_date'];
+                            $expense_head = $v['expense_head'];
+                            $remarks = $v['remarks_if_any'];
+                            $payment_mode = $v['payment_mode'];
+                            $type_of_payment = $v['type_of_payment'];
+                            $reference_number = $v['reference_number_not_mandatory'];
 
-                            
-                            $expense=new Expense();
-                            $expense->date=$date;
-                            $expense->amount=$amount;
-                            
-
-                            $head_id=AccountingHeads::getHead($expensehead);
-                            $expense->expense_head=$head_id;
-                            $expense->remarks=$remark;
-                            $expense->payment_mode=$paymode;
-                            $expense->type_of_payment=$paytype;
-                            $expense->reference_number=$refno;
-
-                            $vendor_id=VendorBasicInfo::getVendor($vendor);
-                            $expense->vendor_id=$vendor_id;
-                            $expense->paid_to=$vendor_id;
-
-                            $expense->gst_in=$gstno;
-                            $expense->pan_no=$panno;
-                            $expense->gst=$gst;
-                            $expense->igst=$igst;
-                            $expense->cgst=$cgst;
-                            $expense->sgst=$sgst;
-                            $expense->total_bill_amount=$billamount;
-                            $expense->paid_amount=$paidamount;
-                            $expense->input_tax=$inputtax;
-                            $expense->tds_percentage=$tds;
-                            $expense->tds_deducted=$tdsdeduct;
-                            $expense->tds_payment_date=$tdsdate;
-
-                            if($expense->save())
-                            {
-                                    $messages[] = "Record $srno inserted successfully";
+                            // Get VendorId from name
+                            $vendor_id = VendorBasicInfo::getVendor($paid_to);
+                            if ($vendor_id > 0) {
+                                $expense_id=AccountingHeads::getHead($expense_head);
+                                if ($expense_id > 0) {
+                                    $expense = new Expense();
+                                    $expense->date = $dateClass->changeDMYtoYMD($date_of_expense);
+                                    $expense->amount = $billing_amount;
+                                    $expense->paid_to = $vendor_id;
+                                    $expense->expense_head = $expense_id;
+                                    $expense->remarks = $remarks;
+                                    $expense->payment_mode = $payment_mode;
+                                    $expense->type_of_payment = $type_of_payment;
+                                    $expense->reference_number = $reference_number;
+                                    $expense->vendor_id = $vendor_id;
+                                    $expense->gst_in = $gstin_of_client;
+                                    $expense->pan_no = $pan_number_for_tds;
+                                    $expense->gst = $gst_charged;
+                                    $expense->igst = $igst;
+                                    $expense->cgst = $cgst;
+                                    $expense->sgst = $sgst;
+                                    $expense->total_bill_amount = $total_bill_amount;
+                                    $expense->input_tax = $input_tax_credit;
+                                    $expense->paid_amount = $total_amount_paid;
+                                    $expense->tds_percentage = $tds_percentage;
+                                    $expense->tds_deducted = $tds_deducted;
+                                    $expense->tds_payment_date = $tds_payment_date;
+                                    if($expense->save()){
+                                        $messages[] = "Record $sr_no inserted successfully";
+                                    }
+                                    else{
+                                        $messages[] = "Error while inserting record $sr_no";  
+                                    }
+                                }
+                                else {
+                                    $messages[] = "$sr_no Expense Head not added.";
+                                }
                             }
-                            else
-                            {
-                                    $messages[] = "Error while inserting record $srno";  
+                            else {
+                                $messages[] = "$sr_no vendor not added.";
                             }
-
                         }
                     }
-                    else
-                    {
+                    else{
                         $messages[] = "No Data in file";
                     }
-                }
-                    
+                } 
             }
 
-             return view('adminlte::expense.import',compact('messages'));
+            return view('adminlte::expense.import',compact('messages'));
+        }
+        else {
+            return redirect()->route('expense.importExport')->with('error','Please Select Excel file.');
         }
 
     }
