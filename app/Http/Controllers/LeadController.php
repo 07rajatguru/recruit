@@ -270,8 +270,8 @@ class LeadController extends Controller
         $to = $user_email;
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Lead - ". $company_name . "-" . $city;
-        $message = "Lead - ". $company_name . "-" . $city;
+        $subject = "New Lead for " . $leads . " - ". $company_name . " - " . $city;
+        $message = "New Lead for " . $leads . " - ". $company_name . " - " . $city;
         $module_id = $lead_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

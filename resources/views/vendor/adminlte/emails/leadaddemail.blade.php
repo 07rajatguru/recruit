@@ -26,7 +26,6 @@
     	</tr>
     	<tr>
     		<td>
-    			<br/>
 				<table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
 	                <tr>
 	                	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Company Name</th>
