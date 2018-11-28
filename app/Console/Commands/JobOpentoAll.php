@@ -66,10 +66,10 @@ class JobOpentoAll extends Command
                             $job_visible_users->user_id = $key1;
                             $job_visible_users->save();
                             
-                            $email = User::getUserSecondaryEmailById($key1);
+                            $email = User::getUserEmailById($key1);
                             $user_emails[] = $email;
                         }
-                        $superadminsecondemail=User::getUserSecondaryEmailById($superadminuserid);
+                        $superadminsecondemail=User::getUserEmailById($superadminuserid);
                         $cc1 = "adler.rgl@gmail.com";
                         $cc2 = "tarikapanjwani@gmail.com";
                         $cc_users_array=array($superadminsecondemail,$cc1,$cc2);

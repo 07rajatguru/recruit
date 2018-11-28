@@ -11,7 +11,7 @@
 
 @foreach($mail as $key => $value)
 
-@if($value['module'] == 'Job Open')
+@if($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All')
 	<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
     	<tr>
         	<td>

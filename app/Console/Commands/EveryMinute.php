@@ -97,7 +97,7 @@ class EveryMinute extends Command
             $module_id = $value['module_id'];
             $sender_id = $value['sender_name'];
 
-            if ($value['module'] == 'Job Open') 
+            if ($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All') 
             {
                 $to_array=array();
                 $to_array=explode(",",$input['to']);
