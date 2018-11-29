@@ -44,8 +44,8 @@ class Receipt extends Model
     public static function getReceiptdata($bank,$type){
 
         $query = Receipt::query();
-        $query = $query->join('vendor_basicinfo','vendor_basicinfo.id','receipt.name_of_company');
-        $query = $query->select('receipt.*','vendor_basicinfo.name as company_name');
+        $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','receipt.name_of_company');
+        $query = $query->select('receipt.*','client_basicinfo.name as company_name');
         $query = $query->where('bank_type','=',$bank);
         $query = $query->where('type','=',$type);
         $res = $query->get();

@@ -8,6 +8,7 @@ use App\Receipt;
 use App\VendorBasicInfo;
 use Excel;
 use App\Date;
+use App\ClientBasicinfo;
 
 class ReceiptController extends Controller
 {
@@ -73,10 +74,10 @@ class ReceiptController extends Controller
 		    						$messages[] = "$ref_no is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Talent HDFC
 		    							$receipt_talent_hdfc = new Receipt();
 		    							$receipt_talent_hdfc->date = $date_form;
@@ -84,7 +85,7 @@ class ReceiptController extends Controller
 		    							$receipt_talent_hdfc->ref_no = $ref_no;
 		    							$receipt_talent_hdfc->value_date = $value_date_form;
 		    							$receipt_talent_hdfc->amount = $amount;
-		    							$receipt_talent_hdfc->name_of_company = $vendor_id;
+		    							$receipt_talent_hdfc->name_of_company = $client_id;
 		    							$receipt_talent_hdfc->remarks = $remarks;
 		    							$receipt_talent_hdfc->bank_type = $bank_type_data;
 		    							$receipt_talent_hdfc->type = 'Talent';
@@ -94,10 +95,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$ref_no record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$ref_no vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -141,10 +142,10 @@ class ReceiptController extends Controller
 		    						$messages[] = "$transaction_id is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Talent ICICI
 		    							$receipt_talent_icici = new Receipt();
 		    							$receipt_talent_icici->trans_id = $transaction_id;
@@ -153,7 +154,7 @@ class ReceiptController extends Controller
 		    							$receipt_talent_icici->description = $desc;
 		    							$receipt_talent_icici->cr = $crdr;
 		    							$receipt_talent_icici->amount = $amount;
-		    							$receipt_talent_icici->name_of_company = $vendor_id;
+		    							$receipt_talent_icici->name_of_company = $client_id;
 		    							$receipt_talent_icici->remarks = $remarks;
 		    							$receipt_talent_icici->bank_type = $bank_type_data;
 		    							$receipt_talent_icici->type = 'Talent';
@@ -163,10 +164,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$transaction_id record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$transaction_id vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -207,17 +208,17 @@ class ReceiptController extends Controller
 		    						$messages[] = "$voucher_no is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Talent Other
 		    							$receipt_talent_other = new Receipt();
 		    							$receipt_talent_other->voucher_no = $voucher_no;
 		    							$receipt_talent_other->value_date = $value_date_form;
 		    							$receipt_talent_other->amount = $amount;
 		    							$receipt_talent_other->mode_of_receipt = $mode_of_receipt;
-		    							$receipt_talent_other->name_of_company = $vendor_id;
+		    							$receipt_talent_other->name_of_company = $client_id;
 		    							$receipt_talent_other->remarks = $remarks;
 		    							$receipt_talent_other->bank_type = $bank_type_data;
 		    							$receipt_talent_other->type = 'Talent';
@@ -227,10 +228,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$voucher_no record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$voucher_no vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -254,9 +255,9 @@ class ReceiptController extends Controller
     public function receiptTalentCreate(){
 
     	$bank_type = Receipt::getBankType();
-    	$vendors = VendorBasicInfo::getAllVendorsName();
+    	$clients = ClientBasicinfo::getClientArray();
     	
-    	return view('adminlte::receipt.receipttalentcreate',compact('bank_type','vendors'));
+    	return view('adminlte::receipt.receipttalentcreate',compact('bank_type','clients'));
     }
 
     public function receiptTalentStore(Request $request)
@@ -370,10 +371,10 @@ class ReceiptController extends Controller
 		    						$messages[] = "$ref_no is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Temp HDFC
 		    							$receipt_temp_hdfc = new Receipt();
 		    							$receipt_temp_hdfc->date = $date_form;
@@ -381,7 +382,7 @@ class ReceiptController extends Controller
 		    							$receipt_temp_hdfc->ref_no = $ref_no;
 		    							$receipt_temp_hdfc->value_date = $value_date_form;
 		    							$receipt_temp_hdfc->amount = $amount;
-		    							$receipt_temp_hdfc->name_of_company = $vendor_id;
+		    							$receipt_temp_hdfc->name_of_company = $client_id;
 		    							$receipt_temp_hdfc->remarks = $remarks;
 		    							$receipt_temp_hdfc->bank_type = $bank_type_data;
 		    							$receipt_temp_hdfc->type = 'Temp';
@@ -391,10 +392,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$ref_no record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$ref_no vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -438,10 +439,10 @@ class ReceiptController extends Controller
 		    						$messages[] = "$transaction_id is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Temp ICICI
 		    							$receipt_temp_icici = new Receipt();
 		    							$receipt_temp_icici->trans_id = $transaction_id;
@@ -450,7 +451,7 @@ class ReceiptController extends Controller
 		    							$receipt_temp_icici->description = $desc;
 		    							$receipt_temp_icici->cr = $crdr;
 		    							$receipt_temp_icici->amount = $amount;
-		    							$receipt_temp_icici->name_of_company = $vendor_id;
+		    							$receipt_temp_icici->name_of_company = $client_id;
 		    							$receipt_temp_icici->remarks = $remarks;
 		    							$receipt_temp_icici->bank_type = $bank_type_data;
 		    							$receipt_temp_icici->type = 'Temp';
@@ -460,10 +461,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$transaction_id record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$transaction_id vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -504,17 +505,17 @@ class ReceiptController extends Controller
 		    						$messages[] = "$voucher_no is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Temp Other
 		    							$receipt_temp_other = new Receipt();
 		    							$receipt_temp_other->voucher_no = $voucher_no;
 		    							$receipt_temp_other->value_date = $value_date_form;
 		    							$receipt_temp_other->amount = $amount;
 		    							$receipt_temp_other->mode_of_receipt = $mode_of_receipt;
-		    							$receipt_temp_other->name_of_company = $vendor_id;
+		    							$receipt_temp_other->name_of_company = $client_id;
 		    							$receipt_temp_other->remarks = $remarks;
 		    							$receipt_temp_other->bank_type = $bank_type_data;
 		    							$receipt_temp_other->type = 'Temp';
@@ -524,10 +525,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$voucher_no record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$voucher_no vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -550,9 +551,9 @@ class ReceiptController extends Controller
     public function receiptTempCreate(){
 
     	$bank_type = Receipt::getBankType();
-    	$vendors = VendorBasicInfo::getAllVendorsName();
+    	$clients = ClientBasicinfo::getClientArray();
 
-    	return view('adminlte::receipt.receipttempcreate',compact('bank_type','vendors'));
+    	return view('adminlte::receipt.receipttempcreate',compact('bank_type','clients'));
     }
 
     public function receiptTempStore(Request $request){
@@ -666,10 +667,10 @@ class ReceiptController extends Controller
 		    						$messages[] = "$ref_no is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Other HDFC
 		    							$receipt_other_hdfc = new Receipt();
 		    							$receipt_other_hdfc->date = $date_form;
@@ -677,7 +678,7 @@ class ReceiptController extends Controller
 		    							$receipt_other_hdfc->ref_no = $ref_no;
 		    							$receipt_other_hdfc->value_date = $value_date_form;
 		    							$receipt_other_hdfc->amount = $amount;
-		    							$receipt_other_hdfc->name_of_company = $vendor_id;
+		    							$receipt_other_hdfc->name_of_company = $client_id;
 		    							$receipt_other_hdfc->remarks = $remarks;
 		    							$receipt_other_hdfc->bank_type = $bank_type_data;
 		    							$receipt_other_hdfc->type = 'Other';
@@ -687,10 +688,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$ref_no record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$ref_no vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -734,10 +735,10 @@ class ReceiptController extends Controller
 		    						$messages[] = "$transaction_id is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Other ICICI
 		    							$receipt_other_icici = new Receipt();
 		    							$receipt_other_icici->trans_id = $transaction_id;
@@ -746,7 +747,7 @@ class ReceiptController extends Controller
 		    							$receipt_other_icici->description = $desc;
 		    							$receipt_other_icici->cr = $crdr;
 		    							$receipt_other_icici->amount = $amount;
-		    							$receipt_other_icici->name_of_company = $vendor_id;
+		    							$receipt_other_icici->name_of_company = $client_id;
 		    							$receipt_other_icici->remarks = $remarks;
 		    							$receipt_other_icici->bank_type = $bank_type_data;
 		    							$receipt_other_icici->type = 'Other';
@@ -756,10 +757,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$transaction_id record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$transaction_id vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -800,17 +801,17 @@ class ReceiptController extends Controller
 		    						$messages[] = "$voucher_no is already exist";
 		    					}
 		    					else {
-		    						// Get Vendor Id from vendor name
-		    						$vendor_id = VendorBasicInfo::getVendor($name);
+		    						// Get Client Id from company name
+		    						$client_id = ClientBasicinfo::getClientIdByName($name);
 
-		    						if ($vendor_id > 0) {
+		    						/*if ($client_id > 0) {*/
 		    							// Create Receipt Other Other
 		    							$receipt_other_other = new Receipt();
 		    							$receipt_other_other->voucher_no = $voucher_no;
 		    							$receipt_other_other->value_date = $value_date_form;
 		    							$receipt_other_other->amount = $amount;
 		    							$receipt_other_other->mode_of_receipt = $mode_of_receipt;
-		    							$receipt_other_other->name_of_company = $vendor_id;
+		    							$receipt_other_other->name_of_company = $client_id;
 		    							$receipt_other_other->remarks = $remarks;
 		    							$receipt_other_other->bank_type = $bank_type_data;
 		    							$receipt_other_other->type = 'Other';
@@ -820,10 +821,10 @@ class ReceiptController extends Controller
 		    							if ($receipt_id > 0) {
 		    								$messages[] = "$voucher_no record added successfully";
 		    							}
-		    						}
+		    						/*}
 		    						else {
 		    							$messages[] = "$voucher_no vendor not added.";
-		    						}
+		    						}*/
 		    					}
 		    				}
 	    				}
@@ -846,9 +847,9 @@ class ReceiptController extends Controller
     public function receiptOtherCreate(){
 
     	$bank_type = Receipt::getBankType();
-    	$vendors = VendorBasicInfo::getAllVendorsName();
+    	$clients = ClientBasicinfo::getClientArray();
 
-    	return view('adminlte::receipt.receiptothercreate',compact('bank_type','vendors'));
+    	return view('adminlte::receipt.receiptothercreate',compact('bank_type','clients'));
     }
 
     public function receiptOtherStore(Request $request){
@@ -906,17 +907,17 @@ class ReceiptController extends Controller
     public function edit($id){
 
     	$dateClass = new Date();
-    	$vendors = VendorBasicInfo::getAllVendorsName();
+    	$clients = ClientBasicinfo::getClientArray();
 
     	$receipt = Receipt::find($id);
     	$type = $receipt->type;
     	$bank_type = $receipt->bank_type;
-    	$vendor_id = $receipt->name_of_company;
+    	$client_id = $receipt->name_of_company;
     	$value_date = $dateClass->changeYMDtoDMY($receipt->value_date);
     	$date = $dateClass->changeYMDtoDMY($receipt->date);
     	$txn_posted_date = $dateClass->changeYMDtoDMY($receipt->txn_posted_date);
 
-    	return view('adminlte::receipt.edit',compact('vendors','type','bank_type','receipt','vendor_id','value_date','date','txn_posted_date'));
+    	return view('adminlte::receipt.edit',compact('clients','type','bank_type','receipt','client_id','value_date','date','txn_posted_date'));
     }
 
     public function update(Request $request,$id){

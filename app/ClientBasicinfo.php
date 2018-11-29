@@ -220,7 +220,7 @@ class ClientBasicinfo extends Ardent
     }
 
     public static function getClientArray(){
-        $clientArray = array('' => 'Select');
+        $clientArray = array('0' => 'Select');
 
         $clientDetails = ClientBasicinfo::all();
         if(isset($clientDetails) && sizeof($clientDetails) > 0){
@@ -620,4 +620,19 @@ class ClientBasicinfo extends Ardent
 
         return $client_array;
     }
+
+    public static function getClientIdByName($name){
+
+        $query = ClientBasicinfo::query();
+        $query = $query->where('name','like',"$name");
+        $query = $query->select('id');
+        $res = $query->first();
+        
+        $client_id = 0;
+        if(isset($res)){
+            $client_id = $res->id;
+        }
+
+        return $client_id;
+     }
 }

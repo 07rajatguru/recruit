@@ -127,7 +127,8 @@
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('company_name_hdfc') ? 'has-error' : '' }}">
 	                            <strong>Company Name:</strong>
-	                            {!! Form::select('company_name_hdfc', $vendors,null, array('id'=>'company_name_hdfc','class' => 'form-control','tabindex' => '5')) !!}
+	                            {{-- Client Name Display --}}
+	                            {!! Form::select('company_name_hdfc', $clients,null, array('id'=>'company_name_hdfc','class' => 'form-control','tabindex' => '5')) !!}
 	                            @if ($errors->has('company_name_hdfc'))
 	                                <span class="help-block">
 	                            <strong>{{ $errors->first('company_name_hdfc') }}
@@ -255,7 +256,8 @@
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('company_name_icici') ? 'has-error' : '' }}">
 	                            <strong>Company Name:</strong>
-	                            {!! Form::select('company_name_icici', $vendors, null, array('id'=>'company_name_icici','class' => 'form-control','tabindex' => '5')) !!}
+	                            {{-- Client Name Display --}}
+	                            {!! Form::select('company_name_icici', $clients, null, array('id'=>'company_name_icici','class' => 'form-control','tabindex' => '5')) !!}
 	                            @if ($errors->has('company_name_icici'))
 	                                <span class="help-block">
 	                            <strong>{{ $errors->first('company_name_icici') }}</strong>
@@ -351,7 +353,8 @@
 	                    <div class="">
 	                        <div class="form-group {{ $errors->has('company_name_other') ? 'has-error' : '' }}">
 	                            <strong>Company Name:</strong>
-	                            {!! Form::select('company_name_other', $vendors, null, array('id'=>'company_name_other','class' => 'form-control','tabindex' => '4')) !!}
+	                            {{-- Client Name Display --}}
+	                            {!! Form::select('company_name_other', $clients, null, array('id'=>'company_name_other','class' => 'form-control','tabindex' => '4')) !!}
 	                            @if ($errors->has('company_name_other'))
 	                                <span class="help-block">
 	                            <strong>{{ $errors->first('company_name_other') }}</strong>
