@@ -68,11 +68,11 @@
                 </tr>
                 <tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Job Description</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{{ $job['description'] }}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{!! $job['description'] !!}</td>
                 </tr>
                 <tr>
 		            <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Desired Candidates</th>
-                	<td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{{ $job['desired_candidate'] }}</td>
+                	<td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{!! $job['desired_candidate'] !!}</td>
                 </tr>
 				<tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Users who can access the job</th>
@@ -80,7 +80,7 @@
                 </tr>
                 <tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">Education Qualification</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;border-bottom: black 1px solid;" colspan="3">{{ $job['education_qualification']}}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;border-bottom: black 1px solid;" colspan="3">{!! $job['education_qualification'] !!}</td>
                 </tr>
             </table>
 

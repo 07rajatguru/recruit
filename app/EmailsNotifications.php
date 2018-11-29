@@ -86,7 +86,7 @@ class EmailsNotifications extends Model
             $job_open['date_opened'] = $dateClass->changeYMDtoDMY($value->date_opened);
             $job_open['job_type'] = $value->job_type;
             $job_open['industry_name'] = $value->industry_name;
-            $job_open['description'] = strip_tags($value->job_description);
+            $job_open['description'] = $value->job_description;
             $job_open['work_experience'] = $value->work_exp_from . "-" . $value->work_exp_to;
             $job_open['salary'] = $salary;
             $job_open['country'] = $value->country;
