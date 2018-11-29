@@ -83,8 +83,8 @@ class JobOpentoAll extends Command
                         $sender_name = $superadminuserid;
                         $to = implode(",",$user_emails);
                         $cc = implode(",",$cc_users_array);
-                        $subject = "Job opened by ". $job_details['user_name'] ."-" . $job_details['posting_title'] . "@" .$client_name . "-" . $client_city;
-                        $message = "<tr><th>" . $job_details['posting_title'] . "/" . $job_details['job_unique_id'] . "</th></tr>";
+                        $subject = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
+                        $message = "<tr><th>" . $job_details['posting_title'] . " / " . $job_details['job_unique_id'] . "</th></tr>";
                         $module_id = $job_id;
 
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -93,7 +93,7 @@ class JobOpentoAll extends Command
                         foreach ($users as $key2=>$value2){
                             $module_id = $job_id;
                             $module = 'Job Open to All';
-                            $message = "Job opened by ". $job_details['user_name'] ."-" . $job_details['posting_title'] . "@" .$client_name . "-" . $client_city;
+                            $message = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
                             $link = route('jobopen.show',$job_id);
                             $user_arr = trim($key2);
 
