@@ -165,7 +165,12 @@ class ExpenseController extends Controller
         $expense->paid_amount=$paid_amount;
         $expense->tds_percentage=$tds;
         $expense->tds_deducted=$tds_detuct;
-        $expense->tds_payment_date = $dateClass->changeDMYtoYMD($tds_date);
+        if (isset($tds_date) && $tds_date != '') {
+            $expense->tds_payment_date = $dateClass->changeDMYtoYMD($tds_date);
+        }
+        else {
+            $expense->tds_payment_date = NULL;
+        }
 
         $validator = \Validator::make(Input::all(),$expense::$rules);
 

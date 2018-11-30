@@ -50,7 +50,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('gst_no') ? 'has-error' : '' }}">
-                            <strong>Vendor GST No: <span class = "required_fields">*</span> </strong>
+                            <strong>Vendor GST No: </strong>
                             
                             {!! Form::text('gst_no', null,array('id'=>'gst_no','placeholder' => 'GST No.','class' => 'form-control', 'tabindex' => '3' )) !!}
                            
@@ -157,7 +157,7 @@
 
 
                             <div class="form-group {{ $errors->has('pan_no') ? 'has-error' : '' }}">
-                                <strong>Vendor PAN No :<span class = "required_fields">*</span></strong>
+                                <strong>Vendor PAN No : </strong>
                                 {!! Form::text('pan_no', null, array('id'=>'pan_no','placeholder' => 'PAN','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 @if ($errors->has('pan_no'))
                                     <span class="help-block">
@@ -347,12 +347,12 @@
                     "vendor_id": {
                         required: true
                     },
-                    "gst_no": {
+                    /*"gst_no": {
                         required: true
                     },
                     "pan_no": {
                         required: true
-                    },
+                    },*/
                     "amount": {
                         required: true
                     },
@@ -391,12 +391,12 @@
                     "vendor_id": {
                         required: "Paid To is required field."
                     },
-                    "gst_no": {
+                   /* "gst_no": {
                         required: "GST No. is required field."
                     },
                     "pan_no": {
                         required: "PAN No. is required field."
-                    },
+                    },*/
                     "amount": {
                         required: "Amount is required field."
                     },
@@ -492,8 +492,14 @@
             var cc_gst=$("#cgst").val();
             var ss_gst=$("#sgst").val();
             var total_bill=parseFloat(bill)+parseFloat(cc_gst)+parseFloat(ss_gst);
-            $("#bill_amount").val(total_bill);
-            $("#paid_amount").val(total_bill);
+            if (total_bill > 0) {
+                $("#bill_amount").val(total_bill);
+                $("#paid_amount").val(total_bill);
+            }
+            else {
+                $("#bill_amount").val(0);
+                $("#paid_amount").val(0);   
+            }
         }
 
         function prefilledtds()  

@@ -11,8 +11,8 @@ class Expense extends Model
     public static $rules = array(
         'date' => 'required',
         'vendor_id'=>'required',
-        'gst_no'=>'required',
-        'pan_no'=>'required',
+        // 'gst_no'=>'required',
+        // 'pan_no'=>'required',
         'amount' => 'required',
         'gst'=>'required',
         'cgst'=>'required',
@@ -30,8 +30,8 @@ class Expense extends Model
         return [
             'date.required' => 'Date is required field',
             'vendor_id'=>'Paid To is required field.',
-            'gst_no'=>'GST No. is required field.',
-            'pan_no'=>'PAN No. is required field.',
+            // 'gst_no'=>'GST No. is required field.',
+            // 'pan_no'=>'PAN No. is required field.',
             'gst'=>'GST(%) is required field.',
             'cgst'=>'CGST is required field.',
             'sgst'=>'SGST is required field.',
