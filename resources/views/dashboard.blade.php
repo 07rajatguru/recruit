@@ -111,7 +111,7 @@
 
     </div>
 
-    {{--<div class="row">
+    <div class="row">
         <div class="col-lg-12 col-xs-12">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -155,7 +155,7 @@
             </div>
 
         </div>
-    </div>--}}
+    </div>
 
     <div class="row">
         <div class="col-lg-6 col-xs-6">
@@ -442,9 +442,9 @@
         });
 
         function opentoalljob(){
-
+            var app_url = "{!! env('APP_URL'); !!}";
             $.ajax({
-                url:'/dashboard/opentoalljob',
+                url:app_url+'/dashboard/opentoalljob',
                 dataType:'json',
                 success: function(job_opened){
                     if (job_opened.length > 0) {
