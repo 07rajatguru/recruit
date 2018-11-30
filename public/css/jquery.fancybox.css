@@ -1,0 +1,139 @@
+/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */
+.fancybox-wrap,
+.fancybox-skin,
+.fancybox-outer,
+.fancybox-inner,
+.fancybox-image,
+.fancybox-wrap iframe,
+.fancybox-wrap object,
+.fancybox-nav,
+.fancybox-nav span,
+.fancybox-tmp
+{
+	padding: 0;
+	margin: 0;
+	border: 0;
+	outline: none;
+	vertical-align: top;
+}
+
+.fancybox-wrap {
+	position: relative;
+	top: 0;
+	left: 0;
+	z-index: 8020;
+}
+
+.fancybox-skin {
+	position: relative;
+	color: #444;
+	text-shadow: none;
+/*	-webkit-border-radius: 12px 12px;
+	   -moz-border-radius: 12px 12px;
+	        border-radius: 12px 12px;*/
+}
+
+.fancybox-opened {
+	z-index: 8030;
+}
+
+.fancybox-opened .fancybox-skin {
+	-webkit-box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
+	   -moz-box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
+	        box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
+}
+
+.fancybox-outer, .fancybox-inner {
+	position: relative;
+}
+
+.fancybox-inner {
+	overflow: hidden;
+}
+
+#fancybox-loading, .fancybox-close, .fancybox-prev span, .fancybox-next span {
+	background-image: url('../images/fancybox_sprite.png');
+}
+
+
+
+.fancybox-close {
+	position: absolute;
+	top: 28% !important;
+	right: -7px;
+	width: 36px;
+	height: 36px;
+	cursor: pointer;
+	z-index: 8040;
+	transform: translateY(-85%);
+}
+
+/* Overlay helper */
+
+.fancybox-lock {
+    overflow: visible !important;
+    width: auto;
+}
+
+.fancybox-lock body {
+    overflow: hidden !important;
+}
+
+.fancybox-lock-test {
+    overflow-y: hidden !important;
+}
+
+.fancybox-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	display: none;
+	z-index: 8010;
+	background: url('../images/fancybox_overlay.png');
+}
+
+.fancybox-overlay-fixed {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+}
+
+.fancybox-lock .fancybox-overlay {
+	overflow: auto;
+	overflow-y: scroll;
+}
+
+
+
+.inline{ display:none;}
+
+#inline_content{
+	overflow:hidden;	
+	max-width:433px;
+	width: 100%;
+	margin: 0 auto;
+	position:relative;
+	padding: 45px 15px 0 15px;
+	text-align:center;
+	top: 50%;
+	transform: translateY(-50%);
+	border: 5px solid white;
+/*	-webkit-border-radius:12px 12px; 
+  	-moz-border-radius:12px 12px; 
+  	border-radius:12px 12px;*/
+}
+#inline_content .heading{
+	padding:15px 20px 15px 20px;
+	background:#333;	
+	position:relative;
+	text-align:center;
+	color:#fff;
+	z-index:5;
+	font-size:15px;
+}
+.img-popup{
+	max-width: 100%;
+	margin: 0 auto;
+	max-height: 150px;
+}

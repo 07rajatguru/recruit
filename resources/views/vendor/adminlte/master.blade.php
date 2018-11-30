@@ -38,6 +38,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/>
 
+    <link href="/css/jquery.fancybox.css" rel="stylesheet">
+
     @yield('adminlte_css')
     @yield('customs_css')
 
@@ -72,6 +74,7 @@
 <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/3.2.4/js/dataTables.fixedColumns.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<script src="/js/jquery.fancybox.js"></script>
 @yield('adminlte_js')
 @yield('customscripts')
 

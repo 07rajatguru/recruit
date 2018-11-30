@@ -160,6 +160,8 @@ class HomeController extends Controller
         }
         //print_r($interview_attend);exit;
 
+        $date = date('Y-m-d');
+
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
@@ -169,6 +171,7 @@ class HomeController extends Controller
         $viewVariable['candidatejoinCount'] = $candidatecount;
         $viewVariable['associatedCount'] = $associate_count;
         $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['date'] = $date;
 
         return view('dashboard',$viewVariable);
     }
