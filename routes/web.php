@@ -177,15 +177,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     //User Profile
     
-    Route::get('users/editprofile',[
+    Route::get('users/editprofile/{id}',[
         'as' => 'users.editprofile',
         'uses' => 'UserController@editProfile'
     ]);
-    Route::post('users/profilestore',[
+    Route::post('users/profilestore/{id}',[
         'as' => 'users.profilestore',
         'uses' => 'UserController@profileStore'
     ]);
-    Route::get('users/myprofile',[
+    Route::get('users/myprofile/{id}',[
         'as' => 'users.myprofile',
         'uses' => 'UserController@profileShow'
     ]);

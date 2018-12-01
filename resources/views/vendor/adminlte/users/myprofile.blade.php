@@ -26,14 +26,14 @@
 
            <div class="pull-left">
                 @if($user['type'] == "Photo")
-                    <img src= "../{!!$user['photo']!!}" height="100px" width="100px" />
+                    <img src= "../../{!!$user['photo']!!}" height="100px" width="100px" />
                 @else
                     <img src= "../../uploads/User_Default.jpg" height="100px" width="100px" />
                 @endif
             </div>
             
            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('users.editprofile') }}">Edit Profile</a>
+                <a class="btn btn-primary" href="{{ route('users.editprofile',$user_id) }}">Edit Profile</a>
             </div>
             
         </div>

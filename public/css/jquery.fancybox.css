@@ -114,11 +114,11 @@
 	width: 100%;
 	margin: 0 auto;
 	position:relative;
-	padding: 45px 15px 0 15px;
-	text-align:center;
+	/*padding: 45px 15px 0 15px;*/
+	/*text-align:center;*/
 	top: 50%;
 	transform: translateY(-50%);
-	border: 5px solid white;
+	/*border: 5px solid white;*/
 /*	-webkit-border-radius:12px 12px; 
   	-moz-border-radius:12px 12px; 
   	border-radius:12px 12px;*/
