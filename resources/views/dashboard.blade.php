@@ -29,19 +29,16 @@
 @section('content')
     
     <!-- popup -->
-    @if($date == '2018-11-30')
+    {{--@if($date == '2018-12-01')
     <a class='inline' href="#inline_content"></a>
     <div style='display:none'>
         <div id="inline_content" style="background: white;">
-            <div class="bs-example bs-example-standalone" data-example-id="dismissible-alert-js">
-                <div class="col-md-12"><img class="img-popup" src="../images/Resized_Banner.jpg" /></div>
-                <div class="alert fade in col-md-12 " role="alert">
-                    {!! session()->get('message') !!}<a href="{!! session()->get('link')  !!}" class="link_deco">Click Here</a>
-                </div>
+            <div class="bs-example bs-example-standalone" data-example-id="dismissible-alert-js" style="height: 275px;">
+                <img class="img-popup" src="../images/source.gif" style="max-height:100%; width:auto;" />
             </div>
         </div>
     </div>
-    @endif
+    @endif--}}
     <!-- popup -->
 
     <div class="row">
@@ -126,7 +123,7 @@
 
     </div>
 
-    <div class="row">
+    {{--<div class="row">
         <div class="col-lg-12 col-xs-12">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -170,7 +167,7 @@
             </div>
 
         </div>
-    </div>
+    </div>--}}
 
     <div class="row">
         <div class="col-lg-6 col-xs-6">
@@ -453,11 +450,11 @@
              }
              });*/
 
-            if($(".inline").length>0){
+            /*if($(".inline").length>0){
                 setTimeout(function (){$('.inline').fancybox().trigger('click')}, 1000);
-            }
+            }*/
             
-            opentoalljob();
+            /*opentoalljob();*/
 
         });
 
