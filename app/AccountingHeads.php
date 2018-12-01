@@ -29,10 +29,10 @@ class AccountingHeads extends Model
         $head_query = $head_query->where('name','like',$expensehead);
 
         $head_query = $head_query->select('id');
-        $head=$head_query->first();
+        $head = $head_query->first();
 
-        if(isset($head))
-        {
+        $head_id = 0;
+        if(isset($head)){
             $head_id=$head->id;
         }
     

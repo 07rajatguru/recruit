@@ -650,13 +650,13 @@ class ExpenseController extends Controller
                             // Get VendorId from name
                             $vendor_id = VendorBasicInfo::getVendor($paid_to);
                             if ($vendor_id > 0) {
-                                $expense_id=AccountingHeads::getHead($expense_head);
-                                if ($expense_id > 0) {
+                                $expense_head_id = AccountingHeads::getHead($expense_head);
+                                if ($expense_head_id > 0) {
                                     $expense = new Expense();
                                     $expense->date = $dateClass->changeDMYtoYMD($date_of_expense);
                                     $expense->amount = $billing_amount;
                                     $expense->paid_to = $vendor_id;
-                                    $expense->expense_head = $expense_id;
+                                    $expense->expense_head = $expense_head_id;
                                     $expense->remarks = $remarks;
                                     $expense->payment_mode = $payment_mode;
                                     $expense->type_of_payment = $type_of_payment;
