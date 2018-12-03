@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -250,30 +258,30 @@
 
             $("#interview_form").validate({
                 rules: {
-                    /*"interview_name": {
+                    "posting_title": {
                         required: true
-                    },*/
+                    },
                     "candidate_id": {
                         required: true
                     },
-                    /*"from": {
+                    "interview_date": {
                         required: true
                     },
-                    "to": {
+                    /*"to": {
                         required: true
                     }*/
                 },
                 messages: {
-                    /*"interview_name": {
-                        required: "Interview Name is required."
-                    },*/
+                    "posting_title": {
+                        required: "Posting Title is required."
+                    },
                     "candidate_id": {
                         required: "Candidate is required."
                     },
-                    /*"from": {
-                        required: "From Date is required."
+                    "interview_date": {
+                        required: "Interview Date is required."
                     },
-                    "to": {
+                    /*"to": {
                         required: "To Date is required."
                     }*/
                 }

@@ -23,11 +23,11 @@
 
 @if( $action == 'edit')
 
-    {!! Form::model($vendor,['method' => 'PATCH','files' => true, 'id' => 'vendorForm','autocomplete' => 'off', 'route' => ['vendor.update', $vendor->id]] ) !!}
+    {!! Form::model($vendor,['method' => 'PATCH','files' => true, 'id' => 'vendor_Form','autocomplete' => 'off', 'route' => ['vendor.update', $vendor->id]] ) !!}
 
 @else
 
- {!! Form::open(array('route' => 'vendor.store','method'=>'POST','files' => true)) !!}
+ {!! Form::open(array('route' => 'vendor.store','method'=>'POST','files' => true , 'id' => 'vendor_Form')) !!}
 
 @endif
 
@@ -377,7 +377,7 @@
 
         $(document).ready(function() {
 
-            $('#vendorForm').on('keyup keypress', function(e) {
+            $('#vendor_Form').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
                 if (keyCode === 13) {
                     e.preventDefault();
@@ -385,12 +385,12 @@
                 }
             });
 
-            $("#vendorForm").validate({
+            $("#vendor_Form").validate({
                 rules: {
                     "name": {
                         required: true
                     },
-                    "moblie": {
+                    "mobile": {
                         required: true
                     },
                     "bank_name": {
@@ -413,7 +413,7 @@
                      "name": {
                         required: "Name is required."
                     },
-                    "moblie": {
+                    "mobile": {
                         required: "Mobile is required."
                     },
                     "bank_name": {
@@ -431,7 +431,7 @@
                     "ifsc": {
                         required: "IFSC Code is required."
                     }
-                });
+                },
             });
     });
         </script>
