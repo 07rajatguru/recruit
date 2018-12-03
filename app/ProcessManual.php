@@ -33,6 +33,7 @@ class ProcessManual extends Model
         }
         $process_open_query = $process_open_query->leftjoin('process_doc','process_doc.process_id','=','process_manual.id');
         $process_open_query = $process_open_query->orderBy('process_manual.id','asc');
+        $process_open_query = $process_open_query->groupBy('process_manual.id');
         $process_response = $process_open_query->get();
 
         $process_list = array();
