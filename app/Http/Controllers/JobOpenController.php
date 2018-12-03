@@ -2203,6 +2203,7 @@ class JobOpenController extends Controller
         $data['location'] = $request->get('location');
         $data['skype_id'] = $request->get('skype_id');
         $data['round'] = '1';
+        $data['candidate_location'] = $request->get('candidate_location');
 
         $job_id = $request->get('job_id');
 
