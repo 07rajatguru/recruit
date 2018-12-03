@@ -208,8 +208,8 @@
 
                             @if ($errors->has('user_ids'))
                                 <span class="help-block">
-                                        <strong>{{ $errors->first('user_ids') }}</strong>
-                                    </span>
+                                    <strong>{{ $errors->first('user_ids') }}</strong>
+                                </span>
                             @endif
                         </div>
 
@@ -250,6 +250,38 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
+
+            $("#toDo_form").validate({
+                rules: {
+                    "assigned_by": {
+                        required: true
+                    },
+                    "subject": {
+                        required: true
+                    },
+                    "due_date": {
+                        required: true
+                    },
+                    "user_ids[]": {
+                        required: true
+                    }
+                },
+                messages: {
+                    "assigned_by": {
+                        required: "Task Owner is required."
+                    },
+                    "subject": {
+                        required: "Subject is required."
+                    },
+                    "due_date": {
+                        required: "Due Date is required."
+                    },
+                    "user_ids[]": {
+                        required: "Users is required."
+                    }
+                }
+            });
+
             $("#due_date").datetimepicker({
                 format: "DD-MM-YYYY HH:mm:ss",
             });
