@@ -314,7 +314,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                        <strong>Salary From :</strong>
+                        <strong>Salary From :<span class = "required_fields"> *</span></strong>
                         <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
                             <div class="box-body col-xs-6 col-sm-6 col-md-6">
                                 <div class="">
@@ -338,7 +338,7 @@
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                        <strong>Salary To :</strong>
+                        <strong>Salary To :<span class = "required_fields"> *</span></strong>
                         <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
                             <div class="box-body col-xs-6 col-sm-6 col-md-6">
                                 <div class="">
@@ -483,11 +483,20 @@
                     "industry_id": {
                         required: true
                     },
-                    "salary_from":{
-                        number:true
+                    "lacs_from":{
+                        required:true
                     },
-                    "salary_to":{
-                        number:true
+                    "lacs_to":{
+                        required:true
+                    },
+                    "thousand_from":{
+                        required:true
+                    },
+                    "thousand_to":{
+                        required:true
+                    },
+                    "user_ids[]": {
+                        required : true,
                     }
                 },
                 messages: {
@@ -503,11 +512,20 @@
                     "industry_id": {
                         required: "Industry is required field."
                     },
-                    "salary_from": {
-                        number: "Enter Numeric value"
+                    "lacs_from": {
+                        required: "Select Numeric value"
                     },
-                    "salary_to": {
-                        number: "Enter Numeric value."
+                    "lacs_to": {
+                        required: "Select Numeric value."
+                    },
+                    "thousand_from": {
+                        required: "Select Numeric value"
+                    },
+                    "thousand_to": {
+                        required: "Select Numeric value."
+                    },
+                    "user_ids[]": {
+                        required : "User is required field.",
                     }
                 }
             });

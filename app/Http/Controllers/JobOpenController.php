@@ -677,8 +677,8 @@ class JobOpenController extends Controller
         }
 
         // lacs dropdown
-        $lacs = array();
-        $lacs[0] = 'lacs';
+        $lacs = array('' => 'lacs');
+        // $lacs[] = 'lacs';
         for($i=1;$i<=50;$i++){
             $lacs[$i] = $i;
         }
