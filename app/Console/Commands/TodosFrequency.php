@@ -175,13 +175,6 @@ class TodosFrequency extends Command
 /*
                              print_r($user_arr);
                         exit;*/
-                            $module_id = $value['id'];
-                            $module = 'Todos';
-                            $message = "$assigned_to_name: New task has been assigned to you";
-                            $link = route('todos.index');
-
-                            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
-
                             // TODO : Email Notification : data store in database
                             //foreach ($users as $k=>$v){
                                 $user_email = User::getUserEmailById($value1);
@@ -200,6 +193,15 @@ class TodosFrequency extends Command
                                 $module_id = $value['id'];
 
                                 event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+                                // Notification entry
+                                $module_id = $value['id'];
+                                $module = 'Todos';
+                                $message = "$assigned_to_name: New task has been assigned to you";
+                                $link = route('todos.index');
+
+                                event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
                             //}
                         }
                     }
