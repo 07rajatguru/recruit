@@ -29,16 +29,16 @@
 @section('content')
     
     <!-- popup -->
-    {{--@if($date == '2018-12-01')
+    @if($date == '2018-12-10')
     <a class='inline' href="#inline_content"></a>
     <div style='display:none'>
         <div id="inline_content" style="background: white;">
-            <div class="bs-example bs-example-standalone" data-example-id="dismissible-alert-js" style="height: 275px;">
-                <img class="img-popup" src="../images/source.gif" style="max-height:100%; width:auto;" />
+            <div class="bs-example bs-example-standalone" data-example-id="dismissible-alert-js">
+                <img class="img-popup" src="../images/adler.jpg" />
             </div>
         </div>
     </div>
-    @endif--}}
+    @endif
     <!-- popup -->
 
     <div class="row">
@@ -450,9 +450,9 @@
              }
              });*/
 
-            /*if($(".inline").length>0){
+            if($(".inline").length>0){
                 setTimeout(function (){$('.inline').fancybox().trigger('click')}, 1000);
-            }*/
+            }
             
             opentoalljob();
 

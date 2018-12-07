@@ -59,8 +59,8 @@
 
 .fancybox-close {
 	position: absolute;
-	top: 28% !important;
-	right: -7px;
+	top: 16% !important;
+	right: -15px;
 	width: 36px;
 	height: 36px;
 	cursor: pointer;
@@ -135,5 +135,5 @@
 .img-popup{
 	max-width: 100%;
 	margin: 0 auto;
-	max-height: 150px;
+	max-height: 100%;
 }
