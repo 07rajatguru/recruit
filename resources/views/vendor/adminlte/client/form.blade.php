@@ -461,48 +461,104 @@
                 }
             });
 
-            $("#clientForm").validate({
-                rules: {
-                    "name": {
-                        required: true
+            var superadmin_userid = "{!! env('SUPERADMINUSERID') !!}";
+            var strategy_userid = "{!! env('STRATEGYUSERID') !!}";
+            var loggedin_userid = <?php echo Auth::user()->id ?>;
+            //alert(superadmin_userid);alert(strategy_userid);alert(loggedin_userid);
+            if (loggedin_userid == superadmin_userid || loggedin_userid == strategy_userid){
+                $("#clientForm").validate({
+                    rules: {
+                        "name": {
+                            required: true
+                        },
+                        "mail": {
+                            required: true
+                        },
+                        "mobile": {
+                            required: true
+                        },
+                        "industry_id": {
+                            required: true
+                        },
+                        "status" : {
+                            required: true
+                        },
+                        "coordinator_name" : {
+                            required: true
+                        },
+                        "client_category" : {
+                            required: true,
+                        }
                     },
-                    "mail": {
-                        required: true
-                    },
-                    "mobile": {
-                        required: true
-                    },
-                    "industry_id": {
-                        required: true
-                    },
-                    "status" : {
-                        required: true
-                    },
-                    "coordinator_name" : {
-                        required: true
+                    messages: {
+                        "name": {
+                            required: "Name is required."
+                        },
+                        "mail": {
+                            required: "Email is required."
+                        },
+                        "mobile": {
+                            required: "Mobile is required."
+                        },
+                        "industry_id": {
+                            required: "Industry is required."
+                        },
+                        "status": {
+                            required: "Status is required."
+                        },
+                        "coordinator_name" :{
+                            required: "HR / Coordinator name is required."
+                        },
+                        "client_category" : {
+                            required: "Client Category is required.",
+                        }
                     }
-                },
-                messages: {
-                    "name": {
-                        required: "Name is required."
+                });
+            }
+            else {
+                $("#clientForm").validate({
+                    rules: {
+                        "name": {
+                            required: true
+                        },
+                        "mail": {
+                            required: true
+                        },
+                        "mobile": {
+                            required: true
+                        },
+                        "industry_id": {
+                            required: true
+                        },
+                        "status" : {
+                            required: true
+                        },
+                        "coordinator_name" : {
+                            required: true
+                        }
                     },
-                    "mail": {
-                        required: "Email is required."
-                    },
-                    "mobile": {
-                        required: "Mobile is required."
-                    },
-                    "industry_id": {
-                        required: "Industry is required."
-                    },
-                    "status": {
-                        required: "Status is required."
-                    },
-                    "coordinator_name" :{
-                        required: "HR / Coordinator name is required."
+                    messages: {
+                        "name": {
+                            required: "Name is required."
+                        },
+                        "mail": {
+                            required: "Email is required."
+                        },
+                        "mobile": {
+                            required: "Mobile is required."
+                        },
+                        "industry_id": {
+                            required: "Industry is required."
+                        },
+                        "status": {
+                            required: "Status is required."
+                        },
+                        "coordinator_name" :{
+                            required: "HR / Coordinator name is required."
+                        }
                     }
-                }
-            });
+                });
+            }
 
         });
 
