@@ -586,7 +586,7 @@ class ToDosController extends Controller
         $users = $request->user_ids;
 
         $frequency_type = $request->frequency_type;
-        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->start_date);
+        $start_date = $request->start_date;
       //  $assigned_by = $request->assigned_by;
 
 /*
@@ -621,7 +621,13 @@ class ToDosController extends Controller
 
         $toDos->priority = $priority;
         $toDos->description = $description;
-        $toDos->start_date = $start_date;
+        if (isset($start_date) && $start_date != '') {
+            $toDos->start_date = $dateClass->changeDMYHMStoYMDHMS($start_date);
+        }
+        else {
+            $toDos->start_date = NULL;
+        }
+
         $toDos->cc_user = $cc_user_id;
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
@@ -859,7 +865,7 @@ class ToDosController extends Controller
         $frequency_type = $request->get('frequency_type');
        // $assigned_by = $request->get('assigned_by');
         $users = $request->user_ids;
-        $start_date = $dateClass->changeDMYHMStoYMDHMS($request->get('start_date'));
+        $start_date = $request->get('start_date');
         
         $toDos = ToDos::find($id);
         if(isset($task_owner))
@@ -884,8 +890,12 @@ class ToDosController extends Controller
             $toDos->description = $description;
        /* if(isset($assigned_by))
             $toDos->assigned_by =$assigned_by;*/
-        if (isset($start_date)) 
-            $toDos->start_date = $start_date;
+        if (isset($start_date) && $start_date != '') {
+            $toDos->start_date = $dateClass->changeDMYHMStoYMDHMS($start_date);
+        }
+        else {
+            $toDos->start_date = NULL;
+        }
 
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 

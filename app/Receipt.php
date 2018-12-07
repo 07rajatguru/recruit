@@ -54,13 +54,28 @@ class Receipt extends Model
         $i = 0;
         foreach ($res as $key => $value) {
             $receipt[$i]['id'] = $value->id;
-            $receipt[$i]['date'] = date('d-m-Y', strtotime($value->date));
+            if (isset($value->date) && $value->date != '') {
+                $receipt[$i]['date'] = date('d-m-Y', strtotime($value->date));
+            }
+            else {
+                $receipt[$i]['date'] = '';
+            }
             $receipt[$i]['ref_no'] = $value->ref_no;
-            $receipt[$i]['value_date'] = date('d-m-Y', strtotime($value->value_date));
+            if (isset($value->value_date) && $value->value_date != '') {
+                $receipt[$i]['value_date'] = date('d-m-Y', strtotime($value->value_date));
+            }
+            else {
+                $receipt[$i]['value_date'] = '';
+            }
             $receipt[$i]['company_name'] = $value->company_name;
             $receipt[$i]['amount'] = $value->amount;
             $receipt[$i]['trans_id'] = $value->trans_id;
-            $receipt[$i]['txn_posted_date'] = date('d-m-Y H:i A', strtotime($value->txn_posted_date));
+            if (isset($value->txn_posted_date) && $value->txn_posted_date != '') {
+                $receipt[$i]['txn_posted_date'] = date('d-m-Y H:i A', strtotime($value->txn_posted_date));
+            }
+            else {
+                $receipt[$i]['txn_posted_date'] = '';
+            }
             $receipt[$i]['cr'] = $value->cr;
             $receipt[$i]['voucher_no'] = $value->voucher_no;
             $receipt[$i]['mode_of_receipt'] = $value->mode_of_receipt;

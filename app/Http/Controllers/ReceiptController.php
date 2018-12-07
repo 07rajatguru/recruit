@@ -271,8 +271,18 @@ class ReceiptController extends Controller
     	//For HDFC
     	if($bank_type == 'hdfc'){
 	    	$receipt->ref_no = $request->get('ref_no');
-	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
-	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	    	if ($request->get('value_date_hdfc') != '') {
+	    		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+	    	}
+	    	else {
+	    		$receipt->value_date = NULL;
+	    	}
+	    	if ($request->get('date') != '') {
+	   			$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	    	}
+	    	else {
+	    		$receipt->date = NULL;
+	    	}
 	   		$receipt->description = $request->get('desc_hdfc');
 	   		$receipt->name_of_company = $request->get('company_name_hdfc');
 	   		$receipt->amount = $request->get('amount_hdfc');
@@ -284,8 +294,18 @@ class ReceiptController extends Controller
    		//For ICICI
    		if($bank_type == 'icici'){
 	   		$receipt->trans_id = $request->get('tran_id');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		if ($request->get('value_date_icici') != '') {
+	   			$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
+	   		}
+	   		else {
+	   			$receipt->value_date = NULL;
+	   		}
+	   		if ($request->get('txn_posted_date') != '') {
+	   			$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		}
+	   		else {
+	   			$receipt->txn_posted_date = NULL;
+	   		}
 	   		$receipt->description = $request->get('desc_icici');
 	   		$receipt->name_of_company = $request->get('company_name_icici');
 	   		$receipt->amount = $request->get('amount_icici');
@@ -298,7 +318,12 @@ class ReceiptController extends Controller
    		// For Other
    		if($bank_type == 'other'){
 	   		$receipt->voucher_no = $request->get('voucher_no');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		if ($request->get('value_date_other') != '') {
+	   			$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		}
+	   		else {
+	   			$receipt->value_date = NULL;
+	   		}
 	   		$receipt->remarks = $request->get('remarks_other');
 	   		$receipt->name_of_company = $request->get('company_name_other');
 	   		$receipt->amount = $request->get('amount_other');
@@ -567,8 +592,18 @@ class ReceiptController extends Controller
 		//For HDFC
     	if($bank_type == 'hdfc'){
 	    	$receipt->ref_no = $request->get('ref_no');
-	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
-	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	    	if ($request->get('value_date_hdfc') != '') {
+	    		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+	    	}
+	    	else {
+	    		$receipt->value_date = NULL;
+	    	}
+	    	if ($request->get('date') != '') {
+	   			$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	    	}
+	    	else {
+	    		$receipt->date = NULL;
+	    	}
 	   		$receipt->description = $request->get('desc_hdfc');
 	   		$receipt->name_of_company = $request->get('company_name_hdfc');
 	   		$receipt->amount = $request->get('amount_hdfc');
@@ -580,8 +615,18 @@ class ReceiptController extends Controller
    		//For ICICI
    		if($bank_type == 'icici'){
 	   		$receipt->trans_id = $request->get('tran_id');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		if ($request->get('value_date_icici') != '') {
+	   			$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
+	   		}
+	   		else {
+	   			$receipt->value_date = NULL;
+	   		}
+	   		if ($request->get('txn_posted_date') != '') {
+	   			$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		}
+	   		else {
+	   			$receipt->txn_posted_date = NULL;
+	   		}
 	   		$receipt->description = $request->get('desc_icici');
 	   		$receipt->name_of_company = $request->get('company_name_icici');
 	   		$receipt->amount = $request->get('amount_icici');
@@ -594,7 +639,12 @@ class ReceiptController extends Controller
    		// For Other
    		if($bank_type == 'other'){
 	   		$receipt->voucher_no = $request->get('voucher_no');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		if ($request->get('value_date_other') != '') {
+	   			$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		}
+	   		else {
+	   			$receipt->value_date = NULL;
+	   		}
 	   		$receipt->remarks = $request->get('remarks_other');
 	   		$receipt->name_of_company = $request->get('company_name_other');
 	   		$receipt->amount = $request->get('amount_other');
@@ -863,8 +913,18 @@ class ReceiptController extends Controller
     	//For HDFC
     	if($bank_type == 'hdfc'){
 	    	$receipt->ref_no = $request->get('ref_no');
-	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
-	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	    	if ($request->get('value_date_hdfc') != '') {
+	    		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_hdfc'));
+	    	}
+	    	else {
+	    		$receipt->value_date = NULL;
+	    	}
+	    	if ($request->get('date') != '') {
+	   			$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+	    	}
+	    	else {
+	    		$receipt->date = NULL;
+	    	}
 	   		$receipt->description = $request->get('desc_hdfc');
 	   		$receipt->name_of_company = $request->get('company_name_hdfc');
 	   		$receipt->amount = $request->get('amount_hdfc');
@@ -876,8 +936,18 @@ class ReceiptController extends Controller
    		//For ICICI
    		if($bank_type == 'icici'){
 	   		$receipt->trans_id = $request->get('tran_id');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		if ($request->get('value_date_icici') != '') {
+	   			$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_icici'));
+	   		}
+	   		else {
+	   			$receipt->value_date = NULL;
+	   		}
+	   		if ($request->get('txn_posted_date') != '') {
+	   			$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		}
+	   		else {
+	   			$receipt->txn_posted_date = NULL;
+	   		}
 	   		$receipt->description = $request->get('desc_icici');
 	   		$receipt->name_of_company = $request->get('company_name_icici');
 	   		$receipt->amount = $request->get('amount_icici');
@@ -890,7 +960,12 @@ class ReceiptController extends Controller
    		// For Other
    		if($bank_type == 'other'){
 	   		$receipt->voucher_no = $request->get('voucher_no');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		if ($request->get('value_date_other') != '') {
+	   			$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date_other'));
+	   		}
+	   		else {
+	   			$receipt->value_date = NULL;
+	   		}
 	   		$receipt->remarks = $request->get('remarks_other');
 	   		$receipt->name_of_company = $request->get('company_name_other');
 	   		$receipt->amount = $request->get('amount_other');
@@ -929,8 +1004,18 @@ class ReceiptController extends Controller
     	$receipt = Receipt::find($id);
     	if ($bank_type == 'hdfc') {
     		$receipt->ref_no = $request->get('ref_no');
-	    	$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
-	   		$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+    		if ($request->get('value_date') != '') {
+	    		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+    		}
+    		else {
+    			$receipt->value_date = NULL;
+    		}
+    		if ($request->get('date') != '') {
+	   			$receipt->date = $dateClass->changeDMYtoYMD($request->get('date'));
+    		}
+    		else {
+    			$receipt->date = NULL;
+    		}
 	   		$receipt->description = $request->get('description');
 	   		$receipt->name_of_company = $request->get('company_name');
 	   		$receipt->amount = $request->get('amount');
@@ -938,8 +1023,18 @@ class ReceiptController extends Controller
     	}
     	else if ($bank_type == 'icici') {
     		$receipt->trans_id = $request->get('trans_id');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
-	   		$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+	   		if ($request->get('value_date') != '') {
+	    		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+    		}
+    		else {
+    			$receipt->value_date = NULL;
+    		}
+    		if ($request->get('txn_posted_date') != '') {
+	   			$receipt->txn_posted_date = $dateClass->changeDMYHMStoYMDHMS($request->get('txn_posted_date'));
+    		}
+    		else {
+    			$receipt->txn_posted_date = NULL;
+    		}
 	   		$receipt->description = $request->get('description');
 	   		$receipt->name_of_company = $request->get('company_name');
 	   		$receipt->amount = $request->get('amount');
@@ -948,7 +1043,12 @@ class ReceiptController extends Controller
     	}
     	else if ($bank_type == 'other') {
     		$receipt->voucher_no = $request->get('voucher_no');
-	   		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+	   		if ($request->get('value_date') != '') {
+	    		$receipt->value_date = $dateClass->changeDMYtoYMD($request->get('value_date'));
+    		}
+    		else {
+    			$receipt->value_date = NULL;
+    		}
 	   		$receipt->name_of_company = $request->get('company_name');
 	   		$receipt->amount = $request->get('amount');
 	   		$receipt->mode_of_receipt = $request->get('mode_of_receipt');
