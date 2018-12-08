@@ -18,6 +18,10 @@ use App\UserLeave;
 use App\Events\NotificationMail;
 use App\UsersLog;
 use App\UsersFamily;
+use App\Training;
+use App\TrainingVisibleUser;
+use App\ProcessManual;
+use App\ProcessVisibleUser;
 
 class UserController extends Controller
 {
@@ -103,17 +107,32 @@ class UserController extends Controller
         $user->account_manager = $account_manager;
         $users = $user->save();
 
-       /* if(isset($user) && sizeof($user) > 0){
-            if(isset($type)){
-                $user->type = $type;
+        $user_id = $user->id;
+
+        // Add new User to training & process manual if it is for all users and entry in database
+        if ($type == 'recruiter' && $status == 'Active') {
+            $training_id = Training::getAlltrainingIds(1);
+            if (isset($training_id) && $training_id != '') {
+                foreach ($training_id as $key => $value) {
+                    $training_visible_users = new TrainingVisibleUser;
+                    $training_visible_users->training_id = $value;
+                    $training_visible_users->user_id = $user_id;
+                    $training_visible_users->save();
+                }
             }
-        }*/
-
+            //print_r($training_id);exit;
+            $process_id = ProcessManual::getAllprocessmanualIds(1);
+            if (isset($process_id) && $process_id != '') {
+                foreach ($process_id as $key => $value) {
+                    $process_visible_users = new ProcessVisibleUser();
+                    $process_visible_users->process_id = $value;
+                    $process_visible_users->user_id = $user_id;
+                    $process_visible_users->save();
+                }
+            }
+        }
      
-
-        return redirect()->route('users.index')
-            ->with('success','User created successfully');
-
+        return redirect()->route('users.index')->with('success','User created successfully');
     }
 
     /**

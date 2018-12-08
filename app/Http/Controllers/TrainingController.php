@@ -128,6 +128,18 @@ class TrainingController extends Controller
             }
         }
 
+        // Check training material for all users or not and update select_all field in daatabase
+        $users_id = User::getAllUsers('recruiter');
+        $user_count = sizeof($users_id);
+
+        $training_users = sizeof($users);
+        if ($training_users == $user_count) {
+            \DB::statement("UPDATE training SET select_all = '1' where id=$training_id");
+        }
+        else {
+            \DB::statement("UPDATE training SET select_all = '0' where id=$training_id");
+        }
+
         //Email Notification : data store in database
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
@@ -219,37 +231,37 @@ class TrainingController extends Controller
         //save files 
         $training_id = $training->id;         
         if (isset($file) && sizeof($file) > 0) {
-        //print_r($upload_documents);exit;
-                    if (isset($file) && $file->isValid()) {
-                        // echo "here";
-                        $file_name = $file->getClientOriginalName();
-                        $file_extension = $file->getClientOriginalExtension();
-                        $file_realpath = $file->getRealPath();
-                        $file_size = $file->getSize();
+            //print_r($upload_documents);exit;
+            if (isset($file) && $file->isValid()) {
+                // echo "here";
+                $file_name = $file->getClientOriginalName();
+                $file_extension = $file->getClientOriginalExtension();
+                $file_realpath = $file->getRealPath();
+                $file_size = $file->getSize();
 
-                        //$extention = File::extension($file_name);
+                //$extention = File::extension($file_name);
 
-                        $dir = 'uploads/training/' . $training_id . '/';
+                $dir = 'uploads/training/' . $training_id . '/';
 
-                        if (!file_exists($dir) && !is_dir($dir)) {
-                            mkdir($dir, 0777, true);
-                            chmod($dir, 0777);
-                        }
-                        $file->move($dir, $file_name);
+                if (!file_exists($dir) && !is_dir($dir)) {
+                    mkdir($dir, 0777, true);
+                    chmod($dir, 0777);
+                }
+                $file->move($dir, $file_name);
 
-                        $file_path = $dir . $file_name;
-                        $training_doc = new TrainingDoc();
-                        $training_doc->training_id = $training_id;
-                        $training_doc->file = $file_path;
-                        $training_doc->name = $file_name;
-                        $training_doc->size = $file_size;
-                        $training_doc->created_at = date('Y-m-d');
-                        $training_doc->updated_at = date('Y-m-d');
-					    $training_doc->save();
-                    }
-
-                return redirect('training/'. $id .'/edit');        
+                $file_path = $dir . $file_name;
+                $training_doc = new TrainingDoc();
+                $training_doc->training_id = $training_id;
+                $training_doc->file = $file_path;
+                $training_doc->name = $file_name;
+                $training_doc->size = $file_size;
+                $training_doc->created_at = date('Y-m-d');
+                $training_doc->updated_at = date('Y-m-d');
+			    $training_doc->save();
             }
+
+            return redirect('training/'. $id .'/edit');        
+        }
 
         $users = $request->input('user_ids');
         TrainingVisibleUser::where('training_id',$training_id)->delete();
@@ -260,6 +272,18 @@ class TrainingController extends Controller
                 $training_visible_users->user_id = $value;
                 $training_visible_users->save();
             }
+        }
+
+        // Check training material for all users or not and update select_all field in daatabase
+        $users_id = User::getAllUsers('recruiter');
+        $user_count = sizeof($users_id);
+
+        $training_users = sizeof($users);
+        if ($training_users == $user_count) {
+            \DB::statement("UPDATE training SET select_all = '1' where id=$training_id");
+        }
+        else {
+            \DB::statement("UPDATE training SET select_all = '0' where id=$training_id");
         }
 
         return redirect()->route('training.index')->with('success','Training Updated Successfully');

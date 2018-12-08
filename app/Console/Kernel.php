@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\ClientStatus',
         'App\Console\Commands\JobOpentoAll',
         'App\Console\Commands\TrainingSelectAllUser',
+        'App\Console\Commands\ProcessManualSelectAllUsers',
     ];
 
     /**

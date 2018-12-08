@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\User;
 use App\TrainingVisibleUser;
+use App\Training;
 
 class TrainingSelectAllUser extends Command
 {
@@ -42,7 +43,16 @@ class TrainingSelectAllUser extends Command
         $users = User::getAllUsers('recruiter');
         $user_count = sizeof($users);
 
-        $training = TrainingVisibleUser::getUserIdCount();
-        print_r($training);
+        $training_id = Training::getAlltrainingIds();
+        foreach ($training_id as $key) {
+            $t_id = TrainingVisibleUser::getUserIdCount($key);
+            if ($t_id == $user_count) {
+                \DB::statement("UPDATE training SET select_all = '1' where id=$key");
+                //print_r($t_id);exit;
+            }
+            else {
+                \DB::statement("UPDATE training SET select_all = '0' where id=$key");
+            }
+        }
     }
 }

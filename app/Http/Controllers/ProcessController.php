@@ -137,6 +137,18 @@ class ProcessController extends Controller
             }
         }
 
+        // Check Process Manual for all users or not and update select_all field in database
+        $users_id = User::getAllUsers();
+        $user_count = sizeof($users_id);
+
+        $process_users = sizeof($users);
+        if ($process_users == $user_count) {
+            \DB::statement("UPDATE process_manual SET select_all = '1' where id=$process_id");
+        }
+        else {
+            \DB::statement("UPDATE process_manual SET select_all = '0' where id=$process_id");
+        }
+
         //Email Notification : data store in database
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
@@ -225,51 +237,63 @@ class ProcessController extends Controller
         //save files 
         $process_id = $process->id;         
         if (isset($file) && sizeof($file) > 0) {
-                    if (isset($file) && $file->isValid()) {
-                        // echo "here";
-                        $file_name = $file->getClientOriginalName();
-                        $file_extension = $file->getClientOriginalExtension();
-                        $file_realpath = $file->getRealPath();
-                        $file_size = $file->getSize();
+            if (isset($file) && $file->isValid()) {
+                // echo "here";
+                $file_name = $file->getClientOriginalName();
+                $file_extension = $file->getClientOriginalExtension();
+                $file_realpath = $file->getRealPath();
+                $file_size = $file->getSize();
 
-                        //$extention = File::extension($file_name);
+                //$extention = File::extension($file_name);
 
-                        $dir = 'uploads/process/' . $process_id . '/';
+                $dir = 'uploads/process/' . $process_id . '/';
 
-                        if (!file_exists($dir) && !is_dir($dir)) {
-                            mkdir($dir, 0777, true);
-                            chmod($dir, 0777);
-                        }
-                        $file->move($dir, $file_name);
+                if (!file_exists($dir) && !is_dir($dir)) {
+                    mkdir($dir, 0777, true);
+                    chmod($dir, 0777);
+                }
+                $file->move($dir, $file_name);
 
-                        $file_path = $dir . $file_name;
-                        $process_doc = new ProcessDoc();
-                        $process_doc->process_id = $process_id;
-                        $process_doc->file = $file_path;
-                        $process_doc->name = $file_name;
-                        $process_doc->size = $file_size;
-                        $process_doc->created_at = date('Y-m-d');
-                        $process_doc->updated_at = date('Y-m-d');
-					    $process_doc->save();
-                    }
-                    return redirect()->route('process.edit',[$process_id]); 
+                $file_path = $dir . $file_name;
+                $process_doc = new ProcessDoc();
+                $process_doc->process_id = $process_id;
+                $process_doc->file = $file_path;
+                $process_doc->name = $file_name;
+                $process_doc->size = $file_size;
+                $process_doc->created_at = date('Y-m-d');
+                $process_doc->updated_at = date('Y-m-d');
+			    $process_doc->save();
+            }
+            return redirect()->route('process.edit',[$process_id]); 
         }
 
         // Update in process visible table
-            $users = $request->input('user_ids');
-            $process_id = $process->id;
-            ProcessVisibleUser::where('process_id',$process_id)->delete();
-            if(isset($users) && sizeof($users)>0){
-                foreach ($users as $key=>$value){
-                    $process_visible_users = new ProcessVisibleUser();
-                    $process_visible_users->process_id = $process_id;
-                    $process_visible_users->user_id = $value;
-                    $process_visible_users->save();
-                }
+        $users = $request->input('user_ids');
+        $process_id = $process->id;
+        ProcessVisibleUser::where('process_id',$process_id)->delete();
+        if(isset($users) && sizeof($users)>0){
+            foreach ($users as $key=>$value){
+                $process_visible_users = new ProcessVisibleUser();
+                $process_visible_users->process_id = $process_id;
+                $process_visible_users->user_id = $value;
+                $process_visible_users->save();
             }
-            //echo '<pre>';print_r($process_visible_users);die;
+        }
+        //echo '<pre>';print_r($process_visible_users);die;
+
+        // Check Process Manual for all users or not and update select_all field in database
+        $users_id = User::getAllUsers();
+        $user_count = sizeof($users_id);
+
+        $process_users = sizeof($users);
+        if ($process_users == $user_count) {
+            \DB::statement("UPDATE process_manual SET select_all = '1' where id=$process_id");
+        }
+        else {
+            \DB::statement("UPDATE process_manual SET select_all = '0' where id=$process_id");
+        }
+
         return redirect()->route('process.index')->with('success','Process Manual Updated Successfully');
-        
     }
 
 

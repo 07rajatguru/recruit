@@ -63,4 +63,25 @@ class ProcessManual extends Model
        // echo '<pre>';print_r($process_list);exit;
         return $process_list;
     }
+
+    public static function getAllprocessmanualIds($select_all=0){
+
+        $query = ProcessManual::query();
+        $query = $query->select('process_manual.id');
+        if ($select_all > 0) {
+            $query = $query->where('process_manual.select_all',$select_all);
+        }
+        $res = $query->get();
+
+        $process_manual_id = array();
+        $i = 0;
+        if (isset($res) && $res != '') {
+            foreach ($res as $key => $value) {
+                $process_manual_id[$i] = $value->id;
+                $i++;
+            }
+        }
+
+        return $process_manual_id;
+    }
 }

@@ -9,12 +9,11 @@ class TrainingVisibleUser extends Model
     public $table = "training_visible_users";
     public $timestamps = false;
 
-    public static function getUserIdCount(){
+    public static function getUserIdCount($training_id){
 
     	$query = TrainingVisibleUser::query();
-    	$query = $query->select(\DB::raw("COUNT(training_visible_users.user_id) as count"));
-    	$query = $query->groupBy('training_visible_users.training_id');
-    	$res = $query->get();
+    	$query = $query->where('training_id',$training_id);
+    	$res = $query->count();
 
     	return $res;
     }

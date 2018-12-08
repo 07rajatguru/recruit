@@ -50,4 +50,25 @@ class Training extends Model
         return $training_list;
     }
 
+    public static function getAlltrainingIds($select_all=0){
+
+        $query = Training::query();
+        $query = $query->select('training.id');
+        if ($select_all > 0) {
+            $query = $query->where('training.select_all',$select_all);
+        }
+        $res = $query->get();
+
+        $training_id = array();
+        $i = 0;
+        if (isset($res) && $res != '') {
+            foreach ($res as $key => $value) {
+                $training_id[$i] = $value->id;
+                $i++;
+            }
+        }
+
+        return $training_id;
+    }
+
 }
