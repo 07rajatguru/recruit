@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -45,7 +45,7 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function postLogin(Request $request)
+    public function login(Request $request)
     {
 
         $this->validate($request, [
@@ -54,10 +54,20 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if ($this->auth->attempt($credentials, $request->has('remember')))
+        if (\Auth::attempt($credentials, $request->has('remember')))
         {
 
             $user = \Auth::user();
+            $user_status = $user->status;
+            if ($user_status == 'Inactive') {
+                \Auth::logout();
+
+                return redirect('/login')
+                    ->withInput($request->only('email', 'remember'))
+                    ->withErrors([
+                        'email' => 'These user currently inactive',
+                    ]);
+            }
             //$user_id = \Auth::user()->id;
             // Entry of login
             $users_log= new UsersLog();
@@ -69,14 +79,14 @@ class LoginController extends Controller
             $users_log->updated_at = gmdate("Y-m-d H:i:s");
             $users_log->save();
 
-            return redirect('/home');
+            return redirect('/dashboard');
             //return redirect()->intended($this->redirectPath());
         }
 
-        return redirect($this->loginPath())
+        return redirect('/login')
             ->withInput($request->only('email', 'remember'))
             ->withErrors([
-                'email' => $this->getFailedLoginMessage(),
+                'email' => 'These credentials do not match our records',
             ]);
     }
 
