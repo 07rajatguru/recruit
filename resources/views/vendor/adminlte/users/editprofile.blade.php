@@ -24,14 +24,10 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-                <h2>Edit User Profile</h2>  
+            <h2>Edit User Profile</h2>  
         </div>
-
-
         <div class="pull-right">
-
-             <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
-            
+            <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
         </div>
     </div>
 </div>
@@ -61,7 +57,11 @@
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: </strong>
-                                {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control','disabled')) !!}
+                                @if($isSuperAdmin || $isAccountant)
+                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control')) !!}
+                                @else
+                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control','disabled')) !!}
+                                @endif
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>
@@ -97,8 +97,19 @@
                                     </div>
                                 {!! Form::text('date_of_anni',isset($user['anni_date']) ? $user['anni_date'] : null, array('id'=>'date_of_anni','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '6')) !!}
                                 </div>
-                            </div>   
+                            </div>
 
+                            <?php if($isSuperAdmin || $isAccountant) { ?>
+                            <div class="form-group {{ $errors->has('date_of_exit') ? 'has-error' : '' }}">
+                                <strong>Exit Date: </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '7')) !!}
+                                </div>
+                            </div> 
+                            <?php }?>  
 
                         </div>
                     </div>
@@ -132,15 +143,14 @@
                                             <span>Select Image</span>
                                         </div>
                                         <div id = "upload_images_div">
-                                            
                                         </div>
                                         <div>
-                                                <span class="btn btn-default btn-file">
-                                                <span class="fileinput-new">Select Profile Photo</span>
-                                               <!--  <span class="fileinput-exists" style="">Change</span> -->
-                                                <input type="file" name="image" id="upload_img">
-                                                </span>
-                                                <!-- <a href="#" class="btn-default fileinput-exists" data-dismiss="fileinput">Remove</a> -->
+                                            <span class="btn btn-default btn-file">
+                                            <span class="fileinput-new">Select Profile Photo</span>
+                                           <!--  <span class="fileinput-exists" style="">Change</span> -->
+                                            <input type="file" name="image" id="upload_img">
+                                            </span>
+                                            <!-- <a href="#" class="btn-default fileinput-exists" data-dismiss="fileinput">Remove</a> -->
                                         </div>
                                     </div>  
                                 </div>
@@ -148,7 +158,11 @@
                        
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
                                 <strong>Designation: </strong>
-                                {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','disabled')) !!}
+                                @if($isSuperAdmin || $isAccountant)
+                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control')) !!}
+                                @else
+                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','disabled')) !!}
+                                @endif
                                 @if ($errors->has('designation'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('designation') }}</strong>
@@ -165,18 +179,6 @@
                                 </span>
                                 @endif
                             </div>
-
-                            <?php if($isSuperAdmin || $isAccountant) { ?>
-                            <div class="form-group {{ $errors->has('date_of_exit') ? 'has-error' : '' }}">
-                                <strong>Exit Date: </strong>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '7')) !!}
-                                </div>
-                            </div> 
-                            <?php }?>  
                         </div>
                     </div>
                 </div>
@@ -512,6 +514,7 @@
         </div>
     </div>
 
+@if($isSuperAdmin || $isAccountant)
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
@@ -534,6 +537,7 @@
             </div>
         </div>
     </div>
+@endif
 
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">

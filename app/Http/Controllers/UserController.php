@@ -407,26 +407,18 @@ class UserController extends Controller
         $user = array();
 
         // profile photo
-
         $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
-
-        if(isset($user_doc_info))
-        {
-            
+        if(isset($user_doc_info)){
             $user['photo'] = $user_doc_info->file;
             $user['type'] = $user_doc_info->type;
         }
-        else
-        {
-            
+        else{
             $user['photo'] = '';
             $user['type'] = '';
         }
 
         $user_info = User::getProfileInfo($user_id);
-        
-        foreach($user_info as $key=>$value)
-        {
+        foreach($user_info as $key=>$value){
             $user['user_id'] = $user_id;
             $user['name'] = $value->name;
             $user['email'] = $value->email;
@@ -440,26 +432,12 @@ class UserController extends Controller
             $user['branch_name'] = $value->branch_name;
             $user['ifsc_code'] = $value->ifsc_code;
             $user['user_full_name'] = $value->bank_full_name;
-
             $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
             $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
-            $user['spouse_name'] = $value->spouse_name;
-            $user['spouse_profession'] = $value->spouse_profession;
-            $user['spouse_contact_number'] = $value->spouse_contact_number;
-
-            $user['father_name'] = $value->father_name;
-            $user['father_profession'] = $value->father_profession;
-            $user['father_contact_number'] = $value->father_contact_number;
-
-            $user['mother_name'] = $value->mother_name;
-            $user['mother_profession'] = $value->mother_profession;
-            $user['mother_contact_number'] = $value->mother_contact_number;
         }
 
         $j=0;
-
         $user['doc'] = array();
-
         $users_docs = \DB::table('users_doc')
                       ->select('users_doc.*')
                       ->where('user_id','=',$user_id)
@@ -467,9 +445,7 @@ class UserController extends Controller
                       ->get();
 
         $utils = new Utils();
-
-        foreach($users_docs as $key=>$value)
-        {
+        foreach($users_docs as $key=>$value){
             $user['doc'][$j]['name'] = $value->name;
             $user['doc'][$j]['id'] = $value->id;
             $user['doc'][$j]['url'] = "../".$value->file;
@@ -494,34 +470,59 @@ class UserController extends Controller
 
             $user_basic_info = User::find($user_id);
             $user_basic_info->name = Input::get('name');
+            $user_basic_info->email = Input::get('email');
             $user_basic_info->secondary_email = Input::get('semail');
             $user_basic_info->save();
 
-            $users_otherinfo = UserOthersInfo::find($user_other_info->id);
-            $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD(Input::get('date_of_joining'));
-            $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD(Input::get('date_of_birth'));
-            $users_otherinfo->fixed_salary = Input::get('fixed_salary');
+            // User Otherinfo update
+            $date_of_joining = Input::get('date_of_joining');
+            $date_of_birth = Input::get('date_of_birth');
+            $date_of_anniversary = Input::get('date_of_anni');
+            $date_of_exit = Input::get('date_of_exit');
             $acc_no = Input::get('account_no');
+            $ifsc_code = Input::get('ifsc');
+
+            $users_otherinfo = UserOthersInfo::find($user_other_info->id);
+            if (isset($date_of_joining) && $date_of_joining != '') {
+                $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
+            }
+            else {
+                $users_otherinfo->date_of_joining = NULL;
+            }
+            if (isset($date_of_birth) && $date_of_birth != '') {
+                $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
+            }
+            else {
+                $users_otherinfo->date_of_birth = NULL;
+            }
             if(isset($acc_no) && $acc_no!=''){
                 $users_otherinfo->acc_no = $acc_no;
             }
             else{
-                $users_otherinfo->acc_no = '0';
+                $users_otherinfo->acc_no = '';
             }
-           
-            $ifsc_code = Input::get('ifsc');
             if(isset($ifsc_code) && $ifsc_code!=''){
                 $users_otherinfo->ifsc_code = $ifsc_code;
             }
             else{
-                $users_otherinfo->ifsc_code = '0';
+                $users_otherinfo->ifsc_code = '';
             }
-            
             $users_otherinfo->bank_name = Input::get('bank_name');
             $users_otherinfo->branch_name = Input::get('branch_name');
             $users_otherinfo->bank_full_name = Input::get('user_full_name');
-            $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD(Input::get('date_of_anni'));
-            $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD(Input::get('date_of_exit'));
+            if (isset($date_of_anniversary) && $date_of_anniversary != '') {
+                $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
+            }
+            else {
+                $users_otherinfo->date_of_anniversary = NULL;
+            }
+            if (isset($date_of_exit) && $date_of_exit != '') {
+                $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
+            }
+            else {
+                $users_otherinfo->date_of_exit = NULL;
+            }
+            $users_otherinfo->fixed_salary = Input::get('fixed_salary');
             $users_otherinfo->save();
 
             // stored photo
@@ -606,45 +607,82 @@ class UserController extends Controller
         else{
             $user_basic_info = User::find($user_id);
             $user_basic_info->name = Input::get('name');
+            $user_basic_info->email = Input::get('email');
             $user_basic_info->secondary_email = Input::get('semail');
             $user_basic_info->save();
 
             // User Otherinfo store
+            $date_of_joining = Input::get('date_of_joining');
+            $date_of_birth = Input::get('date_of_birth');
+            $date_of_anniversary = Input::get('date_of_anni');
+            $date_of_exit = Input::get('date_of_exit');
+            $acc_no = Input::get('account_no');
+            $ifsc_code = Input::get('ifsc');
+
             $users_otherinfo= new UserOthersInfo;
             $users_otherinfo->user_id = $user_id;
-            $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD(Input::get('date_of_joining'));
-            $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD(Input::get('date_of_birth'));
-            $users_otherinfo->fixed_salary = Input::get('fixed_salary');
-            $acc_no = Input::get('account_no');
+            if (isset($date_of_joining) && $date_of_joining != '') {
+                $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
+            }
+            else {
+                $users_otherinfo->date_of_joining = NULL;
+            }
+            if (isset($date_of_birth) && $date_of_birth != '') {
+                $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
+            }
+            else {
+                $users_otherinfo->date_of_birth = NULL;
+            }
             if(isset($acc_no) && $acc_no!=''){
                 $users_otherinfo->acc_no = $acc_no;
             }
             else{
-                $users_otherinfo->acc_no = '0';
+                $users_otherinfo->acc_no = '';
             }
-           
-            $ifsc_code = Input::get('ifsc');
             if(isset($ifsc_code) && $ifsc_code!=''){
                 $users_otherinfo->ifsc_code = $ifsc_code;
             }
             else{
-                $users_otherinfo->ifsc_code = '0';
+                $users_otherinfo->ifsc_code = '';
             }
-
             $users_otherinfo->bank_name = Input::get('bank_name');
             $users_otherinfo->branch_name = Input::get('branch_name');
             $users_otherinfo->bank_full_name = Input::get('user_full_name');
-            $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD(Input::get('date_of_anni'));
-            $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD(Input::get('date_of_exit'));
+            if (isset($date_of_anniversary) && $date_of_anniversary != '') {
+                $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
+            }
+            else {
+                $users_otherinfo->date_of_anniversary = NULL;
+            }
+            if (isset($date_of_exit) && $date_of_exit != '') {
+                $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
+            }
+            else {
+                $users_otherinfo->date_of_exit = NULL;
+            }
+            $users_otherinfo->fixed_salary = Input::get('fixed_salary');
             $users_otherinfo->save();
 
             // Users Family data store
-            /*$users_family = new UsersFamily();
-            $users_family->user_id = $user_id;*/
+            for ($i=1; $i <=5 ; $i++) {
+                $name = Input::get('name_'.$i);
+                $relationship = Input::get('relationship_'.$i);
+                $occupation = Input::get('occupation_'.$i);
+                $contact_no = Input::get('contact_no_'.$i);
+
+                if (isset($name) && $name != '') {
+                    $users_family = new UsersFamily();
+                    $users_family->user_id = $user_id;
+                    $users_family->name = $name;
+                    $users_family->relationship = $relationship;
+                    $users_family->occupation = $occupation;
+                    $users_family->contact_no = $contact_no;
+                    $users_family->save();
+                }
+            }
 
             // stored photo
             if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
-            
                 $file_name = $upload_profile_photo->getClientOriginalName();
                 $file_extension = $upload_profile_photo->getClientOriginalExtension();
                 $file_realpath = $upload_profile_photo->getRealPath();
