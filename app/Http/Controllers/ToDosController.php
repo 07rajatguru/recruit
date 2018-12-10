@@ -628,7 +628,13 @@ class ToDosController extends Controller
             $toDos->start_date = NULL;
         }
 
-        $toDos->cc_user = $cc_user_id;
+        // CC user if not selected then NULL store
+        if (isset($cc_user_id) && $cc_user_id > 0) {
+            $toDos->cc_user = $cc_user_id;
+        }
+        else {
+            $toDos->cc_user = NULL;
+        }
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
@@ -880,8 +886,12 @@ class ToDosController extends Controller
             $toDos->type =$type;
         if(isset($status))
             $toDos->status = $status;
-        if(isset($cc_user_id))
+        if(isset($cc_user_id) && $cc_user_id > 0){
             $toDos->cc_user = $cc_user_id;
+        }
+        else {
+            $toDos->cc_user = NULL;
+        }
         if(isset($priority))
             $toDos->priority = $priority;
         //if(isset($reminder))
