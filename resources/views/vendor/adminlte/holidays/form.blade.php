@@ -160,7 +160,7 @@
                     "to_date" : {
                         required: true,
                     },
-                    "user_ids" : {
+                    "user_ids[]" : {
                         required: true,
                     },
                 },
@@ -177,8 +177,8 @@
                     "to_date" : {
                         required: "To Date is required field.",
                     },
-                    "user_ids" : {
-                        required: "Users is required field",
+                    "user_ids[]" : {
+                        required: "User is required field",
                     },
                 }
             });
