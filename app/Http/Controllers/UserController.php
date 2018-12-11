@@ -434,6 +434,22 @@ class UserController extends Controller
             $user['user_full_name'] = $value->bank_full_name;
             $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
             $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+
+            for ($i=1; $i <= 5 ; $i++) {
+                $users_family = UsersFamily::getAllFamilyDetailsofUser($user_id,$i);
+                if (isset($users_family) && $users_family != '') {
+                    $user['name_'.$i] = $users_family->name;
+                    $user['relationship_'.$i] = $users_family->relationship;
+                    $user['occupation_'.$i] = $users_family->occupation;
+                    $user['contact_no_'.$i] = $users_family->contact_no;
+                }
+                else {
+                    $user['name_'.$i] = '';
+                    $user['relationship_'.$i] = '';
+                    $user['occupation_'.$i] = '';
+                    $user['contact_no_'.$i] = '';
+                }
+            }
         }
 
         $j=0;
@@ -470,7 +486,7 @@ class UserController extends Controller
 
             $user_basic_info = User::find($user_id);
             $user_basic_info->name = Input::get('name');
-            $user_basic_info->email = Input::get('email');
+            //$user_basic_info->email = Input::get('email');
             $user_basic_info->secondary_email = Input::get('semail');
             $user_basic_info->save();
 
@@ -524,6 +540,29 @@ class UserController extends Controller
             }
             $users_otherinfo->fixed_salary = Input::get('fixed_salary');
             $users_otherinfo->save();
+
+            // User Family Details update
+            // delete previous data
+            $user_family_delete = UsersFamily::where('user_id',$user_id)->delete();
+
+            // data store
+            for ($i=1; $i <=5 ; $i++) {
+                $name = Input::get('name_'.$i);
+                $relationship = Input::get('relationship_'.$i);
+                $occupation = Input::get('occupation_'.$i);
+                $contact_no = Input::get('contact_no_'.$i);
+
+                if (isset($name) && $name != '') {
+                    $users_family = new UsersFamily();
+                    $users_family->user_id = $user_id;
+                    $users_family->name = $name;
+                    $users_family->relationship = $relationship;
+                    $users_family->occupation = $occupation;
+                    $users_family->contact_no = $contact_no;
+                    $users_family->family_id = $i;
+                    $users_family->save();
+                }
+            }
 
             // stored photo
             $user_photo_info = UsersDoc::getUserPhotoInfo($user_id);
@@ -607,7 +646,7 @@ class UserController extends Controller
         else{
             $user_basic_info = User::find($user_id);
             $user_basic_info->name = Input::get('name');
-            $user_basic_info->email = Input::get('email');
+            //$user_basic_info->email = Input::get('email');
             $user_basic_info->secondary_email = Input::get('semail');
             $user_basic_info->save();
 
@@ -677,6 +716,7 @@ class UserController extends Controller
                     $users_family->relationship = $relationship;
                     $users_family->occupation = $occupation;
                     $users_family->contact_no = $contact_no;
+                    $users_family->family_id = $i;
                     $users_family->save();
                 }
             }
