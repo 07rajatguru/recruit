@@ -321,24 +321,18 @@ class UserController extends Controller
         $user = array();
 
         // profile photo
-
         $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
-
-        if(isset($user_doc_info))
-        {
+        if(isset($user_doc_info)){
             $user['photo'] = $user_doc_info->file;
             $user['type'] = $user_doc_info->type;
         }
-        else
-        {
+        else{
             $user['photo'] = '';
             $user['type'] = '';
         }
 
         $user_info = User::getProfileInfo($user_id);
-        
-        foreach($user_info as $key=>$value)
-        {
+        foreach($user_info as $key=>$value){
             $user['id'] = $user_id;
             $user['name'] = $value->name;
             $user['email'] = $value->email;
@@ -352,26 +346,15 @@ class UserController extends Controller
             $user['branch_name'] = $value->branch_name;
             $user['ifsc_code'] = $value->ifsc_code;
             $user['user_full_name'] = $value->bank_full_name;
-
             $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
             $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
-            $user['spouse_name'] = $value->spouse_name;
-            $user['spouse_profession'] = $value->spouse_profession;
-            $user['spouse_contact_number'] = $value->spouse_contact_number;
-
-            $user['father_name'] = $value->father_name;
-            $user['father_profession'] = $value->father_profession;
-            $user['father_contact_number'] = $value->father_contact_number;
-
-            $user['mother_name'] = $value->mother_name;
-            $user['mother_profession'] = $value->mother_profession;
-            $user['mother_contact_number'] = $value->mother_contact_number;
         }
 
+        // User Family Details show
+        $user_family = UsersFamily::getAllFamilyDetailsofUser($user_id);
+
         $j=0;
-
         $user['doc'] = array();
-
         $users_docs = \DB::table('users_doc')
                       ->select('users_doc.*')
                       ->where('user_id','=',$user_id)
@@ -379,9 +362,7 @@ class UserController extends Controller
                       ->get();
 
         $utils = new Utils();
-
-        foreach($users_docs as $key=>$value)
-        {
+        foreach($users_docs as $key=>$value){
             $user['doc'][$j]['name'] = $value->name;
             $user['doc'][$j]['id'] = $value->id;
             $user['doc'][$j]['url'] = "../".$value->file;
@@ -389,7 +370,7 @@ class UserController extends Controller
             $j++;
         }
 
-        return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id'));
+        return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family'));
     }
     public function editProfile($user_id)
     {
@@ -436,7 +417,7 @@ class UserController extends Controller
             $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
 
             for ($i=1; $i <= 5 ; $i++) {
-                $users_family = UsersFamily::getAllFamilyDetailsofUser($user_id,$i);
+                $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
                 if (isset($users_family) && $users_family != '') {
                     $user['name_'.$i] = $users_family->name;
                     $user['relationship_'.$i] = $users_family->relationship;
