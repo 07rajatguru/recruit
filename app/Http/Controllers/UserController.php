@@ -797,7 +797,7 @@ class UserController extends Controller
             }
         }
 
-         return redirect()->route('users.myprofile')->with('success','Attachment Uploaded Successfully'); 
+         return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully'); 
     }
     public function attachmentsDestroy($docid)
     {
@@ -819,7 +819,7 @@ class UserController extends Controller
 
         }
 
-        return redirect()->route('users.myprofile')->with('success','Attachment Deleted Successfully'); 
+        return redirect()->route('users.myprofile',$doc_attach->user_id)->with('success','Attachment Deleted Successfully'); 
     }
 
     public function userLeave()
