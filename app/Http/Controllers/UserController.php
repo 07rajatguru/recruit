@@ -824,9 +824,10 @@ class UserController extends Controller
 
     public function userLeave()
     {
-         $leave_type = UserOthersInfo::getLeaveType();
-         $leave_category = UserOthersInfo::getLeaveCategory();
-         return view('adminlte::users.leave',compact('leave_type','leave_category'));
+        $leave_type = UserLeave::getLeaveType();
+        $leave_category = UserLeave::getLeaveCategory();
+
+        return view('adminlte::users.leave',compact('leave_type','leave_category'));
     }
 
     public function leaveStore(Request $request)
@@ -844,7 +845,6 @@ class UserController extends Controller
          $user_leave->category = Input::get('leave_category');
          $user_leave->message = "Kindly Approved My Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . " " .Input::get('leave_msg');
          $user_leave->status = '0';
-
          $user_leave->save();
 
          $superadmin_userid = getenv('SUPERADMINUSERID');
@@ -852,9 +852,7 @@ class UserController extends Controller
          $reports_to_id = User::getReportsToById($user_id);
 
          $superadmin_secondary_email=User::getUserSecondaryEmailById($superadmin_userid);
-         
          $floor_incharge_secondary_email = User::getUserSecondaryEmailById($floor_incharge_id);
-
          $reports_to_secondary_email = User::getUserSecondaryEmailById($reports_to_id);
 
          $cc_users_array = array($floor_incharge_secondary_email,$superadmin_secondary_email);
