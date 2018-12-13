@@ -822,7 +822,7 @@ class UserController extends Controller
         return redirect()->route('users.myprofile',$doc_attach->user_id)->with('success','Attachment Deleted Successfully'); 
     }
 
-    public function userLeave()
+    /*public function userLeaveAdd()
     {
         $leave_type = UserLeave::getLeaveType();
         $leave_category = UserLeave::getLeaveCategory();
@@ -868,7 +868,7 @@ class UserController extends Controller
          event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
          return redirect()->route('users.leave')->with('success',' Successfully');
-    }
+    }*/
 
     public function testEmail(){
 

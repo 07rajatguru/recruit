@@ -197,13 +197,20 @@ Route::group(['middleware' => ['auth']], function () {
         'as' =>'usersattachments.destroy',
         'uses' =>'UserController@attachmentsDestroy'
     ]);
-    Route::get('users/leave',[
-        'as' => 'users.leave',
-        'uses' => 'UserController@userLeave'
+
+    // User Leave Route
+    Route::get('/leave',[
+        'as' => 'leave.index',
+        'uses' => 'LeaveController@index',
     ]);
-    Route::post('users/leavestore',[
-        'as' => 'users.leavestore',
-        'uses' => 'UserController@leaveStore'
+
+    Route::get('leave/add',[
+        'as' => 'leave.add',
+        'uses' => 'LeaveController@userLeaveAdd'
+    ]);
+    Route::post('leave/add',[
+        'as' => 'leave.store',
+        'uses' => 'LeaveController@leaveStore'
     ]);
 
     // Admin > Users

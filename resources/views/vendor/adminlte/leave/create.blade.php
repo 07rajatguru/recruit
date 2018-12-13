@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'User Leave')
+@section('title', 'User Leave Add')
 
 @section('content_header')
     <h1></h1>
@@ -24,7 +24,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>User Leave</h2>  
+            <h2>Add Leave Application</h2>  
         </div>
         <div class="pull-right">
             <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
@@ -98,10 +98,20 @@
 
                     <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
                         <strong>Leave Category: </strong>
-                        {!! Form::select('leave_category', $leave_category,null, array('class' => 'form-control','tabindex' => '5' )) !!}
+                        {!! Form::select('leave_category', $leave_category,null, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category()' )) !!}
                         @if ($errors->has('leave_category'))
                             <span class="help-block">
                         <strong>{{ $errors->first('leave_category') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group document {{ $errors->has('doc') ? 'has-error' : '' }}" style="display: none;">
+                        <strong>Attachment: <span class = "required_fields">*</span> </strong>
+                        <input type="file" name="doc[]" multiple class="form-control" />
+                        @if ($errors->has('doc'))
+                            <span class="help-block">
+                        <strong>{{ $errors->first('doc') }}</strong>
                         </span>
                         @endif
                     </div>
@@ -136,6 +146,17 @@
 
             $("#leave_msg").wysihtml5();
         });
+
+        function category(){
+            leave_cat = $("#leave_category").val();
+
+            if (leave_cat == 'Medical') {
+                $(".document").show();
+            }
+            else {
+                $(".document").hide();
+            }
+        }
     
     </script>
 @endsection
