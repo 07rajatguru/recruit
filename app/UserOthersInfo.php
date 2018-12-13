@@ -13,7 +13,7 @@ class UserOthersInfo extends Model
     {
         $query = UserOthersInfo::query();
         $query = $query->where('user_id','=',$user_id);
-        $query = $query->select('user_id','id');
+        $query = $query->select('user_id','id','date_of_joining');
 
         $response = $query->first();
 
