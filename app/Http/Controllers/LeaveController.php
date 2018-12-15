@@ -9,6 +9,7 @@ use App\UserLeave;
 use App\Events\NotificationMail;
 use App\Date;
 use App\LeaveDoc;
+use App\LeaveBalance;
 
 class LeaveController extends Controller
 {
@@ -16,9 +17,10 @@ class LeaveController extends Controller
     public function index(){
         $user_id = \Auth::user()->id;
 
+        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
         $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
         //print_r($leave_details);exit;
-        return view('adminlte::leave.index',compact('leave_details'));
+        return view('adminlte::leave.index',compact('leave_details','leave_balance'));
     }
 
     public function userLeaveAdd()

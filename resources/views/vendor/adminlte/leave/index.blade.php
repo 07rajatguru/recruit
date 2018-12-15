@@ -22,7 +22,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h3>{{ $total_leave or 0 }}</h3>
+                    <h3>{{ $leave_balance->leave_total or 0 }}</h3>
                     <p>No. of Leave</p>
                 </div>
             </div>
@@ -30,7 +30,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-green">
                 <div class="inner">
-                    <h3>{{ $total_leave or 0 }}</h3>
+                    <h3>{{ $leave_balance->leave_taken or 0 }}</h3>
                     <p>No. of Leave Taken</p>
                 </div>
             </div>
@@ -38,7 +38,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3>{{ $total_leave or 0 }}</h3>
+                    <h3>{{ $leave_balance->leave_remaining or 0 }}</h3>
                     <p>No. of Leave Remainings</p>
                 </div>
             </div>
