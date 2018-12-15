@@ -213,6 +213,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'LeaveController@leaveStore'
     ]);
 
+    Route::get('leave/reply/{id}',[
+        'as' => 'leave.reply',
+        'uses' => 'LeaveController@leaveReply'
+    ]);
+
+    Route::post('leave/reply/{id}',[
+        'as' => 'leave.replysend',
+        'uses' => 'LeaveController@leaveReplySend'
+    ]);
+
     // Admin > Users
     Route::get('users', [
         'as' => 'users.index',

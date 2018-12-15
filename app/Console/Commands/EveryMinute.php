@@ -173,6 +173,7 @@ class EveryMinute extends Command
                 $leave = UserLeave::find($module_id);
 
                 $input['leave_message'] = $leave->message;
+                $input['leave_id'] = $module_id;
 
                 $logged_in_user_id = $leave->user_id;
 

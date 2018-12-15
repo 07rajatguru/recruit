@@ -58,13 +58,14 @@
     		<thead>
     			<tr>
 	    			<th>No</th>
-	    			<th>User Name</th>
-	    			<th>Sujbect</th>
-	    			<th>From date</th>
-	    			<th>To Date</th>
-	    			<th>Leave Type</th>
-	    			<th>Leave Category</th>
-	    			<th>Status</th>
+                    {{--<th>Action</th>--}}
+                    <th>User Name</th>
+                    <th>Sujbect</th>
+                    <th>From date</th>
+                    <th>To Date</th>
+                    <th>Leave Type</th>
+                    <th>Leave Category</th>
+                    <th>Status</th>
 	    		</tr>
     		</thead>
     		<?php $i=0; ?>
@@ -72,6 +73,7 @@
     			@foreach($leave_details as $key => $value)
 	    			<tr>
 		    			<td>{{ ++$i }}</td>
+                        {{--<td></td>--}}
 		    			<td>{{ $value['user_name'] }}</td>
 		    			<td>{{ $value['subject'] }}</td>
 		    			<td>{{ $value['from_date'] }}</td>

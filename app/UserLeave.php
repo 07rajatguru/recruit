@@ -57,4 +57,26 @@ class UserLeave extends Model
 
         return $leave;
     }
+
+    public static function getLeaveDetails($leave_id){
+
+        $query = UserLeave::query();
+        $query = $query->join('users','users.id','user_leave.user_id');
+        $query = $query->select('user_leave.*','users.name as uname');
+        $query = $query->where('user_leave.id',$leave_id);
+        $res = $query->first();
+
+        $leave_data = array();
+        if (isset($res) && $res != '') {
+            $leave_data['id'] = $res->id;
+            $leave_data['user_id'] = $res->user_id;
+            $leave_data['subject'] = $res->subject;
+            $leave_data['category'] = $res->category;
+            $leave_data['message'] = $res->message;
+            $leave_data['status'] = $res->status;
+            $leave_data['uname'] = $res->uname;
+        }
+
+        return $leave_data;
+    }
 }

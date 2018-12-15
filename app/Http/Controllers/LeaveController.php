@@ -36,6 +36,7 @@ class LeaveController extends Controller
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
 
+        $message = Input::get('leave_msg');
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
         $user_leave->subject = Input::get('subject');
@@ -43,7 +44,12 @@ class LeaveController extends Controller
         $user_leave->to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
         $user_leave->type_of_leave = Input::get('leave_type');
         $user_leave->category = Input::get('leave_category');
-        $user_leave->message = "Kindly Approved My Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . " " .Input::get('leave_msg');
+        if ($user_leave->type_of_leave == 'Full' || $user_leave->type_of_leave == 'Half') {
+            $user_leave->message = "Kindly Approve my " . $user_leave->type_of_leave . " day " .$user_leave->category . " Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . $message;
+        }
+        else {
+            $user_leave->message = "Kindly Approve my" . $user_leave->type_of_leave . " go/in " .$user_leave->category . " Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . $message;
+        }
         $user_leave->status = '0';
         $user_leave->save();
 
@@ -99,6 +105,32 @@ class LeaveController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
-        return redirect()->route('leave.add')->with('success','Leave Application Send Successfully');
+        return redirect()->route('leave.index')->with('success','Leave Application Send Successfully');
+    }
+
+    public function leaveReply($id){
+
+        $leave_details = UserLeave::getLeaveDetails($id);
+
+        $leave_doc = LeaveDoc::getLeaveDocById($id);
+
+        return view('adminlte::leave.leavereply',compact('leave_details','leave_doc','id'));
+    }
+
+    public function leaveReplySend(){
+
+        $leave_id = $_POST['leave_id'];
+        $reply = $_POST['check'];
+
+        if ($reply == 'Approved') {
+            # code...
+        }
+        elseif ($reply == 'Noted') {
+            # code...
+        }
+        elseif ($reply == 'Unapproved') {
+            # code...
+        }
+        print_r($reply);exit;
     }
 }
