@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\JobOpentoAll',
         'App\Console\Commands\TrainingSelectAllUser',
         'App\Console\Commands\ProcessManualSelectAllUsers',
+        'App\Console\Commands\TodoCCStartdateDefault',
         'App\Console\Commands\LeaveBalanceData',
     ];
 
