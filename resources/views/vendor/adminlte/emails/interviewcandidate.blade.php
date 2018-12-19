@@ -30,7 +30,7 @@
     </tr>
     <tr>
         <td width="600"  style="background-color: green; !important;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #FFE1FF	; padding: 50px 54px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffe6ff	; padding: 50px 54px;">
                 <tr>
                     <td>
                         <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$cname}},</p></b>
