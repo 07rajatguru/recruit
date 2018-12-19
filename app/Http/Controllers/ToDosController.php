@@ -700,12 +700,12 @@ class ToDosController extends Controller
 
                     if(isset($user_arr))
                     {
-                        $module_id = $toDos_id;
+                        /*$module_id = $toDos_id;
                         $module = 'Todos';
                         $message = "$assigned_to_name: New task has been assigned to you";
                         $link = route('todos.index');
 
-                        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+                        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
                         // TODO : Email Notification : data store in database
                         //$user_email = User::getUserEmailById($value);
