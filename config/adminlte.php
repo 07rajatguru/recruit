@@ -423,11 +423,11 @@ return [
                     'url'  => 'vendors',
                     'icon' => 'circle-o',
                 ],
-                [
+                /*[
                     'text' => 'Expense',
                     'url'  => 'expense',
                     'icon' => 'circle-o',
-                ],
+                ],*/
                 [
                     'text' => 'Holiday',
                     'url'  => 'holidays',
