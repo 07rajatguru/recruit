@@ -122,13 +122,15 @@ class UserController extends Controller
             }
             //print_r($training_id);exit;
         }
-        $process_id = ProcessManual::getAllprocessmanualIds(1);
-        if (isset($process_id) && $process_id != '') {
-            foreach ($process_id as $key => $value) {
-                $process_visible_users = new ProcessVisibleUser();
-                $process_visible_users->process_id = $value;
-                $process_visible_users->user_id = $user_id;
-                $process_visible_users->save();
+        if ($status == 'Active') {
+            $process_id = ProcessManual::getAllprocessmanualIds(1);
+            if (isset($process_id) && $process_id != '') {
+                foreach ($process_id as $key => $value) {
+                    $process_visible_users = new ProcessVisibleUser();
+                    $process_visible_users->process_id = $value;
+                    $process_visible_users->user_id = $user_id;
+                    $process_visible_users->save();
+                }
             }
         }
      
