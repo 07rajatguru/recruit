@@ -65,7 +65,7 @@ class LoginController extends Controller
                 return redirect('/login')
                     ->withInput($request->only('email', 'remember'))
                     ->withErrors([
-                        'email' => 'These user currently inactive',
+                        'email' => 'This user currently inactive',
                     ]);
             }
             //$user_id = \Auth::user()->id;

@@ -38,7 +38,18 @@ class TodoCCStartdateDefault extends Command
      */
     public function handle()
     {
-        $todos = ToDos::getAllTodos();
-        print_r($todos);
+        // Todo cc by default null set
+        $todos = ToDos::getTodosByCCValue();
+        
+        foreach ($todos as $key => $value) {
+            \DB::statement("UPDATE to_dos SET cc_user = NULL where id=$value");
+        }
+
+        // Todo start date by default null set
+        $todos_start = ToDos::getTodosByStartDateValue();
+        //print_r($todos_start);exit;
+        foreach ($todos_start as $key1 => $value1) {
+            \DB::statement("UPDATE to_dos SET start_date = NULL where id=$value1");
+        }
     }
 }

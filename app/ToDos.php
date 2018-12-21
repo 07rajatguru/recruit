@@ -440,4 +440,43 @@ class ToDos extends Model
 
         return $todo_type;
     }
+
+    // function for get todo's cc
+    public static function getTodosByCCValue(){
+
+        $query = ToDos::query();
+        $query = $query->select('to_dos.id');
+        $query = $query->where('to_dos.cc_user','=',0);
+        //$query = $query->limit(2);
+        $res = $query->get();
+
+        $id = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $id[$i] = $value->id;
+            $i++;
+        }
+
+        return $id;
+    }
+
+    // function for get todo's start date
+    public static function getTodosByStartDateValue(){
+
+        $date = '1970-01-01';
+
+        $query = ToDos::query();
+        $query = $query->select('to_dos.id');
+        $query = $query->where('to_dos.start_date','like',"%$date%");
+        $res = $query->get();
+
+        $id = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $id[$i] = $value->id;
+            $i++;
+        }
+
+        return $id;
+    }
 }
