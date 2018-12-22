@@ -350,6 +350,7 @@ class UserController extends Controller
             $user['user_full_name'] = $value->bank_full_name;
             $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
             $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+            $user['contact_number'] = $value->contact_number;
         }
 
         // User Family Details show
@@ -417,6 +418,7 @@ class UserController extends Controller
             $user['user_full_name'] = $value->bank_full_name;
             $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
             $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+            $user['contact_number'] = $value->contact_number;
 
             for ($i=1; $i <= 5 ; $i++) {
                 $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
@@ -480,6 +482,7 @@ class UserController extends Controller
             $date_of_exit = Input::get('date_of_exit');
             $acc_no = Input::get('account_no');
             $ifsc_code = Input::get('ifsc');
+            $contact_number = Input::get('contact');
 
             $users_otherinfo = UserOthersInfo::find($user_other_info->id);
             if (isset($date_of_joining) && $date_of_joining != '') {
@@ -522,6 +525,7 @@ class UserController extends Controller
                 $users_otherinfo->date_of_exit = NULL;
             }
             $users_otherinfo->fixed_salary = Input::get('fixed_salary');
+            $users_otherinfo->contact_number = $contact_number;
             $users_otherinfo->save();
 
             // User Family Details update
@@ -640,6 +644,7 @@ class UserController extends Controller
             $date_of_exit = Input::get('date_of_exit');
             $acc_no = Input::get('account_no');
             $ifsc_code = Input::get('ifsc');
+            $contact_number = Input::get('contact');
 
             $users_otherinfo= new UserOthersInfo;
             $users_otherinfo->user_id = $user_id;
@@ -683,6 +688,7 @@ class UserController extends Controller
                 $users_otherinfo->date_of_exit = NULL;
             }
             $users_otherinfo->fixed_salary = Input::get('fixed_salary');
+            $users_otherinfo->contact_number = $contact_number;
             $users_otherinfo->save();
 
             // Users Family data store

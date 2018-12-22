@@ -8,6 +8,13 @@
 
 @section('content')
 
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
 
 @if ($message = Session::get('success'))
     <div class="alert alert-success">
@@ -46,7 +53,7 @@
                         <div class="">
 
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                                <strong>Name: </strong>
+                                <strong>Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('name',$user['name'], array('id'=>'name','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 @if ($errors->has('name'))
                                     <span class="help-block">
@@ -56,7 +63,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <strong>Email: </strong>
+                                <strong>Email: <span class = "required_fields">*</span> </strong>
                                 @if($isSuperAdmin || $isAccountant)
                                     {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control')) !!}
                                 @else
@@ -99,17 +106,15 @@
                                 </div>
                             </div>
 
-                            <?php if($isSuperAdmin || $isAccountant) { ?>
-                            <div class="form-group {{ $errors->has('date_of_exit') ? 'has-error' : '' }}">
-                                <strong>Exit Date: </strong>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '7')) !!}
-                                </div>
-                            </div> 
-                            <?php }?>  
+                            <div class="form-group {{ $errors->has('contact') ? 'has-error' : '' }}">
+                                <strong>Contact Number: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('contact',isset($user['contact_number']) ? $user['contact_number'] : null, array('id'=>'contact','placeholder' => 'Contact Number','class' => 'form-control','tabindex' => '6')) !!}
+                                @if ($errors->has('contact'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('contact') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
 
                         </div>
                     </div>
@@ -148,7 +153,7 @@
                                             <span class="btn btn-default btn-file">
                                             <span class="fileinput-new">Select Profile Photo</span>
                                            <!--  <span class="fileinput-exists" style="">Change</span> -->
-                                            <input type="file" name="image" id="upload_img">
+                                            <input type="file" name="image" id="upload_img" accept="image/x-png,image/gif,image/jpeg" />
                                             </span>
                                             <!-- <a href="#" class="btn-default fileinput-exists" data-dismiss="fileinput">Remove</a> -->
                                         </div>
@@ -179,6 +184,19 @@
                                 </span>
                                 @endif
                             </div>
+
+                            <?php if($isSuperAdmin || $isAccountant) { ?>
+                            <div class="form-group {{ $errors->has('date_of_exit') ? 'has-error' : '' }}">
+                                <strong>Exit Date: </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '7')) !!}
+                                </div>
+                            </div> 
+                            <?php }?>  
+                            
                         </div>
                     </div>
                 </div>
@@ -568,6 +586,31 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
+            $("#editprofile").validate({
+                rules: {
+                    "name": {
+                        required: true
+                    },
+                    "email": {
+                        required: true,
+                    },
+                    "contact": {
+                        required: true,
+                    },
+                },
+                messages: {
+                    "name": {
+                        required: "Name is required."
+                    },
+                    "email": {
+                        required: "Email is required.",
+                    },
+                    "contact": {
+                        required: "Contact Number is required.",
+                    },
+                }
+            });
+
             $("#date_of_joining").datepicker({
                     format: "dd-mm-yyyy",
                     autoclose: true,
@@ -590,15 +633,14 @@
 
 
             $("#upload_img").change(function(){
-            $('#upload_images_div').html("");
-            var total_file=document.getElementById("upload_img").files.length;
-            for(var i=0;i<total_file;i++)
-            {
-                $('#default_image').hide();
-                $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px'>");
-                $('#upload_images_div').append("<br/><br/>");
-            }
-    });
+                $('#upload_images_div').html("");
+                var total_file=document.getElementById("upload_img").files.length;
+                for(var i=0;i<total_file;i++){
+                    $('#default_image').hide();
+                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px'>");
+                    $('#upload_images_div').append("<br/><br/>");
+                }
+            });
         });
     
     </script>

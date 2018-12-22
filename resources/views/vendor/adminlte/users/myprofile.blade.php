@@ -74,6 +74,10 @@
                                 <th>Anniversary Date</th>
                                 <td>{{ $user['anni_date'] }}</td>
                             </tr>
+                            <tr>
+                                <th>Contact Number</th>
+                                <td>{{ $user['contact_number'] }}</td>
+                            </tr>
                             @if($isSuperAdmin || $isAccountant) 
                                 <tr>
                                     <th>Exit Date</th>
