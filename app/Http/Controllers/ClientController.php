@@ -1077,15 +1077,21 @@ class ClientController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-            /*// Email Notification : data store in datebase
+            // Email Notification : data store in datebase
+            $strategyuserid = getenv('STRATEGYUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+            $strategyemail = User::getUserEmailById($strategyuserid);
+            $cc_users_array = array($superadminemail,$strategyemail);
+
             $module = "Client";
             $sender_name = $user_id;
             $to = $user_email;
-            $subject = "Client - ".$client_name;
+            $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
             $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
             $module_id = $client_id;
+            $cc = implode(",",$cc_users_array);
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,'$module_id'));*/
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }

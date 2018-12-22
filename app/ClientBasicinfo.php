@@ -635,4 +635,49 @@ class ClientBasicinfo extends Ardent
 
         return $client_id;
      }
+
+     public static function getClientDetailsById($id){
+
+        $query = ClientBasicinfo::query();
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
+        $query = $query->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->select('client_basicinfo.*', 'client_address.*' , 'users.name as am_name', 'industry.name as ind_name');
+        $query = $query->where('client_basicinfo.id','=',$id);
+        $res = $query->first();
+
+        $client = array();
+        if (isset($res) && $res != '') {
+            $client['name'] = $res->name;
+            $client['mobile'] = $res->mobile;
+            $client['am_name'] = $res->am_name;
+            $client['mail'] = $res->mail;
+            $client['ind_name'] = $res->ind_name;
+            $client['website'] = $res->website;
+            $client['description'] = $res->description;
+            $client['coordinator_name'] = $res->coordinator_prefix. " " .$res->coordinator_name;
+            $client['status']=$res->status;
+            $client['display_name'] = $res->display_name;
+            if(isset($client['status'])){
+                if($client['status'] == '1'){
+                    $client['status']='Active';
+                }
+                else{
+                    $client['status']='Passive';
+                }
+            }
+            $client['billing_country'] = $res->billing_country;
+            $client['billing_state'] = $res->billing_state;
+            $client['billing_street'] = $res->billing_street1.", ".$res->billing_street2;
+            $client['billing_code'] = $res->billing_code;
+            $client['billing_city'] = $res->billing_city;
+            $client['shipping_country'] = $res->shipping_country;
+            $client['shipping_state'] = $res->shipping_state;
+            $client['shipping_street'] = $res->shipping_street1.", ".$res->shipping_street2;
+            $client['shipping_code'] = $res->shipping_code;
+            $client['shipping_city'] = $res->shipping_city;
+        }
+
+        return $client;
+     }
 }
