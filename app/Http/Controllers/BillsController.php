@@ -814,8 +814,8 @@ class BillsController extends Controller
 
             $module = "Relive Recovery";
             $sender_name = $user_id;
-            $to = $user_email;
-            $cc = implode(",",$cc_users_array);
+            $to = implode(",",$cc_users_array);
+            $cc = $superadminemail;
             
             $subject = "Relive Recovery - ". $c_name;
             $message = "Relive Recovery - ". $c_name;
