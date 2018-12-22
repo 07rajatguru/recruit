@@ -56,12 +56,6 @@
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{!! $client['ind_name'] !!}</td>
                 </tr>
                 <tr>
-                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Client Status</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{!! $client['status'] !!}</td>
-                    <th align="center" style="border-top: black 1px solid;padding: 8px;">Industry</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{!! $client['ind_name'] !!}</td>
-                </tr>
-                <tr>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">About</th>
                     <td align="center" colspan="3" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;border-bottom: black 1px solid;">{!! $client['description'] !!}</td>
                 </tr>
