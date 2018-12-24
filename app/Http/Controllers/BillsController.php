@@ -383,6 +383,8 @@ class BillsController extends Controller
         $module = "Forecasting";
         $sender_name = $user_id;
         $to = $user_email;
+
+        $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
         $subject = "Forecasting - " . $c_name;
@@ -676,6 +678,8 @@ class BillsController extends Controller
             $module = "Recovery";
             $sender_name = $user_id;
             $to = $user_email;
+
+            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
             
             $subject = "Recovery - ". $c_name;
@@ -734,6 +738,8 @@ class BillsController extends Controller
             $module = "Cancel Recovery";
             $sender_name = $user_id;
             $to = $user_email;
+
+            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
             
             $subject = "Cancel Recovery - ". $c_name;
@@ -759,6 +765,8 @@ class BillsController extends Controller
             $module = "Cancel Forecasting";
             $sender_name = $user_id;
             $to = $user_email;
+
+            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
             
             $subject = "Cancel Forecasting - ". $c_name;
@@ -814,6 +822,8 @@ class BillsController extends Controller
 
             $module = "Relive Recovery";
             $sender_name = $user_id;
+
+            $cc_users_array = array_filter($cc_users_array);
             $to = implode(",",$cc_users_array);
             $cc = $superadminemail;
             
@@ -839,6 +849,8 @@ class BillsController extends Controller
 
             $module = "Relive Forecasting";
             $sender_name = $user_id;
+
+            $cc_users_array = array_filter($cc_users_array);
             $to = implode(",",$cc_users_array);
             $cc = $superadminemail;
             
