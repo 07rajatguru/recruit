@@ -268,6 +268,8 @@ class LeadController extends Controller
         $module = "Lead";
         $sender_name = $user_id;
         $to = $user_email;
+
+        $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
         $subject = "New Lead for " . $leads . " - ". $company_name . " - " . $city;
