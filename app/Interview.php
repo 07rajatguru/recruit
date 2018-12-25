@@ -125,6 +125,106 @@ class Interview extends Model
         return $interview;
     }
 
+    //function for indax using ajax call
+    public static function getAllInterviewsByAjax($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        //$query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        if($all==0){
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
+        }
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+        if (isset($order) && $order != '') {
+            $query = $query->orderBy($order,$type);
+        }
+        if (isset($search) && $search != '') {
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('interview.location','like',"%$search%");
+                $query = $query->orwhere('interview.status','like',"%$search%");
+            });
+        }
+        $response = $query->get();
+
+        $interview = array();
+        $i=0;
+        foreach ($response as $key => $value) {
+            $interview[$i]['id'] = $value->id;
+            $interview[$i]['client_name'] = $value->client_name;
+            $interview[$i]['posting_title'] = $value->posting_title;
+            $interview[$i]['city'] = $value->city;
+            $interview[$i]['candidate_fname'] = $value->candidate_fname;
+            $interview[$i]['contact'] = $value->contact;
+            $interview[$i]['interview_date'] = $value->interview_date;
+            $interview[$i]['interview_date_ts'] = strtotime($value->interview_date);
+            $interview[$i]['location'] = $value->location;
+            $interview[$i]['status'] = $value->status;
+            $interview[$i]['candidate_owner'] = $value->candidate_owner;
+            $i++;
+        }
+
+        return $interview;
+    }
+
+    public static function getAllInterviewsCountByAjax($all=0,$user_id,$search=0){
+
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        //$query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        if($all==0){
+            $query = $query->where(function($query) use ($user_id){
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
+        }
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+        if (isset($order) && $order != '') {
+            $query = $query->orderBy($order,$type);
+        }
+        if (isset($search) && $search != '') {
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('interview.location','like',"%$search%");
+                $query = $query->orwhere('interview.status','like',"%$search%");
+            });
+        }
+        $response = $query->count();
+
+        return $response;
+    }
+
     // function for today, tomorrow, this week & Upcoming/Previous interview page
     public static function getInterviewsByTime($all=0,$user_id,$time){
 

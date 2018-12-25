@@ -68,9 +68,9 @@
             </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
+        {{--<tbody>
         @foreach ($interViews as $interView)
-        <?php
+        
         $date = date('Y-m-d', strtotime('this week'));
             if(date("Y-m-d") == date("Y-m-d",strtotime($interView['interview_date'])))
                 $color = "#8FB1D5";
@@ -80,15 +80,15 @@
                 $color = '';
             else
                 $color = '#C4D79B';
-         ?>
+        
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ Form::checkbox('interview_ids',$interView['id'],null,array('class'=>'interview_ids' ,'id'=>$interView['id'] )) }}</td>
-                {{--<td style="background-color: {{ $color }}">{{ $interView['interview_name'] or '' }}</td>--}}
+                {{--<td style="background-color: {{ $color }}">{{ $interView['interview_name'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView['client_name'] }} - {{ $interView['posting_title'] }} , {{$interView['city']}}</td>
                 <td>{{ $interView['candidate_fname'] }}</td>
                 <td>{{ $interView['contact'] }}</td>
-             {{--   <td>{{ $interView['client_name'] or ''}}</td>--}}
+             {{--   <td>{{ $interView['client_name'] or ''}}</td>
                 <td data-th="Lastrun" data-order="{{$interView['interview_date_ts']}}">{{ date('d-m-Y h:i A',strtotime($interView['interview_date'])) }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView['location'] or ''}}</td>
                 <td>{{ $interView['status'] or '' }}</td>
@@ -100,7 +100,7 @@
                 </td>
             </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
 
 
@@ -135,13 +135,36 @@
                 autoclose: true
             });
 
-            var table = jQuery('#interview_table').DataTable( {
+            /*var table = jQuery('#interview_table').DataTable( {
                 responsive: true,
                 stateSave : true,
                 "pageLength": 50,
 
             } );
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#interview_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [5,'desc'],
+                "columnDefs": [ { "targets": 1, "searchable": false, "orderable": false },
+                                { "targets": 9, "searchable": false, "orderable": false },
+                            ],
+                "ajax" : {
+                    'url' : 'interview/all',
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                "fnRowCallback": function( Row, Data ) {
+                    $('td:eq(2)', Row).css('background-color', Data[10]);
+                }
+            });
 
             $('#allcb').change(function(){
                 if($(this).prop('checked')){

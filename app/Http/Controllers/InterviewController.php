@@ -42,6 +42,108 @@ class InterviewController extends Controller
         return view('adminlte::interview.index', array('interViews' => $interViews),compact('count','source'));
     }
 
+    public static function getInterviewOrderColumnName($order){
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "interview.id";
+            }
+            if ($order == 2) {
+                $order_column_name = "job_openings.posting_title";
+            }
+            else if ($order == 3) {
+                $order_column_name = "candidate_basicinfo.full_name";
+            }
+            else if ($order == 4) {
+                $order_column_name = "candidate_basicinfo.mobile";
+            }
+            else if ($order == 5) {
+                $order_column_name = "interview.interview_date";
+            }
+            else if ($order == 6) {
+                $order_column_name = "interview.location";
+            }
+            else if ($order == 7) {
+                $order_column_name = "interview.status";
+            }
+            else if ($order == 8) {
+                $order_column_name = "users.name";
+            }
+        }
+        return $order_column_name;
+    }
+
+    //function for index using ajax call
+    public function getAllInterviewsDetails(){
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getInterviewOrderColumnName($order);
+
+        $source = 'index';
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $superadmin_role_id =  env('SUPERADMIN');
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $interViews = Interview::getAllInterviewsByAjax(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Interview::getAllInterviewsCountByAjax(1,$user->id,$search);
+        }
+        else{
+            $interViews = Interview::getAllInterviewsByAjax(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Interview::getAllInterviewsCountByAjax(0,$user->id,$search);
+        }
+        //print_r($interViews);exit;
+        $interview = array();
+        $i = 0;$j = 0;
+        foreach ($interViews as $key => $value) {
+
+            $date = date('Y-m-d', strtotime('this week'));
+            if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date'])))
+                $color = "#8FB1D5";
+            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date'])))
+                $color = '#feb80a';
+            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date'])))
+                $color = '';
+            else
+                $color = '#C4D79B';
+
+            $action = '';
+            $checkbox = '<input type=checkbox name=interview_ids value='.$value['id'].' class=interview_ids id='.$value['id'].'/>';
+
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
+            $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+            $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
+            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
+
+            $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
+            $delete = $delete_view->render();
+            $action .= $delete;
+
+            $data = array(++$j,$checkbox,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$action,$color);
+            $interview[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $interview
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     // Today Interview Page
     public function today(){
 
