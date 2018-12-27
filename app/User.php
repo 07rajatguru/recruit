@@ -309,6 +309,15 @@ class User extends Authenticatable
         return false;
     }
 
+    public static function isOfficeAdmin($user_role_id)
+    {
+        $admin_role_id = env('OFFICEADMIN');
+        if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        return false;
+    }
+
     public  static function isStrategyCoordination($user_role_id){
         $admin_role_id = getenv('STRATEGY');
         if ($admin_role_id == $user_role_id) {

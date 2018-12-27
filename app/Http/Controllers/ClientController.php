@@ -38,11 +38,12 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isOfficeAdmin){
             $client_array = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
             $count = sizeof($client_array);
         }
