@@ -1114,9 +1114,10 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
         $user_id = $user->id;
 
-        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy,$isAccountant);
+        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy,$isAccountant,$isOfficeAdmin);
 
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
