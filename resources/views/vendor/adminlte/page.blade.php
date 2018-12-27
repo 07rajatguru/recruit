@@ -254,7 +254,7 @@
     </div>
     <!-- ./wrapper -->
 
-<input type="hidden" name="user_id" id="user_id" value="{{ \Auth::user()->id }}">
+<input type="hidden" name="user_id_module" id="user_id_module" value="{{ \Auth::user()->id }}">
 <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
@@ -270,7 +270,7 @@
             setInterval(function(){getNotifications();},interval)
 
             getTodos();
-            //userWiseModule();
+            userWiseModule();
         });
 
         function getNotifications(){
@@ -350,7 +350,7 @@
         }
 
         function userWiseModule(){
-            var user_id = $("#user_id").val();
+            var user_id = $("#user_id_module").val();
             var token = $('input[name="csrf_token"]').val();
             
             jQuery.ajax({
@@ -360,14 +360,12 @@
                 data: { user_id:user_id, '_token':token },
                 success: function(msg){
                     for (var i = 0; i < msg.module_user.length; i++) {
-                        //alert(msg.module_total);
-                        if (msg.module_total[i] == msg.module_user[i]) {
-                            $(msg.module_total[i]).parent('li').show();
-                            alert(msg.module_total[i]);
-                        }
-                        else {
-                            $(msg.module_total[i]).parent('li').hide();
-                        }
+                        $(msg.module_user[i]).parent('li').show();
+                        //alert(msg.module_user[i]);
+                    }
+                    for (var i = 0; i < msg.module_hide.length; i++) {
+                        $(msg.module_hide[i]).parent('li').hide();
+                        //alert(msg.module_hide[i]);
                     }
                 }
             });

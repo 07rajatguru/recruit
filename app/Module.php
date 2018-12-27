@@ -37,7 +37,8 @@ class Module extends Model
 
         $module_name = array();
         foreach ($res as $key => $value) {
-            $module_name[$value->id] = $value->name;
+            $module_name[$value->id]['name'] = $value->name;
+            $module_name[$value->id]['status'] = $value->status;
         }
 
         return $module_name;

@@ -54,6 +54,19 @@
                             </span>
                         @endif
                     </div>
+
+                    <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                        <strong> Status : </strong> &nbsp;&nbsp;
+                        {!! Form::radio('status','0') !!}
+                        {!! Form::label('0') !!} &nbsp;&nbsp;
+                        {!! Form::radio('status','1', true) !!}
+                        {!! Form::label('1') !!}
+                        @if ($errors->has('status'))
+                            <span class="help-block">
+                        <strong>{{ $errors->first('status') }}</strong>
+                        </span>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

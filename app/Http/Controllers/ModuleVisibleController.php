@@ -90,7 +90,15 @@ class ModuleVisibleController extends Controller
         $module_user = ModuleVisibleUser::getModuleByUserIdAjax($user_id);
         $module_total = Module::getAllModulesNameAjax();
 
+        $module_hide = array();
+        foreach ($module_total as $key => $value) {
+            if (!in_array($value, $module_user)) {
+                $module_hide[] = $value;
+            }
+        }
+
         $msg['module_user'] = $module_user;
+        $msg['module_hide'] = $module_hide;
         $msg['module_total'] = $module_total;
         //print_r($msg);exit;
         return json_encode($msg);exit;

@@ -31,10 +31,12 @@ class ModuleController extends Controller
 
     	$name = $request->get('name');
     	$description = $request->get('description');
+        $status = $request->get('status');
 
     	$module = new Module();
     	$module->name = $name;
     	$module->description = $description;
+        $module->status = $status;
     	$module->save();
 
     	return redirect()->route('module.index')->with('success','Module Added Successfully');
@@ -58,10 +60,12 @@ class ModuleController extends Controller
 
     	$name = $request->get('name');
     	$description = $request->get('description');
+        $status = $request->get('status');
 
     	$module = Module::find($id);
     	$module->name = $name;
     	$module->description = $description;
+        $module->status = $status;
     	$module->save();
 
     	return redirect()->route('module.index')->with('success','Module Updated Successfully');

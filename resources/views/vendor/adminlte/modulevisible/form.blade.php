@@ -55,8 +55,13 @@
                     <strong>Select Modules : <span class = "required_fields">*</span></strong>
                     <input type="checkbox" id="all"/> <strong>Select All</strong><br/>
                     @foreach($modules as $k=>$v) &nbsp;&nbsp;
-                    {!! Form::checkbox('module_ids[]', $k, in_array($k,$selected_modules), array('id'=>'module_ids','size'=>'10','class' => 'module_ids')) !!}
-                    {!! Form::label ($v) !!}
+                    @if($v['status'] == '1')
+                        {!! Form::checkbox('module_ids[]', $k, in_array($k,$selected_modules), array('id'=>'module_ids','size'=>'10','class' => 'module_ids', 'checked')) !!}
+                        {!! Form::label ($v['name']) !!}
+                    @else
+                        {!! Form::checkbox('module_ids[]', $k, in_array($k,$selected_modules), array('id'=>'module_ids','size'=>'10','class' => 'module_ids')) !!}
+                        {!! Form::label ($v['name']) !!}
+                    @endif
                     @endforeach
                     @if ($errors->has('module_ids'))
                         <span class="help-block">
