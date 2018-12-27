@@ -432,6 +432,11 @@ return [
                     'text' => 'Holiday',
                     'url'  => 'holidays',
                     'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Module Visibility',
+                    'url'  => 'modulevisible',
+                    'icon' => 'circle-o',
                 ]
                     /* [
                          'text' => 'Permissions',

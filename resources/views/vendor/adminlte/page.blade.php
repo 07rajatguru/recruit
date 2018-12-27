@@ -253,6 +253,9 @@
 
     </div>
     <!-- ./wrapper -->
+
+<input type="hidden" name="user_id" id="user_id" value="{{ \Auth::user()->id }}">
+<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('adminlte_js')
@@ -267,6 +270,7 @@
             setInterval(function(){getNotifications();},interval)
 
             getTodos();
+            //userWiseModule();
         });
 
         function getNotifications(){
@@ -344,6 +348,31 @@
                 }
             });
         }
+
+        function userWiseModule(){
+            var user_id = $("#user_id").val();
+            var token = $('input[name="csrf_token"]').val();
+            
+            jQuery.ajax({
+                type: 'POST',
+                url:'/usermodule/visible',
+                dataType:'json',
+                data: { user_id:user_id, '_token':token },
+                success: function(msg){
+                    for (var i = 0; i < msg.module_user.length; i++) {
+                        //alert(msg.module_total);
+                        if (msg.module_total[i] == msg.module_user[i]) {
+                            $(msg.module_total[i]).parent('li').show();
+                            alert(msg.module_total[i]);
+                        }
+                        else {
+                            $(msg.module_total[i]).parent('li').hide();
+                        }
+                    }
+                }
+            });
+        }
+
     </script>
 
     @stack('js')

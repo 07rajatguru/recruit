@@ -892,6 +892,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@index'
     ]);
 
+    Route::get('interview/all', [
+        'as' => 'interview.all',
+        'uses' => 'InterviewController@getAllInterviewsDetails'
+    ]);
+
     Route::get('todaytomorrow',[
         'as' => 'interview.todaytomorrow',
         'uses' => 'InterviewController@todaytomorrow'
@@ -1749,6 +1754,73 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'receipt.destroy',
         'uses' => 'ReceiptController@ReceiptDestroy',
         'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
+    ]);
+
+    // Module Route
+    Route::get('module',[
+        'as' => 'module.index',
+        'uses' => 'ModuleController@index'
+    ]);
+
+    Route::get('module/create',[
+        'as' => 'module.create',
+        'uses' => 'ModuleController@create'
+    ]);
+
+    Route::post('module/create',[
+        'as' => 'module.store',
+        'uses' => 'ModuleController@store'
+    ]);
+
+    Route::get('module/edit/{id}',[
+        'as' => 'module.edit',
+        'uses' => 'ModuleController@edit'
+    ]);
+
+    Route::patch('module/edit/{id}',[
+        'as' => 'module.update',
+        'uses' => 'ModuleController@update'
+    ]);
+
+    Route::delete('module/{d}',[
+        'as' => 'module.destroy',
+        'uses' => 'ModuleController@destroy'
+    ]);
+
+    // Module Visible Users route
+    Route::get('modulevisible',[
+        'as' => 'modulevisible.index',
+        'uses' => 'ModuleVisibleController@index'
+    ]);
+
+    Route::get('modulevisible/create',[
+        'as' => 'modulevisible.create',
+        'uses' => 'ModuleVisibleController@create'
+    ]);
+
+    Route::post('modulevisible/create',[
+        'as' => 'modulevisible.store',
+        'uses' => 'ModuleVisibleController@store'
+    ]);
+
+    Route::get('modulevisible/{id}/edit',[
+        'as' => 'modulevisible.edit',
+        'uses' => 'ModuleVisibleController@edit'
+    ]);
+
+    Route::patch('modulevisible/{id}/edit',[
+        'as' => 'modulevisible.update',
+        'uses' => 'ModuleVisibleController@update'
+    ]);
+
+    Route::delete('modulevisible/{id}',[
+        'as' => 'modulevisible.destroy',
+        'uses' => 'ModuleVisibleController@destroy'
+    ]);
+
+    Route::post('/usermodule/visible',[
+        'as' => 'usermodule.visible',
+        'uses' => 'ModuleVisibleController@userWiseModuleAjax'
     ]);
     
 });
