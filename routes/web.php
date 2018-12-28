@@ -1759,63 +1759,75 @@ Route::group(['middleware' => ['auth']], function () {
     // Module Route
     Route::get('module',[
         'as' => 'module.index',
-        'uses' => 'ModuleController@index'
+        'uses' => 'ModuleController@index',
+        'middleware' => ['permission:modulevisible-list']
     ]);
 
     Route::get('module/create',[
         'as' => 'module.create',
-        'uses' => 'ModuleController@create'
+        'uses' => 'ModuleController@create',
+        'middleware' => ['permission:modulevisible-create']
     ]);
 
     Route::post('module/create',[
         'as' => 'module.store',
-        'uses' => 'ModuleController@store'
+        'uses' => 'ModuleController@store',
+        'middleware' => ['permission:modulevisible-create']
     ]);
 
     Route::get('module/edit/{id}',[
         'as' => 'module.edit',
-        'uses' => 'ModuleController@edit'
+        'uses' => 'ModuleController@edit',
+        'middleware' => ['permission:modulevisible-edit']
     ]);
 
     Route::patch('module/edit/{id}',[
         'as' => 'module.update',
-        'uses' => 'ModuleController@update'
+        'uses' => 'ModuleController@update',
+        'middleware' => ['permission:modulevisible-edit']
     ]);
 
     Route::delete('module/{d}',[
         'as' => 'module.destroy',
-        'uses' => 'ModuleController@destroy'
+        'uses' => 'ModuleController@destroy',
+        'middleware' => ['permission:modulevisible-delete']
     ]);
 
     // Module Visible Users route
     Route::get('modulevisible',[
         'as' => 'modulevisible.index',
-        'uses' => 'ModuleVisibleController@index'
+        'uses' => 'ModuleVisibleController@index',
+        'middleware' => ['permission:modulevisible-list']
     ]);
 
     Route::get('modulevisible/create',[
         'as' => 'modulevisible.create',
-        'uses' => 'ModuleVisibleController@create'
+        'uses' => 'ModuleVisibleController@create',
+        'middleware' => ['permission:modulevisible-create']
     ]);
 
     Route::post('modulevisible/create',[
         'as' => 'modulevisible.store',
-        'uses' => 'ModuleVisibleController@store'
+        'uses' => 'ModuleVisibleController@store',
+        'middleware' => ['permission:modulevisible-create']
     ]);
 
     Route::get('modulevisible/{id}/edit',[
         'as' => 'modulevisible.edit',
-        'uses' => 'ModuleVisibleController@edit'
+        'uses' => 'ModuleVisibleController@edit',
+        'middleware' => ['permission:modulevisible-edit']
     ]);
 
     Route::patch('modulevisible/{id}/edit',[
         'as' => 'modulevisible.update',
-        'uses' => 'ModuleVisibleController@update'
+        'uses' => 'ModuleVisibleController@update',
+        'middleware' => ['permission:modulevisible-edit']
     ]);
 
     Route::delete('modulevisible/{id}',[
         'as' => 'modulevisible.destroy',
-        'uses' => 'ModuleVisibleController@destroy'
+        'uses' => 'ModuleVisibleController@destroy',
+        'middleware' => ['permission:modulevisible-delete']
     ]);
 
     Route::post('/usermodule/visible',[

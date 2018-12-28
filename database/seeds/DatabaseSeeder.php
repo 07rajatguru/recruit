@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(HolidayPermissionSeeder::class);
         $this->call(HomePagePermissionSeeder::class);
         $this->call(ReceiptPermissionSeeder::class);
+        $this->call(ModuleVisiblePermission::class);
     }
 }
