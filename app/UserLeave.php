@@ -46,8 +46,18 @@ class UserLeave extends Model
             $leave[$i]['id'] = $value->id;
             $leave[$i]['user_id'] = $value->user_id;
             $leave[$i]['subject'] = $value->subject;
-            $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
-            $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+            if (isset($value->from_date) && $value->from_date != '') {
+                $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
+            }
+            else {
+                $leave[$i]['from_date'] = '';
+            }
+            if (isset($value->to_date) && $value->to_date != '') {
+                $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+            }
+            else {
+                $leave[$i]['to_date'] = '';
+            }
             $leave[$i]['leave_type'] = $value->type_of_leave;
             $leave[$i]['leave_category'] = $value->category;
             $leave[$i]['status'] = $value->status;

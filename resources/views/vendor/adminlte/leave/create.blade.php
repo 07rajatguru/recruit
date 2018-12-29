@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'User Leave Add')
+@section('title', 'User Leave Application')
 
 @section('content_header')
     <h1></h1>
@@ -78,7 +78,7 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
                         <strong>Leave Type: </strong>
-                        {!! Form::select('leave_type', $leave_type,null, array('class' => 'form-control','tabindex' => '2' )) !!}
+                        {!! Form::select('leave_type', $leave_type,null, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2', 'onchange' => 'checktype()' )) !!}
                         @if ($errors->has('leave_type'))
                             <span class="help-block">
                         <strong>{{ $errors->first('leave_type') }}</strong>
@@ -86,7 +86,7 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('to_date') ? 'has-error' : '' }}">
+                    <div class="form-group to_date {{ $errors->has('to_date') ? 'has-error' : '' }}" style="display: none;">
                         <strong>To Date: </strong>
                         <div class="input-group date">
                             <div class="input-group-addon">
@@ -155,6 +155,17 @@
             }
             else {
                 $(".document").hide();
+            }
+        }
+
+        function checktype(){
+            var leave_type = $("#leave_type").val();
+
+            if (leave_type == 'Full') {
+                $(".to_date").show();
+            }
+            else{
+                $(".to_date").hide();
             }
         }
     
