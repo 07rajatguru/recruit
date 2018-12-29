@@ -451,6 +451,21 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
+            // Mail for Leave reply approved/unapproved
+            else if ($value['module'] == 'Leave Reply') {
+                $cc_array=array();
+                $cc_array=explode(",",$input['cc']); 
+
+                $input['cc_array']=array_unique($cc_array);
+
+                \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
         }
     }
 }

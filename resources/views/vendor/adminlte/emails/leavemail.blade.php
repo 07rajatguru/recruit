@@ -24,28 +24,45 @@
             </table>
         </td>
     </tr>
-    <tr>
-        <td width="600" >
-            <table  cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+    @foreach($mail as $key => $value)
+        @if($value['module'] == 'Leave')
+            <tr>
+                <td width="600" >
+                    <table  cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+                        <tr>
+                            <td>
+                                <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
+                                <p>{!! $leave_message !!}</p>
+                                <p>Thanks & Regards,</p>
+                                <p>{{ $logged_in_user_nm }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
                 <tr>
-                    <td>
-                        <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
-                        <p>{!! $leave_message !!}</p>
-                        <p>Thanks & Regards,</p>
-                        <p>{{ $logged_in_user_nm }}</p>
+                    <td align="center" style="padding: 0px;">
+                        <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/leave/reply/'.$leave_id}}">Reply</a>
                     </td>
                 </tr>
             </table>
-        </td>
-    </tr>
-
-    <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
-        <tr>
-            <td align="center" style="padding: 0px;">
-                <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/leave/reply/'.$leave_id}}">Reply</a>
-            </td>
-        </tr>
-    </table>
+        @else
+            <tr>
+                <td width="600" >
+                    <table  cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+                        <tr>
+                            <td>
+                                <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
+                                <p>{!! $value['message'] !!}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        @endif
+    @endforeach
 
     <tr width="600" style="height: 45px; background-color: #dddddd;">
         <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>

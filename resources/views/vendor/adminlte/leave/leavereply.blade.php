@@ -64,11 +64,15 @@
 
 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
     <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
-    <button type="submit" class="btn btn-primary" onclick="permission('Noted')">Noted</button> &nbsp;&nbsp;&nbsp;&nbsp;
     <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
 </div>
 
-<input type="hidden" name="leave_id" id="leave_id" value="{{$id}}">
+<input type="hidden" name="leave_id" id="leave_id" value="{{$leave_id}}">
+<input type="hidden" name="msg" id="msg" value="{{$leave_details['message']}}">
+<input type="hidden" name="user_name" id="user_name" value="{{$leave_details['uname']}}">
+<input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{$loggedin_user_id}}">
+<input type="hidden" name="user_id" id="user_id" value="{{$leave_details['user_id']}}">
+<input type="hidden" name="subject" id="subject" value="{{$leave_details['subject']}}">
 @stop
 
 @section('customscripts')
@@ -77,14 +81,21 @@
         var leave_id = $("#leave_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
-        //alert(check);
+        var msg = $("#msg").val();
+        var user_name = $("#user_name").val();
+        var loggedin_user_id = $("#loggedin_user_id").val();
+        var user_id = $("#user_id").val();
+        var subject = $("#subject").val();
+        //alert(loggedin_user_id);
         $.ajax({
             type: 'POST',
             url:app_url+'/leave/reply/'+leave_id,
-            data: {leave_id: leave_id, 'check':check, '_token':token},
+            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject},
             dataType:'json',
             success: function(data){
-                
+                if (data == 'success') { 
+                    window.location.reload();
+                }
             }
         });
     }
