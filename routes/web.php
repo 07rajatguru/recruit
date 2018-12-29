@@ -223,6 +223,37 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'LeaveController@leaveReplySend'
     ]);
 
+    // All Users Leave Balance Routes
+    Route::get('userwiseleave',[
+        'as' => 'leave.userwise',
+        'uses' => 'LeaveController@userWiseLeave'
+    ]);
+
+    Route::get('userwiseleave/create',[
+        'as' => 'leave.userwisecreate',
+        'uses' => 'LeaveController@userWiseLeavaAdd'
+    ]);
+
+    Route::post('userwiseleave/create',[
+        'as' => 'leave.userwisestore',
+        'uses' => 'LeaveController@userWiseLeaveStore'
+    ]);
+
+    Route::get('userwiseleave/{id}/edit',[
+        'as' => 'leave.userwiseedit',
+        'uses' => 'LeaveController@userWiseLeaveEdit'
+    ]);
+
+    Route::patch('userwiseleave/{id}/edit',[
+        'as' => 'leave.userwiseupdate',
+        'uses' => 'LeaveController@userWiseLeaveUpdate'
+    ]);
+
+    Route::delete('userwiseleave/{id}',[
+        'as' => 'leaveuserwise.destroy',
+        'uses' => 'LeaveController@userWiseLeaveDestroy'
+    ]);
+
     // Admin > Users
     Route::get('users', [
         'as' => 'users.index',
