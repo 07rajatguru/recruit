@@ -175,7 +175,7 @@ class LeaveController extends Controller
         
         if ($reply == 'Approved') {
             $new_msg = "Your Leave has been Approved.";
-            $message = $msg . "<br/> <p>Thanks & Regards,</p> <br/> <p>" . $user_name . "</p> <br/><br/> <p>" . $new_msg . "</p>";
+            $message = "<tr><td><p>" . $new_msg . "</p><p>" . $msg . "</p><p>Thanks & Regards,</p><p>" . $user_name . "</p></td></tr>";
 
             $module = "Leave Reply";
             $sender_name = $loggedin_user_id;
@@ -186,10 +186,12 @@ class LeaveController extends Controller
             $module_id = $leave_id;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            \DB::statement("UPDATE user_leave SET status = '1' where id = $leave_id");
         }
         elseif ($reply == 'Unapproved') {
             $new_msg = "Your Leave has been Unapproved.";
-            $message = $msg . "<br/> <p>Thanks & Regards,</p> <br/>" . $user_name . "<br/><br/>" . $new_msg;
+            $message = "<tr><td><p>" . $new_msg . "</p><p>" . $msg . "</p><p>Thanks & Regards,</p><p>" . $user_name . "</p></td></tr>";
 
             $module = "Leave Reply";
             $sender_name = $loggedin_user_id;
@@ -200,6 +202,8 @@ class LeaveController extends Controller
             $module_id = $leave_id;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            \DB::statement("UPDATE user_leave SET status = '2' where id = $leave_id");
         }
 
         $data = 'success';

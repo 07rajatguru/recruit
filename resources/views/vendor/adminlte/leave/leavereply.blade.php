@@ -95,6 +95,7 @@
             success: function(data){
                 if (data == 'success') { 
                     window.location.reload();
+                    alert('Reply Send Successfully.');
                 }
             }
         });
