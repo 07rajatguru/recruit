@@ -112,4 +112,28 @@ class UsersLog extends Model
         return $type;
     }
 
+    public static function getUserAttendanceByIdDate($user_id,$date){
+
+        $query = UsersLog::query();
+        $query = $query->select('users_log.*',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
+        $query = $query->where('user_id',$user_id);
+        $query = $query->where('date','=',$date);
+        $res = $query->get();
+
+        $user_attendance = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $user_attendance[$i]['id'] = $value->id;
+            $user_attendance[$i]['user_id'] = $value->user_id;
+            $user_attendance[$i]['date'] = $value->date;
+            $user_attendance[$i]['time'] = $value->time;
+            $user_attendance[$i]['type'] = $value->type;
+            $user_attendance[$i]['login'] = $value->login;
+            $user_attendance[$i]['logout'] = $value->logout;
+            $i++;
+        }
+
+        return $user_attendance;
+    }
+
 }

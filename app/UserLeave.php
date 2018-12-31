@@ -89,4 +89,28 @@ class UserLeave extends Model
 
         return $leave_data;
     }
+
+    public static function getLeaveDataByFromDate($date){
+
+        $query = UserLeave::query();
+        $query = $query->select('user_leave.*');
+        $query = $query->where('from_date','=',$date);
+        $res = $query->get();
+
+        $leave_by_date = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $leave_by_date[$i]['id'] = $value->id;
+            $leave_by_date[$i]['user_id'] = $value->user_id;
+            $leave_by_date[$i]['from_date'] = $value->from_date;
+            $leave_by_date[$i]['to_date'] = $value->to_date;
+            $leave_by_date[$i]['type_of_leave'] = $value->type_of_leave;
+            $leave_by_date[$i]['category'] = $value->category;
+            $leave_by_date[$i]['message'] = $value->message;
+            $leave_by_date[$i]['status'] = $value->status;
+            $i++;
+        }
+
+        return $leave_by_date;
+    }
 }
