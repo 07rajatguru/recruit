@@ -323,24 +323,27 @@ tr.disabled > td a {
 .fc-title{
     color:black;
 }
-.Admin{
+/*.Admin{
     margin-top : -150px !important;
     height: 200px !important;
     overflow-y: scroll !important;
+}*/
+.Admin{
+    height: 125px;
+    overflow-y: scroll;
 }
-
 .treeview span{
     width:235px !important;
 }
 .treeview-menu{
-    width:235px !important;
+   width:234px !important;
 }
 .sidebar-menu li>a>.fa-angle-left, .sidebar-menu li>a>.pull-right-container>.fa-angle-left{
     margin-right:-49px;
 }
 
 .sidebar-menu>li{
-    height: 35px;
+    /*height: 35px;*/
 }
 
 .sidebar-menu li>a>.pull-right-container
