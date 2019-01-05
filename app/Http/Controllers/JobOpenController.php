@@ -741,7 +741,8 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsers('recruiter','Yes');
+        $select_all_users = User::getAllUsers('recruiter');
         //print_r($users);exit;
       //  $team_mates = $user_id;
 
@@ -767,7 +768,7 @@ class JobOpenController extends Controller
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'));
 
     }
 
@@ -1352,7 +1353,8 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsersWithInactive('recruiter');
+        $users = User::getAllUsers('recruiter','Yes');
+        $select_all_users = User::getAllUsers('recruiter');
         
         /*$users_res = User::orderBy('name', 'ASC')->get();
         $users = array();
@@ -1414,7 +1416,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'));
 
     }
 

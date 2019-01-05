@@ -202,7 +202,7 @@
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job: <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
-                        @foreach($users as $k=>$v)&nbsp;&nbsp; 
+                        @foreach($select_all_users as $k=>$v)&nbsp;&nbsp; 
                         {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
                         {!! Form::label ($v) !!}
                         @endforeach
