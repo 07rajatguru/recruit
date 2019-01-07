@@ -22,6 +22,8 @@ use App\Training;
 use App\TrainingVisibleUser;
 use App\ProcessManual;
 use App\ProcessVisibleUser;
+use App\JobOpen;
+use App\JobVisibleUsers;
 
 class UserController extends Controller
 {
@@ -130,6 +132,19 @@ class UserController extends Controller
                     $process_visible_users->process_id = $value;
                     $process_visible_users->user_id = $user_id;
                     $process_visible_users->save();
+                }
+            }
+        }
+
+        // If job_open_to_all = 1 then new user visible that all jobs
+        if ($type == 'recruiter' && $status == 'Active') {
+            $job_id = JobOpen::getAllJobsId(1);
+            if (isset($job_id) && $job_id != '') {
+                foreach ($job_id as $key => $value){
+                    $job_visible_users = new JobVisibleUsers();
+                    $job_visible_users->job_id = $value;
+                    $job_visible_users->user_id = $user_id;
+                    $job_visible_users->save();
                 }
             }
         }

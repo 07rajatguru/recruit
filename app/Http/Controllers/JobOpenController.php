@@ -934,6 +934,18 @@ class JobOpenController extends Controller
                 }
             }
 
+            // Get job_visible_user count and check to all users then update open_to_all field
+            $users_id = User::getAllUsers('recruiter');
+            $user_count = sizeof($users_id);
+
+            $job_users = sizeof($users);
+            if ($job_users == $user_count) {
+                \DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
+            }
+            else {
+                \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
+            }
+
             $job_summary = $request->file('job_summary');
             $others_doc = $request->file('others_doc');
 
@@ -1546,6 +1558,18 @@ class JobOpenController extends Controller
             }
         }
 
+        // Get job_visible_user count and check to all users then update open_to_all field
+        $users_id = User::getAllUsers('recruiter');
+        $user_count = sizeof($users_id);
+
+        $job_users = sizeof($users);
+        if ($job_users == $user_count) {
+            \DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
+        }
+        else {
+            \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
+        }
+
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Updated Successfully');
     }
 
@@ -1791,6 +1815,18 @@ class JobOpenController extends Controller
                     $job_visible_users->user_id = $value;
                     $job_visible_users->save();
                 }
+            }
+
+            // Get job_visible_user count and check to all users then update open_to_all field
+            $users_id = User::getAllUsers('recruiter');
+            $user_count = sizeof($users_id);
+
+            $job_users = sizeof($users);
+            if ($job_users == $user_count) {
+                \DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
+            }
+            else {
+                \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
             }
 
             $job_summary = $request->file('job_summary');

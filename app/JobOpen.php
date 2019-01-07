@@ -1310,4 +1310,26 @@ class JobOpen extends Model
 
         return $job_id;
     }
+
+    // Get jobid for open_to_all new user
+    public static function getAllJobsId($open_to_all=1){
+
+        $query = JobOpen::query();
+        $query = $query->select('job_openings.id');
+        if ($open_to_all > 0) {
+            $query = $query->where('job_openings.open_to_all',$open_to_all);
+        }
+        $res = $query->get();
+
+        $job_id = array();
+        $i = 0;
+        if (isset($res) && $res != '') {
+            foreach ($res as $key => $value) {
+                $job_id[$i] = $value->id;
+                $i++;
+            }
+        }
+
+        return $job_id;
+    }
 }
