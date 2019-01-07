@@ -1627,7 +1627,8 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsers('recruiter','Yes');
+        $select_all_users = User::getAllUsers('recruiter');
         //print_r($users);exit;
       //  $team_mates = $user_id;
 
@@ -1662,7 +1663,7 @@ class JobOpenController extends Controller
         $action = "clone";
 
         
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'));
 
     }
 
