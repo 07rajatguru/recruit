@@ -48,7 +48,7 @@ class UserLeaveCheck extends Command
             $status = $value['status'];
 
             $user_attendance = UsersLog::getUserAttendanceByIdDate($user_id,$from_date);
-            if (!empty($user_attendance)) {
+            if (isset($user_attendance) && sizeof($user_attendance)>0) {
                 if ($status == 1) {
                     print_r("App");exit;
                 }

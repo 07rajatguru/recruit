@@ -59,7 +59,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                            {!! Form::text('from_date',null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control','tabindex' => '3')) !!}
+                            {!! Form::text('from_date',null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control','tabindex' => '3', 'onchange' => 'preDefinemsg();')) !!}
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
                         <strong>Leave Type: </strong>
-                        {!! Form::select('leave_type', $leave_type,null, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2', 'onchange' => 'checktype()' )) !!}
+                        {!! Form::select('leave_type', $leave_type,null, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2', 'onchange' => 'checktype();preDefinemsg();' )) !!}
                         @if ($errors->has('leave_type'))
                             <span class="help-block">
                         <strong>{{ $errors->first('leave_type') }}</strong>
@@ -92,13 +92,13 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                        {!! Form::text('to_date',null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control','tabindex' => '4')) !!}
+                        {!! Form::text('to_date',null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control','tabindex' => '4', 'onchange' => 'preDefinemsg();')) !!}
                         </div>
                     </div>
 
                     <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
                         <strong>Leave Category: </strong>
-                        {!! Form::select('leave_category', $leave_category,null, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category()' )) !!}
+                        {!! Form::select('leave_category', $leave_category,null, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();preDefinemsg();' )) !!}
                         @if ($errors->has('leave_category'))
                             <span class="help-block">
                         <strong>{{ $errors->first('leave_category') }}</strong>
@@ -144,7 +144,8 @@
                     autoclose: true,
             });
 
-            $("#leave_msg").wysihtml5();
+            // $("#leave_msg").wysihtml5();
+            preDefinemsg();
         });
 
         function category(){
@@ -166,6 +167,33 @@
             }
             else{
                 $(".to_date").hide();
+            }
+        }
+
+        function preDefinemsg(){
+
+            var leave_type = $("#leave_type").val();
+            var leave_category = $("#leave_category").val();
+            var from_date = $("#from_date").val();
+            var to_date = $("#to_date").val();
+
+            if (leave_type == 'Full' || leave_type == 'Half') {
+                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day ');
+            }
+            else if (leave_type == 'Early/Late') {
+                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' go/in');
+            }
+            else if (leave_category == 'Casual' || leave_category == 'Medical') {
+                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day' +leave_category+ ' Leave');
+            }
+            else if (from_date) {
+                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day' +leave_category+ ' Leave from' +from_date);
+            }
+            else if (to_date) {
+                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day' +leave_category+ ' Leave from' +from_date+ ' to' +to_date);
+            }
+            else {
+                $("#leave_msg").val('Kindly Approve my ');
             }
         }
     
