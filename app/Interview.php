@@ -419,6 +419,7 @@ class Interview extends Model
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
             'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
         $query = $query->where('interview.id',$ids);
+        $query = $query->orderBy('interview.interview_date','asc');
         $response = $query->first();
 
         return $response;
@@ -809,6 +810,26 @@ class Interview extends Model
 
         return $interview_details;
 
+    }
+
+    public static function getInterviewIdInASCDate($ids){
+
+        $interview_ids = explode(',', $ids);
+
+        $query = Interview::query();
+        $query = $query->select('interview.id','interview.interview_date');
+        $query = $query->whereIn('interview.id',$interview_ids);
+        $query = $query->orderBy('interview.interview_date','asc');
+        $res = $query->get();
+        
+        $interview_id = array();
+        $i = 0;
+        foreach ($res as $key => $value) {
+            $interview_id[$i] = $value->id;
+            $i++;
+        }
+
+        return $interview_id;
     }
 
 }

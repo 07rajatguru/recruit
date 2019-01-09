@@ -771,17 +771,17 @@ class InterviewController extends Controller
 
         $interview_ids = $_POST['inter_ids'];
         $subject = $_POST['subject'];
-        //print_r($subject);exit;
 
-        $interview_id_array = explode(",", $interview_ids);
+        $interview_id = Interview::getInterviewIdInASCDate($interview_ids);
+
         $i = 0;
-        foreach ($interview_id_array as $key => $value) {
+        foreach ($interview_id as $key => $value) {
 
             $interview[$i] = Interview::ScheduleMailMultiple($value);
             $to_address_client = array();
             $j = 0;
-            foreach ($interview as $key => $value) {
-                $to_address_client[$j] = $value['client_owner_email'];
+            foreach ($interview as $key1 => $value1) {
+                $to_address_client[$j] = $value1['client_owner_email'];
                 $j++;
             }
             /*$to_address_candidate = array();
