@@ -323,10 +323,12 @@ class HomeController extends Controller
             $month_array[$m] = date('M', mktime(0,0,0,$m));
         }
 
+        $starting_year = '2016';
+        $ending_year = date('Y',strtotime('+3 year'));
         $year_array = array();
-        $year_array[2016] = 2016;
-        $year_array[2017] = 2017;
-        $year_array[2018] = 2018;
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
 
         $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id,$developer_role_id);
         if(in_array($user_role_id,$access_roles_id)){
