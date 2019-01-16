@@ -44,15 +44,17 @@ class ClientStatus extends Command
     {
         //
 
-        $job_open=\DB::table('client_basicinfo')
+        /*$job_open=\DB::table('client_basicinfo')
         ->leftjoin('job_openings','client_basicinfo.id','=','job_openings.client_id')
         ->leftjoin('job_associate_candidates','job_associate_candidates.job_id','=','job_openings.id')
         ->select('job_openings.*','client_basicinfo.id as Client_Id','job_associate_candidates.created_at as created')
         ->groupBy('client_basicinfo.id')
         ->orderBy('job_openings.created_at','desc')
         ->where('client_basicinfo.id','=','30')
-        ->get();
-        print_r($job_open);exit;
+        ->get();*/
+
+        $job_res = JobOpen::getClientJobDetails();
+        print_r($job_res);exit;
         $job=array();
         if(isset($job_open)){
             foreach($job_open as $key=>$value){
