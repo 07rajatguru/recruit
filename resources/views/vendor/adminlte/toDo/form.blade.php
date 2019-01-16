@@ -201,10 +201,12 @@
                         <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                             <strong>Select Users : <span class = "required_fields">*</span></strong>
                             <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
-                            @foreach($users as $k=>$v) &nbsp;&nbsp;
-                            {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
-                            {!! Form::label ($v) !!}
-                            @endforeach
+                            <div id="select_user">
+                                @foreach($users as $k=>$v) &nbsp;&nbsp;
+                                {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                                {!! Form::label ($v) !!}
+                                @endforeach
+                            </div>
 
                             @if ($errors->has('user_ids'))
                                 <span class="help-block">
@@ -340,10 +342,14 @@
                   success: function(data){
                       $("#search").empty();
                       $("#search_to").empty();
-                      for(var i=0;i<data.length;i++){
+                      $("#select_user").empty();
+                      for(var i=0;i<data.typeArr.length;i++){
                           //$('#typeList').append($('<option></option>').val(data[i].id).html(data[i].value));
                           //$('#typeList').select2('val', typelist)
-                          $('#search').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value))
+                          $('#search').append($('<option data-position="'+(i+1)+'"></option>').val(data.typeArr[i].id).html(data.typeArr[i].value))
+                      }
+                      for (var j=0;j<data.userArr.length;j++){
+                            $('#select_user').append('<input type="checkbox" name="user_ids[]" id="user_ids" size="10" class="users_ids" value="' + data.userArr[j].user_id + '"/> <label>'+data.userArr[j].user_name+'</label>&nbsp;&nbsp;');
                       }
                   },
                     complete: function (data) {
@@ -373,9 +379,19 @@
                     dataType:'json',
                     success: function(data){
                         $("#search_to").empty();
-                        for(var i=0;i<data.length;i++){
-                            $('#search_to').append($('<option data-position="'+(i+1)+'"></option>').val(data[i].id).html(data[i].value));
-                            $('#search option[value="'+data[i].id+'"]').remove();
+                        $("#select_user").empty();
+                        for(var i=0;i<data.typeArr.length;i++){
+                            $('#search_to').append($('<option data-position="'+(i+1)+'"></option>').val(data.typeArr[i].id).html(data.typeArr[i].value));
+                            $('#search option[value="'+data.typeArr[i].id+'"]').remove();
+                        }
+
+                        for (var j=0;j<data.userArr.length;j++){
+                            if (data.selected_userArr.includes(data.userArr[j].user_id)) {
+                                $('#select_user').append('<input type="checkbox" name="user_ids[]" id="user_ids" size="10" class="users_ids" value="' + data.userArr[j].user_id + '" checked/> <label>'+data.userArr[j].user_name+'</label>&nbsp;&nbsp;');
+                            }
+                            else {
+                                $('#select_user').append('<input type="checkbox" name="user_ids[]" id="user_ids" size="10" class="users_ids" value="' + data.userArr[j].user_id + '"/> <label>'+data.userArr[j].user_name+'</label>&nbsp;&nbsp;');
+                            }
                         }
                     }
                 });

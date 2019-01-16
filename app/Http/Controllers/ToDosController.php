@@ -1102,6 +1102,14 @@ class ToDosController extends Controller
                 $i++;
             }
 
+            $job_user = User::getAllUsers('recruiter');
+            $j=0;
+            foreach ($job_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
+
         } 
         // For Interview Details
         elseif($selectedType == 2) {
@@ -1121,6 +1129,14 @@ class ToDosController extends Controller
                 }
             } else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
+            }
+
+            $interview_user = User::getAllUsers();
+            $j=0;
+            foreach ($interview_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
             }
         } 
         // For Client Details
@@ -1160,6 +1176,14 @@ class ToDosController extends Controller
             } else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
+            
+            $client_user = User::getAllUsers();
+            $j=0;
+            foreach ($client_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
         }
 
         // For Candidate Details
@@ -1175,14 +1199,23 @@ class ToDosController extends Controller
             } else{
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }
-
+            $candidate_user = User::getAllUsers();
+            $j=0;
+            foreach ($candidate_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
          }
 
          else {
             $typeArr[0] = array('id' => '','value'=>'Select Type' );
         }
 
-        return json_encode($typeArr);
+        $data['typeArr'] = $typeArr;
+        $data['userArr'] = $userArr;
+
+        return json_encode($data);
     }
 
     public function getSelectedTypeList(){
@@ -1200,6 +1233,8 @@ class ToDosController extends Controller
         $toDoId = Input::get('toDoId');
 
         $selected_typeList = AssociatedTypeList::getAssociatedListByTodoId($toDoId);
+        $selected_userArr = TodoAssignedUsers::getUserListByTodoId($toDoId);
+        //print_r($selected_userArr);exit;
 
         // For Job Opening Details
         $typeArr = array();
@@ -1220,11 +1255,19 @@ class ToDosController extends Controller
                 $typeArr[$i]['value'] =  $v['company_name']." - ".$v['posting_title']." - ".$v['location'];//$v['client']." - ".$v['location'];
                 $i++;
             }
+
+            $job_user = User::getAllUsers('recruiter');
+            $j=0;
+            foreach ($job_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
         }
 
         // For Interview Details
         elseif($selectedType == 2) {
-            $typeDetails = Interview::getInterviewsByIds(explode(',',$selected_typeList));
+            $typeDetails = Interview::getTodosInterviewsByIds(explode(',',$selected_typeList));
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
@@ -1235,6 +1278,13 @@ class ToDosController extends Controller
             } /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }*/
+            $interview_user = User::getAllUsers();
+            $j=0;
+            foreach ($interview_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
         }
 
         // For Client Details
@@ -1260,6 +1310,13 @@ class ToDosController extends Controller
             } /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }*/
+            $client_user = User::getAllUsers();
+            $j=0;
+            foreach ($client_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
         }
 
         // For Candidate Details
@@ -1276,14 +1333,24 @@ class ToDosController extends Controller
             }/* else{
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }*/
-
+            $candidate_user = User::getAllUsers();
+            $j=0;
+            foreach ($candidate_user as $key => $value) {
+                $userArr[$j]['user_id'] = $key;
+                $userArr[$j]['user_name'] = $value;
+                $j++;
+            }
         }
 
         else {
             $typeArr[0] = array('id' => '','value'=>'Select Type' );
         }
 
-        return json_encode($typeArr);
+        $data['typeArr'] = $typeArr;
+        $data['selected_userArr'] = $selected_userArr;
+        $data['userArr'] = $userArr;
+
+        return json_encode($data);
 
     }
 

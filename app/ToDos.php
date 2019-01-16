@@ -407,7 +407,7 @@ class ToDos extends Model
             }   
         }
         else if ($type == 2) {
-            $interview_res = Interview::getInterviewsByIds(explode(',',$type_list));
+            $interview_res = Interview::getTodosInterviewsByIds(explode(',',$type_list));
             foreach ($interview_res as $k=>$v){
                 $jobopen[$i] =  $v->client_name." - ".$v->posting_title." - ".$v->city;
                 $todo_type .= "<li>".$jobopen[$i]."</li>";

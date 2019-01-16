@@ -832,4 +832,22 @@ class Interview extends Model
         return $interview_id;
     }
 
+    // function for get interview by ids for todos edit,show page
+    public static function getTodosInterviewsByIds($ids){
+
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
+            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
+            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
+        $query = $query->whereIn('interview.id',$ids);
+        $query = $query->orderBy('interview.interview_date','asc');
+        $response = $query->get();
+
+        return $response;
+    }
+
 }
