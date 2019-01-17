@@ -289,4 +289,16 @@ class JobAssociateCandidates extends Model
         return $candidate;
     }
 
+    /*// function for convert active/passive client job associated cvs by date wise desc 
+    public static function getClientJobAssociatedIdByDESCDate($job_id){
+
+        $job_cvs_data = JobAssociateCandidates::query();
+        $job_cvs_data = $job_cvs_data->select('job_associate_candidates.id','job_associate_candidates.created_at');
+        $job_cvs_data = $job_cvs_data->orderBy('job_associate_candidates.created_at','desc');
+        $job_cvs_data = $job_cvs_data->whereIn('job_associate_candidates.job_id',$job_id);
+        $job_cvs_res = $job_cvs_data->first();
+
+        return $job_cvs_res;
+    }*/
+
 }

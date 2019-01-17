@@ -1333,17 +1333,29 @@ class JobOpen extends Model
         return $job_id;
     }
 
-    // function for client convert active/passive
-    public static function getClientJobDetails(){
+    /*// function for client convert active/passive
+    public static function getClientJobDetails($client_id){
 
         $job_data = JobOpen::query();
-        $job_data = $job_data->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_data = $job_data->select('job_openings.*','client_basicinfo.id as Client_Id');
-        $job_data = $job_data->groupBy('job_openings.client_id');
-        $job_data = $job_data->orderBy('job_openings.created_at','desc');
-        $job_data = $job_data->where('job_openings.client_id','=','30');
+        //$job_data = $job_data->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_data = $job_data->select('job_openings.id');
+        //$job_data = $job_data->groupBy('job_openings.client_id');
+        // $job_data = $job_data->orderBy('job_openings.created_at','asc');
+        $job_data = $job_data->where('job_openings.client_id',$client_id);
         $job_res = $job_data->get();
 
         return $job_res;
     }
+
+    // function for convert active/passive client job by date wise desc 
+    public static function getClientJobIdByDESCDate($job_id){
+
+        $job_data = JobOpen::query();
+        $job_data = $job_data->select('job_openings.id','job_openings.created_at');
+        $job_data = $job_data->orderBy('job_openings.created_at','desc');
+        $job_data = $job_data->whereIn('job_openings.id',$job_id);
+        $job_res = $job_data->first();
+
+        return $job_res;
+    }*/
 }
