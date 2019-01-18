@@ -43,6 +43,8 @@ class ClientStatus extends Command
     public function handle()
     {
 
+        $active_clients = array();
+
         $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id)'));
 
         //print_r($job_created_at);exit;
@@ -83,6 +85,7 @@ class ClientStatus extends Command
                    }
                    else{
                         DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_id'");
+                       $active_clients[] = $client_id;
                         echo " status - 1 :".$client_id;
                    }
                 }
@@ -107,5 +110,41 @@ class ClientStatus extends Command
             DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$value'");
             echo " status - 0 :".$value;
         }
+
+        // get all jobs which are created before 1 month
+        $date1=date('Y-m-d 00:00:00',strtotime("-30 days"));
+        $jo_query = JobOpen::query();
+        $jo_query = $jo_query->where('created_at','<',"$date1");
+        $job_res = $jo_query->get();
+
+        $all_jobs = array();
+        foreach ($job_res as $k=>$v){
+            $all_jobs[$v->client_id] = $v->id;
+        }
+
+        // in that jobs find in which jobs no cvs are associated within 1 month and get their client ids
+        foreach ($all_jobs as $k=>$v){
+            $jo_query1 = JobAssociateCandidates::query();
+            $jo_query1 = $jo_query1->where('job_associate_candidates.job_id',$v);
+            $jo_query1 = $jo_query1->where('job_associate_candidates.created_at','>=',"$date1");
+            $job_res = $jo_query1->first();
+
+            if(isset($job_res->job_id))
+            {
+               // get client id from job id
+               $jo_query2 = JobOpen::query();
+               $jo_query2 = $jo_query2->where('id',$job_res->job_id);
+               $client_res2 = $jo_query2->first();
+               $active_clients[]= $client_res2->client_id;
+
+                DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_res2->client_id'");
+            }
+            else{
+                if(!in_array($k,$active_clients))
+                    DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$v'");
+            }
+
+        }
+
     }
 }
