@@ -165,51 +165,14 @@
 
                         <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                             <strong>Status: <span class = "required_fields">*</span></strong>
-                            
-                            @if($action=='edit')
 
-                            @if($client_status== '1')
+                                {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
 
-                            {!! Form::radio('status','1',true) !!}
-                            <label>Active</label>
-                            
-                            {!! Form::radio('status','0') !!}
-                            <label>Passive</label>
-
-                
-                            @elseif($client_status== '0')
-
-                            {!! Form::radio('status','1') !!}
-                            <label>Active</label>
-                            
-                            {!! Form::radio('status','0',true) !!}
-                            <label>Passive</label>
-
-                            @else
-
-                            {!! Form::radio('status','1') !!}
-                            <label>Active</label>
-                            
-                            {!! Form::radio('status','0') !!}
-                            <label>Passive</label>
-
-                            @endif
-
-                            @else
-
-                            {!! Form::radio('status','1',true) !!}
-                            <label>Active</label>
-                            
-                            {!! Form::radio('status','0') !!}
-                            <label>Passive</label>
-
-                            @endif  
-
-                            @if ($errors->has('status'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('status') }}</strong>
-                                </span>
-                            @endif
+                                @if ($errors->has('status'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('status') }}</strong>
+                                    </span>
+                                @endif
                             
                         </div>
 

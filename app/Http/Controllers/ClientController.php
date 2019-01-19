@@ -684,6 +684,9 @@ class ClientController extends Controller
         $client_cat=ClientBasicinfo::getCategory();
         $client_category='';
 
+        $client_status_key=ClientBasicinfo::getStatus();
+        $client_status = 1;
+
         $generate_lead = '1';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -716,7 +719,7 @@ class ClientController extends Controller
         $industry_id = '';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy'));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy'));
     }
 
 
@@ -738,6 +741,7 @@ class ClientController extends Controller
 
         $co_prefix=ClientBasicinfo::getcoprefix();
         $client_cat=ClientBasicinfo::getCategory();
+        $client_status_key=ClientBasicinfo::getStatus();
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -834,7 +838,7 @@ class ClientController extends Controller
          $users = User::getAllUsersWithInactive();
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category'));
     }
 
     public function store(Request $request){
@@ -876,14 +880,7 @@ class ClientController extends Controller
         
         $status = $input['status'];
 
-        if($status=='1')
-        {
-            $client_basic_info->status='1';
-        }
-        else
-        {
-            $client_basic_info->status='0';
-        }
+        $client_basic_info->status = $status;
 
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
@@ -1381,14 +1378,8 @@ class ClientController extends Controller
 
         $status=$input->status;
 
-        if($status=='1')
-        {
-            $client_basicinfo->status='1';
-        }
-        if($status=='0')
-        {
-            $client_basicinfo->status='0';
-        }
+        $client_basicinfo->status = $status;
+
         $client_basicinfo->website = $input->website;
         if(isset($input->source) && $input->source!=''){
             $client_basicinfo->source = $input->source;

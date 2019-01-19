@@ -521,6 +521,15 @@ class ClientBasicinfo extends Ardent
         return $type;
     }
 
+    public static function getStatus(){
+        $status = array();
+        $status[0] = 'Passive';
+        $status[1] = 'Active';
+        $status[2] = 'Leaders';
+        $status[3] = 'Forbid';
+        return $status;
+    }
+
     public static function getClientsByType($all=0,$user_id,$rolePermissions,$status,$category=NULL){
 
         $client_visibility = false;
