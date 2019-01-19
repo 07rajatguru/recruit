@@ -335,8 +335,12 @@ class ClientController extends Controller
             }
             if($value['status']=='Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
-            else
-                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span>';
+            else if($value['status']=='Passive')
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+            else if($value['status']=='Leaders')
+                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+            else if($value['status']=='Forbid')
+                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
             if($isSuperAdmin || $isStrategy ){
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
             }

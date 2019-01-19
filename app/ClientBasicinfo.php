@@ -132,9 +132,17 @@ class ClientBasicinfo extends Ardent
                 {
                   $client_array[$i]['status']='Active';
                 }
-                else
+                else  if($client_array[$i]['status']== '0')
                 {
                   $client_array[$i]['status']='Passive';
+                }
+                else  if($client_array[$i]['status']== '2')
+                {
+                    $client_array[$i]['status']='Leaders';
+                }
+                else  if($client_array[$i]['status']== '3')
+                {
+                    $client_array[$i]['status']='Forbid';
                 }
             }
             
