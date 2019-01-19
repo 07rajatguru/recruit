@@ -77,6 +77,15 @@ class ClientStatus extends Command
                 $job_created_at = $value1->created_at; // job added date
                 // $job_associated_created_at = $job_associated_data->created_at; // job candidate associate date
 
+                 // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                 $client_status_query = ClientBasicinfo::query();
+                 $client_status_query = $client_status_query->where('id',$client_id);
+                 $client_res = $client_status_query->first();
+                 $client_status = $client_res->status;
+
+                 if($client_status==2 or $client_status==3)
+                     continue;
+
                 $date1=date('Y-m-d',strtotime("-30 days"));
                 if(isset($job_created_at)){
                    if(($job_created_at /*|| $job_associated_created_at*/) < $date1){
@@ -100,13 +109,18 @@ class ClientStatus extends Command
                 $i++;
             }
         }
-        else{
-            DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
-            echo " status - 0 :".$client_id;
-        }
-        /*$i++;
-        }*/
+
+
         foreach ($clientids as $key => $value) {
+            // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+            $client_status_query = ClientBasicinfo::query();
+            $client_status_query = $client_status_query->where('id',$value);
+            $client_res = $client_status_query->first();
+            $client_status = $client_res->status;
+
+            if($client_status==2 or $client_status==3)
+                continue;
+
             DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$value'");
             echo " status - 0 :".$value;
         }
@@ -137,9 +151,27 @@ class ClientStatus extends Command
                $client_res2 = $jo_query2->first();
                $active_clients[]= $client_res2->client_id;
 
+                // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                $client_status_query = ClientBasicinfo::query();
+                $client_status_query = $client_status_query->where('id',$client_res2->client_id);
+                $client_res = $client_status_query->first();
+                $client_status = $client_res->status;
+
+                if($client_status==2 or $client_status==3)
+                    continue;
+
                 DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_res2->client_id'");
             }
             else{
+                // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                $client_status_query = ClientBasicinfo::query();
+                $client_status_query = $client_status_query->where('id',$v);
+                $client_res = $client_status_query->first();
+                $client_status = $client_res->status;
+
+                if($client_status==2 or $client_status==3)
+                    continue;
+
                 if(!in_array($k,$active_clients))
                     DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$v'");
             }
