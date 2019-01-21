@@ -111,9 +111,8 @@ class ClientStatus extends Command
             }
         }
 
-        print_r($clientids);exit;
         foreach ($clientids as $key => $value) {
-            // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+            // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
             $client_status_query = ClientBasicinfo::query();
             $client_status_query = $client_status_query->where('id',$value);
             $client_res = $client_status_query->first();
@@ -136,6 +135,7 @@ class ClientStatus extends Command
         foreach ($job_res as $k=>$v){
             $all_jobs[$v->client_id] = $v->id;
         }
+        //print_r($all_jobs);exit;
 
         // in that jobs find in which jobs no cvs are associated within 1 month and get their client ids
         foreach ($all_jobs as $k=>$v){
@@ -143,7 +143,7 @@ class ClientStatus extends Command
             $jo_query1 = $jo_query1->where('job_associate_candidates.job_id',$v);
             $jo_query1 = $jo_query1->where('job_associate_candidates.created_at','>=',"$date1");
             $job_res = $jo_query1->first();
-
+            
             if(isset($job_res->job_id))
             {
                // get client id from job id
@@ -152,11 +152,11 @@ class ClientStatus extends Command
                $client_res2 = $jo_query2->first();
                $active_clients[]= $client_res2->client_id;
 
-                // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
                 $client_status_query = ClientBasicinfo::query();
                 $client_status_query = $client_status_query->where('id',$client_res2->client_id);
                 $client_res = $client_status_query->first();
-                $client_status = $client_res->status;
+                $client_status = $client_res['status'];
 
                 if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;
@@ -164,11 +164,11 @@ class ClientStatus extends Command
                 DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_res2->client_id'");
             }
             else{
-                // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
                 $client_status_query = ClientBasicinfo::query();
                 $client_status_query = $client_status_query->where('id',$v);
                 $client_res = $client_status_query->first();
-                $client_status = $client_res->status;
+                $client_status = $client_res['status'];
 
                 if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;

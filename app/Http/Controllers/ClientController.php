@@ -1487,9 +1487,21 @@ class ClientController extends Controller
                 {
                     $client['status']='Active';
                 }
-                else
+                else if($client['status'] == '0')
                 {
                     $client['status']='Passive';
+                }
+                else if($client['status'] == '2')
+                {
+                    $client['status']='Leaders';
+                }
+                else if($client['status'] == '3')
+                {
+                    $client['status']='Forbid';
+                }
+                else if($client['status'] == '4')
+                {
+                    $client['status']='Left';
                 }
             }
 
