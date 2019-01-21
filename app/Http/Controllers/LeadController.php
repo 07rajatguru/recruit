@@ -442,6 +442,11 @@ class LeadController extends Controller
 
         // For account manager
          $users = User::getAllUsers();
+         $users[0] = '--Select User--';
+
+        $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
+        $yet_to_assign_users[0] = '--Select User--';
+        $yet_to_assign_users_id = '0';
 
         if(sizeof($industry_res)>0){
             foreach($industry_res as $r){
@@ -470,7 +475,7 @@ class LeadController extends Controller
          $co_prefix=ClientBasicinfo::getcoprefix();
          $co_category='';
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status'));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','yet_to_assign_users','yet_to_assign_users_id'));
 
      }
 
@@ -538,7 +543,15 @@ class LeadController extends Controller
         else
         {
             $client_basic_info->category='';
-        } 
+        }
+
+        if (isset($input['yet_to_assign_id'])) {
+            $client_basic_info->yet_to_assign_user = $input['yet_to_assign_id'];
+        }
+        else{
+            $client_basic_info->yet_to_assign_user = 0;
+        }
+         
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 

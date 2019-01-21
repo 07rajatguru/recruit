@@ -353,6 +353,8 @@ class ClientController extends Controller
                 $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
             else if($value['status']=='Forbid')
                 $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+            else if($value['status']=='Left')
+                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
             if($isSuperAdmin || $isStrategy ){
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
             }
@@ -374,6 +376,7 @@ class ClientController extends Controller
         echo json_encode($json_data);exit;
     }
 
+    // Active client listing page function
     public function ActiveClient(){
 
         $utils = new Utils();
@@ -410,6 +413,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
@@ -419,6 +425,15 @@ class ClientController extends Controller
             }
             else if ($client['status'] == 'Passive'){
                 $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
             }
 
             if($client['category'] == 'Paramount'){
@@ -435,9 +450,10 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Active';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
     }
 
+    // Passive client listing page function
     public function PassiveClient(){
 
         $utils = new Utils();
@@ -474,6 +490,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
@@ -483,6 +502,15 @@ class ClientController extends Controller
             }
             else if ($client['status'] == 'Passive'){
                 $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
             }
 
             if($client['category'] == 'Paramount'){
@@ -499,9 +527,241 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Passive';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
     }
 
+    // Leaders client listing page function
+    public function LeadersClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,2);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,2);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Leaders';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+    }
+
+    // Forbid client listing page function
+    public function ForbidClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,3);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,3);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Forbid';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+    }
+
+    // Left client listing page function
+    public function LeftClient(){
+
+        $utils = new Utils();
+        $user =  \Auth::user();
+
+        // get logged in user company id
+        $company_id = $user->company_id;
+
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
+            $client_array = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,4);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+        }
+        else{
+            $client_array = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,4);
+            $count = sizeof($client_array);
+
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+        }
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+        foreach($clients as $client){
+            if($client['status'] == 'Active' ){
+                $active++;
+            }
+            else if ($client['status'] == 'Passive'){
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount'){
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate'){
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard'){
+                $std_cat++;
+            }
+        }
+
+        $account_manager=User::getAllUsers('recruiter');
+
+        $source = 'Left';
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+    }
+
+    // Paramount client listing page function
     public function ParamountClient(){
 
         $utils = new Utils();
@@ -537,6 +797,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
@@ -546,6 +809,15 @@ class ClientController extends Controller
             }
             else if ($client['status'] == 'Passive'){
                 $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
             }
 
             if($client['category'] == 'Paramount'){
@@ -562,9 +834,10 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Paramount';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
     }
 
+    // Moderate client listing page function
     public function ModerateClient(){
 
         $utils = new Utils();
@@ -600,6 +873,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
@@ -609,6 +885,15 @@ class ClientController extends Controller
             }
             else if ($client['status'] == 'Passive'){
                 $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
             }
 
             if($client['category'] == 'Paramount'){
@@ -625,9 +910,10 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Moderate';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
     }
 
+    // Standard client listing page function
     public function StandardClient(){
 
         $utils = new Utils();
@@ -663,6 +949,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
@@ -672,6 +961,15 @@ class ClientController extends Controller
             }
             else if ($client['status'] == 'Passive'){
                 $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
             }
 
             if($client['category'] == 'Paramount'){
@@ -688,7 +986,7 @@ class ClientController extends Controller
         $account_manager=User::getAllUsers('recruiter');
 
         $source = 'Standard';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
     }
 
     public function create()
@@ -718,7 +1016,12 @@ class ClientController extends Controller
         $user_id = $user->id;
 
         // For account manager
-         $users = User::getAllUsers('recruiter','Yes');
+        $users = User::getAllUsers('recruiter','Yes');
+        $users[0] = '--Select User--';
+
+        $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
+        $yet_to_assign_users[0] = '--Select User--';
+        $yet_to_assign_users_id = '0';
 
         if(sizeof($industry_res)>0){
             foreach($industry_res as $r){
@@ -735,7 +1038,7 @@ class ClientController extends Controller
         $industry_id = '';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy'));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','yet_to_assign_users','yet_to_assign_users_id'));
     }
 
 
@@ -782,7 +1085,7 @@ class ClientController extends Controller
 
         $client = array();
         $client_basicinfo  = \DB::table('client_basicinfo')
-            ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
+            ->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
             ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
             ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','industry.name as ind_name')
             ->where('client_basicinfo.id','=',$id)
@@ -819,6 +1122,7 @@ class ClientController extends Controller
             exit;*/
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
+            $yet_to_assign_users_id = $value->yet_to_assign_user;
         }
         else
         {
@@ -852,9 +1156,13 @@ class ClientController extends Controller
          $client = (object)$client;
         // For account manager 
          $users = User::getAllUsersWithInactive();
+         $users[0] = '--Select User--';
+
+        $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
+        $yet_to_assign_users[0] = '--Select User--';
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','yet_to_assign_users_id'));
     }
 
     public function store(Request $request){
@@ -931,7 +1239,14 @@ class ClientController extends Controller
         {
             $client_basic_info->category='';
         }
-        
+
+        if (isset($input['yet_to_assign_id'])) {
+            $client_basic_info->yet_to_assign_user = $input['yet_to_assign_id'];
+        }
+        else{
+            $client_basic_info->yet_to_assign_user = 0;
+        }
+
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
@@ -1137,7 +1452,7 @@ class ClientController extends Controller
 
         $client = array();
         $client_basicinfo  = \DB::table('client_basicinfo')
-            ->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
+            ->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
             ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
             ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id', 'industry.name as ind_name')
             ->where('client_basicinfo.id','=',$id)
@@ -1433,6 +1748,12 @@ class ClientController extends Controller
         else
         {
             $client_basicinfo->category='';
+        }
+        if (isset($input->yet_to_assign_id)) {
+            $client_basicinfo->yet_to_assign_user = $input->yet_to_assign_id;
+        }
+        else{
+            $client_basicinfo->yet_to_assign_user = 0;
         }
         
         if($client_basicinfo->save()){

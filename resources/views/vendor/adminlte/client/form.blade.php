@@ -108,6 +108,18 @@
                             @endif
                         </div>
 
+                        @if($isSuperAdmin || $isStrategy)
+                            <div class="form-group {{ $errors->has('yet_to_assign_id') ? 'has-error' : '' }}">
+                                <strong>Yet to Assign: </strong>
+                                {!! Form::select('yet_to_assign_id', $yet_to_assign_users, $yet_to_assign_users_id, array('id'=>'yet_to_assign_id','class' => 'form-control', 'tabindex' => '10' )) !!}
+                                @if ($errors->has('yet_to_assign_id'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('yet_to_assign_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        @endif
+
                         <input type="hidden" name="account_manager" id="account_manager" value="{{$user_id}}" />
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
@@ -423,6 +435,9 @@
                     return false;
                 }
             });
+
+            $("#account_manager_id").select2();
+            $("#yet_to_assign_id").select2();
 
             var superadmin_userid = "{!! env('SUPERADMINUSERID') !!}";
             var strategy_userid = "{!! env('STRATEGYUSERID') !!}";

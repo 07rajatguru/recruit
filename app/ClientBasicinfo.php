@@ -51,8 +51,8 @@ class ClientBasicinfo extends Ardent
         }
 
         $query = ClientBasicinfo::query();
-        $query = $query->join('client_address','client_address.client_id','=','client_basicinfo.id');
-        $query = $query->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
         if ($all == 1) {
             $query = $query->leftJoin('client_doc',function($join){
                                 $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
@@ -70,6 +70,18 @@ class ClientBasicinfo extends Ardent
                 }
                 if ($search == 'Passive' || $search == 'passive') {
                     $search = 0;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                if ($search == 'Forbid' || $search == 'forbid') {
+                    $search = 3;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                if ($search == 'Leaders' || $search == 'leaders') {
+                    $search = 2;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                if ($search == 'Left' || $search == 'left') {
+                    $search = 4;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
                 }
                 $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
@@ -598,8 +610,17 @@ class ClientBasicinfo extends Ardent
                 if($client_array[$i]['status']== '1'){
                   $client_array[$i]['status']='Active';
                 }
-                else{
+                else if($client_array[$i]['status']== '0'){
                   $client_array[$i]['status']='Passive';
+                }
+                else if($client_array[$i]['status']== '2'){
+                    $client_array[$i]['status']='Leaders';
+                }
+                else if($client_array[$i]['status']== '3'){
+                    $client_array[$i]['status']='Forbid';
+                }
+                else if($client_array[$i]['status']== '4'){
+                    $client_array[$i]['status']='Left';
                 }
             }
             

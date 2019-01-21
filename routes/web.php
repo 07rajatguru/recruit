@@ -515,6 +515,21 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@PassiveClient'
     ]);
 
+    Route::get('client/leaders',[
+        'as' => 'client.leaders',
+        'uses' => 'ClientController@LeadersClient'
+    ]);
+
+    Route::get('client/forbid',[
+        'as' => 'client.forbid',
+        'uses' => 'ClientController@ForbidClient'
+    ]);
+
+    Route::get('client/left',[
+        'as' => 'client.left',
+        'uses' => 'ClientController@LeftClient'
+    ]);
+
     Route::get('client/paramount',[
         'as' => 'client.paramount',
         'uses' => 'ClientController@ParamountClient',

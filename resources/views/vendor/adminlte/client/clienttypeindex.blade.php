@@ -14,24 +14,38 @@
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
                 <a class="btn btn-primary" href="{{ route('client.index') }}"> Back</a>
             </div>
+            <div  class="pull-left">
+                <h2> {{ $source }} Clients ({{ $count }}) </h2>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div  class="pull-left">
-                <h2> {{ $source }} Clients ({{ $count }}) </h2>
-            </div>
             <div class="col-md-2">
                 <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div></a>
             </div>
-            &nbsp;
+
             <div class="col-md-2">
                 <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div></a>
+            </div>
+
+            <div class="col-md-2">
+                <a href="{{ route('client.leaders') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders Clients ({{ $leaders }})</div></a>
+            </div>
+
+            <div class="col-md-2">
+                <a href="{{ route('client.forbid') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#777;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid Clients ({{ $forbid }}) </div></a>
+            </div>
+
+            <div class="col-md-2">
+                <a href="{{ route('client.left') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Left Clients ({{ $left }}) </div>
+                </a>
             </div>
         </div>
     </div>
 
+    <br/>
     @if($isSuperAdmin || $isStrategy )
         <div class="row" style="margin-left: 20%;">
             <div class="col-lg-12 margin-tb">
@@ -114,9 +128,15 @@
                 @endif
 
                 @if($client['status']=='Active')
-                    <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
-                @else
-                    <td ><span class="label label-sm label-danger">{{$client['status']}} </span></td>
+                    <td><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
+                @elseif($client['status']=='Passive')
+                    <td><span class="label label-sm label-danger">{{$client['status']}} </span></td>
+                @elseif($client['status']=='Leaders')
+                    <td><span class="label label-sm label-primary">{{$client['status']}} </span></td>
+                @elseif($client['status']=='Forbid')
+                    <td><span class="label label-sm label-default">{{$client['status']}} </span></td>
+                @elseif($client['status']=='Left')
+                    <td><span class="label label-sm label-info">{{$client['status']}} </span></td>
                 @endif
 
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
