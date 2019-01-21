@@ -23,12 +23,16 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-12 margin-tb">
+        <div class="col-md-12 margin-tb">
 
-            <div  class="pull-left">
+            <div  class="col-md-4 pull-left">
                 <h2>Client List ({{ $count }}) </h2>
             </div>
-      
+
+        </div>
+
+        <div class="col-md-12">
+
             <div class="col-md-2">
                 <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active Clients ({{ $active }})</div></a>
             </div>
@@ -38,9 +42,19 @@
                 <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div></a>
             </div>
 
+            <div class="col-md-2">
+                <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders Clients ({{ $active }})</div></a>
+            </div>
+            &nbsp;
+
+            <div class="col-md-2">
+                <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid Clients ({{ $passive }}) </div></a>
+            </div>
+
         </div>
     </div>
 
+    <br/>
     @if($isSuperAdmin || $isStrategy )
         <div class="row" style="margin-left: 14%;">
             <div class="col-lg-12 margin-tb">
