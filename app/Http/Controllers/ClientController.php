@@ -98,6 +98,9 @@ class ClientController extends Controller
         $i = 0;
         $active = 0;
         $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
         $para_cat = 0;
         $mode_cat = 0;
         $std_cat = 0;
@@ -116,6 +119,15 @@ class ClientController extends Controller
             }
             else if ($client['status'] == 'Passive'){
                 $passive++;
+            }
+            else if($client['status'] == 'Leaders' ){
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ){
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ){
+                $left++;
             }
 
             if($client['category'] == 'Paramount')
@@ -212,7 +224,7 @@ class ClientController extends Controller
 
         $passive=sizeof($paramount_client);
         */
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager','para_cat','mode_cat','std_cat'));
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left'));
     }
 
     public static function getOrderColumnName($order,$admin){

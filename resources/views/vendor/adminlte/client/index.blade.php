@@ -42,14 +42,19 @@
                 <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive Clients ({{ $passive }}) </div></a>
             </div>
 
-            <div class="col-md-2">
-                <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders Clients ({{ $active }})</div></a>
+            {{--<div class="col-md-2">
+                <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders Clients ({{ $leaders }})</div></a>
             </div>
             &nbsp;
 
             <div class="col-md-2">
-                <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid Clients ({{ $passive }}) </div></a>
+                <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#777;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid Clients ({{ $forbid }}) </div></a>
             </div>
+
+            <div class="col-md-2">
+                <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#ffffff;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Left Clients ({{ $left }}) </div>
+                </a>
+            </div>--}}
 
         </div>
     </div>

@@ -144,6 +144,10 @@ class ClientBasicinfo extends Ardent
                 {
                     $client_array[$i]['status']='Forbid';
                 }
+                else  if($client_array[$i]['status']== '4')
+                {
+                    $client_array[$i]['status']='Left';
+                }
             }
             
             $address ='';
@@ -535,6 +539,7 @@ class ClientBasicinfo extends Ardent
         $status[1] = 'Active';
         $status[2] = 'Leaders';
         $status[3] = 'Forbid';
+        $status[4] = 'Left';
         return $status;
     }
 

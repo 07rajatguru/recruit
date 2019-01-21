@@ -422,6 +422,9 @@ class LeadController extends Controller
         $client_cat=ClientBasicinfo::getCategory();
         $client_category='';
 
+        $client_status_key=ClientBasicinfo::getStatus();
+        $client_status = 1;
+
         $generate_lead = '0';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -467,7 +470,7 @@ class LeadController extends Controller
          $co_prefix=ClientBasicinfo::getcoprefix();
          $co_category='';
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category'));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status'));
 
      }
 
@@ -526,15 +529,7 @@ class LeadController extends Controller
         $client_basic_info->coordinator_prefix= $input['co_category'];
 
         $status = $input['status'];
-
-        if($status=='1')
-        {
-            $client_basic_info->status='1';
-        }
-        else
-        {
-            $client_basic_info->status='0';
-        }
+        $client_basic_info->status = $status;
 
         if(isset($input['client_category']))
         {
