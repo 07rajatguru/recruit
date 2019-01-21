@@ -441,7 +441,7 @@ class LeadController extends Controller
         $user_id = $user->id;
 
         // For account manager
-         $users = User::getAllUsers();
+         $users = User::getAllUsers('recruiter','Yes');
          $users[0] = '--Select User--';
 
         $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
