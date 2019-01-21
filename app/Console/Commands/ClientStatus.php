@@ -41,7 +41,8 @@ class ClientStatus extends Command
      * @return mixed
      */
     public function handle()
-    {
+    {   
+        echo "Testing";exit;
 
         $active_clients = array();
 
@@ -83,7 +84,7 @@ class ClientStatus extends Command
                  $client_res = $client_status_query->first();
                  $client_status = $client_res->status;
 
-                 if($client_status==2 or $client_status==3)
+                 if($client_status==2 or $client_status==3 or $client_status==4)
                      continue;
 
                 $date1=date('Y-m-d',strtotime("-30 days"));
@@ -110,7 +111,7 @@ class ClientStatus extends Command
             }
         }
 
-
+        print_r($clientids);exit;
         foreach ($clientids as $key => $value) {
             // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
             $client_status_query = ClientBasicinfo::query();
@@ -118,7 +119,7 @@ class ClientStatus extends Command
             $client_res = $client_status_query->first();
             $client_status = $client_res->status;
 
-            if($client_status==2 or $client_status==3)
+            if($client_status==2 or $client_status==3 or $client_status==4)
                 continue;
 
             DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$value'");
@@ -157,7 +158,7 @@ class ClientStatus extends Command
                 $client_res = $client_status_query->first();
                 $client_status = $client_res->status;
 
-                if($client_status==2 or $client_status==3)
+                if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;
 
                 DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_res2->client_id'");
@@ -169,7 +170,7 @@ class ClientStatus extends Command
                 $client_res = $client_status_query->first();
                 $client_status = $client_res->status;
 
-                if($client_status==2 or $client_status==3)
+                if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;
 
                 if(!in_array($k,$active_clients))
