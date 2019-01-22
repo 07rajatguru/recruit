@@ -42,7 +42,7 @@ class ClientStatus extends Command
      */
     public function handle()
     {   
-        echo "Testing";exit;
+        //echo "Testing";exit;
 
         $active_clients = array();
 
@@ -132,15 +132,22 @@ class ClientStatus extends Command
         $job_res = $jo_query->get();
 
         $all_jobs = array();
+        $i = 0;
         foreach ($job_res as $k=>$v){
-            $all_jobs[$v->client_id] = $v->id;
+            $all_jobs[$i]['job_id'] = $v->id;
+            $all_jobs[$i]['client_id'] = $v->client_id;
+            $i++;
         }
         //print_r($all_jobs);exit;
 
         // in that jobs find in which jobs no cvs are associated within 1 month and get their client ids
+        $j = 0;
         foreach ($all_jobs as $k=>$v){
+            $j_id[$j] = $v['job_id'];
+            $c_id[$j] = $v['client_id'];
+
             $jo_query1 = JobAssociateCandidates::query();
-            $jo_query1 = $jo_query1->where('job_associate_candidates.job_id',$v);
+            $jo_query1 = $jo_query1->where('job_associate_candidates.job_id',$j_id[$j]);
             $jo_query1 = $jo_query1->where('job_associate_candidates.created_at','>=',"$date1");
             $job_res = $jo_query1->first();
             
@@ -166,17 +173,17 @@ class ClientStatus extends Command
             else{
                 // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
                 $client_status_query = ClientBasicinfo::query();
-                $client_status_query = $client_status_query->where('id',$v);
+                $client_status_query = $client_status_query->where('id',$c_id[$j]);
                 $client_res = $client_status_query->first();
                 $client_status = $client_res['status'];
 
                 if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;
 
-                if(!in_array($k,$active_clients))
-                    DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$v'");
+                if(!in_array($c_id[$j],$active_clients))
+                    DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$c_id[$j]'");
             }
-
+            $j++;
         }
 
     }
