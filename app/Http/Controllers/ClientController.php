@@ -1017,11 +1017,11 @@ class ClientController extends Controller
 
         // For account manager
         $users = User::getAllUsers('recruiter','Yes');
-        $users[0] = '--Select User--';
+        $users[0] = 'Yet to Assign';
 
-        $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
-        $yet_to_assign_users[0] = '--Select User--';
-        $yet_to_assign_users_id = '0';
+        /*$yet_to_assign_users = User::getAllUsers('recruiter','Yes');
+        $yet_to_assign_users[0] = 'Yet to Assign';
+        $yet_to_assign_users_id = '0';*/
 
         if(sizeof($industry_res)>0){
             foreach($industry_res as $r){
@@ -1038,7 +1038,7 @@ class ClientController extends Controller
         $industry_id = '';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','yet_to_assign_users','yet_to_assign_users_id'));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
     }
 
 
@@ -1122,7 +1122,7 @@ class ClientController extends Controller
             exit;*/
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
-            $yet_to_assign_users_id = $value->yet_to_assign_user;
+            //$yet_to_assign_users_id = $value->yet_to_assign_user;
         }
         else
         {
@@ -1162,7 +1162,7 @@ class ClientController extends Controller
         $yet_to_assign_users[0] = '--Select User--';
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','yet_to_assign_users_id'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users'/*,'yet_to_assign_users_id'*/));
     }
 
     public function store(Request $request){
@@ -1240,12 +1240,12 @@ class ClientController extends Controller
             $client_basic_info->category='';
         }
 
-        if (isset($input['yet_to_assign_id'])) {
+        /*if (isset($input['yet_to_assign_id'])) {
             $client_basic_info->yet_to_assign_user = $input['yet_to_assign_id'];
         }
         else{
             $client_basic_info->yet_to_assign_user = 0;
-        }
+        }*/
 
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
@@ -1761,12 +1761,12 @@ class ClientController extends Controller
         {
             $client_basicinfo->category='';
         }
-        if (isset($input->yet_to_assign_id)) {
+        /*if (isset($input->yet_to_assign_id)) {
             $client_basicinfo->yet_to_assign_user = $input->yet_to_assign_id;
         }
         else{
             $client_basicinfo->yet_to_assign_user = 0;
-        }
+        }*/
         
         if($client_basicinfo->save()){
 

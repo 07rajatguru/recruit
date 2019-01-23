@@ -108,7 +108,7 @@
                             @endif
                         </div>
 
-                        @if($isSuperAdmin || $isStrategy)
+                        {{--@if($isSuperAdmin || $isStrategy)
                             <div class="form-group {{ $errors->has('yet_to_assign_id') ? 'has-error' : '' }}">
                                 <strong>Yet to Assign: </strong>
                                 {!! Form::select('yet_to_assign_id', $yet_to_assign_users, $yet_to_assign_users_id, array('id'=>'yet_to_assign_id','class' => 'form-control', 'tabindex' => '10' )) !!}
@@ -118,7 +118,7 @@
                                     </span>
                                 @endif
                             </div>
-                        @endif
+                        @endif--}}
 
                         <input type="hidden" name="account_manager" id="account_manager" value="{{$user_id}}" />
 

@@ -131,7 +131,12 @@ class ClientBasicinfo extends Ardent
         foreach ($res as $key => $value) {
             $client_array[$i]['id'] = $value->id;
             $client_array[$i]['name'] = $value->name;
-            $client_array[$i]['am_name'] = $value->am_name;
+            if ($value->account_manager_id == 0) {
+                $client_array[$i]['am_name'] = 'Yet to Assign';
+            }
+            else {
+                $client_array[$i]['am_name'] = $value->am_name;
+            }
             $client_array[$i]['category']=$value->category;
             $client_array[$i]['status']=$value->status;
             $client_array[$i]['account_mangr_id']=$value->account_manager_id;
