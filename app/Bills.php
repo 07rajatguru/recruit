@@ -166,6 +166,7 @@ class Bills extends Model
                 }
             }
             $bills[$i]['efforts'] = $efforts_str;
+            $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
             $i++;
         }
 
@@ -754,7 +755,9 @@ class Bills extends Model
 
         $join_mail = Bills::query();
         $join_mail = $join_mail->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
-        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name');
+        $join_mail = $join_mail->join('job_openings','job_openings.id','=','bills.job_id');
+        $join_mail = $join_mail->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
         $join_mail = $join_mail->where('bills.id',$id);
         $join_mail_res = $join_mail->first();
 
@@ -767,7 +770,7 @@ class Bills extends Model
             $gst = ($fees * 18)/100;
             $billing_amount = $fees + $gst;
 
-            $join_confirmation_mail['client_name'] = $join_mail_res->client_name;
+            $join_confirmation_mail['client_name'] = $join_mail_res->coordinator_prefix. " " .$join_mail_res->client_name;
             $join_confirmation_mail['company_name'] = $join_mail_res->company_name;
             $join_confirmation_mail['candidate_name'] = $join_mail_res->candidate_name;
             $join_confirmation_mail['designation_offered'] = $join_mail_res->designation_offered;

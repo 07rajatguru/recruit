@@ -18,6 +18,7 @@
 				<u>Request you to kindly confirm the joining of candidate as below:</u>
 			</td>
 		</tr>
+		<br/>
 		<table border="1" cellpadding="0" cellspacing="0" width="100%" style="text-align: center;">
 			<tr style="color: yellow; background-color: #7598d9;">
 				<td><b>Company Name</b></td>
@@ -60,13 +61,15 @@
 				<td><b>{{ $join_mail['billing_amount'] }}</b></td>
 			</tr>
 		</table>
+		<br/>
 		<tr>
 			<td>
-				GST number of ADLER TALENT SOLUTIONS PVT. LTD. as <b><u>24AAMCA2137K1ZP</u></b> .<br/>
-				Also, Request you to kindly confirm your GST number for the said invoice to send it accordingly.<br/>
-				Awaiting your revert to raise an invoice accordingly.<br/>
+				<u>GST number of ADLER TALENT SOLUTIONS PVT. LTD. as 24AAMCA2137K1ZP</u> .<br/><br/>
+				Also, Request you to kindly confirm your GST number for the said invoice to send it accordingly.<br/><br/>
+				Awaiting your revert to raise an invoice accordingly.<br/><br/>
 				Thanks.
 			</td>
 		</tr>
 	</table>
 </body>
+</html>

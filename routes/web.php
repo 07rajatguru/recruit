@@ -1110,9 +1110,25 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'billattachments.upload',
         'uses' => 'BillsController@upload',
     ]);
+    // for recovery joining confirmation mail route
     Route::post('recovery/sendconfirmationmail/{id}',[
         'as' => 'recovery.sendconfirmationmail',
-        'uses' => 'BillsController@SendConfirmationMail'
+        'uses' => 'BillsController@getSendConfirmationMail'
+    ]);
+    // for recovery go confirmation route
+    Route::post('recovery/gotconfirmation/{id}',[
+        'as' => 'recovery.gotconfirmation',
+        'uses' => 'BillsController@getGotConfirmation'
+    ]);
+    // for recovery invoice genereate route
+    Route::post('recovery/invoicegenerate/{id}',[
+        'as' => 'recovery.invoicegenerate',
+        'uses' => 'BillsController@getInvoiceGenerate'
+    ]);
+    // for recovery payment received route
+    Route::post('recovery/paymentreceived/{id}',[
+        'as' => 'recovery.paymentreceived',
+        'uses' => 'BillsController@getPaymentReceived'
     ]);
     //for relive bill
     Route::get('recovery/{id}',[

@@ -1059,48 +1059,104 @@ class BillsController extends Controller
 
     }
 
-    public function SendConfirmationMail($id){
+    // Joining Confirmation Mail to SA & Acc
+    public function getSendConfirmationMail($id){
         
         $user_id = \Auth::user()->id;
-        
         //Logged in User Email Id
         $user_email = User::getUserEmailById($user_id);
 
-        $from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+        $account_userid = getenv('ACCOUNTANTUSERID');
+        if ($user_id == $superadmin_userid) {
+            $accountantemail = User::getUserEmailById($account_userid);
+            $cc_users_array[] = $accountantemail;
+        }
+        else if ($user_id == $account_userid) {
+            $superadminemail = User::getUserEmailById($superadmin_userid);
+            $cc_users_array[] = $superadminemail;
+        }
+        else {
+            $superadminemail = User::getUserEmailById($superadmin_userid);
+            $cc_users_array[] = $superadminemail;   
+        }
 
         $join_mail = Bills::getJoinConfirmationMail($id);
-        //$client_email_id = $join_mail['client_email_id'];
         $candidate_name = $join_mail['candidate_name'];
         $candidate_id = $join_mail['candidate_id'];
-        //print_r($join_mail);exit;
 
-        $candidate_email = Bills::getCandidateOwnerEmail($id);
-        $candidate_owner_email = $candidate_email->candidateowneremail;
+        $cc_users_array = array_filter($cc_users_array);
 
-        $client_email = Bills::getClientOwnerEmail($id);
-        $client_owner_email = $client_email->clientowneremail;
+        $module = "Joining Confirmation";
+        $sender_name = $user_id;
+        $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        $subject = "Joining Confirmation of - ". $candidate_name;
+        $message = "Joining Confirmation of - ". $candidate_name;
+        $module_id = $id;
 
-        $to_address = $user_email;
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        $cc_address = array();
-        $cc_address[] = $client_owner_email;
-        $cc_address[] = $candidate_owner_email;
+        \DB::statement("UPDATE bills SET joining_confirmation_mail = '1' where id=$id");
 
-        $input = array();
-        $input['from_name'] = $from_name;
-        $input['from_address'] = $from_address;
-        $input['to'] = $to_address;
-        $input['cc'] = $cc_address;
-        $input['join_mail'] = $join_mail;
-        $input['candidate_name'] = $candidate_name;
+        return redirect('/recovery')->with('success','Joining Confirmation Mail Send Successfully');
+    }
 
-        \Mail::send('adminlte::emails.joinconfirmationmail', $input, function ($message) use ($input) {
-            $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to'])->cc($input['cc'])->subject('Joining Confirmation of '. $input['candidate_name']);
-        });
+    // Got Confirmation Check
+    public function getGotConfirmation($id){
 
-        return redirect('/recovery');
+        \DB::statement("UPDATE bills SET joining_confirmation_mail = '2' where id=$id");
+
+        return redirect('/recovery')->with('success','Got Confirmation Successfully');
+    }
+
+    // Generate Invoice and send mail to SA & Acc
+    public function getInvoiceGenerate($id){
+
+        $user_id = \Auth::user()->id;
+        //Logged in User Email Id
+        $user_email = User::getUserEmailById($user_id);
+
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+        $account_userid = getenv('ACCOUNTANTUSERID');
+        if ($user_id == $superadmin_userid) {
+            $accountantemail = User::getUserEmailById($account_userid);
+            $cc_users_array[] = $accountantemail;
+        }
+        else if ($user_id == $account_userid) {
+            $superadminemail = User::getUserEmailById($superadmin_userid);
+            $cc_users_array[] = $superadminemail;
+        }
+        else {
+            $superadminemail = User::getUserEmailById($superadmin_userid);
+            $cc_users_array[] = $superadminemail;   
+        }
+
+        $join_mail = Bills::getJoinConfirmationMail($id);
+        $candidate_name = $join_mail['candidate_name'];
+        $cc_users_array = array_filter($cc_users_array);
+
+        $module = "Invoice Generate";
+        $sender_name = $user_id;
+        $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        $subject = "Generated Invoice of - ". $candidate_name;
+        $message = "Generated Invoice of - ". $candidate_name;
+        $module_id = $id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        \DB::statement("UPDATE bills SET joining_confirmation_mail = '3' where id=$id");
+
+        return redirect('/recovery')->with('success','Invoice Generated and Mailed Successfully');
+    }
+
+    // Payment received or not
+    public function getPaymentReceived($id){
+
+        \DB::statement("UPDATE bills SET joining_confirmation_mail = '4' where id=$id");
+
+        return redirect('/recovery')->with('success','Payment Received Successfully');
     }
 
 }

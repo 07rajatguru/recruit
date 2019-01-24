@@ -466,6 +466,39 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
 
+            // Mail for Joining Confirmation of recovery
+            else if ($value['module'] == 'Joining Confirmation'){
+
+                $join_mail = Bills::getJoinConfirmationMail($module_id);
+
+                $input['join_mail'] = $join_mail;
+
+                \Mail::send('adminlte::emails.joinconfirmationmail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            // Mail for Invoice gererate of recovery
+            else if ($value['module'] == 'Invoice Generate'){
+
+                $join_mail = Bills::getJoinConfirmationMail($module_id);
+
+                $input['join_mail'] = $join_mail;
+
+                $input['attachment'] = 'public/uploads/bills/'.$module_id.'/Invoice Format.xlsx';
+                
+                \Mail::send('adminlte::emails.invoicegenerate', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                    $message->attach($input['attachment'],['as' => 'Invoice.xlsx']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
         }
     }
 }

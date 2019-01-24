@@ -71,6 +71,23 @@
         <?php $i=0; ?>
         <tbody>
         @foreach($bnm as $key=>$value)
+        <?php 
+            if ($value['job_confirmation'] == '1') {
+              $color = '#00B0F0';
+            }
+            else if ($value['job_confirmation'] == '2') {
+              $color = '#FFA500';
+            }
+            else if ($value['job_confirmation'] == '3') {
+              $color = '#FFC0CB';
+            }
+            else if ($value['job_confirmation'] == '4') {
+              $color = '#32CD32';
+            }
+            else {
+              $color = '';
+            }
+        ?>
             <tr>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
                 <td>
@@ -112,9 +129,17 @@
                                 @if($value['cancel_bill']==0)
                                   @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                                 @endif
-                                {{--@if($isSuperAdmin && $value['cancel_bill']==0)
-                                  @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery'])
-                                @endif--}}
+                                @if($isSuperAdmin || $isAccountant)
+                                  @if($value['job_confirmation'] == 0 && $value['cancel_bill']==0)
+                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?'])
+                                  @elseif($value['job_confirmation'] == 1 && $value['cancel_bill']==0)
+                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?'])
+                                  @elseif($value['job_confirmation'] == 2 && $value['cancel_bill']==0)
+                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?'])
+                                  @elseif($value['job_confirmation'] == 3 && $value['cancel_bill']==0)
+                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?'])
+                                  @endif
+                                @endif
                         @endif
                         @if($isSuperAdmin || $isAccountant)
                           @if($value['cancel_bill']==1)
@@ -128,7 +153,7 @@
                    @if($access=='true')
                        <td>{{ $value['user_name'] }}</td>
                    @endif
-                   <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
+                   <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $value['display_name'] }} - {{$value['posting_title']}} , {{ $value['city'] }}</td>
                    <td>{{ $value['cname'] }}</td>
                    <td data-th="Lastrun" data-order="{{$value['date_of_joining_ts']}}">{{ $value['date_of_joining'] }}</td>
                    <td>{{ $value['fixed_salary'] }}</td>
