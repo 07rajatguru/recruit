@@ -1113,6 +1113,16 @@ class BillsController extends Controller
     // Generate Invoice and send mail to SA & Acc
     public function getInvoiceGenerate($id){
 
+        // Generate excel sheet nad save at bill id location
+        Excel::create($id.'_invoice', function($excel) {
+            $excel->sheet('Sheet 1', function($sheet) {
+                $sheet->loadView('adminlte::bills.sheet');
+                // $sheet->mergeCells('A3:J3');
+                // $data[] = 'Invoice';
+                // $sheet->fromArray($data, null, 'A3', true);
+            });
+        })->store('xlsx', storage_path('bills/'.$id));
+        
         $user_id = \Auth::user()->id;
         //Logged in User Email Id
         $user_email = User::getUserEmailById($user_id);
@@ -1159,4 +1169,8 @@ class BillsController extends Controller
         return redirect('/recovery')->with('success','Payment Received Successfully');
     }
 
+    public function getExportSheet(){
+
+        return view('adminlte::bills.sheet');
+    }
 }

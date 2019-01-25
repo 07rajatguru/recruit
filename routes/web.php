@@ -118,6 +118,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@testMail'
     ]);
 
+    Route::get('/exportsheet',[
+        'as' => 'export.sheet',
+        'uses' => 'BillsController@getExportSheet'
+    ]);
+
 
      //lead management route
 
