@@ -757,7 +757,8 @@ class Bills extends Model
         $join_mail = $join_mail->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $join_mail = $join_mail->join('job_openings','job_openings.id','=','bills.job_id');
         $join_mail = $join_mail->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
+        $join_mail = $join_mail->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix','client_basicinfo.gst_no as gst_no','client_address.*');
         $join_mail = $join_mail->where('bills.id',$id);
         $join_mail_res = $join_mail->first();
 
@@ -769,6 +770,9 @@ class Bills extends Model
             $fees = ($salary * $pc)/100;
             $gst = ($fees * 18)/100;
             $billing_amount = $fees + $gst;
+
+            $sgst = ($fees * 9)/100;
+            $cgst = ($fees * 9)/100;
 
             $join_confirmation_mail['client_name'] = $join_mail_res->coordinator_prefix. " " .$join_mail_res->client_name;
             $join_confirmation_mail['company_name'] = $join_mail_res->company_name;
@@ -783,6 +787,84 @@ class Bills extends Model
             $join_confirmation_mail['billing_amount'] = $billing_amount;
             $join_confirmation_mail['client_email_id'] = $join_mail_res->client_email_id;
             $join_confirmation_mail['candidate_id'] = $join_mail_res->candidate_id;
+            $join_confirmation_mail['sgst'] = $sgst;
+            $join_confirmation_mail['cgst'] = $cgst;
+            $join_confirmation_mail['amount_in_words'] = Utils::number_in_words($billing_amount);
+            $join_confirmation_mail['gst_no'] = $join_mail_res->gst_no;
+
+            $billing_address ='';
+            if($join_mail_res->billing_street1!=''){
+                $billing_address .= $join_mail_res->billing_street1;
+            }
+            if($join_mail_res->billing_street2!=''){
+                if($billing_address=='')
+                    $billing_address .= $join_mail_res->billing_street2;
+                else
+                    $billing_address .= ", ".$join_mail_res->billing_street2;
+            }
+            if($join_mail_res->billing_city!=''){
+                if($billing_address=='')
+                    $billing_address .= $join_mail_res->billing_city;
+                else
+                    $billing_address .= ", ".$join_mail_res->billing_city;
+            }
+            $billing_address .= '<br/>';
+            if($join_mail_res->billing_state!=''){
+                if($billing_address=='')
+                    $billing_address .= $join_mail_res->billing_state;
+                else
+                    $billing_address .= ", ".$join_mail_res->billing_state;
+            }
+            if($join_mail_res->billing_country!=''){
+                if($billing_address=='')
+                    $billing_address .= $join_mail_res->billing_country;
+                else
+                    $billing_address .= ", ".$join_mail_res->billing_country;
+            }
+            if($join_mail_res->billing_code!=''){
+                if($billing_address=='')
+                    $billing_address .= $join_mail_res->billing_code;
+                else
+                    $billing_address .= ", ".$join_mail_res->billing_code;
+            }
+            $join_confirmation_mail['billing_address'] = $billing_address;
+
+            $shipping_address ='';
+            if($join_mail_res->shipping_street1!=''){
+                $shipping_address .= $join_mail_res->shipping_street1;
+            }
+            if($join_mail_res->shipping_street2!=''){
+                if($shipping_address=='')
+                    $shipping_address .= $join_mail_res->shipping_street2;
+                else
+                    $shipping_address .= ", ".$join_mail_res->shipping_street2;
+            }
+            $shipping_address .= '<br/>';
+            if($join_mail_res->shipping_city!=''){
+                if($shipping_address=='')
+                    $shipping_address .= $join_mail_res->shipping_city;
+                else
+                    $shipping_address .= ", ".$join_mail_res->shipping_city;
+            }
+            if($join_mail_res->shipping_state!=''){
+                if($shipping_address=='')
+                    $shipping_address .= $join_mail_res->shipping_state;
+                else
+                    $shipping_address .= ", ".$join_mail_res->shipping_state;
+            }
+            if($join_mail_res->shipping_country!=''){
+                if($shipping_address=='')
+                    $shipping_address .= $join_mail_res->shipping_country;
+                else
+                    $shipping_address .= ", ".$join_mail_res->shipping_country;
+            }
+            if($join_mail_res->shipping_code!=''){
+                if($shipping_address=='')
+                    $shipping_address .= $join_mail_res->shipping_code;
+                else
+                    $shipping_address .= ", ".$join_mail_res->shipping_code;
+            }
+            $join_confirmation_mail['shipping_address'] = $shipping_address;
         }
 
         return $join_confirmation_mail;

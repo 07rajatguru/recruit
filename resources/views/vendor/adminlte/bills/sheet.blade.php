@@ -10,13 +10,20 @@
 </head>
 	<body>
 		<table>
-			<tr style="text-align: center;background: #808080;">
-				<th colspan="10">Invoice</th>
-			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
+				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
+			</tr>
+
+			<tr>
+				<th colspan="10" style="text-align: center;background: #808080;color: #483d8b;">Invoice</th>
+			</tr>
+			<tr>
+				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
+			</tr>
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>
@@ -25,33 +32,33 @@
 				<th style="background: #add8e6;"></th>
 			</tr>
 			<tr>
-				<td colspan="5">Name:</td>
-				<td colspan="4">Name:</td>
-				<td rowspan="2"> Invoice No. :<br/> ATS/18-19/___</td>
+				<td colspan="5">Name: {{ $invoice_data['company_name'] }}</td>
+				<td colspan="4">Name: {{ $invoice_data['company_name'] }}</td>
+				<td rowspan="2"><b> Invoice No. :<br/> ATS/18-19/___</b></td>
 			</tr>
 			<tr>
-				<td colspan="5" rowspan="2">Address:</td>
-				<td colspan="4" rowspan="2">Address:</td>
+				<td colspan="5" rowspan="2">Address: {{ $invoice_data['billing_address'] }}</td>
+				<td colspan="4" rowspan="2">Address: {{ $invoice_data['shipping_address'] }}</td>
 			</tr>
 			<tr>
 				<td colspan="5"></td>
 				<td colspan="4"></td>
-				<td rowspan="2">Dt- _________</td>
+				<td rowspan="2"><b>Dt- _________</b></td>
 			</tr>
 			<tr>
-				<td colspan="5">GST Number-</td>
-				<td colspan="4">GST Number-</td>
+				<td colspan="5">GST Number- {{ $invoice_data['gst_no'] }}</td>
+				<td colspan="4">GST Number- {{ $invoice_data['gst_no'] }}</td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
-			<tr style="text-align: center;background: #808080;">
-				<th colspan="10">Description</th>
+			<tr>
+				<th colspan="10" style="text-align: center;background: #808080;">Description</th>
 			</tr>
 			<tr>
 				<th>Sr. <br/> No</th>
-				<th colspan="8">Description</th>
-				<th>Amount</th>
+				<th colspan="8" style="text-align: center;">Description</th>
+				<th style="text-align: center;">Amount</th>
 			</tr>
 			<tr>
 				<td>1</td>
@@ -64,59 +71,59 @@
 			<tr>
 				<td></td>
 				<td colspan="5">Candidate Name:</td>
-				<td colspan="3"></td>
-				<td>18900</td>
+				<td colspan="3">{{ $invoice_data['candidate_name'] }}</td>
+				<td style="text-align: center;">{{ $invoice_data['fees'] }}</td>
 			</tr>
 			<tr>
 				<td></td>
 				<td colspan="5">Designation:</td>
-				<td colspan="3"></td>
+				<td colspan="3">{{ $invoice_data['designation_offered'] }}</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td colspan="5">Job Location:</td>
-				<td colspan="3"></td>
+				<td colspan="3">{{ $invoice_data['job_location'] }}</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td colspan="5">Fixed CTC:</td>
-				<td colspan="3"></td>
+				<td colspan="3">{{ $invoice_data['fixed_salary'] }}</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td colspan="5">Percentage Charged:</td>
-				<td colspan="3"></td>
+				<td colspan="3">{{ $invoice_data['percentage_charged'] }}%</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td colspan="5">Joining Date:</td>
-				<td colspan="3"></td>
+				<td colspan="3">{{ date('d-m-Y', strtotime($invoice_data['joining_date'])) }}</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan="8">Amount Excluding GST</td>
-				<td>18900</td>
+				<td colspan="8" style="text-align: right;">Amount Excluding GST</td>
+				<td style="text-align: center;">{{ $invoice_data['fees'] }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan="8">CGST  @ 9%</td>
-				<td>1701</td>
+				<td colspan="8" style="text-align: right;">CGST  @ 9%</td>
+				<td style="text-align: center;">{{ $invoice_data['cgst'] }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan="8">SGST  @ 9%</td>
-				<td>1701</td>
+				<td colspan="8" style="text-align: right;">SGST  @ 9%</td>
+				<td style="text-align: center;">{{ $invoice_data['sgst'] }}</td>
 			</tr>
 			<tr>
 				<td>INR:</td>
-				<td colspan="7">Twenty Two Thousand Three Hundred Two Only</td>
-				<td>Total</td>
-				<td>22302</td>
+				<td colspan="7" style="text-align: center;">{{ $invoice_data['amount_in_words'] }}</td>
+				<td style="text-align: center;">Total</td>
+				<td style="text-align: center;">{{ $invoice_data['billing_amount'] }}</td>
 			</tr>
 			<tr style="height: 10px;">
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
@@ -128,7 +135,7 @@
 				<td colspan="10"><u>Subject To Ahmedabad Jurisdiction</u></td>
 			</tr>
 			<tr>
-				<td colspan="10">Please make cheque payable to:<b> Adler Talent Solutions Pvt. Ltd.</b></td>
+				<td colspan="10">Please make cheque payable to: <b> Adler Talent Solutions Pvt. Ltd.</b></td>
 			</tr>
 			<tr>
 				<td colspan="10">Bank Name : ICICI Bank Limited</td>
@@ -151,13 +158,13 @@
 			<tr>
 				<td colspan="10"><b>For, Adler Talent Solutions Pvt. Ltd. </b></td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>

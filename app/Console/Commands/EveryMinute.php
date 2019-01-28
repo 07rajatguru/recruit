@@ -493,7 +493,7 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.invoicegenerate', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
-                    $message->attach($input['attachment'],['as' => 'sheet.xlsx']);
+                    $message->attach($input['attachment']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
