@@ -200,6 +200,7 @@ class BillsController extends Controller
         $job_id = 0;
 
         $users = User::getAllUsersCopy('recruiter');
+        //print_r($users);exit;
 
         $employee_name = array();
         $employee_percentage = array();
@@ -481,7 +482,7 @@ class BillsController extends Controller
 
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
-        $users = User::getAllUsersCopyWithInactive('recruiter');
+        $users = User::getAllUsersCopy('recruiter');
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
             $i = 0;

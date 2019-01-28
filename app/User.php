@@ -180,18 +180,15 @@ class User extends Authenticatable
     }
 
     public static function getAllUsersCopy($type=NULL){
-        $status = 'Inactive';
-        $status_array = array($status);
+        // $status = 'Inactive';
+        // $status_array = array($status);
         
         $user_query = User::query();
-
         if($type!=NULL){
             $user_query = $user_query->where('type','=',$type);
         }
-
-        $user_query = $user_query->whereNotIn('status',$status_array);
+        // $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->orderBy('name');
-
         $users = $user_query->get();
 
         /*$users = User::select('*')
@@ -202,6 +199,22 @@ class User extends Authenticatable
         if(isset($users) && sizeof($users)){
             foreach ($users as $user) {
                 $userArr[$user->id] = $user->name;
+            }
+            // available inactive users for 6 months from the date of inactive
+            foreach ($users as $user) {
+                $user_status[$user->id] = $user->status;
+                $user_updated_at[$user->id] = $user->updated_at;
+
+                $user_date = $user_updated_at[$user->id];
+                $after_six[$user->id] = date('Y-m-d',strtotime("$user_date +6 months"));
+                $today = date('Y-m-d');
+                if ($user_status[$user->id] == 'Inactive') {
+                    if ($after_six[$user->id] < $today ) {
+                        if (array_search($user->name,$userArr)) {
+                            unset($userArr[array_search($user->name,$userArr)]);
+                        }
+                    }
+                }
             }
         }
 
