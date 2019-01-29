@@ -184,6 +184,28 @@
                 </div>
             </div> 
 
+            @if($isSuperAdmin || $isAccountant)
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+
+                        <div class="box-header with-border col-md-6 ">
+                            <h3 class="box-title">Lead Efforts</h3>
+                        </div>
+
+                         <div class="col-xs-12 col-sm-12 col-md-12">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th scope="row">Employee Name :</th>
+                                    <td>{{ $lead_name }}</td>
+                                    <th>Employee Percentage :</th>
+                                    <td>{{ (int)$lead_percentage }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
              <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
 

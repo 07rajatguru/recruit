@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Utils;
 use App\Events\NotificationMail;
+use App\BillsLeadEfforts;
 
 class BillsController extends Controller
 {
@@ -211,10 +212,12 @@ class BillsController extends Controller
             $employee_name[$i] = '';
             $employee_percentage[$i] = '';
         }
+        $lead_name = $user_id;
+        $lead_percentage = 0;
 
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant'));
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
     }
 
     public function store(Request $request)
@@ -275,6 +278,19 @@ class BillsController extends Controller
            return redirect('forecasting/create')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
        }
 
+        if(isset($input['lead_name']) && $input['lead_name']!=''){
+            $lead_name = $input['lead_name'];
+        }
+        else{
+            $lead_name = '';
+        }
+        if (isset($input['lead_percentage']) && $input['lead_percentage']!='') {
+            $lead_percentage = $input['lead_percentage'];
+        }
+        else {
+            $lead_percentage = '';
+        }
+
         //echo $dateClass->changeDMYtoYMD($date_of_joining);exit;
         $bill = new Bills();
 
@@ -321,6 +337,13 @@ class BillsController extends Controller
                 $bill_efforts->employee_percentage = $v;
 
                 $bill_efforts->save();
+            }
+            if (isset($lead_name) && $lead_name != '' && isset($lead_percentage) && $lead_percentage != '') {
+                $bill_lead_efforts = new BillsLeadEfforts();
+                $bill_lead_efforts->bill_id = $bill_id;
+                $bill_lead_efforts->employee_name = $lead_name;
+                $bill_lead_efforts->employee_percentage = $lead_percentage;
+                $bill_lead_efforts->save();
             }
 
             if (isset($upload_documents) && sizeof($upload_documents) > 0) {
@@ -480,6 +503,12 @@ class BillsController extends Controller
             }
         }
 
+        $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsById($id);
+        foreach ($lead_efforts as $key => $value) {
+            $lead_name = $key;
+            $lead_percentage = $value;
+        }
+
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
         $users = User::getAllUsersCopy('recruiter');
@@ -505,7 +534,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
 
     }
 
@@ -568,6 +597,19 @@ class BillsController extends Controller
             return redirect('forecasting/'.$id.'/edit')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
         }
 
+        if(isset($input['lead_name']) && $input['lead_name']!=''){
+            $lead_name = $input['lead_name'];
+        }
+        else{
+            $lead_name = '';
+        }
+        if (isset($input['lead_percentage']) && $input['lead_percentage']!='') {
+            $lead_percentage = $input['lead_percentage'];
+        }
+        else {
+            $lead_percentage = '';
+        }
+
         $bill = Bills::find($id);
 
         $uploaded_by = $bill->uploaded_by;
@@ -619,6 +661,16 @@ class BillsController extends Controller
                     $bill_efforts->save();
                 }
 
+            }
+
+            BillsLeadEfforts::where('bill_id','=',$id)->delete();
+
+            if (isset($lead_name) && $lead_name != '' && isset($lead_percentage) && $lead_percentage != '') {
+                $bill_lead_efforts = new BillsLeadEfforts();
+                $bill_lead_efforts->bill_id = $id;
+                $bill_lead_efforts->employee_name = $lead_name;
+                $bill_lead_efforts->employee_percentage = $lead_percentage;
+                $bill_lead_efforts->save();
             }
         }
          $file = $request->file('file');

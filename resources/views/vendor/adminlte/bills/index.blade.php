@@ -66,6 +66,9 @@
             <th>Client Name</th>
             <th>Client Contact Number</th>
             <th>Client Email Id</th>
+            @if($isSuperAdmin || $isAccountant)
+              <th>Lead Efforts</th>
+            @endif
         </tr>
     </thead>
         <?php $i=0; ?>
@@ -170,7 +173,9 @@
                    <td>{{ $value['client_name'] }}</td>
                    <td>{{ $value['client_contact_number'] }}</td>
                    <td>{{ $value['client_email_id'] }}</td>
-
+                   @if($isSuperAdmin || $isAccountant)
+                      <td>{{ $value['lead_efforts'] }}</td>
+                   @endif
                </tr>
            @endforeach
            </tbody>

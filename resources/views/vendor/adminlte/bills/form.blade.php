@@ -260,6 +260,35 @@
 
             </div>
         </div>
+        @if($isSuperAdmin || $isAccountant)
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header with-border col-md-6 ">
+                        <h3 class="box-title">Lead Efforts</h3>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                            <div class="">
+                                <div class="form-group">
+                                    <strong>Employee Name :  <span class = "required_fields">*</span> </strong>
+                                    {!! Form::select('lead_name', $users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25' )) !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                            <div class="">
+                                <div class="form-group">
+                                    <strong>Employee Percentage:  <span class = "required_fields">*</span> </strong>
+                                    {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce' , 'tabindex' => '26')) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             @if( $action == 'add')
@@ -341,6 +370,7 @@
             $("#employee_name_3").select2();
             $("#employee_name_4").select2();
             $("#employee_name_5").select2();
+            $("#lead_name").select2();
 
             prefilleddata();
             // on job select pre filled all data
@@ -399,6 +429,12 @@
                     },
                     "address_of_communication": {
                         required: true
+                    },
+                    "lead_name":{
+                        required: true
+                    },
+                    "lead_percentage": {
+                        required: true
                     }
                 },
                 messages: {
@@ -437,6 +473,12 @@
                     },
                     "address_of_communication":{
                         required: "Address of Communication is required field."
+                    },
+                    "lead_name":{
+                        required: "Lead Efforts is required field."
+                    },
+                    "lead_percentage": {
+                        required: "Lead Percentage is required field."
                     }
                 }
             });

@@ -174,6 +174,19 @@ class Bills extends Model
             else{
                 $bills[$i]['invoice_url'] = $url;
             }
+
+            // get lead employee efforts
+            $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);
+            $lead_efforts_str = '';
+            foreach ($lead_efforts as $k=>$v){
+                if($lead_efforts_str==''){
+                    $lead_efforts_str = $k .'('.(int)$v . '%)';
+                }
+                else{
+                    $lead_efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                }
+            }
+            $bills[$i]['lead_efforts'] = $lead_efforts_str;
             $i++;
         }
         return $bills;
@@ -283,42 +296,57 @@ class Bills extends Model
             //$billsdetails['employee_name'] = $bills->ename;
             //$billsdetails['employee_percentage'] = $bills->employee_percentage;
 
-        $efforts = Bills::getEmployeeEffortsNameById($id);
+            $efforts = Bills::getEmployeeEffortsNameById($id);
 
-        // set employee name and percentage
-        $i = 0;
-        if (isset($efforts) && sizeof($efforts) > 0) {
-            foreach ($efforts as $k => $v) {
-                $employee_name[$i] = $k;
-                $employee_percentage[$i] = $v;
-                $i++;
-            }
-        }
-         }
-          
-          $i = 0;
-            $billsdetails['files'] = array();
-            $billsFiles = BillsDoc::select('bills_doc.*')
-                ->where('bills_doc.bill_id',$id)
-                ->get();
-            $utils = new Utils();
-            if(isset($billsFiles) && sizeof($billsFiles) > 0){
-                foreach ($billsFiles as $billfile) {
-                    $billsdetails['files'][$i]['id'] = $billfile->id;
-                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
-                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
-                    $billsdetails['files'][$i]['name'] = $billfile->name ;
-                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
-
+            // set employee name and percentage
+            $i = 0;
+            if (isset($efforts) && sizeof($efforts) > 0) {
+                foreach ($efforts as $k => $v) {
+                    $employee_name[$i] = $k;
+                    $employee_percentage[$i] = $v;
                     $i++;
-
                 }
             }
+        }
+          
+        $i = 0;
+        $billsdetails['files'] = array();
+        $billsFiles = BillsDoc::select('bills_doc.*')
+            ->where('bills_doc.bill_id',$id)
+            ->get();
+        $utils = new Utils();
+        if(isset($billsFiles) && sizeof($billsFiles) > 0){
+            foreach ($billsFiles as $billfile) {
+                $billsdetails['files'][$i]['id'] = $billfile->id;
+                $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                $billsdetails['files'][$i]['name'] = $billfile->name ;
+                $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+
+                $i++;
+
+            }
+        }
+
+        // Lead Employees name
+        $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($id);
+        if (isset($lead_efforts) && sizeof($lead_efforts) > 0) {
+            foreach ($lead_efforts as $key => $value) {
+                $lead_name = $key;
+                $lead_percentage = $value;
+            }
+        }
+        else{
+            $lead_name = '';
+            $lead_percentage = '';
+        }
 
         $viewVariable = array();
         $viewVariable['billsdetails'] = $billsdetails;
         $viewVariable['employee_name'] = $employee_name;
         $viewVariable['employee_percentage'] = $employee_percentage;
+        $viewVariable['lead_name'] = $lead_name;
+        $viewVariable['lead_percentage'] = $lead_percentage;
         //print_r($viewVariable);exit;
 
         return $viewVariable;
