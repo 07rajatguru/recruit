@@ -1173,6 +1173,7 @@ class BillsController extends Controller
 
     public function getExportSheet(){
 
-        return view('adminlte::bills.sheet');
+        $invoice_data = Bills::getJoinConfirmationMail(24);
+        return view('adminlte::bills.sheet',compact('invoice_data'));
     }
 }

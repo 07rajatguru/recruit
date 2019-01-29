@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-	
-</head>
 	<body>
 		<table style="width: 40%;">
 			<tr>
@@ -60,7 +57,7 @@
 				<td colspan="7"><b>Towards professional fee for recruitment (SAC Code-9997):</b></td>
 				<td></td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>

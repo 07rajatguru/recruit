@@ -809,7 +809,6 @@ class Bills extends Model
                 else
                     $billing_address .= ", ".$join_mail_res->billing_city;
             }
-            $billing_address .= '<br/>';
             if($join_mail_res->billing_state!=''){
                 if($billing_address=='')
                     $billing_address .= $join_mail_res->billing_state;
@@ -840,7 +839,6 @@ class Bills extends Model
                 else
                     $shipping_address .= ", ".$join_mail_res->shipping_street2;
             }
-            $shipping_address .= '<br/>';
             if($join_mail_res->shipping_city!=''){
                 if($shipping_address=='')
                     $shipping_address .= $join_mail_res->shipping_city;
