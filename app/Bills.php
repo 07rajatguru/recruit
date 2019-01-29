@@ -791,6 +791,7 @@ class Bills extends Model
             $join_confirmation_mail['cgst'] = $cgst;
             $join_confirmation_mail['amount_in_words'] = Utils::number_in_words($billing_amount);
             $join_confirmation_mail['gst_no'] = $join_mail_res->gst_no;
+            $join_confirmation_mail['gst_check'] = substr($join_mail_res->gst_no,0,2);
 
             $billing_address ='';
             if($join_mail_res->billing_street1!=''){

@@ -1124,7 +1124,7 @@ class BillsController extends Controller
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data);
             });
         })->store('xlsx', storage_path('bills/'.$id));
-        //exit;
+            
         $user_id = \Auth::user()->id;
         //Logged in User Email Id
         $user_email = User::getUserEmailById($user_id);

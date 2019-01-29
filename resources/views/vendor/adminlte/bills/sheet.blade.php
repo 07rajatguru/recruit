@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style type="text/css">
-		table {
-		  border-collapse: collapse;
-		  width: 40%;
-		}
-	</style>
+	
 </head>
 	<body>
-		<table>
+		<table style="width: 40%;">
 			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
@@ -109,6 +104,7 @@
 				<td colspan="8" style="text-align: right;">Amount Excluding GST</td>
 				<td style="text-align: center;">{{ $invoice_data['fees'] }}</td>
 			</tr>
+			@if(isset($invoice_data['gst_check']) && $invoice_data['gst_check'] == '24')
 			<tr>
 				<td></td>
 				<td colspan="8" style="text-align: right;">CGST  @ 9%</td>
@@ -119,13 +115,23 @@
 				<td colspan="8" style="text-align: right;">SGST  @ 9%</td>
 				<td style="text-align: center;">{{ $invoice_data['sgst'] }}</td>
 			</tr>
+			@else
+			<tr>
+				<td></td>
+				<td colspan="8" style="text-align: right;">IGST  @ 18%</td>
+				<td style="text-align: center;">{{ $invoice_data['gst'] }}</td>
+			</tr>
+			<tr>
+				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
+			</tr>
+			@endif
 			<tr>
 				<td>INR:</td>
 				<td colspan="7" style="text-align: center;">{{ $invoice_data['amount_in_words'] }}</td>
 				<td style="text-align: center;">Total</td>
 				<td style="text-align: center;">{{ $invoice_data['billing_amount'] }}</td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>
@@ -152,7 +158,7 @@
 			<tr>
 				<td colspan="10">IFSC Code : ICIC0000295</td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>
@@ -170,7 +176,7 @@
 			<tr>
 				<td colspan="10"><b>Authorized Signatory</b></td>
 			</tr>
-			<tr style="height: 10px;">
+			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>
