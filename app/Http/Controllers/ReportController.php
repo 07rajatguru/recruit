@@ -7,6 +7,7 @@ use App\JobAssociateCandidates;
 use App\Lead;
 use App\User;
 use App\Interview;
+use App\Bills;
 
 class ReportController extends Controller
 {
@@ -366,5 +367,12 @@ class ReportController extends Controller
 //echo 'Weekly Activity Report -'.$input['value'];
             //return view('adminlte::emails.WeeklyReport',compact('app_url','associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
         }
+    }
+
+    public function personWiseReportIndex(){
+
+        $personwise_data = Bills::getPersonwiseReportData();
+        
+        return view('adminlte::reports.personwise-report');
     }
 }

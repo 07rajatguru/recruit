@@ -1606,6 +1606,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReportController@userWiseMonthlyReport'
     ]);
 
+    Route::any('personwise-report',[
+        'as' => 'report.personwisereportindex',
+        'uses' => 'ReportController@personWiseReportIndex'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',

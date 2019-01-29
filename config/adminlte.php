@@ -321,7 +321,12 @@ return [
                    'text' => 'Monthly report',
                    'url'  => 'userwise-monthly-report',
                    'icon' => 'circle-o',
-               ]
+               ],
+               [
+                   'text' => 'Person-wise report',
+                   'url'  => 'personwise-report',
+                   'icon' => 'circle-o',
+               ],
            ],
         ],
 

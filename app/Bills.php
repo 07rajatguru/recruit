@@ -942,4 +942,43 @@ class Bills extends Model
         }
         return $salary;
     }
+
+    // get personwise report data
+    public static function getPersonwiseReportData(){
+
+        $users = User::getAllUsers('recruiter');
+        $i = 0;
+        foreach ($users as $key => $value) {
+
+            $personwise_query[$i] = Bills::query();
+            $personwise_query[$i] = $personwise_query[$i]->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+            $personwise_query[$i] = $personwise_query[$i]->join('job_openings','job_openings.id','=','bills.job_id');
+            $personwise_query[$i] = $personwise_query[$i]->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+            $personwise_query[$i] = $personwise_query[$i]->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+            $personwise_query[$i] = $personwise_query[$i]->select('bills.*','bills_efforts.*','candidate_basicinfo.full_name as candidate_name');
+            $personwise_query[$i] = $personwise_query[$i]->where('bills_efforts.employee_name',$key);
+            $personwise_res[$i] = $personwise_query[$i]->get();
+
+            $person_data = array();
+            foreach ($personwise_res[$i] as $key => $value) {
+
+                $salary = $value->fixed_salary;
+                $pc = $value->percentage_charged;
+
+                $fees = ($salary * $pc)/100;
+                $gst = ($fees * 18)/100;
+                $billing_amount = $fees + $gst;
+
+                $person_data[$i]['candidate_name'] = $value->candidate_name;
+                $person_data[$i]['company_name'] = $value->company_name;
+                $person_data[$i]['position'] = $value->designation_offered;
+                $person_data[$i]['salary_offered'] = $value->fixed_salary;
+                $person_data[$i]['billing'] = $billing_amount;
+                $person_data[$i]['joining_date'] = $value->date_of_joining;
+            }
+        print_r($personwise_res[$i]);exit;
+
+            $i++;
+        }
+    }
 }
