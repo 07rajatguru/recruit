@@ -488,7 +488,7 @@ class EveryMinute extends Command
 
                 $input['join_mail'] = $join_mail;
 
-                $input['attachment'] = 'storage/bills/'.$module_id.'/'.$module_id.'_invoice.xlsx';
+                $input['attachment'] = 'public/uploads/bills/'.$module_id.'/'.$module_id.'_invoice.xlsx';
                 
                 \Mail::send('adminlte::emails.invoicegenerate', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);

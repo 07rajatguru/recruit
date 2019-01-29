@@ -139,6 +139,9 @@
                                   @elseif($value['job_confirmation'] == 3 && $value['cancel_bill']==0)
                                     @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?'])
                                   @endif
+                                  @if(isset($value['invoice_url']) && $value['invoice_url'] != NULL)
+                                    <a target="_blank" href="{{$value['invoice_url']}}"><i  class="fa fa-fw fa-download"></i></a>
+                                  @endif
                                 @endif
                         @endif
                         @if($isSuperAdmin || $isAccountant)
