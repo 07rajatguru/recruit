@@ -943,25 +943,24 @@ class Bills extends Model
         return $salary;
     }
 
-    // get personwise report data
-    public static function getPersonwiseReportData(){
+    public static function getPersonwiseReportData($key,$current_year,$next_year){
+        
+        $personwise_query = Bills::query();
+        $personwise_query = $personwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $personwise_query = $personwise_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $personwise_query = $personwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $personwise_query = $personwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $personwise_query = $personwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name');
+        $personwise_query = $personwise_query->where('bills_efforts.employee_name',$key);
+        $personwise_query = $personwise_query->where('bills.status','=','1');
+        $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
+        $personwise_query = $personwise_query->where('bills.date_of_joining','<=',$next_year);
+        $personwise_res = $personwise_query->get();
 
-        $users = User::getAllUsers('recruiter');
-        $i = 0;
-        foreach ($users as $key => $value) {
-
-            $personwise_query[$i] = Bills::query();
-            $personwise_query[$i] = $personwise_query[$i]->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
-            $personwise_query[$i] = $personwise_query[$i]->join('job_openings','job_openings.id','=','bills.job_id');
-            $personwise_query[$i] = $personwise_query[$i]->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-            $personwise_query[$i] = $personwise_query[$i]->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
-            $personwise_query[$i] = $personwise_query[$i]->select('bills.*','bills_efforts.*','candidate_basicinfo.full_name as candidate_name');
-            $personwise_query[$i] = $personwise_query[$i]->where('bills_efforts.employee_name',$key);
-            $personwise_res[$i] = $personwise_query[$i]->get();
-
-            $person_data = array();
-            foreach ($personwise_res[$i] as $key => $value) {
-
+        $person_data = array();
+        $j = 0;
+        if (isset($personwise_res) && sizeof($personwise_res)>0) {
+            foreach ($personwise_res as $key => $value) {
                 $salary = $value->fixed_salary;
                 $pc = $value->percentage_charged;
 
@@ -969,16 +968,29 @@ class Bills extends Model
                 $gst = ($fees * 18)/100;
                 $billing_amount = $fees + $gst;
 
-                $person_data[$i]['candidate_name'] = $value->candidate_name;
-                $person_data[$i]['company_name'] = $value->company_name;
-                $person_data[$i]['position'] = $value->designation_offered;
-                $person_data[$i]['salary_offered'] = $value->fixed_salary;
-                $person_data[$i]['billing'] = $billing_amount;
-                $person_data[$i]['joining_date'] = $value->date_of_joining;
-            }
-        print_r($personwise_res[$i]);exit;
+                $person_data[$j]['candidate_name'] = $value->candidate_name;
+                $person_data[$j]['company_name'] = $value->company_name;
+                $person_data[$j]['position'] = $value->designation_offered;
+                $person_data[$j]['salary_offered'] = $value->fixed_salary;
+                $person_data[$j]['billing'] = $billing_amount;
+                $person_data[$j]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
 
-            $i++;
+                // get employee efforts
+                $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                $efforts_str = '';
+                foreach ($efforts as $k=>$v){
+                    if($efforts_str==''){
+                        $efforts_str = $k .'('.(int)$v . '%)';
+                    }
+                    else{
+                        $efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                    }
+                }
+                $person_data[$j]['efforts'] = $efforts_str;
+                $j++;
+            }
         }
+
+        return $person_data;
     }
 }

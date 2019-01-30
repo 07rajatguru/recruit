@@ -371,8 +371,48 @@ class ReportController extends Controller
 
     public function personWiseReportIndex(){
 
-        $personwise_data = Bills::getPersonwiseReportData();
-        
-        return view('adminlte::reports.personwise-report');
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+        if ($isSuperAdmin || $isAccountant) {
+            // Year Data
+            $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+            $ending_year = date('Y',strtotime('+1 year'));
+            $year_array = array();
+            for ($y=$starting_year; $y < $ending_year ; $y++) {
+                $next = $y+1;
+                $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+            }
+
+            if (isset($_POST['year']) && $_POST['year'] != '') {
+                $year = $_POST['year'];
+            }
+            else{
+                $y = date('Y');
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+
+            $year_data = explode(',', $year);
+            $current = $year_data[0];
+            $next = $year_data[1];
+            $current_year = date('Y-m-d',strtotime("first day of $current"));
+            $next_year = date('Y-m-d',strtotime("last day of $next"));
+
+            $users = User::getAllUsers('recruiter');
+            foreach ($users as $key => $value) {
+                $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+            }
+            //print_r($personwise_data);exit;
+            
+            return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
+        }
+        else {
+            return view('errors.403');
+        }
     }
 }
