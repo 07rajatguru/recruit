@@ -8,6 +8,7 @@ use App\Lead;
 use App\User;
 use App\Interview;
 use App\Bills;
+use Excel;
 
 class ReportController extends Controller
 {
@@ -414,5 +415,35 @@ class ReportController extends Controller
         else {
             return view('errors.403');
         }
+    }
+
+    public function personWiseReportExport(){
+
+        Excel::create('Personwise Report',function($excel){
+            $excel->sheet('sheet 1',function($sheet){
+                
+                if (isset($_POST['year']) && $_POST['year'] != '') {
+                    $year = $_POST['year'];
+                }
+                else{
+                    $y = date('Y');
+                    $n = $y-1;
+                    $year = $n.'-4, '.$y.'-3';
+                }
+
+                $year_data = explode(',', $year);
+                $current = $year_data[0];
+                $next = $year_data[1];
+                $current_year = date('Y-m-d',strtotime("first day of $current"));
+                $next_year = date('Y-m-d',strtotime("last day of $next"));
+
+                $users = User::getAllUsers('recruiter');
+                foreach ($users as $key => $value) {
+                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                }
+                
+                $sheet->loadview('adminlte::reports.personwise-reportexport')->with('personwise_data',$personwise_data);
+            });
+        })->export('xlsx');
     }
 }

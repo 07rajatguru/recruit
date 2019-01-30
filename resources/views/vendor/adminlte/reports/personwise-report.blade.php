@@ -10,8 +10,8 @@
 
 	<div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="">
-                <h2 style="text-align: center;">Person Wise Report</h2>
+            <div class="pull-left">
+                <h2>Person Wise Report</h2>
             </div>
         </div>
     </div>
@@ -27,6 +27,9 @@
             <div class="form-group" style="margin-top: 19px;">
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
+        </div>
+        <div class="pull-right col-md-2">
+            <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
         </div>
     </div>
     <br/>
@@ -94,6 +97,20 @@
         var year = $("#year").val();
 
         var url = '/personwise-report';
+
+        var form = $('<form action="'+url+ '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="text" name="year" value="'+year+'" />' +
+            '</form>');
+
+        $('body').append(form);
+        form.submit();
+    }
+
+    function export_data(){
+        var year = $("#year").val();
+
+        var url = '/personwise-report/export';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

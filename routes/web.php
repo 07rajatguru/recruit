@@ -1611,6 +1611,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReportController@personWiseReportIndex'
     ]);
 
+    Route::post('personwise-report/export',[
+        'as' => 'report.personwisereportexport',
+        'uses' => 'ReportController@personWiseReportExport'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',
