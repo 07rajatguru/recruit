@@ -713,7 +713,7 @@ class ClientBasicinfo extends Ardent
                 else if ($client['status'] == '0') {
                     $client['status'] = 'Passive';
                 }
-                else if ($client['status' == '2']) {
+                else if ($client['status'] == '2') {
                     $client['status'] = 'Leaders';
                 }
                 else if ($client['status'] == '3') {

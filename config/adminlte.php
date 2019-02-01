@@ -327,6 +327,11 @@ return [
                    'url'  => 'personwise-report',
                    'icon' => 'circle-o',
                ],
+               [
+                   'text' => 'Month-wise report',
+                   'url'  => 'monthwise-report',
+                   'icon' => 'circle-o',
+               ],
            ],
         ],
 
