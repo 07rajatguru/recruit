@@ -19,7 +19,7 @@
                     <td align="center">
                         <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img width="600" class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
+                                <img width="600" class="site-logo" src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
                             </a>
                         </div>
                     </td>
@@ -30,7 +30,7 @@
     </tr>
     <tr>
         <td width="600"  style="background-color: green; !important;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffe6ff	; padding: 50px 54px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
                 <tr>
                     <td>
                         <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$cname}},</p></b>
