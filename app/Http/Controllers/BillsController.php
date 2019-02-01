@@ -1029,6 +1029,18 @@ class BillsController extends Controller
             }
         }
 
+        $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsById($id);
+        if (isset($lead_efforts) && sizeof($lead_efforts)>0) {
+            foreach ($lead_efforts as $key => $value) {
+                $lead_name = $key;
+                $lead_percentage = $value;
+            }
+        }
+        else{
+            $lead_name = '';
+            $lead_percentage = 0;
+        }
+
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
         $users = User::getAllUsersCopyWithInactive('recruiter');
@@ -1054,7 +1066,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
 
     }
 
