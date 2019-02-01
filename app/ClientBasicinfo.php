@@ -708,10 +708,19 @@ class ClientBasicinfo extends Ardent
             $client['display_name'] = $res->display_name;
             if(isset($client['status'])){
                 if($client['status'] == '1'){
-                    $client['status']='Active';
+                    $client['status'] = 'Active';
                 }
-                else{
-                    $client['status']='Passive';
+                else if ($client['status' == '0']) {
+                    $client['status'] = 'Passive';
+                }
+                else if ($client['status' == '2']) {
+                    $client['status'] = 'Leaders';
+                }
+                else if ($client['status'] == '3') {
+                    $client['status'] = 'Forbid';
+                }
+                else if ($client['status'] == '4') {
+                    $client['status'] = 'Left';
                 }
             }
             $client['billing_country'] = $res->billing_country;
