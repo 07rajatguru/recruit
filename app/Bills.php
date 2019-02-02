@@ -949,9 +949,9 @@ class Bills extends Model
         $personwise_query = $personwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $personwise_query = $personwise_query->join('job_openings','job_openings.id','=','bills.job_id');
         $personwise_query = $personwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $personwise_query = $personwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
         $personwise_query = $personwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
         if ($key != NULL) {
+            $personwise_query = $personwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
             $personwise_query = $personwise_query->where('bills_efforts.employee_name',$key);
         }
         $personwise_query = $personwise_query->where('bills.status','=','1');

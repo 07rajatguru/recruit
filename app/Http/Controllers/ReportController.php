@@ -525,4 +525,66 @@ class ReportController extends Controller
             return view('errors.403');
         }
     }
+
+    public function monthWiseReportExport(){
+
+        Excel::create('Month-wise Report',function($excel){
+
+            $excel->sheet('sheet 1',function($sheet){
+                
+                if (isset($_POST['year']) && $_POST['year'] != '') {
+                    $year = $_POST['year'];
+                }
+                else{
+                    $y = date('Y');
+                    $n = $y-1;
+                    $year = $n.'-4-'.$y.'-3';
+                }
+
+                $year_data = explode('-', $year);
+                $current_year = $year_data[0];
+                $current_month = $year_data[1];
+                $next_year = $year_data[2];
+                $next_month = $year_data[3];
+
+                for ($m=$current_month; $m <= 15 ; $m++) { 
+                    if ($m == 13) {
+                        $m = 1;
+
+                        $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                        $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
+                        $m = 13;
+                    }
+                    else if ($m == 14) {
+                        $m = 2;
+
+                        $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                        $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
+                        $m = 14;
+                    }
+
+                    else if ($m == 15) {
+                        $m = 3;
+
+                        $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                        $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
+                        $m = 15;
+                    }
+                    else {
+                        $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                        $month[$current_year.'-'.$m] = $month_name.'-'.$current_year;
+                    }
+                }
+
+                foreach ($month as $key => $value) {
+                    $month_start = date('Y-m-d',strtotime("first day of $key"));
+                    $month_last = date('Y-m-d',strtotime("last day of $key"));
+
+                    $monthwise_data[$value] = Bills::getPersonwiseReportData(NULL,$month_start,$month_last);
+                }
+                    
+                $sheet->loadview('adminlte::reports.monthwise-reportexport')->with('monthwise_data',$monthwise_data);
+            });
+        })->export('xlsx');
+    }
 }

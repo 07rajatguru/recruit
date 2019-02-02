@@ -10,7 +10,7 @@
 
 @section('customs_css')
     <style>
-        .button{
+        /*.button{
 		    left: 4px;
 		    height: 14px;
 		    width: 10px;
@@ -25,7 +25,7 @@
 		    font-family: 'Courier New', Courier, monospace;
 		    line-height: 14px;
 		    background-color: #31b131;
-        }
+        }*/
     </style>
 @endsection
 
@@ -59,7 +59,7 @@
 		<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="personwise-report" style="border: 2px solid black;">
 			<thead>
 				<tr style="background-color: #7598d9">
-					<th style="border: 2px solid black;"></th>
+					{{--<th style="border: 2px solid black;"></th>--}}
 					<th style="border: 2px solid black;text-align: center;">Sr.No</th>
 					<th style="border: 2px solid black;text-align: center;">Candidate Name</th>
 					<th style="border: 2px solid black;text-align: center;">Company Name</th>
@@ -75,19 +75,22 @@
 					<th style="border: 2px solid black;text-align: center;">Efforts</th>
 				</tr>
 			</thead>
+			<?php $j = 0;?>
 			@foreach($monthwise_data as $key => $value)
 			<?php $i = 0;?>
 				<tbody>
 					<tr>
-						<td style="border: 2px solid black;">
-							<button class="button">+</button>
-						</td>
-						<td colspan="13" style="text-align: center;background-color: yellow;border: 2px solid black;"><b>{{$key}}</b></td>
+						{{--<td style="border: 2px solid black;">
+							<button class="button" data-id="{{ $j }}">+</button>
+						</td>--}}
+						<td colspan="13" style="text-align: center;background-color: yellow;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
 					</tr>
+				</tbody>
+				<tbody id="data_{{$j}}" style="display: none;">
 					@if(isset($value) && sizeof($value) >0)
 						@foreach($value as $k => $v)
-							<tr id="myDIV" style="display: none;">
-								<td style="border: 1px solid black;"></td>
+							<tr>
+								{{--<td style="border: 1px solid black;"></td>--}}
 								<td style="border: 1px solid black;">{{ ++$i }}</td>
 								<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['company_name'] }}</td>
@@ -104,17 +107,18 @@
 							</tr>
 						@endforeach
 					@else
-					<tr id="myDIV" style="display: none;">
+					<tr>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+						<td style="border: 1px solid black;"></td> {{--<td style="border: 1px solid black;"></td>--}}
 					</tr>
 					@endif
 				</tbody>
+			<?php $j++;?>
 			@endforeach
 		</table>
 	</div>
@@ -123,14 +127,35 @@
 
 @section('customscripts')
 	<script type="text/javascript">
-		$( ".button" ).click(function() {
-		  $( "#myDIV" ).toggle();
+
+		$(document).ready(function(){
+
+			$(".button").click(function(){
+				var $toggle = $(this);
+
+				var id = "#data_" + $toggle.data('id');
+				$(id).toggle();
+			});
 		});
 
 		function select_data(){
 	        var year = $("#year").val();
 
 	        var url = '/monthwise-report';
+
+	        var form = $('<form action="'+url+ '" method="post">' +
+	            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+	            '<input type="text" name="year" value="'+year+'" />' +
+	            '</form>');
+
+	        $('body').append(form);
+	        form.submit();
+	    }
+
+	    function export_data(){
+	        var year = $("#year").val();
+
+	        var url = '/monthwise-report/export';
 
 	        var form = $('<form action="'+url+ '" method="post">' +
 	            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

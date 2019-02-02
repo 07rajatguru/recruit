@@ -1621,6 +1621,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReportController@monthwiseReprotIndex'
     ]);
 
+    Route::post('monthwise-report/export',[
+        'as' => 'report.monthwisereportexport',
+        'uses' => 'ReportController@monthWiseReportExport'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',
