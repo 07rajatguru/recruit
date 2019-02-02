@@ -23,7 +23,7 @@
 			@if(isset($value) && sizeof($value) >0)
 				@foreach($value as $k => $v)
 					<tr>
-						<td style="border: 1px solid #000000;">{{ ++$i }}</td>
+						<td style="border: 1px solid #000000;text-align: center;">{{ ++$i }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['candidate_name'] }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['company_name'] }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['position'] }}</td>

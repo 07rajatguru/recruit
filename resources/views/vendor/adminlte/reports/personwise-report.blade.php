@@ -48,16 +48,19 @@
 					<th style="border: 2px solid black;text-align: center;">Status</th>
 				</tr>
 			</thead>
+			<?php $j = 0;?>
 			@foreach($personwise_data as $key => $value)
 			<?php $i = 0;?>
 				<tbody>
 					<tr>
-						<td colspan="9" style="text-align: center;background-color: yellow;border: 2px solid black;"><b>{{$key}}</b></td>
+						<td colspan="9" style="text-align: center;background-color: yellow;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
 					</tr>
+				</tbody>
+				<tbody id="data_{{$j}}" style="display: none;">
 					@if(isset($value) && sizeof($value) >0)
 						@foreach($value as $k => $v)
 							<tr>
-								<td style="border: 1px solid black;">{{ ++$i }}</td>
+								<td style="border: 1px solid black;text-align: center;">{{ ++$i }}</td>
 								<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['company_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['position'] }}</td>
@@ -78,6 +81,7 @@
 					</tr>
 					@endif
 				</tbody>
+			<?php $j++;?>
 			@endforeach
 		</table>
 	</div>
@@ -86,12 +90,15 @@
 
 @section('customscripts')
 <script type="text/javascript">
-	/*var table = jQuery("#personwise-report").DataTable({
-		responsive: true,
-		"pageLength": 100,
-		stateSave: true
+	
+	$(document).ready(function(){
+		$(".button").click(function(){
+
+			var $toggle = $(this);
+			var id = "#data_" + $toggle.data('id');
+			$(id).toggle();
+		});
 	});
-	new jQuery.fn.dataTable.FixedHeader( table );*/
 
 	function select_data(){
         var year = $("#year").val();
