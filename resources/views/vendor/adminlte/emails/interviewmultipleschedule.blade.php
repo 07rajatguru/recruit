@@ -23,6 +23,7 @@
                     <td align="center"style="font-family: Cambria;"><b>Name of the Candidate</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Interview Date</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Interview Time</b></td>
+                    <td align="center"style="font-family: Cambria;"><b>Interview Location</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Candidate Location</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Mode of Interview</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Skype ID</b></td>
@@ -40,6 +41,7 @@
                         <td align="center"style="font-family: Cambria;">{{$value['cname']}}</td>
                         <td align="center"style="font-family: Cambria;">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
                         <td align="center"style="font-family: Cambria;">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
+                        <td align="center"style="font-family: Cambria;">{{$value['interview_location']}}</td>
                         <td align="center"style="font-family: Cambria;">{{$value['candidate_location']}}</td>
                         <td align="center"style="font-family: Cambria;">{{$value['interview_type']}}</td>
                         <td align="center"style="font-family: Cambria;">{{$value['skype_id']}}</td>

@@ -116,10 +116,20 @@
 
                             <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
                                 <strong>About Client:</strong>
-                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '7', 'rows' => '5' )) !!}
                                 @if ($errors->has('about'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('about') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
+                                <strong>Comments:</strong>
+                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '10', 'rows' => '5' )) !!}
+                                @if ($errors->has('comments'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('comments') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -192,7 +202,7 @@
 
                             <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
                                 <strong>Interview Venue:</strong>
-                                {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '9' , 'rows' => '2')) !!}
+                                {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
                                 @if ($errors->has('location'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('location') }}</strong>
@@ -200,22 +210,22 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
-                                <strong>Candidate Location:</strong>
-                                {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '9' , 'rows' => '2')) !!}
-                                @if ($errors->has('candidate_location'))
+                            <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
+                                <strong>Interview Location:</strong>
+                                {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
+                                @if ($errors->has('interview_location'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidate_location') }}</strong>
+                                <strong>{{ $errors->first('interview_location') }}</strong>
                                 </span>
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
-                                <strong>Comments:</strong>
-                                {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '10', 'rows' => '5' )) !!}
-                                @if ($errors->has('comments'))
+                            <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
+                                <strong>Candidate Location:</strong>
+                                {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Candidate Location','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
+                                @if ($errors->has('candidate_location'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('comments') }}</strong>
+                                <strong>{{ $errors->first('candidate_location') }}</strong>
                                 </span>
                                 @endif
                             </div>

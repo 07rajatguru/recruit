@@ -47,6 +47,7 @@ class Interview extends Model
         }
         $interview->select_round = $data['round'];
         $interview->candidate_location = $data['candidate_location'];
+        $interview->interview_location = $data['interview_location'];
 
         return $interview;
     }
@@ -417,7 +418,7 @@ class Interview extends Model
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
+            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location','interview.interview_location as interview_location');
         $query = $query->where('interview.id',$ids);
         $query = $query->orderBy('interview.interview_date','asc');
         $response = $query->first();
@@ -735,6 +736,7 @@ class Interview extends Model
         $input['candidate_location'] = $interview->candidate_location;
         $input['company_name'] = $interview->company_name;
         $input['city'] = $interview->job_city;
+        $input['interview_location'] = $interview->interview_location;
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
@@ -807,6 +809,7 @@ class Interview extends Model
         $interview_details['client_owner_email'] = $client_owner_email;
         $interview_details['skype_id'] = $interview->skype_id;
         $interview_details['candidate_location'] = $interview->candidate_location;
+        $interview_details['interview_location'] = $interview->interview_location;
 
         return $interview_details;
 

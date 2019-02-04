@@ -23,6 +23,7 @@
                     <td align="center"><b>Name of the Candidate</b></td>
                     <td align="center"><b>Interview Date</b></td>
                     <td align="center"><b>Interview Time</b></td>
+                    <td align="center"><b>Interview Location</b></td>
                     <td align="center"><b>Candidate Location</b></td>
                     <td align="center"><b>Mode of Interview</b></td>
                     <td align="center"><b>Skype ID</b></td>
@@ -39,6 +40,7 @@
                     <td align="center">{{$cname}}</td>
                     <td align="center">{{date('d/m/Y',strtotime($interview_date)) }}</td>
                     <td align="center">{{date('h:i A',strtotime($interview_time))  }}</td>
+                    <td align="center">{{$interview_location}}</td>
                     <td align="center">{{$candidate_location}}</td>
                     <td align="center">{{$interview_type}}</td>
                     <td align="center">{{$skype_id}}</td>

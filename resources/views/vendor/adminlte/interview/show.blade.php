@@ -65,16 +65,21 @@
                             <td>{{ isset($about)? $about : null }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Interview Round :</th>
-                            <td>{{ isset($interview_round)? $interview_round : null }}</td>
                             @if(isset($skype_id) && $skype_id != '')
+                                <th scope="row">Interview Round :</th>
+                                <td>{{ isset($interview_round)? $interview_round : null }}</td>
                                 <th scope="row">Skype Id :</th>
                                 <td>{{ isset($skype_id)? $skype_id : null }}</td>
+                            @else
+                                <th scope="row">Interview Round :</th>
+                                <td colspan="3">{{ isset($interview_round)? $interview_round : null }}</td>
                             @endif
                         </tr>
                         <tr>
                             <th scope="row">Candidate Location:</th>
                             <td>{{ isset($candidate_location)? $candidate_location : null }}</td>
+                            <th scope="row">Interview Location:</th>
+                            <td>{{ isset($interview_location)? $interview_location : null }}</td>
                         </tr>
                     </table>
                 </div>
