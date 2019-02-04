@@ -941,7 +941,7 @@ class JobOpen extends Model
     public static function getJobforOpentoAll(){
 
         $date = date('Y-m-d');
-        $date_time = date('Y-m-d h');
+        $date_time = date('Y-m-d H');
         //print_r($date);exit;
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
