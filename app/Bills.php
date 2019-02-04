@@ -167,7 +167,7 @@ class Bills extends Model
             }
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
-            $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xlsx';
+            $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
             if (!file_exists($url) && !is_dir($url)) {
                 $bills[$i]['invoice_url'] = NULL;
             }

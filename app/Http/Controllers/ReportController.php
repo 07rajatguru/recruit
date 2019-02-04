@@ -444,7 +444,7 @@ class ReportController extends Controller
                 
                 $sheet->loadview('adminlte::reports.personwise-reportexport')->with('personwise_data',$personwise_data);
             });
-        })->export('xlsx');
+        })->export('xls');
     }
 
     public function monthwiseReprotIndex(){
@@ -585,6 +585,6 @@ class ReportController extends Controller
                     
                 $sheet->loadview('adminlte::reports.monthwise-reportexport')->with('monthwise_data',$monthwise_data);
             });
-        })->export('xlsx');
+        })->export('xls');
     }
 }
