@@ -28,7 +28,7 @@
 						<td style="border: 1px solid #000000;">{{ $v['company_name'] }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['position'] }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['salary_offered'] }}</td>
-						<td style="border: 1px solid #000000;">{{ $v['billing'] }}</td>
+						<td style="border: 1px solid #000000;">{{ $v['person_billing'] }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['joining_date'] }}</td>
 						<td style="border: 1px solid #000000;">{{ $v['efforts'] }}</td>
 						<td style="border: 1px solid #000000;"></td>
