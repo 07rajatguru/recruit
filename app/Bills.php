@@ -943,16 +943,16 @@ class Bills extends Model
         return $salary;
     }
 
-    public static function getPersonwiseReportData($key=NULL,$current_year,$next_year){
+    public static function getPersonwiseReportData($user_id=NULL,$current_year,$next_year){
         
         $personwise_query = Bills::query();
         $personwise_query = $personwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $personwise_query = $personwise_query->join('job_openings','job_openings.id','=','bills.job_id');
         $personwise_query = $personwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $personwise_query = $personwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
-        if ($key != NULL) {
+        if ($user_id != NULL) {
             $personwise_query = $personwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
-            $personwise_query = $personwise_query->where('bills_efforts.employee_name',$key);
+            $personwise_query = $personwise_query->where('bills_efforts.employee_name',$user_id);
         }
         $personwise_query = $personwise_query->where('bills.status','=','1');
         $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
@@ -975,7 +975,7 @@ class Bills extends Model
                 $person_data[$j]['company_name'] = $value->company_name;
                 $person_data[$j]['position'] = $value->designation_offered;
                 $person_data[$j]['salary_offered'] = $value->fixed_salary;
-                $person_data[$j]['billing'] = $billing_amount;
+                $person_data[$j]['billing'] = $fees;
                 $person_data[$j]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
 
                 // get employee efforts
@@ -988,12 +988,24 @@ class Bills extends Model
                     else{
                         $efforts_str .= ', '. $k .'('.(int)$v . '%)';
                     }
+                    // Person wise billing amount
+                    $user_name = User::getUserNameById($user_id);
+                    if ($user_name == $k) {
+                        $efforts_person = $v;
+                        $person_billing = ($fees * $efforts_person) / 100;
+                    }
+                }
+                if (isset($person_billing) && $person_billing != '') {
+                    $person_data[$j]['person_billing'] = $person_billing;
+                }
+                else {
+                    $person_data[$j]['person_billing'] = 0;   
                 }
                 $person_data[$j]['efforts'] = $efforts_str;
                 $person_data[$j]['client_name'] = $value->coordinator_prefix. " " .$value->client_name;
                 $person_data[$j]['location'] = $value->job_location;
                 $person_data[$j]['gst'] = $gst;
-                $person_data[$j]['invoice_raised'] = $billing_amount + $gst;
+                $person_data[$j]['invoice_raised'] = $billing_amount;
                 $person_data[$j]['payment'] = $payment;
                 $j++;
             }
