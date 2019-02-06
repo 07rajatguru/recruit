@@ -475,7 +475,7 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
                         <div class="form-group {{ $errors->has('bank_name') ? 'has-error' : '' }}">
-                            <strong>Bank Name: </strong>
+                            <strong>Bank Name: <span class = "required_fields">*</span> </strong>
                             {!! Form::text('bank_name',$user['bank_name'],array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control', 'tabindex' => '28' )) !!}
                             @if ($errors->has('bank_name'))
                                 <span class="help-block">
@@ -485,7 +485,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('account_no') ? 'has-error' : '' }}">
-                            <strong>Account Number: </strong>
+                            <strong>Account Number: <span class = "required_fields">*</span> </strong>
                             {!! Form::text('account_no',$user['acc_no'], array('id'=>'account_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '29'  )) !!}
                             @if ($errors->has('account_no'))
                             <span class="help-block">
@@ -543,7 +543,7 @@
                     <div class="">
                         <div class="form-group {{ $errors->has('fixed_salary') ? 'has-error' : '' }}">
                             <strong>Fixed Salary: </strong>
-                            {!! Form::text('fixed_salary',null,array('id'=>'fixed_salary','placeholder' => 'Fixed Saraly','class' => 'form-control', 'tabindex' => '33' )) !!}
+                            {!! Form::text('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Saraly','class' => 'form-control', 'tabindex' => '33' )) !!}
                             @if ($errors->has('fixed_salary'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('fixed_salary') }}</strong>
@@ -597,6 +597,12 @@
                     "contact": {
                         required: true,
                     },
+                    "bank_name": {
+                        required: true,
+                    },
+                    "account_no": {
+                        required: true,
+                    },
                 },
                 messages: {
                     "name": {
@@ -607,6 +613,12 @@
                     },
                     "contact": {
                         required: "Contact Number is required.",
+                    },
+                    "bank_name": {
+                        required: "Bank Name is required.",
+                    },
+                    "account_no": {
+                        required: "Account Number is required.",
                     },
                 }
             });
