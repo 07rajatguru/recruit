@@ -1626,6 +1626,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReportController@monthWiseReportExport'
     ]);
 
+    Route::any('eligibility-report',[
+        'as' => 'report.eligibilityreportindex',
+        'uses' => 'EligibilityReportController@index'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',

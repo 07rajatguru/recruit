@@ -332,6 +332,11 @@ return [
                    'url'  => 'monthwise-report',
                    'icon' => 'circle-o',
                ],
+               [
+                   'text' => 'Eligibility report',
+                   'url'  => 'eligibility-report',
+                   'icon' => 'circle-o',
+               ],
            ],
         ],
 

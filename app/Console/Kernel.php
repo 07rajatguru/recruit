@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\TodoCCStartdateDefault',
         'App\Console\Commands\LeaveBalanceData',
         'App\Console\Commands\UserLeaveCheck',
+        'App\Console\Commands\EligibilityWorkingReport',
     ];
 
     /**
