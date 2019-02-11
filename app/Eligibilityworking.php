@@ -32,22 +32,26 @@ class Eligibilityworking extends Model
         $query = Eligibilityworking::query();
         $query = $query->where('user_id',$user_id);
         $query = $query->where('year',$year);
-        $query = $query->where('month','>=',"$first_month");
-        $query = $query->where('month','<=',"$next_month");
+        $query = $query->whereBetween('month',[$first_month,$next_month]);
         $query = $query->select('eligibility_working.*');
         $res = $query->get();
 
         $data = array();
-        $i = 0;
+        $target = 0;
+        $achieved = 0;
         foreach ($res as $key => $value) {
-            $data[$i]['id'] = $value->id;
-            $data[$i]['user_id'] = $value->user_id;
-            $data[$i]['target'] = $value->target;
-            $data[$i]['achieved'] = $value->achieved;
-            $data[$i]['eligibility'] = $value->eligibility;
-            $data[$i]['month'] = $value->month;
-            $data[$i]['year'] = $value->year;
-            $i++;
+            $target = $target + $value->target;
+            $achieved = $achieved + $value->achieved;
+
+            if ($achieved >= $target) {
+                $eligibility = 'True';
+            }
+            else {
+                $eligibility = 'False';
+            }
+            $data['target'] = $target;
+            $data['achieved'] = $achieved;
+            $data['eligibility'] = $eligibility;
         }
 
         return $data;

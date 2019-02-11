@@ -1631,6 +1631,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'EligibilityReportController@index'
     ]);
 
+    Route::post('eligibility-report/export',[
+        'as' => 'report.eligibilityreportexport',
+        'uses' => 'EligibilityReportController@export'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',

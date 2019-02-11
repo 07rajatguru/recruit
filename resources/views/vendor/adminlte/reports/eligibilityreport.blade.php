@@ -59,8 +59,61 @@
 					<th style="border: 1px solid black;text-align: center;">Eligibility</th>
 				</tr>
 			</thead>
+            <?php $i = 0;?>
+            <tbody>
+                @foreach($eligible_data as $key => $value)
+                    <tr>
+                        <td>{{++$i}}</td>
+                        <td>{{ $key }}</td>
+                        @foreach($value as $k => $v)
+                            <td>{{ $v['target'] or '-' }}</td>
+                            <td>{{ $v['achieved'] or '-' }}</td>
+                            <td>{{ $v['eligibility'] or '-' }}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
 		</table>
 	</div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="personwise-report" style="border: 2px solid black;">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="border: 1px solid black;text-align: center;">Sr.No</th>
+                    <th rowspan="2" style="border: 1px solid black;text-align: center;">Name of <br/> Employee</th>
+                    <th colspan="3" style="border: 1px solid black;text-align: center;">6 Month (Q1+Q2)</th>
+                    <th colspan="3" style="border: 1px solid black;text-align: center;">9 Month (Q1+Q2+Q3)</th>
+                    <th colspan="3" style="border: 1px solid black;text-align: center;">12 Month (Q1+Q2+Q3+Q4)</th>
+                </tr>
+                <tr>
+                    <th style="border: 1px solid black;text-align: center;">Target</th>
+                    <th style="border: 1px solid black;text-align: center;">Achieved</th>
+                    <th style="border: 1px solid black;text-align: center;">Eligibility</th>
+                    <th style="border: 1px solid black;text-align: center;">Target</th>
+                    <th style="border: 1px solid black;text-align: center;">Achieved</th>
+                    <th style="border: 1px solid black;text-align: center;">Eligibility</th>
+                    <th style="border: 1px solid black;text-align: center;">Target</th>
+                    <th style="border: 1px solid black;text-align: center;">Achieved</th>
+                    <th style="border: 1px solid black;text-align: center;">Eligibility</th>
+                </tr>
+            </thead>
+            <?php $i = 0;?>
+            <tbody>
+                @foreach($eligible_detail as $key => $value)
+                    <tr>
+                        <td>{{++$i}}</td>
+                        <td>{{ $key }}</td>
+                        @foreach($value as $k => $v)
+                            <td>{{ $v['target'] or '-' }}</td>
+                            <td>{{ $v['achieved'] or '-' }}</td>
+                            <td>{{ $v['eligibility'] or '-' }}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @stop
 
 @section('customscripts')
@@ -79,5 +132,19 @@
         $('body').append(form);
         form.submit();
     }
+
+    function export_data(){
+            var year = $("#year").val();
+
+            var url = '/eligibility-report/export';
+
+            var form = $('<form action="'+url+ '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
 </script>
 @endsection
