@@ -34,9 +34,20 @@ class UserController extends Controller
      */
 
     public function index(Request $request)
-    {
+    {   
+        $user =  \Auth::user();
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
         $data = User::orderBy('id','DESC')->get();
-        return view('adminlte::users.index',compact('data'))
+        return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
 
     }
@@ -782,7 +793,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('users.editprofile',$user_id)->with('success','Profile Updated Successfully'); 
+        return redirect()->route('users.index')->with('success','Profile Updated Successfully'); 
     }
 
     public function Upload(Request $request)

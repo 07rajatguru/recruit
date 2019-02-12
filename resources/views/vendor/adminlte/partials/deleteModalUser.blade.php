@@ -1,4 +1,4 @@
-<a data-toggle="modal" href="#modal-delete-{!! $data['id'] !!}" class="btn btn-danger">Delete</a>
+<a data-toggle="modal" href="#modal-delete-{!! $data['id'] !!}" class="fa fa-trash" title="Delete"></a>
 <div id="modal-delete-{!! $data['id']!!}" class="modal text-left fade">
 
 
