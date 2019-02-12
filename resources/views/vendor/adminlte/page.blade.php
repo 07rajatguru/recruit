@@ -168,13 +168,22 @@
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; /*height: 200px;*/">
                                                         <ul class="menu" style="overflow: hidden; width: 100%;/* height: 200px;*/">
-                                                        <?php $user_id = \Auth::user()->id; ?>
-                                                            {{--<li>
-                                                                <a href="{{ route('users.myprofile',$user_id) }}">
-                                                                    <i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;My Profile
-                                                                </a>
-                                                            </li>--}}
-                                                          
+                                                        <?php $user_id = \Auth::user()->id;
+                                                            use App\User;
+                                                            $user =  \Auth::user();
+                                                            $userRole = $user->roles->pluck('id','id')->toArray();
+                                                            $role_id = key($userRole);
+
+                                                            $user_obj = new User();
+                                                            $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+                                                            $isAccountant = $user_obj::isAccountant($role_id);
+                                                            if ($isSuperAdmin || $isAccountant) { ?>
+                                                                <li>
+                                                                    <a href="{{ route('users.editprofile',$user_id) }}">
+                                                                        <i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;Edit Profile
+                                                                    </a>
+                                                                </li>
+                                                            <?php }?>
                                                             <li>
                                                                 @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
                                                                     <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
