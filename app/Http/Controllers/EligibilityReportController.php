@@ -137,4 +137,8 @@ class EligibilityReportController extends Controller
             });
         })->export('xls');
     }
+
+    public function create(){
+        
+    }
 }

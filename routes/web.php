@@ -1636,6 +1636,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'EligibilityReportController@export'
     ]);
 
+    Route::get('eligibility-report/add',[
+        'as' => 'report.eligibilityreportadd',
+        'uses' => 'EligibilityReportController@create'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',
