@@ -107,6 +107,7 @@ class HomeController extends Controller
 
         else{
              $month = date('m');
+             $year = date('Y');
              $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
                                                 ->whereRaw('YEAR(created_at) = ?',[$year])
                                                 ->where('account_manager_id',$user->id)
@@ -159,6 +160,7 @@ class HomeController extends Controller
         }
         else{
             $month = date('m');
+            $year = date('Y');
             $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
                                                ->whereRaw('YEAR(interview_date) = ?',[$year])
                                                ->where('interview_owner_id',$user->id)
