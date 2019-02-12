@@ -327,6 +327,7 @@ class Interview extends Model
     public static function getAttendedInterviews($all=0,$user_id){
 
         $month = date('m');
+        $year = date('Y');
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -340,6 +341,7 @@ class Interview extends Model
             'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
         $query = $query->where('interview.status','=','Attended');
         $query = $query->where(\DB::raw('MONTH(interview_date)'),'=',$month);
+        $query = $query->where(\DB::raw('YEAR(interview_date)'),'=',$year);
         $query = $query->orderby('interview.interview_date','desc');
     
         if($all==0){

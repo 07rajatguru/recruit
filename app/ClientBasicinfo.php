@@ -398,12 +398,14 @@ class ClientBasicinfo extends Ardent
     public static function getMonthWiseClientByUserId($user_id,$all=0)
     {
         $month = date('m');
+        $year = date('Y');
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftJoin('users','users.id','=','client_basicinfo.account_manager_id');
         $query = $query->select('client_basicinfo.*','users.name as am_name','users.id as am_id','client_address.billing_city as city');
         $query = $query->whereRaw('MONTH(client_basicinfo.created_at) = ?',[$month]);
+        $query = $query->whereRaw('YEAR(client_basicinfo.created_at) = ?',[$year]);
 
         if($all==0)
         {
@@ -436,9 +438,21 @@ class ClientBasicinfo extends Ardent
                 {
                   $client[$i]['status']='Active';
                 }
-                else
+                else if($client[$i]['status']== '0')
                 {
                   $client[$i]['status']='Passive';
+                }
+                else if($client[$i]['status']== '2')
+                {
+                  $client[$i]['status']='Leaders';
+                }
+                else if($client[$i]['status']== '3')
+                {
+                  $client[$i]['status']='Forbid';
+                }
+                else if($client[$i]['status']== '4')
+                {
+                  $client[$i]['status']='Left';
                 }
             }
 

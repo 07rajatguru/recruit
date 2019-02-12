@@ -99,14 +99,18 @@ class HomeController extends Controller
         //get Client List
         if(in_array($user_role_id,$access_roles_id)){
             $month = date('m');
-            $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->count();
+            $year = date('Y');
+            $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
+                                                    ->whereRaw('YEAR(created_at) = ?',[$year])
+                                                    ->count();
         }
 
         else{
              $month = date('m');
              $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
-                                               ->where('account_manager_id',$user->id)
-                                               ->count();   
+                                                ->whereRaw('YEAR(created_at) = ?',[$year])
+                                                ->where('account_manager_id',$user->id)
+                                                ->count();   
         }
 
         if(in_array($user_role_id,$access_roles_id)){
@@ -147,13 +151,16 @@ class HomeController extends Controller
         //get No. of interviews attended this month
         if(in_array($user_role_id,$access_roles_id)){
             $month = date('m');
+            $year = date('Y');
             $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
+                                                      ->whereRaw('YEAR(interview_date) = ?',[$year])
                                                       ->where('status','=','Attended')
                                                       ->count();
         }
         else{
             $month = date('m');
             $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
+                                               ->whereRaw('YEAR(interview_date) = ?',[$year])
                                                ->where('interview_owner_id',$user->id)
                                                ->where('status','=','Attended')
                                                ->count();
