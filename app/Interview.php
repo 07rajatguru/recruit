@@ -632,7 +632,7 @@ class Interview extends Model
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
 
-        $to_address[] = 'tarikapanjwani@gmail.com';
+        //$to_address[] = 'tarikapanjwani@gmail.com';
        // $to_address[] = 'rajlalwani@adlertalent.com';
 
         $input['to'] = $to_address;
@@ -680,7 +680,7 @@ class Interview extends Model
         $to_address = array();
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
-        $to_address[] = 'tarikapanjwani@gmail.com';
+        //$to_address[] = 'tarikapanjwani@gmail.com';
         
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
