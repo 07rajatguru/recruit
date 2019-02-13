@@ -78,8 +78,7 @@ class EligibilityWorkingReport extends Command
                 $eligible->target = $target;
                 $eligible->achieved = $achieved;
                 $eligible->eligibility = $eligibility;
-                $eligible->month = $month;
-                $eligible->year = $year;
+                $eligible->date = $start_month;
                 $eligible->save();
             }
             else {
@@ -88,8 +87,7 @@ class EligibilityWorkingReport extends Command
                 $eligible->target = $target;
                 $eligible->achieved = $achieved;
                 $eligible->eligibility = $eligibility;
-                $eligible->month = $month;
-                $eligible->year = $year;
+                $eligible->date = $start_month;
                 $eligible->save();
             }
 

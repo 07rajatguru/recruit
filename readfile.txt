@@ -11,3 +11,4 @@ login with admin@tanitech.in/admin123
 Add manual login/logout time : /users/attendance
 Month wise dashboard data : /dashboard/monthwise
 Add new module : /module
+Add Eligibility : eligibility-report/add

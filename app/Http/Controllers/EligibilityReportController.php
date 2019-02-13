@@ -39,50 +39,96 @@ class EligibilityReportController extends Controller
                 $year = $n.'-4-'.$y.'-3';
             }
 
-            $year_data = explode('-', $year);
-            $current_year = $year_data[0];
-            $current_month = $year_data[1];
-            $next_year = $year_data[2];
-            $next_month = $year_data[3];
+            $year_data = explode('-', $year); // [result : Array ( [0] => 2018 [1] => 4 [2] => 2019 [3] => 3 )] by default
+            $current_year = $year_data[0]; // [result : 2018]
+            $current_month = $year_data[1]; // [result : 4]
+            $next_year = $year_data[2]; // [result : 2019]
+            $next_month = $year_data[3]; // [result : 3]
 
             $users = User::getAllUsers('recruiter');
 
-            for ($m=$current_month; $m <= 15 ; $m=$m+3) { 
+            // For Quater wise[Q1, Q2, Q3, Q4]
+            for ($m=$current_month; $m <= 15 ; $m=$m+3) {
+                // For Quater 4 
                 if ($m==13) {
                     $m = 1;
 
-                    $first_month = $m;
-                    $next_month = $first_month+2;
+                    $next_month_three = $m+2;
+                    $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                    $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
+
+                    $month_year = $month_name.'-'.$next_year;
+                    $next_month_year = $next_month_name.'-'.$next_year;
+                    $first_three = date('Y-m-d',strtotime("first day of $month_year"));
+                    $last_three = date('Y-m-d',strtotime("last day of $next_month_year"));
+                    
                     foreach ($users as $key => $value) {
-                        $eligible_data[$value][$first_month.'-'.$next_month] = Eligibilityworking::getEligibilityDataByUser($key,$next_year,$first_month,$next_month);
+                        $eligible_data[$value][$m.'-'.$next_month_three] = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
                     }
                     $m = 13;
                 }
+                // For Quater 1, 2, 3
                 else{
-                    $first_month = $m;
-                    $next_month = $first_month+2;
+                    $next_month_three = $m+2;
+                    $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                    $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
+
+                    $month_year = $month_name.'-'.$current_year;
+                    $next_month_year = $next_month_name.'-'.$current_year;
+                    $first_three = date('Y-m-d',strtotime("first day of $month_year"));
+                    $last_three = date('Y-m-d',strtotime("last day of $next_month_year"));
+                    
                     foreach ($users as $key => $value) {
-                        $eligible_data[$value][$first_month.'-'.$next_month] = Eligibilityworking::getEligibilityDataByUser($key,$current_year,$first_month,$next_month);
+                        $eligible_data[$value][$m.'-'.$next_month_three] = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
                     }
                 }
             }
 
+            // For 6 months[April to Sept]
             for ($i=$current_month; $i < 10 ; $i=$i+6) { 
                 
-                $first = $i;
-                $next = $first+5;
+                $next_month_six = $i+5;
+                $month_name = date("M", mktime(0, 0, 0, $i, 1));
+                $next_month_name = date("M", mktime(0, 0, 0, $next_month_six, 1));
+
+                $month_year = $month_name.'-'.$current_year;
+                $next_month_year = $next_month_name.'-'.$current_year;
+                $first_six = date('Y-m-d',strtotime("first day of $month_year"));
+                $last_six = date('Y-m-d',strtotime("last day of $next_month_year"));
+                
                 foreach ($users as $key => $value) {
-                    $eligible_detail[$value][$first.'-'.$next] = Eligibilityworking::getEligibilityDataByUser($key,$current_year,$first,$next);
+                    $eligible_detail[$value][$i.'-'.$next_month_six] = Eligibilityworking::getEligibilityDataByUser($key,$first_six,$last_six);
                 }
             }
 
-            for ($i=$current_month; $i < 12 ; $i=$i+8) { 
+            // For 9 months[April to Dec]
+            for ($i=$current_month; $i < 12 ; $i=$i+9) { 
                 
-                $first = $i;
-                $next = $first+8;
+                $next_month_nine = $i+8;
+                $month_name = date("M", mktime(0, 0, 0, $i, 1));
+                $next_month_name = date("M", mktime(0, 0, 0, $next_month_nine, 1));
+
+                $month_year = $month_name.'-'.$current_year;
+                $next_month_year = $next_month_name.'-'.$current_year;
+                $first_nine = date('Y-m-d',strtotime("first day of $month_year"));
+                $last_nine = date('Y-m-d',strtotime("last day of $next_month_year"));
+                
                 foreach ($users as $key => $value) {
-                    $eligible_detail[$value][$first.'-'.$next] = Eligibilityworking::getEligibilityDataByUser($key,$current_year,$first,$next);
+                    $eligible_detail[$value][$i.'-'.$next_month_nine] = Eligibilityworking::getEligibilityDataByUser($key,$first_nine,$last_nine);
                 }
+            }
+
+            // For 12 months[April to March]
+            $month_name = date("M", mktime(0, 0, 0, $current_month, 1));
+            $next_month_name = date("M", mktime(0, 0, 0, $next_month, 1));
+            
+            $month_year = $month_name.'-'.$current_year;
+            $next_month_year = $next_month_name.'-'.$next_year;
+            $first_year = date('Y-m-d',strtotime("first day of $month_year"));
+            $last_year = date('Y-m-d',strtotime("last day of $next_month_year"));
+            
+            foreach ($users as $key => $value) {
+                $eligible_detail[$value][$year] = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
             }
             //print_r($eligible_detail);exit();
 
@@ -115,27 +161,93 @@ class EligibilityReportController extends Controller
 
                 $users = User::getAllUsers('recruiter');
 
-                for ($m=$current_month; $m <= 15 ; $m=$m+3) { 
+                // For Quater wise[Q1, Q2, Q3, Q4]
+                for ($m=$current_month; $m <= 15 ; $m=$m+3) {
+                    // For Quater 4 
                     if ($m==13) {
                         $m = 1;
 
-                        $first_month = $m;
-                        $next_month = $first_month+2;
+                        $next_month_three = $m+2;
+                        $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                        $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
+
+                        $month_year = $month_name.'-'.$next_year;
+                        $next_month_year = $next_month_name.'-'.$next_year;
+                        $first_three = date('Y-m-d',strtotime("first day of $month_year"));
+                        $last_three = date('Y-m-d',strtotime("last day of $next_month_year"));
+                        
                         foreach ($users as $key => $value) {
-                            $eligible_data[$value][$first_month.'-'.$next_month] = Eligibilityworking::getEligibilityDataByUser($key,$next_year,$first_month,$next_month);
+                            $eligible_data[$value][$m.'-'.$next_month_three] = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
                         }
                         $m = 13;
                     }
+                    // For Quater 1, 2, 3
                     else{
-                        $first_month = $m;
-                        $next_month = $first_month+2;
+                        $next_month_three = $m+2;
+                        $month_name = date("M", mktime(0, 0, 0, $m, 1));
+                        $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
+
+                        $month_year = $month_name.'-'.$current_year;
+                        $next_month_year = $next_month_name.'-'.$current_year;
+                        $first_three = date('Y-m-d',strtotime("first day of $month_year"));
+                        $last_three = date('Y-m-d',strtotime("last day of $next_month_year"));
+                        
                         foreach ($users as $key => $value) {
-                            $eligible_data[$value][$first_month.'-'.$next_month] = Eligibilityworking::getEligibilityDataByUser($key,$current_year,$first_month,$next_month);
+                            $eligible_data[$value][$m.'-'.$next_month_three] = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
                         }
                     }
                 }
+
+                // For 6 months[April to Sept]
+                for ($i=$current_month; $i < 10 ; $i=$i+6) { 
+                    
+                    $next_month_six = $i+5;
+                    $month_name = date("M", mktime(0, 0, 0, $i, 1));
+                    $next_month_name = date("M", mktime(0, 0, 0, $next_month_six, 1));
+
+                    $month_year = $month_name.'-'.$current_year;
+                    $next_month_year = $next_month_name.'-'.$current_year;
+                    $first_six = date('Y-m-d',strtotime("first day of $month_year"));
+                    $last_six = date('Y-m-d',strtotime("last day of $next_month_year"));
+                    
+                    foreach ($users as $key => $value) {
+                        $eligible_detail[$value][$i.'-'.$next_month_six] = Eligibilityworking::getEligibilityDataByUser($key,$first_six,$last_six);
+                    }
+                }
+
+                // For 9 months[April to Dec]
+                for ($i=$current_month; $i < 12 ; $i=$i+9) { 
+                    
+                    $next_month_nine = $i+8;
+                    $month_name = date("M", mktime(0, 0, 0, $i, 1));
+                    $next_month_name = date("M", mktime(0, 0, 0, $next_month_nine, 1));
+
+                    $month_year = $month_name.'-'.$current_year;
+                    $next_month_year = $next_month_name.'-'.$current_year;
+                    $first_nine = date('Y-m-d',strtotime("first day of $month_year"));
+                    $last_nine = date('Y-m-d',strtotime("last day of $next_month_year"));
+                    
+                    foreach ($users as $key => $value) {
+                        $eligible_detail[$value][$i.'-'.$next_month_nine] = Eligibilityworking::getEligibilityDataByUser($key,$first_nine,$last_nine);
+                    }
+                }
+
+                // For 12 months[April to March]
+                $month_name = date("M", mktime(0, 0, 0, $current_month, 1));
+                $next_month_name = date("M", mktime(0, 0, 0, $next_month, 1));
                 
-                $sheet->loadview('adminlte::reports.eligibilityreportexport')->with('eligible_data',$eligible_data);
+                $month_year = $month_name.'-'.$current_year;
+                $next_month_year = $next_month_name.'-'.$next_year;
+                $first_year = date('Y-m-d',strtotime("first day of $month_year"));
+                $last_year = date('Y-m-d',strtotime("last day of $next_month_year"));
+                
+                foreach ($users as $key => $value) {
+                    $eligible_detail[$value][$year] = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
+                }
+                $eligible['eligible_data'] = $eligible_data;
+                $eligible['eligible_detail'] = $eligible_detail;
+
+                $sheet->loadview('adminlte::reports.eligibilityreportexport')->with('eligible',$eligible);
             });
         })->export('xls');
     }
@@ -195,6 +307,7 @@ class EligibilityReportController extends Controller
                 $eligibility = 'false';
             }
 
+            $date = date('Y-m-d',strtotime("first day of $month_data"));
             // Add data in eligibility table
             $eligibility_data_id = Eligibilityworking::getCheckuserworkingreport($key,$month,$year);
             if (isset($eligibility_data_id) && $eligibility_data_id != '') {
@@ -203,8 +316,7 @@ class EligibilityReportController extends Controller
                 $eligible->target = $target;
                 $eligible->achieved = $achieved;
                 $eligible->eligibility = $eligibility;
-                $eligible->month = $month;
-                $eligible->year = $year;
+                $eligible->date = $date;
                 $eligible->save();
             }
             else {
@@ -213,8 +325,7 @@ class EligibilityReportController extends Controller
                 $eligible->target = $target;
                 $eligible->achieved = $achieved;
                 $eligible->eligibility = $eligibility;
-                $eligible->month = $month;
-                $eligible->year = $year;
+                $eligible->date = $date;
                 $eligible->save();
             }
         }

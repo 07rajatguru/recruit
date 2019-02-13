@@ -13,8 +13,8 @@ class Eligibilityworking extends Model
 
     	$query = Eligibilityworking::query();
     	$query = $query->where('user_id',$user_id);
-    	$query = $query->where('month',$month);
-        $query = $query->where('year',$year);
+    	$query = $query->where(\DB::raw('MONTH(date)'),'=',$month);
+        $query = $query->where(\DB::raw('YEAR(date)'),'=',$year);
     	$res = $query->first();
 
     	if (isset($res) && sizeof($res)>0) {
@@ -27,12 +27,12 @@ class Eligibilityworking extends Model
     	return $eligibility_id;
     }
 
-    public static function getEligibilityDataByUser($user_id,$year,$first_month,$next_month){
+    public static function getEligibilityDataByUser($user_id,$first,$last){
 
         $query = Eligibilityworking::query();
         $query = $query->where('user_id',$user_id);
-        $query = $query->where('year',$year);
-        $query = $query->whereBetween('month',[$first_month,$next_month]);
+        $query = $query->where('date','>=',$first);
+        $query = $query->where('date','<=',$last);
         $query = $query->select('eligibility_working.*');
         $res = $query->get();
 

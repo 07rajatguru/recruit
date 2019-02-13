@@ -14,9 +14,9 @@
                 <h2>Eligibility Report</h2>
             </div>
 
-            <div class="pull-right">
+            {{--<div class="pull-right">
                 <a class="btn btn-success" href="{{ route('report.eligibilityreportadd') }}"> Add Eligibility</a>
-            </div>
+            </div>--}}
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
