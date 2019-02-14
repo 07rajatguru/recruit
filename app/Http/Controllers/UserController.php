@@ -337,6 +337,7 @@ class UserController extends Controller
     {
         //superadmin
         $users =  \Auth::user();
+        $loggedin_user_id = \Auth::user()->id;
         $userRole = $users->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
 
@@ -344,67 +345,72 @@ class UserController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $dateClass = new Date();
-        //$user_id = \Auth::user()->id;
-        $user = array();
+        if ($isSuperAdmin || $isAccountant || $loggedin_user_id == $user_id) {        
+            $dateClass = new Date();
+            $user = array();
 
-        // profile photo
-        $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
-        if(isset($user_doc_info)){
-            $user['photo'] = $user_doc_info->file;
-            $user['type'] = $user_doc_info->type;
+            // profile photo
+            $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
+            if(isset($user_doc_info)){
+                $user['photo'] = $user_doc_info->file;
+                $user['type'] = $user_doc_info->type;
+            }
+            else{
+                $user['photo'] = '';
+                $user['type'] = '';
+            }
+
+            $user_info = User::getProfileInfo($user_id);
+            foreach($user_info as $key=>$value){
+                $user['id'] = $user_id;
+                $user['name'] = $value->name;
+                $user['email'] = $value->email;
+                $user['s_email'] = $value->secondary_email;
+                $user['designation'] = $value->designation;
+                $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
+                $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
+                $user['salary'] = $value->fixed_salary;
+                $user['acc_no'] = $value->acc_no;
+                $user['bank_name'] = $value->bank_name;
+                $user['branch_name'] = $value->branch_name;
+                $user['ifsc_code'] = $value->ifsc_code;
+                $user['user_full_name'] = $value->bank_full_name;
+                $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
+                $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+                $user['contact_number'] = $value->contact_number;
+            }
+
+            // User Family Details show
+            $user_family = UsersFamily::getAllFamilyDetailsofUser($user_id);
+
+            $j=0;
+            $user['doc'] = array();
+            $users_docs = \DB::table('users_doc')
+                          ->select('users_doc.*')
+                          ->where('user_id','=',$user_id)
+                          ->where('type','=','Others')
+                          ->get();
+
+            $utils = new Utils();
+            foreach($users_docs as $key=>$value){
+                $user['doc'][$j]['name'] = $value->name;
+                $user['doc'][$j]['id'] = $value->id;
+                $user['doc'][$j]['url'] = "../".$value->file;
+                $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+                $j++;
+            }
+
+            return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family'));
         }
-        else{
-            $user['photo'] = '';
-            $user['type'] = '';
+        else {
+            return view('errors.403');
         }
-
-        $user_info = User::getProfileInfo($user_id);
-        foreach($user_info as $key=>$value){
-            $user['id'] = $user_id;
-            $user['name'] = $value->name;
-            $user['email'] = $value->email;
-            $user['s_email'] = $value->secondary_email;
-            $user['designation'] = $value->designation;
-            $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
-            $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
-            $user['salary'] = $value->fixed_salary;
-            $user['acc_no'] = $value->acc_no;
-            $user['bank_name'] = $value->bank_name;
-            $user['branch_name'] = $value->branch_name;
-            $user['ifsc_code'] = $value->ifsc_code;
-            $user['user_full_name'] = $value->bank_full_name;
-            $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
-            $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
-            $user['contact_number'] = $value->contact_number;
-        }
-
-        // User Family Details show
-        $user_family = UsersFamily::getAllFamilyDetailsofUser($user_id);
-
-        $j=0;
-        $user['doc'] = array();
-        $users_docs = \DB::table('users_doc')
-                      ->select('users_doc.*')
-                      ->where('user_id','=',$user_id)
-                      ->where('type','=','Others')
-                      ->get();
-
-        $utils = new Utils();
-        foreach($users_docs as $key=>$value){
-            $user['doc'][$j]['name'] = $value->name;
-            $user['doc'][$j]['id'] = $value->id;
-            $user['doc'][$j]['url'] = "../".$value->file;
-            $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
-            $j++;
-        }
-
-        return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family'));
     }
     public function editProfile($user_id)
     {
          //superadmin
         $users =  \Auth::user();
+        $loggedin_user_id = \Auth::user()->id;
         $userRole = $users->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
 
@@ -412,75 +418,79 @@ class UserController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $dateClass = new Date();
-        //$user_id = \Auth::user()->id;
-        $user = array();
+        if ($isSuperAdmin || $isAccountant || $loggedin_user_id == $user_id) {
+            $dateClass = new Date();
+            $user = array();
 
-        // profile photo
-        $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
-        if(isset($user_doc_info)){
-            $user['photo'] = $user_doc_info->file;
-            $user['type'] = $user_doc_info->type;
-        }
-        else{
-            $user['photo'] = '';
-            $user['type'] = '';
-        }
+            // profile photo
+            $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
+            if(isset($user_doc_info)){
+                $user['photo'] = $user_doc_info->file;
+                $user['type'] = $user_doc_info->type;
+            }
+            else{
+                $user['photo'] = '';
+                $user['type'] = '';
+            }
 
-        $user_info = User::getProfileInfo($user_id);
-        foreach($user_info as $key=>$value){
-            $user['user_id'] = $user_id;
-            $user['name'] = $value->name;
-            $user['email'] = $value->email;
-            $user['s_email'] = $value->secondary_email;
-            $user['designation'] = $value->designation;
-            $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
-            $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
-            $user['salary'] = $value->fixed_salary;
-            $user['acc_no'] = $value->acc_no;
-            $user['bank_name'] = $value->bank_name;
-            $user['branch_name'] = $value->branch_name;
-            $user['ifsc_code'] = $value->ifsc_code;
-            $user['user_full_name'] = $value->bank_full_name;
-            $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
-            $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
-            $user['contact_number'] = $value->contact_number;
+            $user_info = User::getProfileInfo($user_id);
+            foreach($user_info as $key=>$value){
+                $user['user_id'] = $user_id;
+                $user['name'] = $value->name;
+                $user['email'] = $value->email;
+                $user['s_email'] = $value->secondary_email;
+                $user['designation'] = $value->designation;
+                $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
+                $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
+                $user['salary'] = $value->fixed_salary;
+                $user['acc_no'] = $value->acc_no;
+                $user['bank_name'] = $value->bank_name;
+                $user['branch_name'] = $value->branch_name;
+                $user['ifsc_code'] = $value->ifsc_code;
+                $user['user_full_name'] = $value->bank_full_name;
+                $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
+                $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
+                $user['contact_number'] = $value->contact_number;
 
-            for ($i=1; $i <= 5 ; $i++) {
-                $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
-                if (isset($users_family) && $users_family != '') {
-                    $user['name_'.$i] = $users_family->name;
-                    $user['relationship_'.$i] = $users_family->relationship;
-                    $user['occupation_'.$i] = $users_family->occupation;
-                    $user['contact_no_'.$i] = $users_family->contact_no;
-                }
-                else {
-                    $user['name_'.$i] = '';
-                    $user['relationship_'.$i] = '';
-                    $user['occupation_'.$i] = '';
-                    $user['contact_no_'.$i] = '';
+                for ($i=1; $i <= 5 ; $i++) {
+                    $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
+                    if (isset($users_family) && $users_family != '') {
+                        $user['name_'.$i] = $users_family->name;
+                        $user['relationship_'.$i] = $users_family->relationship;
+                        $user['occupation_'.$i] = $users_family->occupation;
+                        $user['contact_no_'.$i] = $users_family->contact_no;
+                    }
+                    else {
+                        $user['name_'.$i] = '';
+                        $user['relationship_'.$i] = '';
+                        $user['occupation_'.$i] = '';
+                        $user['contact_no_'.$i] = '';
+                    }
                 }
             }
+
+            $j=0;
+            $user['doc'] = array();
+            $users_docs = \DB::table('users_doc')
+                          ->select('users_doc.*')
+                          ->where('user_id','=',$user_id)
+                          ->where('type','=','Others')
+                          ->get();
+
+            $utils = new Utils();
+            foreach($users_docs as $key=>$value){
+                $user['doc'][$j]['name'] = $value->name;
+                $user['doc'][$j]['id'] = $value->id;
+                $user['doc'][$j]['url'] = "../".$value->file;
+                $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+                $j++;
+            }
+
+            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id'));
         }
-
-        $j=0;
-        $user['doc'] = array();
-        $users_docs = \DB::table('users_doc')
-                      ->select('users_doc.*')
-                      ->where('user_id','=',$user_id)
-                      ->where('type','=','Others')
-                      ->get();
-
-        $utils = new Utils();
-        foreach($users_docs as $key=>$value){
-            $user['doc'][$j]['name'] = $value->name;
-            $user['doc'][$j]['id'] = $value->id;
-            $user['doc'][$j]['url'] = "../".$value->file;
-            $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
-            $j++;
+        else {
+            return view('errors.403');
         }
-
-        return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id'));
     }
 
     public function profileStore($user_id,Request $request)
