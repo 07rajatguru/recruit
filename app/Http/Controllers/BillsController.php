@@ -56,6 +56,70 @@ class BillsController extends Controller
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
     }
 
+    /*public function getAllForecastingDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $cancel_bill = 0;
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+        $accountant_role_id = env('ACCOUNTANT');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $bnm = Bills::getAllBills(0,1,$user_id);
+            $access = true;
+        }
+        else{
+            $bnm = Bills::getAllBills(0,0,$user_id);
+            $access = false;
+        }
+
+        $count = sizeof($bnm);
+        $title = "Forecasting";
+
+        $forecasting = array();
+        foreach ($bnm as $key => $value) {
+            $action = '';
+
+            if($access || ($user_id==$value['uploaded_by'])) {
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                if($isSuperAdmin) {
+                    $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                    $delete = $delete_view->render();
+                    $action .= $delete;
+                }
+                if($value['cancel_bill']==0) {
+                    $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                    $cancel = $cancel_view->render();
+                    $action .= $cancel;
+                }
+                if($value['status']==0 && $value['cancel_bill']!=1){
+                    //BM will be generated after date of joining
+                }
+            }
+        }
+    }*/
+
     public function cancelbnm(){
 
         $cancel_bill = 1;
@@ -504,9 +568,15 @@ class BillsController extends Controller
         }
 
         $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsById($id);
-        foreach ($lead_efforts as $key => $value) {
-            $lead_name = $key;
-            $lead_percentage = $value;
+        if (isset($lead_efforts) && sizeof($lead_efforts)>0) {
+            foreach ($lead_efforts as $key => $value) {
+                $lead_name = $key;
+                $lead_percentage = $value;
+            }
+        }
+        else {
+            $lead_name = $user_id;
+            $lead_percentage = 0;
         }
 
         $job_id = $bnm->job_id;
