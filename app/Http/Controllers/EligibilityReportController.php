@@ -254,25 +254,37 @@ class EligibilityReportController extends Controller
 
     public function create(){
         
-        // Month data
-        $month_array = array();
-        for ($i=1; $i <=12 ; $i++) { 
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+        if ($isSuperAdmin || $isAccountant) {
+            // Month data
+            $month_array = array();
+            for ($i=1; $i <=12 ; $i++) { 
+                $month_array[$i] = date('M',mktime(0,0,0,$i));
+            }
+
+            // Year Data
+            $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+            $ending_year = date('Y',strtotime('+3 year'));
+            $default = date('Y');
+
+            $year_array = array();
+            for ($y=$starting_year; $y < $ending_year ; $y++) { 
+                $year_array[$y] = $y;
+            }
+            $month = date('m');
+            $year = date('Y');
+
+            return view('adminlte::reports.eligibilityreportcreate',compact('month_array','year_array','month','year'));
         }
-
-        // Year Data
-        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
-        $ending_year = date('Y',strtotime('+3 year'));
-        $default = date('Y');
-
-        $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) { 
-            $year_array[$y] = $y;
+        else {
+            return view('errors.403');
         }
-        $month = date('m');
-        $year = date('Y');
-
-        return view('adminlte::reports.eligibilityreportcreate',compact('month_array','year_array','month','year'));
     }
 
     public function store(Request $request){
