@@ -733,9 +733,10 @@ class BillsController extends Controller
 
             }
 
-            BillsLeadEfforts::where('bill_id','=',$id)->delete();
-
             if (isset($lead_name) && $lead_name != '' && isset($lead_percentage) && $lead_percentage != '') {
+
+                BillsLeadEfforts::where('bill_id','=',$id)->delete();
+
                 $bill_lead_efforts = new BillsLeadEfforts();
                 $bill_lead_efforts->bill_id = $id;
                 $bill_lead_efforts->employee_name = $lead_name;
