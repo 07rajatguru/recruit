@@ -60,7 +60,10 @@ class EligibilityWorkingReport extends Command
                 $achieved = $achieved + $value1['person_billing'];
             }
             // Check Eligibility
-            if ($achieved >= $target) {
+            if ($achieved == 0) {
+                $eligibility = 'false';
+            }
+            else if ($achieved >= $target) {
                 $eligibility = 'true';
             }
             else {

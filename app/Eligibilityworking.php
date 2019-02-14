@@ -43,7 +43,10 @@ class Eligibilityworking extends Model
             $target = $target + $value->target;
             $achieved = $achieved + $value->achieved;
 
-            if ($achieved >= $target) {
+            if ($achieved == 0) {
+                $eligibility = 'False';
+            }
+            else if ($achieved >= $target) {
                 $eligibility = 'True';
             }
             else {
