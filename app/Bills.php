@@ -98,7 +98,7 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllBills($status=0,$all=0,$user_id=0){
+    public static function getAllBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
         $date_class = new Date();
 
         $cancel_bill = 1;
@@ -121,6 +121,24 @@ class Bills extends Model
                 $bills_query = $bills_query->where('uploaded_by',$user_id);
             //});
         }
+        if (isset($limit) && $limit > 0) {
+            $bills_query = $bills_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $bills_query = $bills_query->offset($offset);
+        }
+        if (isset($order) && $order !='') {
+            $bills_query = $bills_query->orderBy($order,$type);
+        }
+        $bills_query = $bills_query->where(function($bills_query) use ($search){
+            $bills_query = $bills_query->where('users.name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+        });
 
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
@@ -192,7 +210,42 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getCancelBills($status=0,$all=0,$user_id=0){
+    public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0){
+        $cancel_bill = 1;
+        $cancel = array($cancel_bill);
+
+        $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+       // $bills_query = $bills_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
+        ,'candidate_basicinfo.lname');
+        if($all==0){
+            //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
+              //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
+                //$bills_query = $bills_query->orwhere('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->where('uploaded_by',$user_id);
+            //});
+        }
+        $bills_query = $bills_query->where(function($bills_query) use ($search){
+            $bills_query = $bills_query->where('users.name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+        });
+        $bills_query = $bills_query->where('bills.status',$status);
+        $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
+        $bills_count = $bills_query->count();
+
+        return $bills_count;
+    }
+
+    public static function getCancelBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
         $date_class = new Date();
 
         $cancel_bill = 1;
@@ -210,6 +263,25 @@ class Bills extends Model
         if($all==0){
             $bills_query = $bills_query->where('uploaded_by',$user_id);
         }
+
+        if (isset($limit) && $limit > 0) {
+            $bills_query = $bills_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $bills_query = $bills_query->offset($offset);
+        }
+        if (isset($order) && $order !='') {
+            $bills_query = $bills_query->orderBy($order,$type);
+        }
+        $bills_query = $bills_query->where(function($bills_query) use ($search){
+            $bills_query = $bills_query->where('users.name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+        });
 
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
@@ -255,10 +327,66 @@ class Bills extends Model
                 }
             }
             $bills[$i]['efforts'] = $efforts_str;
+            $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
+            $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+            if (!file_exists($url) && !is_dir($url)) {
+                $bills[$i]['invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['invoice_url'] = $url;
+            }
+
+            // get lead employee efforts
+            $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);
+            $lead_efforts_str = '';
+            foreach ($lead_efforts as $k=>$v){
+                if($lead_efforts_str==''){
+                    $lead_efforts_str = $k .'('.(int)$v . '%)';
+                }
+                else{
+                    $lead_efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                }
+            }
+            $bills[$i]['lead_efforts'] = $lead_efforts_str;
             $i++;
         }
 
         return $bills;
+    }
+
+    public static function getAllCancelBillsCount($status=0,$all=0,$user_id=0,$search=0){
+        $cancel_bill = 1;
+        $cancel = array($cancel_bill);
+
+        $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+       // $bills_query = $bills_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
+        ,'candidate_basicinfo.lname');
+        if($all==0){
+            //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
+              //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
+                //$bills_query = $bills_query->orwhere('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->where('uploaded_by',$user_id);
+            //});
+        }
+        $bills_query = $bills_query->where(function($bills_query) use ($search){
+            $bills_query = $bills_query->where('users.name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+        });
+        $bills_query = $bills_query->where('bills.status',$status);
+        $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
+        $bills_count = $bills_query->count();
+
+        return $bills_count;
     }
 
     public static function getShowBill($id){

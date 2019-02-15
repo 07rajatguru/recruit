@@ -15,9 +15,9 @@
                   <h2>{{$title}} ({{$count}})</h2>
                 @else
                   @if($cancel_bnm == 1)
-                    <h2>Cancel Forecasting ({{$count}})</h2>
+                    <h2>{{$title}} ({{$count}})</h2>
                   @else
-                    <h2>Cancel Recovery ({{$count}})</h2>
+                    <h2>{{$title}} ({{$count}})</h2>
                   @endif
                 @endif
             </div>
@@ -43,7 +43,7 @@
         {!! Form::close() !!}--}}
 
     </div>
-<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
+<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="bill_table">
     <thead>
         <tr>
             <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
@@ -71,10 +71,10 @@
             @endif
         </tr>
     </thead>
-        <?php $i=0; ?>
+       {{-- php $i=0;
         <tbody>
         @foreach($bnm as $key=>$value)
-        <?php 
+        php 
             if ($value['job_confirmation'] == '1') {
               $color = '#00B0F0';
             }
@@ -90,7 +90,7 @@
             else {
               $color = '';
             }
-        ?>
+        
             <tr>
                 <td><input type="checkbox" name="id[]" value="{{$value['id']}}"></td>
                 <td>
@@ -98,7 +98,7 @@
                         @if($access || ($user_id==$value['uploaded_by']) )
                             <a class="fa fa-edit" title="Edit" href="{{ route('forecasting.edit',$value['id']) }}"></a>
                             <a class="fa fa-circle" title="show" href="{{ route('forecasting.show',$value['id']) }}"></a>
-                        {{--<a class="fa fa-close" title="Cancel Forecasting" href="{{ route('forecasting.cancel',$value['id']) }}"></a>--}}
+                        <a class="fa fa-close" title="Cancel Forecasting" href="{{ route('forecasting.cancel',$value['id']) }}"></a>
                           @if($isSuperAdmin)
                              @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                           @endif
@@ -178,88 +178,161 @@
                    @endif
                </tr>
            @endforeach
-           </tbody>
+           </tbody>--}}
        </table>
        <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
-                           @stop
-                           @section('customscripts')
-                               <script type="text/javascript">
-                                   $(document).ready(function(){
+       <input type="hidden" name="title" id="title" value="{{ $title }}">
+@stop
+@section('customscripts')
+   <script type="text/javascript">
+       $(document).ready(function(){
 
-                                       var table = $('#jo_table').DataTable( {
-                                          columnDefs: [  {
-                                               'targets': 0,
-                                               'searchable':false,
-                                               'orderable':false,
-                                               'className': 'dt-body-center',
-                                               /*'render': function (data, type, full, meta){
-                                                   return '<input type="checkbox" name="id[]" value="'
-                                                       + $('<div/>').text(data).html() + '">';
-                                               }*/
-                                           } ],
+           /*var table = $('#bill_table').DataTable( {
+              columnDefs: [  {
+                   'targets': 0,
+                   'searchable':false,
+                   'orderable':false,
+                   'className': 'dt-body-center',
+                   'render': function (data, type, full, meta){
+                       return '<input type="checkbox" name="id[]" value="'
+                           + $('<div/>').text(data).html() + '">';
+                   }
+               } ],
 
-                                           /*scrollY: "300px",
-                                           scrollX:  true,
-                                           scrollCollapse: true,
-                                           paging:         false,
-                                           columnDefs: [
-                                               { width: 200, targets: 0 }
-                                           ],*/
-                                           responsive: true,
-                                           stateSave: true,
-                                           "pageLength": 100
-                                       } );
+               scrollY: "300px",
+               scrollX:  true,
+               scrollCollapse: true,
+               paging:         false,
+               columnDefs: [
+                   { width: 200, targets: 0 }
+               ],
+               responsive: true,
+               stateSave: true,
+               "pageLength": 100
+           } );
 
-                                       new jQuery.fn.dataTable.FixedHeader( table );
+           new jQuery.fn.dataTable.FixedHeader( table );*/
+            var title = $("#title").val();
+            if (title == 'Forecasting' || title == 'Recovery') {
+              $("#bill_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [2,'desc'],
+                "columnDefs": [ {orderable: false, targets: [0]},
+                                {orderable: false, targets: [1]},
+                            ],
+                "ajax" : {
+                    'url' : 'bills/all',
+                    'type' : 'get',
+                    "data": {title:title},
+                    error: function(){
 
+                    }
+                },
+                responsive: true,
+                "pageLength": 100,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[17] == "1" ){
+                        $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                    }
+                    else if ( Data[17] == "2" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFA500');
+                    }
+                    else if ( Data[17] == "3" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                    }
+                    else if ( Data[17] == "4" ){
+                        $('td:eq(4)', Row).css('background-color', '#32CD32');
+                    }
+                  }
+              });
+            }
+            else if (title == 'Cancel Forecasting' || title == 'Cancel Recovery') {
+              $("#bill_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [2,'desc'],
+                "columnDefs": [ {orderable: false, targets: [0]},
+                                {orderable: false, targets: [1]},
+                            ],
+                "ajax" : {
+                    'url' : '/bills/cancel/all',
+                    'type' : 'get',
+                    "data": {title:title},
+                    error: function(){
 
-                                       $('#example-select-all').on('click', function(){
-                                           // Check/uncheck all checkboxes in the table
-                                           var rows = table.rows({ 'search': 'applied' }).nodes();
-                                           $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                    }
+                },
+                responsive: true,
+                "pageLength": 100,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[17] == "1" ){
+                        $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                    }
+                    else if ( Data[17] == "2" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFA500');
+                    }
+                    else if ( Data[17] == "3" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                    }
+                    else if ( Data[17] == "4" ){
+                        $('td:eq(4)', Row).css('background-color', '#32CD32');
+                    }
+                  }
+              });
+            }
 
-                                       });
+           $('#example-select-all').on('click', function(){
+               // Check/uncheck all checkboxes in the table
+               var rows = table.rows({ 'search': 'applied' }).nodes();
+               $('input[type="checkbox"]', rows).prop('checked', this.checked);
 
-                                       // Handle click on checkbox to set state of "Select all" control
-                                       $('#jo_table tbody').on('change', 'input[type="checkbox"]', function(){
-                                           // If checkbox is not checked
-                                           if(!this.checked){
-                                               var el = $('#example-select-all').get(0);
-                                               // If "Select all" control is checked and has 'indeterminate' property
-                                               if(el && el.checked && ('indeterminate' in el)){
-                                                   // Set visual state of "Select all" control
-                                                   // as 'indeterminate'
-                                                   el.indeterminate = true;
-                                               }
-                                           }
-                                       });
+           });
 
-                                   });
+           // Handle click on checkbox to set state of "Select all" control
+           $('#bill_table tbody').on('change', 'input[type="checkbox"]', function(){
+               // If checkbox is not checked
+               if(!this.checked){
+                   var el = $('#example-select-all').get(0);
+                   // If "Select all" control is checked and has 'indeterminate' property
+                   if(el && el.checked && ('indeterminate' in el)){
+                       // Set visual state of "Select all" control
+                       // as 'indeterminate'
+                       el.indeterminate = true;
+                   }
+               }
+           });
 
-                                   function downloadExcel() {
+       });
 
-                                       var table = $('#jo_table').DataTable();
-                                       var ids = new Array();
-                                       // Iterate over all checkboxes in the table
-                                       table.$('input[type="checkbox"]').each(function () {
-                                           // If checkbox is checked
-                                           if (this.checked) {
-                                               ids.push(this.value);
-                                           }
-                                       });
+       function downloadExcel() {
 
-                                       var token = $('input[name="csrf_token"]').val();
-                                       $.ajax({
-                                           type: 'POST',
-                                           url: 'bills/downloadexcel',
-                                           data: { ids:ids ,'_token':token},
-                                           success: function(res)
-                                           {
+           var table = $('#bill_table').DataTable();
+           var ids = new Array();
+           // Iterate over all checkboxes in the table
+           table.$('input[type="checkbox"]').each(function () {
+               // If checkbox is checked
+               if (this.checked) {
+                   ids.push(this.value);
+               }
+           });
 
-                                           }
-                                       });
+           var token = $('input[name="csrf_token"]').val();
+           $.ajax({
+               type: 'POST',
+               url: 'bills/downloadexcel',
+               data: { ids:ids ,'_token':token},
+               success: function(res)
+               {
 
-                                   }
+               }
+           });
 
-                               </script>
-                           @endsection
+       }
+
+   </script>
+@endsection

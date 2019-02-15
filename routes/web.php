@@ -1040,9 +1040,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:bills-list']
     ]);
 
+    Route::get('bills/all', [
+        'as' => 'bills.all',
+        'uses' => 'BillsController@getAllBillsDetails',
+        'middleware' => ['permission:bills-list']
+    ]);
+
     Route::get('forecasting/cancel', [
         'as' => 'forecasting.cancelbnm',
         'uses' => 'BillsController@cancelbnm'
+    ]);
+
+    Route::get('/bills/cancel/all', [
+        'as' => 'bills.cancelall',
+        'uses' => 'BillsController@getAllCancelBillsDetails',
+        'middleware' => ['permission:bills-list']
     ]);
 
     Route::get('recovery', [

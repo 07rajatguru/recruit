@@ -42,21 +42,79 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $bnm = Bills::getAllBills(0,1,$user_id);
+            $count = Bills::getAllBillsCount(0,1,$user_id);
             $access = true;
         }
         else{
-            $bnm = Bills::getAllBills(0,0,$user_id);
+            $count = Bills::getAllBillsCount(0,0,$user_id);
             $access = false;
         }
-
-        $count = sizeof($bnm);
 
         $title = "Forecasting";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
     }
 
-    /*public function getAllForecastingDetails(){
+    public function getForecastingOrderColumnName($order,$admin){
+        $order_column_name = '';
+        if($admin){
+            if (isset($order) && $order >= 0) {
+                if ($order == 2) {
+                    $order_column_name = "bills.id";
+                }
+                else if ($order == 3) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 4) {
+                    $order_column_name = "bills.company_name";
+                }
+                else if ($order == 5) {
+                    $order_column_name = "candidate_basicinfo.full_name";
+                }
+                else if ($order == 6) {
+                    $order_column_name = "bills.date_of_joining";
+                }
+                else if ($order == 7) {
+                    $order_column_name = "bills.fixed_salary";
+                }
+                else if ($order == 8) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 9) {
+                    $order_column_name = "candidate_basicinfo.mobile";
+                }
+            }
+        }
+        else{
+            if (isset($order) && $order >= 0) {
+                if ($order == 2) {
+                    $order_column_name = "bills.id";
+                }
+                else if ($order == 3) {
+                    $order_column_name = "bills.company_name";
+                }
+                else if ($order == 4) {
+                    $order_column_name = "candidate_basicinfo.full_name";
+                }
+                else if ($order == 5) {
+                    $order_column_name = "bills.date_of_joining";
+                }
+                else if ($order == 6) {
+                    $order_column_name = "bills.fixed_salary";
+                }
+                else if ($order == 7) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 8) {
+                    $order_column_name = "candidate_basicinfo.mobile";
+                }
+            }
+        }
+
+        return $order_column_name;
+    }
+
+    // Index using ajax call
+    public function getAllBillsDetails(){
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -64,6 +122,7 @@ class BillsController extends Controller
         $search = $_GET['search']['value'];
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
+        $title = $_GET['title'];
 
         $cancel_bill = 0;
 
@@ -83,42 +142,148 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
-            $bnm = Bills::getAllBills(0,1,$user_id);
-            $access = true;
-        }
-        else{
-            $bnm = Bills::getAllBills(0,0,$user_id);
-            $access = false;
-        }
-
-        $count = sizeof($bnm);
-        $title = "Forecasting";
-
-        $forecasting = array();
-        foreach ($bnm as $key => $value) {
-            $action = '';
-
-            if($access || ($user_id==$value['uploaded_by'])) {
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
-                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
-                if($isSuperAdmin) {
-                    $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                    $delete = $delete_view->render();
-                    $action .= $delete;
-                }
-                if($value['cancel_bill']==0) {
-                    $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                    $cancel = $cancel_view->render();
-                    $action .= $cancel;
-                }
-                if($value['status']==0 && $value['cancel_bill']!=1){
-                    //BM will be generated after date of joining
-                }
+        if ($title == 'Forecasting') {
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            if(in_array($user_role_id,$access_roles_id)){
+                $order_column_name = self::getForecastingOrderColumnName($order,1);
+                $bnm = Bills::getAllBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllBillsCount(0,1,$user_id,$search);
+                $access = true;
+            }
+            else{
+                $order_column_name = self::getForecastingOrderColumnName($order,0);
+                $bnm = Bills::getAllBills(0,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllBillsCount(0,0,$user_id,$search);
+                $access = false;
             }
         }
-    }*/
+        else if($title == 'Recovery'){
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            if(in_array($user_role_id,$access_roles_id)){
+                $order_column_name = self::getForecastingOrderColumnName($order,1);
+                $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllBillsCount(1,1,$user_id,$search);
+                $access = true;
+            }
+            else{
+                $order_column_name = self::getForecastingOrderColumnName($order,0);
+                $bnm = Bills::getAllBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllBillsCount(1,0,$user_id,$search);
+                $access = false;
+            }
+        }
+
+        $forecasting = array();
+        $i = 0;$j = 0;
+        foreach ($bnm as $key => $value) {
+            $action = '';
+            $checkbox = '';
+            if ($title == 'Forecasting') {
+                if($access || ($user_id==$value['uploaded_by'])) {
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+                    if($value['cancel_bill']==0) {
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $cancel = $cancel_view->render();
+                        $action .= $cancel;
+                    }
+                    if($value['status']==0 && $value['cancel_bill']!=1){
+                        //BM will be generated after date of joining
+                        if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
+                            $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
+                        }
+                    }
+                }
+                if($isSuperAdmin || $isAccountant) {
+                    if($value['cancel_bill']==1){
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
+                        $relive = $relive_view->render();
+                        $action .= $relive;
+                    }
+                }
+            }
+            else if ($title == 'Recovery') {
+                if($access || ($user_id==$value['uploaded_by'])) {
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+                    if($value['cancel_bill']==0) {
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $cancel = $cancel_view->render();
+                        $action .= $cancel;
+                    }
+                    if($isSuperAdmin || $isAccountant){
+                        if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
+                            $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
+                            $job_con = $job_confirmation->render();
+                            $action .= $job_con;
+                        }
+                        else if($value['job_confirmation'] == 1 && $value['cancel_bill']==0){
+                            $got_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?']);
+                            $got_con = $got_confirmation->render();
+                            $action .= $got_con;
+                        }
+                        else if($value['job_confirmation'] == 2 && $value['cancel_bill']==0){
+                            $invoice_generate = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?']);
+                            $invoice = $invoice_generate->render();
+                            $action .= $invoice;
+                        }
+                        else if($value['job_confirmation'] == 3 && $value['cancel_bill']==0){
+                            $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?']);
+                            $payment = $payment_received->render();
+                            $action .= $payment;
+                        }
+                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
+                            $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
+                        }
+                    }
+                }
+                if($isSuperAdmin || $isAccountant) {
+                    if($value['cancel_bill']==1){
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
+                        $relive = $relive_view->render();
+                        $action .= $relive;
+                    }
+                }
+            }
+            $checkbox .= '<input type=checkbox name=id[] value='.$value['id'].'/>';
+
+            if($access=='true'){
+                $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
+            }
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+            $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
+            if($isSuperAdmin || $isAccountant) {
+                $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
+                $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
+
+                $data = array($checkbox,$action,++$j,$user_name,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$percentage_charged,$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$lead_efforts,$value['job_confirmation']);
+            }
+            else {
+                $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id']);
+            }
+
+            $forecasting[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $forecasting
+        );
+
+        echo json_encode($json_data);exit;
+    }
 
     public function cancelbnm(){
 
@@ -142,18 +307,187 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $bnm = Bills::getCancelBills(0,1,$user_id);
+            $count = Bills::getAllCancelBillsCount(0,1,$user_id);
             $access = true;
         }
         else{
-            $bnm = Bills::getCancelBills(0,0,$user_id);
+            $count = Bills::getAllCancelBillsCount(0,0,$user_id);
             $access = false;
         }
 
-        $count = sizeof($bnm);
-
-        $title = "Forecasting";
+        $title = "Cancel Forecasting";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm'));
+    }
+    // for cancel bills get using ajax
+    public function getAllCancelBillsDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        $title = $_GET['title'];
+
+        $cancel_bill = 0;
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+        $accountant_role_id = env('ACCOUNTANT');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        if ($title == 'Cancel Forecasting') {
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            if(in_array($user_role_id,$access_roles_id)){
+                $order_column_name = self::getForecastingOrderColumnName($order,1);
+                $bnm = Bills::getCancelBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllCancelBillsCount(0,1,$user_id,$search);
+                $access = true;
+            }
+            else{
+                $order_column_name = self::getForecastingOrderColumnName($order,0);
+                $bnm = Bills::getCancelBills(0,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllCancelBillsCount(0,0,$user_id,$search);
+                $access = false;
+            }
+        }
+        else if($title == 'Cancel Recovery'){
+            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            if(in_array($user_role_id,$access_roles_id)){
+                $order_column_name = self::getForecastingOrderColumnName($order,1);
+                $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllCancelBillsCount(1,1,$user_id,$search);
+                $access = true;
+            }
+            else{
+                $order_column_name = self::getForecastingOrderColumnName($order,0);
+                $bnm = Bills::getCancelBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+                $count = Bills::getAllCancelBillsCount(1,0,$user_id,$search);
+                $access = false;
+            }
+        }
+
+        $forecasting = array();
+        $i = 0;$j = 0;
+        foreach ($bnm as $key => $value) {
+            $action = '';
+            $checkbox = '';
+            if ($title == 'Cancel Forecasting') {
+                if($access || ($user_id==$value['uploaded_by'])) {
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+                    if($value['cancel_bill']==0) {
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $cancel = $cancel_view->render();
+                        $action .= $cancel;
+                    }
+                    if($value['status']==0 && $value['cancel_bill']!=1){
+                        //BM will be generated after date of joining
+                        if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
+                            $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
+                        }
+                    }
+                }
+                if($isSuperAdmin || $isAccountant) {
+                    if($value['cancel_bill']==1){
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
+                        $relive = $relive_view->render();
+                        $action .= $relive;
+                    }
+                }
+            }
+            else if ($title == 'Cancel Recovery') {
+                if($access || ($user_id==$value['uploaded_by'])) {
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+                    if($value['cancel_bill']==0) {
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $cancel = $cancel_view->render();
+                        $action .= $cancel;
+                    }
+                    if($isSuperAdmin || $isAccountant){
+                        if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
+                            $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
+                            $job_con = $job_confirmation->render();
+                            $action .= $job_con;
+                        }
+                        else if($value['job_confirmation'] == 1 && $value['cancel_bill']==0){
+                            $got_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?']);
+                            $got_con = $got_confirmation->render();
+                            $action .= $got_con;
+                        }
+                        else if($value['job_confirmation'] == 2 && $value['cancel_bill']==0){
+                            $invoice_generate = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?']);
+                            $invoice = $invoice_generate->render();
+                            $action .= $invoice;
+                        }
+                        else if($value['job_confirmation'] == 3 && $value['cancel_bill']==0){
+                            $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?']);
+                            $payment = $payment_received->render();
+                            $action .= $payment;
+                        }
+                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
+                            $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
+                        }
+                    }
+                }
+                if($isSuperAdmin || $isAccountant) {
+                    if($value['cancel_bill']==1){
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
+                        $relive = $relive_view->render();
+                        $action .= $relive;
+                    }
+                }
+            }
+            $checkbox .= '<input type=checkbox name=id[] value='.$value['id'].'/>';
+
+            if($access=='true'){
+                $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
+            }
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+            $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
+            if($isSuperAdmin || $isAccountant) {
+                $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
+                $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
+
+                $data = array($checkbox,$action,++$j,$user_name,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$percentage_charged,$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$lead_efforts,$value['job_confirmation']);
+            }
+            else {
+                $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id']);
+            }
+
+            $forecasting[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $forecasting
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function billsMade(){
@@ -177,15 +511,14 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $bnm = Bills::getAllBills(1,1,$user_id);
+            $count = Bills::getAllBillsCount(1,1,$user_id);
             $access = true;
         }
         else{
-            $bnm = Bills::getAllBills(1,0,$user_id);
+            $count = Bills::getAllBillsCount(1,0,$user_id);
             $access = false;
         }
 
-        $count = sizeof($bnm);
         $title = "Recovery";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
 
@@ -214,16 +547,15 @@ class BillsController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $bnm = Bills::getCancelBills(1,1,$user_id);
+            $count = Bills::getAllCancelBillsCount(1,1,$user_id);
             $access = true;
         }
         else{
-            $bnm = Bills::getCancelBills(1,0,$user_id);
+            $count = Bills::getAllCancelBillsCount(1,0,$user_id);
             $access = false;
         }
 
-        $count = sizeof($bnm);
-        $title = "Recovery";
+        $title = "Cancel Recovery";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn'));
 
     }
