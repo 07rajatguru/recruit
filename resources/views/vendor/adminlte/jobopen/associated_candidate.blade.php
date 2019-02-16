@@ -324,11 +324,11 @@
                             <a title="Select" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="padding:0!important;">
                                 <i class="fa fa-sun-o"></i>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="margin-top: -140px !important;">
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
-                                        <ul class="menu" style="overflow: hidden; width: 100%;overflow: auto;height: 50px;">
+                                        <ul class="menu" style="width: 100%;overflow: auto;height: 120px;">
                                             <li>
                                                 <a class="schedule-interview" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-schedule-interview" >Schedule Interview</a>
                                             </li>
