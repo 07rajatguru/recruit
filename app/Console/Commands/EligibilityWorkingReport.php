@@ -41,7 +41,7 @@ class EligibilityWorkingReport extends Command
      */
     public function handle()
     {
-        $users = User::getAllUsers('recruiter');
+        $users = User::getAllUsersExpectSuperAdmin('recruiter');
 
         foreach ($users as $key => $value) {
             $user_data = UserOthersInfo::getUserOtherInfo($key);
