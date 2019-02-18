@@ -496,6 +496,100 @@ class ToDosController extends Controller
 
     }
 
+    public function getOrderTodosColumnName($order){
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "to_dos.id";
+            }
+            else if ($order == 2) {
+                $order_column_name = "to_dos.subject";
+            }
+            else if ($order == 3) {
+                $order_column_name = "users.name";
+            }
+            else if ($order == 4) {
+                $order_column_name = "users.name";
+            }
+            else if ($order == 5) {
+                $order_column_name = "to_dos.due_date";
+            }
+            else if ($order == 6) {
+                $order_column_name = "status.name";
+            }
+        }
+
+        return $order_column_name;
+    }
+
+    public function getAllTodosDetails(){
+        
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user->id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
+
+        $todos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $order_column_name = self::getOrderTodosColumnName($order);
+            $todos = ToDos::getAllTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
+            $count = ToDos::getAllTodosCount($todo_ids,$search);
+        }
+        $status = Status::getStatusArray();
+
+        $todos_details = array();
+        $i = 0;$j = 0;
+        foreach ($todos as $key => $value) {
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
+            if(($value['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination){
+                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($isSuperAdmin){
+                $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'todos','display_name'=>'Todo']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+            $status_view = \View::make('adminlte::partials.todostatus', ['data' => $value, 'name' => 'todos','display_name'=>'More Information', 'status' => $status]);
+            $status_display = $status_view->render();
+            $action .= $status_display;
+
+            $subject = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['subject'].'</a>';
+            $due_date = '<a style="color:black; text-decoration:none;" data-th="Lastrun" data-order="'.$value['due_date_ts'].'">'.$value['due_date'].'</a>';
+
+            $data = array(++$j,$action,$subject,$value['am_name'],$value['assigned_to'],$due_date,$value['status']);
+            $todos_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $todos_details
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     public function create(){
 
        // $candidate = CandidateBasicInfo::getCandidateArray();
@@ -1019,6 +1113,65 @@ class ToDosController extends Controller
 
     }
 
+    public function getCompleteTodosDetails(){
+        
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user->id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
+
+        $todos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $order_column_name = self::getOrderTodosColumnName($order);
+            $todos = ToDos::getCompleteTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
+            $count = ToDos::getCompleteTodosCount($todo_ids,$search);
+        }
+        $status = Status::getStatusArray();
+
+        $completed_details = array();
+        $i = 0;$j = 0;
+        foreach ($todos as $key => $value) {
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
+            if(($value['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination){
+                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            $subject = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['subject'].'</a>';
+            $due_date = '<a style="color:black; text-decoration:none;" data-th="Lastrun" data-order="'.$value['due_date_ts'].'">'.$value['due_date'].'</a>';
+
+            $data = array(++$j,$action,$subject,$value['am_name'],$value['assigned_to'],$due_date,$value['status']);
+            $completed_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $completed_details
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     public function mytask(Request $request){
         $todo_status = env('COMPLETEDSTATUS');
 
@@ -1044,6 +1197,65 @@ class ToDosController extends Controller
         $count = sizeof($todos);
 
         return view('adminlte::toDo.mytask', array('todos' => $todos),compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
+    }
+
+    public function getMyTodosDetails(){
+        
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user->id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
+
+        $todos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $order_column_name = self::getOrderTodosColumnName($order);
+            $todos = ToDos::getMyTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
+            $count = ToDos::getMyTodosCount($todo_ids,$search);
+        }
+        $status = Status::getStatusArray();
+
+        $my_details = array();
+        $i = 0;$j = 0;
+        foreach ($todos as $key => $value) {
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
+            if(($value['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination){
+                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            $subject = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['subject'].'</a>';
+            $due_date = '<a style="color:black; text-decoration:none;" data-th="Lastrun" data-order="'.$value['due_date_ts'].'">'.$value['due_date'].'</a>';
+
+            $data = array(++$j,$action,$subject,$value['am_name'],$value['assigned_to'],$due_date,$value['status']);
+            $my_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $my_details
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function status(Request $request){

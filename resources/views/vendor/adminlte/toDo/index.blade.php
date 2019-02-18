@@ -63,8 +63,8 @@
             <th>Status</th>
         </tr>
         </thead>
-        <tbody>
-        <?php $i=0; ?>
+        {{--<tbody>
+        php $i=0;
         @foreach ($todos as $key => $todo)
 
             <tr>
@@ -77,12 +77,12 @@
                     @if(($todo['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination)
                         <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
                     @endif
-                    <?php if($isSuperAdmin) { ?>
+                    @if($isSuperAdmin)
                         @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
-                    <?php  }?>
+                    @endif
                     {{--@if($todo['status_ids']!=$todo_status)
                         @include('adminlte::partials.completedtodo', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])
-                    @endif--}}
+                    @endif
                     @include('adminlte::partials.todostatus', ['data' => $todo, 'name' => 'todos','display_name'=>'More Information'])
 
                 </td>
@@ -100,7 +100,7 @@
             </tr>
 
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
 
 @endsection
@@ -108,13 +108,31 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#todos_table').DataTable( {
+          /*  var table = jQuery('#todos_table').DataTable( {
                 responsive: true,
                 stateSave : true,
                 "bStateSave": true,
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#todos_table").DataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0, 'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]},],
+                "ajax" : {
+                    'url' : 'todos/alltodos',
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive : true,
+                "pageLength": 10,
+                "pagingType" : "full_numbers",
+                stateSave : true,
+            });
         });
     </script>
 @endsection

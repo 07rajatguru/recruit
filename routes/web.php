@@ -1199,14 +1199,29 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@index',
     ]);
 
-     Route::get('todos/complete', [
+    Route::get('todos/alltodos', [
+        'as' => 'todos.alltodos',
+        'uses' => 'ToDosController@getAllTodosDetails',
+    ]);
+
+    Route::get('todos/complete', [
         'as' => 'todos.completetodo',
         'uses' => 'ToDosController@completetodo',
+    ]);
+
+    Route::get('todos/complete/all',[
+        'as' => 'todos.completeall',
+        'uses' => 'ToDosController@getCompleteTodosDetails'
     ]);
 
     Route::get('todos/mytask', [
         'as' => 'todos.mytask',
         'uses' => 'ToDosController@mytask',
+    ]);
+
+    Route::get('todos/my/all', [
+        'as' => 'todos.myall',
+        'uses' => 'ToDosController@getMyTodosDetails',
     ]);
 
     Route::get('todos/create', [
