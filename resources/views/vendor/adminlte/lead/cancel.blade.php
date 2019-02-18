@@ -45,17 +45,17 @@
             </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
+        {{--<tbody>
             
             @foreach($leads as $key=>$value)
-            <?php
+            php
             if($value['convert_client'] == 1) {
                 $color='#32CD32';
             }
             else{
                 $color='';
             }
-                 ?>
+                
             <tr >
                 <td>{{ ++$i }}</td>
                  <td>
@@ -64,7 +64,7 @@
 
                    {{-- @if ($value['convert_client'] == 0)
                     <a title="Convert lead to client"  class="fa fa-clone" href="{{ route('lead.clone',$value['id']) }}"></a>
-                    @endif --}}
+                    @endif 
 
                    
                 </td>
@@ -89,7 +89,7 @@
                
                 </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
  
     </table>
    </div>
@@ -97,12 +97,33 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#lead_table').DataTable( {
+            /*var table = jQuery('#lead_table').DataTable( {
                 responsive: true,
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#lead_table").DataTable({
+                "bProcessing": true,
+                "serverSide": true,
+                "order" : [0,'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]}],
+                "ajax":{
+                    url :"../lead/cancel/all", // json datasource
+                    type: "get",  // type of method  , by default would be get
+                    error: function(){  // error handling code
+                      //  $("#employee_grid_processing").css("display","none");
+                    }
+                },
+                "pageLength": 50,
+                "responsive": true,
+                "pagingType": "full_numbers",
+                "stateSave" : true,
+            });
+            
+            var table = $('#lead_table').DataTable();
+            table.columns( [19] ).visible( false );
         });
     </script>
 @endsection

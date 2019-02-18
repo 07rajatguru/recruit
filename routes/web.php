@@ -143,6 +143,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'lead.leadcancel',
         'uses' => 'LeadController@cancellead'
     ]);
+
+    Route::get('lead/cancel/all', [
+        'as' => 'lead.cancelall',
+        'uses' => 'LeadController@getCancelLeadsDetails'
+    ]);
     
    Route::post('lead/store', [
         'as' => 'lead.store',

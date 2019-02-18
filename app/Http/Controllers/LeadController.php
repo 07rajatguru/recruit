@@ -171,6 +171,63 @@ class LeadController extends Controller
         return view('adminlte::lead.cancel',compact('leads','lead_count','count'));        
     }
 
+    public function getCancelLeadsDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getLeadOrderColumnName($order);
+        $user = \Auth::user();
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id =  env('STRATEGY');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $leads_res = Lead::getCancelLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Lead::getCancelLeadsCount(1,$user->id,$search);
+        }
+        else {
+            $leads_res = Lead::getCancelLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Lead::getCancelLeadsCount(0,$user->id,$search);
+        }
+
+        $lead = array();
+        $i = 0;$j = 0;
+        foreach ($leads_res as $key => $value) {
+            $action = '';
+
+            if($value['access']){
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
+
+            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['source'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['lead_status'],$value['convert_client']);
+            $lead[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $lead
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     public function cancel($id){
         
         $cancel_lead =1;
