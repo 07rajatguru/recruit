@@ -34,13 +34,13 @@
                 <th width="280px">Action</th>
             </tr>
         </thead>
-        <tbody>
+        {{--<tbody>
 
         @foreach($trainingFiles as $trainingFile)
       
         @endforeach
     
-        <?php $i = 0 ;?>
+        php $i = 0 ;
         @foreach ($training as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
@@ -48,7 +48,7 @@
                 <td>
                   
                     <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
-                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $trainingFile['file'] }}"></a>--}}
+                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $trainingFile['file'] }}"></a>
                     @if($value['owner_id'] == $user_id || $isSuperAdmin)         
                     <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
                     @endif
@@ -59,20 +59,38 @@
                 </td>
            </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
     
 @stop
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#training_table').DataTable( {
+            /*var table = jQuery('#training_table').DataTable( {
                 responsive: true,
                 stateSave : true,
                 "pageLength": 100,
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#training_table").DataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0, 'asc'],
+                "columnDefs": [ {orderable: false, targets: [2]},],
+                "ajax" : {
+                    'url' : 'training/all',
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive : true,
+                "pageLength": 100,
+                "pagingType" : "full_numbers",
+                stateSave : true,
+            });
         });
     </script>
 @endsection

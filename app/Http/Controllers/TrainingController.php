@@ -37,19 +37,99 @@ class TrainingController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-	        $training = Training::getAlltraining(1,$user_id);
+	        $count = Training::getAlltrainingCount(1,$user_id);
         }
         else{
-            $training = Training::getAlltraining(0,$user_id);   
+            $count = Training::getAlltrainingCount(0,$user_id);   
         }
 
-        $count = sizeof($training);
+        //$count = sizeof($training);
 
-	   $trainingFiles = TrainingDoc::select('training_doc.file')->get();
+	   //$trainingFiles = TrainingDoc::select('training_doc.file')->get();
 	//print_r($trainingFiles);die;
 	
     return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id','count'));
    
+    }
+
+    public function getOrderTrainingColumnName($order){
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "training.id";
+            }
+            else if ($order == 1) {
+                $order_column_name = "training.title";
+            }
+        }
+
+        return $order_column_name;
+    }
+
+    public function getAllTrainingDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $order_column_name = self::getOrderTrainingColumnName($order);
+            $training = Training::getAlltraining(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Training::getAlltrainingCount(1,$user_id,$search);
+        }
+        else{
+            $order_column_name = self::getOrderTrainingColumnName($order);
+            $training = Training::getAlltraining(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Training::getAlltrainingCount(0,$user_id,$search);
+        }
+
+        $trainingFiles = TrainingDoc::select('training_doc.file')->get();
+
+        $training_data = array();
+        $i = 0; $j = 0;
+        foreach ($training as $key => $value) {
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle" href="'.route('training.show',$value['id']).'" style="margin:2px;"></a>';
+            if($value['owner_id'] == $user_id || $isSuperAdmin){
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+            $title = '<a target="_blank" href="'.$value['file_url'].'">'.$value['title'].'</a>';
+            $data = array(++$j,$title,$action);
+            $training_data[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $training_data
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function create(){

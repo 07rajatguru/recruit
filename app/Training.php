@@ -8,19 +8,40 @@ class Training extends Model
 {
     public $table = "training";
 
-    public static function getAlltraining($all=0,$user_id){
+    public static function getAlltraining($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
 
              
         $training_open_query = Training::query();
         $training_open_query = $training_open_query->select('training.*','training_doc.file as url');
 
         if ($all==0) {
-          $training_open_query = $training_open_query->join('training_visible_users','training_visible_users.training_id','=','training.id');
-          $training_open_query = $training_open_query->where('user_id','=',$user_id);
+            $training_open_query = $training_open_query->join('training_visible_users','training_visible_users.training_id','=','training.id');
+            $training_open_query = $training_open_query->where('user_id','=',$user_id);
+            if (isset($search) && $search != '') {
+                $training_open_query = $training_open_query->where(function($training_open_query) use ($search){
+                    $training_open_query = $training_open_query->where('training.title','like',"%$search%");
+                });
+            }
+        }
+        else {
+            if (isset($search) && $search != '') {
+                $training_open_query = $training_open_query->where(function($training_open_query) use ($search){
+                    $training_open_query = $training_open_query->where('training.title','like',"%$search%");
+                });
+            }
         }
         $training_open_query = $training_open_query->leftjoin('training_doc','training_doc.training_id','=','training.id');
 
-        $training_open_query = $training_open_query->orderBy('id','asc');
+        if (isset($limit) && $limit > 0) {
+            $training_open_query = $training_open_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $training_open_query = $training_open_query->offset($offset);
+        }
+        if (isset($order) && $order !='') {
+            $training_open_query = $training_open_query->orderBy($order,$type);
+        }
+        //$training_open_query = $training_open_query->orderBy('id','asc');
         $training_open_query = $training_open_query->groupBy('training.id');
         $training_response = $training_open_query->get();
 
@@ -48,6 +69,36 @@ class Training extends Model
 
        // echo '<pre>';print_r($training_list);exit;
         return $training_list;
+    }
+
+    public static function getAlltrainingCount($all=0,$user_id,$search=0){
+
+             
+        $training_open_query = Training::query();
+        $training_open_query = $training_open_query->select('training.*','training_doc.file as url');
+
+        if ($all==0) {
+            $training_open_query = $training_open_query->join('training_visible_users','training_visible_users.training_id','=','training.id');
+            $training_open_query = $training_open_query->where('user_id','=',$user_id);
+            if (isset($search) && $search != '') {
+                $training_open_query = $training_open_query->where(function($training_open_query) use ($search){
+                    $training_open_query = $training_open_query->where('training.title','like',"%$search%");
+                });
+            }
+        }
+        else {
+            if (isset($search) && $search != '') {
+                $training_open_query = $training_open_query->where(function($training_open_query) use ($search){
+                    $training_open_query = $training_open_query->where('training.title','like',"%$search%");
+                });
+            }
+        }
+        $training_open_query = $training_open_query->leftjoin('training_doc','training_doc.training_id','=','training.id');
+        $training_open_query = $training_open_query->groupBy('training.id');
+        $training_res = $training_open_query->get();
+        $training_count = sizeof($training_res);
+        
+        return $training_count;
     }
 
     public static function getAlltrainingIds($select_all=0){

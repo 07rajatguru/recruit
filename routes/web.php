@@ -1375,6 +1375,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@index',
         'middleware' => ['permission:training-list']
     ]);
+
+    Route::get('training/all', [
+        'as' => 'training.all',
+        'uses' => 'TrainingController@getAllTrainingDetails',
+        'middleware' => ['permission:training-list']
+    ]);
+
     Route::get('training/create', [
         'as' => 'training.create',
         'uses' => 'TrainingController@create',
