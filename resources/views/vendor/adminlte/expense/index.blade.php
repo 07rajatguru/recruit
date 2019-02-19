@@ -45,8 +45,8 @@
             </tr>
         </thead>
 
-        <tbody>            
-        <?php $i = 0 ;?>
+        {{--<tbody>            
+        php $i = 0 ;
         @foreach($expense as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
@@ -71,19 +71,37 @@
                 <td>{{ $value['number'] or '' }}</td>
             </tr>
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
     
 @stop
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#expense_table').DataTable( {
+            /*var table = jQuery('#expense_table').DataTable( {
                 responsive: true,
                 stateSave : true
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#expense_table").DataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0, 'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]},],
+                "ajax" : {
+                    'url' : 'expense/all',
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive : true,
+                "pageLength": 100,
+                "pagingType" : "full_numbers",
+                stateSave : true,
+            });
         });
     </script>
 @endsection

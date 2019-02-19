@@ -30,6 +30,92 @@ class ExpenseController extends Controller
         return view('adminlte::expense.index',compact('expense','isSuperAdmin','count'));
     }
 
+    public function getOrderExpenseColumnName($order){
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "expense.id";
+            }
+            else if ($order == 2) {
+                $order_column_name = "expense.date";
+            }
+            else if ($order == 3) {
+                $order_column_name = "expense.paid_amount";
+            }
+            else if ($order == 4) {
+                $order_column_name = "vendor_basicinfo.name";
+            }
+            else if ($order == 5) {
+                $order_column_name = "accounting_heads.name";
+            }
+            else if ($order == 6) {
+                $order_column_name = "expense.remarks";
+            }
+            else if ($order == 7) {
+                $order_column_name = "expense.payment_mode";
+            }
+            else if ($order == 8) {
+                $order_column_name = "expense.type_of_payment";
+            }
+            else if ($order == 9) {
+                $order_column_name = "expense.reference_number";
+            }
+        }
+
+        return $order_column_name;
+    }
+
+    public function getAllExpenseDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $order_column_name = self::getOrderExpenseColumnName($order);
+        $expense = Expense::getAllExpense($limit,$offset,$search,$order_column_name,$type);
+        $count=sizeof($expense);
+
+        $expense_data = array();
+        $i = 0; $j = 0;
+        foreach ($expense as $key => $value) {
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle" href="'.route('expense.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('expense.edit',$value['id']).'" style="margin:2px;"></a>';
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            $payment_mode = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['payment_mode'].'</a>';
+            $payment_type = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['payment_type'].'</a>';
+
+            $data = array(++$j,$action,$value['date'],$value['paid_amount'],$value['paid_to'],$value['expense_head'],$value['remarks'],$payment_mode,$payment_type,$value['number']);
+
+            $expense_data[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $expense_data
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     public function create(){
 
         $payment_mode = Expense::getPaymentMode();

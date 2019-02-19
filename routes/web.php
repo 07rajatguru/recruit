@@ -1527,7 +1527,12 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'expense.index',
         'uses' => 'ExpenseController@index',
         'middleware' => ['permission:expense-list|expense-create|expense-edit|expense-delete']
-        
+    ]);
+
+    Route::get('expense/all',[
+        'as' => 'expense.all',
+        'uses' => 'ExpenseController@getAllExpenseDetails',
+        'middleware' => ['permission:expense-list|expense-create|expense-edit|expense-delete'] 
     ]);
 
     Route::get('expense/create',[

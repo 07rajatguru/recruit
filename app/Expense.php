@@ -80,12 +80,33 @@ class Expense extends Model
         return $ptype;
     }
 
-    public static function getAllExpense(){
+    public static function getAllExpense($limit=0,$offset=0,$search=0,$order=0,$type='desc'){
         $dateClass = new Date();
 
         $query = Expense::query();
         $query = $query->join('accounting_heads','accounting_heads.id','=','expense.expense_head');
-        $query=$query->join('vendor_basicinfo','vendor_basicinfo.id','=','expense.vendor_id');
+        $query = $query->join('vendor_basicinfo','vendor_basicinfo.id','=','expense.vendor_id');
+        if (isset($limit) && $limit > 0) {
+          $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+          $query = $query->offset($offset);
+        }
+        if (isset($order) && $order !='') {
+          $query = $query->orderBy($order,$type);
+        }
+        if (isset($search) && $search != '') {
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('expense.date','like',"%$search%");
+                $query = $query->orwhere('expense.paid_amount','like',"%$search%");
+                $query = $query->orwhere('vendor_basicinfo.name','like',"%$search%");
+                $query = $query->orwhere('accounting_heads.name','like',"%$search%");
+                $query = $query->orwhere('expense.remarks','like',"%$search%");
+                $query = $query->orwhere('expense.payment_mode','like',"%$search%");
+                $query = $query->orwhere('expense.type_of_payment','like',"%$search%");
+                $query = $query->orwhere('expense.reference_number','like',"%$search%");
+            });
+        }
         $query = $query->select('expense.*','accounting_heads.name as aname','vendor_basicinfo.name as vname');
         $resource = $query->get();
 
