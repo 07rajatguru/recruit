@@ -40,25 +40,103 @@ class ProcessController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $process_response = ProcessManual::getAllprocess(1,$user_id);
+            $count = ProcessManual::getAllprocessCount(1,$user_id);
         }
         else{
-            $process_response = ProcessManual::getAllprocess(0,$user_id);
+            $count = ProcessManual::getAllprocessCount(0,$user_id);
         }
 
-        $count = sizeof($process_response);
-	    $processFiles = ProcessDoc::select('process_doc.file')->get();
+        //$count = sizeof($process_response);
+	    //$processFiles = ProcessDoc::select('process_doc.file')->get();
 
         $viewVariable = array();
-        $viewVariable['processList'] = $process_response;
+        //$viewVariable['processList'] = $process_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
-        $viewVariable['processFiles'] = $processFiles;
+        //$viewVariable['processFiles'] = $processFiles;
         $viewVariable['count'] = $count;   
 
-        //$process = ProcessManual::All();
-
-
     	return view('adminlte::process.index ',$viewVariable);
+    }
+
+    public function getOrderProcessColumnName($order){
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "process_manual.id";
+            }
+            else if ($order == 1) {
+                $order_column_name = "process_manual.title";
+            }
+        }
+
+        return $order_column_name;
+    }
+
+    public function getAllProcessDetails(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        if(in_array($user_role_id,$access_roles_id)){
+            $order_column_name = self::getOrderProcessColumnName($order);
+            $process_response = ProcessManual::getAllprocess(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = ProcessManual::getAllprocessCount(1,$user_id,$search);
+        }
+        else{
+            $order_column_name = self::getOrderProcessColumnName($order);
+            $process_response = ProcessManual::getAllprocess(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = ProcessManual::getAllprocessCount(0,$user_id,$search);
+        }
+
+        $processFiles = ProcessDoc::select('process_doc.file')->get();
+
+        $process = array();
+        $i = 0; $j = 0;
+        foreach ($process_response as $key => $value) {
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',$value['id']).'" style="margin:2px;"></a>';
+            if(isset($value['access']) && $value['access']==1){
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+            $title = '<a target="_blank" href="'.$value['url'].'">'.$value['title'].'</a>';
+            $data = array(++$j,$title,$action);
+            $process[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $process
+        );
+
+        echo json_encode($json_data);exit;
+
     }
 
     public function create(){

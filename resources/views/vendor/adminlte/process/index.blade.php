@@ -26,7 +26,7 @@
 
     @endif
 
-    <table id="training_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+    <table id="process_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>No</th>
@@ -35,13 +35,13 @@
                 <th width="280px">Action</th>
             </tr>
         </thead>
-        <tbody>
+        {{--<tbody>
 
         @foreach($processFiles as $processFile)
       
         @endforeach
     
-        <?php $i = 0 ;?>
+        php $i = 0 ;
         @foreach ($processList as $key => $value)
            
             <tr>
@@ -55,7 +55,7 @@
                 <td>
                   
                     <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>
-                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $processFile['file'] }}"></a>--}}
+                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $processFile['file'] }}"></a>
                     @if(isset($value['access']) && $value['access']==1)
                         <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
                     @endif
@@ -67,20 +67,38 @@
            </tr>
         
         @endforeach
-        </tbody>
+        </tbody>--}}
     </table>
     
 @stop
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#training_table').DataTable( {
+            /*var table = jQuery('#process_table').DataTable( {
                 responsive: true,
                 stateSave : true,
                 "pageLength": 100,
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+
+            $("#process_table").DataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0, 'asc'],
+                "columnDefs": [ {orderable: false, targets: [2]},],
+                "ajax" : {
+                    'url' : 'process/all',
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive : true,
+                "pageLength": 100,
+                "pagingType" : "full_numbers",
+                stateSave : true,
+            });
         });
     </script>
 @endsection

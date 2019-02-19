@@ -1436,6 +1436,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ProcessController@index',
         'middleware' => ['permission:process-list']
     ]);
+
+    Route::get('process/all', [
+        'as' => 'process.all',
+        'uses' => 'ProcessController@getAllProcessDetails',
+        'middleware' => ['permission:process-list']
+    ]);
     
     Route::get('process/create', [
         'as' => 'process.create',
