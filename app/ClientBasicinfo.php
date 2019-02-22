@@ -210,8 +210,8 @@ class ClientBasicinfo extends Ardent
     public static function getAllClientsCount($all=0,$user_id,$search=0){
 
         $query = ClientBasicinfo::query();
-        $query = $query->join('client_address','client_address.client_id','=','client_basicinfo.id');
-        $query = $query->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
         if ($all == 1) {
             $query = $query->leftJoin('client_doc',function($join){
                                 $join->on('client_doc.client_id', '=', 'client_basicinfo.id');

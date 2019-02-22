@@ -1696,6 +1696,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'EligibilityReportController@store'
     ]);
 
+    Route::any('clientwise-report',[
+        'as' => 'report.clientwisereportindex',
+        'uses' => 'ReportController@clientWiseReportIndex'
+    ]);
+
+    Route::post('clientwise-report/export',[
+        'as' => 'report.clientwisereportexport',
+        'uses' => 'ReportController@clientWiseReportExport'
+    ]);
+
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',

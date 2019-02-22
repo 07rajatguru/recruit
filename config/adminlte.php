@@ -337,6 +337,11 @@ return [
                    'url'  => 'eligibility-report',
                    'icon' => 'circle-o',
                ],
+               [
+                   'text' => 'Client-wise report',
+                   'url'  => 'clientwise-report',
+                   'icon' => 'circle-o',
+               ],
            ],
         ],
 

@@ -1141,4 +1141,55 @@ class Bills extends Model
 
         return $person_data;
     }
+
+    public static function getClientwiseReportData($client_name,$current_year,$next_year){
+
+        $clientwise_query = Bills::query();
+        $clientwise_query = $clientwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $clientwise_query = $clientwise_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $clientwise_query = $clientwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $clientwise_query = $clientwise_query->join('users','users.id','=','client_basicinfo.account_manager_id');
+        $clientwise_query = $clientwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','users.name as owner_name','client_basicinfo.coordinator_name as coordinator_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
+        $clientwise_query = $clientwise_query->where('bills.company_name','like',"%$client_name%");
+        $clientwise_query = $clientwise_query->where('bills.status','=','1');
+        $clientwise_query = $clientwise_query->where('bills.date_of_joining','>=',$current_year);
+        $clientwise_query = $clientwise_query->where('bills.date_of_joining','<=',$next_year);
+        $clientwise_res = $clientwise_query->get();
+
+        $client_data = array();
+        $i = 0;
+        foreach ($clientwise_res as $key => $value) {
+            $salary = $value->fixed_salary;
+            $pc = $value->percentage_charged;
+            $fees = ($salary * $pc)/100;
+            $gst = ($fees * 18)/100;
+            $billing_amount = $fees + $gst;
+
+            $client_data[$i]['candidate_name'] = $value->candidate_name;
+            $client_data[$i]['owner_name'] = $value->owner_name;
+            $client_data[$i]['position'] = $value->designation_offered;
+            $client_data[$i]['salary_offered'] = $value->fixed_salary;
+            $client_data[$i]['billing'] = $fees;
+            $client_data[$i]['gst'] = $gst;
+            $client_data[$i]['invoice'] = $billing_amount;
+            $client_data[$i]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
+
+            // get employee efforts
+            $efforts = Bills::getEmployeeEffortsNameById($value->id);
+            $efforts_str = '';
+            foreach ($efforts as $k=>$v){
+                if($efforts_str==''){
+                    $efforts_str = $k .'('.(int)$v . '%)';
+                }
+                else{
+                    $efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                }
+            }
+            $client_data[$i]['efforts'] = $efforts_str;
+            $client_data[$i]['coordinator_name'] = $value->coordinator_prefix. " " .$value->coordinator_name;
+            $i++;
+        }
+
+        return $client_data;
+    }
 }

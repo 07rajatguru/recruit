@@ -8,6 +8,7 @@ use App\Lead;
 use App\User;
 use App\Interview;
 use App\Bills;
+use App\ClientBasicinfo;
 use Excel;
 
 class ReportController extends Controller
@@ -584,6 +585,87 @@ class ReportController extends Controller
                 }
                     
                 $sheet->loadview('adminlte::reports.monthwise-reportexport')->with('monthwise_data',$monthwise_data);
+            });
+        })->export('xls');
+    }
+
+    public function clientWiseReportIndex(){
+
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+        if ($isSuperAdmin || $isAccountant) {
+            // Year Data
+            $starting_year = '2017';
+            $ending_year = date('Y',strtotime('+1 year'));
+            $year_array = array();
+            for ($y=$starting_year; $y < $ending_year ; $y++) {
+                $next = $y+1;
+                $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+            }
+
+            if (isset($_POST['year']) && $_POST['year'] != '') {
+                $year = $_POST['year'];
+            }
+            else{
+                $y = date('Y');
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+
+            $year_data = explode(',', $year);
+            $current = $year_data[0];
+            $next = $year_data[1];
+            $current_year = date('Y-m-d',strtotime("first day of $current"));
+            $next_year = date('Y-m-d',strtotime("last day of $next"));
+
+            $clients = ClientBasicinfo::getLoggedInUserClients(0);
+            foreach ($clients as $key => $value) {
+                $client_name = $value->name.' - '.$value->billing_city;
+                $c_name = $value->name;
+                $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_name,$current_year,$next_year);
+                //print_r($clientwise_data);exit;
+            }
+
+            return view('adminlte::reports.clientwise-report',compact('year_array','year','clientwise_data'));
+        }
+        else {
+            return view('errors.403');
+        }
+    }
+
+    public function clientWiseReportExport(){
+
+        Excel::create('Client-wise Report',function($excel){
+
+            $excel->sheet('sheet 1',function($sheet){
+                
+                if (isset($_POST['year']) && $_POST['year'] != '') {
+                    $year = $_POST['year'];
+                }
+                else{
+                    $y = date('Y');
+                    $n = $y-1;
+                    $year = $n.'-4, '.$y.'-3';
+                }
+
+                $year_data = explode(',', $year);
+                $current = $year_data[0];
+                $next = $year_data[1];
+                $current_year = date('Y-m-d',strtotime("first day of $current"));
+                $next_year = date('Y-m-d',strtotime("last day of $next"));
+
+                $clients = ClientBasicinfo::getLoggedInUserClients(0);
+                foreach ($clients as $key => $value) {
+                    $client_name = $value->name.' - '.$value->billing_city;
+                    $c_name = $value->name;
+                    $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_name,$current_year,$next_year);
+                }
+                $sheet->loadview('adminlte::reports.clientwise-reportexport')->with('clientwise_data',$clientwise_data);
             });
         })->export('xls');
     }
