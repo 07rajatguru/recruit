@@ -78,6 +78,8 @@ class TrainingController extends Controller
 
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
+        $delete_perm = $user->can('training-destroy');
+
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
@@ -111,7 +113,7 @@ class TrainingController extends Controller
             if($value['owner_id'] == $user_id || $isSuperAdmin){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-            if ($isSuperAdmin) {
+            if ($isSuperAdmin || $delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training']);
                 $delete = $delete_view->render();
                 $action .= $delete;
