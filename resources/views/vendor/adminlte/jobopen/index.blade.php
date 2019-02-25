@@ -82,10 +82,12 @@
                 <h2>Job Openings List ({{ $count or 0}})</h2>
             </div>
 
+            @permission('job-create')
             <div class="pull-right">
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
                 <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
             </div>
+            @endpermission
 
             <div class="pull-right">
                 {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>--}}

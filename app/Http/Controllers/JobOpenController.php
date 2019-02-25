@@ -206,6 +206,11 @@ class JobOpenController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isClient = $user_obj::isClient($role_id);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
         /*$access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $count = JobOpen::getAllJobsCount(1,$user_id,'');
@@ -216,11 +221,16 @@ class JobOpenController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user_id);
+            $count = JobOpen::getAllJobsCount(1,$user_id,NUll);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
         }
+        else if ($isClient) {
+            $job_response = JobOpen::getAllJobsByCLient($client_id);
+            $count = sizeof($job_response);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
+        }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user_id);
+            $count = JobOpen::getAllJobsCount(0,$user_id,NULL);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
 
@@ -269,13 +279,14 @@ class JobOpenController extends Controller
            }
         }
 
-        $count = sizeof($job_response);
+        //$count = sizeof($job_response);
 
         $viewVariable = array();
-        $viewVariable['jobList'] = $job_response;
+        //$viewVariable['jobList'] = $job_response;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
+        $viewVariable['isClient'] = $isClient;
 
         return view('adminlte::jobopen.index', $viewVariable,compact('count','priority_0','priority_1','priority_2','priority_3','priority_5','priority_6','priority_7','priority_8'));
 
@@ -496,6 +507,12 @@ class JobOpenController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isClient = $user_obj::isClient($role_id);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+        //print_r($client_id);exit;
 
         $job_priority = JobOpen::getJobPriorities();
 
@@ -503,6 +520,10 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search);
+        }
+        else if ($isClient) {
+            $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = sizeof($job_response);
         }
         else{
             $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -2439,6 +2460,11 @@ class JobOpenController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isClient = $user_obj::isClient($role_id);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         $admin_role_id = getenv('ADMIN');
         $director_role_id = getenv('DIRECTOR');
@@ -2449,6 +2475,10 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getClosedJobs(1,$user_id);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
+        }
+        else if ($isClient) {
+            $job_response = JobOpen::getClosedJobsByClient($client_id);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
         else{
             $job_response = JobOpen::getClosedJobs(0,$user_id);
@@ -2509,6 +2539,11 @@ class JobOpenController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isClient = $user_obj::isClient($role_id);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         $admin_role_id = getenv('ADMIN');
         $director_role_id = getenv('DIRECTOR');
@@ -2519,6 +2554,10 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search);
+        }
+        else if ($isClient) {
+            $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type);
+            $count = sizeof($job_response);
         }
         else{
             $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type);

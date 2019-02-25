@@ -248,6 +248,7 @@ class User extends Authenticatable
         $type['admin'] = 'Admin Team';
         $type['recruiter'] = 'Recruitment Team';
         $type['it'] = 'IT Team';
+        $type['client'] = 'Client';
 
         return $type;
     }
@@ -333,6 +334,15 @@ class User extends Authenticatable
 
     public  static function isStrategyCoordination($user_role_id){
         $admin_role_id = getenv('STRATEGY');
+        if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function isClient($user_role_id){
+
+        $admin_role_id = getenv('CLIENT');
         if ($admin_role_id == $user_role_id) {
             return true;
         }

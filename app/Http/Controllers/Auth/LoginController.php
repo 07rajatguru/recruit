@@ -69,17 +69,34 @@ class LoginController extends Controller
                     ]);
             }
             //$user_id = \Auth::user()->id;
-            // Entry of login
-            $users_log= new UsersLog();
-            $users_log->user_id = $user->id;
-            $users_log->date = gmdate("Y-m-d");
-            $users_log->time = gmdate("H:i:s");
-            $users_log->type ='login';
-            $users_log->created_at = gmdate("Y-m-d H:i:s");
-            $users_log->updated_at = gmdate("Y-m-d H:i:s");
-            $users_log->save();
 
-            return redirect('/dashboard');
+            $type = $user->type;
+            if ($type == 'client') {
+                // Entry of login
+                $users_log= new UsersLog();
+                $users_log->user_id = $user->id;
+                $users_log->date = gmdate("Y-m-d");
+                $users_log->time = gmdate("H:i:s");
+                $users_log->type ='login';
+                $users_log->created_at = gmdate("Y-m-d H:i:s");
+                $users_log->updated_at = gmdate("Y-m-d H:i:s");
+                $users_log->save();
+
+                return redirect('/jobs');
+            }
+            else {
+                // Entry of login
+                $users_log= new UsersLog();
+                $users_log->user_id = $user->id;
+                $users_log->date = gmdate("Y-m-d");
+                $users_log->time = gmdate("H:i:s");
+                $users_log->type ='login';
+                $users_log->created_at = gmdate("Y-m-d H:i:s");
+                $users_log->updated_at = gmdate("Y-m-d H:i:s");
+                $users_log->save();
+
+                return redirect('/dashboard');
+            }
             //return redirect()->intended($this->redirectPath());
         }
 

@@ -751,4 +751,20 @@ class ClientBasicinfo extends Ardent
 
         return $client;
      }
+
+     // Client id by client email
+     public static function getClientIdByEmail($email){
+
+        $query = ClientBasicinfo::query();
+        $query = $query->where('mail','like',"$email");
+        $query = $query->select('id');
+        $res = $query->first();
+        
+        $client_id = 0;
+        if(isset($res)){
+            $client_id = $res->id;
+        }
+
+        return $client_id;
+     }
 }

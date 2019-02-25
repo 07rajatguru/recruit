@@ -727,12 +727,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs/create', [
         'as' => 'jobopen.create',
         'uses' => 'JobOpenController@create',
-        // 'middleware' => ['permission:industry-create']
+        'middleware' => ['permission:job-create']
     ]);
 
     Route::get('jobs/clone/{id}', [
         'as' => 'jobopen.clone',
         'uses' => 'JobOpenController@jobClone',
+        'middleware' => ['permission:job-create']
     ]);
 
 
@@ -749,12 +750,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
-        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+        'middleware' => ['permission:job-list|job-create|job-edit|job-delete']
     ]);
     Route::get('jobs/all', [
         'as' => 'jobopen.all',
         'uses' => 'JobOpenController@getAllJobsDetails',
-        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+        'middleware' => ['permission:job-list|job-create|job-edit|job-delete']
     ]);
     Route::post('jobs', [
         'as' => 'jobopen.index',
@@ -775,32 +776,34 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('jobs/create', [
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',
-        //'middleware' => ['permission:industry-create']
+        'middleware' => ['permission:job-create']
     ]);
 
     Route::post('jobs/clone', [
         'as' => 'jobopen.clonestore',
         'uses' => 'JobOpenController@clonestore',
+        'middleware' => ['permission:job-create']
     ]); 
     
     Route::get('jobs/{id}', [
         'as' => 'jobopen.show',
-        'uses' => 'JobOpenController@show'
+        'uses' => 'JobOpenController@show',
+        'middleware' => ['permission:job-show']
     ]);
     Route::get('jobs/{id}/edit', [
         'as' => 'jobopen.edit',
         'uses' => 'JobOpenController@edit',
-        //'middleware' => ['permission:industry-edit']
+        'middleware' => ['permission:job-edit']
     ]);
     Route::delete('jobs/{id}', [
         'as' => 'jobopen.destroy',
         'uses' => 'JobOpenController@destroy',
-        //    'middleware' => ['permission:industry-delete']
+        'middleware' => ['permission:job-delete']
     ]);
     Route::patch('jobs/{id}', [
         'as' => 'jobopen.update',
         'uses' => 'JobOpenController@update',
-        //'middleware' => ['permission:industry-edit']
+        'middleware' => ['permission:job-edit']
     ]);
     Route::post('jobs/upload/{id}', [
         'as' => 'jobopen.upload',
