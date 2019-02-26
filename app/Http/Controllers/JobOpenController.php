@@ -227,7 +227,7 @@ class JobOpenController extends Controller
         else if ($isClient) {
             $job_response = JobOpen::getAllJobsByCLient($client_id);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
         }
         else{
             $count = JobOpen::getAllJobsCount(0,$user_id,NULL);
@@ -358,11 +358,21 @@ class JobOpenController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isClient = $user_obj::isClient($role_id);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getPriorityWiseJobs(1,$user_id,$priority);
             $job_response_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
+        }
+        else if ($isClient) {
+            $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority);
+            $count = sizeof($job_response);
+            $job_response_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
         }
         else{
             $job_response = JobOpen::getPriorityWiseJobs(0,$user_id,$priority);
@@ -436,6 +446,7 @@ class JobOpenController extends Controller
         $viewVariable['priority_8'] = $priority_8;
         $viewVariable['priority_9'] = $priority_9;
         $viewVariable['priority_10'] = $priority_10;
+        $viewVariable['isClient'] = $isClient;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
@@ -557,7 +568,12 @@ class JobOpenController extends Controller
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            if ($isClient) {
+                $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            }
+            else{
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            }
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
             $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
@@ -1113,6 +1129,15 @@ class JobOpenController extends Controller
             $user = \Auth::user();
             $user_id = $user->id;
 
+            $userRole = $user->roles->pluck('id','id')->toArray();
+            $role_id = key($userRole);
+            $user_obj = new User();
+            $isClient = $user_obj::isClient($role_id);
+
+            // for get client id by email
+            $user_email = $user->email;
+            $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
             $user_role_id = User::getLoggedinUserRole($user);
 
             $admin_role_id = env('ADMIN');
@@ -1177,6 +1202,9 @@ class JobOpenController extends Controller
             else if(in_array($user_id,$users_array))
             {
                 $job_open['access'] = '0';
+            }
+            else if ($isClient && $value->client_id == $client_id) {
+                $job_open['access'] = '1';
             }
             else
             {
@@ -1300,7 +1328,7 @@ class JobOpenController extends Controller
         $job_status = JobOpen::getJobStatus();
 
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
-                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id));   
+                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id, 'isClient' => $isClient));   
     }
 
     public function edit($id)
@@ -2591,7 +2619,12 @@ class JobOpenController extends Controller
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            if ($isClient) {
+                $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            }
+            else{
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            }
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
             $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
@@ -2921,6 +2954,14 @@ class JobOpenController extends Controller
         });
 
         return redirect('/jobs/'.$job_id.'/associated_candidates');
+    }
+
+    // Function for associated candidates details by job for clinet login show page 
+    public function getCandidateDetailsByJob($id){
+
+        $candidate_details = JobAssociateCandidates::getAssociatedCandidatesDetailsByJobId($id);
+        //print_r($candidate_details);exit;
+        return view('adminlte::jobopen.candidatedetails',compact('candidate_details'));
     }
 
 }

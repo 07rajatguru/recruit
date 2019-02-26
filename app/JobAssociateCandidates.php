@@ -43,6 +43,19 @@ class JobAssociateCandidates extends Model
         return $response;
     }
 
+    public static function getAssociatedCandidatesDetailsByJobId($job_id){
+
+        $query = new JobAssociateCandidates();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('candidate_uploaded_resume', 'candidate_uploaded_resume.candidate_id', '=', 'candidate_basicinfo.id');
+        $query = $query->select('candidate_basicinfo.id as can_id', 'candidate_basicinfo.full_name as fname','candidate_uploaded_resume.*');
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+        $query = $query->where('candidate_uploaded_resume.file_type','=',"Candidate Formatted Resume");
+        $response = $query->get();
+
+        return $response;
+    }
+
     public static function getDailyReportAssociate($user_id,$date=NULL){
 
         $query = JobAssociateCandidates::query();

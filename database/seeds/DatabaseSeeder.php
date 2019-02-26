@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ReceiptPermissionSeeder::class);
         $this->call(ModuleVisiblePermission::class);
         $this->call(JobTableSeeder::class);
+        $this->call(AllModulePermissionSeeder::class);
     }
 }

@@ -83,8 +83,10 @@
             </div>
 
             <div class="pull-right">
-                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
-                <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                @if(!$isClient)
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
+                    <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                @endif
                 <a class="btn btn-primary" href="{{ route('jobopen.index') }}"> Back</a>
             </div>
 

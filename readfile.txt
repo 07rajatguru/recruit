@@ -12,3 +12,6 @@ Add manual login/logout time : /users/attendance
 Month wise dashboard data : /dashboard/monthwise
 Add new module : /module
 Add Eligibility : eligibility-report/add
+
+CLient login : add role, give permission to role
+			 : when add new client login - give permission to job module

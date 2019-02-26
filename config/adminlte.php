@@ -112,6 +112,13 @@ return [
             'text'        => 'Dashboard',
             'url'         => 'dashboard',
             'icon'        => 'dashboard',
+            'submenu' => [
+               [
+                   'text' => 'Dashboard',
+                   'url'  => 'dashboard',
+                   'icon' => 'dashboard',
+               ],
+             ]
         ],
 
 
@@ -256,26 +263,26 @@ return [
                 ],
             ],
              [
-            'text'        => "To'Dos",
+            'text'        => "To-Dos",
             'icon'        => 'tasks',
             'submenu' => [
                 [
-                    'text' => "Add To'Dos",
+                    'text' => "Add To-Dos",
                     'url'  => 'todos/create',
                     'icon' => 'plus',
                 ],
                 [
-                    'text' => "List To'Dos",
+                    'text' => "List To-Dos",
                     'url'  => 'todos',
                     'icon' => 'list',
                 ],
                 [
-                    'text' => "List Completed To'Dos",
+                    'text' => "List Completed To-Dos",
                     'url'  => 'todos/complete',
                     'icon' => 'list',
                 ],
                 [
-                    'text' => "My To'Dos",
+                    'text' => "My To-Dos",
                     'url'  => 'todos/mytask',
                     'icon' => 'list',
                 ]
@@ -286,6 +293,13 @@ return [
                 'text'        => 'Attendance',
                 'url'         => '/userattendance',
                 'icon'        => 'signal',
+                'submenu' => [
+                  [
+                    'text' => "Attendance",
+                    'url'  => '/userattendance',
+                    'icon' => 'signal',
+                  ],
+                ],
             ],
 
         [

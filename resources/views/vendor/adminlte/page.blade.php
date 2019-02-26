@@ -54,9 +54,18 @@
                                 </a>
                             @endif
                             <!-- Navbar Right Menu -->
+                            <?php Use App\User;
+                                $user = \Auth::user();
+                                $user_id = $user->id;
+                                $userRole = $user->roles->pluck('id','id')->toArray();
+                                $role_id = key($userRole);
+                                $user_obj = new User();
+                                $isClient = $user_obj::isClient($role_id);
+                            ?>
                                 <div class="navbar-custom-menu">
 
                                     <ul class="nav navbar-nav">
+                                        @if(!$isClient)
                                         <li class="dropdown messages-menu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-plus"></i>
@@ -154,7 +163,7 @@
                                                 <li class="footer"><a href="todos">See All Todo's</a></li>
                                             </ul>
                                         </li>
-
+                                        @endif
                                         <li class="dropdown messages-menu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                 @if(\Auth::user()->id)
@@ -168,12 +177,13 @@
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; /*height: 200px;*/">
                                                         <ul class="menu" style="overflow: hidden; width: 100%;/* height: 200px;*/">
-                                                        <?php $user_id = \Auth::user()->id; ?>
+                                                        @if(!$isClient)
                                                             <li>
                                                                 <a href="{{ route('users.myprofile',$user_id) }}">
                                                                     <i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;My Profile
                                                                 </a>
                                                             </li>
+                                                        @endif
                                                           
                                                             <li>
                                                                 @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
