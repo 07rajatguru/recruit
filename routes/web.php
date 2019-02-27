@@ -1713,22 +1713,26 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::any('daily-report',[
         'as' => 'report.dailyreportindex',
-        'uses' => 'ReportController@dailyreportIndex'
+        'uses' => 'ReportController@dailyreportIndex',
+        'middleware' => ['permission:daily-report']
     ]);
 
     Route::any('weekly-report',[
         'as' => 'report.weeklyreportindex',
-        'uses' => 'ReportController@weeklyreportIndex'
+        'uses' => 'ReportController@weeklyreportIndex',
+        'middleware' => ['permission:weekly-report']
     ]);
 
     Route::any('monthly-report',[
         'as' => 'report.monthlyreportindex',
-        'uses' => 'ReportController@monthlyreportIndex'
+        'uses' => 'ReportController@monthlyreportIndex',
+        'middleware' => ['permission:userwise-report']
     ]);
 
     Route::any('userwise-monthly-report',[
         'as' => 'report.monthlyreportindex',
-        'uses' => 'ReportController@userWiseMonthlyReport'
+        'uses' => 'ReportController@userWiseMonthlyReport',
+        'middleware' => ['permission:userwise-report']
     ]);
 
     Route::any('personwise-report',[

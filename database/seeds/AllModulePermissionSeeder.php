@@ -193,6 +193,22 @@ class AllModulePermissionSeeder extends Seeder
                 'display_name' => 'Delete permission',
                 'description' => 'Delete permission'
             ],
+            // Report permission
+            [
+                'name' => 'daily-report',
+                'display_name' => 'Display Daily Report',
+                'description' => 'Display Daily Report'
+            ],
+            [
+                'name' => 'weekly-report',
+                'display_name' => 'Display Weekly Report',
+                'description' => 'Display Weekly Report'
+            ],
+            [
+                'name' => 'userwise-report',
+                'display_name' => 'Display Userwise Report',
+                'description' => 'Display Userwise Report'
+            ],
         ];
 
         foreach ($permission as $key => $value) {
