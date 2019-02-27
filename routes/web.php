@@ -405,18 +405,20 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Admin > Permissions
-    Route::resource('permissions', 'PermissionsController', [
-        'except' => 'show',
-        'names' => [
-            'index' => 'permission.index',
-            'create' => 'permission.create',
-            'store' => 'permission.store',
-            'show' => 'permission.show',
-            'update' => 'permission.update',
-            'edit' => 'permission.edit',
-            'destroy' => 'permission.destroy',
-        ],
-    ]);
+    Route::group(['middleware' => ['permission:permission-list']], function () {
+        Route::resource('permissions', 'PermissionsController', [
+            'except' => 'show',
+            'names' => [
+                'index' => 'permission.index',
+                'create' => 'permission.create',
+                'store' => 'permission.store',
+                'show' => 'permission.show',
+                'update' => 'permission.update',
+                'edit' => 'permission.edit',
+                'destroy' => 'permission.destroy',
+            ],
+        ]);
+    });
 
     // Admin > Candidate Source
     Route::get('candidateSource', [
