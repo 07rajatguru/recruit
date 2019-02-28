@@ -24,6 +24,8 @@ use App\ProcessManual;
 use App\ProcessVisibleUser;
 use App\JobOpen;
 use App\JobVisibleUsers;
+use App\RoleUser;
+use App\ModuleVisibleUser;
 
 class UserController extends Controller
 {
@@ -98,7 +100,6 @@ class UserController extends Controller
             'type' => 'required'
         ]);
 
-
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
@@ -111,6 +112,7 @@ class UserController extends Controller
         $type = $request->input('type');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
+        $role_id = $request->input('roles');
         //print_r($account_manager);exit;
 
         $user->secondary_email=$request->input('semail');
@@ -156,6 +158,30 @@ class UserController extends Controller
                     $job_visible_users->job_id = $value;
                     $job_visible_users->user_id = $user_id;
                     $job_visible_users->save();
+                }
+            }
+        }
+
+         // Add new user module visibility by it's role id
+        if (isset($role_id) && $role_id > 0) {
+            $other_user_id = RoleUser::getUserIdByRoleId($role_id);
+            if (isset($other_user_id) && $other_user_id > 0) {
+                $module_arr = ModuleVisibleUser::getModuleByUserId($other_user_id);
+                $module_id = array();
+                $i = 0;
+                if (isset($module_arr) && sizeof($module_arr)>0) {
+                    foreach ($module_arr as $key => $value) {
+                        $module_id[$i] = $key;
+                        $i++;
+                    }
+                    if (isset($module_id) && sizeof($module_id)>0) {
+                        foreach ($module_id as $key => $value) {
+                            $module_user_add = new ModuleVisibleUser();
+                            $module_user_add->user_id = $user_id;
+                            $module_user_add->module_id = $value;
+                            $module_user_add->save();
+                        }
+                    }
                 }
             }
         }
