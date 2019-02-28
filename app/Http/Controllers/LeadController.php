@@ -259,7 +259,7 @@ class LeadController extends Controller
         return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead','lead_status'));
     }
 
- public function store(Request $request){
+    public function store(Request $request){
 
         $user = \Auth::user();
  	    $input = $request->all();
@@ -540,15 +540,9 @@ class LeadController extends Controller
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
+        $user_email = \Auth::user()->email;
 
         $input = $request->all();
-
-        $generate_lead = '1';
-        $lead = Lead::find($id);
-            if($generate_lead==1){
-                $lead->convert_client = 1;
-            }
-        $lead->save();
 
         $client_basic_info = new ClientBasicinfo();
         $client_basic_info->name = $input['name'];
@@ -601,20 +595,20 @@ class LeadController extends Controller
         {
             $client_basic_info->category='';
         }
-
-        /*if (isset($input['yet_to_assign_id'])) {
-            $client_basic_info->yet_to_assign_user = $input['yet_to_assign_id'];
-        }
-        else{
-            $client_basic_info->yet_to_assign_user = 0;
-        }*/
          
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
 
         if($client_basic_info->save()){
+            // If client basic info added successfully then lead convert to client
+            $lead = Lead::find($id);
+            if($generatelead==1){
+                $lead->convert_client = 1;
+            }
+            $lead->save();
 
             $client_id = $client_basic_info->id;
+            $client_name = $client_basic_info->name;
 
             $client_address = new ClientAddress();
             $client_address->client_id = $client_id;
@@ -756,17 +750,6 @@ class LeadController extends Controller
                 }
             }
 
-            /*$lead = new lead();
-            $lead->name = $input['name'];
-            $lead->mobile = $input['mobile'];
-            $lead->city = $input['citya'];
-            $generatelead = $input['generatelead'];
-            $convert_client = 0;
-            if($generatelead==1){
-                $lead->convert_client = 1;
-            }
-            $lead->save();*/
-
             // TODO:: Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
@@ -778,6 +761,23 @@ class LeadController extends Controller
             $user_arr[] = $super_admin_userid;
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+            // Email Notification : data store in datebase
+            $strategyuserid = getenv('STRATEGYUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+            $strategyemail = User::getUserEmailById($strategyuserid);
+            $cc_users_array = array($superadminemail,$strategyemail);
+
+            $module = "Client";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
+            $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
+            $module_id = $client_id;
+            $cc = implode(",",$cc_users_array);
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
         else{
