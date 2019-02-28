@@ -59,7 +59,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                            {!! Form::text('from_date',null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control','tabindex' => '3', 'onchange' => 'preDefinemsg();')) !!}
+                            {!! Form::text('from_date',null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control','tabindex' => '3')) !!}
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
                         <strong>Leave Type: </strong>
-                        {!! Form::select('leave_type', $leave_type,null, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2', 'onchange' => 'checktype();preDefinemsg();' )) !!}
+                        {!! Form::select('leave_type', $leave_type,null, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2', 'onchange' => 'checktype();' )) !!}
                         @if ($errors->has('leave_type'))
                             <span class="help-block">
                         <strong>{{ $errors->first('leave_type') }}</strong>
@@ -92,13 +92,13 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                        {!! Form::text('to_date',null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control','tabindex' => '4', 'onchange' => 'preDefinemsg();')) !!}
+                        {!! Form::text('to_date',null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control','tabindex' => '4')) !!}
                         </div>
                     </div>
 
                     <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
                         <strong>Leave Category: </strong>
-                        {!! Form::select('leave_category', $leave_category,null, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();preDefinemsg();' )) !!}
+                        {!! Form::select('leave_category', $leave_category,null, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();' )) !!}
                         @if ($errors->has('leave_category'))
                             <span class="help-block">
                         <strong>{{ $errors->first('leave_category') }}</strong>
@@ -144,8 +144,8 @@
                     autoclose: true,
             });
 
-            // $("#leave_msg").wysihtml5();
-            preDefinemsg();
+            $("#leave_msg").wysihtml5();
+            // preDefinemsg();
         });
 
         function category(){
@@ -170,7 +170,7 @@
             }
         }
 
-        function preDefinemsg(){
+        /*function preDefinemsg(){
 
             var leave_type = $("#leave_type").val();
             var leave_category = $("#leave_category").val();
@@ -195,7 +195,7 @@
             else {
                 $("#leave_msg").val('Kindly Approve my ');
             }
-        }
+        }*/
     
     </script>
 @endsection

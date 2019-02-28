@@ -62,10 +62,20 @@
     </div>
 @endif
 
-<div class="col-xs-12 col-sm-12 col-md-12 text-center">
-    <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
-    <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
-</div>
+@if($leave_details['status'] == 0)
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
+    </div>
+@elseif($leave_details['status'] == 1)
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <button type="button" class="btn btn-primary" disabled="disabled">Approved</button>
+    </div>
+@elseif($leave_details['status'] == 2)
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <button type="button" class="btn btn-primary" disabled="disabled">Unapproved</button>
+    </div>
+@endif
 
 <input type="hidden" name="leave_id" id="leave_id" value="{{$leave_id}}">
 <input type="hidden" name="msg" id="msg" value="{{$leave_details['message']}}">
