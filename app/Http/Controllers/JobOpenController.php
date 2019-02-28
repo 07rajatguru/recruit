@@ -1907,7 +1907,6 @@ class JobOpenController extends Controller
                     $job_open_doc->updated_at = time();
                     $job_open_doc->save();
                 }
-
             }
 
             if (isset($others_doc) && $others_doc->isValid()) {
@@ -1936,39 +1935,51 @@ class JobOpenController extends Controller
                     $job_open_doc->updated_at = time();
                     $job_open_doc->save();
                 }
-
             }
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
-            $module_id = $job_id;
-            $module = 'Job Openings';
-            $message = $user_name . " added new job";
-            $link = route('jobopen.show',$job_id);
-
             $user_arr = array();
+            if(isset($users) && sizeof($users)>0) {
+                $user_emails = array();
+                foreach ($users as $key=>$value) {
+                    if($user_id!=$value) {
+                        $module_id = $job_id;
+                        $module = 'Job Openings';
+                        $message = $user_name . " added new job";
+                        $link = route('jobopen.show',$job_id);
+                        $user_arr =trim($value);
 
-            if(isset($users) && sizeof($users)>0){
-                foreach ($users as $key=>$value){
-                    if($user_id!=$value){
-                        $user_arr[] = $value;
+                        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+
+                        $email = User::getUserEmailById($value);
+                        $user_emails[] = $email;
                     }
                 }
+
+                // Email Notification : data store in datebase
+                $superadminuserid = getenv('SUPERADMINUSERID');
+                $superadminsecondemail=User::getUserEmailById($superadminuserid);
+                $loggedin_email = \Auth::user()->email;
+
+                $cc_users_array=array($loggedin_email,$superadminsecondemail);
+
+                $module = "Job Open";
+                $sender_name = $user_id;
+                $to = implode(",",$user_emails);
+                $cc = implode(",",$cc_users_array);
+
+                $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
+                $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
+                
+                $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
+                $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
+                $module_id = $job_id;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
-            event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
-
-            /*// Email Notification : data store in datebase
-            $module = "Job Open";
-            $sender_name = $user_id;
-            $to = $user_email;
-            $subject = "Job Open - ".$posting_title;
-            $message = "<tr><td>" . $user_name . " added new Job </td></tr>";
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message));*/
-
         }
 
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully');
-        
     }
 
     public function destroy($id)
