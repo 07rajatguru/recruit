@@ -170,7 +170,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('lead/{id}', [
         'as' => 'lead.update',
         'uses' => 'LeadController@update',
-        'middleware' => ['permission:lead-eit'],
+        'middleware' => ['permission:lead-edit'],
     ]);
 
     Route::delete('lead/{id}', [

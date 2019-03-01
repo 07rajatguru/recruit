@@ -58,7 +58,7 @@
     		<thead>
     			<tr>
 	    			<th>No</th>
-                    {{--<th>Action</th>--}}
+                    <th width="40px">Action</th>
                     <th>User Name</th>
                     <th>Sujbect</th>
                     <th>From date</th>
@@ -73,7 +73,9 @@
     			@foreach($leave_details as $key => $value)
 	    			<tr>
 		    			<td>{{ ++$i }}</td>
-                        {{--<td></td>--}}
+                        <td>
+                            <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                        </td>
 		    			<td>{{ $value['user_name'] }}</td>
 		    			<td>{{ $value['subject'] }}</td>
 		    			<td>{{ $value['from_date'] }}</td>
