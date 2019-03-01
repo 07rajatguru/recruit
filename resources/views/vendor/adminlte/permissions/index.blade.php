@@ -83,7 +83,7 @@
 
                     {{--@permission(('permission-edit'))--}}
 
-                    <a class="btn btn-primary" href="{{ route('permission.edit',$permission->id) }}">Edit</a>
+                    <a class="fa fa-edit" title="Edit" href="{{ route('permission.edit',$permission->id) }}"></a>
 
                     {{--@endpermission--}}
 

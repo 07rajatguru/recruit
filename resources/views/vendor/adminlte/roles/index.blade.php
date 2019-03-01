@@ -69,11 +69,11 @@
 
                 <td>
 
-                    <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
+                    <a class="fa fa-circle" title="Show" href="{{ route('roles.show',$role->id) }}"></a>
 
                     @permission(('role-edit'))
 
-                    <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
+                    <a class="fa fa-edit" title="Edit" href="{{ route('roles.edit',$role->id) }}"></a>
 
                     @endpermission
 
