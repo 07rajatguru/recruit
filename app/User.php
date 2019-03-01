@@ -411,7 +411,8 @@ class User extends Authenticatable
     public static function getOtherUsers($user_id=0){
 
         $superadmin_role_id =  getenv('SUPERADMIN');
-        $superadmin = array($superadmin_role_id);
+        $client_role_id =  getenv('CLIENT');
+        $superadmin = array($superadmin_role_id,$client_role_id);
         $status = 'Inactive';
         $status_array = array($status);
         $query = User::query();

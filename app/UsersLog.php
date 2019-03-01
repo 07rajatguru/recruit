@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Date;
 
 class UsersLog extends Model
 {
@@ -12,7 +13,8 @@ class UsersLog extends Model
     public static function getUsersAttendance($user_id=0,$month,$year){
 
         $superadmin_role_id =  getenv('SUPERADMIN');
-        $superadmin = array($superadmin_role_id);
+        $client_role_id =  getenv('CLIENT');
+        $superadmin = array($superadmin_role_id,$client_role_id);
         $status = 'Inactive';
         $status_array = array($status);
 
@@ -44,7 +46,8 @@ class UsersLog extends Model
     public static function getUsersAttendanceList($user_id=0,$month,$year){
 
         $superadmin_role_id =  getenv('SUPERADMIN');
-        $superadmin = array($superadmin_role_id);
+        $client_role_id =  getenv('CLIENT');
+        $superadmin = array($superadmin_role_id,$client_role_id);
         $status = 'Inactive';
         $status_array = array($status);
 
@@ -114,6 +117,8 @@ class UsersLog extends Model
 
     public static function getUserAttendanceByIdDate($user_id,$date){
 
+        $date_class = new Date();
+
         $query = UsersLog::query();
         $query = $query->select('users_log.*',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
         $query = $query->where('user_id',$user_id);
@@ -130,6 +135,12 @@ class UsersLog extends Model
             $user_attendance[$i]['type'] = $value->type;
             $user_attendance[$i]['login'] = $value->login;
             $user_attendance[$i]['logout'] = $value->logout;
+
+            $login_time = $date_class->converttime($value->login);
+            $logout_time = $date_class->converttime($value->logout);
+            $total = ($logout_time - $login_time) / 60;
+
+            $user_attendance[$i]['total'] = date('H:i', mktime(0,$total));;
             $i++;
         }
 
