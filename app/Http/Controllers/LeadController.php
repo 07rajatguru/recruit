@@ -774,6 +774,7 @@ class LeadController extends Controller
             $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
             $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
             $module_id = $client_id;
+            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
