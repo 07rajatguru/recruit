@@ -8,6 +8,13 @@
 
 @section('content')
 
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
 
 @if ($message = Session::get('success'))
     <div class="alert alert-success">
@@ -32,7 +39,7 @@
     </div>
 </div>
 
-    {!! Form::open(array('route' => 'leave.store','method'=>'POST','id' => 'userleave','files' => true)) !!}
+    {!! Form::open(array('route' => 'leave.store','method'=>'POST','id' => 'userleave','files' => true, 'id' => 'leave_form')) !!}
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -44,7 +51,7 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
                         <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
-                            <strong>Subject: </strong>
+                            <strong>Subject: <span class = "required_fields">*</span></strong>
                             {!! Form::text('subject',null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1' )) !!}
                             @if ($errors->has('subject'))
                                 <span class="help-block">
@@ -54,7 +61,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
-                            <strong>From Date: </strong>
+                            <strong>From Date: <span class = "required_fields">*</span></strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
@@ -64,7 +71,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('leave_msg') ? 'has-error' : '' }}">
-                            <strong>Message:</strong>
+                            <strong>Message: <span class = "required_fields">*</span></strong>
                             {!! Form::textarea('leave_msg', null, array('id'=>'leave_msg','placeholder' => 'Message','class' => 'form-control', 'tabindex' => '6'  )) !!}
                             @if ($errors->has('leave_msg'))
                                 <span class="help-block">
@@ -77,7 +84,7 @@
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
-                        <strong>Leave Type: </strong>
+                        <strong>Leave Type: <span class = "required_fields">*</span></strong>
                         {!! Form::select('leave_type', $leave_type,null, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2', 'onchange' => 'checktype();' )) !!}
                         @if ($errors->has('leave_type'))
                             <span class="help-block">
@@ -97,7 +104,7 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
-                        <strong>Leave Category: </strong>
+                        <strong>Leave Category: <span class = "required_fields">*</span></strong>
                         {!! Form::select('leave_category', $leave_category,null, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();' )) !!}
                         @if ($errors->has('leave_category'))
                             <span class="help-block">
@@ -122,7 +129,7 @@
 
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" onclick="validation();">Submit</button>
         </div>
     </div>
 </div>
@@ -145,7 +152,6 @@
             });
 
             $("#leave_msg").wysihtml5();
-            // preDefinemsg();
         });
 
         function category(){
@@ -170,32 +176,92 @@
             }
         }
 
-        /*function preDefinemsg(){
+        function validation(){
 
-            var leave_type = $("#leave_type").val();
-            var leave_category = $("#leave_category").val();
-            var from_date = $("#from_date").val();
-            var to_date = $("#to_date").val();
-
-            if (leave_type == 'Full' || leave_type == 'Half') {
-                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day ');
-            }
-            else if (leave_type == 'Early/Late') {
-                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' go/in');
-            }
-            else if (leave_category == 'Casual' || leave_category == 'Medical') {
-                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day' +leave_category+ ' Leave');
-            }
-            else if (from_date) {
-                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day' +leave_category+ ' Leave from' +from_date);
-            }
-            else if (to_date) {
-                $("#leave_msg").val('Kindly Approve my ' +leave_type+ ' day' +leave_category+ ' Leave from' +from_date+ ' to' +to_date);
+            leave_cat = $("#leave_category").val();
+            if (leave_cat == 'Medical') {
+                $("#leave_form").validate({
+                    rules: {
+                        "subject": {
+                            required: true
+                        },
+                        "from_date": {
+                            required: true
+                        },
+                        "leave_type": {
+                            required: true
+                        },
+                        "leave_category": {
+                            required: true
+                        },
+                        "leave_msg": {
+                            required: true
+                        },
+                        "doc[]": {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        "subject": {
+                            required: "Subject is required field."
+                        },
+                        "from_date": {
+                            required: "From date is required field."
+                        },
+                        "leave_type": {
+                            required: "Leave type is required field."
+                        },
+                        "leave_category": {
+                            required: "Leave Category is required field."
+                        },
+                        "leave_msg": {
+                            required: "Message is required field."
+                        },
+                        "doc[]": {
+                            required: "Document file is required field."
+                        }
+                    }
+                });
             }
             else {
-                $("#leave_msg").val('Kindly Approve my ');
+                $("#leave_form").validate({
+                    rules: {
+                        "subject": {
+                            required: true
+                        },
+                        "from_date": {
+                            required: true
+                        },
+                        "leave_type": {
+                            required: true
+                        },
+                        "leave_category": {
+                            required: true
+                        },
+                        "leave_msg": {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        "subject": {
+                            required: "Subject is required field."
+                        },
+                        "from_date": {
+                            required: "From date is required field."
+                        },
+                        "leave_type": {
+                            required: "Leave type is required field."
+                        },
+                        "leave_category": {
+                            required: "Leave Category is required field."
+                        },
+                        "leave_msg": {
+                            required: "Message is required field."
+                        }
+                    }
+                });
             }
-        }*/
+        }
     
     </script>
 @endsection

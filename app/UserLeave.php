@@ -35,9 +35,10 @@ class UserLeave extends Model
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
         $query = $query->select('user_leave.*','users.name as user_name');
-        if ($all > 0) {
-            $query = $query->where('user_leave.user_id',$user_id);
+        if ($all == 0) {
+            $query = $query->whereIn('user_leave.user_id',$user_id);
         }
+        $query = $query->orderBy('user_leave.id','desc');
         $res = $query->get();
 
         $leave = array();

@@ -15,12 +15,35 @@ class LeaveController extends Controller
 {
     // Start functions for single user apply for leave & leave data
     public function index(){
-        $user_id = \Auth::user()->id;
+        
+        $user = \Auth::user();
+        $user_id = $user->id;
 
-        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
-        $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
-        //print_r($leave_details);exit;
-        return view('adminlte::leave.index',compact('leave_details','leave_balance'));
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+
+        if(!$isSuperAdmin){
+            $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
+        }
+
+        if($isSuperAdmin || $isAdmin || $isAccountant){
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
+        }
+        else {
+            $floor_reports_id = User::getAssignedUsers($user_id,NULL);
+            foreach ($floor_reports_id as $key => $value) {
+                $user_ids[] = $key;
+            }
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids);   
+        }
+        //print_r($user_ids);exit;
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','isSuperAdmin'));
     }
 
     public function userLeaveAdd()

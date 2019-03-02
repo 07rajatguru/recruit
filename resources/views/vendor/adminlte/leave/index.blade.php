@@ -7,43 +7,48 @@
 @stop
 
 @section('content')
-	<div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Leave Balance</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('leave.add') }}"> Add Leave Application</a>
-            </div>
-        </div>
-    </div>
-    
     <div class="row">
-        <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>{{ $leave_balance->leave_total or 0 }}</h3>
-                    <p>No. of Leave</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-green">
-                <div class="inner">
-                    <h3>{{ $leave_balance->leave_taken or 0 }}</h3>
-                    <p>No. of Leave Taken</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-red">
-                <div class="inner">
-                    <h3>{{ $leave_balance->leave_remaining or 0 }}</h3>
-                    <p>No. of Leave Remainings</p>
-                </div>
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-right">
+                   <a class="btn btn-success" href="{{ route('leave.add') }}"> Add Leave Application</a>
             </div>
         </div>
     </div>
+    @if(!$isSuperAdmin)
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h2>Leave Balance</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-xs-4">
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>{{ $leave_balance->leave_total or 0 }}</h3>
+                        <p>No. of Leave</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-xs-4">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>{{ $leave_balance->leave_taken or 0 }}</h3>
+                        <p>No. of Leave Taken</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-xs-4">
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>{{ $leave_balance->leave_remaining or 0 }}</h3>
+                        <p>No. of Leave Remainings</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
