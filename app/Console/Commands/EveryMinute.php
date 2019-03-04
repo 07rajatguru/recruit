@@ -175,10 +175,12 @@ class EveryMinute extends Command
                 $leave = UserLeave::find($module_id);
 
                 $leave_doc = LeaveDoc::getLeaveDocById($module_id);
-                $input['attachment'] = array();$j = 0;
-                foreach ($leave_doc as $key => $value) {
-                    $input['attachment'][$j] = 'public/'.$value['fileName'];
-                    $j++;
+                if (isset($leave_doc) && sizeof($leave_doc) > 0) {
+                    $input['attachment'] = array();$j = 0;
+                    foreach ($leave_doc as $key => $value) {
+                        $input['attachment'][$j] = 'public/'.$value['fileName'];
+                        $j++;
+                    }
                 }
 
                 $input['leave_message'] = $leave->message;
@@ -191,8 +193,10 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                    foreach ($input['attachment'] as $key => $value) {
-                        $message->attach($value);
+                    if (isset($input['attachment']) && sizeof($input['attachment'])>0) {
+                        foreach ($input['attachment'] as $key => $value) {
+                            $message->attach($value);
+                        }
                     }
                 });
 
