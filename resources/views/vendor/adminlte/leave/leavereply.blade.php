@@ -25,9 +25,10 @@
             	<div class="col-xs-12 col-sm-12 col-md-12">
             		<b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
             		<p><b> Subject : </b> &nbsp;&nbsp;{!! $leave_details['subject'] !!}</p>
-            		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! $leave_details['message'] !!}</p>
-            		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thanks & Regards,</p>
-            		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $leave_details['uname'] }}</p>
+                    <br/>
+            		<p>{!! $leave_details['message'] !!}</p>
+            		<p>Thanks & Regards,</p>
+            		<p>{{ $leave_details['uname'] }}</p>
             	</div>
             </div>
         </div>
@@ -72,11 +73,11 @@
     </div>
 @elseif($leave_details['status'] == 1)
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Approved</button>
+        <button type="button" class="btn btn-primary" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
     </div>
 @elseif($leave_details['status'] == 2)
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Unapproved</button>
+        <button type="button" class="btn btn-primary" disabled="disabled">Unapproved by {{ $leave_details['approved_by'] }}</button>
     </div>
 @endif
 

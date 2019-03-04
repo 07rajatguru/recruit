@@ -12,6 +12,7 @@ use App\Lead;
 use App\Interview;
 use App\Bills;
 use App\ClientBasicinfo;
+use App\LeaveDoc;
 
 class EveryMinute extends Command
 {
@@ -173,6 +174,13 @@ class EveryMinute extends Command
 
                 $leave = UserLeave::find($module_id);
 
+                $leave_doc = LeaveDoc::getLeaveDocById($module_id);
+                $input['attachment'] = array();$j = 0;
+                foreach ($leave_doc as $key => $value) {
+                    $input['attachment'][$j] = 'public/'.$value['fileName'];
+                    $j++;
+                }
+
                 $input['leave_message'] = $leave->message;
                 $input['leave_id'] = $module_id;
 
@@ -181,9 +189,12 @@ class EveryMinute extends Command
                 $input['logged_in_user_nm'] = User::getUserNameById($logged_in_user_id);
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
-                $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                        });
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                    foreach ($input['attachment'] as $key => $value) {
+                        $message->attach($value);
+                    }
+                });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
 

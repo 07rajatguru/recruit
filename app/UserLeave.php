@@ -72,8 +72,9 @@ class UserLeave extends Model
     public static function getLeaveDetails($leave_id){
 
         $query = UserLeave::query();
-        $query = $query->join('users','users.id','user_leave.user_id');
-        $query = $query->select('user_leave.*','users.name as uname');
+        $query = $query->join('users as u1','u1.id','user_leave.user_id');
+        $query = $query->leftjoin('users as u2','u2.id','user_leave.approved_by');
+        $query = $query->select('user_leave.*','u1.name as uname','u2.name as approved_by');
         $query = $query->where('user_leave.id',$leave_id);
         $res = $query->first();
 
@@ -86,6 +87,7 @@ class UserLeave extends Model
             $leave_data['message'] = $res->message;
             $leave_data['status'] = $res->status;
             $leave_data['uname'] = $res->uname;
+            $leave_data['approved_by'] = $res->approved_by;
         }
 
         return $leave_data;

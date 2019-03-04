@@ -83,12 +83,6 @@ class LeaveController extends Controller
         $user_leave->type_of_leave = Input::get('leave_type');
         $user_leave->category = Input::get('leave_category');
         $user_leave->message = $message;
-        /*if ($user_leave->type_of_leave == 'Full' || $user_leave->type_of_leave == 'Half') {
-            $user_leave->message = "Kindly Approve my " . $user_leave->type_of_leave . " day " .$user_leave->category . " Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . $message;
-        }
-        else {
-            $user_leave->message = "Kindly Approve my " . $user_leave->type_of_leave . " go/in " .$user_leave->category . " Leave " . "From " . $user_leave->from_date . " To " . $user_leave->to_date . $message;
-        }*/
         $user_leave->status = '0';
         $user_leave->save();
 
@@ -212,7 +206,7 @@ class LeaveController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
-            \DB::statement("UPDATE user_leave SET status = '1' where id = $leave_id");
+            \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id where id = $leave_id");
         }
         elseif ($reply == 'Unapproved') {
             $new_msg = "<p> Hello, </p> <p><b>Your leave has been Unapproved.</b></p>";
@@ -228,7 +222,7 @@ class LeaveController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
-            \DB::statement("UPDATE user_leave SET status = '2' where id = $leave_id");
+            \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id where id = $leave_id");
         }
 
         $data = 'success';
