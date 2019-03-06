@@ -548,7 +548,7 @@ class CandidateController extends Controller
 
                 if(isset($job_id) && $job_id>0){
                     $job_id = $request->input('jobopen');
-                    $status_id = env('associate_candidate_status', 10);
+                    $status_id = env('associate_candidate_status', 1);
 
                     $jobopening = new JobAssociateCandidates();
                     $jobopening->job_id = $job_id;
@@ -854,7 +854,7 @@ class CandidateController extends Controller
                 JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->delete();
                 if(isset($job_id) && $job_id>0){
                     $job_id = $request->input('jobopen');
-                    $status_id = env('associate_candidate_status', 10);
+                    $status_id = env('associate_candidate_status', 1);
 
                     $jobopening = new JobAssociateCandidates();
                     $jobopening->job_id = $job_id;
