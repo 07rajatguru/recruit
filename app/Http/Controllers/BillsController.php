@@ -141,6 +141,7 @@ class BillsController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isManager = $user_obj::isManager($role_id);
 
         if ($title == 'Forecasting') {
             $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
@@ -261,7 +262,7 @@ class BillsController extends Controller
             }
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
-            if($isSuperAdmin || $isAccountant) {
+            if($isSuperAdmin || $isAccountant || $isManager) {
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
                 $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
 
