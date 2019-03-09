@@ -7,10 +7,65 @@ use Illuminate\Support\Facades\Input;
 
 class IndexController extends Controller
 {
-
-    public function index()
+    // Home Page
+    public function getIndex()
     {
-        return view('index.index');
+        return view('index.home');
+    }
+    // Platform / Overview page
+    public function getOverview(){
+
+        return view('index.overview');
+    }
+    // Platform / Dashboard page
+    public function getDashboard(){
+
+        return view('index.dashboard');
+    }
+    // Platform / Features page
+    public function getFeatures(){
+
+        return view('index.features');
+    }
+    // Platform / Modules page
+    public function getModules(){
+
+        return view('index.modules');
+    }
+    // Benefits / Time Saver page
+    public function getTimeSaver(){
+
+        return view('index.time_saver');
+    }
+    // Benefits / Time Saver page
+    public function getTransparent(){
+
+        return view('index.transparent');
+    }
+    // Benefits / Time Saver page
+    public function getDataInsight(){
+
+        return view('index.data_insight');
+    }
+    // Coming Soon page
+    public function getComingSoon(){
+
+        return view('index.coming_soon');
+    }
+    // About Us Page
+    public function getAboutUs(){
+
+        return view('index.about_us');
+    }
+    // Career Page
+    public function getCareers(){
+
+        return view('index.careers');
+    }
+    // Contact Us Page
+    public function getContactUs(){
+
+        return view('index.contact_us');
     }
 
     public static function sendMail()

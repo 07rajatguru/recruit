@@ -1,0 +1,35 @@
+.dashboard{}
+.dashboard .cms h3{text-transform: none !important;}
+.dashboard .cms p{line-height: 160% !important}
+.dashboard .dashboard_box{border:1px solid #00aace;}
+.dashboard .dashboard_box .dashboard_Head{background-color: #f5f5f5;padding: 15px;}
+.dashboard .dashboard_box + .dashboard_box{margin-top: 30px;}
+.dashboard .dashboard_box .dashboard_Head .title{line-height: 150% !important;}
+.dashboard .dashboard_box .dashboard_Head .title a{color: #000;}
+.dashboard .dashboard_box .dashboard_Head p{margin-bottom: 10px;line-height: 160%;}
+.dashboard .dashboard_box .dashboard_Head p:last-child{margin-bottom: 0;}
+.dashboard .dashboard_box .counter_box{margin:0 -3px;}
+.dashboard .dashboard_box .counter_box ul{margin: 0;padding: 0;font-size: 0;display: table;width: 100%;}
+.dashboard .dashboard_box .counter_box ul li{list-style: none;display: table-cell;width: 25%;padding: 0 3px; }
+.dashboard .dashboard_box .counter_box ul li .counter_inner{background-color: #00aace;padding:13px 10px 5px; text-align: center;}
+.dashboard .dashboard_box .counter_box ul li .tag{color: #FFF;font-size: 36px !important;}
+.dashboard .dashboard_box .counter_box ul li p{color: #FFF;font-size: 14px;}
+
+@media(max-width: 1199px){
+    .dashboard .dashboard_box .counter_box ul li p{line-height: 150%;}
+    .dashboard .dashboard_box .counter_box ul li{padding: 0;background-color: #00aace;vertical-align: middle}
+    .dashboard .dashboard_box .counter_box ul li + li{border-left: 5px solid #FFF;}
+    .dashboard .dashboard_box .counter_box{margin:0;}
+}
+@media(max-width: 991px){
+    .dashboard .dashboard_box .counter_box ul li .counter_inner{padding: 13px 5px 5px;}
+}
+@media(max-width: 480px){
+    .dashboard .dashboard_box .counter_box ul{display: block;}
+    .dashboard .dashboard_box .counter_box ul li{display:block;width: 100%;}
+    .dashboard .dashboard_box .counter_box ul li + li{border-left: none;border-top: 2px solid #FFF}
+    .dashboard .dashboard_box .counter_box ul li .counter_inner{display: table;width: 100%;height: 70px;padding: 0 10px;}
+    .dashboard .dashboard_box .counter_box ul li .tag{display: table-cell;margin-bottom: 0 !important;width: 30%;vertical-align: middle;}
+    .dashboard .dashboard_box .counter_box ul li p{display: table-cell;vertical-align: middle;text-align: left;}
+    .dashboard .dashboard_box + .dashboard_box{margin-top: 15px;}
+}

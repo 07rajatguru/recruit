@@ -16,7 +16,51 @@ Route::get('/', function () {
 });
 
 Route::get('/index', [
-    'uses' => 'IndexController@index'
+    'uses' => 'IndexController@getIndex'
+]);
+
+Route::get('/overview', [
+    'uses' => 'IndexController@getOverview'
+]);
+
+Route::get('/front-dashboard', [
+    'uses' => 'IndexController@getDashboard'
+]);
+
+Route::get('/features', [
+    'uses' => 'IndexController@getFeatures'
+]);
+
+Route::get('/modules', [
+    'uses' => 'IndexController@getModules'
+]);
+
+Route::get('/time_saver', [
+    'uses' => 'IndexController@getTimeSaver'
+]);
+
+Route::get('/transparent', [
+    'uses' => 'IndexController@getTransparent'
+]);
+
+Route::get('/data_insight',[
+    'uses' => 'IndexController@getDataInsight'
+]);
+
+Route::get('/coming_soon',[
+    'uses' => 'IndexController@getComingSoon'
+]);
+
+Route::get('/about_us',[
+    'uses' => 'IndexController@getAboutUs'
+]);
+
+Route::get('/careers',[
+    'uses' => 'IndexController@getCareers'
+]);
+
+Route::get('/contact_us',[
+    'uses' => 'IndexController@getContactUs'
 ]);
 
 Route::post('/contactus', [

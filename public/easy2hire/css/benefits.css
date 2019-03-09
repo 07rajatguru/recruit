@@ -1,0 +1,10 @@
+.benefits{}
+.benefits ul{padding: 0 0 0;}
+.benefits ul li{list-style-type: none; border:1px solid #f5f5f5}
+.benefits ul li+li{margin-top: 30px;}
+.benefits ul li span{color: #00aace;font-weight: bold;display: block;font-size: 1.2em;background-color: #f5f5f5;padding: 10px 15px;}
+.benefits ul li .txt{padding: 10px 15px;color: #000}
+@media(max-width: 767px){
+	.benefits .cms .title{line-height: 125% !important}
+	.benefits .cms p{margin-bottom: 10px;line-height: 150%;}
+}
