@@ -6,7 +6,7 @@
     <div id="revolutionSlider" class="slider rev_slider" data-version="5.4.8" data-plugin-revolution-slider data-plugin-options="{'sliderLayout': 'fullscreen', 'delay': 9000, 'gridwidth': 1140, 'gridheight': 800, 'responsiveLevels': [4096,1200,992,500]}">
       <ul>
         <li class="slide-overlay" data-transition="fade">
-          <img src="easy2hire/img/slider-1.jpg"  
+          <img src="easy2hire/img/Slider-1.jpg"  
           alt=""
           data-bgposition="center center" 
           data-bgfit="cover" 
@@ -46,7 +46,7 @@
         data-paddingleft="['45','45','45','110']">Consult our Experts Now </a>
       </li>
       <li class="slide-overlay" data-transition="fade">
-        <img src="easy2hire/img/slider-2.jpg"  
+        <img src="easy2hire/img/Slider-2.jpg"  
         alt=""
         data-bgposition="center center" 
         data-bgfit="cover" 
@@ -87,7 +87,7 @@
 
       </li>
       <li class="slide-overlay" data-transition="fade">
-        <img src="easy2hire/img/slider-3.jpg"  
+        <img src="easy2hire/img/Slider-3.jpg"  
         alt=""
         data-bgposition="center center" 
         data-bgfit="cover" 
@@ -128,7 +128,7 @@
 
       </li>
       <li class="slide-overlay" data-transition="fade">
-        <img src="easy2hire/img/slider-4.jpg"  
+        <img src="easy2hire/img/Slider-4.jpg"  
         alt=""
         data-bgposition="center center" 
         data-bgfit="cover" 
