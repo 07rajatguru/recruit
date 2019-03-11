@@ -186,7 +186,7 @@
           <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
         </div>
         <div class="col-md-4 text-center text-md-left order-1 order-md-2 mb-5 mb-md-0 mr-lg-5 appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="400">
-          <img src="easy2hire/img/phone.png" class="img-fluid" alt="" />
+          <img src="easy2hire/img/1_home.jpg" class="img-fluid" alt="" />
         </div>
       </div>
     </div>
@@ -196,7 +196,7 @@
     <div class="container container-lg">
       <div class="row align-items-center">
         <div class="col-md-6 col-lg-5 col-xl-6 text-center pr-5 mb-5 mb-md-0 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
-          <img src="easy2hire/img/phone.png" class="img-fluid" alt="" />
+          <img src="easy2hire/img/2_home.jpg" class="img-fluid" alt="" />
         </div>
         <div class="col-md-6 col-lg-7 col-xl-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200">
           <span class="font-weight-bold text-color-dark opacity-8 text-4">Easy2hire makes your Operations More Fruitful Than Before with Deep Tracking Capabilities.</span>
@@ -228,7 +228,7 @@
           <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
         </div>
         <div class="col-md-4 text-center text-md-left order-1 order-md-2 mb-5 mb-md-0 mr-lg-5 appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="400">
-          <img src="easy2hire/img/phone.png" class="img-fluid" alt="" />
+          <img src="easy2hire/img/3_home.jpg" class="img-fluid" alt="" />
         </div>
       </div>
     </div>
@@ -238,7 +238,7 @@
     <div class="container container-lg">
     <div class="row align-items-center">
       <div class="col-md-6 col-lg-5 col-xl-6 text-center pr-5 mb-5 mb-md-0 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
-        <img src="easy2hire/img/phone.png" class="img-fluid" alt="" />
+        <img src="easy2hire/img/4_home.jpg" class="img-fluid" alt="" />
       </div>
       <div class="col-md-6 col-lg-7 col-xl-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200">
         <span class="font-weight-bold text-color-dark opacity-8 text-4">Stop wasting time on searching for information and start working in just a few minutes with a separate module for every important business activity. 

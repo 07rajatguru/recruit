@@ -19,7 +19,7 @@
             <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
                <div class="thumbnail_container">
                   <div class="thumbnail">
-                     <img src="easy2hire/img/home.png" alt="Interactive Dashboard" title="Interactive Dashboard">
+                     <img src="easy2hire/img/Dashboard.jpg" alt="Interactive Dashboard" title="Interactive Dashboard">
                   </div>
                </div>
             </div>
@@ -37,7 +37,7 @@
          <div class="row">
             <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
                <div class="thumbnail">
-                  <img src="easy2hire/img/home.png" alt="Leads Management" title="Leads Management">
+                  <img src="easy2hire/img/lead_module.jpg" alt="Leads Management" title="Leads Management">
                </div>
             </div>
 	         </div>
@@ -57,7 +57,7 @@
 	         <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/home.png" alt="Client Management" title="Client Management">
+	                  <img src="easy2hire/img/Client.jpg" alt="Client Management" title="Client Management">
 	               </div>
 	            </div>
 	         </div>
@@ -75,7 +75,7 @@
 	      <div class="row">
 	         <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/home.png" alt="Job Opening Module" title="Job Opening Module">
+	               <img src="easy2hire/img/Job_Opening.jpg" alt="Job Opening Module" title="Job Opening Module">
 	            </div>
 	         </div>
 		      </div>
@@ -94,7 +94,7 @@
 	         <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/home.png" alt="Candidate Management" title="Candidate Management">
+	                  <img src="easy2hire/img/Candidate_List.jpg" alt="Candidate Management" title="Candidate Management">
 	               </div>
 	            </div>
 	         </div>
@@ -112,7 +112,7 @@
 	      <div class="row">
 	         <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/home.png" alt="Interview Management" title="Interview Management">
+	               <img src="easy2hire/img/Interview-1.jpg" alt="Interview Management" title="Interview Management">
 	            </div>
 	         </div>
 		      </div>
@@ -131,7 +131,7 @@
 	         <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/home.png" alt="Billing & Accounts" title="Billing & Accounts">
+	                  <img src="easy2hire/img/Forecasting.jpg" alt="Billing & Accounts" title="Billing & Accounts">
 	               </div>
 	            </div>
 	         </div>
@@ -149,7 +149,7 @@
 	      <div class="row">
 	         <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/home.png" alt="TODOs" title="TODOs">
+	               <img src="easy2hire/img/Todos.jpg" alt="TODOs" title="TODOs">
 	            </div>
 	         </div>
 		      </div>
@@ -168,7 +168,7 @@
 	         <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/home.png" alt="Attendance" title="Attendance">
+	                  <img src="easy2hire/img/Attendence_module.jpg" alt="Attendance" title="Attendance">
 	               </div>
 	            </div>
 	         </div>
@@ -186,7 +186,7 @@
 	      <div class="row">
 	         <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/home.png" alt="Reports" title="Reports">
+	               <img src="easy2hire/img/Monthly_Report.jpg" alt="Reports" title="Reports">
 	            </div>
 	         </div>
 		      </div>
@@ -205,7 +205,7 @@
 	         <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/home.png" alt="Training Materials" title="Training Materials">
+	                  <img src="easy2hire/img/Training_Material.jpg" alt="Training Materials" title="Training Materials">
 	               </div>
 	            </div>
 	         </div>
@@ -223,7 +223,7 @@
 	      <div class="row">
 	         <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/home.png" alt="Process Manuals" title="Process Manuals">
+	               <img src="easy2hire/img/Process_Manual.jpg" alt="Process Manuals" title="Process Manuals">
 	            </div>
 	         </div>
 		      </div>
@@ -242,7 +242,7 @@
 	         <div class="col-md-6 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/home.png" alt="Finance Module" title="Finance Module">
+	                  <img src="easy2hire/img/Expense.jpg" alt="Finance Module" title="Finance Module">
 	               </div>
 	            </div>
 	         </div>
@@ -260,7 +260,7 @@
 	      <div class="row">
 	         <div class="col-md-6 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/home.png" alt="Admin Module" title="Admin Module">
+	               <img src="easy2hire/img/Users_Management.jpg" alt="Admin Module" title="Admin Module">
 	            </div>
 	         </div>
 		      </div>

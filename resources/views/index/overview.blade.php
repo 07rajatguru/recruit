@@ -29,7 +29,7 @@
             <div class="col-md-5 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
                <div class="thumbnail_container">
                   <div class="thumbnail">
-                     <img src="easy2hire/img/overview.jpg" alt="Keep an Eye on Everything from a Single Screen" title="Keep an Eye on Everything from a Single Screen">
+                     <img src="easy2hire/img/1_overview.jpg" alt="Keep an Eye on Everything from a Single Screen" title="Keep an Eye on Everything from a Single Screen">
                   </div>
                </div>
             </div>
@@ -59,7 +59,7 @@
             </div>
             <div class="col-md-5 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
                <div class="thumbnail">
-                  <img src="easy2hire/img/overview.jpg" alt="Manage Vacancies & Job Opening Boards" title="Manage Vacancies & Job Opening Boards">
+                  <img src="easy2hire/img/2_overview.jpg" alt="Manage Vacancies & Job Opening Boards" title="Manage Vacancies & Job Opening Boards">
                </div>
             </div>
 	         </div>
@@ -88,7 +88,7 @@
 	         <div class="col-md-5 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/overview.jpg" alt="Generate Insightful Business Performance Reports" title="Generate Insightful Business Performance Reports">
+	                  <img src="easy2hire/img/3_overview.jpg" alt="Generate Insightful Business Performance Reports" title="Generate Insightful Business Performance Reports">
 	               </div>
 	            </div>
 	         </div>
@@ -114,7 +114,7 @@
 	         </div>
 	          <div class="col-md-5 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200"><div class="thumbnail_container">
 	            <div class="thumbnail">
-	               <img src="easy2hire/img/overview.jpg" alt="Simplify Billing & Accounts" title="Simplify Billing & Accounts">
+	               <img src="easy2hire/img/4_overview.jpg" alt="Simplify Billing & Accounts" title="Simplify Billing & Accounts">
 	            </div>
 	          </div>
 		      </div>
@@ -139,7 +139,7 @@
 	         <div class="col-md-5 order-lg-12 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="400">
 	            <div class="thumbnail_container">
 	               <div class="thumbnail">
-	                  <img src="easy2hire/img/overview.jpg" alt="Your Recruitment Management Process can Get Better with Easy2Hire" title="Your Recruitment Management Process can Get Better with Easy2Hire">
+	                  <img src="easy2hire/img/5_overview.jpg" alt="Your Recruitment Management Process can Get Better with Easy2Hire" title="Your Recruitment Management Process can Get Better with Easy2Hire">
 	               </div>
 	            </div>
 	         </div>

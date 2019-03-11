@@ -1190,7 +1190,7 @@ class ClientController extends Controller
         }
         else
         {
-            $client_basic_info->percentage_charged_below=NULL;
+            $client_basic_info->percentage_charged_below='8.33';
         }
         
         if(isset($input['percentage_charged_above']) && $input['percentage_charged_above']!='' )
@@ -1199,7 +1199,7 @@ class ClientController extends Controller
         }
         else
         {
-             $client_basic_info->percentage_charged_above=NULL;
+             $client_basic_info->percentage_charged_above='8.33';
         }
         
         $status = $input['status'];

@@ -164,7 +164,7 @@
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>Charged Below AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Charged Below AM Position','class' => 'form-control', 'tabindex' => '18' )) !!}
+                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Charged Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
                         </div>
                         @endif
 
@@ -423,6 +423,9 @@
     <script>
 
         $(document).ready(function() {
+
+            document.getElementById("percentage_charged_above").value = "8.33";
+            document.getElementById("percentage_charged_below").value = "8.33";
 
             $('#account_manager_id').on('change', function (e) {
                 $("#account_manager").val(this.value);
