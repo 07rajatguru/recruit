@@ -74,8 +74,10 @@ class User extends Authenticatable
 
     public static function getAllUsers($type=NULL,$am=NULL){
         $status = 'Inactive';
-
         $status_array = array($status);
+
+        $client_type = array('client');
+
         $user_query = User::query();
 
         if($type!=NULL){
@@ -87,6 +89,7 @@ class User extends Authenticatable
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -103,6 +106,7 @@ class User extends Authenticatable
 
     public static function getAllUsersWithInactive($type=NULL){
 
+        $client_type = array('client');
         $user_query = User::query();
 
         if($type!=NULL){
@@ -110,6 +114,7 @@ class User extends Authenticatable
         }
 
         $user_query = $user_query->orderBy('name');
+        $user_query = $user_query->whereNotIn('type',$client_type);
         $users = $user_query->get();
 
         $userArr = array();
