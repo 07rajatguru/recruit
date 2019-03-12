@@ -368,6 +368,7 @@ class LeadController extends Controller
             $referredby = $lead->referredby;
             $lead_status = $lead->lead_status;
             //print_r($lead_s); exit;
+            // in refered by all users with inactive if inactive user added lead so
             $users=User::getAllUsersWithInactive();
             $leadsarr = array();
             $leads_info = \DB::table('lead_management')
@@ -594,6 +595,20 @@ class LeadController extends Controller
         else
         {
             $client_basic_info->category='';
+        }
+
+        if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '' ) {
+            $client_basic_info->percentage_charged_below=$input['percentage_charged_below'];
+        }
+        else {
+            $client_basic_info->percentage_charged_below='8.33';
+        }
+        
+        if(isset($input['percentage_charged_above']) && $input['percentage_charged_above']!='' ) {
+            $client_basic_info->percentage_charged_above=$input['percentage_charged_above'];
+        }
+        else {
+             $client_basic_info->percentage_charged_above='8.33';
         }
          
         $client_basic_info->created_at = time();

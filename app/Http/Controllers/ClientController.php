@@ -1704,7 +1704,7 @@ class ClientController extends Controller
         }
         else
         {
-            $client_basicinfo->percentage_charged_below=NULL;
+            $client_basicinfo->percentage_charged_below='8.33';
         }
         
         if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='' )
@@ -1713,7 +1713,7 @@ class ClientController extends Controller
         }
         else
         {
-             $client_basicinfo->percentage_charged_above=NULL;
+             $client_basicinfo->percentage_charged_above='8.33';
         }
         
         //$client_basicinfo->fax = $input->fax;
