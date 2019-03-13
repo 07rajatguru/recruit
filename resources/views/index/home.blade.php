@@ -75,7 +75,7 @@
         data-frames='[{"delay":2500,"speed":2000,"frame":"0","from":"opacity:0;y:50%;","to":"o:1;y:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;fb:0;","ease":"Power3.easeInOut"}]'
         data-hash
         data-hash-offset="85"
-        href="#projects"
+        href="/features"
         data-x="left" data-hoffset="0"
         data-y="['center','center','center','top']" data-voffset="['133','133','133','665']"
         data-whitespace="nowrap"
@@ -116,7 +116,7 @@
         data-frames='[{"delay":2500,"speed":2000,"frame":"0","from":"opacity:0;y:50%;","to":"o:1;y:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;fb:0;","ease":"Power3.easeInOut"}]'
         data-hash
         data-hash-offset="85"
-        href="#projects"
+        href="/front-dashboard"
         data-x="left" data-hoffset="0"
         data-y="['center','center','center','top']" data-voffset="['133','133','133','655']"
         data-whitespace="nowrap"  
@@ -157,7 +157,7 @@
         data-frames='[{"delay":2500,"speed":2000,"frame":"0","from":"opacity:0;y:50%;","to":"o:1;y:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;fb:0;","ease":"Power3.easeInOut"}]'
         data-hash
         data-hash-offset="85"
-        href="#projects"
+        href="/overview"
         data-x="left" data-hoffset="0"
         data-y="['center','center','center','top']" data-voffset="['133','133','133','655']"
         data-whitespace="nowrap"  
@@ -183,7 +183,7 @@
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Schedule important tasks.</span></li>
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Email templates for client & candidate-side emailing.</span></li>
           </ul>
-          <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
+          <a href="/time_saver" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
         </div>
         <div class="col-md-4 text-center text-md-left order-1 order-md-2 mb-5 mb-md-0 mr-lg-5 appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="400">
           <img src="easy2hire/img/1_home.png" alt="" class="img-fluid" style="height:330px;max-width:530px;margin-left:-120px;" />
@@ -207,7 +207,7 @@
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Color-based job segregation for quick heads-up.</span></li>
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Check your team’s attendance.</span></li>
           </ul>
-          <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
+          <a href="/transparent" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
         </div>
       </div>
     </div>
@@ -225,7 +225,7 @@
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Set & Analyze Job Priority.</span></li>
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Compare Actual vs Aligned Delivery.</span></li>
           </ul>
-          <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
+          <a href="/data_insight" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">LEARN MORE</a>
         </div>
         <div class="col-md-4 text-center text-md-left order-1 order-md-2 mb-5 mb-md-0 mr-lg-5 appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="400">
           <img src="easy2hire/img/3_home.png" class="img-fluid" alt="" style="height:330px;max-width:530px;margin-left:-120px;"/>
@@ -250,7 +250,7 @@
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Streamlined Interview Management.</span></li>
             <li><i class="fas fa-caret-right top-6"></i> <span class="text-4">Tactical & Automated Candidate Profiling.</span></li>
           </ul>
-          <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">Check out Different Easy2Hire Modules Now</a>
+          <a href="/modules" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2">Check out Different Easy2Hire Modules Now</a>
         </div>
       </div>
     </div>
@@ -261,7 +261,7 @@
       <div class="row justify-content-center">
         <div class="col-md-10 col-xl-9 text-center">
           <h2 class="font-weight-bold text-color-light text-11 mb-4 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="200">You Can Be Next by Joining Our Esteemed Clientele</h2>
-          <p class="font-weight-light text-color-light line-height-9 text-4 opacity-7 mb-5 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="400">More Than 1500+ Agencies Globally have Realized Their True Potential</p>
+         <!--  <p class="font-weight-light text-color-light line-height-9 text-4 opacity-7 mb-5 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="400">More Than 1500+ Agencies Globally have Realized Their True Potential</p> -->
           <a href="#" class="d-inline-flex align-items-center btn btn-primary font-weight-semibold px-5 btn-py-3 text-3 rounded appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="550">Improve Your Operations with EASY2HIRE NOW<i class="fa fa-arrow-right ml-2 pl-1 text-5"></i></a>
         </div>
       </div>
@@ -383,16 +383,16 @@
             <p class="mb-0 appear-animation animated maskUp appear-animation-visible" data-appear-animation="maskUp" data-appear-animation-delay="400" style="animation-delay: 400ms;">Feel free to ask for details, don't save any questions!</p>
           </div>
 
-          <form id="contactForm" class="contact-form appear-animation animated fadeIn appear-animation-visible" action="php/contact-form.php" method="POST" data-appear-animation="fadeIn" data-appear-animation-delay="600" novalidate="novalidate" style="animation-delay: 600ms;">
-            <div class="contact-form-success alert alert-success d-none mt-4" id="contactSuccess">
+            <div class="contact-form-success alert alert-success d-none mt-4" id="sendmessage">
               <strong>Success!</strong> Your message has been sent to us.
             </div>
 
-            <div class="contact-form-error alert alert-danger d-none mt-4" id="contactError">
+            <div class="contact-form-error alert alert-danger d-none mt-4" id="errormessage">
               <strong>Error!</strong> There was an error sending your message.
               <span class="mail-error-message text-1 d-block" id="mailErrorMessage"></span>
             </div>
-
+            <form id="contactForm" class="contactForm" action="{{route('contact.us')}}" method="POST" style="animation-delay: 600ms;">
+                 {{ csrf_field()}}
             <div class="form-row">
               <div class="form-group col-lg-6">
                 <label class="required font-weight-bold text-dark">Full Name</label>

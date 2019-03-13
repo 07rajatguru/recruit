@@ -41,23 +41,28 @@
           </div>
           <div class="col-lg-10">
              <div class="contact_form">
-                <form>
+                <form id="contactForm" class="contactForm" action="{{route('contact.us')}}" method="POST">
+                  {{ csrf_field()}}
                    <h2 class="title font-weight-bold">ARE YOU READY TO BE MORE PRODUCTIVE AS A RECRUITMENT AGENCY? 
                       <span class="sub font-weight-normal">Get in touch with our experts for an insightful discussion. You can also share your feedback, suggestions and questions by filling the form below. We will get back to you within 24 hours.</span>
                    </h2>
                    <div class="form-group Border">
-                      <input type="text" placeholder="Full Name*" class="form-control">
+                      <input type="text" placeholder="Full Name*" class="form-control" required=""  name="name" id="name">
                       <label class="error" style="display: none;">Please enter your Full Name.</label>
                    </div>
                    <div class="form-group Border">
-                      <input type="text" placeholder="Email Address*" class="form-control">
+                      <input type="email" placeholder="Email Address*" class="form-control" required="" name="email" id="email">
                    </div>
                    <div class="form-group Border">
-                      <input type="text" placeholder="Subject*" class="form-control">
+                      <input type="text" placeholder="Subject*" class="form-control" required="" name="subject" id="subject">
                    </div>
                    <div class="form-group">
-                      <textarea placeholder="Message*" class="form-control textarea"></textarea>
+                      <textarea placeholder="Message*" class="form-control textarea" required="" name="message" id="message"></textarea>
                    </div>
+                   <div class="form-group">
+                      <input type="hidden" class="form-control" name="check" id="check" value="hello">
+                   </div>
+
                    <div class="read-btn text-right">
                       <button class="btn btn-primary btn-modern" title="Submit">submit</button>
                    </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\ContactUs;
 
 class IndexController extends Controller
 {
@@ -74,10 +75,19 @@ class IndexController extends Controller
     	$email=Input::get('email');
     	$subject=Input::get('subject');
 		$msg=Input::get('message');
+        $check=Input::get('check');
+
+        $contact_us = new ContactUs();
+        $contact_us->name = $name;
+        $contact_us->email = $email;
+        $contact_us->subject = $subject;
+        $contact_us->message = $msg;
+        $contact_us->save();
 
 		$to=getenv('CONTACTMAIL_TO');
 		$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
+        $app_url = getenv('APP_URL');
 
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
@@ -86,13 +96,21 @@ class IndexController extends Controller
 		$input['email']=$email;
 		$input['subject']=$subject;
 		$input['msg']=$msg;
+        $input['app_url'] = $app_url;
 
 		\Mail::send('adminlte::emails.contactus', $input, function ($message) use ($input) 
 		{
-                $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->subject( $input['subject']);
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->subject( $input['subject']);
         });
 
-        return redirect('/index');
+        if(isset($check) && $check != '')
+        {
+            return redirect('/contact_us');
+        }
+        else
+        {
+            return redirect('/index');
+        }
     }
 }
