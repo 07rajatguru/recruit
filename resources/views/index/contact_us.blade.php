@@ -73,7 +73,7 @@
        </div>
     </div>
     <div class="map">
-       <iframe src="https://maps.google.com/maps?width=100%&amp;height=400&amp;hl=en&amp;q=Titanium%20City%20Center%2CAhmedabad+(Your%20Business%20Name)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" ></iframe>
+       <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14689.295346656285!2d72.522698!3d23.011879!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x13092791eda764b8!2sTraj+Infotech+Pvt.+Ltd.!5e0!3m2!1sen!2sin!4v1500296945890" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe> </iframe>
     </div>
  </div>
 @stop

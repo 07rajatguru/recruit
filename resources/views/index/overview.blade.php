@@ -45,7 +45,7 @@
                   <li>Real-time Notifications for Current Updates</li>
                   <li>Quick Add Tab Shortcut for adding lead, client, jobs, interviews data</li>
                </ul>
-               <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">READ MORE</a>
+               <a href="/demo_request" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">Request a Free Demo</a>
             </div>
          </div>
       </div>
@@ -73,7 +73,6 @@
 	               <li>Track all jobs with less than 5 deliveries within 48 hours to improve delivery ratio</li>
 	               <li>Control access for modifying/deleting jobs to keep the data secured</li>
 	            </ul>
-	            <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">READ MORE</a>
 	         </div>
       	 </div>
    	  </div>
@@ -100,7 +99,7 @@
 	               <li>Weekly Reports</li>
 	               <li>Monthly Reports </li>
 	            </ul>
-	            <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">READ MORE</a>
+	            <a href="/demo_request" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">Request a Free Demo</a>
 	         </div>
 	      </div>
 	   </div>
@@ -124,7 +123,6 @@
 		            <li>Never Miss a Single Revenue Generation Opportunity</li>
 		            <li>Generate Recovery Mails Automatically </li>
 		         </ul>
-		         <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">READ MORE</a>
 		      </div>
 	      </div>
 		</div>
@@ -151,7 +149,7 @@
 	               <li><strong>Track Current Activities:</strong>Stay updated about current leads, active jobs, interview schedule, attendance charts, active clients and lots more from a single window.<i>Explore How Easy2Hire Promotes Transparency & Productivity </i></li>
 	               <li><strong>Gather Actionable Insights:</strong>Be data-wise by gathering valuable insights into lead-client conversion, interview-delivery ratio and perform client analysis to improve revenues and growth prospects.<i>See How Data Analysis Optimize Operations</i></li>
 	            </ul>
-	            <a href="#" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">READ MORE</a>
+	            <a href="/demo_request" class="btn btn-primary font-weight-semibold rounded-0 btn-px-5 py-3 text-2" title="READ MORE">Request a Free Demo</a>
 	         </div>
 	      </div>
 	   </div>

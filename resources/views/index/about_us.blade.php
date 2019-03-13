@@ -137,7 +137,7 @@
 	    </div>
 	    <!-- <p><strong>Ready to Be Overwhelmed with Easy2Hire <br>Try out our Solution Now</strong></p> -->
 	    <h3 class="font-weight-bold text-color-dark text-6 subtitle mb-1">Ready to Be Overwhelmed with Easy2Hire</h3>
-	    <a href="#" title="Try out our Solution Now" class="font-weight-bold text-5">Try out our Solution Now</a>
+	    <a href="/demo_request" title="Try out our Solution Now" class="font-weight-bold text-5">Try out our Solution Now</a>
 	 </div>
 </div>
 @stop
