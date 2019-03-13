@@ -35,7 +35,7 @@
         data-frames='[{"delay":2500,"speed":2000,"frame":"0","from":"opacity:0;y:50%;","to":"o:1;y:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;fb:0;","ease":"Power3.easeInOut"}]'
         data-hash
         data-hash-offset="85"
-        href="#projects"
+        href="/demo_request"
         data-x="left" data-hoffset="0"
         data-y="['center','center','center','top']" data-voffset="['133','133','133','655']"
         data-whitespace="nowrap"  
@@ -262,7 +262,7 @@
         <div class="col-md-10 col-xl-9 text-center">
           <h2 class="font-weight-bold text-color-light text-11 mb-4 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="200">You Can Be Next by Joining Our Esteemed Clientele</h2>
          <!--  <p class="font-weight-light text-color-light line-height-9 text-4 opacity-7 mb-5 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="400">More Than 1500+ Agencies Globally have Realized Their True Potential</p> -->
-          <a href="#" class="d-inline-flex align-items-center btn btn-primary font-weight-semibold px-5 btn-py-3 text-3 rounded appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="550">Improve Your Operations with EASY2HIRE NOW<i class="fa fa-arrow-right ml-2 pl-1 text-5"></i></a>
+          <a href="/demo_request" class="d-inline-flex align-items-center btn btn-primary font-weight-semibold px-5 btn-py-3 text-3 rounded appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="550">Improve Your Operations with EASY2HIRE NOW<i class="fa fa-arrow-right ml-2 pl-1 text-5"></i></a>
         </div>
       </div>
     </div>

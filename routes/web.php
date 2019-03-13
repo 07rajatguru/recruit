@@ -68,6 +68,15 @@ Route::post('/contactus', [
      'uses' => 'IndexController@sendMail'
 ]);
 
+Route::get('/demo_request',[
+    'uses' => 'IndexController@getDemoRequest'
+]);
+
+Route::post('/demorequest', [
+     'as' => 'demo.request',
+     'uses' => 'IndexController@sendDemoRequest'
+]);
+
 //Auth::routes();
 
 Route::get('/login', [
