@@ -1083,6 +1083,7 @@ class Bills extends Model
             $personwise_query = $personwise_query->where('bills_efforts.employee_name',$user_id);
         }
         $personwise_query = $personwise_query->where('bills.status','=','1');
+        $personwise_query = $personwise_query->where('bills.cancel_bill','=','0');
         $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
         $personwise_query = $personwise_query->where('bills.date_of_joining','<=',$next_year);
         $personwise_res = $personwise_query->get();
@@ -1152,6 +1153,7 @@ class Bills extends Model
         $clientwise_query = $clientwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','users.name as owner_name','client_basicinfo.coordinator_name as coordinator_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
         $clientwise_query = $clientwise_query->where('bills.company_name','like',"%$client_name%");
         $clientwise_query = $clientwise_query->where('bills.status','=','1');
+        $clientwise_query = $clientwise_query->where('bills.cancel_bill','=','0');
         $clientwise_query = $clientwise_query->where('bills.date_of_joining','>=',$current_year);
         $clientwise_query = $clientwise_query->where('bills.date_of_joining','<=',$next_year);
         $clientwise_res = $clientwise_query->get();
