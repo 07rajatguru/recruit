@@ -366,21 +366,29 @@
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
-                
+
+                <?php
+                    $utc = $candidate->job_associate_candidates_date;
+                    $dt = new \DateTime($utc);
+                    $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+
+                    $dt->setTimezone($tz);
+                    $associated_date = $dt->format('Y-m-d H:i:s');
+                ?>
                 @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
-                <td>{{ date('d-m-Y h:i A' , strtotime($candidate->job_associate_candidates_date)) }}</td>
+                <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
                 @else
                 <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
-                <td>{{ date('d-m-Y h:i A' , strtotime($candidate->job_associate_candidates_date)) }}</td>
+                <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
                 @endif
 
             </tr>
