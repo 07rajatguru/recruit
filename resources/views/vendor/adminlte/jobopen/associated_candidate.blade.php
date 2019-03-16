@@ -309,7 +309,7 @@
             <th>Candidate Email</th>
             <th>Candidate Status</th>
             <th>Round Cleared</th>
-            <th>Associated Date</th>
+            <th>Associated Date/Time</th>
 
         </tr>
         <?php $i = 0; ?>
