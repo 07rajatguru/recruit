@@ -230,7 +230,7 @@
                     }
                 },
                 responsive: true,
-                "pageLength": 100,
+                "pageLength": 25,
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
