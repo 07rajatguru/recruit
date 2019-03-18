@@ -456,7 +456,7 @@ class LeadController extends Controller
         if(isset($cancel_lead))
             $lead_basic->cancel_lead=$cancel_lead;
 
-         $lead_basic->account_manager_id = $user;
+         //$lead_basic->account_manager_id = $user;
 
         $leadUpdated = $lead_basic->save();
 
