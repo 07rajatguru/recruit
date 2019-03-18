@@ -392,6 +392,22 @@ return [
            ],
        ],
        [
+           'text'        => 'Customer Support',
+           'icon'        => 'user-md',
+           'submenu' => [
+               [
+                   'text' => 'Add Customer Support',
+                   'url'  => 'customer-support/create',
+                   'icon' => 'plus',
+               ],
+               [
+                   'text' => 'List Customer Support',
+                   'url'  => 'customer-support',
+                   'icon' => 'list',
+               ]
+           ],
+       ],
+       [
            'text'        => 'Finance',
            'icon'        => 'money',
            'submenu' => [
@@ -465,6 +481,11 @@ return [
                 [
                     'text' => 'Holiday',
                     'url'  => 'holidays',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Module',
+                    'url'  => 'module',
                     'icon' => 'circle-o',
                 ],
                 [

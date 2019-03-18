@@ -44,6 +44,22 @@ class Module extends Model
         return $module_name;
     }
 
+    public static function getModules()
+    {
+        $query = Module::query();
+        $query = $query->orderBy('id','ASC');
+
+        $response = $query->get();
+        $module = array();
+
+        foreach ($response as $k=>$v)
+        {
+            $module[$v->id] = $v->name;  
+        }
+
+        return $module;
+    }
+
     public static function getAllModulesNameAjax(){
 
         $query = Module::query();

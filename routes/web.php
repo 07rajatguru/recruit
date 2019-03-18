@@ -2136,5 +2136,51 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'usermodule.visible',
         'uses' => 'ModuleVisibleController@userWiseModuleAjax'
     ]);
+
+    // Customer Support routes
+
+    Route::get('customer-support',[
+        'as' => 'customer.index',
+        'uses' => 'CustomerSupportController@index'
+    ]);
+
+    Route::get('customer-support/create',[
+        'as' => 'customer.create',
+        'uses' => 'CustomerSupportController@create'
+    ]);
+
+    Route::post('customer-support/create',[
+        'as' => 'customer.store',
+        'uses' => 'CustomerSupportController@store'
+    ]);
+
+    Route::get('customer-support/{id}',[
+        'as'=>'customer.show',
+        'uses'=>'CustomerSupportController@show'
+    ]);
+
+    Route::get('customer-support/{id}/edit',[
+        'as' => 'customer.edit',
+        'uses' => 'CustomerSupportController@edit'
+    ]);
+
+    Route::patch('customer-support/{id}',[
+        'as' => 'customer.update',
+        'uses' => 'CustomerSupportController@update'
+    ]);
+
+    Route::post('customer-support/upload/{id}', [
+        'as' => 'customerattachments.upload',
+        'uses' => 'CustomerSupportController@upload'
+    ]);
     
+    Route::delete('customer-support/destroy/{id}', [
+        'as' => 'customerattachments.destroy',
+        'uses' => 'CustomerSupportController@attachmentsDestroy'
+    ]);
+
+    Route::delete('customer-support/{id}',[
+        'as' => 'customer.destroy',
+        'uses' => 'CustomerSupportController@destroy'
+    ]); 
 });
