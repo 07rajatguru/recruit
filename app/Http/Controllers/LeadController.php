@@ -467,7 +467,7 @@ class LeadController extends Controller
             return redirect('lead/'.$lead_basic->id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
 
-        return redirect()->route('lead.index')->with('success','ToDo Updated Successfully');
+        return redirect()->route('lead.index')->with('success','Lead Updated Successfully');
 
 	 }
 
