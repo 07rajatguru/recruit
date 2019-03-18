@@ -8,6 +8,7 @@
 @stop
 
 @section('content')
+
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
