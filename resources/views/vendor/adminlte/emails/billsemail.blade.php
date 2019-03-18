@@ -36,10 +36,10 @@
 			<td>Fixed Salary</td>
 			<td>{{ $value['fixed_salary'] }} CTC</td>
 		</tr>
-		<tr style="height: auto;width: auto;">
+		{{--<tr style="height: auto;width: auto;">
 			<td>Percentage Charged</td>
 			<td>{{ $value['percentage_charged'] }}%</td>
-		</tr>
+		</tr>--}}
 		<tr style="height: auto;width: auto;">
 			<td>Efforts</td>
 			<td>{{ $value['efforts'] }}</td>
