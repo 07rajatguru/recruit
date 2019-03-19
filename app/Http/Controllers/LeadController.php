@@ -532,8 +532,10 @@ class LeadController extends Controller
 
          $co_prefix=ClientBasicinfo::getcoprefix();
          $co_category='';
+        $percentage_charged_below = '8.33';
+        $percentage_charged_above = '8.33';
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
 
      }
 
