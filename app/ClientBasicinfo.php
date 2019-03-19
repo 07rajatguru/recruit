@@ -747,6 +747,7 @@ class ClientBasicinfo extends Ardent
             $client['shipping_street'] = $res->shipping_street1.", ".$res->shipping_street2;
             $client['shipping_code'] = $res->shipping_code;
             $client['shipping_city'] = $res->shipping_city;
+            $client['percentage_charged'] = $res->percentage_charged_above;
         }
 
         return $client;
