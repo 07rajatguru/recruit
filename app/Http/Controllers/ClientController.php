@@ -1036,9 +1036,11 @@ class ClientController extends Controller
         }
 
         $industry_id = '';
+        $percentage_charged_below = '8.33';
+        $percentage_charged_above = '8.33';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
     }
 
 
@@ -1123,6 +1125,8 @@ class ClientController extends Controller
             $user_id = $value->account_manager_id;
             $industry_id = $value->industry_id;
             //$yet_to_assign_users_id = $value->yet_to_assign_user;
+            $percentage_charged_below = $value->percentage_charged_below;
+            $percentage_charged_above = $value->percentage_charged_above;
         }
         else
         {
@@ -1162,7 +1166,7 @@ class ClientController extends Controller
         $yet_to_assign_users[0] = '--Select User--';
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users'/*,'yet_to_assign_users_id'*/));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/));
     }
 
     public function store(Request $request){
@@ -1702,6 +1706,9 @@ class ClientController extends Controller
         {
             $client_basicinfo->percentage_charged_below=$input->percentage_charged_below;
         }
+        else if (isset($client_basicinfo->percentage_charged_below) && $client_basicinfo->percentage_charged_below != '') {
+            $client_basicinfo->percentage_charged_below = $client_basicinfo->percentage_charged_below;
+        }
         else
         {
             $client_basicinfo->percentage_charged_below='8.33';
@@ -1710,6 +1717,9 @@ class ClientController extends Controller
         if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='' )
         {
             $client_basicinfo->percentage_charged_above=$input->percentage_charged_above;
+        }
+        else if (isset($client_basicinfo->percentage_charged_above) && $client_basicinfo->percentage_charged_above != '') {
+            $client_basicinfo->percentage_charged_above = $client_basicinfo->percentage_charged_above;
         }
         else
         {
@@ -1756,6 +1766,9 @@ class ClientController extends Controller
         if(isset($input->client_category))
         {
             $client_basicinfo->category=$input->client_category;
+        }
+        else if (isset($client_basicinfo->category) && $client_basicinfo->category != '') {
+            $client_basicinfo->category = $client_basicinfo->category;
         }
         else
         {

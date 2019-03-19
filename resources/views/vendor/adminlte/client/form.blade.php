@@ -58,12 +58,12 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
                             <strong>Display Name: </strong>
                             {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','maxlength' => 7 )) !!}
-                            @if ($errors->has('name'))
+                            @if ($errors->has('display_name'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('name') }}</strong>
+                                <strong>{{ $errors->first('display_name') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -164,14 +164,14 @@
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>Charged Below AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_below', null, array('id'=>'percentage_charged_below','placeholder' => 'Charged Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
+                            {!! Form::text('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charged Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
                         </div>
                         @endif
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>Charged Above AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_above', null, array('id'=>'percentage_charged_above','placeholder' => 'Charged Above AM Position','class' => 'form-control', 'tabindex' => '20' )) !!}
+                            {!! Form::text('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charged Above AM Position','class' => 'form-control', 'tabindex' => '20' )) !!}
                         </div>
                         @endif
 
@@ -423,9 +423,6 @@
     <script>
 
         $(document).ready(function() {
-
-            document.getElementById("percentage_charged_above").value = "8.33";
-            document.getElementById("percentage_charged_below").value = "8.33";
 
             $('#account_manager_id').on('change', function (e) {
                 $("#account_manager").val(this.value);
