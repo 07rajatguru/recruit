@@ -644,7 +644,10 @@
             });
 
 
-            $("#upload_img").change(function(){
+            $("#upload_img").change(function(e){
+                if( !e ){
+                    e = window.event;
+                }
                 $('#upload_images_div').html("");
                 var total_file=document.getElementById("upload_img").files.length;
                 for(var i=0;i<total_file;i++){
