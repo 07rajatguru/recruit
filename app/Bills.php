@@ -155,7 +155,7 @@ class Bills extends Model
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+            $bills[$i]['fixed_salary'] = /*Utils::IND_money_format(round(*/$value->fixed_salary/*))*/;
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
@@ -299,7 +299,7 @@ class Bills extends Model
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+            $bills[$i]['fixed_salary'] = /*Utils::IND_money_format(round(*/$value->fixed_salary/*))*/;
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
@@ -412,7 +412,7 @@ class Bills extends Model
             $billsdetails['designation_offered'] = $bills->offered;
             $billsdetails['date_of_joining'] = $bills->date;
             $billsdetails['job_location'] = $bills->location;
-            $billsdetails['fixed_salary'] = Utils::IND_money_format(round($bills->salary));
+            $billsdetails['fixed_salary'] = /*Utils::IND_money_format(round(*/$bills->salary/*))*/;
             $billsdetails['percentage_charged'] = $bills->percentage;
             $billsdetails['description'] = $bills->remarks;
             $billsdetails['source'] = $bills->source;
