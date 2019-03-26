@@ -339,7 +339,7 @@ class User extends Authenticatable
 
     public static function isHr($user_role_id)
     {
-        $hr_role_id = env('HRUSERID');
+        $hr_role_id = env('HR');
         if ($hr_role_id == $user_role_id) {
             return true;
         }
