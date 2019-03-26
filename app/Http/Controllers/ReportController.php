@@ -28,8 +28,9 @@ class ReportController extends Controller
 
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
+        $hrUserID = getenv('HRUSERID');
 
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsers('recruiter');
         }
@@ -69,6 +70,7 @@ class ReportController extends Controller
 
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
+        $hrUserID = getenv('HRUSERID');
 
         // get role of logged in user
         $user =  \Auth::user();
@@ -78,7 +80,7 @@ class ReportController extends Controller
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
@@ -172,6 +174,7 @@ class ReportController extends Controller
 
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
+        $hrUserID = getenv('HRUSERID');
 
         // get role of logged in user
         $user =  \Auth::user();
@@ -181,7 +184,7 @@ class ReportController extends Controller
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
@@ -222,8 +225,9 @@ class ReportController extends Controller
 
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
+        $hrUserID = getenv('HRUSERID');
 
-        $access_roles_id = array($superAdminUserID,$managerUserID);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsers('recruiter');
         }
@@ -380,7 +384,9 @@ class ReportController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
-        if ($isSuperAdmin || $isAccountant) {
+        $isHr = $user_obj::isHr($role_id);
+
+        if ($isSuperAdmin || $isAccountant || $isHr) {
             // Year Data
             $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
             $ending_year = date('Y',strtotime('+1 year'));
