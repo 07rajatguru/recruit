@@ -1223,7 +1223,7 @@ class JobOpen extends Model
 
     public static function getJobforOpentoAll(){
 
-        $date = date('Y-m-d');
+        $date = $days_ago = date('Y-m-d', strtotime('-5 days'));
         $date_time = date('Y-m-d H');
         //print_r($date);exit;
         $job_onhold = getenv('ONHOLD');

@@ -71,8 +71,8 @@ class JobOpentoAll extends Command
                         }
                         $superadminsecondemail=User::getUserEmailById($superadminuserid);
                         $cc1 = "adler.rgl@gmail.com";
-                        //$cc2 = "tarikapanjwani@gmail.com";
-                        $cc_users_array=array($superadminsecondemail,$cc1);
+                        $cc2 = "tarikapanjwani@gmail.com";
+                        $cc_users_array=array($superadminsecondemail,$cc1,$cc2);
 
                         $job_details = JobOpen::getJobById($job_id);
 
