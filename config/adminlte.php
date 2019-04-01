@@ -391,7 +391,7 @@ return [
                ]
            ],
        ],
-       [
+       /*[
            'text'        => 'Customer Support',
            'icon'        => 'user-md',
            'submenu' => [
@@ -406,7 +406,7 @@ return [
                    'icon' => 'list',
                ]
            ],
-       ],
+       ],*/
        /*[
            'text'        => 'Finance',
            'icon'        => 'money',
@@ -491,6 +491,11 @@ return [
                 [
                     'text' => 'Module Visibility',
                     'url'  => 'modulevisible',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Client Heirarchy',
+                    'url'  => 'client-heirarchy',
                     'icon' => 'circle-o',
                 ]
                     /* [

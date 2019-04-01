@@ -68,7 +68,7 @@ class Bills extends Model
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = Utils::IND_money_format($value->fixed_salary);
+            $bills[$i]['fixed_salary'] = /*Utils::IND_money_format(*/$value->fixed_salary/*)*/;
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
