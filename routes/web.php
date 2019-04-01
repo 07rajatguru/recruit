@@ -2182,5 +2182,44 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('customer-support/{id}',[
         'as' => 'customer.destroy',
         'uses' => 'CustomerSupportController@destroy'
-    ]); 
+    ]);
+
+
+    // Client Heirarchy Route
+    Route::get('client-heirarchy',[
+        'as' => 'clientheirarchy.index',
+        'uses' => 'ClientHeirarchyController@index',
+        'middleware' => ['permission:clientheirarchy-list']
+    ]);
+
+    Route::get('client-heirarchy/create',[
+        'as' => 'clientheirarchy.create',
+        'uses' => 'ClientHeirarchyController@create',
+        'middleware' => ['permission:clientheirarchy-create']
+    ]);
+
+    Route::post('client-heirarchy/create',[
+        'as' => 'clientheirarchy.store',
+        'uses' => 'ClientHeirarchyController@store',
+        'middleware' => ['permission:clientheirarchy-create']
+    ]);
+
+    Route::get('client-heirarchy/edit/{id}',[
+        'as' => 'clientheirarchy.edit',
+        'uses' => 'ClientHeirarchyController@edit',
+        'middleware' => ['permission:clientheirarchy-edit']
+    ]);
+
+    Route::patch('client-heirarchy/edit/{id}',[
+        'as' => 'clientheirarchy.update',
+        'uses' => 'ClientHeirarchyController@update',
+        'middleware' => ['permission:clientheirarchy-edit']
+    ]);
+
+    Route::delete('client-heirarchy/{d}',[
+        'as' => 'clientheirarchy.destroy',
+        'uses' => 'ClientHeirarchyController@destroy',
+        'middleware' => ['permission:clientheirarchy-delete']
+    ]);
+
 });
