@@ -42,15 +42,26 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-
-                        <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
-                            <strong>Posting Title: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1')) !!}
-                            @if ($errors->has('posting_title'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('posting_title') }}</strong>
-                                </span>
-                            @endif
+                        <div class="col-md-4" style="margin-left: -15px;">
+                            <div class="form-group {{ $errors->has('level_id') ? 'has-error' : '' }}">
+                                <strong>Posting Title: <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('level_id', $client_hierarchy_name, null, array('id'=>'level_id','class' => 'form-control', 'tabindex' => '1')) !!}
+                                @if ($errors->has('level_id'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('level_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-8" style="width: 72%;margin: 20px 0 0 -20px;">
+                            <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
+                                {!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1')) !!}
+                                @if ($errors->has('posting_title'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('posting_title') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="form-group {{ $errors->has('hiring_manager_id') ? 'has-error' : '' }}">
@@ -474,6 +485,9 @@
 
             $("#jobsForm").validate({
                 rules: {
+                    "level_id": {
+                        required: true
+                    },
                     "posting_title": {
                         required: true
                     },
@@ -503,6 +517,9 @@
                     }
                 },
                 messages: {
+                    "level_id": {
+                        required: "Select Posting Title."
+                    },
                     "posting_title": {
                         required: "Posting Title is required field."
                     },
@@ -562,6 +579,7 @@
             $("#client_id").select2();
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
+            $("#level_id").select2();
         });
 
         var placeSearch, autocomplete;

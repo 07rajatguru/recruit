@@ -916,6 +916,7 @@ class JobOpenController extends Controller
             }
         //print_r($open_to_all);exit;
         }
+        $level_id = $input['level_id'];
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -951,6 +952,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
         $job_open->open_to_all_date = $open_to_all;
+        $job_open->level_id = $level_id;
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -1111,11 +1113,12 @@ class JobOpenController extends Controller
         $job_open=array();
 
         $job_open_detail = \DB::table('job_openings')
+            ->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id')
             ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
             ->join('client_address','client_address.client_id','=','client_basicinfo.id')
             ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
             ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
-            ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name')
+            ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name','client_heirarchy.name as level_name')
             ->where('job_openings.id', '=', $id)
             ->get();
 
@@ -1242,8 +1245,12 @@ class JobOpenController extends Controller
             }
 
           //  $salary = $min_ctc.'-'.$max_ctc;
-
-            $job_open['posting_title'] = $value->posting_title;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $job_open['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $job_open['posting_title'] = $value->posting_title;   
+            }
             $job_open['job_id'] = $value->job_id;
             $job_open['client_name'] = $value->client_name . "-" . $value->bill_city;
             $job_open['client_id'] = $value->client_id;
@@ -1559,6 +1566,8 @@ class JobOpenController extends Controller
         if (isset($work_exp_to) && $work_exp_to == '')
             $work_exp_to = 0;
 
+        $level_id = $input['level_id'];
+
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
         $job_open = JobOpen::find($id);
@@ -1593,6 +1602,7 @@ class JobOpenController extends Controller
         $job_open->thousand_to = $thousand_to;
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
+        $job_open->level_id = $level_id;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -1737,11 +1747,13 @@ class JobOpenController extends Controller
 
         // job priority
         $job_priorities = JobOpen::getJobPriorities();
+        // get Client hierarchy names
+        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
 
         $action = "clone";
 
         
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
 
     }
 
@@ -1816,6 +1828,8 @@ class JobOpenController extends Controller
         if (isset($work_exp_to) && $work_exp_to == '')
             $work_exp_to = 0;
 
+        $level_id = $input['level_id'];
+
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
         $job_open = new JobOpen();
@@ -1847,7 +1861,7 @@ class JobOpenController extends Controller
         $job_open->thousand_to = $thousand_to;
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
-
+        $job_open->level_id = $level_id;
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
