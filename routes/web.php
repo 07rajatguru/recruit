@@ -2216,10 +2216,16 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:clientheirarchy-edit']
     ]);
 
-    Route::delete('client-heirarchy/{d}',[
+    Route::delete('client-heirarchy/{id}',[
         'as' => 'clientheirarchy.destroy',
         'uses' => 'ClientHeirarchyController@destroy',
         'middleware' => ['permission:clientheirarchy-delete']
+    ]);
+
+    Route::get('client-heirarchy/update-position',[
+        'as' => 'clientheirarchy.update-position',
+        'uses' => 'ClientHeirarchyController@UpdatePosition',
+        'middleware' => ['permission:clientheirarchy-list']
     ]);
 
 });

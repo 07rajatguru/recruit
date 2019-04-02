@@ -63,4 +63,11 @@ class ClientHeirarchyController extends Controller
 
     	return redirect()->route('clientheirarchy.index')->with('success','Client Herirarchy Deleted Successfully');
     }
+
+    public function UpdatePosition(){
+
+        $ids_array = $_GET['ids'];
+        //$ids = $_POST['ids'];
+        print_r($ids_array);
+    }
 }

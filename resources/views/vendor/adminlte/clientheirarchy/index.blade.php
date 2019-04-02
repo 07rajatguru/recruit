@@ -39,7 +39,7 @@
            <th>Order</th>
 	    </tr>
     </thead>
-    <tbody>
+    <tbody id="sortable_data">
         <?php $i=0; ?>
         @foreach ($client_heirarchy as $key => $value)
             <tr>
@@ -58,6 +58,7 @@
 @stop
 
 @section('customscripts')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             /*var table = jQuery('#client_heirarchy_table').DataTable( {
@@ -66,7 +67,29 @@
             } );
 
             new jQuery.fn.dataTable.FixedHeader( table );*/
-            
+            jQuery("#sortable_data").sortable({
+                update: function ()
+                {
+                    var order = $("#sortable_data").sortable('toArray');
+                    //alert(order);
+                    var dataString = 'ids=' + order;
+                    $.ajax
+                    ({
+                        type: "GET",
+                        url: '/client-heirarchy/update-position',
+                        data: dataString,
+                        cache: false,
+                        success: function (data)
+                        {
+                            if (data == 'success') {
+
+                            }
+
+                        }
+                    });
+
+                }
+            });
         });
     </script>
 @endsection
