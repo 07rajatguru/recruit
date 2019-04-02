@@ -13,7 +13,7 @@ class AddColumnInLead extends Migration
      */
     public function up()
     {
-        Schema::create('lead_management', function (Blueprint $table) {
+        /*Schema::create('lead_management', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('mail')->unique()->nullable();
@@ -26,7 +26,7 @@ class AddColumnInLead extends Migration
             $table->string('remarks')->nullable(); 
               
             $table->timestamps();
-        });
+        });*/
 
         DB::statement("ALTER TABLE lead_management ADD COLUMN city text NOT NULL");
         DB::statement("ALTER TABLE lead_management ADD COLUMN state text NOT NULL");
@@ -40,7 +40,7 @@ class AddColumnInLead extends Migration
      */
     public function down()
     {
-        Schema:: drop('lead_management');
+        /*Schema:: drop('lead_management');*/
 
         DB::statement("ALTER TABLE lead_management DROP COLUMN city ");
         DB::statement("ALTER TABLE lead_management DROP COLUMN state ");

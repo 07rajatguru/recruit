@@ -31,5 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ModuleVisiblePermission::class);
         $this->call(JobTableSeeder::class);
         $this->call(AllModulePermissionSeeder::class);
+        $this->call(TrainingProcessPermissions::class);
+        $this->call(ClientHeirarchySeeder::class);
     }
 }
