@@ -60,12 +60,13 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#client_heirarchy_table').DataTable( {
+            /*var table = jQuery('#client_heirarchy_table').DataTable( {
                 responsive: true,
                 stateSave : true,
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader( table );*/
+            
         });
     </script>
 @endsection
