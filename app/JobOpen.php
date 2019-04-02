@@ -899,12 +899,12 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            if (isset($value->level_name) && $value->level_name != '') {
+            /*if (isset($value->level_name) && $value->level_name != '') {
                 $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
             }
-            else {
+            else {*/
                 $jobs_list[$i]['posting_title'] = $value->posting_title;
-            }
+            /*}*/
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){
@@ -969,6 +969,7 @@ class JobOpen extends Model
                     $jobs_list[$i]['access'] = '0';
                 }
             }
+            $jobs_list[$i]['level_name'] = $value->level_name;
 
             $i++;
         }

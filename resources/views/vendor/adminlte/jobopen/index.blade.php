@@ -241,6 +241,7 @@
             <th>Action</th>
             <th>MB</th>
             <th>Company Name</th>
+            <th>Level</th>
             <th>Position Title</th>
             <th>CA</th>
             <th>Location</th>
@@ -389,37 +390,37 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[16] == "0" ){
+                    if ( Data[17] == "0" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[16] == "1" ){
+                    else if ( Data[17] == "1" ){
                         $('td:eq(4)', Row).css('background-color', '#FF0000');
                     }
-                    else if ( Data[16] == "2" ){
+                    else if ( Data[17] == "2" ){
                         $('td:eq(4)', Row).css('background-color', '#00B0F0');
                     }
-                    else if ( Data[16] == "3" ){
+                    else if ( Data[17] == "3" ){
                         $('td:eq(4)', Row).css('background-color', '#FABF8F');
                     }
-                    else if ( Data[16] == "4" ){
+                    else if ( Data[17] == "4" ){
                         $('td:eq(4)', Row).css('background-color', '#B1A0C7');
                     }
-                    else if ( Data[16] == "5" ){
+                    else if ( Data[17] == "5" ){
                         $('td:eq(4)', Row).css('background-color', 'yellow');
                     }
-                    else if ( Data[16] == "6" ){
+                    else if ( Data[17] == "6" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[16] == "7" ){
+                    else if ( Data[17] == "7" ){
                         $('td:eq(4)', Row).css('background-color', '#808080');
                     }
-                    else if ( Data[16] == "8" ){
+                    else if ( Data[17] == "8" ){
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[16] == "9" ){
+                    else if ( Data[17] == "9" ){
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[16] == "10" ){
+                    else if ( Data[17] == "10" ){
                         $('td:eq(4)', Row).css('background-color', '#FFFFFF');
                     }
                     else{

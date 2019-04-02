@@ -568,6 +568,7 @@ class JobOpenController extends Controller
 
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+            $level_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['level_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             if ($isClient) {
                 $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
@@ -576,7 +577,7 @@ class JobOpenController extends Controller
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$level_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
