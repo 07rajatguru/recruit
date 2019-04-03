@@ -66,8 +66,16 @@ class ClientHeirarchyController extends Controller
 
     public function UpdatePosition(){
 
-        $ids_array = $_GET['ids'];
-        //$ids = $_POST['ids'];
-        print_r($ids_array);
+        $ids_array = explode(",", $_GET['ids']);
+
+        $i = 1;
+        foreach ($ids_array as $id) {
+
+            $order = ClientHeirarchy::find($id);
+            $order->order = $i;
+            $order->save();
+            // \DB::statement("UPDATE client_heirarchy SET order = '$i' where id = $id");
+            $i++;
+        }
     }
 }

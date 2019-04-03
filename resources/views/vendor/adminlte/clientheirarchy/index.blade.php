@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Client Heirarchy')
+@section('title', 'Client Hierarchy')
 
 @section('content_header')
     <h1></h1>
@@ -10,10 +10,10 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Client Heirarchy</h2>
+            <h2>Client Hierarchy</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-success" href="{{ route('clientheirarchy.create') }}"> Add New Client Heirarchy</a>
+            <a class="btn btn-success" href="{{ route('clientheirarchy.create') }}"> Add New Client Hierarchy</a>
         </div>
     </div>
 </div>
@@ -36,21 +36,21 @@
 	       <th width="50px">No</th>
 	       <th width="100px">Action</th>
 	       <th>Name</th>
-           <th>Order</th>
+           {{--<th>Order</th>--}}
 	    </tr>
     </thead>
     <tbody id="sortable_data">
         <?php $i=0; ?>
         @foreach ($client_heirarchy as $key => $value)
-            <tr>
+            <tr id="{{ $value['id'] }}">
                 <td>{{ ++$i }}</td>
                 <td>
                     {{--<a class="fa fa-circle" href="{{ route('clientheirarchy.show',$value['id']) }}"></a>--}}
                     <a class="fa fa-edit" href="{{ route('clientheirarchy.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Support'])
+                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Client Hierarchy'])
                 </td>
                 <td>{{ $value['name'] }}</td>
-                <td>{{ $value['order'] }}</td>
+                {{--<td>{{ $value['order'] }}</td>--}}
             </tr>
         @endforeach
     </tbody>
@@ -68,9 +68,8 @@
 
             new jQuery.fn.dataTable.FixedHeader( table );*/
             jQuery("#sortable_data").sortable({
-                update: function ()
-                {
-                    var order = $("#sortable_data").sortable('toArray');
+                update: function (event, ui){
+                    var order = $(this).sortable('toArray');
                     //alert(order);
                     var dataString = 'ids=' + order;
                     $.ajax

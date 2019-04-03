@@ -19,7 +19,7 @@ class ClientHeirarchy extends Model
 
     	$query = ClientHeirarchy::query();
     	$query = $query->select('client_heirarchy.*');
-    	$query = $query->orderBy('id','desc');
+    	$query = $query->orderBy('order','asc');
     	$res = $query->get();
 
     	$client_heirarchy = array();
