@@ -79,6 +79,7 @@ class TrainingController extends Controller
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $delete_perm = $user->can('training-destroy');
+        $edit_perm = $user->can('training-edit');
 
         $role_id = key($userRole);
         $user_obj = new User();
@@ -110,10 +111,10 @@ class TrainingController extends Controller
         foreach ($training as $key => $value) {
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('training.show',$value['id']).'" style="margin:2px;"></a>';
-            if($value['owner_id'] == $user_id || $isSuperAdmin){
+            if($value['owner_id'] == $user_id || $isSuperAdmin || $edit_perm){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-            if ($isSuperAdmin || $value['owner_id'] == $user_id ) {
+            if ($isSuperAdmin || $value['owner_id'] == $user_id || $delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training']);
                 $delete = $delete_view->render();
                 $action .= $delete;
