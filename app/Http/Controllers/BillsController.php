@@ -1015,6 +1015,9 @@ class BillsController extends Controller
 
         $bill = Bills::find($id);
 
+        $prev_fixed_salary = $bill->fixed_salary;
+        $prev_percentage_charged = $bill->percentage_charged;
+   
         $uploaded_by = $bill->uploaded_by;
         //print_r($uploaded_by);exit;
 
@@ -1042,6 +1045,18 @@ class BillsController extends Controller
             $bill->percentage_charged = $percentage_charged;
         else
             $bill->percentage_charged = 0;
+
+        // for set again job confirmation icon if deatils are changed
+
+        if($prev_percentage_charged != $bill->percentage_charged)
+        {
+            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+        }
+
+        if($prev_fixed_salary != $bill->fixed_salary)
+        {
+            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+        }
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
 

@@ -235,16 +235,16 @@
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
                     if ( Data[17] == "1" ){
-                        $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                        $('td:eq(5)', Row).css('background-color', '#00B0F0');
                     }
                     else if ( Data[17] == "2" ){
-                        $('td:eq(4)', Row).css('background-color', '#FFA500');
+                        $('td:eq(5)', Row).css('background-color', '#FFA500');
                     }
                     else if ( Data[17] == "3" ){
-                        $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                        $('td:eq(5)', Row).css('background-color', '#FFC0CB');
                     }
                     else if ( Data[17] == "4" ){
-                        $('td:eq(4)', Row).css('background-color', '#32CD32');
+                        $('td:eq(5)', Row).css('background-color', '#32CD32');
                     }
                   }
               });
@@ -271,16 +271,16 @@
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
                     if ( Data[17] == "1" ){
-                        $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                        $('td:eq(5)', Row).css('background-color', '#00B0F0');
                     }
                     else if ( Data[17] == "2" ){
-                        $('td:eq(4)', Row).css('background-color', '#FFA500');
+                        $('td:eq(5)', Row).css('background-color', '#FFA500');
                     }
                     else if ( Data[17] == "3" ){
-                        $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                        $('td:eq(5)', Row).css('background-color', '#FFC0CB');
                     }
                     else if ( Data[17] == "4" ){
-                        $('td:eq(4)', Row).css('background-color', '#32CD32');
+                        $('td:eq(5)', Row).css('background-color', '#32CD32');
                     }
                   }
               });

@@ -944,9 +944,9 @@ class Bills extends Model
             $join_confirmation_mail['job_location'] = $join_mail_res->job_location;
             $join_confirmation_mail['fixed_salary'] = $join_mail_res->fixed_salary;
             $join_confirmation_mail['percentage_charged'] = $join_mail_res->percentage_charged;
-            $join_confirmation_mail['fees'] = $fees;
-            $join_confirmation_mail['gst'] = $gst;
-            $join_confirmation_mail['billing_amount'] = $billing_amount;
+            $join_confirmation_mail['fees'] = Utils::IND_money_format(round($fees));
+            $join_confirmation_mail['gst'] = Utils::IND_money_format(round($gst));
+            $join_confirmation_mail['billing_amount'] = Utils::IND_money_format(round($billing_amount));
             $join_confirmation_mail['client_email_id'] = $join_mail_res->client_email_id;
             $join_confirmation_mail['candidate_id'] = $join_mail_res->candidate_id;
             $join_confirmation_mail['sgst'] = $sgst;
