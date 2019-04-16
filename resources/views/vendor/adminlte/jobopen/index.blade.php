@@ -331,7 +331,7 @@
             <input type="hidden" name="job_ids" id="job_ids" value="">
 
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
             {!! Form::close() !!}
@@ -463,11 +463,8 @@
             $("input:checkbox[name=job_ids]:checked").each(function(){
                 job_ids.push($(this).val());
             });
-            //alert(job_ids);
 
             $("#job_ids").val(job_ids);
-            //$(".checkid").empty();
-
             $.ajax({
                 type : 'POST',
                 url : app_url+'/jobs/checkJobId',
@@ -476,12 +473,14 @@
                 success: function(msg){
                     $(".priority").show();
                     if (msg.success == 'success') {
-                        //$(".checkid").append(msg.mail);
                         $(".status").show();
                         $(".error").empty();
+                        $('#submit').removeAttr('disabled');
                     }
                     else{
                         $(".status").hide();
+                        $(".error").empty();
+                        $('#submit').attr('disabled','disabled');
                         $(".error").append(msg.err);
                     }
                 }
