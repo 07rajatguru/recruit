@@ -1017,10 +1017,10 @@ class BillsController extends Controller
 
         $prev_fixed_salary = $bill->fixed_salary;
         $prev_percentage_charged = $bill->percentage_charged;
+        $prev_date_of_joining = $bill->date_of_joining;
+        $prev_job_location = $bill->job_location;
    
         $uploaded_by = $bill->uploaded_by;
-        //print_r($uploaded_by);exit;
-
         $bill->receipt_no = 'xyz';
         $bill->company_name = $company_name;
         $bill->candidate_contact_number = $candidate_contact_number;
@@ -1047,14 +1047,16 @@ class BillsController extends Controller
             $bill->percentage_charged = 0;
 
         // for set again job confirmation icon if deatils are changed
-
-        if($prev_percentage_charged != $bill->percentage_charged)
-        {
+        if($prev_percentage_charged != $bill->percentage_charged) {
             \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
         }
-
-        if($prev_fixed_salary != $bill->fixed_salary)
-        {
+        else if($prev_fixed_salary != $bill->fixed_salary) {
+            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+        }
+        else if($prev_date_of_joining != $bill->date_of_joining) {
+            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+        }
+        else if($prev_job_location != $bill->job_location) {
             \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
         }
 
