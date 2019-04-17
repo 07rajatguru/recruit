@@ -66,7 +66,7 @@ class WeeklyReport extends Command
             $cc_array[] = $report_email;
             $cc_array[] = $floor_incharge_email;
             $cc_array[] = 'rajlalwani@adlertalent.com';
-            //$cc_array[] = 'saloni@trajinfotech.com';
+            $cc_array[] = 'saloni@trajinfotech.com';
 
             /*$input['from_name'] = $from_name;
             $input['from_address'] = $from_address;
