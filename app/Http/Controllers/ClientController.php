@@ -342,9 +342,9 @@ class ClientController extends Controller
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
-            if($isSuperAdmin || $isStrategy ){
+            //if($isSuperAdmin || $isStrategy ){
                 $client_category = $value['category'];
-            }
+           // }
             if($value['status']=='Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
             else if($value['status']=='Passive')
@@ -359,7 +359,7 @@ class ClientController extends Controller
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address']);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
             }
 
             $clients[$i] = $data;
