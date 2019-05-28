@@ -96,9 +96,9 @@
                 <th>Company Name</th>   
                 <th>HR/Coordinator Name</th>
                 
-
+                <?php if($isSuperAdmin || $isStrategy || $isAccountManager) { ?>
                 <th>Client Category</th>
-
+                <?php }?>
 
                 <th>Status</th>
                 <th>Client Address</th>

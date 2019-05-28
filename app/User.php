@@ -372,6 +372,21 @@ class User extends Authenticatable
         return false;
     }
 
+    public static function isAccountManager($user_id){
+        $is_am = false;
+
+        $user_query = User::query();
+        $user_query = $user_query->where('id',$user_id);
+        $user_query = $user_query->where('account_manager','Yes');
+        $user_query = $user_query->first();
+
+        if(isset($user_query->id) && $user_query->id>0){
+            $is_am = true;
+        }
+
+        return $is_am;
+    }
+
     public static function getUserIdByName($name){
         $user_id = 0;
 

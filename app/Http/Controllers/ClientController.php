@@ -38,6 +38,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
         //$isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
@@ -224,7 +225,8 @@ class ClientController extends Controller
 
         $passive=sizeof($paramount_client);
         */
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left'));
+
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left'));
     }
 
     public static function getOrderColumnName($order,$admin){
@@ -297,6 +299,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
         //$isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
@@ -334,7 +337,7 @@ class ClientController extends Controller
                     $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
                 }
             }
-            if($isSuperAdmin || $isStrategy ){
+            if($isSuperAdmin || $isStrategy){
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
                 $account = $account_manager_view->render();
                 $action .= $account;
@@ -342,9 +345,9 @@ class ClientController extends Controller
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
-            //if($isSuperAdmin || $isStrategy ){
+            if($isSuperAdmin || $isStrategy || $isAccountManager ){
                 $client_category = $value['category'];
-           // }
+            }
             if($value['status']=='Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
             else if($value['status']=='Passive')
@@ -355,11 +358,11 @@ class ClientController extends Controller
                 $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
             else if($value['status']=='Left')
                 $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
-            if($isSuperAdmin || $isStrategy ){
+            if($isSuperAdmin || $isStrategy || $isAccountManager ){
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address']);
             }
 
             $clients[$i] = $data;
