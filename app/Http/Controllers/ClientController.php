@@ -1163,7 +1163,7 @@ class ClientController extends Controller
          $client = (object)$client;
         // For account manager 
          $users = User::getAllUsers('recruiter','Yes');
-         $users[0] = '--Select User--';
+         $users[0] = 'Yet to Assign';
 
         $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
         $yet_to_assign_users[0] = '--Select User--';
