@@ -318,6 +318,7 @@ class ClientController extends Controller
         }
         //print_r($client_array);exit;
         $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $clients = array();
         $i = 0;
@@ -450,7 +451,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Active';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
@@ -527,7 +529,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Passive';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
@@ -604,7 +607,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Leaders';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
@@ -681,7 +685,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Forbid';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
@@ -758,7 +763,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Left';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
@@ -834,7 +840,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Paramount';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
@@ -910,7 +917,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Moderate';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
@@ -986,7 +994,8 @@ class ClientController extends Controller
             }
         }
 
-        $account_manager=User::getAllUsers('recruiter');
+        $account_manager=User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
 
         $source = 'Standard';
         return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
@@ -1831,6 +1840,30 @@ class ClientController extends Controller
             }
             $client_address->updated_at = date("Y-m-d H:i:s");
             $client_address->save();
+
+            // if account manager change then jobs hiring manager all changes
+            $job_ids = JobOpen::getJobIdByClientId($id);
+            if ($input->account_manager == '0') {
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $a_m = $super_admin_userid;
+            }
+            else {
+                $a_m = $input->account_manager;
+            }
+            foreach ($job_ids as $key => $value) {
+
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id=$value");
+
+                $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
+
+                if ($check_job_user_id == false) {
+                    $job_visible_users = new JobVisibleUsers();
+                    $job_visible_users->job_id = $value;
+                    $job_visible_users->user_id = $a_m;
+                    $job_visible_users->save();
+                }
+            }
+
             return redirect()->route('client.index')->with('success','Client updated successfully');
         }else{
             return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ( $client_basicinfo->errors() );
@@ -1948,6 +1981,10 @@ class ClientController extends Controller
 
         if ($act_man) {
             $job_ids = JobOpen::getJobIdByClientId($id);
+            if ($account_manager == '0') {
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $a_m = $super_admin_userid;
+            }
             foreach ($job_ids as $key => $value) {
 
                 \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id=$value");
