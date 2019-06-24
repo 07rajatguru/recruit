@@ -1429,6 +1429,9 @@ class BillsController extends Controller
         $bnm = Bills::find($id);
         $status = $bnm->status;
 
+        $dateClass = new Date();
+        $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
+
         $action = 'edit';
 
         $employee_name = array();
@@ -1487,7 +1490,7 @@ class BillsController extends Controller
                 }
             }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj'));
 
     }
 
