@@ -93,6 +93,10 @@ class ClientBasicinfo extends Ardent
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
             $query = $query->where('account_manager_id',$user_id);
 
+            $manager_user_id = env('MANAGERUSERID');
+           
+    
+
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('users.name','like',"%$search%");
@@ -109,6 +113,12 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
                 });
+            }
+
+            // visible standard and moderate clients to manager
+            if($manager_user_id == $user_id){
+                $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
+                $query = $query->orwhere('client_basicinfo.category','like',"Standard");
             }
 
         }

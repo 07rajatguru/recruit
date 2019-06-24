@@ -310,8 +310,12 @@ class ClientController extends Controller
             $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
         }
+        else if($isAccountManager){
+            $order_column_name = self::getOrderColumnName($order,1);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
+            $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
+        }
         else{
-
             $order_column_name = self::getOrderColumnName($order,0);
             $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
