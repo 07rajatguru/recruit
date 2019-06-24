@@ -328,9 +328,9 @@ class ClientController extends Controller
         $i = 0;
         foreach ($client_res as $key => $value) {
             $action = '';
-            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility'] || $isAccountant){
+            //if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility'] || $isAccountant){
                 $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
-            }
+            //}
             if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner']){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
@@ -1482,8 +1482,8 @@ class ClientController extends Controller
    
     foreach ($client_basicinfo as $key=>$value)
     {
-        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id))
-        {
+        //if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id))
+        //{
             $client['name'] = $value->name;
             $client['source'] = $value->source;
             $client['fax'] = $value->fax;
@@ -1536,11 +1536,11 @@ class ClientController extends Controller
             {
                 $client['client_owner'] = false;
             }
-        }
-        else
-        {
-            return view('errors.403');
-        }
+        //}
+       // else
+       // {
+       //     return view('errors.403');
+       // }
     }
 
         $client_address = \DB::table('client_address')
