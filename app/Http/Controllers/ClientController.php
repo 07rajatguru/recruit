@@ -1463,6 +1463,7 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
         //$isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
+        $isManager = $user_obj::isManager($role_id);
         $user_id = $user->id;
 
         $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy,$isAccountant);
@@ -1482,8 +1483,16 @@ class ClientController extends Controller
    
     foreach ($client_basicinfo as $key=>$value)
     {
-        //if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id))
-        //{
+        $client_category = $value->category;
+        if ($client_category == 'Moderate' || $client_category == 'Standard') {
+            $manager_user_id = env('MANAGERUSERID');
+        }
+        else {
+            $manager_user_id = 0;
+        }
+
+        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || ($manager_user_id == $user_id))
+        {   
             $client['name'] = $value->name;
             $client['source'] = $value->source;
             $client['fax'] = $value->fax;
@@ -1536,11 +1545,11 @@ class ClientController extends Controller
             {
                 $client['client_owner'] = false;
             }
-        //}
-       // else
-       // {
-       //     return view('errors.403');
-       // }
+        }
+       else
+       {
+           return view('errors.403');
+       }
     }
 
         $client_address = \DB::table('client_address')
@@ -1588,7 +1597,7 @@ class ClientController extends Controller
         $client_upload_type['Others'] = 'Others';
     
         //print_r($client);exit;
-        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy'));
+        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy','isManager'));
     }
 
         public function attachmentsDestroy($docid){
