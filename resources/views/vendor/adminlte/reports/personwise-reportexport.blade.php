@@ -18,7 +18,7 @@
 	<?php $i = 0;?>
 		<tbody>
 			<tr>
-				<td colspan="9" style="text-align: center;background-color: #FFFF00;border: 2px solid #000000;"><b>{{$key}}</b></td>
+				<td colspan="9" style="text-align: center;background-color: #FFFF66;border: 2px solid #000000;"><b>{{$key}}</b></td>
 			</tr>
 			@if(isset($value) && sizeof($value) >0)
 				@foreach($value as $k => $v)
@@ -34,6 +34,17 @@
 						<td style="border: 1px solid #000000;"></td>
 					</tr>
 				@endforeach
+				<tr>
+					<td style="border: 1px solid black;text-align: center;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;text-align: center;"><b>Total</b></td>
+					<td style="border: 1px solid black;">{{ $v['total_salary_offered'] }}</td>
+					<td style="border: 1px solid black;">{{ $v['total_billing'] }}</td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+				</tr>
 			@else
 			<tr>
 				<td style="border: 1px solid #000000;"></td> <td style="border: 1px solid #000000;"></td>
