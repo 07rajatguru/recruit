@@ -35,6 +35,23 @@
 
         </div>
     </div>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box-body col-xs-3 col-sm-3 col-md-3">
+            <div class="form-group">
+                <strong>Select Financial Year:</strong>
+                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+            </div>
+        </div>
+
+        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+            <div class="form-group" style="margin-top: 19px;">
+                {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+            </div>
+        </div>
+        <div class="pull-right col-md-2">
+            <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
+        </div>
+    </div>
     <br/>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

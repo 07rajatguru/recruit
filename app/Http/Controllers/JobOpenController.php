@@ -2565,6 +2565,31 @@ class JobOpenController extends Controller
            }
         }
 
+        // Year Data
+        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else{
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else{
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
@@ -2573,6 +2598,8 @@ class JobOpenController extends Controller
         $viewVariable['priority_4'] = $priority_4;
         $viewVariable['priority_9'] = $priority_9;
         $viewVariable['priority_10'] = $priority_10;
+        $viewVariable['year_array'] = $year_array;
+        $viewVariable['year'] = $year;
 
 
         return view('adminlte::jobopen.close',$viewVariable);   
