@@ -1091,6 +1091,8 @@ class Bills extends Model
         $person_data = array();
         $j = 0;
         if (isset($personwise_res) && sizeof($personwise_res)>0) {
+            $total_salary_offered = 0;
+            $total_billing = 0;
             foreach ($personwise_res as $key => $value) {
                 $salary = $value->fixed_salary;
                 $pc = $value->percentage_charged;
@@ -1103,7 +1105,7 @@ class Bills extends Model
                 $person_data[$j]['candidate_name'] = $value->candidate_name;
                 $person_data[$j]['company_name'] = $value->company_name;
                 $person_data[$j]['position'] = $value->designation_offered;
-                $person_data[$j]['salary_offered'] = $value->fixed_salary;
+                $person_data[$j]['salary_offered'] = round($value->fixed_salary);
                 $person_data[$j]['billing'] = $fees;
                 $person_data[$j]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
 
@@ -1125,7 +1127,7 @@ class Bills extends Model
                     }
                 }
                 if (isset($person_billing) && $person_billing != '') {
-                    $person_data[$j]['person_billing'] = $person_billing;
+                    $person_data[$j]['person_billing'] = round($person_billing);
                 }
                 else {
                     $person_data[$j]['person_billing'] = 0;   
@@ -1136,6 +1138,12 @@ class Bills extends Model
                 $person_data[$j]['gst'] = $gst;
                 $person_data[$j]['invoice_raised'] = $billing_amount;
                 $person_data[$j]['payment'] = $payment;
+
+                $total_salary_offered = $total_salary_offered + $value->fixed_salary;
+                $total_billing = $total_billing + $person_billing;
+
+                $person_data[$j]['total_salary_offered'] = round($total_salary_offered);
+                $person_data[$j]['total_billing'] = round($total_billing);
                 $j++;
             }
         }

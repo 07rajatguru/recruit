@@ -53,7 +53,7 @@
 			<?php $i = 0;?>
 				<tbody>
 					<tr>
-						<td colspan="9" style="text-align: center;background-color: yellow;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
+						<td colspan="9" style="text-align: center;background-color: #FFFF66;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
 					</tr>
 				</tbody>
 				<tbody id="data_{{$j}}" style="display: none;">
@@ -71,6 +71,17 @@
 								<td style="border: 1px solid black;"></td>
 							</tr>
 						@endforeach
+						<tr>
+							<td style="border: 1px solid black;text-align: center;"></td>
+							<td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;text-align: center;"><b>Total</b></td>
+							<td style="border: 1px solid black;">{{ $v['total_salary_offered'] }}</td>
+							<td style="border: 1px solid black;">{{ $v['total_billing'] }}</td>
+							<td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td>
+						</tr>
 					@else
 					<tr>
 						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
