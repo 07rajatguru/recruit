@@ -1202,4 +1202,17 @@ class Bills extends Model
 
         return $client_data;
     }
+
+    // Get Recovery bills data where PC value 0
+    public static function getRecoveryBillData(){
+
+        $query = Bills::query();
+        $query = $query->select('bills.*');
+        $query = $query->where('bills.status','=','1');
+        $query = $query->where('bills.percentage_charged','=','0');
+        // $query = $query->limit(1);
+        $res = $query->get();
+
+        return $res;
+    } 
 }

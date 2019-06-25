@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\UserLeaveCheck',
         'App\Console\Commands\EligibilityWorkingReport',
         'App\Console\Commands\BillsPCAdd',
+        'App\Console\Commands\RecoveryPrePCAdd',
     ];
 
     /**
