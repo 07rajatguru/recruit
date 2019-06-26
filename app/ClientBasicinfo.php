@@ -95,9 +95,11 @@ class ClientBasicinfo extends Ardent
 
         // visible standard and moderate clients to manager
             if($manager_user_id == $user_id){
-                $query = $query->where('account_manager_id',$user_id);
-               $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
-               $query = $query->orwhere('client_basicinfo.category','like',"Standard");
+                    $query = $query->where(function($query) use ($user_id){
+                    $query = $query->where('account_manager_id',$user_id);
+                   $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
+                   $query = $query->orwhere('client_basicinfo.category','like',"Standard");
+                 });
             }
             else{
                 $query = $query->where('account_manager_id',$user_id);
@@ -140,6 +142,7 @@ class ClientBasicinfo extends Ardent
         }
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
+       // print_r($query->toSql());exit;
 
         $client_array = array();
         $i = 0;
