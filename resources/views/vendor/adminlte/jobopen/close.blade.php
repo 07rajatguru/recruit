@@ -35,7 +35,7 @@
 
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    {{--<div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box-body col-xs-3 col-sm-3 col-md-3">
             <div class="form-group">
                 <strong>Select Financial Year:</strong>
@@ -48,10 +48,7 @@
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
-        <div class="pull-right col-md-2">
-            <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
-        </div>
-    </div>
+    </div>--}}
     <br/>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -139,24 +136,8 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
-            /*var table = jQuery('#jo_table').DataTable( {
-                responsive: true,
-                "columnDefs": [
-                    { "width": "10px", "targets": 0 },
-                    { "width": "10px", "targets": 1 },
-                    { "width": "10px", "targets": 2 },
-                    { "width": "10px", "targets": 3 },
-                    { "width": "10px", "targets": 4 },
-                    { "width": "10px", "targets": 5 },
-                    { "width": "10px", "targets": 6 },
-                    { "width": "10px", "targets": 7 },
-                    { "width": "10px", "targets": 8 },
-                    { "width": "10px", "targets": 9 }
-                ],
-                "pageLength": 100
-            });
-            new jQuery.fn.dataTable.FixedHeader( table );*/
 
+            // var year = $("#year").val();
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
@@ -175,6 +156,7 @@
                 "ajax" : {
                     'url' : 'allclose',
                     'type' : 'get',
+                    // data : {year:year},
                     error: function(){
 
                     }
@@ -196,5 +178,51 @@
                 },
             });
         });
+
+        /*function select_data(){
+
+            $("#jo_table").dataTable().fnDestroy();
+
+            var year = $("#year").val();
+            $("#jo_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0,'desc'],
+                "columnDefs": [ { "width": "10px", "targets": 0, "order": 'desc' },
+                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
+                    { "width": "10px", "targets": 2,},
+                    { "width": "10px", "targets": 3 },
+                    { "width": "10px", "targets": 4 },
+                    { "width": "10px", "targets": 5 },
+                    { "width": "10px", "targets": 6 },
+                    { "width": "10px", "targets": 7 },
+                    { "width": "10px", "targets": 8 },
+                    { "width": "10px", "targets": 9 },
+                            ],
+                "ajax" : {
+                    'url' : 'allclose',
+                    'type' : 'get',
+                    data : {year:year},
+                    error: function(){
+
+                    }
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                fnRowCallback: function( Row, Data ) {
+                    if ( Data[16] == "4" ){
+                        $('td:eq(4)', Row).css('background-color', '#B1A0C7');
+                    }
+                    else if ( Data[16] == "9" ){
+                        $('td:eq(4)', Row).css('background-color', '#92D050');
+                    }
+                    else if ( Data[16] == "10" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFFFFF');
+                    }
+                },
+            });
+        }*/
     </script>
 @endsection

@@ -241,7 +241,7 @@
             <th>Action</th>
             <th>MB</th>
             <th>Company Name</th>
-            <th>Level</th>
+            {{--<th>Level</th>--}}
             <th>Position Title</th>
             <th>CA</th>
             <th>Location</th>
