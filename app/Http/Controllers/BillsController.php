@@ -40,7 +40,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllBillsCount(0,1,$user_id);
             $access = true;
@@ -144,7 +144,7 @@ class BillsController extends Controller
         $isManager = $user_obj::isManager($role_id);
 
         if ($title == 'Forecasting') {
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getAllBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -159,7 +159,7 @@ class BillsController extends Controller
             }
         }
         else if($title == 'Recovery'){
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -306,7 +306,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllCancelBillsCount(0,1,$user_id);
             $access = true;
@@ -349,7 +349,7 @@ class BillsController extends Controller
         $isAccountant = $user_obj::isAccountant($role_id);
 
         if ($title == 'Cancel Forecasting') {
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getCancelBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -364,7 +364,7 @@ class BillsController extends Controller
             }
         }
         else if($title == 'Cancel Recovery'){
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -510,7 +510,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllBillsCount(1,1,$user_id);
             $access = true;
@@ -546,7 +546,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllCancelBillsCount(1,1,$user_id);
             $access = true;
@@ -582,7 +582,7 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isAccountant);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
@@ -853,7 +853,7 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$isAccountant);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
@@ -1412,7 +1412,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }

@@ -35,7 +35,7 @@ class TrainingController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
 	        $count = Training::getAlltrainingCount(1,$user_id);
         }
@@ -92,7 +92,7 @@ class TrainingController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $order_column_name = self::getOrderTrainingColumnName($order);
             $training = Training::getAlltraining(1,$user_id,$limit,$offset,$search,$order_column_name,$type);

@@ -615,7 +615,7 @@ class ToDosController extends Controller
 
         // For Job Opening Details
         if($selectedType == 1){
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $job_response = JobOpen::getAllJobs(1,$user_id);
             }
@@ -1297,7 +1297,7 @@ class ToDosController extends Controller
         //$typeArr = array();
         // For Job Opening Details
         if($selectedType == 1){
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $job_response = JobOpen::getAllJobs(1,$user_id);
             }
@@ -1325,7 +1325,7 @@ class ToDosController extends Controller
         } 
         // For Interview Details
         elseif($selectedType == 2) {
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $typeDetails = Interview::getAllInterviews(1,$user_id);
             }
@@ -1367,7 +1367,7 @@ class ToDosController extends Controller
                 $manager_role_id = env('MANAGER');
                 $superadmin_role_id = env('SUPERADMIN');
 
-                $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+                $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
                 if(in_array($user_role_id,$access_roles_id)){
                     // get all clients
                     $typeDetails = ClientBasicinfo::getLoggedInUserClients(0);
@@ -1451,7 +1451,7 @@ class ToDosController extends Controller
         // For Job Opening Details
         $typeArr = array();
         if($selectedType == 1){
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $job_response = JobOpen::getJobsByIds(1,explode(',',$selected_typeList));
             }
@@ -1502,7 +1502,7 @@ class ToDosController extends Controller
         // For Client Details
         elseif($selectedType == 3) {
 
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 // get all clients
                 $typeDetails = ClientBasicinfo::getClientsByIds(0,explode(',',$selected_typeList));

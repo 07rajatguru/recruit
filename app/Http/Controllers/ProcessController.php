@@ -38,7 +38,7 @@ class ProcessController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = ProcessManual::getAllprocessCount(1,$user_id);
         }
@@ -95,7 +95,7 @@ class ProcessController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $order_column_name = self::getOrderProcessColumnName($order);
             $process_response = ProcessManual::getAllprocess(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -444,7 +444,7 @@ class ProcessController extends Controller
             $manager_role_id = env('MANAGER');
             $superadmin_role_id = env('SUPERADMIN');
 
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
 
             if(in_array($user_role_id,$access_roles_id)){
                 $process['access'] = '1';

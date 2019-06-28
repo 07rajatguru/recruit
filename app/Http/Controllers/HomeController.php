@@ -270,7 +270,7 @@ class HomeController extends Controller
         $manager_role_id = env('MANAGER');
         $strategy_role_id = env('STRATEGY');
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $job_opened = JobOpen::getOpenToAllJobs(1,$user_id,10);
         }
