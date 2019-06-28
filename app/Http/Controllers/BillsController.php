@@ -262,7 +262,7 @@ class BillsController extends Controller
             }
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
-            if($isSuperAdmin || $isAccountant || $isManager) {
+            if($isSuperAdmin || $isAccountant/* || $isManager*/) {
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
                 $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
 
