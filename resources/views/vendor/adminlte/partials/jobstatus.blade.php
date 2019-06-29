@@ -10,6 +10,7 @@
             </div>
             {!! Form::open(['method' => 'POST', 'route' => ["$name.status", $data['id']]]) !!}
             <input type="hidden" id="job_id" name="job_id" value="{!! $data['id'] !!}">
+            <input type="hidden" id="display_name" name="display_name" value="{!! $display_name !!}">
             <div class="modal-body">
                 <strong>Select Job Priority :</strong> <br>
                 {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}

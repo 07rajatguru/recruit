@@ -377,7 +377,12 @@ class JobOpen extends Model
 
                 // Strategy and coordinator role dont have all access
                 if($isStrategy){
-                    $jobs_list[$i]['access'] = '0';
+                    if(isset($value->hiring_manager_id) && $value->hiring_manager_id==$user_id ){
+                        $jobs_list[$i]['access'] = '1';
+                    }
+                    else {
+                        $jobs_list[$i]['access'] = '0';
+                    }
                 }
                 else{
                     $jobs_list[$i]['access'] = '1';

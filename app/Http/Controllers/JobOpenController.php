@@ -552,7 +552,7 @@ class JobOpenController extends Controller
             if(isset($value['access']) && $value['access']==1){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
         
-                $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'More Information', 'job_priority' => $job_priority]);
+                $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open', 'job_priority' => $job_priority]);
                 $status = $status_view->render();
                 $action .= $status;
             }
@@ -2477,9 +2477,11 @@ class JobOpenController extends Controller
     }
 
     public function status(Request $request){
+
         $priority = $request->get('job_priority');
         $job_id = $request->get('job_id');
-        //print_r($priority);exit;
+        $display_name = $request->get('display_name');
+        // print_r($display_name);exit;
 
         $job_open = JobOpen::find($job_id);
 
@@ -2493,7 +2495,12 @@ class JobOpenController extends Controller
          
         $job_open->save();
 
-            return redirect()->route('jobopen.index')->with('success', 'Job Priority added successfully');
+        if ($display_name == 'Job Close') {
+            return redirect()->route('jobopen.close')->with('success', 'Job Priority Updated successfully');
+        }
+        else if ($display_name == 'Job Open') {
+            return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated successfully');
+        }
        
     }
 
@@ -2661,9 +2668,9 @@ class JobOpenController extends Controller
             if(isset($value['access']) && $value['access']==1){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
         
-                /*$status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'More Information', 'job_priority' => $job_priority]);
+                $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Close', 'job_priority' => $job_priority]);
                 $status = $status_view->render();
-                $action .= $status;*/
+                $action .= $status;
             }
             if ($isSuperAdmin) {
                 $delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job']);
