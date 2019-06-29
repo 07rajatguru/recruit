@@ -68,6 +68,15 @@ class ProcessManual extends Model
     return $process_list;
   }
 
+  public static function getProcessManualsDocCount($process_id){
+
+      $query = ProcessDoc::query();
+      $query = $query->where('process_id',$process_id);
+      $response = $query->count();
+
+      return $response;
+  }
+
   public static function getAllprocessCount($all=0,$user_id,$search=0){
   
     $process_open_query = ProcessManual::query();

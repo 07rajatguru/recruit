@@ -55,6 +55,7 @@ class ProcessController extends Controller
         //$viewVariable['processFiles'] = $processFiles;
         $viewVariable['count'] = $count;   
 
+
     	return view('adminlte::process.index ',$viewVariable);
     }
 
@@ -122,12 +123,21 @@ class ProcessController extends Controller
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
-            $title = '<a target="_blank" href="'.$value['url'].'">'.$value['title'].'</a>';
+            $doc_count = ProcessManual::getProcessManualsDocCount($value['id']);
+
+            if($doc_count==1){
+                $title = '<a target="_blank" href="'.$value['url'].'">'.$value['title'].'</a>';
+            }
+            else{
+                $title = $value['title'];
+            }
+            
             $data = array(++$j,$title,$action);
             $process[$i] = $data;
             $i++;
         }
 
+//print_r($process);exit;
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
