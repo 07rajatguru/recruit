@@ -35,7 +35,7 @@
 
         </div>
     </div>
-    {{--<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box-body col-xs-3 col-sm-3 col-md-3">
             <div class="form-group">
                 <strong>Select Financial Year:</strong>
@@ -48,7 +48,7 @@
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
-    </div>--}}
+    </div>
     <br/>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -137,7 +137,7 @@
     <script type="text/javascript">
         $(document).ready(function(){
 
-            // var year = $("#year").val();
+            var year = $("#year").val();
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
@@ -156,7 +156,7 @@
                 "ajax" : {
                     'url' : 'allclose',
                     'type' : 'get',
-                    // data : {year:year},
+                    data : {year:year},
                     error: function(){
 
                     }
@@ -179,7 +179,7 @@
             });
         });
 
-        /*function select_data(){
+        function select_data(){
 
             $("#jo_table").dataTable().fnDestroy();
 
@@ -223,6 +223,6 @@
                     }
                 },
             });
-        }*/
+        }
     </script>
 @endsection

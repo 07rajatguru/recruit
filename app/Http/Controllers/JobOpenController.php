@@ -2537,9 +2537,40 @@ class JobOpenController extends Controller
         $manager_role_id = getenv('MANAGER');
         $superadmin_role_id = getenv('SUPERADMIN');
 
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else{
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else{
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+        $year1 = $year_data[0]; // [result : 2019-4]
+        $year2 = $year_data[1]; // [result : 2020-3]
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getClosedJobs(1,$user_id);
+            $job_response = JobOpen::getClosedJobs(1,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
         }
         else if ($isClient) {
@@ -2547,7 +2578,7 @@ class JobOpenController extends Controller
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
         else{
-            $job_response = JobOpen::getClosedJobs(0,$user_id);
+            $job_response = JobOpen::getClosedJobs(0,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
         }
 
@@ -2572,31 +2603,6 @@ class JobOpenController extends Controller
            }
         }
 
-        /*// Year Data
-        $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
-        $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
-            $next = $y+1;
-            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
-        }
-
-        if (isset($_POST['year']) && $_POST['year'] != '') {
-            $year = $_POST['year'];
-        }
-        else{
-            $y = date('Y');
-            $m = date('m');
-            if ($m > 3) {
-                $n = $y + 1;
-                $year = $y.'-4, '.$n.'-3';
-            }
-            else{
-                $n = $y-1;
-                $year = $n.'-4, '.$y.'-3';
-            }
-        }*/
-
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
@@ -2605,8 +2611,8 @@ class JobOpenController extends Controller
         $viewVariable['priority_4'] = $priority_4;
         $viewVariable['priority_9'] = $priority_9;
         $viewVariable['priority_10'] = $priority_10;
-        /*$viewVariable['year_array'] = $year_array;
-        $viewVariable['year'] = $year;*/
+        $viewVariable['year_array'] = $year_array;
+        $viewVariable['year'] = $year;
 
 
         return view('adminlte::jobopen.close',$viewVariable);   
@@ -2620,8 +2626,14 @@ class JobOpenController extends Controller
         $search = $_GET['search']['value'];
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
-        // $year = $_GET['year'];
+        $year = $_GET['year'];
 
+        $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+        $year1 = $year_data[0]; // [result : 2019-4]
+        $year2 = $year_data[1]; // [result : 2020-3]
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+        
         $order_column_name = self::getJobOrderColumnName($order);
 
         $user = \Auth::user();
@@ -2646,16 +2658,16 @@ class JobOpenController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
-            $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search);
+            $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search,$current_year,$next_year);
         }
         else if ($isClient) {
             $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type);
             $count = sizeof($job_response);
         }
         else{
-            $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
-            $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search);
+            $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search,$current_year,$next_year);
         }
         $job_priority = JobOpen::getJobPriorities();
         $jobs = array();

@@ -225,7 +225,7 @@ class JobOpen extends Model
         //$jobquery = $jobquery->
     }
 
-    public static function getClosedJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+    public static function getClosedJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -264,6 +264,10 @@ class JobOpen extends Model
 
         $job_close_query = $job_close_query->where('job_associate_candidates.deleted_at',NULL);
         $job_close_query = $job_close_query->groupBy('job_openings.id');
+
+        // Get data by financial year
+        $job_close_query = $job_close_query->where('job_openings.created_at','>=',$current_year);
+        $job_close_query = $job_close_query->where('job_openings.created_at','<=',$next_year);
 
         //$job_close_query = $job_close_query->orderBy('job_openings.updated_at','desc');
 
@@ -553,7 +557,7 @@ class JobOpen extends Model
         return $jobs_list;   
     }
 
-    public static function getAllClosedJobsCount($all=0,$user_id,$search){
+    public static function getAllClosedJobsCount($all=0,$user_id,$search,$current_year,$next_year){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -595,6 +599,9 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
+        // Get data by financial year
+        $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
+        $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
         $job_response = $job_open_query->get();
 
         return sizeof($job_response);
