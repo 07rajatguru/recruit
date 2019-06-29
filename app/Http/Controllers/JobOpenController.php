@@ -220,6 +220,37 @@ class JobOpenController extends Controller
             $count = JobOpen::getAllJobsCount(0,$user_id,'');
         }*/
 
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else{
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else{
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+        $year1 = $year_data[0]; // [result : 2019-4]
+        $year2 = $year_data[1]; // [result : 2020-3]
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $count = JobOpen::getAllJobsCount(1,$user_id,NUll);
@@ -288,6 +319,8 @@ class JobOpenController extends Controller
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
         $viewVariable['isClient'] = $isClient;
+        $viewVariable['year_array'] = $year_array;
+        $viewVariable['year'] = $year;
 
         return view('adminlte::jobopen.index', $viewVariable,compact('count','priority_0','priority_1','priority_2','priority_3','priority_5','priority_6','priority_7','priority_8'));
 
