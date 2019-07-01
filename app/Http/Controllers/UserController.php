@@ -48,7 +48,7 @@ class UserController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-        $data = User::orderBy('id','DESC')->get();
+        $data = User::orderBy('status','ASC')->get();
         return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
 
