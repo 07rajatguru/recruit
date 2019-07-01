@@ -79,7 +79,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Openings List ({{ $count or 0}})</h2>
+                <h2>Job Openings List <span id="count">({{ $count or 0}})</span></h2>
             </div>
 
             @permission('job-create')
@@ -381,7 +381,13 @@
                     'type' : 'get',
                     error: function(){
 
-                    }
+                    },
+                },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+                    // alert(count);
+                    $("#count").html('');
+                    $("#count").append("(" + count + ")");
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -479,7 +485,13 @@
                     'type' : 'get',
                     error: function(){
 
-                    }
+                    },
+                },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+                    // alert(count);
+                    $("#count").html('');
+                    $("#count").append("(" + count + ")");
                 },
                 responsive: true,
                 "pageLength": 50,

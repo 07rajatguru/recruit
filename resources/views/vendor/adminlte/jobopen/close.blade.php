@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Closing List ({{ $count }})</h2>
+                <h2>Job Closing List <span id="count">({{ $count }})</span></h2>
             </div>
 
             <div class="pull-right">
@@ -161,6 +161,12 @@
 
                     }
                 },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+                    // alert(count);
+                    $("#count").html('');
+                    $("#count").append("(" + count + ")");
+                },
                 responsive: true,
                 "pageLength": 50,
                 "pagingType": "full_numbers",
@@ -206,6 +212,12 @@
                     error: function(){
 
                     }
+                },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+                    // alert(count);
+                    $("#count").html('');
+                    $("#count").append("(" + count + ")");
                 },
                 responsive: true,
                 "pageLength": 50,
