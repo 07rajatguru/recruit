@@ -236,8 +236,8 @@ class JobOpenController extends Controller
                 $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
                 $year1 = $year_data[0]; // [result : 2019-4]
                 $year2 = $year_data[1]; // [result : 2020-3]
-                $current_year = date('Y-m-d',strtotime("first day of $year1"));
-                $next_year = date('Y-m-d',strtotime("last day of $year2"));
+                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
             }
             else {
                 $year = NULL;
@@ -544,8 +544,8 @@ class JobOpenController extends Controller
                 $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
                 $year1 = $year_data[0]; // [result : 2019-4]
                 $year2 = $year_data[1]; // [result : 2020-3]
-                $current_year = date('Y-m-d',strtotime("first day of $year1"));
-                $next_year = date('Y-m-d',strtotime("last day of $year2"));
+                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
             }
             else {
                 $year = NULL;
@@ -2620,8 +2620,8 @@ class JobOpenController extends Controller
         $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
         $year1 = $year_data[0]; // [result : 2019-4]
         $year2 = $year_data[1]; // [result : 2020-3]
-        $current_year = date('Y-m-d',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+        $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
@@ -2686,8 +2686,8 @@ class JobOpenController extends Controller
         $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
         $year1 = $year_data[0]; // [result : 2019-4]
         $year2 = $year_data[1]; // [result : 2020-3]
-        $current_year = date('Y-m-d',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+        $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
         
         $order_column_name = self::getJobOrderColumnName($order);
 
