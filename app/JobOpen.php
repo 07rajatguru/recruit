@@ -799,7 +799,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -873,6 +873,15 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
+        }
+
         $job_response = $job_open_query->get();
 //print_r($job_response);exit;
         $jobs_list = array();
