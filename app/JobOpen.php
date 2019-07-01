@@ -857,6 +857,14 @@ class JobOpen extends Model
             }
         }
 
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
+        }
+
         if (isset($limit) && $limit > 0) {
             $job_open_query = $job_open_query->limit($limit);
         }
@@ -872,14 +880,6 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
             });
-        }
-
-        // Get data by financial year
-        if (isset($current_year) && $current_year != NULL) {
-            $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
-        }
-        if (isset($next_year) && $next_year != NULL) {
-            $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
         }
 
         $job_response = $job_open_query->get();
@@ -1138,7 +1138,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobsCount($all=0,$user_id,$search){
+    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1169,6 +1169,14 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
+        }
 
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         if (isset($search) && $search != '') {
