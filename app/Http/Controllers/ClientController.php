@@ -2112,9 +2112,10 @@ class ClientController extends Controller
 
        $client = ClientBasicinfo::find($client_id);
 
+//print_r($client);exit;
        $post = $client->post()->orderBy('created_at', 'desc')->get();
 
-       return view('adminlte::client.remarks',compact('user_id','client_id','post'));
+       return view('adminlte::client.remarks',compact('user_id','client_id','post','client'));
 
     }
 
