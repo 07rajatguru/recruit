@@ -2109,7 +2109,11 @@ class ClientController extends Controller
        $user_id = \Auth::user()->id;
        $client_id = $id;
 
-       return view('adminlte::client.remarks',compact('user_id','client_id'));
+       $client = ClientBasicinfo::find($client_id);
+
+       $post = $client->post()->orderBy('created_at', 'desc')->get();
+
+       return view('adminlte::client.remarks',compact('user_id','client_id','post'));
 
     }
 

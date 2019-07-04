@@ -17,7 +17,7 @@ class Post extends Model
         'content'
     ];
 
-	public function instates() {
+	public function post() {
         return $this->belongsTo('App\ClientBasicinfo');
     }
 

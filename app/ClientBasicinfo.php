@@ -42,6 +42,10 @@ class ClientBasicinfo extends Ardent
         ];
     }
 
+    public function post() {
+        return $this->hasMany('App\Post','client_id');
+    }
+
     public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
 
         $client_visibility = false;

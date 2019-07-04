@@ -666,6 +666,7 @@ Route::group(['middleware' => ['auth']], function () {
         //'middleware' => ['permission:industry-edit']
     ]);
     Route::post('client/{client_id}/post',['as'=>'client.post.write','uses'=>'ClientController@writePost']);
+Route::post('review/update/{state_id}/{review_id}',['as'=>'state.reviews.update','uses'=>'ClientController@updateStateReview']);
 
 
     Route::delete('client/{id}', [
