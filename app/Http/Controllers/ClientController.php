@@ -2142,4 +2142,25 @@ class ClientController extends Controller
     }
 
 
+    public function writeComment(Request $request,$post_id){
+        $input = $request->all();
+
+        $client_id = $input['client_id'];
+
+        $user_id = \Auth::user()->id;
+        $currentUser = User::find($user_id);
+        $post = Post::find($post_id);
+
+        $comment = $post->comment([
+            "title" => $input["content"],
+            "body" => $input["content"]
+        ], $currentUser);
+
+        $returnValue["success"] = true;
+        $returnValue["message"] = "Commment recorded";
+        $returnValue["id"] = $comment->id;
+
+        return redirect()->route('client.remarks',[$client_id]);
+    }
+
 }

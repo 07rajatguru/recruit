@@ -6,7 +6,7 @@
             <img src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="Avatar" class="avatar">
         </div> 
         <div class="comment-area">
-           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Share what you are thinking here...', 'rows' => 3, "required" => true]) !!}
+           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 3, "required" => true]) !!}
         </div>
 
          <div class="button-area">
