@@ -1,5 +1,5 @@
 <div class="post__author ">
-    <!-- <img class="profile-avatar-pic" src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="author"> -->
+    <img class="profile-avatar-pic" src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="author"> 
     <div class="author-date">
         <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
         <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$per_post->created_at->diffForHumans()}} </time>
