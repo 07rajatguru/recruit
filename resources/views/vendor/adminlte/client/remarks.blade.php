@@ -19,3 +19,21 @@
 </div>
 @stop
 
+@section('customscripts')
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+
+        });
+
+		function showcommentbox(post_id) {
+            if($(".comment-"+post_id).is(':hidden')){
+                $(".comment-"+post_id).show();
+            }
+            else{
+                $(".comment-"+post_id).hide();
+            }
+        }
+
+    </script>
+@stop
+

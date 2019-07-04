@@ -21,6 +21,14 @@
     </div>
     <p>{{$per_post->content}} </p>
 
+    <div class="post-additional-info inline-items">
+        <div class="comments-shared">
+            <a href="javascript:void(0);" title="Write a comment" data-form-id="write_a_review_11_comment" onclick="showcommentbox({{$per_post->id}})" class="reply post-add-icon inline-items">
+                    <i class="fa fa-commenting-o" aria-hidden="true" ></i>
+                </a>
+        </div>
+    </div>
+
     <!-- Window-popup Update Review -->
 
     <div class="modal fade" id="update-review-{{$per_post->id }}">
@@ -38,12 +46,7 @@
                 {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true ]) !!}
 
                 <div class="form-group is-empty update-preview-image-container"></div>
-                <div class="add-options-message">
-                    <div class="input">
-                        <img class="camera-img" src="/images/camera-icon.png"/>
-                        <input name="file[]" id="files" type="file" multiple="true">
-                    </div>
-                </div>
+            
 
                 <input type="hidden" id="review_id" name="review_id" value="{{$per_post->id }}">
                 {{-- <a href="javascript:void(0);" class="btn btn-primary btn-lg full-width" onclick="updateReview({{$per_post->id }})">Update</a>--}}
@@ -51,6 +54,10 @@
                 {!! Form::close() !!}
             </div>
         </div>
+    </div>
+
+    <div class="reply comment-{{$per_post->id}}" style="display: none;">
+        @include('adminlte::client.comment.new', array('per_post' => $per_post,'client_id'=>$client_id))
     </div>
 
    <!-- Check readfile  -->

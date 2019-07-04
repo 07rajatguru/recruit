@@ -665,8 +665,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@remarks',
         //'middleware' => ['permission:industry-edit']
     ]);
+
     Route::post('client/{client_id}/post',['as'=>'client.post.write','uses'=>'ClientController@writePost']);
-Route::post('review/update/{state_id}/{review_id}',['as'=>'state.reviews.update','uses'=>'ClientController@updateStateReview']);
+    Route::post('review/update/{state_id}/{review_id}',['as'=>'state.reviews.update','uses'=>'ClientController@updateStateReview']);
+
+    Route::post('post/{post_id}',['as'=>'post.comments.write','uses'=>'ClientController@writeComment']);
 
 
     Route::delete('client/{id}', [
