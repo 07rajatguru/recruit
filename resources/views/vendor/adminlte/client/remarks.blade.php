@@ -55,6 +55,29 @@
             }
         }
 
+        function updateCommentReply(id) {
+            var csrf_token = $("#csrf_token").val();
+            if(id>0){
+                var content = $("#update-comment-textarea-"+id).val();
+                jQuery.ajax({
+                    url:'/client/comment/update',
+                    type:"POST",
+                    dataType:'json',
+                    data : "content="+content+"&id="+id+"&_token="+csrf_token,
+                    success: function(response){
+                        if (response.returnvalue == 'valid') {
+                            alert("Data updated succesfully");
+                        }
+                        else{
+                            alert("Error while updating comment");
+                        }
+                        window.location.reload();
+                    }
+                });
+
+            }
+        }
+
     </script>
 @stop
 

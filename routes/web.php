@@ -672,6 +672,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('post/{post_id}',['as'=>'post.comments.write','uses'=>'ClientController@writeComment']);
     Route::get('client/post/delete/{id}',['as'=>'leader.reviewdestroy','uses'=>'ClientController@postDestroy']);
 
+    Route::post('client/comment/update',['as'=>'client.commentupdate','uses'=>'ClientController@updateComment']);
 
     Route::delete('client/{id}', [
         'as' => 'client.destroy',

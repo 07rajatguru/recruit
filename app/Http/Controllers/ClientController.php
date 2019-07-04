@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comments;
 use App\Utils;
 use Illuminate\Http\Request;
 use App\ClientBasicinfo;
@@ -20,7 +21,6 @@ use App\Events\NotificationMail;
 use App\EmailsNotifications;
 use App\JobVisibleUsers;
 use App\Post;
-use App\Commentable\Comment;
 
 class ClientController extends Controller
 {
@@ -2179,6 +2179,21 @@ class ClientController extends Controller
 
        return redirect()->route('client.remarks',[$client_id]);
 
+    }
+
+    public function updateComment(){
+
+        $id = $_POST['id'];
+        $content = $_POST['content'];
+
+        $response['returnvalue'] = 'invalid';
+
+        $res = Comments::updateComment($id,$content);
+//exit;
+        if($res){
+            $response['returnvalue'] = 'valid';
+        }
+        return json_encode($response);exit;
     }
 
     public function postDestroy($id){
