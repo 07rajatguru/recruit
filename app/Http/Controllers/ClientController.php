@@ -349,6 +349,9 @@ class ClientController extends Controller
                 $account = $account_manager_view->render();
                 $action .= $account;
             }
+            if($isSuperAdmin || $value['client_owner']){
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+            }
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
