@@ -19,6 +19,7 @@ use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
 use App\EmailsNotifications;
 use App\JobVisibleUsers;
+use App\Post;
 
 class ClientController extends Controller
 {
@@ -2101,5 +2102,40 @@ class ClientController extends Controller
             //return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
     }
+
+
+    public function remarks($id){
+
+       $user_id = \Auth::user()->id;
+       $client_id = $id;
+
+       return view('adminlte::client.remarks',compact('user_id','client_id'));
+
+    }
+
+    public function writePost(Request $request, $client_id){
+
+        $input = $request->all();
+
+        $user_id = $input['user_id'];
+        $client_id = $input['client_id'];
+        $content = $input['content'];
+
+        if(isset($user_id) && $user_id>0){
+
+            $post = new Post();
+            $post->content = $content;
+            $post->user_id = $user_id;
+            $post->client_id = $client_id;
+            $post->approved = 0;
+            $post->approved_by = 0;
+            $post->created_at = time();
+            $post->updated_at = time();
+            $post->save();
+        }
+
+        return redirect()->route('client.remarks',[$client_id]);
+    }
+
 
 }

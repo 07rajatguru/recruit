@@ -659,6 +659,15 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@edit',
         //'middleware' => ['permission:industry-edit']
     ]);
+
+    Route::get('client/{id}/remarks', [
+        'as' => 'client.remarks',
+        'uses' => 'ClientController@remarks',
+        //'middleware' => ['permission:industry-edit']
+    ]);
+    Route::post('client/{client_id}/post',['as'=>'client.post.write','uses'=>'ClientController@writePost']);
+
+
     Route::delete('client/{id}', [
         'as' => 'client.destroy',
         'uses' => 'ClientController@destroy',
