@@ -20,6 +20,7 @@ use App\Events\NotificationMail;
 use App\EmailsNotifications;
 use App\JobVisibleUsers;
 use App\Post;
+use App\Commentable\Comment;
 
 class ClientController extends Controller
 {
@@ -2161,6 +2162,76 @@ class ClientController extends Controller
         $returnValue["id"] = $comment->id;
 
         return redirect()->route('client.remarks',[$client_id]);
+    }
+
+    public function updateClientRemarks(Request $request, $client_id,$post_id){
+
+        $input = $request->all();
+
+        $user_id = $input['user_id'];
+        $state_id = $input['state_id'];
+
+        $response = StatesReviews::updateReview($review_id,$input["content"]);
+        $returnValue["success"] = true;
+        $returnValue["message"] = "Review recorded";
+        $returnValue["id"] = $review_id;
+
+        $total_images = 0;
+        if(isset($_FILES['file']['name']) && $_FILES['file']['name']!='')
+            $total_images = count($_FILES['file']['name']);
+
+        $file = $request->file('file');
+
+        if($total_images > 0) {
+            for ($i = 0; $i < $total_images; $i++) {
+                $tmpFilePath = $_FILES['file']['tmp_name'][$i];
+
+                if ($tmpFilePath != ""){
+
+                    $imgname = $_FILES['file']['name'][$i];
+                    $filesize = filesize($tmpFilePath);
+                    $file_key = "uploads/post/".$review_id."/".$imgname;
+
+                    //$state_reviews->attach($file[$i], ['title' => $imgname]);
+
+                    $review_image = new StatesReviewsImage();
+                    $review_image->comment_id = $review_id;
+                    $review_image->uploaded_by = $user_id;
+                    $review_image->file = $file_key;
+                    $review_image->name = $imgname;
+                    $review_image->size = $filesize;
+                    $review_image->extension = '';
+                    $review_image->created_at = date("Y-m-d H:i:s");
+                    $review_image->updated_at = date("Y-m-d H:i:s");
+                    $review_image->save();
+
+                    $review_image_id = $review_image->id;
+
+                    $newFilePath = "uploads/post/" .$review_image_id.'-'. $_FILES['file']['name'][$i];
+                    $file_res = move_uploaded_file($tmpFilePath, $newFilePath);
+                    if($file_res) {
+                        $new_image_name = $review_image_id.'-'.$imgname;
+                        \DB::table('states_review_image')->where('id', $review_image_id)->update(['name' => $new_image_name]);
+
+                    }
+                }
+            }
+        }
+        return redirect()->route('statereranews',[$state_id]);
+
+    }
+
+    public function postDestroy($id){
+
+        $response['returnvalue'] = 'invalid';
+        $res = Post::deletePost($id);
+        if($res){
+            \DB::table('comments')->where('commentable_id', '=', $id)->delete();
+            $response['returnvalue'] = 'valid';
+        }
+
+        return json_encode($response);exit;
+
     }
 
 }

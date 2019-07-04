@@ -13,7 +13,7 @@
                         <a href="#" data-toggle="modal" data-target="#update-review-{{$per_post->id }}">Edit Post</a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);" onclick="deleteReview({{$per_post->id }})">Delete Post</a>
+                        <a href="javascript:void(0);" onclick="deletePost({{$per_post->id }})">Delete Post</a>
                     </li>
                 </div>
             @endif
@@ -36,11 +36,11 @@
             <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">X</a>
 
             <div class="ui-block-title">
-                <h6 class="title">Update Review</h6>
+                <h6 class="title">Update Remarks</h6>
             </div>
 
             <div class="ui-block-content">
-                {!! Form::open(['route' => ['state.reviews.update', $client_id,$per_post->id], 'name' => 'update_a_review', 'id' => 'update_a_review', 'files' => 'true']) !!}
+                {!! Form::open(['route' => ['client.post.update', $client_id,$per_post->id], 'name' => 'update_a_review', 'id' => 'update_a_review', 'files' => 'true']) !!}
                 {!! Form::hidden('client_id', $client_id) !!}
                 {!! Form::hidden('user_id', auth()->id()) !!}
                 {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true ]) !!}
@@ -60,5 +60,8 @@
         @include('adminlte::client.comment.new', array('per_post' => $per_post,'client_id'=>$client_id))
     </div>
 
-   <!-- Check readfile  -->
+    <ul class="children">
+        @include('adminlte::client.comment.list', array('per_post' => $per_post))
+    </ul>
+
 </div>

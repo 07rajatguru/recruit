@@ -28,5 +28,14 @@ class Post extends Model
         return $this->belongsTo('App\User');
     }
 
+    public static function deletePost($id)
+    {
+        return static::find($id)->delete();
+    }
 
+    public static function updatePost($id,$data)
+    {
+        $response = static::find($id)->update(['content' => $data]);
+        return $response;
+    }
 }

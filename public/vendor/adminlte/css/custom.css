@@ -387,7 +387,7 @@ tr.disabled > td a {
 .post-additional-info a {color: #555;}
 .like-dislike-button {display: inline-block;}
 .children {border-top: 1px solid #e6ecf5;margin: 25px -20px 0;padding-left: 35px;}
-.children li {list-style: none;border-left: 1px solid #e6ecf5;padding:15px;border-bottom: 1px solid #e6ecf5;background-color: #fafbfd;position: relative;}
+.children li {list-style: none;border-left: 1px solid #e6ecf5;padding:15px;border-bottom: 1px solid #e6ecf5;background-color: #337ab7;position: relative;}
 .children li:before {content: "";position: absolute;width: 9px;height: 9px;top: 40px;left: -5px;
     background-color: #c2c5d9;border-radius: 100%; z-index: 13;}
 .more-comments { text-align: center; padding: 15px 0 0;font-size: 12px;color: #515365;

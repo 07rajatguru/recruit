@@ -34,6 +34,27 @@
             }
         }
 
+		function deletePost(id) {
+            msg = "Are you sure ?";
+            var confirmvalue = confirm(msg);
+
+            if(confirmvalue){
+                jQuery.ajax({
+                    url:'/client/post/delete/'+id,
+                    dataType:'json',
+                    success: function(response){
+                        if (response.returnvalue == 'valid') {
+                            alert("Remarks deleted succesfully");
+                        }
+                        else{
+                            alert("Error while deleting reviews");
+                        }
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+
     </script>
 @stop
 
