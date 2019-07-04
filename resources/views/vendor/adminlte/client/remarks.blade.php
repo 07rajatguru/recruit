@@ -78,6 +78,27 @@
             }
         }
 
+        function deleteComment(id) {
+            msg = "Are you sure ?";
+            var confirmvalue = confirm(msg);
+
+            if(confirmvalue){
+                jQuery.ajax({
+                    url:'/client/comment/delete/'+id,
+                    dataType:'json',
+                    success: function(response){
+                        if (response.returnvalue == 'valid') {
+                            alert("Comment deleted succesfully");
+                        }
+                        else{
+                            alert("Error while deleting comment");
+                        }
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+
     </script>
 @stop
 

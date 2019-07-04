@@ -19,4 +19,8 @@ class Comments extends Model
         return $response;
     }
 
+    public static function deleteComment($id)
+    {
+        return static::find($id)->delete();
+    }
 }

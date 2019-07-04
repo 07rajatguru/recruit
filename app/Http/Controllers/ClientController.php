@@ -2196,6 +2196,18 @@ class ClientController extends Controller
         return json_encode($response);exit;
     }
 
+    public function commentDestroy($id){
+        $response['returnvalue'] = 'invalid';
+        $res = Comments::deleteComment($id);
+        if($res){
+            // delete replies on it
+            //Comments::where('parent_id', '=', $id)->delete();
+            $response['returnvalue'] = 'valid';
+        }
+
+        return json_encode($response);exit;
+    }
+
     public function postDestroy($id){
 
         $response['returnvalue'] = 'invalid';
