@@ -8,6 +8,15 @@
 @stop
 
 @section('content')
+<div class="col-lg-12 col-md-12 margin-tb">
+    <div class="pull-left">
+        <h2>{{ $client['name'] }}</h2>
+    </div>
+
+   <div class="pull-right" style="margin-right: 25%;">
+        <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
+    </div>
+</div>
 <div class="col-md-9"> 
     <div>
      	 @include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id))    	 
