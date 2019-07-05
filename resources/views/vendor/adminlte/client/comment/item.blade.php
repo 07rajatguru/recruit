@@ -10,16 +10,16 @@
     <div class="more">
         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
         <ul class="more-dropdown">
-            @if(isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id)
-                <div class="auth-links">
-                    <li><a href="#" data-toggle="modal" data-target="#update-comment-{{$comment->id }}">Edit Comment</a></li>
-                    <li> <a href="javascript:void(0);" onclick="deleteComment({{$comment->id }})">Delete Comment</a></li>
-                </div>
-            @else
-                <div class="auth-links">
-                    <li><a href="javascript:void(0);" onclick="$('#login-dialog').modal('show');">Login</a></li>
-                </div>
+            <div class="auth-links" >
+                <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$comment->id }})">Add Comment</a></li>
+            @if((isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id ) || $isSuperAdmin)
+                <li><a href="#" data-toggle="modal" data-target="#update-comment-{{$comment->id }}">Edit Comment</a></li>
             @endif
+            @if($isSuperAdmin)
+                <li> <a href="javascript:void(0);" onclick="deleteComment({{$comment->id }})">Delete Comment</a></li>
+            @endif
+
+                </div>
         </ul>
     </div>
 </div>

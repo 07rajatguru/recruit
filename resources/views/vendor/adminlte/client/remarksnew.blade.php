@@ -6,11 +6,11 @@
             <img src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="Avatar" class="avatar">
         </div> 
         <div class="comment-area">
-           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 3, "required" => true]) !!}
+           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 2, "required" => true]) !!}
         </div>
 
-         <div class="button-area">
-            <button class="btn btn-primary btn-md-2">Post Comment</button>
+         <div class="button-area" style="padding: 4px;">
+            <button class="btn btn-primary btn-md-2">Post Remarks</button>
         </div>
 
     {!! Form::close() !!}

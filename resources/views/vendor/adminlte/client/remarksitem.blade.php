@@ -1,4 +1,4 @@
-<div class="post__author ">
+<div class="post__author " style="padding: 0 0 0 20px;">
     <img class="profile-avatar-pic" src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="author"> 
     <div class="author-date">
         <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
@@ -7,27 +7,30 @@
     <div class="more">
         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
         <ul class="more-dropdown">
-            @if(isset(Auth::user()->id) && ($per_post->user->id == \Auth::user()->id) )
-                <div class="auth-links">
-                    <li>
-                        <a href="#" data-toggle="modal" data-target="#update-review-{{$per_post->id }}">Edit Post</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" onclick="deletePost({{$per_post->id }})">Delete Post</a>
-                    </li>
-                </div>
+            <div class="auth-links">
+            <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$per_post->id }})">Add Comment</a></li>
+            @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id) || $isSuperAdmin )
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#update-review-{{$per_post->id }}">Edit Post</a>
+                </li>
             @endif
+             @if($isSuperAdmin)
+                <li>
+                    <a href="javascript:void(0);" onclick="deletePost({{$per_post->id }})">Delete Post</a>
+                </li>
+             @endif
+            </div>
         </ul>
     </div>
     <p>{{$per_post->content}} </p>
 
-    <div class="post-additional-info inline-items">
+    {{--<div class="post-additional-info inline-items">
         <div class="comments-shared">
             <a href="javascript:void(0);" title="Write a comment" data-form-id="write_a_review_11_comment" onclick="showcommentbox({{$per_post->id}})" class="reply post-add-icon inline-items">
                     <i class="fa fa-commenting-o" aria-hidden="true" ></i>
                 </a>
         </div>
-    </div>
+    </div>--}}
 
     <!-- Window-popup Update Review -->
 

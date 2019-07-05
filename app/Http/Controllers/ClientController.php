@@ -2109,16 +2109,21 @@ class ClientController extends Controller
 
 
     public function remarks($id){
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
        $user_id = \Auth::user()->id;
        $client_id = $id;
 
        $client = ClientBasicinfo::find($client_id);
 
-//print_r($client);exit;
        $post = $client->post()->orderBy('created_at', 'desc')->get();
-
-       return view('adminlte::client.remarks',compact('user_id','client_id','post','client'));
+//echo $isSuperAdmin;exit;
+       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin'));
 
     }
 
