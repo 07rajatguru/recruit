@@ -1112,6 +1112,7 @@ class Bills extends Model
                 // get employee efforts
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
                 $efforts_str = '';
+                $person_billing = 0;
                 foreach ($efforts as $k=>$v){
                     if($efforts_str==''){
                         $efforts_str = $k .'('.(int)$v . '%)';
@@ -1121,6 +1122,7 @@ class Bills extends Model
                     }
                     // Person wise billing amount
                     $user_name = User::getUserNameById($user_id);
+
                     if ($user_name == $k) {
                         $efforts_person = $v;
                         $person_billing = ($fees * $efforts_person) / 100;
