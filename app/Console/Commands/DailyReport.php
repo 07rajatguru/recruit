@@ -49,7 +49,7 @@ class DailyReport extends Command
        // $cc_address = 'tarikapanjwani@gmail.com';
         // $app_url = env('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersEmails('recruiter','Yes');
         
         $date = date('Y-m-d');
         $fixed_date = Holidays::getFixedLeaveDate();
@@ -117,7 +117,6 @@ class DailyReport extends Command
                 $sender_name = $key;
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
             }
         }
     }

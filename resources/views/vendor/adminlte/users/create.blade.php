@@ -140,6 +140,14 @@
                                 @endif
                             </div>
 
+                            <div class="form-group">
+                                <strong> Generate Report : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('daily_report','Yes', true) !!}
+                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                                {!! Form::radio('daily_report','No') !!}
+                                {!! Form::label('No') !!}
+                            </div>
+                          
                             <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                                 <strong> Status : </strong> &nbsp;&nbsp;
                                 {!! Form::radio('status','Active', true) !!}

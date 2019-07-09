@@ -110,12 +110,14 @@ class UserController extends Controller
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');
         $type = $request->input('type');
+        $check_report = $request->input('daily_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
         $role_id = $request->input('roles');
         //print_r($account_manager);exit;
 
         $user->secondary_email=$request->input('semail');
+        $user->daily_report = $check_report;
         $user->reports_to = $reports_to;
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
@@ -291,10 +293,12 @@ class UserController extends Controller
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');
         $type = $request->input('type');
+        $check_report = $request->input('daily_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
 
         $user->secondary_email=$request->input('semail');
+        $user->daily_report = $check_report;
         $user->reports_to = $reports_to; 
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
@@ -307,14 +311,10 @@ class UserController extends Controller
                 $user->type = $type;
             }
         }*/
-
-
-  
-
+        
         return redirect()->route('users.index')
             ->with('success','User updated successfully');
     }
-
 
     /**
      * Remove the specified resource from storage.

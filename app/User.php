@@ -128,7 +128,7 @@ class User extends Authenticatable
     }
 
 
-    public static function getAllUsersEmails($type=NULL){
+    public static function getAllUsersEmails($type=NULL,$report=NULL){
 
         $status = 'Inactive';
         $superadmin = getenv('SUPERADMINUSERID');
@@ -139,6 +139,10 @@ class User extends Authenticatable
 
         if($type!=NULL){
             $user_query = $user_query->where('type','=',$type);
+        }
+
+        if($report!=NULL){
+            $user_query = $user_query->where('daily_report','=',$report);
         }
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
