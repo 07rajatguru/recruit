@@ -54,7 +54,7 @@
 
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                                 <strong>Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('name',$user['name'], array('id'=>'name','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::text('name',$user['name'], array('id'=>'name','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '1')) !!}
                                 @if ($errors->has('name'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -65,14 +65,14 @@
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span> </strong>
                                 @if($isSuperAdmin || $isAccountant)
-                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control')) !!}
+                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control','tabindex' => '1')) !!}
                                 @else
                                     {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control','disabled')) !!}
                                 @endif
                                 @if ($errors->has('email'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('email') }}</strong>
-                                </span>
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
                                 @endif
                             </div>
 
@@ -102,7 +102,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                {!! Form::text('date_of_anni',isset($user['anni_date']) ? $user['anni_date'] : null, array('id'=>'date_of_anni','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '6')) !!}
+                                {!! Form::text('date_of_anni',isset($user['anni_date']) ? $user['anni_date'] : null, array('id'=>'date_of_anni','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '4')) !!}
                                 </div>
                             </div>
 
@@ -114,6 +114,11 @@
                                         <strong>{{ $errors->first('contact') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+
+                            <div class="form-group">
+                                <strong>Current Address: </strong>
+                                {!! Form::textarea('current_address', $user['current_address'], array('id'=>'current_address' ,'placeholder' => 'Current Address','class' => 'form-control','tabindex' => '7','rows' => '4')) !!}
                             </div>
 
                         </div>
@@ -164,7 +169,7 @@
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
                                 <strong>Designation: </strong>
                                 @if($isSuperAdmin || $isAccountant)
-                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control')) !!}
+                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '3')) !!}
                                 @else
                                     {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','disabled')) !!}
                                 @endif
@@ -192,11 +197,15 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '7')) !!}
+                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '6')) !!}
                                 </div>
                             </div> 
-                            <?php }?>  
-                            
+                            <?php }?>
+
+                            <div class="form-group">
+                                <strong>Permanent Address: </strong>
+                                {!! Form::textarea('permanent_address',$user['permanent_address'], array('id'=>'permanent_address','placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '8','rows' => '4')) !!}
+                            </div>
                         </div>
                     </div>
                 </div>
