@@ -8,6 +8,7 @@ use App\Industry;
 use App\user;
 use App\ClientBasicinfo;
 use App\ClientAddress;
+use App\ClientDoc;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use App\Events\NotificationEvent;

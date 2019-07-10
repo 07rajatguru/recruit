@@ -127,9 +127,8 @@
     </style>
  @endsection  
 
-                       
                             <div class="form-group">
-                                <strong>Select Leads: :</strong>
+                                <strong>Select Leads:</strong>
                                     {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control','tabindex' => '8')) !!}
                                     @if ($errors->has('leads'))
                                     <span class="help-block">

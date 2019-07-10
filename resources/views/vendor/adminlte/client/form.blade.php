@@ -367,14 +367,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
     @if($isSuperAdmin || $isAdmin)
-        @if( $action == 'add')
+        @if($action == 'add' || $action == 'copy')
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Attachment Information</h3>
