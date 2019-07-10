@@ -294,7 +294,7 @@ class ReportController extends Controller
         //$cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersEmails('recruiter','Yes');
 
         $input = array();
         $input['from_name'] = $from_name;
@@ -343,7 +343,7 @@ class ReportController extends Controller
         $input['cc'] = $cc_address;
         $input['app_url'] = $app_url;
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersEmails('recruiter','Yes');
 
         foreach ($users as $key => $value) {
 

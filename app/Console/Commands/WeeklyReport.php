@@ -46,7 +46,7 @@ class WeeklyReport extends Command
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');*/
 
-        $users = User::getAllUsersEmails('recruiter');
+        $users = User::getAllUsersEmails('recruiter','Yes');
 
         foreach ($users as $key => $value) {
 

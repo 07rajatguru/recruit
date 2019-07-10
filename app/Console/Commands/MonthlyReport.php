@@ -47,7 +47,7 @@ class MonthlyReport extends Command
         // $cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
-        $users_all = User::getAllUsersEmails('recruiter');
+        $users_all = User::getAllUsersEmails('recruiter','Yes');
 
         $month = date('m',strtotime('last month'));
         if($month==12){
