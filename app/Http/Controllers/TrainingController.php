@@ -142,7 +142,11 @@ class TrainingController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $users = User::getAllUsers('recruiter');
+        $users_recruit = User::getAllUsers('recruiter');
+        $users_hr = User::getAllUsers('hr');
+
+        $users = $users_recruit + $users_hr;
+        
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
         
@@ -250,7 +254,11 @@ class TrainingController extends Controller
 
     public function edit($id){
 
-     	$users = User::getAllUsers('recruiter');
+     	$users_recruit = User::getAllUsers('recruiter');
+        $users_hr = User::getAllUsers('hr');
+
+        $users = $users_recruit + $users_hr;
+
      	$training = Training::find($id);
         
         $action = "edit" ;
