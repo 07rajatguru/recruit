@@ -258,6 +258,7 @@ class User extends Authenticatable
         $type['recruiter'] = 'Recruitment Team';
         $type['it'] = 'IT Team';
         $type['client'] = 'Client';
+        $type['hr'] = 'HR';
 
         return $type;
     }
