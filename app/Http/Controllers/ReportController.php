@@ -386,7 +386,7 @@ class ReportController extends Controller
         $isAccountant = $user_obj::isAccountant($role_id);
         $isHr = $user_obj::isHr($role_id);
 
-        if ($isSuperAdmin || $isAccountant || $isHr) {
+        if ($isSuperAdmin || $isAccountant ) {
             // Year Data
             $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
             $ending_year = date('Y',strtotime('+1 year'));
