@@ -889,7 +889,7 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsers('recruiter','Yes');
+        $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
         //print_r($users);exit;
       //  $team_mates = $user_id;
@@ -1534,7 +1534,7 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsers('recruiter','Yes');
+        $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
         
         /*$users_res = User::orderBy('name', 'ASC')->get();
@@ -1825,7 +1825,7 @@ class JobOpenController extends Controller
 
         // For account manager
          
-        $users = User::getAllUsers('recruiter','Yes');
+        $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
         //print_r($users);exit;
       //  $team_mates = $user_id;
