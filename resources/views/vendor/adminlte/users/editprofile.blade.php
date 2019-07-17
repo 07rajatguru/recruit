@@ -602,11 +602,17 @@
 @endsection
 
 @section('customscripts')
+  <script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
 
         jQuery(document).ready(function () {
 
-            $("#signature").wysihtml5();
+            //$("#signature").wysihtml5();
+
+            CKEDITOR.replace( 'signature', 
+            {
+                filebrowserUploadUrl: '{{ route('upload.signature',['_token' => csrf_token() ]) }}'
+            });
 
             $("#editprofile").validate({
                 rules: {

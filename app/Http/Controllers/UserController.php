@@ -359,6 +359,35 @@ class UserController extends Controller
             ->with('success','User deleted successfully');
     }
 
+    public function uploadSignatureImage(Request $request)
+    {
+        $user_id = \Auth::user()->id;
+
+        $CKEditor = $request->input('CKEditor');
+        $funcNum  = $request->input('CKEditorFuncNum');
+        $message  = $url = '';
+
+        if (Input::hasFile('upload'))
+        {
+            $file = Input::file('upload');
+            if ($file->isValid())
+            {
+                $filename = $file->getClientOriginalName();
+                $file->move(public_path().'/uploads/users/'.$user_id.'/signature/', $filename);
+                $url = url('uploads/users/'.$user_id.'/signature/' . $filename);
+            }
+            else
+            {
+                $message = 'An error occurred while uploading the file.';
+            }
+        }
+        else
+        {
+            $message = 'No file uploaded.';
+        }
+        return '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$url.'", "'.$message.'")</script>';
+    }
+
     public function profileShow($user_id)
     {
         //superadmin

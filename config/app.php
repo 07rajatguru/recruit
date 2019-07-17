@@ -188,6 +188,9 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
 
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
+
+        BrianFaust\Commentable\CommentableServiceProvider::class,
+        Unisharp\Ckeditor\ServiceProvider::class,
     ],
 
     /*

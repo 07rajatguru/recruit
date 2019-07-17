@@ -66,6 +66,8 @@
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset('vendor/adminlte/js/bootstrap3-wysihtml5.all.min.js') }}"></script>
 
+<script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.44/js/bootstrap-datetimepicker.min.js"></script>
 

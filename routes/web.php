@@ -268,6 +268,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'usersattachments.upload',
         'uses' => 'UserController@Upload'
     ]);
+    Route::post('/upload-signature',[
+        'as' => 'upload.signature',
+        'uses' => 'UserController@uploadSignatureImage'
+    ]);
     Route::delete('usersattachments/destroy/{id}',[
         'as' =>'usersattachments.destroy',
         'uses' =>'UserController@attachmentsDestroy'
