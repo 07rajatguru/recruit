@@ -48,17 +48,21 @@ class ClientStatus extends Command
 
         $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id)'));
 
-        //print_r($job_created_at);exit;
+        //print_r($job_data);exit;
 
         $client = ClientBasicinfo::query();
         $client = $client->select('client_basicinfo.id');
         $client_res = $client->get();
+
+        //print_r($client_res);exit;
 
         $j = 0;
         foreach ($client_res as $key => $value) {
             $clientids[$j] = $value->id;
             $j++;
         }
+
+        //print_r($clientids);exit;
 
         /*$i = 0;
         foreach ($client_res as $key => $value) {
@@ -75,22 +79,36 @@ class ClientStatus extends Command
              foreach($job_data as $key1=>$value1){
                 $client_id=$value1->client_id;
 
+                //echo $client_id;exit;
+
                 $job_created_at = $value1->created_at; // job added date
+                //echo $job_created_at;exit;
+
                 // $job_associated_created_at = $job_associated_data->created_at; // job candidate associate date
 
-                 // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
-                 $client_status_query = ClientBasicinfo::query();
-                 $client_status_query = $client_status_query->where('id',$client_id);
-                 $client_res = $client_status_query->first();
-                 $client_status = $client_res->status;
+                // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                $client_status_query = ClientBasicinfo::query();
+                $client_status_query = $client_status_query->where('id',$client_id);
+                $client_res = $client_status_query->first();
+                $client_status = $client_res->status;
 
-                 if($client_status==2 or $client_status==3 or $client_status==4)
+                //echo $client_status;exit;
+
+                if($client_status==2 or $client_status==3 or $client_status==4)
                      continue;
 
                 $date1=date('Y-m-d',strtotime("-30 days"));
+                //echo $date1;exit;
+
                 if(isset($job_created_at)){
                    if(($job_created_at /*|| $job_associated_created_at*/) < $date1){
-                        DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+
+                        //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+
+                        // set passive date for passive clients
+                        $today_date = date('Y-m-d');
+                        DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
+
                         echo " status - 0 :".$client_id;
                    }
                    else{
@@ -100,7 +118,12 @@ class ClientStatus extends Command
                    }
                 }
                 else{
-                    DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+                    //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
+
+                    // set passive date for passive clients
+                    $today_date = date('Y-m-d');
+                    DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
+
                     echo " status - 0 :".$client_id;
                 }
             //} 
@@ -121,7 +144,12 @@ class ClientStatus extends Command
             if($client_status==2 or $client_status==3 or $client_status==4)
                 continue;
 
-            DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$value'");
+            //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$value'");
+
+            // set passive date for passive clients
+            $today_date = date('Y-m-d');
+            DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$value'");
+
             echo " status - 0 :".$value;
         }
 
@@ -181,10 +209,14 @@ class ClientStatus extends Command
                     continue;
 
                 if(!in_array($c_id[$j],$active_clients))
-                    DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$c_id[$j]'");
+
+                    //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$c_id[$j]'");
+
+                    // set passive date for passive clients
+                    $today_date = date('Y-m-d');
+                    DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$c_id[$j]'");
             }
             $j++;
         }
-
     }
 }

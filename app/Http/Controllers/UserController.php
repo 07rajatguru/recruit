@@ -404,6 +404,9 @@ class UserController extends Controller
                 $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
                 $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
                 $user['contact_number'] = $value->contact_number;
+                $user['current_address'] = $value->current_address;
+                $user['permanent_address'] = $value->permanent_address;
+                $user['signature'] = $value->signature;
             }
 
             // User Family Details show
@@ -479,6 +482,7 @@ class UserController extends Controller
                 $user['contact_number'] = $value->contact_number;
                 $user['current_address'] = $value->current_address;
                 $user['permanent_address'] = $value->permanent_address;
+                $user['signature'] = $value->signature;
 
                 for ($i=1; $i <= 5 ; $i++) {
                     $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
@@ -549,6 +553,7 @@ class UserController extends Controller
             $contact_number = Input::get('contact');
             $current_address = Input::get('current_address');
             $permanent_address = Input::get('permanent_address');
+            $signature = Input::get('signature');
 
             $users_otherinfo = UserOthersInfo::find($user_other_info->id);
             if (isset($date_of_joining) && $date_of_joining != '') {
@@ -594,6 +599,7 @@ class UserController extends Controller
             $users_otherinfo->contact_number = $contact_number;
             $users_otherinfo->current_address = $current_address;
             $users_otherinfo->permanent_address = $permanent_address;
+            $users_otherinfo->signature = $signature;
             $users_otherinfo->save();
 
             // User Family Details update

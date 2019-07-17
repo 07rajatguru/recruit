@@ -49,6 +49,7 @@ class CompaniesController extends Controller
 
         $company = new Companies();
         $company->name = $request->input('name');
+        $company->description = $request->input('description');
         $company->save();
 
         return redirect()->route('companies.index')->with('success','Company created successfully');
@@ -85,6 +86,7 @@ class CompaniesController extends Controller
 
         $companies = Companies::find($id);
         $companies->name = $request->input('name');
+        $companies->description = $request->input('description');
         $companies->save();
 
         return redirect()->route('companies.index')->with('success','Company updated successfully');

@@ -1228,8 +1228,14 @@ class ClientController extends Controller
         }
         
         $status = $input['status'];
-
         $client_basic_info->status = $status;
+
+        // save passive date for passive client
+        if($status == '0')
+        {
+            $today_date = date('Y-m-d'); 
+            $client_basic_info->passive_date = $today_date;
+        }
 
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
@@ -1760,8 +1766,14 @@ class ClientController extends Controller
         $client_basicinfo->industry_id = $input->industry_id;
 
         $status=$input->status;
-
         $client_basicinfo->status = $status;
+
+        // save passive date for passive client
+        if($status == '0')
+        {
+            $today_date = date('Y-m-d'); 
+            $client_basicinfo->passive_date = $today_date;
+        }
 
         $client_basicinfo->website = $input->website;
         if(isset($input->source) && $input->source!=''){

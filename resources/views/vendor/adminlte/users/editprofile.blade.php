@@ -44,9 +44,9 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
+            <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Basic Information</h3>
-                </div>
+            </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
@@ -120,7 +120,6 @@
                                 <strong>Current Address: </strong>
                                 {!! Form::textarea('current_address', $user['current_address'], array('id'=>'current_address' ,'placeholder' => 'Current Address','class' => 'form-control','tabindex' => '7','rows' => '4')) !!}
                             </div>
-
                         </div>
                     </div>
 
@@ -205,6 +204,17 @@
                             <div class="form-group">
                                 <strong>Permanent Address: </strong>
                                 {!! Form::textarea('permanent_address',$user['permanent_address'], array('id'=>'permanent_address','placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '8','rows' => '4')) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-xs-12 col-sm-12 col-md-12">
+                        <div class="">
+                            <div class="form-group">
+                                <strong>Signature : </strong>
+                                {!! Form::textarea('signature',$user['signature'], array('id'=>'signature','placeholder' => 'Signature','class' => 'form-control','tabindex' => '8','rows' => '4')) !!}
                             </div>
                         </div>
                     </div>
@@ -593,7 +603,10 @@
 
 @section('customscripts')
     <script type="text/javascript">
+
         jQuery(document).ready(function () {
+
+            $("#signature").wysihtml5();
 
             $("#editprofile").validate({
                 rules: {

@@ -121,7 +121,7 @@
                             <div class="col-md-6 ">
                                 <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                     <strong>Type:</strong>
-                                    {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '6', 'onchange' => 'skype()' )) !!}
+                                    {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '6', 'onchange' => 'skype()' )) !!}
                                     @if ($errors->has('type'))
                                         <span class="help-block">
                                 <strong>{{ $errors->first('type') }}</strong>
@@ -130,7 +130,7 @@
                                 </div>
 
                                 <div class="form-group skype {{ $errors->has('skype_id') ? 'has-error' : '' }}" style="display: none;">
-                                    <strong>Skype Id:</strong>
+                                    <strong>Video Id:</strong>
                                     {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4' )) !!}
                                     @if ($errors->has('skype_id'))
                                         <span class="help-block">
