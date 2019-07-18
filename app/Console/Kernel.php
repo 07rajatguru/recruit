@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\EligibilityWorkingReport',
         'App\Console\Commands\BillsPCAdd',
         'App\Console\Commands\RecoveryPrePCAdd',
+        'App\Console\Commands\PassiveClientList',
     ];
 
     /**

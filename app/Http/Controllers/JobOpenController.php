@@ -415,7 +415,7 @@ class JobOpenController extends Controller
 
         $count = sizeof($job_response);
 
-        $priority_0 = 0;
+        /*$priority_0 = 0;
         $priority_1 = 0;
         $priority_2 = 0;
         $priority_3 = 0;
@@ -461,7 +461,7 @@ class JobOpenController extends Controller
             else if($job_priority['priority'] == 10) {
                 $priority_10++;
             }
-        }
+        }*/
 
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
@@ -469,17 +469,17 @@ class JobOpenController extends Controller
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['count'] = $count;
         $viewVariable['priority'] = $priority;
-        $viewVariable['priority_0'] = $priority_0;
-        $viewVariable['priority_1'] = $priority_1;
-        $viewVariable['priority_2'] = $priority_2;
-        $viewVariable['priority_3'] = $priority_3;
-        $viewVariable['priority_4'] = $priority_4;
-        $viewVariable['priority_5'] = $priority_5;
-        $viewVariable['priority_6'] = $priority_6;
-        $viewVariable['priority_7'] = $priority_7;
-        $viewVariable['priority_8'] = $priority_8;
-        $viewVariable['priority_9'] = $priority_9;
-        $viewVariable['priority_10'] = $priority_10;
+        // $viewVariable['priority_0'] = $priority_0;
+        // $viewVariable['priority_1'] = $priority_1;
+        // $viewVariable['priority_2'] = $priority_2;
+        // $viewVariable['priority_3'] = $priority_3;
+        // $viewVariable['priority_4'] = $priority_4;
+        // $viewVariable['priority_5'] = $priority_5;
+        // $viewVariable['priority_6'] = $priority_6;
+        // $viewVariable['priority_7'] = $priority_7;
+        // $viewVariable['priority_8'] = $priority_8;
+        // $viewVariable['priority_9'] = $priority_9;
+        // $viewVariable['priority_10'] = $priority_10;
         $viewVariable['isClient'] = $isClient;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
@@ -2680,15 +2680,15 @@ class JobOpenController extends Controller
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getClosedJobs(1,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
             $job_response = JobOpen::getClosedJobsByClient($client_id);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
         else{
             $job_response = JobOpen::getClosedJobs(0,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
 
         $count = sizeof($job_response);
@@ -2696,18 +2696,14 @@ class JobOpenController extends Controller
         $priority_9 = 0;
         $priority_10 = 0;
 
-        foreach ($job_priority_data as $job_priority) 
-        {
-           if($job_priority['priority'] == 4) 
-           {
+        foreach ($job_priority_data as $job_priority) {
+           if($job_priority['priority'] == 4) {
                 $priority_4++;
            }
-           else if($job_priority['priority'] == 9) 
-           {
+           else if($job_priority['priority'] == 9) {
                 $priority_9++;
            }
-           else if($job_priority['priority'] == 10) 
-           {
+           else if($job_priority['priority'] == 10) {
                 $priority_10++;
            }
         }
@@ -2769,15 +2765,32 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
             $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type);
             $count = sizeof($job_response);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
         else{
             $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
+
+        $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
+        foreach ($job_priority_data as $job_priority) {
+           if($job_priority['priority'] == 4) {
+                $priority_4++;
+           }
+           else if($job_priority['priority'] == 9) {
+                $priority_9++;
+           }
+           else if($job_priority['priority'] == 10) {
+                $priority_10++;
+           }
+        }
+
         $job_priority = JobOpen::getJobPriorities();
         $jobs = array();
         $i = 0;$j = 0;
@@ -2822,6 +2835,10 @@ class JobOpenController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
+            'priority_onhold' => intval($priority_4),
+            'priority_closed_us' => intval($priority_9),
+            'priority_closed_client' => intval($priority_10),
+            'year' => $year,
             "data" => $jobs
         );
 

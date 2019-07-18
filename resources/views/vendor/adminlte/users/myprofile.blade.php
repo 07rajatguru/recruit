@@ -84,6 +84,14 @@
                                     <td>{{ $user['exit_date'] }}</td>
                                 </tr>
                             @endif
+                            <tr>
+                                <th>Current Address</th>
+                                <td>{{ $user['current_address'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Permanent Address</th>
+                                <td>{{ $user['permanent_address'] }}</td>
+                            </tr>
                         </table>
                     </div>
                     <div class="col-xs-5 col-sm-5 col-md-5" style="padding-left: 120px;">

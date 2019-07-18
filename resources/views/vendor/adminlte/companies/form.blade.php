@@ -38,6 +38,16 @@
                                 </span>
                         @endif
                     </div>
+
+                     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
+                        <strong>Description:</strong>
+                        {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '2','rows' => '8')) !!}
+                        @if ($errors->has('no_of_positions'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('description') }}</strong>
+                            </span>
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -48,6 +58,4 @@
 
     </div>
 </div>
-
-
 {!! Form::close() !!}

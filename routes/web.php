@@ -268,6 +268,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'usersattachments.upload',
         'uses' => 'UserController@Upload'
     ]);
+    Route::post('/upload-signature',[
+        'as' => 'upload.signature',
+        'uses' => 'UserController@uploadSignatureImage'
+    ]);
     Route::delete('usersattachments/destroy/{id}',[
         'as' =>'usersattachments.destroy',
         'uses' =>'UserController@attachmentsDestroy'
@@ -869,7 +873,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@OpentoAll'
     ]);
 
-    Route::get('jobs/priority/{priority}',[
+    Route::get('jobs/priority/{priority}/{year}',[
         'as' => 'jobopen.priority',
         'uses' => 'JobOpenController@priorityWise'
     ]);
