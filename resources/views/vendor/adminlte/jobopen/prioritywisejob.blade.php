@@ -9,7 +9,7 @@
 
 @section('customs_css')
 <style>
-    .select2-selection__rendered[title="Urgent Positions"] {
+    /*.select2-selection__rendered[title="Urgent Positions"] {
       background-color: #FF0000;
     }
     .select2-selection__rendered[title="New Positions"] {
@@ -63,7 +63,7 @@
     }
     .select2-results__option[id*="Closed By Client"] {
       background-color: #FFFFFF;
-    }
+    }*/
 </style>
 @endsection
 
@@ -87,7 +87,7 @@
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
                     <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
                 @endif
-                <a class="btn btn-primary" href="{{ route('jobopen.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ url()->previous() }}"> Back</a>
             </div>
 
             <div class="pull-right">
@@ -96,9 +96,9 @@
             </div>
         </div>
     </div>
-    <br/>
+    {{--<br/>
 
-    {{--<div class="row">
+    <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-md-3">
                 <label >Search Open Jobs by selecting priority : </label>
@@ -127,7 +127,7 @@
             </div>
         </div>
     </div>--}}
-    <div class="row">
+    {{--<div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                 <a href="{{ route('jobopen.priority',$job_priority[0]) }}" title="-None-" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_0 }}</div></a>
@@ -165,10 +165,10 @@
                 <a href="{{ route('jobopen.priority',$job_priority[10]) }}" title="Closed By Client" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_10 }}</div></a>
             </div>
         </div>
-    </div>
+    </div>--}}
 
-     <div class="row">
-       {{-- <div class="col-xs-12 col-sm-12 col-md-12">
+    {{-- <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box-body col-xs-1 col-sm-1 col-md-1" style="width: 7%; float:left; margin: 5px">
                 <div style="height:30px;width:70px;background-color:#FFFFFF;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">None ({{ $priority_0 }})
                 </div>
@@ -193,13 +193,13 @@
                 <div style="height:30px;width:190px;background-color:#92D050;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Identified Candidates ({{ $priority_4 }})
                 </div>
             </div>
-        </div>--}}
-    </div>
+        </div>
+    </div>--}}
 
     &nbsp;
 
-    <div class="row">
-        {{--<div class="col-xs-12 col-sm-12 col-md-12">
+    {{--<div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
 
             <div class="box-body col-xs-2 col-sm-2 col-md-2" style="width: 16%; float:left; margin: 5px">
                 <div style="height:30px;width:160px;background-color:yellow;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Revived Positions ({{ $priority_5 }})
@@ -225,21 +225,21 @@
                 <div style="height:30px;width:220px;background-color:#FFFFFF;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Closed By Client ({{ $priority_10 }})
                 </div>
             </div>
-        </div>--}}
-    </div>
+        </div>
+    </div>--}}
 
     &nbsp;
 
-    <div class="row">
-        {{--<div class="col-xs-12 col-sm-12 col-md-12">
+    {{--<div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
 
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <div style="height:30px;width:700px;background-color:#808080;font-weight: 600;border-radius: 20px;border: 1px solid black;padding:6px 0px 0px 6px;text-align: center;">Constant Deliveries needed for very old positions where many deliveries are done but no result yet ({{ $priority_6 }})
                 </div>
             </div>
 
-        </div>--}}
-    </div>
+        </div>
+    </div>--}}
     
     &nbsp;
     

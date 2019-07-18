@@ -873,7 +873,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@OpentoAll'
     ]);
 
-    Route::get('jobs/priority/{priority}',[
+    Route::get('jobs/priority/{priority}/{year}',[
         'as' => 'jobopen.priority',
         'uses' => 'JobOpenController@priorityWise'
     ]);
