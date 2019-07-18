@@ -357,8 +357,22 @@ tr.disabled > td a {
 .m-post-row {background: #fff; border: 1px solid #ddd;margin-bottom: 20px;}
 .thumb {position: absolute;left: 20px;top: 25px;}
 .thumb img {width: 40px;height: 40px; border-radius: 50%;border: 2px solid #ccc;}
-.comment-area {}
-.comment-area textarea {padding: 1.5rem 1.1rem .2rem;padding-left: 70px;line-height: 1.8;    resize: none;border-radius: 0;}
+.comment-area { float: left;
+    display: inline-block}
+.comment-area textarea {padding: 5px;
+    line-height: 1.8;
+    resize: none;
+    border-radius: 0;
+    height: 46px !important;
+    width: 100%;
+    border-left: 0;
+    border-top: 0;}
+ .m-post-row .button-area{    width: auto;
+   padding: 0 !important;} 
+.m-post-row .button-area .btn{    padding: 12px 15px;
+    border-radius: 0;}    
+.m-post-row.comment-box{    background: transparent;
+    border: 0;}
 .button-area {display: inline-block;width: 100%;padding: 20px;}
 .button-area .btn {float: right; background: #337ab7;border-color: #2e6da4;}
 .hidden, #uploadImg:not(.hidden) + label{ display: none;}
@@ -368,10 +382,17 @@ tr.disabled > td a {
 .button-area img{display: block; margin-bottom: 5px;}
 .post__author {padding: 0px;}
 .post__author-name {display: block;margin: 0;}
-.post__author p {font-size: 14px; color: #555;/*margin: 20px 0;*/}
-.post__author .profile-avatar-pic {width: 40px;height: 40px;border-radius: 100%;overflow: hidden; margin-right: 12px;}
+.post__author p {font-size: 14px; color: #555;margin: 0;padding: 0 0 5px 53px;}
+.post__author .profile-avatar-pic {width: 40px;height: 40px;border-radius: 100%;overflow: hidden; margin: 5px 10px 0 0;}
 .author-date {display: inline-block;vertical-align: middle;}
 .author-date a {font-weight: 700;font-size: 14px;}
+.post__author-name.fn{    display: inline-block;
+    float: left;
+    margin: 0;}
+.post__date{ display: inline-block;margin: -3px 0 0;}
+time.published{    display: inline-block;
+    float: left;
+    margin: -2px 0 0 10px;}
 .post__author .more {
     width: 20px;
     text-align:center;
@@ -386,7 +407,7 @@ tr.disabled > td a {
 .post-additional-info .comments-shared {float: right;}
 .post-additional-info a {color: #555;}
 .like-dislike-button {display: inline-block;}
-.children {border-top: 1px solid #e6ecf5;margin: 25px -20px 0;padding-left: 35px;}
+.children {border-top: 1px solid #e6ecf5;margin: 0 -20px 0;padding-left: 35px;}
 .children li {list-style: none;border-left: 1px solid #e6ecf5;padding:4px;border-bottom: 1px solid #e6ecf5;background-color: #337ab7;/*position: relative;*/}
 .children li:before {content: "";position: absolute;width: 9px;height: 9px;top: 40px;left: -5px;
     background-color: #c2c5d9;border-radius: 100%; z-index: 13;}
