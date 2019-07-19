@@ -712,7 +712,8 @@ class JobOpenController extends Controller
             'recordsFiltered' => intval($count),
             'year' => $year,
             "data" => $jobs,
-            "priority" => $priority
+            "priority" => $priority,
+            "job_priority" => $job_priority
         );
 
         echo json_encode($json_data);exit;
@@ -2709,10 +2710,7 @@ class JobOpenController extends Controller
         }
 
         $count = sizeof($job_response);
-        $priority_4 = 0;
-        $priority_9 = 0;
-        $priority_10 = 0;
-
+        $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
         foreach ($job_priority_data as $job_priority) {
            if($job_priority['priority'] == 4) {
                 $priority_4++;
@@ -2725,14 +2723,17 @@ class JobOpenController extends Controller
            }
         }
 
+        $close_priority = array();
+        $close_priority['priority_4'] = $priority_4++;
+        $close_priority['priority_9'] = $priority_9++;
+        $close_priority['priority_10'] = $priority_10++;
+
         $viewVariable = array();
         $viewVariable['jobList'] = $job_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
-        $viewVariable['priority_4'] = $priority_4;
-        $viewVariable['priority_9'] = $priority_9;
-        $viewVariable['priority_10'] = $priority_10;
+        $viewVariable['close_priority'] = $close_priority;
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
 
@@ -2807,6 +2808,11 @@ class JobOpenController extends Controller
                 $priority_10++;
            }
         }
+        
+        $close_priority = array();
+        $close_priority['priority_4'] = $priority_4++;
+        $close_priority['priority_9'] = $priority_9++;
+        $close_priority['priority_10'] = $priority_10++;
 
         $job_priority = JobOpen::getJobPriorities();
         $jobs = array();
@@ -2852,9 +2858,7 @@ class JobOpenController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            'priority_onhold' => intval($priority_4),
-            'priority_closed_us' => intval($priority_9),
-            'priority_closed_client' => intval($priority_10),
+            'close_priority' => $close_priority,
             'year' => $year,
             'job_priority' => $job_priority,
             "data" => $jobs

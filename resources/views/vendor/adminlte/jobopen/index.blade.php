@@ -143,29 +143,29 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[0],$year]) }}" title="-None-" style="text-decoration: none;color: black;"><div class="priority_0" style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_0 }}</div></a>
+                <a id="priority_0" href="" title="-None-" style="text-decoration: none;color: black;"><div class="priority_0" style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_0 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[1],$year]) }}" title="Urgent Positions" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_1 }}</div></a>
+                <a id="priority_1" href="" title="Urgent Positions" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_1 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[2],$year]) }}" title="New Positions" style="text-decoration: none;color: black;"><div class="priority_2" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_2 }}</div></a>
+                <a id="priority_2" href="" title="New Positions" style="text-decoration: none;color: black;"><div class="priority_2" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_2 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[3],$year]) }}" title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div class="priority_3" style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_3 }}</div></a>
+                <a id="priority_3" href="" title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div class="priority_3" style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_3 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[5],$year]) }}" title="Revived Positions" style="text-decoration: none;color: black;"><div class="priority_5" style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_5 }}</div></a>
+                <a id="priority_5" href="" title="Revived Positions" style="text-decoration: none;color: black;"><div class="priority_5" style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_5 }}</div></a>
             </div>
         
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[6],$year]) }}" title="Constant Deliveries needed for very old positions where many deliveries are done but no result yet" style="text-decoration: none;color: black;"><div class="priority_6" style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_6 }}</div></a>
+                <a id="priority_6" href="" title="Constant Deliveries needed for very old positions where many deliveries are done but no result yet" style="text-decoration: none;color: black;"><div class="priority_6" style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;">{{ $priority_6 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[7],$year]) }}" title="No Deliveries Needed" style="text-decoration: none;color: black;"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_7 }}</div></a>
+                <a id="priority_7" href="" title="No Deliveries Needed" style="text-decoration: none;color: black;"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_7 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="{{ route('jobopen.priority',[$job_priority[8],$year]) }}" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;" class="priority_8">{{ $priority_8 }}</div></a>
+                <a id="priority_8" href="" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;" class="priority_8">{{ $priority_8 }}</div></a>
 
             </div>
         </div>
@@ -386,10 +386,18 @@
                 },
                 initComplete:function( settings, json){
                     var count = json.recordsTotal;
-        //console.log("dfdf");
-                    // alert(count);
-                    $("#count").html('');
-                    $("#count").append("(" + count + ")");
+                    var job_priority = json.job_priority;
+
+                    $("#count").html("(" + count + ")");
+
+                    $("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]+'/'+year);
+                    $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]+'/'+year);
+                    $("#priority_2").attr("href", '/jobs/priority/'+job_priority[2]+'/'+year);
+                    $("#priority_3").attr("href", '/jobs/priority/'+job_priority[3]+'/'+year);
+                    $("#priority_5").attr("href", '/jobs/priority/'+job_priority[5]+'/'+year);
+                    $("#priority_6").attr("href", '/jobs/priority/'+job_priority[6]+'/'+year);
+                    $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]+'/'+year);
+                    $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -492,6 +500,18 @@
                 initComplete:function( settings, json){
                     var count = json.recordsTotal;
                     var priority = json.priority;
+                    var job_priority = json.job_priority;
+
+                    $("#count").html("(" + count + ")");
+
+                    $("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]+'/'+year);
+                    $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]+'/'+year);
+                    $("#priority_2").attr("href", '/jobs/priority/'+job_priority[2]+'/'+year);
+                    $("#priority_3").attr("href", '/jobs/priority/'+job_priority[3]+'/'+year);
+                    $("#priority_5").attr("href", '/jobs/priority/'+job_priority[5]+'/'+year);
+                    $("#priority_6").attr("href", '/jobs/priority/'+job_priority[6]+'/'+year);
+                    $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]+'/'+year);
+                    $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);
 
                     if(typeof(priority['priority_0'])!="undefined"){
                         $(".priority_0").html(priority['priority_0']);
@@ -517,9 +537,6 @@
                     if(typeof(priority['priority_8'])!="undefined"){
                         $(".priority_8").html(priority['priority_8']);
                     }
-
-                    $("#count").html('');
-                    $("#count").append("(" + count + ")");
                 },
                 responsive: true,
                 "pageLength": 50,
