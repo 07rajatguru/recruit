@@ -53,13 +53,13 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
              <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a id="on_hold_href" href="{{ route('jobopen.priority',[$job_priority[4],$year]) }}" title="On Hold" style="text-decoration: none;color: black;"><div  id="on_hold" style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_4 }}</div></a>
+                <a id="on_hold_href" href="" title="On Hold" style="text-decoration: none;color: black;"><div  id="on_hold" style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_4 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a id="closed_us_href" href="{{ route('jobopen.priority',[$job_priority[9],$year]) }}" title="Closed By Us" style="text-decoration: none;color: black;"><div id="closed_us" style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_9 }}</div></a>
+                <a id="closed_us_href" href="" title="Closed By Us" style="text-decoration: none;color: black;"><div id="closed_us" style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_9 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a id="closed_client_href" href="{{ route('jobopen.priority',[$job_priority[10],$year]) }}" title="Closed By Client" style="text-decoration: none;color: black;"><div id="closed_client" style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_10 }}</div></a>
+                <a id="closed_client_href" href="" title="Closed By Client" style="text-decoration: none;color: black;"><div id="closed_client" style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $priority_10 }}</div></a>
             </div>
         </div>
     </div>
@@ -166,6 +166,7 @@
                     var on_hold = json.priority_onhold;
                     var closed_us = json.priority_closed_us;
                     var closed_client = json.priority_closed_client;
+                    var job_priority = json.job_priority;
                     // alert(count);
                     $("#count").html('');
                     $("#count").append("(" + count + ")");
@@ -176,6 +177,11 @@
                     $("#closed_us").append(closed_us);
                     $("#closed_client").html('');
                     $("#closed_client").append(closed_client);
+
+                    // var link = '/jobs/priority/'+job_priority[4]+'/'+year;
+                    $("#on_hold_href").attr("href", '/jobs/priority/'+job_priority[4]+'/'+year);
+                    $("#closed_us_href").attr("href", '/jobs/priority/'+job_priority[9]+'/'+year);
+                    $("#closed_client_href").attr("href", '/jobs/priority/'+job_priority[10]+'/'+year);
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -228,7 +234,8 @@
                     var on_hold = json.priority_onhold;
                     var closed_us = json.priority_closed_us;
                     var closed_client = json.priority_closed_client;
-                    var year = json.year;
+                    // var year = json.year;
+                    var job_priority = json.job_priority;
                     // alert(count);
                     $("#count").html('');
                     $("#count").append("(" + count + ")");
@@ -239,6 +246,11 @@
                     $("#closed_us").append(closed_us);
                     $("#closed_client").html('');
                     $("#closed_client").append(closed_client);
+
+                    // var link = ;
+                    $("#on_hold_href").attr("href", '/jobs/priority/'+job_priority[4]+'/'+year);
+                    $("#closed_us_href").attr("href", '/jobs/priority/'+job_priority[9]+'/'+year);
+                    $("#closed_client_href").attr("href", '/jobs/priority/'+job_priority[10]+'/'+year);
                 },
                 responsive: true,
                 "pageLength": 50,

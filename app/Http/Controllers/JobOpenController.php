@@ -371,10 +371,7 @@ class JobOpenController extends Controller
     }
 
     // Function for priority wise job page
-    public function priorityWise($priority){
-
-        //$priority = $_POST['priority'];
-        //print_r($priority);exit;
+    public function priorityWise($priority,$year){
         $user = \Auth::user();
 
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -394,14 +391,31 @@ class JobOpenController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isClient = $user_obj::isClient($role_id);
 
+        if (isset($year) && $year != 0) {
+            $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+            $year1 = $year_data[0]; // [result : 2019-4]
+            $year2 = $year_data[1]; // [result : 2020-3]
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+
+            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+        }
+        else {
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+
+            $financial_year = '';
+        }
+
         // for get client id by email
         $user_email = $user->email;
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getPriorityWiseJobs(1,$user_id,$priority);
-            $job_response_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
+            $job_response = JobOpen::getPriorityWiseJobs(1,$user_id,$priority,$current_year,$next_year);
+            $job_response_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
             $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority);
@@ -409,8 +423,8 @@ class JobOpenController extends Controller
             $job_response_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
         }
         else{
-            $job_response = JobOpen::getPriorityWiseJobs(0,$user_id,$priority);
-            $job_response_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
+            $job_response = JobOpen::getPriorityWiseJobs(0,$user_id,$priority,$current_year,$next_year);
+            $job_response_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
 
         $count = sizeof($job_response);
@@ -481,6 +495,7 @@ class JobOpenController extends Controller
         // $viewVariable['priority_9'] = $priority_9;
         // $viewVariable['priority_10'] = $priority_10;
         $viewVariable['isClient'] = $isClient;
+        $viewVariable['financial_year'] = $financial_year;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
@@ -641,6 +656,7 @@ class JobOpenController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
+            'year' => $year,
             "data" => $jobs
         );
 
@@ -2785,6 +2801,7 @@ class JobOpenController extends Controller
             'priority_closed_us' => intval($priority_9),
             'priority_closed_client' => intval($priority_10),
             'year' => $year,
+            'job_priority' => $job_priority,
             "data" => $jobs
         );
 

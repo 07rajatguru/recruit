@@ -78,6 +78,7 @@
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
+            <h4><b>Financial Year</b> : {{ $financial_year }}</h4>
             <div class="pull-left">
                 <h2>{{$priority}} Job List ({{ $count or 0}})</h2>
             </div>
