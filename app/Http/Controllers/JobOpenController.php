@@ -614,6 +614,16 @@ class JobOpenController extends Controller
 
         $jobs = array();
         $i = 0;$j = 0;
+
+        $priority_0 = 0;
+        $priority_1 = 0;
+        $priority_2 = 0;
+        $priority_3 = 0;
+        $priority_5 = 0;
+        $priority_6 = 0;
+        $priority_7 = 0;
+        $priority_8 = 0;
+
         foreach ($job_response as $key => $value) {
             $action = '';
             $checkbox = '';
@@ -646,18 +656,63 @@ class JobOpenController extends Controller
             else{
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
+
+            if($value['priority'] == 0)
+            {
+                $priority_0++;
+            }
+            else if($value['priority'] == 1)
+            {
+                $priority_1++;
+            }
+            else if($value['priority'] == 2)
+            {
+                $priority_2++;
+            }
+            else if($value['priority'] == 3)
+            {
+                $priority_3++;
+            }
+            else if($value['priority'] == 5)
+            {
+                $priority_5++;
+            }
+            else if($value['priority'] == 6)
+            {
+                $priority_6++;
+            }
+            else if($value['priority'] == 7)
+            {
+                $priority_7++;
+            }
+            else if($value['priority'] == 8)
+            {
+                $priority_8++;
+            }
+
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
             $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
 
+        $priority = array();
+        $priority['priority_0'] = $priority_0;
+        $priority['priority_1'] = $priority_1;
+        $priority['priority_2'] = $priority_2;
+        $priority['priority_3'] = $priority_3;
+        $priority['priority_5'] = $priority_5;
+        $priority['priority_6'] = $priority_6;
+        $priority['priority_7'] = $priority_7;
+        $priority['priority_8'] = $priority_8;
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
             'year' => $year,
-            "data" => $jobs
+            "data" => $jobs,
+            "priority" => $priority
         );
 
         echo json_encode($json_data);exit;

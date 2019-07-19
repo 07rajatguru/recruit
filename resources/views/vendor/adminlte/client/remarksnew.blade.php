@@ -1,12 +1,12 @@
-<div class="m-post-row">
+<div class="m-post-row comment-box">
     {!! Form::open(['route' => ['client.post.write', $client_id], 'name' => 'write_a_post', 'id' => 'write_a_post', 'files' => 'true']) !!}
         {!! Form::hidden('client_id', $client_id) !!}
         {!! Form::hidden('user_id', $user_id) !!}
-        <div class="thumb">
+        <!-- <div class="thumb">
             <img src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="Avatar" class="avatar">
-        </div> 
+        </div>  -->
         <div class="comment-area">
-           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 2, "required" => true]) !!}
+           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 2, 'cols' => 70,"required" => true]) !!}
         </div>
 
          <div class="button-area" style="padding: 4px;">
