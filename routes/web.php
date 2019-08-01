@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/everyminute',  [
+    'uses' => 'IndexController@everyminute'
+]);
+
 Route::get('/index', [
     'uses' => 'IndexController@getIndex'
 ]);

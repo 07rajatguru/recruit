@@ -9,6 +9,10 @@ use App\DemoRequest;
 
 class IndexController extends Controller
 {
+    public function everyminute(){
+        \Artisan::call('email:everyminute');
+    }
+
     // Home Page
     public function getIndex()
     {
