@@ -51,13 +51,12 @@ class LoginController extends Controller
             'email' => 'required|email', 'password' => 'required',
         ]);
 
-        // get user if exists
-        $user = \DB::table('users')->where('email', $request->input('email'))->first();
-
         $credentials = $request->only('email', 'password');
 
         if (\Auth::attempt($credentials, $request->has('remember')))
         {
+            $user = \Auth::user();
+            
             // For set Session Variable
             $new_sessionid = \Session::getId(); //get new session_id after user sign in
 
@@ -74,7 +73,6 @@ class LoginController extends Controller
             \DB::table('users')->where('id', $user->id)->update(['session_id' => $new_sessionid]);
             // Ending of Session Variable
 
-            $user = \Auth::user();
             $user_status = $user->status;
             if ($user_status == 'Inactive') {
                 \Auth::logout();
