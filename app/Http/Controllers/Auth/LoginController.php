@@ -47,15 +47,32 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-
         $this->validate($request, [
             'email' => 'required|email', 'password' => 'required',
         ]);
+
+        // get user if exists
+        $user = \DB::table('users')->where('email', $request->input('email'))->first();
 
         $credentials = $request->only('email', 'password');
 
         if (\Auth::attempt($credentials, $request->has('remember')))
         {
+            // For set Session Variable
+            $new_sessionid = \Session::getId(); //get new session_id after user sign in
+
+            if($user->session_id != '') {
+                $last_session = \Session::getHandler()->read($user->session_id); 
+
+                if ($last_session) {
+                    if (\Session::getHandler()->destroy($user->session_id)) {
+                        
+                    }
+                }
+            }
+
+            \DB::table('users')->where('id', $user->id)->update(['session_id' => $new_sessionid]);
+            // Ending of Session Variable
 
             $user = \Auth::user();
             $user_status = $user->status;
@@ -141,6 +158,8 @@ class LoginController extends Controller
         $users_log->updated_at = gmdate("Y-m-d H:i:s");
         $users_log->save();
 
+        \Session::flush();
+        //\Session::put('success','you are logout Successfully');
         \Auth::logout();
 
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
