@@ -340,7 +340,7 @@ class CandidateController extends Controller
                 $candidateOtherInfo->experience_years = $candiateExperience_years;
             }
             if(isset($candiateExperience_months) && $candiateExperience_months!=''){
-                $candidateOtherInfo->experience_months = $candiateHighest_qualification;
+                $candidateOtherInfo->experience_months = $candiateExperience_months;
             }
             if(isset($candiateCurrent_job_title)){
                 $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
@@ -1414,9 +1414,9 @@ class CandidateController extends Controller
 
     public function importExport(){
 
-        $candidateimportsource = CandidateBasicInfo::getCandidateimportsource();
+        $candidateSource = CandidateBasicInfo::getCandidateimportsource();
 
-        return view('adminlte::candidate.import',compact('candidateimportsource'));
+        return view('adminlte::candidate.import',compact('candidateSource'));
     }
 
     public function importn1excel(){
@@ -1551,6 +1551,113 @@ class CandidateController extends Controller
         }
         elseif ($candidatesource == 'n2') {
             $candidate = CandidateController::importn2excel();
+        }
+
+        if($request->hasFile('import_file')) {
+            $path = $request->file('import_file')->getRealPath();
+
+            $data = Excel::load($path, function ($reader) {})->get();
+
+            $messages = array();
+
+            if (!empty($data) && $data->count()) {
+
+                foreach ($data->toArray() as $key => $value) {
+
+                    if(!empty($value)) {
+                        //foreach ($value as $v) {
+                           //print_r($value);exit;
+
+                            //$sr_no = $v['sr_no'];
+                          //  $managed_by = $v['managed_by'];
+                            $name = $value['name'];
+                            $gender = $value['gender'];
+                            $marital_status =$value['marital_status'];
+                            $mobile_number = $value['phone_number'];
+                            $email = $value['email_id'];
+                            $current_employer = $value['curr_company_name'];
+                            $experience = $value['total_experience'];
+                            $job_title = $value['curr_company_designation'];
+                            $skill = $value['key_skills'];
+                            $city = $value['home_towncity'];
+                            $zipcode = $value['pin_code'];
+                            $address = $value['permanent_address'];
+                            $current_salary = $value['annual_salary'];
+
+                            // first check email already exist or not , if exist doesnot update data
+                            $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
+
+                            if($candidate_cnt>0){
+                                $messages[] = "Record $name already present ";
+                            }
+                            else{
+                                   // $namearray = explode(' ', $name);
+                                    $mobilearray = explode(',', $mobile_number);
+                                    $addressarray = explode(',', $address);
+
+                                    // Insert new candidate
+                                    $candidate_basic_info = new CandidateBasicInfo();
+                                    $candidate_basic_info->full_name = $name;
+                                    //$candidate_basic_info->lname = $namearray[1];
+                                    $candidate_basic_info->email = $email;
+                                    $candidate_basic_info->mobile = $mobilearray[0];
+                                    if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){
+                                        $candidate_basic_info->phone = $mobilearray[1];
+                                    }
+                                    if ($marital_status == 'Single/unmarried') {
+                                         $candidate_basic_info->marital_status = 'Single';     
+                                    }
+                                    else{
+                                    $candidate_basic_info->marital_status = $marital_status;
+                                    }
+                                    $candidate_basic_info->type = $gender;
+                                    $candidate_basic_info->city = $city;
+                                    $candidate_basic_info->zipcode = $zipcode;
+                                    $candidate_basic_info->street1 = $addressarray[0];
+                                    //$candidate_basic_info->street2 = $addressarray[1];
+
+                                    if($candidate_basic_info->save()) {
+                                        $candidate_id = $candidate_basic_info->id;
+
+                                        $experiencearray = explode(' ', $experience);
+                                        $currentsalaryarray = explode(' ', $current_salary);
+
+                                        $candidate_otherinfo = new CandidateOtherInfo();
+                                        $candidate_otherinfo->candidate_id = $candidate_id;
+                                        $candidate_otherinfo->current_job_title = $job_title;
+                                        $candidate_otherinfo->current_employer = $current_employer;
+                                        $candidate_otherinfo->experience_years = $experiencearray[0];
+                                        $candidate_otherinfo->experience_months = $experiencearray[2];
+                                        $candidate_otherinfo->skill = $skill;
+                                        if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
+                                            # code...
+                                        $candidate_otherinfo->current_salary = $currentsalaryarray[1];
+                                        }
+                                        $candidate_otherinfo->owner_id = $user_id;
+                                        $candidate_otherinfo->save();
+                                        //CandidateOtherInfo::create($input);
+
+                                        if ($candidate_id > 0) {
+                                            $messages[] = "Record $name inserted successfully";
+                                        }
+
+                                    }
+                                    else{
+                                        $messages[] = "Error while inserting record $sr_no ";
+                                    }
+                                }
+
+                            }
+                    
+                    else{
+                        $messages[] = "No Data in file";
+                    }
+
+                }
+            }
+
+            return view('adminlte::candidate.import',compact('messages'));
+            //return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
 
         return view('adminlte::candidate.import',compact('messages','candidateSource'));
