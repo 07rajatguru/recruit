@@ -13,6 +13,22 @@ class IndexController extends Controller
         \Artisan::call('email:everyminute');
     }
 
+    public function jobopentoall(){
+        \Artisan::call('job:opentoall');
+    }
+
+    public function reportdaily(){
+         \Artisan::call('report:daily');
+    }
+
+    public function reportweekly(){
+         \Artisan::call('report:weekly');
+    }
+
+    public function reportmonthly(){
+         \Artisan::call('report:monthly');
+    }
+
     // Home Page
     public function getIndex()
     {

@@ -19,6 +19,22 @@ Route::get('/everyminute',  [
     'uses' => 'IndexController@everyminute'
 ]);
 
+Route::get('/jobopentoall',  [
+    'uses' => 'IndexController@jobopentoall'
+]);
+
+Route::get('/reportdaily',  [
+    'uses' => 'IndexController@reportdaily'
+]);
+
+Route::get('/reportweekly',  [
+    'uses' => 'IndexController@reportweekly'
+]);
+
+Route::get('/reportmonthly',  [
+    'uses' => 'IndexController@reportmonthly'
+]);
+
 Route::get('/index', [
     'uses' => 'IndexController@getIndex'
 ]);
