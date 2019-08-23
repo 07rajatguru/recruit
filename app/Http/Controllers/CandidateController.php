@@ -91,9 +91,17 @@ class CandidateController extends Controller
             ->get();
 
         $count = sizeof($candidateDetails);*/
-        $count = CandidateBasicInfo::getAllCandidatesCount('');
+
+        $letter = 'a';
+        $letter_array = array();
+        $range = range("A", "Z");
+        foreach ($range as $key => $value) {
+            $letter_array[$value] = $value;
+        }
+
+        $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
         
-        return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count'));
+        return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count','letter','letter_array'));
     }
 
     public static function getCandidateOrderColumnName($order){
@@ -132,10 +140,11 @@ class CandidateController extends Controller
         $search = $_GET['search']['value'];
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
+        $initial_letter = $_GET['initial_letter'];
 
         $order_column_name = self::getCandidateOrderColumnName($order);
-        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type);
-        $count = CandidateBasicInfo::getAllCandidatesCount($search);
+        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter);
+        $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter);
 
         $candidate_details = array();
         $i = 0;$j = 0;

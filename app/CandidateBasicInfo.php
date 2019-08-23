@@ -55,7 +55,7 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc'){
+    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL){
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
@@ -70,12 +70,16 @@ class CandidateBasicInfo extends Model
         if (isset($offset) && $offset > 0) {
             $query = $query->offset($offset);
         }
+        $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         if (isset($search) && $search != '') {
-            $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
-            $query = $query->orwhere('users.name','like',"%$search%");
-            $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
-            $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+            });
         }
+        //$query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         $res = $query->get();
 
         $candidate = array();
@@ -92,18 +96,21 @@ class CandidateBasicInfo extends Model
         return $candidate;
     }
 
-    public static function getAllCandidatesCount($search){
+    public static function getAllCandidatesCount($search,$initial_letter){
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
-        if (isset($search) && $search != '') {
+        
+        $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        $query = $query->where(function($query) use ($search){
             $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
             $query = $query->orwhere('users.name','like',"%$search%");
             $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
             $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
-        }
+        });
+       // $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         $res = $query->count();
 
         return $res;

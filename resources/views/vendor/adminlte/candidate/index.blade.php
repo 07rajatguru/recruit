@@ -10,11 +10,26 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Candidate List ({{ $count or 0 }})</h2>
+                <h2>Candidate List <span id="candidate_count">({{ $count or 0 }})</span></h2>
             </div>
 
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+            <div class="form-group">
+                <strong>Select initial letter:</strong>
+                {{Form::select('letter',$letter_array, $letter, array('id'=>'letter','class'=>'form-control'))}}
+            </div>
+        </div>
+
+        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+            <div class="form-group" style="margin-top: 19px;">
+                {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
     </div>
@@ -81,6 +96,8 @@
 
             new jQuery.fn.dataTable.FixedHeader( table );*/
 
+            var initial_letter = $("#letter").val();
+
             $("#candidate_table").dataTable({
                 "bProcessing": true,
                 "serverSide": true,
@@ -89,6 +106,7 @@
                                 ],
                 "ajax":{
                     url :"candidate/all", // json datasource
+                    data: {initial_letter:initial_letter},
                     type: "get",  // type of method  , by default would be get
                     error: function(){  // error handling code
                       //  $("#employee_grid_processing").css("display","none");
@@ -100,6 +118,43 @@
                 "pagingType": "full_numbers",
                 "stateSave" : true,
             });
+
+            $("#letter").select2();
         });
+
+        function select_data(){
+
+            $("#candidate_table").dataTable().fnDestroy();
+
+           var initial_letter = $("#letter").val();
+            $("#candidate_table").dataTable({
+                "bProcessing": true,
+                "serverSide": true,
+                "order": [0,'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]},
+                               ],
+               "ajax":{
+                    url :"candidate/all", // json datasource
+                    data: {initial_letter:initial_letter},
+                    type: "get",  // type of method  , by default would be get
+                    error: function(){  // error handling code
+                      //  $("#employee_grid_processing").css("display","none");
+                    }
+                },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+
+                    $("#candidate_count").html("(" + count + ")");
+                },
+                "pageLength": 50,
+                "responsive": true,
+                "autoWidth": false,
+                "pagingType": "full_numbers",
+                "stateSave" : true,
+            });
+        }
+
     </script>
+
+
 @endsection
