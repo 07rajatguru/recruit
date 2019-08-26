@@ -17,19 +17,19 @@
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
         </div>
-    </div>
 
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
-            <div class="form-group">
-                <strong>Select initial letter:</strong>
-                {{Form::select('letter',$letter_array, $letter, array('id'=>'letter','class'=>'form-control'))}}
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
+                <div class="form-group">
+                    <strong>Select initial letter:</strong>
+                    {{Form::select('letter',$letter_array, $letter, array('id'=>'letter','class'=>'form-control'))}}
+                </div>
             </div>
-        </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
-            <div class="form-group" style="margin-top: 19px;">
-                {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
+                <div class="form-group" style="margin-top: 19px;">
+                    {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+                </div>
             </div>
         </div>
     </div>
@@ -38,7 +38,6 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     @if ($message = Session::get('error'))
