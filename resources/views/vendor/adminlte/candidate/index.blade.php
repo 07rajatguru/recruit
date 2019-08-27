@@ -28,7 +28,7 @@
 
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <div class="form-group" style="margin-top: 19px;">
-                    {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+                    {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()','id' => 'select_btn']) !!}
                 </div>
             </div>
         </div>
@@ -107,9 +107,17 @@
                     url :"candidate/all", // json datasource
                     data: {initial_letter:initial_letter},
                     type: "get",  // type of method  , by default would be get
+                    beforeSend: function() {
+                        document.getElementById("select_btn").value="Loading...";
+                        document.getElementById("select_btn").disabled = true;
+                    },
+                    complete: function (data) {
+                        document.getElementById("select_btn").value="select";
+                        document.getElementById("select_btn").disabled = false;
+                    },
                     error: function(){  // error handling code
                       //  $("#employee_grid_processing").css("display","none");
-                    }
+                    },
                 },
                 "pageLength": 50,
                 "responsive": true,
@@ -136,9 +144,17 @@
                     url :"candidate/all", // json datasource
                     data: {initial_letter:initial_letter},
                     type: "get",  // type of method  , by default would be get
+                    beforeSend: function() {
+                        document.getElementById("select_btn").value="Loading...";
+                        document.getElementById("select_btn").disabled = true;
+                    },
+                    complete: function (data) {
+                        document.getElementById("select_btn").value="select";
+                        document.getElementById("select_btn").disabled = false;
+                    },
                     error: function(){  // error handling code
                       //  $("#employee_grid_processing").css("display","none");
-                    }
+                    },
                 },
                 initComplete:function( settings, json){
                     var count = json.recordsTotal;
