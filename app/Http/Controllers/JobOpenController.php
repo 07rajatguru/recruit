@@ -2198,7 +2198,6 @@ class JobOpenController extends Controller
 
     public function associateCandidate($id)
     {
-
         // get job name from id
         $jobopen_response = JobOpen::where('id', $id)->first();
         $posting_title = $jobopen_response->posting_title;
@@ -2210,15 +2209,65 @@ class JobOpenController extends Controller
             $candidates[] = $value->candidate_id;
         }
 
-        $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id')
+        /*$candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id')
             ->leftjoin('users', 'users.id', '=', 'candidate_otherinfo.owner_id')
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.email as email', 'users.name as owner')
             ->whereNotIn('candidate_basicinfo.id', $candidates)
             ->orderBy('candidate_basicinfo.id','desc')
-            ->get();
+            ->get();*/
 
-        return view('adminlte::jobopen.associate_candidate', array('candidates' => $candidateDetails, 'job_id' => $id, 'posting_title' => $posting_title, 'message' => ''));
+        $letter = 'Z';
+        $letter_array = array();
+        $range = range("A", "Z");
+        foreach ($range as $key => $value) {
+            $letter_array[$value] = $value;
+        }
+
+        return view('adminlte::jobopen.associate_candidate', array('job_id' => $id, 'posting_title' => $posting_title, 'message' => '','letter' => $letter,'letter_array' => $letter_array));
+    }
+
+    public function getAllAssociateCandidates()
+    {
+        $job_id = $_GET['job_id'];
+        $initial_letter = $_GET['initial_letter'];
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        // get candidate ids already associated with job
+        $candidate_response = JobAssociateCandidates::where('job_id', '=', $job_id)->get();
+        $candidates = array();
+        foreach ($candidate_response as $key => $value) {
+            $candidates[] = $value->candidate_id;
+        }
+
+        $response = CandidateBasicInfo::getAssociateCandidates($limit,$offset,$search,$initial_letter,$candidates);
+
+        $candidate_details = array();
+        $i = 0;$count=0;
+        foreach ($response as $key => $value)
+        {
+            $checkbox = '';
+            $checkbox .= '<input type=checkbox name=candidate value='.$value['id'].' class=others_cbs id='.$value['id'].'/>';
+
+            $data = array($checkbox,$value['fname'],$value['owner'],$value['email']);
+            $candidate_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $candidate_details
+        );
+        
+        echo json_encode($json_data);exit;
     }
 
     public function postAssociateCandidates()

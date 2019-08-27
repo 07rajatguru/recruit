@@ -92,7 +92,7 @@ class CandidateController extends Controller
 
         $count = sizeof($candidateDetails);*/
 
-        $letter = 'a';
+        $letter = 'Z';
         $letter_array = array();
         $range = range("A", "Z");
         foreach ($range as $key => $value) {

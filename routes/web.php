@@ -945,6 +945,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@associateCandidate',
         'middleware' => ['permission:associate-candidate-list']
     ]);
+
+    Route::get('/associate-candidate/all', [
+        'as' => 'associate-candidate.all',
+        'uses' => 'JobOpenController@getAllAssociateCandidates',
+        'middleware' => ['permission:associate-candidate-list']
+    ]);
+
     Route::post('jobs/associate_candidate', [
         'as' => 'jobopen.associate_candidate',
         'uses' => 'JobOpenController@postAssociateCandidates',

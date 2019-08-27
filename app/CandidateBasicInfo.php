@@ -252,4 +252,47 @@ class CandidateBasicInfo extends Model
 
         return $candidate_name;
     }
+
+    public static function getAssociateCandidates($limit=0,$offset=0,$search=NULL,$initial_letter=NULL,$candidates)
+    {
+        $query = CandidateBasicInfo::query();
+        $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
+        $query = $query->leftjoin('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
+                'candidate_basicinfo.email as email', 'users.name as owner');
+
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+
+        if (isset($search) && $search != '')
+        {
+            $query = $query->where(function($query) use ($search)
+            {
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
+            });
+        }
+
+        $query = $query->whereNotIn('candidate_basicinfo.id', $candidates);
+        $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        $query = $query->orderBy('candidate_basicinfo.id','desc');
+        $response = $query->get();
+
+        $candidate = array();
+        $i = 0;
+        foreach ($response as $key => $value)
+        {
+            $candidate[$i]['id'] = $value->id;
+            $candidate[$i]['fname'] = $value->fname;
+            $candidate[$i]['owner'] = $value->owner;
+            $candidate[$i]['email'] = $value->email;
+            $i++;
+        }
+        return $candidate;
+    }
 }
