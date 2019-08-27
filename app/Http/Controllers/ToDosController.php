@@ -1147,6 +1147,10 @@ class ToDosController extends Controller
             $todos = ToDos::getCompleteTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
             $count = ToDos::getCompleteTodosCount($todo_ids,$search);
         }
+        else
+        {
+            $count = 0;
+        }
         $status = Status::getStatusArray();
 
         $completed_details = array();
@@ -1232,6 +1236,10 @@ class ToDosController extends Controller
             $order_column_name = self::getOrderTodosColumnName($order);
             $todos = ToDos::getMyTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
             $count = ToDos::getMyTodosCount($todo_ids,$search);
+        }
+        else
+        {
+            $count = 0;
         }
         $status = Status::getStatusArray();
 

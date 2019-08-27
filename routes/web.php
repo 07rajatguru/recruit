@@ -1590,13 +1590,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('training/{id}', [
         'as' => 'training.destroy',
         'uses' => 'TrainingController@trainingDestroy',
-        'middleware' => ['permission:training-destroy']
+        'middleware' => ['permission:training-delete']
     ]);
 
     Route::delete('training/destroy/{id}', [
         'as' => 'trainingattachments.destroy',
         'uses' => 'TrainingController@attachmentsDestroy',
-        'middleware' => ['permission:training-destroy']
+        'middleware' => ['permission:training-delete']
    ]);
 
     // Admin > Process Manual
@@ -1648,13 +1648,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('process/{id}', [
         'as' => 'process.destroy',
         'uses' => 'ProcessController@processDestroy',
-        'middleware' => ['permission:process-destroy']
+        'middleware' => ['permission:process-delete']
     ]);
 
     Route::delete('process/destroy/{id}', [
         'as' => 'processattachments.destroy',
         'uses' => 'ProcessController@attachmentsDestroy',
-        'middleware' => ['permission:process-destroy']
+        'middleware' => ['permission:process-delete']
    ]);
 
     // Admin > Accounting Heads
