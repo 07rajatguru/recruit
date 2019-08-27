@@ -91,16 +91,20 @@
                     type: "GET",
                     url :"/associate-candidate/all",
                     data: {initial_letter:initial_letter,job_id:job_id},
-                    /*beforeSend: function()
-                    {
+                    beforeSend: function() {
                         document.getElementById("select_btn").value="Loading...";
+                        document.getElementById("select_btn").disabled = true;
                     },
-                    success: function()
-                    {
-                        document.getElementById("select_btn").value="Select";
-                        console.log("a");
-                    }*/
+                    complete: function (data) {
+                        document.getElementById("select_btn").value="select";
+                        document.getElementById("select_btn").disabled = false;
+                    }
                 },
+                // initComplete:function( settings, json){
+                //     var success = json.success;
+
+                //     document.getElementById("select_btn").value=success;
+                // },
                 "pageLength": 100,
                 "responsive": true,
                 "autoWidth": false,
@@ -173,15 +177,14 @@
                     type: "GET",
                     url :"/associate-candidate/all",
                     data: {initial_letter:initial_letter,job_id:job_id},
-                    /*beforeSend: function()
-                    {
+                    beforeSend: function() {
                         document.getElementById("select_btn").value="Loading...";
+                        document.getElementById("select_btn").disabled = true;
                     },
-                    success: function()
-                    {
-                        document.getElementById("select_btn").value="Select";
-                        console.log("a");
-                    }*/
+                    complete: function (data) {
+                        document.getElementById("select_btn").value="select";
+                        document.getElementById("select_btn").disabled = false;
+                    }
                 },
                
                 "pageLength": 100,
