@@ -553,6 +553,10 @@ class ToDosController extends Controller
             $todos = ToDos::getAllTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
             $count = ToDos::getAllTodosCount($todo_ids,$search);
         }
+        else
+        {
+            $count = 0;
+        }
         $status = Status::getStatusArray();
 
         $todos_details = array();
