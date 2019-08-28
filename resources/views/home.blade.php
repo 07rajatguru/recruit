@@ -11,7 +11,7 @@
     <div class="row">
 
         <div class="filter_section">
-            <div class="month_div col-md-5" >
+            <div class="month_div col-md-4 col-sm-6 col-xs-12">
                 <select class="form-control" name="month" id="month">
                     @foreach($month_list as $key=>$value)
                         <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
@@ -19,7 +19,7 @@
                 </select>
             </div>
 
-            <div class="year_div col-md-5">
+            <div class="year_div col-md-4 col-sm-6 col-xs-12">
                 <select class="form-control" name="year" id="year">
                     @foreach($year_list as $key=>$value)
                         <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
@@ -27,11 +27,11 @@
                 </select>
             </div>
 
-            <div class="attendance_submit col-md-2">
+            <div class="attendance_submit col-md-2 col-sm-6 col-xs-12">
                 <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" />
             </div>
             <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
-            <div class="pull-right col-md-2">
+            <div class="filter-ex-btn pull-right col-md-2 col-sm-6 col-xs-12">
                 <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
             </div>
             <?php   }?>

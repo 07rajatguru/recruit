@@ -26,23 +26,23 @@
     <div class="row">
 
         <div class="col-md-12">
-            <div class="col-md-1" style="width: 11%;">
+            <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active({{ $active }})</div></a>
             </div>
 
-            <div class="col-md-1" style="width: 11%;">
+            <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.passive') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Passive({{ $passive }}) </div></a>
             </div>
 
-            <div class="col-md-1" style="width: 11%;">
+            <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders({{ $leaders }})</div></a>
             </div>
 
-            <div class="col-md-1" style="width: 11%;">
+            <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.forbid') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#777;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid({{ $forbid }}) </div></a>
             </div>
 
-            <div class="col-md-1" style="width: 11%;">
+            <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.left') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Left({{ $left }}) </div>
                 </a>
             </div>
@@ -53,13 +53,13 @@
     @if($isSuperAdmin || $isStrategy )
         <div class="row">
             <div class="col-md-12">
-                <div class="col-md-2">
+                <div class="col-md-2 col-sm-4">
                     <a href="{{ route('client.paramount') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#E9967A;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Paramount ({{ $para_cat }})</div></a>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 col-sm-4">
                     <a href="{{ route('client.moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Moderate ({{ $mode_cat }})</div></a>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 col-sm-4">
                     <a href="{{ route('client.standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Standard ({{ $std_cat }})</div></a>
                 </div>
             </div>

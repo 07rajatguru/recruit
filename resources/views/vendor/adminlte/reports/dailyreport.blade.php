@@ -17,13 +17,13 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-        	<div class="box-body col-xs-4 col-sm-4 col-md-4">
+        	<div class="box-body col-xs-4 col-sm-5 col-md-4">
         		<div class="form-group">
 		        	{{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control'))}}
 	        	</div>
     		</div>
 
-    		<div class="box-body col-xs-4 col-sm-4 col-md-4">
+    		<div class="box-body col-xs-4 col-sm-5 col-md-4">
     			<div class="form-group">
 		        	{{Form::text('date',$date , array('id'=>'date', 'placeholder' => 'Date', 'class'=>'form-control','autocomplete'=>'off'))}}
 	        	</div>

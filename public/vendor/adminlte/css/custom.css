@@ -512,3 +512,21 @@ input[type="file"] {display: block;}
 .edit-widget .update-review-photo {height:100px;}
 .update-review-photo {text-align:center;}
 .remove-review-image {padding:3px;border-radius: 2px;}
+.select-initial-letter {display: inline-block;}
+.select2-container--default .select2-selection--single{height: 32px !important;}
+ .form-group .select2-container{width: 100% !important;}
+
+@media (min-width: 768px){
+    .sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>.treeview-menu.Admin{
+        top: -125px
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu>li>.treeview-menu.Report{
+        max-height: 180px;
+    overflow-y: scroll;
+    overflow-x: hidden;}
+}
+@media (max-width: 991px){
+    .content{overflow: scroll;}
+   .pull-right.export-btn{margin: 28px 0 0;}  
+   .filter-ex-btn, .attendance_submit{margin: 15px 0 0}
+}

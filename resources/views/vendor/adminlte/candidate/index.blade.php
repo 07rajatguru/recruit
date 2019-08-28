@@ -19,18 +19,16 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <div class="form-group">
+            <div class="box-body col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group select-initial-letter">
                     <strong>Select initial letter:</strong>
                     {{Form::select('letter',$letter_array, $letter, array('id'=>'letter','class'=>'form-control'))}}
                 </div>
-            </div>
-
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <div class="form-group" style="margin-top: 19px;">
+                <div class="form-group select-initial-letter" style="margin-top: 19px;">
                     {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()','id' => 'select_btn']) !!}
                 </div>
             </div>
+
         </div>
     </div>
 
