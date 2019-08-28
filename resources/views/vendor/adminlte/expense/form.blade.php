@@ -23,9 +23,9 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($expense,['method' => 'PATCH','files' => true, 'id' => 'expense_form', 'route' => ['expense.update', $expense->id]] ) !!}
+    {!! Form::model($expense,['method' => 'PATCH','files' => true,'autocomplete' => 'off','id' => 'expense_form', 'route' => ['expense.update', $expense->id]] ) !!}
 @else
-    {!! Form::open(array('route' => 'expense.store','files' => true,'method'=>'POST', 'id' => 'expense_form')) !!}
+    {!! Form::open(array('route' => 'expense.store','files' => true,'autocomplete' => 'off','method'=>'POST', 'id' => 'expense_form')) !!}
 @endif
 
     <div class="row">

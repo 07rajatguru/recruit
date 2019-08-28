@@ -25,7 +25,7 @@
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
-                
+                <h1>{{ $vendor['name'] }} - {{ $vendor['contact_point'] }}</h1>
             </div>
 
            <div class="pull-right">
@@ -45,27 +45,22 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
-                         <tr>
-                            <th scope="row">Vendor  Name</th>
-                            <td>{{ $vendor['name'] }}</td>
-                            <th>Mobile Number</th>
-                            <td>{{ $vendor['mobile'] }}</td>
-                        </tr>
                         <tr>
-                            <th>Landline Number</th>
-                            <td>{{ $vendor['landline'] }}</td>
-                            <th>Email</th>
-                            <td>{{ $vendor['mail'] }}</td>
-                        </tr>
-                         <tr>
-                            <th>Conact_Point</th>
-                            <td>{{ $vendor['contact_point'] }}</td>
                             <th>Designation</th>
                             <td>{{ $vendor['designation'] }}</td>
-                        </tr>
-                         <tr>
                             <th>Type Of Organization</th>
                             <td>{{ $vendor['organization_type'] }}</td>
+                            
+                        </tr>
+                        <tr>
+                            <th>Mobile Number</th>
+                            <td>{{ $vendor['mobile'] }}</td>
+                            <th>Landline Number</th>
+                            <td>{{ $vendor['landline'] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ $vendor['mail'] }}</td>
                             <th>Website</th>
                             <td>{{ $vendor['website'] }}</td>
                         </tr>
@@ -88,10 +83,8 @@
                             <td>{{ $vendor['vendor_address'] }}</td>
                             <th>Pincode</th>
                             <td>{{ $vendor['pincode'] }}</td>
-                        </tr>
-                        <tr>
-                             <th>State</th>
-                             <td>{{ $vendor['state_nm'] }}</td>  
+                            <th>State</th>
+                            <td>{{ $vendor['state_nm'] }}</td>
                         </tr>
                     </table>
                  </div>
