@@ -274,6 +274,7 @@ class ProcessController extends Controller
         $processdetails['files'] = array();
         $processFiles = ProcessDoc::select('process_doc.*')
                 ->where('process_doc.process_id',$id)
+                ->orderBy('process_doc.id','asc')
                 ->get();
 
         $utils = new Utils();
@@ -484,6 +485,7 @@ class ProcessController extends Controller
         $processdetails['files'] = array();
         $processFiles = ProcessDoc::select('process_doc.*')
                 ->where('process_doc.process_id',$id)
+                ->orderBy('process_doc.id','asc')
                 ->get();
 
         $utils = new Utils();
