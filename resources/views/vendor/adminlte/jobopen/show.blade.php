@@ -184,7 +184,7 @@
                                     <td>
                                         <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $jobopen['id'], 'name' => 'jobopenattachments' ,'display_name'=> 'Attachments'])
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $jobopen['id'], 'name' => 'jobopenattachments' ,'display_name'=> 'Attachments', 'type' => 'show'])
                                     </td>
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
                                     <td>{{ $value['uploaded_by'] }}</td>

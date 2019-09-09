@@ -5,6 +5,19 @@
         }
     </style>
 @endsection
+
+@if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
+@if ($message = Session::get('error'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -450,6 +463,44 @@
                     <div class="form-group">
                         <strong>Others:</strong>
                         {!! Form::file('others_doc', null, array('id'=>'others_doc','class' => 'form-control')) !!}
+                    </div>
+
+                </div>
+            </div>
+        @elseif($action == 'edit')
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header  col-md-6 ">
+                        <h3 class="box-title">Attachments</h3>
+                        &nbsp;&nbsp;
+                        @include('adminlte::jobopen.upload', ['data' => $job_open, 'name' => 'jobopen'])
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>File Name</th>
+                                <th>Uploaded by</th>
+                                <th>Size</th>
+                                <th>Category</th>
+                            </tr>
+                            @if(sizeof($job_open['doc'])>0)
+                                @foreach($job_open['doc'] as $key=>$value)
+                                    <tr>
+                                        <td>
+                                            <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                            &nbsp;
+                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=> $job_open['id'], 'name' => 'jobopenattachments' ,'display_name'=> 'Attachments','type' => 'edit'])
+                                        </td>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                        <td>{{ $value['uploaded_by'] }}</td>
+                                        <td>{{ $value['size'] }}</td>
+                                        <td>{{ $value['category'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </table>
                     </div>
 
                 </div>

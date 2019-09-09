@@ -1506,7 +1506,7 @@ class JobOpenController extends Controller
             $work_from[$i] = $i;
         }
 
-        //Work experience from dropdown
+        //Work experience to dropdown
         $work_to = array('0'=>'Work Experience From');
         for($i=1;$i<=30;$i++){
             $work_to[$i] = $i;
@@ -1522,19 +1522,16 @@ class JobOpenController extends Controller
         $user_id = $user->id;
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
 
-        if(in_array($user_role_id,$access_roles_id))
-        {
+        if(in_array($user_role_id,$access_roles_id)) {
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
         }
-        else
-        {
+        else {
             // get logged in user clients
             $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
         }
 
         $client = array();
-
         if (sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
                 $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
@@ -1551,7 +1548,6 @@ class JobOpenController extends Controller
         $user_id = $user->id;
 
         // For account manager
-         
         $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
         
@@ -1576,48 +1572,50 @@ class JobOpenController extends Controller
         // $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
 
         $job_open = JobOpen::find($id);
+        if(in_array($user_role_id,$access_roles_id) || ($job_open->hiring_manager_id==$user_id)) {    
+            $user_id = $job_open->hiring_manager_id;
+            $lacs_from = $job_open->lacs_from;
+            $thousand_from = $job_open->thousand_from;
+            $lacs_to = $job_open->lacs_to;
+            $thousand_to = $job_open->thousand_to;
+            $work_exp_from = $job_open->work_exp_from;
+            $work_exp_to = $job_open->work_exp_to;
+            //$dateClass->changeYMDtoDMY($job_open->target_date);
+            $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
+            $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
+            $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
+           /* $team_mates = array();
+            if(isset($job_visible_users) && sizeof($job_visible_users)>0){
+                foreach($job_visible_users as $row){
+                    $team_mates[] = $row->user_id;
+                }
+            }*/
 
-    if(in_array($user_role_id,$access_roles_id) || ($job_open->hiring_manager_id==$user_id))
-    {
-
-        
-        
-        $user_id = $job_open->hiring_manager_id;
-        $lacs_from = $job_open->lacs_from;
-        $thousand_from = $job_open->thousand_from;
-        $lacs_to = $job_open->lacs_to;
-        $thousand_to = $job_open->thousand_to;
-        $work_exp_from = $job_open->work_exp_from;
-        $work_exp_to = $job_open->work_exp_to;
-        //print_r($job_open);exit;
-       // $target_date = '';
-        //$dateClass->changeYMDtoDMY($job_open->target_date);
-        $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
-        $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
-        $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
-       /* $team_mates = array();
-        if(isset($job_visible_users) && sizeof($job_visible_users)>0){
-            foreach($job_visible_users as $row){
-                $team_mates[] = $row->user_id;
+            $selected_users = array();
+            if(isset($job_visible_users) && sizeof($job_visible_users)>0){
+                foreach($job_visible_users as $row){
+                    $selected_users[] = $row->user_id;
+                }
             }
-        }*/
 
-        $selected_users = array();
-        if(isset($job_visible_users) && sizeof($job_visible_users)>0){
-            foreach($job_visible_users as $row){
-                $selected_users[] = $row->user_id;
+            $jobopen_model = new JobOpen();
+            $upload_type = $jobopen_model->upload_type;
+
+            $job_open['doc'] = JobOpenDoc::getJobDocByJobId($id);
+            foreach ($job_open['doc'] as $key => $value) {
+                if (array_search($value['category'], $upload_type)) {
+                    unset($upload_type[array_search($value['category'], $upload_type)]);
+                }
             }
+            $upload_type['Others'] = 'Others';
         }
-
-    }
-    else
-    {
-        return view('errors.403');
-    }
+        else {
+            return view('errors.403');
+        }
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'/*,'client_hierarchy_name'*/));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type'));
 
     }
 
@@ -1760,6 +1758,37 @@ class JobOpenController extends Controller
         }
         else {
             \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
+        }
+
+        $upload_type = $request->upload_type;
+        $file = $request->file('file');
+        if (isset($file) && $file->isValid()) {
+            $doc_name = $file->getClientOriginalName();
+            $doc_filesize = filesize($file);
+
+            $dir_name = "uploads/jobs/" . $job_id . "/";
+            $others_doc_key = "uploads/jobs/" . $job_id . "/" . $doc_name;
+
+            if (!file_exists($dir_name)) {
+                mkdir("uploads/jobs/$job_id", 0777, true);
+            }
+
+            if (!$file->move($dir_name, $doc_name)) {
+                return false;
+            } else {
+                $jobopen_doc = new JobOpenDoc();
+                $jobopen_doc->job_id = $job_id;
+                $jobopen_doc->category = $upload_type;
+                $jobopen_doc->name = $doc_name;
+                $jobopen_doc->file = $others_doc_key;
+                $jobopen_doc->uploaded_by = $user_id;
+                $jobopen_doc->size = $doc_filesize;
+                $jobopen_doc->created_at = time();
+                $jobopen_doc->updated_at = time();
+                $jobopen_doc->save();
+            }
+
+            return redirect('jobs/'.$id.'/edit');
         }
 
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Updated Successfully');
@@ -2163,7 +2192,6 @@ class JobOpenController extends Controller
                 return false;
             } else {
                 $jobopen_doc = new JobOpenDoc();
-
                 $jobopen_doc->job_id = $job_id;
                 $jobopen_doc->category = $upload_type;
                 $jobopen_doc->name = $doc_name;
@@ -2193,7 +2221,13 @@ class JobOpenController extends Controller
         $jobopenDocDelete = JobOpenDoc::where('id', $docid)->delete();
 
         $id = $_POST['id'];
-        return redirect()->route('jobopen.show', [$id])->with('success', 'Attachment deleted Successfully');
+        $type = $_POST['type'];
+        if ($type == 'show') {
+            return redirect()->route('jobopen.show', [$id])->with('success', 'Attachment deleted Successfully');
+        }
+        else if($type == 'edit') {
+            return redirect()->route('jobopen.edit', [$id])->with('success', 'Attachment deleted Successfully');   
+        }
     }
 
     public function associateCandidate($id)

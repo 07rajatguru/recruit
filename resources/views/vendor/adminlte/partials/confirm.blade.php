@@ -23,6 +23,9 @@
                 <p>
                     Are you sure want to delete this {!! $display_name !!}?
                 </p>
+                @if(isset($type) && $type != '')
+                    <input type="hidden" name="type" id="type" value="{{ $type }}">
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>
