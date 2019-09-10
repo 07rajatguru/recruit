@@ -407,6 +407,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -464,7 +465,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Active';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left','isAccountManager'));
     }
 
     // Passive client listing page function
@@ -485,6 +486,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -542,7 +544,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Passive';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left','isAccountManager'));
     }
 
     // Leaders client listing page function
@@ -563,6 +565,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -620,7 +623,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Leaders';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left','isAccountManager'));
     }
 
     // Forbid client listing page function
@@ -641,6 +644,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -698,7 +702,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Forbid';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left','isAccountManager'));
     }
 
     // Left client listing page function
@@ -719,6 +723,7 @@ class ClientController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -776,7 +781,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Left';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','isAccountant','leaders','forbid','left','isAccountManager'));
     }
 
     // Paramount client listing page function
@@ -796,6 +801,7 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -853,7 +859,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Paramount';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left','isAccountManager'));
     }
 
     // Moderate client listing page function
@@ -873,6 +879,7 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -930,7 +937,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Moderate';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left','isAccountManager'));
     }
 
     // Standard client listing page function
@@ -950,6 +957,7 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
@@ -1007,7 +1015,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Standard';
-        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left'));
+        return view('adminlte::client.clienttypeindex',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','para_cat','mode_cat','std_cat','source','account_manager','leaders','forbid','left','isAccountManager'));
     }
 
     public function create()

@@ -82,7 +82,7 @@
                 <th>Client Owner</th>
                 <th>Company Name</th>   
                 <th>HR/Coordinator Name</th>
-                <?php if($isSuperAdmin || $isStrategy ) { ?>
+                <?php if($isSuperAdmin || $isStrategy || $isAccountManager ) { ?>
                 <th>Client Category</th>
                 <?php }?>
                 <th>Status</th>
@@ -115,6 +115,10 @@
                         @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
                     @endif
 
+                    @if($isSuperAdmin || $client['client_owner'] )
+                        <a title="Remarks" class="fa fa-plus"  href="{{ route('client.remarks',$client['id']) }}" style="margin:2px;"></a>
+                    @endif
+
                 </td>
 
                 <td>{{ $client['am_name'] }}</td>
@@ -123,7 +127,7 @@
 
                 <td>{{ $client['hr_name'] }}</td>
 
-                @if($isSuperAdmin || $isStrategy )
+                @if($isSuperAdmin || $isStrategy || $isAccountManager)
                     <td>{{ $client['category']}}</td>
                 @endif
 
