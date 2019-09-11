@@ -328,16 +328,13 @@ class UserController extends Controller
     {
       $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
-        if(isset($user_photo))
-        {
+        if(isset($user_photo)) {
             $path="uploads/users/" . $user_photo->user_id;
             $files=glob($path . "/*");
 
-            foreach($files as $file_nm)
-            {
-                if(is_file($file_nm))
-                {
-                        unlink($file_nm);
+            foreach($files as $file_nm) {
+                if(is_file($file_nm)) {
+                    unlink($file_nm);
                 }
             }
 
@@ -347,17 +344,18 @@ class UserController extends Controller
 
             $user_doc = UsersDoc::where('user_id','=',$id)->delete();
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
+            ProcessVisibleUser::where('user_id',$id)->delete();
+            TrainingVisibleUser::where('user_id',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
-        else
-        {
+        else {
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
+            ProcessVisibleUser::where('user_id',$id)->delete();
+            TrainingVisibleUser::where('user_id',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
 
-        //User::find($id)->delete();
-        return redirect()->route('users.index')
-            ->with('success','User deleted successfully');
+        return redirect()->route('users.index')->with('success','User deleted successfully');
     }
 
     public function uploadSignatureImage(Request $request)
