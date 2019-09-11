@@ -14,7 +14,7 @@
     </div>
 
    <div class="pull-right" style="margin-right: 25%;">
-        <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
+        <a class="btn btn-primary" href="{{ url()->previous() }}">Back</a>
     </div>
 </div>
 <div class="col-md-9"> 

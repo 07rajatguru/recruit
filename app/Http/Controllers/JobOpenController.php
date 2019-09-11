@@ -693,29 +693,29 @@ class JobOpenController extends Controller
         $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
         $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
 
-        foreach ($job_priority_data as $job_priority) {
-           if($job_priority['priority'] == 0) {
+        foreach ($job_priority_data as $value) {
+           if($value['priority'] == 0) {
                 $priority_0++;
            }
-           else if($job_priority['priority'] == 1) {
+           else if($value['priority'] == 1) {
                 $priority_1++;
            }
-            else if($job_priority['priority'] == 2) {
+            else if($value['priority'] == 2) {
                 $priority_2++;
            }
-            else if($job_priority['priority'] == 3) {
+            else if($value['priority'] == 3) {
                 $priority_3++;
            }
-            else if($job_priority['priority'] == 5) {
+            else if($value['priority'] == 5) {
                 $priority_5++;
            }
-            else if($job_priority['priority'] == 6) {
+            else if($value['priority'] == 6) {
                 $priority_6++;
            }
-            else if($job_priority['priority'] == 7) {
+            else if($value['priority'] == 7) {
                 $priority_7++;
            }
-            else if($job_priority['priority'] == 8) {
+            else if($value['priority'] == 8) {
                 $priority_8++;
            }
         }
