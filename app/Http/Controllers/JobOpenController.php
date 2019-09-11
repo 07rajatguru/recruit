@@ -602,27 +602,21 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
             $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type);
             $count = sizeof($job_response);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year);
         }
         else{
             $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
 
         $jobs = array();
         $i = 0;$j = 0;
-
-        $priority_0 = 0;
-        $priority_1 = 0;
-        $priority_2 = 0;
-        $priority_3 = 0;
-        $priority_5 = 0;
-        $priority_6 = 0;
-        $priority_7 = 0;
-        $priority_8 = 0;
 
         foreach ($job_response as $key => $value) {
             $action = '';
@@ -657,7 +651,7 @@ class JobOpenController extends Controller
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
 
-            if($value['priority'] == 0)
+            /*if($value['priority'] == 0)
             {
                 $priority_0++;
             }
@@ -688,12 +682,42 @@ class JobOpenController extends Controller
             else if($value['priority'] == 8)
             {
                 $priority_8++;
-            }
+            }*/
 
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
             $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
+        }
+
+        $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
+        $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
+
+        foreach ($job_priority_data as $job_priority) {
+           if($job_priority['priority'] == 0) {
+                $priority_0++;
+           }
+           else if($job_priority['priority'] == 1) {
+                $priority_1++;
+           }
+            else if($job_priority['priority'] == 2) {
+                $priority_2++;
+           }
+            else if($job_priority['priority'] == 3) {
+                $priority_3++;
+           }
+            else if($job_priority['priority'] == 5) {
+                $priority_5++;
+           }
+            else if($job_priority['priority'] == 6) {
+                $priority_6++;
+           }
+            else if($job_priority['priority'] == 7) {
+                $priority_7++;
+           }
+            else if($job_priority['priority'] == 8) {
+                $priority_8++;
+           }
         }
 
         $priority = array();
