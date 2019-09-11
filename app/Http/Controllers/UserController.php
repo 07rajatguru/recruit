@@ -303,17 +303,18 @@ class UserController extends Controller
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
         $user->account_manager = $account_manager;
-        $users = $user->save();    
+        $users = $user->save();
 
-       /* $user = User::find($id);
-        if(isset($user) && sizeof($user) > 0){
-            if(isset($type)){
-                $user->type = $type;
-            }
-        }*/
-        
-        return redirect()->route('users.index')
-            ->with('success','User updated successfully');
+        //  If status is inactive then delete this user process and training
+        if (isset($status) && $status == 'Inactive') {
+
+            ProcessVisibleUser::where('user_id',$id)->delete();
+            TrainingVisibleUser::where('user_id',$id)->delete();
+        }
+        if (isset($status) && $status == 'Active') {
+            return redirect()->route('users.index')->with('success','User updated successfully. please add this user manually in training and process module.');
+        }
+        return redirect()->route('users.index')->with('success','User updated successfully');
     }
 
     /**
