@@ -148,6 +148,9 @@
             $(".users_ids").click(function () {
                 $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
             });
+
+            // Edit form > if all user select then select all selected
+            $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
         });
     </script>
 @endsection
