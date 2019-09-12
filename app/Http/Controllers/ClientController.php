@@ -1691,9 +1691,10 @@ class ClientController extends Controller
 
         if (isset($lead_id) && $lead_id !='') {
             $lead = Lead::find($lead_id);
-            //print_r($lead);exit;
-            $lead->convert_client = 0;
-            $lead->save();
+            if (isset($lead) && $lead != '') {
+                $lead->convert_client = 0;
+                $lead->save();
+            }
         }
 
 
