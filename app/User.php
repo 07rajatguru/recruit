@@ -652,4 +652,15 @@ class User extends Authenticatable
 
         return $user_reports_to;
     }
+
+    public static function getCompanyDetailsByUserID($user_id)
+    {
+        $user_query = User::query();
+        $user_query = $user_query->leftjoin('companies','companies.id','=','users.company_id');
+        $user_query = $user_query->where('users.id',$user_id);
+        $user_query = $user_query->select('companies.*');
+        $response = $user_query->first();
+
+        return $response;
+    }
 }

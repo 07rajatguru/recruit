@@ -2575,7 +2575,7 @@ class JobOpenController extends Controller
         $candidate_id = $request->get('candidate_id');
         $posting_title = $request->get('job_id');
 
-        $candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$interview_id);
+        $candidate_mail = Interview::getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id);
 
         $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
 

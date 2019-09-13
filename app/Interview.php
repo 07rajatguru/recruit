@@ -606,7 +606,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getCandidateEmail($candidate_id,$posting_title,$interview_id){
+    public static function getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id){
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -617,6 +617,8 @@ class Interview extends Model
         //$input['to'] = $user_email;
         $input['app_url'] = $app_url;
 
+        // get user company description by logged in user
+        $user_company_details = User::getCompanyDetailsByUserID($user_id);
 
         $candidate_email = Interview::getCandidateOwnerEmail($interview_id);
         $candidate_owner_email = $candidate_email->candidateowneremail;
@@ -643,7 +645,8 @@ class Interview extends Model
         $input['cname'] = $cname;
         $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
-        $input['company_url'] =$job_details['company_url'];
+        $input['company_url'] = $job_details['company_url'];
+        $input['company_desc'] = $user_company_details['description'];
         $input['client_desc'] = $job_details['client_desc'];
         $input['job_designation'] = $job_details['posting_title'];
         $input['job_location'] = $job_details['job_location'];

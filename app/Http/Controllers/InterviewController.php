@@ -415,7 +415,7 @@ class InterviewController extends Controller
         $candidate_id = $request->get('candidate_id');
         $posting_title = $request->get('posting_title');
 
-        $candidate_mail = Interview::getCandidateEmail($candidate_id,$posting_title,$interview_id);
+        $candidate_mail = Interview::getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id);
 
         // Interview Schedule Mail
         $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);

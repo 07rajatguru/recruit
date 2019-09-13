@@ -16,7 +16,7 @@
             <p><u>Please find interview schedule as below for your kind reference:</u></p>
             <p>
             <table width="580" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
-                <tr style="background-color: #7598d9">
+                <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 11.0pt;">
                     <td align="center"><b>Sr. No.</b></td>
                     <td align="center"><b>Position</b></td>
                     <td align="center"><b>Position Location</b></td>
@@ -35,7 +35,7 @@
                     <td align="center"><b>Source</b></td>
                 </tr>
                 <?php $i=0; ?>
-                <tr>
+                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                     <td align="center">{{ ++$i }}</td>
                     <td align="center">{{$job_designation}}</td>
                     <td align="center">{{$job_location}}</td>
@@ -62,8 +62,8 @@
                 </tr>
             </table>
             </p>
-            <p>Hope this works.</p>
-            <p>Thanks.</p>
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">Hope this works.</p>
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">Thanks.</p>
         </td>
     </tr>
 </table>
