@@ -574,6 +574,10 @@ class CandidateController extends Controller
             }
         }
 
+        // Candidate Vacancy Details email
+
+        $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($candidate_id,$user_id,$job_id);
+    
         return redirect()->route('candidate.index')->with('success','Candidate Created Successfully');
 
     }

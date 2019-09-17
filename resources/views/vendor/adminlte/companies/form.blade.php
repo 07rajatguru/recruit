@@ -59,3 +59,12 @@
     </div>
 </div>
 {!! Form::close() !!}
+
+@section('customscripts')
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+        $("#description").wysihtml5();
+    });
+</script>
+@endsection

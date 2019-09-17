@@ -524,7 +524,7 @@ class ClientBasicinfo extends Ardent
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile',
+        $query = $query->select('client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager',
             'job_openings.posting_title','job_openings.city');
         $response = $query->get();
 
@@ -534,6 +534,7 @@ class ClientBasicinfo extends Ardent
             $client['coordinator_name'] = $v->coordinator_name;
             $client['mail'] = $v->mail;
             $client['mobile'] = $v->mobile;
+            $client['account_manager'] = $v->account_manager;
             $client['designation'] = $v->posting_title;
             $client['job_location'] = $v->city;
         }

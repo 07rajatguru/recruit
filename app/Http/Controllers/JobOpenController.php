@@ -2348,6 +2348,11 @@ class JobOpenController extends Controller
             $job_associate_candidate->associate_by = $user_id;
             $job_associate_candidate->shortlisted = 0;
             $job_associate_candidate->save();
+
+            // Candidate Vacancy Details email
+
+            $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
+
         }
 
         $jobDetail = JobOpen::find($job_id);

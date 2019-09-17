@@ -295,4 +295,60 @@ class CandidateBasicInfo extends Model
         }
         return $candidate;
     }
+
+    public static function candidateAssociatedEmail($candidate_id,$user_id,$job_id)
+    {
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+        $app_url = getenv('APP_URL');
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['app_url'] = $app_url;
+
+        // get user company description by logged in user
+        $user_company_details = User::getCompanyDetailsByUserID($user_id);
+
+        // Candidate owner email
+        $candidate_owner_email = User::getUserEmailById($user_id);
+        $candidate_owner_name = User::getUserNameById($user_id);
+        $input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
+
+        // Client Account Manager email
+        $client_info = ClientBasicinfo::getClientInfoByJobId($job_id);
+        $client_owner_email = User::getUserEmailById($client_info['account_manager']);
+
+        $to_address = array();
+        $to_address[] = $candidate_owner_email;
+        $to_address[] = $client_owner_email;
+
+        //$to_address[] = 'tarikapanjwani@gmail.com';
+       // $to_address[] = 'rajlalwani@adlertalent.com';
+
+        $input['to'] = $to_address;
+
+        // CC to Superadmin
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+        $cc = $superadminemail;
+        $input['cc'] = $cc;
+
+        // job Details
+        $job_details = JobOpen::getJobById($job_id);
+
+        $input['city'] = $job_details['city'];
+        $input['company_name'] = $job_details['company_name'];
+        $input['company_url'] = $job_details['company_url'];
+        $input['company_desc'] = $user_company_details['description'];
+        $input['client_desc'] = $job_details['client_desc'];
+        $input['job_designation'] = $job_details['posting_title'];
+        $input['job_location'] = $job_details['job_location'];
+        $input['job_description'] = $job_details['job_description'];
+     
+        \Mail::send('adminlte::emails.candidateassociatemail', $input, function ($message) use($input)
+        {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->cc($input['cc'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
+        });
+    }
 }

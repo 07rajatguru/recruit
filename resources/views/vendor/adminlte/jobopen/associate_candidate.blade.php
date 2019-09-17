@@ -96,7 +96,7 @@
                         document.getElementById("select_btn").disabled = true;
                     },
                     complete: function (data) {
-                        document.getElementById("select_btn").value="select";
+                        document.getElementById("select_btn").value="Select";
                         document.getElementById("select_btn").disabled = false;
                     }
                 },
@@ -182,7 +182,7 @@
                         document.getElementById("select_btn").disabled = true;
                     },
                     complete: function (data) {
-                        document.getElementById("select_btn").value="select";
+                        document.getElementById("select_btn").value="Select";
                         document.getElementById("select_btn").disabled = false;
                     }
                 },
