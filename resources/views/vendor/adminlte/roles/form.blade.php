@@ -125,6 +125,13 @@
             $(".name").click(function () {
                 $("#all_roles").prop('checked', ($('.name:checked').length == $('.name').length) ? true : false);
             });
+
+            if ($('.name:checked').length == $('.name').length){
+              $('#all_roles').prop('checked',true);
+            }
+            else {
+              $('#all_roles').prop('checked',false);
+            }
         });
     </script>
 @endsection
