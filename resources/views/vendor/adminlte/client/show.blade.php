@@ -46,7 +46,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                          <tr>
-                            <th scope="row"  >HR/Coordinator Name</th>
+                            <th scope="row"  ><!-- HR/Coordinator Name -->Contact Point</th>
                             <td>{{ $client['coordinator_name'] }}</td>
 
                             @if($isSuperAdmin || $isAdmin || $isStrategy || $isManager)

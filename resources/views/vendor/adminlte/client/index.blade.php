@@ -94,14 +94,16 @@
                 <th>Action</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>   
-                <th>HR/Coordinator Name</th>
+                <!-- <th>HR/Coordinator Name</th> -->
+                <th>Contact Point</th>
                 
                 <?php if($isSuperAdmin || $isStrategy || $isAccountManager) { ?>
                 <th>Client Category</th>
                 <?php }?>
 
                 <th>Status</th>
-                <th>Client Address</th>
+                <!-- <th>Client Address</th> -->
+                <th>City</th>
             </tr>
         </thead>
         {{--<tbody>

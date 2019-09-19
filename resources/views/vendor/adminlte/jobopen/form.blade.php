@@ -414,22 +414,24 @@
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
                         <div class="form-group">
                             <strong>City:</strong>
                             {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '20')) !!}
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <strong>Country:</strong>
-                        {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '21')) !!}
+                </div>
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="">
+                        <div class="form-group">
+                            <strong>Country:</strong>
+                            {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '21')) !!}
+                        </div>
                     </div>
-
                 </div>
 
-                <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
                         <div class="form-group">
                             <strong>State:</strong>
@@ -437,9 +439,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 

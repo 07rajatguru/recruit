@@ -33,10 +33,11 @@ class Lead extends Model
 
         $typeArray = array('' => 'Select Lead Service');
         $typeArray['Recruitment'] = 'Recruitment';
-        $typeArray['Temp'] = 'Temp';
+        //$typeArray['Temp'] = 'Temp';
+        $typeArray['Contract Staffing'] = 'Contract Staffing';
         $typeArray['Payroll'] = 'Payroll';
-        $typeArray['Compliance']='Compliance';
-        $typeArray['IT'] = 'IT';
+        //$typeArray['Compliance']='Compliance';
+        //$typeArray['IT'] = 'IT';
         $typeArray['HR Advisory'] = 'HR Advisory';	
        
         return $typeArray;

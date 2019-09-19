@@ -127,7 +127,8 @@
         <div class="col-lg-12 col-xs-12">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Below Jobs open to all</h3>
+                    <!-- <h3 class="box-title">Below Jobs open to all</h3> -->
+                    <h3 class="box-title">Jobs open to all</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -138,7 +139,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table no-margin">
+                        <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
                                 <th>Company Name</th>
@@ -184,7 +185,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table no-margin">
+                        <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
                                 <th width="180px">Posting Title</th>
@@ -197,10 +198,11 @@
                             @if(isset($interviews))
                                 @foreach($interviews as $interview)
                                     <tr>
-                                        <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
+                                        <!-- <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td> -->
+                                        <td>{{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td>{{ $interview->candidate_fname}} </td>
                                         <td>{{ $interview->contact }}</td>
-                                        <td>{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
+                                        <td style="font-size:13px;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -236,13 +238,13 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table no-margin">
+                        <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
                                 <th>Sr No.</th>
                                 <th width="180px">Subject</th>
                                 <th>Assigned By</th>
-                                <th>Assigned To</th>
+                                <!-- <th>Assigned To</th> -->
                                 <th>Due Date</th>
                             </tr>
                             </thead>
@@ -254,8 +256,8 @@
                                         <td>{{ $i }}</td>
                                         <td>{{ $toDo['subject'] }}</td>
                                         <td>{{ $toDo['am_name'] }}</td>
-                                        <td>{{ $toDo['assigned_to'] }}</td>
-                                        <td>{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
+                                        <!-- <td>{{ $toDo['assigned_to'] }}</td> -->
+                                        <td style="font-size:13px;">{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach

@@ -9,7 +9,8 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if($generate_lead==0)
-                <h2>Please confirm the details and generate Client</h2>
+                <!-- <h2>Please confirm the details and generate Client</h2> -->
+                <h2>Confirm the details to generate Client</h2>
             @elseif( $action == 'edit')
                 <h2>Edit Client</h2>
             @else
@@ -59,7 +60,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
-                            <strong>Display Name: </strong>
+                            <strong>Display Name: <span class = "required_fields">*</span></strong>
                             {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','maxlength' => 7 )) !!}
                             @if ($errors->has('display_name'))
                                 <span class="help-block">
@@ -191,7 +192,7 @@
 
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <strong>HR/Coordinator Name: <span class = "required_fields">*</span></strong>
+                    <strong><!-- HR/Coordinator Name -->Contact Point: <span class = "required_fields">*</span></strong>
                     <div class="">
 
                             <div class="col-md-4 form-group {{ $errors->has('co_category') ? 'has-error' : '' }}" style="margin-left: -15px;">
@@ -205,7 +206,7 @@
                             </div>
 
                             <div class="col-md-8 form-group {{ $errors->has('coordinator_name') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                                {!! Form::text('coordinator_name', null, array('id'=>'coordinator_name','placeholder' => 'HR/Coordinator Name','class' => 'form-control', 'tabindex' => '3' )) !!}
+                                {!! Form::text('coordinator_name', null, array('id'=>'coordinator_name','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @if ($errors->has('coordinator_name'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('coordinator_name') }}</strong>
@@ -444,6 +445,9 @@
                         "name": {
                             required: true
                         },
+                        "display_name": {
+                            required: true
+                        },
                         "mail": {
                             required: true
                         },
@@ -466,6 +470,9 @@
                     messages: {
                         "name": {
                             required: "Name is required."
+                        },
+                        "display_name": {
+                            required: "Display Name is required."
                         },
                         "mail": {
                             required: "Email is required."
@@ -494,6 +501,9 @@
                         "name": {
                             required: true
                         },
+                        "display_name": {
+                            required: true
+                        },
                         "mail": {
                             required: true
                         },
@@ -513,6 +523,9 @@
                     messages: {
                         "name": {
                             required: "Name is required."
+                        },
+                        "display_name": {
+                            required: "Display Name is required."
                         },
                         "mail": {
                             required: "Email is required."

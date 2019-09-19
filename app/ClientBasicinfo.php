@@ -190,9 +190,16 @@ class ClientBasicinfo extends Ardent
             }
             
             $address ='';
-            if($value->area!=''){
-                $address .= $value->area;
-            }
+            // if($value->area!=''){
+            //     $address .= $value->area;
+            // }
+            // if($value->city!=''){
+            //     if($address=='')
+            //         $address .= $value->city;
+            //     else
+            //         $address .= ", ".$value->city;
+            // }
+
             if($value->city!=''){
                 if($address=='')
                     $address .= $value->city;

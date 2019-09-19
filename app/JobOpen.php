@@ -52,7 +52,7 @@ class JobOpen extends Model
 
     public static function getJobTypes(){
         $job_types = array();
-        $job_types['-None-'] = '-None-';
+        //$job_types['-None-'] = '-None-';
         $job_types['Full time'] = 'Full time';
         $job_types['Part time'] = 'Part time';
         $job_types['Temporary'] = 'Temporary';
