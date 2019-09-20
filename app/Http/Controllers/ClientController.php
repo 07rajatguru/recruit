@@ -1462,7 +1462,7 @@ class ClientController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-            return redirect()->route('client.index')->with('success','Client Created Successfully');
+            return redirect()->route('client.index')->with('success','Client Added Successfully.');
         }
         else{
             return redirect('client/create')->withInput(Input::all())->withErrors($client_basic_info->errors());
@@ -1717,7 +1717,7 @@ class ClientController extends Controller
                 $response = $client_doc->recursiveRemoveDirectory($dir_name);
             }
 
-            return redirect()->route('client.index')->with('success','Client deleted Successfully');
+            return redirect()->route('client.index')->with('success','Client Deleted Successfully.');
         }else{
             return redirect()->route('client.index')->with('error','Client is associated with job.!!');
         }
@@ -1903,7 +1903,7 @@ class ClientController extends Controller
                 }
             }
 
-            return redirect()->route('client.index')->with('success','Client updated successfully');
+            return redirect()->route('client.index')->with('success','Client Updated Successfully.');
         }else{
             return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ( $client_basicinfo->errors() );
         }

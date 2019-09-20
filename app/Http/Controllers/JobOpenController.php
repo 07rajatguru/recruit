@@ -943,7 +943,8 @@ class JobOpenController extends Controller
         $job_type = JobOpen::getJobTypes();
 
         // job priority
-        $job_priorities = JobOpen::getJobPriorities();
+        //$job_priorities = JobOpen::getJobPriorities();
+        $job_priorities = JobOpen::getNewJobPriorities();
 
         $no_of_positions = 1;
 

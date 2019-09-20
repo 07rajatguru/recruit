@@ -107,7 +107,23 @@ class JobOpen extends Model
         $job_priorities['9'] = '#92D050';
         $job_priorities['10'] = '#FFFFFF';*/
 
+        return $job_priorities;
+    }
 
+    public static function getNewJobPriorities(){
+
+        $job_priorities = array();
+        $job_priorities['0'] = '-None-';
+        $job_priorities['1'] = 'Urgent Positions';
+        $job_priorities['2'] = 'New Positions';
+        $job_priorities['3'] = 'Constant Deliveries needed';
+        $job_priorities['4'] = 'On Hold';
+        $job_priorities['5'] = 'Revived Positions';
+        //$job_priorities['6'] = 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet';
+        $job_priorities['7'] = 'No Deliveries Needed';
+        $job_priorities['8'] = 'Identified candidates';
+        $job_priorities['9'] = 'Closed By Us';
+        $job_priorities['10'] = 'Closed By Client';
 
         return $job_priorities;
     }

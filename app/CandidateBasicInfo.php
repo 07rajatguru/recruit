@@ -311,7 +311,6 @@ class CandidateBasicInfo extends Model
 
         // Candidate owner email
         $candidate_owner_email = User::getUserEmailById($user_id);
-        $candidate_owner_name = User::getUserNameById($user_id);
         $input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
 
         // Client Account Manager email
