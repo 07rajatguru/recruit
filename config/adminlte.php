@@ -502,6 +502,11 @@ return [
                     'text' => 'Client Heirarchy',
                     'url'  => 'client-heirarchy',
                     'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Client Remarks Lsit',
+                    'url'  => 'client-remarks',
+                    'icon' => 'circle-o',
                 ]
                     /* [
                          'text' => 'Permissions',

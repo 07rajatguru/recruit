@@ -2282,4 +2282,41 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:clientheirarchy-list']
     ]);
 
+    // Client Remarks Route
+    Route::get('client-remarks',[
+        'as' => 'clientremarks.index',
+        'uses' => 'ClientRemarksController@index',
+        'middleware' => ['permission:clientremarks-list']
+    ]);
+
+    Route::get('client-remarks/create',[
+        'as' => 'clientremarks.create',
+        'uses' => 'ClientRemarksController@create',
+        'middleware' => ['permission:clientremarks-create']
+    ]);
+
+    Route::post('client-remarks/create',[
+        'as' => 'clientremarks.store',
+        'uses' => 'ClientRemarksController@store',
+        'middleware' => ['permission:clientremarks-create']
+    ]);
+
+    Route::get('client-remarks/edit/{id}',[
+        'as' => 'clientremarks.edit',
+        'uses' => 'ClientRemarksController@edit',
+        'middleware' => ['permission:clientremarks-edit']
+    ]);
+
+    Route::patch('client-remarks/edit/{id}',[
+        'as' => 'clientremarks.update',
+        'uses' => 'ClientRemarksController@update',
+        'middleware' => ['permission:clientremarks-edit']
+    ]);
+
+    Route::delete('client-remarks/{id}',[
+        'as' => 'clientremarks.destroy',
+        'uses' => 'ClientRemarksController@destroy',
+        'middleware' => ['permission:clientremarks-delete']
+    ]);
+
 });
