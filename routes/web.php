@@ -654,6 +654,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:client-list']
     ]);
 
+    Route::get('clients/forbid',[
+        'as' => 'clients.forbid',
+        'uses' => 'ClientController@getForbidClient',
+        'middleware' => ['permission:client-list']
+    ]);
+    
     Route::get('client/all', [
         'as' => 'client.all',
         'uses' => 'ClientController@getAllClientsDetails',

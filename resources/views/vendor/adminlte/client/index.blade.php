@@ -38,9 +38,9 @@
                 <a href="{{ route('client.leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders({{ $leaders }})</div></a>
             </div>
 
-            <div class="col-md-2 col-sm-4">
+            <!-- <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.forbid') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#777;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid({{ $forbid }}) </div></a>
-            </div>
+            </div> -->
 
             <div class="col-md-2 col-sm-4">
                 <a href="{{ route('client.left') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Left({{ $left }}) </div>
@@ -67,23 +67,18 @@
 
     @endif
 
-
     <br>
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
-
-    
 
     @if ($message = Session::get('error'))
         <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
  
@@ -162,17 +157,14 @@
 
     <div class="modal-dialog">
         <div class="modal-content">
-            
-
+        
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Send Mail To Clients</h4>
             </div>
             <div class="modal-body">
                 <p>
-                     Are You Sure You Want to Send Mail To Clients ?
-                    
-                   
+                    Are You Sure You Want to Send Mail To Clients ?
                 </p>
             </div>
             <div class="modal-footer">
@@ -245,28 +237,25 @@
 
 function client_emails_notification()
 {
-            var client_ids = new Array();
-            var token = $("#token").val();
-            var table = $("#client_table").dataTable();
+    var client_ids = new Array();
+    var token = $("#token").val();
+    var table = $("#client_table").dataTable();
 
-                table.$("input:checkbox[name=client]:checked").each(function(){
-                    client_ids.push($(this).val());
+    table.$("input:checkbox[name=client]:checked").each(function(){
+        client_ids.push($(this).val());
+    });
 
+    var url = '/client/emailnotification';
 
-                });
+    if(client_ids.length > 0){
+        var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="'+token+'" />' +
+            '<input type="text" name="client_ids" value="'+client_ids+'" />' +
+            '</form>');
 
-                var url = '/client/emailnotification';
-
-                if(client_ids.length > 0){
-                    var form = $('<form action="' + url + '" method="post">' +
-                            '<input type="hidden" name="_token" value="'+token+'" />' +
-                            '<input type="text" name="client_ids" value="'+client_ids+'" />' +
-                            '</form>');
-
-                    $('body').append(form);
-                    form.submit();
-                }
-            
+        $('body').append(form);
+        form.submit();
+    }        
 }
-    </script>
+</script>
 @endsection

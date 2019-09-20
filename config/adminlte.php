@@ -157,6 +157,11 @@ return [
                        'text' => 'List Clients',
                        'url'  => 'client',
                        'icon' => 'list',
+                   ],
+                                      [
+                       'text' => 'Forbid Clients',
+                       'url'  => 'clients/forbid',
+                       'icon' => 'list',
                    ]/*,
                    [
                        'text' => 'Import Clients',
