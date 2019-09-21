@@ -29,85 +29,150 @@
 @stop
 
 @section('customscripts')
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
+<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src='https://cdn.rawgit.com/pguso/jquery-plugin-circliful/master/js/jquery.circliful.min.js'></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+<script type="text/javascript">
 
-        });
+    jQuery(document).ready(function()
+    {
+        initSearchRemarks();
+        initSearchComment();
+    });
 
-		function showcommentbox(post_id) {
-            if($(".comment-"+post_id).is(':hidden')){
-                $(".comment-"+post_id).show();
+    function initSearchRemarks()
+    {
+        $("#content").autocomplete(
+        {
+            minLength: 1,
+            source: '/search-remarks',
+            
+            select: function( event, ui ) 
+            {
+                if(ui.item.label == 'No Remarks Found')
+                {
+                    $("#content").val('');
+                    return false;
+                }
             }
-            else{
-                $(".comment-"+post_id).hide();
+        }).autocomplete( "instance" )._renderItem = function( ul,item )
+        {
+            if(item.label !== '')
+            {
+                ul.addClass('srch-remarks');
+                return $( "<li>" )
+                .append( "<div><span>" + item.label + "</span></div>")
+                .appendTo( ul )
+            } 
+        };
+    }
+
+    function initSearchComment()
+    {
+        $("#comment").autocomplete(
+        {
+            minLength: 1,
+            source: '/search-remarks',
+            
+            select: function( event, ui ) 
+            {
+                if(ui.item.label == 'No Remarks Found')
+                {
+                    $("#comment").val('');
+                    return false;
+                }
             }
+        }).autocomplete( "instance" )._renderItem = function( ul,item )
+        {
+            if(item.label !== '')
+            {
+                ul.addClass('srch-remarks');
+                return $( "<li>" )
+                .append( "<div><span>" + item.label + "</span></div>")
+                .appendTo( ul )
+            } 
+        };
+    }
+
+	function showcommentbox(post_id)
+    {
+        if($(".comment-"+post_id).is(':hidden')){
+            $(".comment-"+post_id).show();
         }
+        else{
+            $(".comment-"+post_id).hide();
+        }
+    }
 
-		function deletePost(id) {
-            msg = "Are you sure ?";
-            var confirmvalue = confirm(msg);
+	function deletePost(id)
+    {
+        msg = "Are you sure ?";
+        var confirmvalue = confirm(msg);
 
-            if(confirmvalue){
-                jQuery.ajax({
-                    url:'/client/post/delete/'+id,
-                    dataType:'json',
-                    success: function(response){
-                        if (response.returnvalue == 'valid') {
-                            alert("Remarks deleted succesfully");
-                        }
-                        else{
-                            alert("Error while deleting reviews");
-                        }
-                        window.location.reload();
+        if(confirmvalue){
+            jQuery.ajax(
+            {
+                url:'/client/post/delete/'+id,
+                dataType:'json',
+                success: function(response){
+                    if (response.returnvalue == 'valid') {
+                        alert("Remarks Deleted Succesfully.");
                     }
-                });
-            }
-        }
-
-        function updateCommentReply(id) {
-            var csrf_token = $("#csrf_token").val();
-            if(id>0){
-                var content = $("#update-comment-textarea-"+id).val();
-                jQuery.ajax({
-                    url:'/client/comment/update',
-                    type:"POST",
-                    dataType:'json',
-                    data : "content="+content+"&id="+id+"&_token="+csrf_token,
-                    success: function(response){
-                        if (response.returnvalue == 'valid') {
-                            alert("Data updated succesfully");
-                        }
-                        else{
-                            alert("Error while updating comment");
-                        }
-                        window.location.reload();
+                    else{
+                        alert("Error while Deleting Remarks.");
                     }
-                });
-
-            }
+                    window.location.reload();
+                }
+            });
         }
+    }
 
-        function deleteComment(id) {
-            msg = "Are you sure ?";
-            var confirmvalue = confirm(msg);
-
-            if(confirmvalue){
-                jQuery.ajax({
-                    url:'/client/comment/delete/'+id,
-                    dataType:'json',
-                    success: function(response){
-                        if (response.returnvalue == 'valid') {
-                            alert("Comment deleted succesfully");
-                        }
-                        else{
-                            alert("Error while deleting comment");
-                        }
-                        window.location.reload();
+    function updateCommentReply(id)
+    {
+        var csrf_token = $("#csrf_token").val();
+        if(id>0){
+            var content = $("#update-comment-textarea-"+id).val();
+            jQuery.ajax(
+            {
+                url:'/client/comment/update',
+                type:"POST",
+                dataType:'json',
+                data : "content="+content+"&id="+id+"&_token="+csrf_token,
+                success: function(response){
+                    if (response.returnvalue == 'valid') {
+                        alert("Data updated Succesfully.");
                     }
-                });
-            }
+                    else{
+                        alert("Error while updating comment");
+                    }
+                    window.location.reload();
+                }
+            });
         }
+    }
 
-    </script>
+    function deleteComment(id)
+    {
+        msg = "Are you sure ?";
+        var confirmvalue = confirm(msg);
+
+        if(confirmvalue){
+            jQuery.ajax(
+            {
+                url:'/client/comment/delete/'+id,
+                dataType:'json',
+                success: function(response){
+                    if (response.returnvalue == 'valid') {
+                        alert("Comment deleted Succesfully.");
+                    }
+                    else{
+                        alert("Error while deleting comment");
+                    }
+                    window.location.reload();
+                }
+            });
+        }
+    }
+</script>
 @stop
 

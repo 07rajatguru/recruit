@@ -57,4 +57,11 @@ class ClientRemarksController extends Controller
 
     	return redirect()->route('clientremarks.index')->with('success','Client Remarks Deleted Successfully.');
     }
+
+    public function searchRemarks(Request $request){
+
+        $term = $request->get('term');
+        $data = ClientRemarks::getSearchRemarks($term);
+        return json_encode($data);
+    }
 }

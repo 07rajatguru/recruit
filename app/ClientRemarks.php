@@ -25,4 +25,32 @@ class ClientRemarks extends Model
 
     	return $client_remarks;
     }
+
+    public static function getSearchRemarks($term){
+        
+        $query = ClientRemarks::query();
+
+        if($term!=''){
+            $query = $query->where('client_remarks.remarks','like',"%$term%");
+        }
+
+        $query = $query->select('client_remarks.remarks','client_remarks.id');
+        $query = $query->orderBy('client_remarks.id','DESC');
+        $query = $query->limit(50);
+        $response = $query->get();
+
+        $data = array();
+        $i=0;
+
+        foreach ($response as $key=>$value){
+            $data[$i]['label'] = $value->remarks;
+            $data[$i]['id'] = $value->id;
+            $i++;
+        }
+        if(sizeof($data)==0){
+            $data['label'] = 'No Remarks Found';
+            $data['id'] = '';
+        }
+        return $data;
+    }
 }

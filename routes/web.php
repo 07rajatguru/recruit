@@ -2289,6 +2289,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:clientremarks-list']
     ]);
 
+    Route::get('/search-remarks',[
+        'as' => 'search.remarks',
+        'uses' => 'ClientRemarksController@searchRemarks'
+    ]);
+
     Route::get('client-remarks/create',[
         'as' => 'clientremarks.create',
         'uses' => 'ClientRemarksController@create',

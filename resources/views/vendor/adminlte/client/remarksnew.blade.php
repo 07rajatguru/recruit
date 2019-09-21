@@ -6,7 +6,7 @@
             <img src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="Avatar" class="avatar">
         </div>  -->
         <div class="comment-area">
-           {!! Form::textarea('content', null, ['class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 2, 'cols' => 70,"required" => true]) !!}
+           {!! Form::textarea('content', null, ['id' => 'content','class' => 'form-control' ,'placeholder' => 'Write your remarks', 'rows' => 2, 'cols' => 70,"required" => true,'onkeypress' => 'initSearchRemarks();']) !!}
         </div>
 
          <div class="button-area" style="padding: 4px;">
@@ -15,4 +15,3 @@
 
     {!! Form::close() !!}
 </div>
-
