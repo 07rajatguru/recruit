@@ -95,6 +95,45 @@
         };
     }
 
+    function initUpdateSearchRemarks(id)
+    {
+       $("#update-review-textarea-"+id).autocomplete(
+        {
+            minLength: 1,
+            source: '/search-remarks',
+            appendTo : '#update-review-'+id+'',
+            
+            select: function( event, ui ) 
+            {
+                if(ui.item.label !== '')
+                {
+                    $("#update-review-textarea-"+id).val(ui.item.label);
+                }
+                else
+                {
+                    $("#update-review-textarea-"+id).val('');
+                    $("#update-review-"+id).modal('hide');
+                    $("#remarksModal").modal('show');
+                }
+                return false;
+            },
+        }).autocomplete( "instance" )._renderItem = function( ul,item )
+        {
+            if(item.label !== '')
+            {
+                ul.addClass('srch-remarks');
+                return $( "<li>" )
+                .append( "<div><span>" + item.label + "</span></div>")
+                .appendTo( ul )
+            }
+            else
+            {
+                $("#update-review-"+id).modal('hide');
+                $("#remarksModal").modal('show');
+            }
+        };
+    }
+
     function initSearchComment()
     {
         $("#comment").autocomplete(

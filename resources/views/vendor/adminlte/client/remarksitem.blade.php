@@ -3,9 +3,9 @@
     <div class="author-date">
         <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
         <?php
-            $post_time = explode(" ", $per_post->created_at);
+            $post_time = explode(" ", $per_post->updated_at);
             $time = App\Date::converttime($post_time[1]);
-            $post_date = date('d-m-Y' ,strtotime($per_post->created_at)) . ' at '. date('h:i A' ,$time);
+            $post_date = date('d-m-Y' ,strtotime($per_post->updated_at)) . ' at '. date('h:i A' ,$time);
         ?>
         <!-- <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$per_post->created_at->diffForHumans()}} </time> -->
         &nbsp;&nbsp;&nbsp;{{ $post_date }}
@@ -52,7 +52,7 @@
                 {!! Form::open(['route' => ['client.post.update', $client_id,$per_post->id], 'name' => 'update_a_review', 'id' => 'update_a_review', 'files' => 'true']) !!}
                 {!! Form::hidden('client_id', $client_id) !!}
                 {!! Form::hidden('user_id', auth()->id()) !!}
-                {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true ]) !!}
+                {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onclick' => "initUpdateSearchRemarks('$per_post->id')"]) !!}
 
                 <div class="form-group is-empty update-preview-image-container"></div>
             
