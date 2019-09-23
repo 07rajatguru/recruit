@@ -131,7 +131,7 @@
 
                                 <div class="form-group skype {{ $errors->has('skype_id') ? 'has-error' : '' }}" style="display: none;">
                                     <strong>Video Id:</strong>
-                                    {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4' )) !!}
+                                    {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4','placeholder' => 'Video Id')) !!}
                                     @if ($errors->has('skype_id'))
                                         <span class="help-block">
                                     <strong>{{ $errors->first('skype_id') }}</strong>

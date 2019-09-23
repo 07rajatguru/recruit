@@ -70,10 +70,19 @@ class ClientBasicinfo extends Ardent
                             });
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
 
+            /*if (isset($search) && $search != '') {
+                $query = $query->where(function($query) use ($status_id)
+                {
+                    $search = $status_id;
+                    $query = $query->whereNotIn('client_basicinfo.status','like',"%$search%");
+                });
+            }   */
+
             if (isset($search) && $search != '') {
                 $query = $query->where('users.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -133,6 +142,7 @@ class ClientBasicinfo extends Ardent
                     $query = $query->where('users.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -180,6 +190,8 @@ class ClientBasicinfo extends Ardent
         $i = 0;
         foreach ($res as $key => $value) {
             $client_array[$i]['id'] = $value->id;
+            $client_array[$i]['latest_remarks'] = self::getClientLatestRemarks($value->id);
+
             $client_array[$i]['name'] = $value->name;
             if ($value->account_manager_id == 0) {
                 $client_array[$i]['am_name'] = 'Yet to Assign';
@@ -299,11 +311,20 @@ class ClientBasicinfo extends Ardent
         $status_id_array = array($status_id);
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
 
+       /* if (isset($search) && $search != '') {
+            $query = $query->where(function($query) use ($status_id)
+            {
+                $search = $status_id;
+                $query = $query->whereNotIn('client_basicinfo.status','like',"%$search%");
+            });
+        }   */
+
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
                 $query = $query->where('users.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -1012,8 +1033,8 @@ class ClientBasicinfo extends Ardent
         return $client_id;
      }
 
-     // Get Passive Clients of Current Week
-     public static function getPassiveClients(){
+    // Get Passive Clients of Current Week
+    public static function getPassiveClients(){
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
@@ -1027,5 +1048,30 @@ class ClientBasicinfo extends Ardent
         $query_response = $query->get();
 
         return $query_response;
-     }
+    }
+
+    // Get Latest Client Remarks in Listing
+    public static function getClientLatestRemarks($id)
+    {
+        $query = ClientBasicinfo::query();
+        $query = $query->leftjoin('post', 'post.client_id', '=', 'client_basicinfo.id');
+        $query = $query->leftjoin('comments','comments.commentable_id','=','post.id');
+        $query = $query->where('client_basicinfo.id','=',$id);
+        $query = $query->orderBy('post.updated_at','DESC');
+        $query = $query->orderBy('comments.updated_at','DESC');
+        $query = $query->select('post.content as content','comments.body as comment_body');
+        $response = $query->first();
+
+        if(isset($response->comment_body) && $response->comment_body != '')
+        {
+            return $response->comment_body;
+        }
+        else
+        {
+            if(isset($response->content) && $response->content != '')
+            {
+                return $response->content;
+            }
+        }
+    }
 }

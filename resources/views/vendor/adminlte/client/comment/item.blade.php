@@ -3,8 +3,14 @@
     <div class="author-date">
         <a class="h6 post__author-name fn" href="javascript:void(0);">{{ $comment->creator()->name }}</a>
         <div class="post__date">
-            <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">
-                {{$comment->created_at->diffForHumans()}} </time>
+            <?php
+                $comment_time = explode(" ", $comment->updated_at);
+                $time = App\Date::converttime($comment_time[1]);
+                $comment_date = date('d-m-Y' ,strtotime($comment->updated_at)) . ' at '. date('h:i A' ,$time);
+            ?>
+            <!-- <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$comment->created_at->diffForHumans()}} </time>-->
+
+            &nbsp;&nbsp;&nbsp;{{ $comment_date }}
         </div>
     </div>
     <div class="more">

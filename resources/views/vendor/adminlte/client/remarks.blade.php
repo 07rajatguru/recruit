@@ -28,10 +28,29 @@
 </div>
 @stop
 
+<!-- /.modal start -->
+<div class="modal text-left fade" id="remarksModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+           
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+              <h4 class="modal-title">No Remarks Found</h4>    
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 @section('customscripts')
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
-<script src='https://cdn.rawgit.com/pguso/jquery-plugin-circliful/master/js/jquery.circliful.min.js'></script>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript">
 
     jQuery(document).ready(function()
@@ -49,12 +68,17 @@
             
             select: function( event, ui ) 
             {
-                if(ui.item.label == 'No Remarks Found')
+                if(ui.item.label !== '')
+                {
+                    $("#content").val(ui.item.label);
+                }
+                else
                 {
                     $("#content").val('');
-                    return false;
+                    $("#remarksModal").modal('show');
                 }
-            }
+                return false;
+            },
         }).autocomplete( "instance" )._renderItem = function( ul,item )
         {
             if(item.label !== '')
@@ -63,7 +87,11 @@
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
-            } 
+            }
+            else
+            {
+                $("#remarksModal").modal('show');
+            }
         };
     }
 

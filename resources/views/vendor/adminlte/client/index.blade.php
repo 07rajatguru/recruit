@@ -99,6 +99,7 @@
                 <th>Status</th>
                 <!-- <th>Client Address</th> -->
                 <th>City</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         {{--<tbody>
@@ -207,9 +208,9 @@
                 }
             },
             responsive: true,
-            "pageLength": 50,
+            "pageLength": 25,
             "pagingType": "full_numbers",
-            stateSave : true,
+            //stateSave : true,
         });
 
             $('#allcb').change(function(){

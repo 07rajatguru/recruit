@@ -487,7 +487,7 @@
                             required: "Status is required."
                         },
                         "coordinator_name" :{
-                            required: "HR / Coordinator name is required."
+                            required: "Contact Point is required."
                         },
                         "client_category" : {
                             required: "Client Category is required.",
@@ -540,7 +540,7 @@
                             required: "Status is required."
                         },
                         "coordinator_name" :{
-                            required: "HR / Coordinator name is required."
+                            required: "Contact Point is required."
                         }
                     }
                 });

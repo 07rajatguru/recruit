@@ -2,7 +2,13 @@
     <img class="profile-avatar-pic" src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="author"> 
     <div class="author-date">
         <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
-        <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$per_post->created_at->diffForHumans()}} </time>
+        <?php
+            $post_time = explode(" ", $per_post->created_at);
+            $time = App\Date::converttime($post_time[1]);
+            $post_date = date('d-m-Y' ,strtotime($per_post->created_at)) . ' at '. date('h:i A' ,$time);
+        ?>
+        <!-- <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$per_post->created_at->diffForHumans()}} </time> -->
+        &nbsp;&nbsp;&nbsp;{{ $post_date }}
     </div>
     <div class="more">
         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>

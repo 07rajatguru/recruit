@@ -356,6 +356,8 @@ class ClientController extends Controller
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+
             if($isSuperAdmin || $isStrategy || $isAccountManager ){
                 $client_category = $value['category'];
             }
@@ -370,10 +372,10 @@ class ClientController extends Controller
             else if($value['status']=='Left')
                 $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
             if($isSuperAdmin || $isStrategy || $isAccountManager ){
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address']);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address']);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$value['hr_name'],$client_status,$value['address'],$latest_remarks);
             }
 
             $clients[$i] = $data;
@@ -2219,7 +2221,7 @@ class ClientController extends Controller
        $client = ClientBasicinfo::find($client_id);
 
        $post = $client->post()->orderBy('created_at', 'desc')->get();
-//echo $isSuperAdmin;exit;
+
        return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin'));
 
     }

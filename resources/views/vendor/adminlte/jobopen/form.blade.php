@@ -623,12 +623,9 @@
 
             });
 
-
-            $('#date_opened').datepicker().datepicker('setDate', 'today');
-           // $('#target_date').datepicker().datepicker('setDate', 'today');
-
             if(action=="add")
             {
+                $('#date_opened').datepicker().datepicker('setDate', 'today');
                 var date2 = $('#date_opened').datepicker('getDate');
                 date2.setMonth(date2.getMonth()+1);
                 $('#target_date').datepicker('setDate', date2);

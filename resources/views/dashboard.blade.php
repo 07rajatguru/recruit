@@ -142,14 +142,14 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th>Company Name</th>
-                                <th>Position Title</th>
-                                <th>Location</th>
-                                <th>CA</th>
-                                <th>Min CTC<br/>(in Lacs)</th>
-                                <th>Max CTC<br/>(in Lacs)</th>
-                                <th>Added Date</th>
-                                <th>MB</th>
+                                <th style="border: 1px solid #00c0ef;">Company Name</th>
+                                <th style="border: 1px solid #00c0ef;">Position Title</th>
+                                <th style="border: 1px solid #00c0ef;">Location</th>
+                                <th style="border: 1px solid #00c0ef;">CA</th>
+                                <th style="border: 1px solid #00c0ef;">Min CTC<br/>(in Lacs)</th>
+                                <th style="border: 1px solid #00c0ef;">Max CTC<br/>(in Lacs)</th>
+                                <th style="border: 1px solid #00c0ef;">Added Date</th>
+                                <th style="border: 1px solid #00c0ef;">MB</th>
                             </tr>
                             </thead>
                             <tbody id="job_open_to_all">
@@ -188,10 +188,11 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th width="180px">Posting Title</th>
-                                <th>Candidate Name</th>
-                                <th>Candidate Contact No.</th>
-                                <th width="160px">Time</th>
+                                <th width="180px" style="border: 1px solid #00c0ef;">Posting Title</th>
+                                <th style="border: 1px solid #00c0ef;">Candidate Name</th>
+                                <!-- <th>Candidate Contact No.</th> -->
+                                <th style="border: 1px solid #00c0ef;">Contact No.</th>
+                                <th width="160px" style="border: 1px solid #00c0ef;">Time</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -199,10 +200,10 @@
                                 @foreach($interviews as $interview)
                                     <tr>
                                         <!-- <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td> -->
-                                        <td>{{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
-                                        <td>{{ $interview->candidate_fname}} </td>
-                                        <td>{{ $interview->contact }}</td>
-                                        <td style="font-size:13px;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}} </td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $interview->contact }}</td>
+                                        <td style="font-size:13px;border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -241,11 +242,11 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th>Sr No.</th>
-                                <th width="180px">Subject</th>
-                                <th>Assigned By</th>
+                                <th style="border: 1px solid #00c0ef;">Sr No.</th>
+                                <th width="180px" style="border: 1px solid #00c0ef;">Subject</th>
+                                <th style="border: 1px solid #00c0ef;">Assigned By</th>
                                 <!-- <th>Assigned To</th> -->
-                                <th>Due Date</th>
+                                <th style="border: 1px solid #00c0ef;">Due Date</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -253,11 +254,11 @@
                                 <?php $i =1; ?>
                                 @foreach($toDos as $toDo)
                                     <tr>
-                                        <td>{{ $i }}</td>
-                                        <td>{{ $toDo['subject'] }}</td>
-                                        <td>{{ $toDo['am_name'] }}</td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $i }}</td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $toDo['subject'] }}</td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $toDo['am_name'] }}</td>
                                         <!-- <td>{{ $toDo['assigned_to'] }}</td> -->
-                                        <td style="font-size:13px;">{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
+                                        <td style="font-size:13px;border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach
@@ -471,14 +472,14 @@
                             var link = /jobs/+job_opened[i].id+/associated_candidates/;
                             var html = '';
                             html += '<tr>';
-                            html += '<td style="background-color: '+job_opened[i].color+'">'+job_opened[i].display_name+'</td>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].posting_title+'</td>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].location+'</td>';
-                            html += '<td><a title="Show Associated Candidates" href="'+link+'">'+job_opened[i].associate_candidate_cnt+'</td>';
-                            html += '<td>'+job_opened[i].min_ctc+'</td>';
-                            html += '<td>'+job_opened[i].max_ctc+'</td>';
-                            html += '<td>'+job_opened[i].created_date+'</td>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;">'+job_opened[i].am_name+'</td>';
+                            html += '<td style="background-color: '+job_opened[i].color+';border: 1px solid #00c0ef;">'+job_opened[i].display_name+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;">'+job_opened[i].posting_title+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;">'+job_opened[i].location+'</td>';
+                            html += '<td style="border: 1px solid #00c0ef;"><a title="Show Associated Candidates" href="'+link+'">'+job_opened[i].associate_candidate_cnt+'</td>';
+                            html += '<td style="border: 1px solid #00c0ef;">'+job_opened[i].min_ctc+'</td>';
+                            html += '<td style="border: 1px solid #00c0ef;">'+job_opened[i].max_ctc+'</td>';
+                            html += '<td style="border: 1px solid #00c0ef;">'+job_opened[i].created_date+'</td>';
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;">'+job_opened[i].am_name+'</td>';
                             html += '</tr>';
 
                             $("#job_open_to_all").append(html);
