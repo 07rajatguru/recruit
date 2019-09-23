@@ -53,14 +53,14 @@ class ClientBasicinfo extends Ardent
         if(isset($client_visibility_id) && in_array($client_visibility_id,$rolePermissions)){
             $client_visibility = true;
         }
+        $status_id = '3';
+        $status_id_array = array($status_id);
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
 
         // Not display Forbid clients
-        $status_id = '3';
-        $status_id_array = array($status_id);
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
         
         if ($all == 1) {
@@ -70,54 +70,48 @@ class ClientBasicinfo extends Ardent
                             });
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
 
-            /*if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($status_id)
-                {
-                    $search = $status_id;
-                    $query = $query->whereNotIn('client_basicinfo.status','like',"%$search%");
-                });
-            }   */
-
             if (isset($search) && $search != '') {
-                $query = $query->where('users.name','like',"%$search%");
-                $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
-                $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
-                $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                if ($search == 'Active' || $search == 'active') {
-                    $search = 1;
-                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                }
-                if ($search == 'Passive' || $search == 'passive') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                }
-               /* if ($search == 'Forbid' || $search == 'forbid') {
-                    $search = 3;
-                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                }*/
-                if ($search == 'Leaders' || $search == 'leaders') {
-                    $search = 2;
-                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                }
-                if ($search == 'Left' || $search == 'left') {
-                    $search = 4;
-                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                }
-                $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
-                $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                $query = $query->where(function($query) use ($search){
+                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
+                    if ($search == 'Active' || $search == 'active') {
+                        $search = 1;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }
+                    if ($search == 'Passive' || $search == 'passive') {
+                        $search = 0;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }
+                   /* if ($search == 'Forbid' || $search == 'forbid') {
+                        $search = 3;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }*/
+                    if ($search == 'Leaders' || $search == 'leaders') {
+                        $search = 2;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }
+                    if ($search == 'Left' || $search == 'left') {
+                        $search = 4;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }
+                    $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
+                    $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
-                if($search == 'Yet' || $search == 'yet') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                }
-                if($search == 'Yet to' || $search == 'yet to') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                }
-                if($search == 'Yet to Assign' || $search == 'yet to assign') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                }
+                    if($search == 'Yet' || $search == 'yet') {
+                        $search = 0;
+                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
+                    }
+                    if($search == 'Yet to' || $search == 'yet to') {
+                        $search = 0;
+                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
+                    }
+                    if($search == 'Yet to Assign' || $search == 'yet to assign') {
+                        $search = 0;
+                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
+                    }
+                });
             }
 
         }
