@@ -41,7 +41,7 @@
         </div>
 
         <div class="ui-block-content">
-            {!! Form::textarea('content',  $comment->body, ['id'=>'update-comment-textarea-'.$comment->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true ]) !!}
+            {!! Form::textarea('content',  $comment->body, ['id'=>'update-comment-textarea-'.$comment->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onfocus' => "initUpdateSearchComment('$comment->id')"]) !!}
             <input type="hidden" id="review_id" name="review_id" value="{{$comment->id }}"><br/>
             <div class="update-button"><a href="javascript:void(0);" class="btn btn-primary btn-lg full-width" onclick="updateCommentReply({{$comment->id }})">Update</a></div>
         </div>

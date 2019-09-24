@@ -185,7 +185,7 @@ class ClientBasicinfo extends Ardent
         $i = 0;
         foreach ($res as $key => $value) {
             $client_array[$i]['id'] = $value->id;
-            $client_array[$i]['latest_remarks'] = self::getClientLatestRemarks($value->id);
+            $client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
 
             $client_array[$i]['name'] = $value->name;
             if ($value->account_manager_id == 0) {
@@ -1055,9 +1055,9 @@ class ClientBasicinfo extends Ardent
     }
 
     // Get Latest Client Remarks in Listing
-    public static function getClientLatestRemarks($id)
+    public static function getLatestRemarks($id)
     {
-        $query = ClientBasicinfo::query();
+        /*$query = ClientBasicinfo::query();
         $query = $query->leftjoin('post', 'post.client_id', '=', 'client_basicinfo.id');
         $query = $query->leftjoin('comments','comments.commentable_id','=','post.id');
         $query = $query->where('client_basicinfo.id','=',$id);
@@ -1076,6 +1076,44 @@ class ClientBasicinfo extends Ardent
             {
                 return $response->content;
             }
+        }*/
+
+        // Get Latest Remarks time
+        $remarks_res = Post::getClientLatestRemarks($id);
+
+        if(isset($remarks_res) && $remarks_res != '')      
+        {
+            $remarks_time = explode(" ", $remarks_res->updated_date);
+            $remarks_new_time = Date::converttime($remarks_time[1]);
+            $remarks_date = date('d-m-Y' ,strtotime($remarks_res->updated_date)) . " " . date('h:i A' ,$remarks_new_time);
+        }
+        else{
+            $remarks_date = '';
+        }
+
+        // Get Latest Comments time
+        $comments_res = Comments::getClientLatestComments($id);
+      
+        if(isset($comments_res) && $comments_res != '')      
+        {
+            $comments_time = explode(" ", $comments_res->comments_updated_date);
+            $comments_new_time = Date::converttime($comments_time[1]);
+            $comments_date = date('d-m-Y' ,strtotime($comments_res->comments_updated_date)) . " " . date('h:i A' ,$comments_new_time);
+        }
+        else{
+            $comments_date = '';
+        }
+
+        // Check Dates
+
+        if($remarks_date > $comments_date){
+            return $remarks_res->content;
+        }
+        if($comments_date > $remarks_date){
+            return $comments_res->comment_body;
+        }
+        if($remarks_date == $comments_date && $remarks_date != '' && $comments_date != ''){
+            return $comments_res->comment_body;
         }
     }
 }

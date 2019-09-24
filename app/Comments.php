@@ -23,4 +23,18 @@ class Comments extends Model
     {
         return static::find($id)->delete();
     }
+
+    public static function getClientLatestComments($id)
+    {
+        $query = Comments::query();
+        
+        $query = $query->leftjoin('post','post.id','=','comments.commentable_id');
+        $query = $query->leftjoin('client_basicinfo', 'client_basicinfo.id', '=', 'post.client_id');
+        $query = $query->where('client_basicinfo.id','=',$id);
+        $query = $query->orderBy('comments.updated_at','DESC');
+        $query = $query->select('comments.body as comment_body','comments.updated_at as comments_updated_date');
+        $response = $query->first();
+
+        return $response;
+    }
 }

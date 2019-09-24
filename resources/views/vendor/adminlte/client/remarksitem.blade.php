@@ -52,7 +52,7 @@
                 {!! Form::open(['route' => ['client.post.update', $client_id,$per_post->id], 'name' => 'update_a_review', 'id' => 'update_a_review', 'files' => 'true']) !!}
                 {!! Form::hidden('client_id', $client_id) !!}
                 {!! Form::hidden('user_id', auth()->id()) !!}
-                {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onclick' => "initUpdateSearchRemarks('$per_post->id')"]) !!}
+                {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onfocus' => "initUpdateSearchRemarks('$per_post->id')"]) !!}
 
                 <div class="form-group is-empty update-preview-image-container"></div>
             

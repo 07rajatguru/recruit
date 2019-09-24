@@ -74,8 +74,8 @@
                 }
                 else
                 {
-                    $("#content").val('');
                     $("#remarksModal").modal('show');
+                    $("#content").val('');
                 }
                 return false;
             },
@@ -91,6 +91,7 @@
             else
             {
                 $("#remarksModal").modal('show');
+                $("#content").val('');
             }
         };
     }
@@ -111,9 +112,9 @@
                 }
                 else
                 {
-                    $("#update-review-textarea-"+id).val('');
                     $("#update-review-"+id).modal('hide');
                     $("#remarksModal").modal('show');
+                    //$("#update-review-textarea-"+id).val('');
                 }
                 return false;
             },
@@ -130,6 +131,7 @@
             {
                 $("#update-review-"+id).modal('hide');
                 $("#remarksModal").modal('show');
+                //$("#update-review-textarea-"+id).val('');
             }
         };
     }
@@ -143,12 +145,17 @@
             
             select: function( event, ui ) 
             {
-                if(ui.item.label == 'No Remarks Found')
+                if(ui.item.label !== '')
                 {
-                    $("#comment").val('');
-                    return false;
+                    $("#comment").val(ui.item.label);
                 }
-            }
+                else
+                {
+                    $("#remarksModal").modal('show');
+                    $("#comment").val('');
+                }
+                return false;
+            },
         }).autocomplete( "instance" )._renderItem = function( ul,item )
         {
             if(item.label !== '')
@@ -158,6 +165,51 @@
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             } 
+            else
+            {
+                $("#remarksModal").modal('show');
+                $("#comment").val('');
+            }
+        };
+    }
+
+    function initUpdateSearchComment(id)
+    {
+        $("#update-comment-textarea-"+id).autocomplete(
+        {
+            minLength: 1,
+            source: '/search-remarks',
+            appendTo : '#update-comment-'+id+'',
+            
+            select: function( event, ui ) 
+            {
+                if(ui.item.label !== '')
+                {
+                    $("#update-comment-textarea-"+id).val(ui.item.label);
+                }
+                else
+                {
+                    $("#update-comment-"+id).modal('hide');
+                    $("#remarksModal").modal('show');
+                    //$("#update-comment-textarea-"+id).val('');
+                }
+                return false;
+            },
+        }).autocomplete( "instance" )._renderItem = function( ul,item )
+        {
+            if(item.label !== '')
+            {
+                ul.addClass('srch-remarks');
+                return $( "<li>" )
+                .append( "<div><span>" + item.label + "</span></div>")
+                .appendTo( ul )
+            }
+            else
+            {
+                $("#update-comment-"+id).modal('hide');
+                $("#remarksModal").modal('show');
+                //$("#update-comment-textarea-"+id).val('');
+            }
         };
     }
 

@@ -38,4 +38,16 @@ class Post extends Model
         $response = static::find($id)->update(['content' => $data]);
         return $response;
     }
+
+    public static function getClientLatestRemarks($id)
+    {
+        $query = Post::query();
+        $query = $query->leftjoin('client_basicinfo', 'client_basicinfo.id', '=', 'post.client_id');
+        $query = $query->where('post.client_id','=',$id);
+        $query = $query->orderBy('post.updated_at','DESC');
+        $query = $query->select('post.content as content','post.updated_at as updated_date');
+        $response = $query->first();
+
+        return $response;
+    }
 }
