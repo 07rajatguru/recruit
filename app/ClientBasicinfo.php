@@ -59,6 +59,8 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
+        $query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
 
         // Not display Forbid clients
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
@@ -76,6 +78,9 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
+                    $query = $query->orwhere('post.content','like',"%$search%");
+                    $query = $query->orwhere('comments.body','like',"%$search%");
+
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -138,6 +143,9 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
+                    $query = $query->orwhere('post.content','like',"%$search%");
+                    $query = $query->orwhere('comments.body','like',"%$search%");
+
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -146,6 +154,21 @@ class ClientBasicinfo extends Ardent
                         $search = 0;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
                     }
+                    /* if ($search == 'Forbid' || $search == 'forbid') {
+                        $search = 3;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }*/
+                    if ($search == 'Leaders' || $search == 'leaders') {
+                        $search = 2;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }
+                    if ($search == 'Left' || $search == 'left') {
+                        $search = 4;
+                        $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                    }
+
+                    $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
+                    $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
                     if($search == 'Yet' || $search == 'yet') {
                         $search = 0;
@@ -159,8 +182,6 @@ class ClientBasicinfo extends Ardent
                         $search = 0;
                         $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
                     }
-                    $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
-                    $query = $query->orwhere('client_address.billing_city','like',"%$search%");
                 });
             }
         }
@@ -276,6 +297,10 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+
+        $query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
+        $query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
+
         if ($all == 1) {
             $query = $query->leftJoin('client_doc',function($join){
                                 $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
@@ -300,7 +325,6 @@ class ClientBasicinfo extends Ardent
             else{
                 $query = $query->where('account_manager_id',$user_id);
             }
-            
         }
 
         // Not display Forbid clients
@@ -309,20 +333,15 @@ class ClientBasicinfo extends Ardent
         $status_id_array = array($status_id);
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
 
-       /* if (isset($search) && $search != '') {
-            $query = $query->where(function($query) use ($status_id)
-            {
-                $search = $status_id;
-                $query = $query->whereNotIn('client_basicinfo.status','like',"%$search%");
-            });
-        }   */
-
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
                 $query = $query->where('users.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
+                $query = $query->orwhere('post.content','like',"%$search%");
+                $query = $query->orwhere('comments.body','like',"%$search%");
+
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -331,6 +350,19 @@ class ClientBasicinfo extends Ardent
                     $search = 0;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
                 }
+                /* if ($search == 'Forbid' || $search == 'forbid') {
+                    $search = 3;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }*/
+                if ($search == 'Leaders' || $search == 'leaders') {
+                    $search = 2;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                if ($search == 'Left' || $search == 'left') {
+                    $search = 4;
+                    $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
+                }
+                
                 $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                 $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 

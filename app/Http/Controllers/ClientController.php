@@ -256,6 +256,9 @@ class ClientController extends Controller
                 else if ($order == 7) {
                     $order_column_name = "client_address.billing_street2";
                 }
+                else if ($order == 8) {
+                    $order_column_name = "post.content" || "comments.body";
+                }
             }
         }
         else{
@@ -277,6 +280,9 @@ class ClientController extends Controller
                 }
                 else if ($order == 6) {
                     $order_column_name = "client_address.billing_street2";
+                }
+                else if ($order == 7) {
+                    $order_column_name = "post.content" || "comments.body";
                 }
             }
         }
