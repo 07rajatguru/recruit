@@ -33,5 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AllModulePermissionSeeder::class);
         $this->call(TrainingProcessPermissions::class);
         $this->call(ClientHeirarchySeeder::class);
+        $this->call(ClientRemarksPermissionSeeder::class);
+        $this->call(ClientRemarksSeeder::class);
     }
 }
