@@ -599,6 +599,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@postClientEmails',
         //'middleware' => ['permission:industry-edit']
     ]);
+
+     Route::post('client/accountmanager', [
+        'as' => 'client.accountmanager',
+        'uses' => 'ClientController@postClientAccountManager',
+        //'middleware' => ['permission:industry-edit']
+    ]);
      
     Route::get('client', [
         'as' => 'client.index',

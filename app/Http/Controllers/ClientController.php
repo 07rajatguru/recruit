@@ -59,7 +59,6 @@ class ClientController extends Controller
 
         $account_manager=User::getAllUsers('recruiter');
 
-
         // if Super Admin get clients of all companies
         /*if($isSuperAdmin || $isAdmin || $isStrategy){
             $clients = \DB::table('client_basicinfo')
@@ -228,7 +227,10 @@ class ClientController extends Controller
         $passive=sizeof($paramount_client);
         */
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left'));
+        $all_account_manager = User::getAllUsers('recruiter','Yes');
+        $all_account_manager[0] = 'Yet to Assign';
+
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager'));
     }
 
     public static function getOrderColumnName($order,$admin){
@@ -1995,7 +1997,6 @@ class ClientController extends Controller
 
     }
 
-   
     public function postClientEmails()
     {
         $user =  \Auth::user();
@@ -2058,6 +2059,23 @@ class ClientController extends Controller
         }
 
         return redirect()->route('client.index')->with('success','Successfully');
+    }
+
+    public function postClientAccountManager()
+    {
+        $user =  \Auth::user();
+        $user_id = $user->id;
+
+        $account_manager_id = $_POST['account_manager_id'];
+
+        $client_ids = $_POST['client_ids'];
+        $client_ids_array=explode(",",$client_ids);
+
+        foreach($client_ids_array as $key => $value)
+        {
+            \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id' where `id` = '$value'"); 
+        }
+        return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
     }
 
     public function getMonthWiseClient()

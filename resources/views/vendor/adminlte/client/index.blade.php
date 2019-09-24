@@ -12,6 +12,7 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
+                <a class="btn btn-success" data-toggle="modal" data-target="#accountmanagermodal"> Change Account Manager</a>
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
             </div>
             <div>
@@ -80,7 +81,6 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-
  
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="client_table">
         <thead>
@@ -155,7 +155,6 @@
     </table>
 
 <div class="modal fade searchmodal" id="searchmodal" aria-labelledby="searchmodal" role="dialog">
-
     <div class="modal-dialog">
         <div class="modal-content">
         
@@ -177,13 +176,39 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
-        <input type="hidden" id="token" value="{{ csrf_token() }}">
+
+<!-- Account Manager Modal Popup -->
+
+<div class="modal fade accountmanagermodal" id="accountmanagermodal" aria-labelledby="accountmanagermodal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Change Account Manager</h4>
+            </div>
+            <div class="modal-body">
+                <strong>Select Account Manager :</strong> <br><br>
+                {!! Form::select('account_manager_id', $all_account_manager,null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" onclick="client_account_manager()">
+                Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+         
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<input type="hidden" id="token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
       jQuery( document ).ready(function() {
 
+        $("#account_manager_id").select2({width : "550px"});
         /*var table = jQuery('#client_table').DataTable( {
                     responsive: true,
                     "pageLength": 100,
@@ -198,7 +223,7 @@
             'bProcessing' : true,
             'serverSide' : true,
             "order" : [1,'desc'],
-            "columnDefs": [ {orderable: false, targets: [0]},
+            "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}
                         ],
             "ajax" : {
                 'url' : 'client/all',
@@ -257,6 +282,39 @@ function client_emails_notification()
         $('body').append(form);
         form.submit();
     }        
+}
+
+function client_account_manager()
+{
+    var client_ids = new Array();
+    var token = $("#token").val();
+    var table = $("#client_table").dataTable();
+    var account_manager_id = $("#account_manager_id").val();
+
+    table.$("input:checkbox[name=client]:checked").each(function(){
+        client_ids.push($(this).val());
+    });
+
+    if(client_ids == '')
+    {
+        alert("Please Select atleast one Client.")
+        $("#accountmanagermodal").modal('hide');
+    }
+    else
+    {
+        var url = '/client/accountmanager';
+
+        if(client_ids.length > 0){
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="'+token+'" />' +
+                '<input type="text" name="client_ids" value="'+client_ids+'" />' +
+                '<input type="text" name="account_manager_id" value="'+account_manager_id+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }    
+    }
 }
 </script>
 @endsection
