@@ -1549,7 +1549,6 @@ class ClientController extends Controller
 
     public function show($id)
     {
-
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -1583,12 +1582,14 @@ class ClientController extends Controller
         $client_category = $value->category;
         if ($client_category == 'Moderate' || $client_category == 'Standard') {
             $manager_user_id = env('MANAGERUSERID');
+            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
         }
         else {
             $manager_user_id = 0;
+            $marketing_intern_user_id = 0;
         }
 
-        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || ($manager_user_id == $user_id))
+        if(in_array($role_id,$access_roles_id) || ($value->am_id == $user_id) || ($manager_user_id == $user_id) || ($marketing_intern_user_id == $user_id))
         {   
             $client['name'] = $value->name;
             $client['source'] = $value->source;

@@ -118,13 +118,14 @@ class ClientBasicinfo extends Ardent
         else if ($all == 0){
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
             $manager_user_id = env('MANAGERUSERID');
+            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
 
-        // visible standard and moderate clients to manager
-            if($manager_user_id == $user_id){
+            // visible standard and moderate clients to manager
+            if($manager_user_id == $user_id || $marketing_intern_user_id == $user_id){
                     $query = $query->where(function($query) use ($user_id){
                     $query = $query->where('account_manager_id',$user_id);
-                   $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
-                   $query = $query->orwhere('client_basicinfo.category','like',"Standard");
+                    $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
+                    $query = $query->orwhere('client_basicinfo.category','like',"Standard");
                  });
             }
             else{
@@ -284,14 +285,17 @@ class ClientBasicinfo extends Ardent
         }
         else if ($all == 0){
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
-           // $query = $query->where('account_manager_id',$user_id);
-             $manager_user_id = env('MANAGERUSERID');
+            // $query = $query->where('account_manager_id',$user_id);
+            $manager_user_id = env('MANAGERUSERID');
+            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
 
-        // visible standard and moderate clients to manager
-            if($manager_user_id == $user_id){
-                $query = $query->where('account_manager_id',$user_id);
-               $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
-               $query = $query->orwhere('client_basicinfo.category','like',"Standard");
+            // visible standard and moderate clients to manager
+            if($manager_user_id == $user_id || $marketing_intern_user_id == $user_id){
+                $query = $query->where(function($query) use ($user_id){
+                    $query = $query->where('account_manager_id',$user_id);
+                    $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
+                    $query = $query->orwhere('client_basicinfo.category','like',"Standard");
+                });
             }
             else{
                 $query = $query->where('account_manager_id',$user_id);
@@ -694,8 +698,11 @@ class ClientBasicinfo extends Ardent
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
             $manager_user_id = env('MANAGERUSERID');
+            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
+
             // visible standard and moderate clients to manager
-            if($manager_user_id == $user_id){
+            if($manager_user_id == $user_id || $marketing_intern_user_id == $user_id){
+            
                 $query = $query->where(function($query) use ($user_id){
                     $query = $query->where('account_manager_id',$user_id);
                     $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
@@ -838,8 +845,11 @@ class ClientBasicinfo extends Ardent
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
             $manager_user_id = env('MANAGERUSERID');
+            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
+
             // visible standard and moderate clients to manager
-            if($manager_user_id == $user_id){
+            if($manager_user_id == $user_id || $marketing_intern_user_id == $user_id){
+           
                 $query = $query->where(function($query) use ($user_id){
                     $query = $query->where('account_manager_id',$user_id);
                     $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
