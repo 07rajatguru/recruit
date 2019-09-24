@@ -17,7 +17,7 @@
         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
         <ul class="more-dropdown">
             <div class="auth-links" >
-                <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$comment->id }})">Add Comment</a></li>
+                <!-- <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$comment->id }})">Add Comment</a></li> -->
             @if((isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id ) || $isSuperAdmin)
                 <li><a href="#" data-toggle="modal" data-target="#update-comment-{{$comment->id }}">Edit Comment</a></li>
             @endif
