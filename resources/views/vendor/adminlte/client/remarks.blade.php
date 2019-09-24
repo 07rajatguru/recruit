@@ -1,10 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Client')
+@section('title', 'Client Remarks')
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -19,7 +18,7 @@
 </div>
 <div class="col-md-9"> 
     <div>
-     	 @include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id))    	 
+     	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id))    	 
     </div>
 
     <div>
@@ -28,33 +27,13 @@
 </div>
 @stop
 
-<!-- /.modal start -->
-<div class="modal text-left fade" id="remarksModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-           
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-              <h4 class="modal-title">No Remarks Found</h4>    
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-            
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 @section('customscripts')
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript">
 
-    jQuery(document).ready(function()
-    {
+    jQuery(document).ready(function(){
+
         initSearchRemarks();
         initSearchComment();
     });
@@ -68,13 +47,16 @@
             
             select: function( event, ui ) 
             {
-                if(ui.item.label !== '')
+                if(ui.item.label == "No Remarks Found")
+                {
+                    $("#content").val(ui.item.label);
+                }
+                else if(ui.item.label !== '')
                 {
                     $("#content").val(ui.item.label);
                 }
                 else
                 {
-                    $("#remarksModal").modal('show');
                     $("#content").val('');
                 }
                 return false;
@@ -88,9 +70,7 @@
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             }
-            else
-            {
-                $("#remarksModal").modal('show');
+            else{
                 $("#content").val('');
             }
         };
@@ -106,15 +86,13 @@
             
             select: function( event, ui ) 
             {
-                if(ui.item.label !== '')
+                if(ui.item.label == "No Remarks Found")
                 {
                     $("#update-review-textarea-"+id).val(ui.item.label);
                 }
-                else
+                if(ui.item.label !== '')
                 {
-                    $("#update-review-"+id).modal('hide');
-                    $("#remarksModal").modal('show');
-                    //$("#update-review-textarea-"+id).val('');
+                    $("#update-review-textarea-"+id).val(ui.item.label);
                 }
                 return false;
             },
@@ -126,12 +104,6 @@
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
-            }
-            else
-            {
-                $("#update-review-"+id).modal('hide');
-                $("#remarksModal").modal('show');
-                //$("#update-review-textarea-"+id).val('');
             }
         };
     }
@@ -145,13 +117,16 @@
             
             select: function( event, ui ) 
             {
-                if(ui.item.label !== '')
+                if(ui.item.label == "No Remarks Found")
+                {
+                    $("#comment").val(ui.item.label);
+                }
+                else if(ui.item.label !== '')
                 {
                     $("#comment").val(ui.item.label);
                 }
                 else
                 {
-                    $("#remarksModal").modal('show');
                     $("#comment").val('');
                 }
                 return false;
@@ -165,9 +140,7 @@
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             } 
-            else
-            {
-                $("#remarksModal").modal('show');
+            else{
                 $("#comment").val('');
             }
         };
@@ -183,15 +156,13 @@
             
             select: function( event, ui ) 
             {
-                if(ui.item.label !== '')
+                if(ui.item.label == "No Remarks Found")
                 {
                     $("#update-comment-textarea-"+id).val(ui.item.label);
                 }
-                else
+                if(ui.item.label !== '')
                 {
-                    $("#update-comment-"+id).modal('hide');
-                    $("#remarksModal").modal('show');
-                    //$("#update-comment-textarea-"+id).val('');
+                   $("#update-comment-textarea-"+id).val(ui.item.label);
                 }
                 return false;
             },
@@ -203,12 +174,6 @@
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
-            }
-            else
-            {
-                $("#update-comment-"+id).modal('hide');
-                $("#remarksModal").modal('show');
-                //$("#update-comment-textarea-"+id).val('');
             }
         };
     }

@@ -48,7 +48,7 @@ class ClientRemarks extends Model
             $i++;
         }
         if(sizeof($data)==0){
-            $data['label'] = '';
+            $data['label'] = 'No Remarks Found';
             $data['id'] = '';
         }
         return $data;

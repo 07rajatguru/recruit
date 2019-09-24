@@ -18,14 +18,13 @@
         <ul class="more-dropdown">
             <div class="auth-links" >
                 <!-- <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$comment->id }})">Add Comment</a></li> -->
-            @if((isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id ) || $isSuperAdmin)
-                <li><a href="#" data-toggle="modal" data-target="#update-comment-{{$comment->id }}">Edit Comment</a></li>
-            @endif
-            @if($isSuperAdmin)
-                <li> <a href="javascript:void(0);" onclick="deleteComment({{$comment->id }})">Delete Comment</a></li>
-            @endif
-
-                </div>
+                @if((isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id ) || $isSuperAdmin)
+                    <li><a href="#" data-toggle="modal" data-target="#update-comment-{{$comment->id }}">Edit Comment</a></li>
+                @endif
+                @if($isSuperAdmin)
+                    <li> <a href="javascript:void(0);" onclick="deleteComment({{$comment->id }})">Delete Comment</a></li>
+                @endif
+            </div>
         </ul>
     </div>
 </div>
