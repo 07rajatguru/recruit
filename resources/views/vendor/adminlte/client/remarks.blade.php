@@ -8,14 +8,14 @@
 @stop
 
 @section('content')
-<div class="col-lg-12 col-md-12 margin-tb">
+<div class="col-lg-12 col-md-12 margin-tb" style="margin-top: -3%;">
     <div class="pull-left">
-        <h2>{{ $client['name'] }}</h2>
+        <h3>{{ $client['name'] }} - {{ $client['coordinator_name'] }} - {{ $client_location }}</h3>
     </div>
 
-   <div class="pull-right" style="margin-right: 25%;">
+    {{--<div class="pull-right" style="margin-right: 50%;margin-top: 1%;">
         <a class="btn btn-primary" href="{{ url()->previous() }}">Back</a>
-    </div>
+    </div>--}}
 </div>
 <div class="col-md-9"> 
     <div>

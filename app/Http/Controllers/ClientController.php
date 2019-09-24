@@ -2221,9 +2221,11 @@ class ClientController extends Controller
 
        $client = ClientBasicinfo::find($client_id);
 
+       $client_location = ClientBasicinfo::getBillingCityOfClientByID($client_id);
+
        $post = $client->post()->orderBy('created_at', 'desc')->get();
 
-       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin'));
+       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location'));
 
     }
 
