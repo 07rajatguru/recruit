@@ -600,6 +600,11 @@ Route::group(['middleware' => ['auth']], function () {
         //'middleware' => ['permission:industry-edit']
     ]);
 
+    Route::post('client/checkClientId',[
+        'as' => 'client.checkClientId',
+        'uses' => 'ClientController@checkClientId'
+    ]);
+
      Route::post('client/accountmanager', [
         'as' => 'client.accountmanager',
         'uses' => 'ClientController@postClientAccountManager',

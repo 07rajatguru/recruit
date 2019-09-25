@@ -2061,19 +2061,35 @@ class ClientController extends Controller
         return redirect()->route('client.index')->with('success','Successfully');
     }
 
+    public function checkClientId(){
+
+        if (isset($_POST['client_ids']) && $_POST['client_ids'] != '') {
+            $client_ids = $_POST['client_ids'];
+        }
+
+        if (isset($client_ids) && sizeof($client_ids) > 0) {
+            $msg['success'] = 'Success';
+        }
+        else{
+            $msg['err'] = '<b>Please Select Client.</b>';
+            $msg['msg'] = "Fail";
+        }
+
+        return $msg;
+    }
+
     public function postClientAccountManager()
     {
-        $user =  \Auth::user();
-        $user_id = $user->id;
-
         $account_manager_id = $_POST['account_manager_id'];
 
         $client_ids = $_POST['client_ids'];
         $client_ids_array=explode(",",$client_ids);
 
+        $updated_at = date('Y-m-d H:i:s');
+
         foreach($client_ids_array as $key => $value)
         {
-            \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id' where `id` = '$value'"); 
+            \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id', updated_at = '$updated_at' where `id` = '$value'"); 
         }
         return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
     }

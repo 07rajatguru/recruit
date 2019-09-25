@@ -12,7 +12,10 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
-                <a class="btn btn-success" data-toggle="modal" data-target="#accountmanagermodal"> Change Account Manager</a>
+                @if($isSuperAdmin || $isStrategy )
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
+                    </button>
+                @endif
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
             </div>
             <div>
@@ -179,7 +182,7 @@
 
 <!-- Account Manager Modal Popup -->
 
-<div class="modal fade accountmanagermodal" id="accountmanagermodal" aria-labelledby="accountmanagermodal" role="dialog">
+<div id="accountmanagermodal" class="modal text-left fade priority" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
         
@@ -187,21 +190,27 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Change Account Manager</h4>
             </div>
-            <div class="modal-body">
-                <strong>Select Account Manager :</strong> <br><br>
-                {!! Form::select('account_manager_id', $all_account_manager,null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" onclick="client_account_manager()">
-                Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-            </div>
-         
+            {!! Form::open(['method' => 'POST', 'route' => 'client.accountmanager']) !!}
+                <div class="modal-body">
+                    <div class="ac_mngr_cls">
+                        <strong>Select Account Manager :</strong> <br><br>
+                        {!! Form::select('account_manager_id', $all_account_manager,null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+                    </div>
+                    <div class="error"></div>
+                </div>
+
+                <input type="hidden" name="client_ids" id="client_ids" value="">
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            {!! Form::close() !!}
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
 
-<input type="hidden" id="token" value="{{ csrf_token() }}">
+<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
@@ -286,35 +295,41 @@ function client_emails_notification()
 
 function client_account_manager()
 {
+    var token = $('input[name="csrf_token"]').val();
+    var app_url = "{!! env('APP_URL'); !!}";
     var client_ids = new Array();
-    var token = $("#token").val();
+
     var table = $("#client_table").dataTable();
-    var account_manager_id = $("#account_manager_id").val();
+    
 
     table.$("input:checkbox[name=client]:checked").each(function(){
         client_ids.push($(this).val());
     });
 
-    if(client_ids == '')
-    {
-        alert("Please Select atleast one Client.")
-        $("#accountmanagermodal").modal('hide');
-    }
-    else
-    {
-        var url = '/client/accountmanager';
+    $("#client_ids").val(client_ids);
 
-        if(client_ids.length > 0){
-            var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="'+token+'" />' +
-                '<input type="text" name="client_ids" value="'+client_ids+'" />' +
-                '<input type="text" name="account_manager_id" value="'+account_manager_id+'" />' +
-                '</form>');
-
-            $('body').append(form);
-            form.submit();
-        }    
-    }
+    $.ajax(
+    {
+        type : 'POST',
+        url : app_url+'/client/checkClientId',
+        data : {client_ids : client_ids, '_token':token},
+        dataType : 'json',
+        success: function(msg)
+        {
+            $(".priority").show();
+            if (msg.success == 'Success') {
+                $(".ac_mngr_cls").show();
+                $(".error").empty();
+                $('#submit').removeAttr('disabled');
+            }
+            else{
+                $(".ac_mngr_cls").hide();
+                $(".error").empty();
+                $('#submit').attr('disabled','disabled');
+                $(".error").append(msg.err);
+            }
+        }
+    });
 }
 </script>
 @endsection
