@@ -319,7 +319,7 @@ class CandidateBasicInfo extends Model
 
         $to_address = array();
         $to_address[] = $candidate_owner_email;
-        $to_address[] = $client_owner_email;
+        // $to_address[] = $client_owner_email;
 
         //$to_address[] = 'tarikapanjwani@gmail.com';
        // $to_address[] = 'rajlalwani@adlertalent.com';
@@ -327,10 +327,11 @@ class CandidateBasicInfo extends Model
         $input['to'] = $to_address;
 
         // CC to Superadmin
-        $superadminuserid = getenv('SUPERADMINUSERID');
-        $superadminemail = User::getUserEmailById($superadminuserid);
-        $cc = $superadminemail;
-        $input['cc'] = $cc;
+        // $superadminuserid = getenv('SUPERADMINUSERID');
+        // $superadminemail = User::getUserEmailById($superadminuserid);
+        // $cc = $superadminemail;
+        // $cc = $client_owner_email;
+        // $input['cc'] = $cc;
 
         // job Details
         $job_details = JobOpen::getJobById($job_id);
@@ -347,7 +348,7 @@ class CandidateBasicInfo extends Model
         \Mail::send('adminlte::emails.candidateassociatemail', $input, function ($message) use($input)
         {
             $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to'])->cc($input['cc'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
+            $message->to($input['to'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
         });
     }
 }
