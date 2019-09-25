@@ -278,8 +278,6 @@ class CandidateController extends Controller
         $candidateSource = $request->input('candidateSource');
         $job_id = $request->input('jobopen');
 
-       
-
         // Save Candidate Basic Info
         $candidate = new CandidateBasicInfo();
 
@@ -574,9 +572,10 @@ class CandidateController extends Controller
             }
         }
 
-        // Candidate Vacancy Details email
-
-        $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($candidate_id,$user_id,$job_id);
+        if(isset($job_id) && $job_id>0){
+            // Candidate Vacancy Details email
+            $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($candidate_id,$user_id,$job_id);
+        }
     
         return redirect()->route('candidate.index')->with('success','Candidate Created Successfully');
 
