@@ -126,15 +126,15 @@ class LeadController extends Controller
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
                 $delete = $delete_view->render();
                 $action .= $delete;
+
+                $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $cancel = $cancel_view->render();
+                $action .= $cancel;
             }
 
             if ($value['convert_client'] == 0){
                 if($value['access']){
                     $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
-
-                    $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
-                    $cancel = $cancel_view->render();
-                    $action .= $cancel;
                 }
             }
 
