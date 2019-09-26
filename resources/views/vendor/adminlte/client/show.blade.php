@@ -46,13 +46,13 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                          <tr>
-                            <th scope="row"  ><!-- HR/Coordinator Name -->Contact Point</th>
+                            <th scope="row"  >Contact Point</th>
                             <td>{{ $client['coordinator_name'] }}</td>
 
                             @if($isSuperAdmin || $isAdmin || $isStrategy || $isManager)
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
-                            @elseif($client['client_owner'])
+                            @elseif($client['client_owner'] || $user_id == $marketing_intern_user_id)
                                 <th>Contact Number</th>
                                 <td colspan="3">{{ $client['mobile'] }}</td>
                             @else
@@ -65,7 +65,7 @@
                             @if($isSuperAdmin || $isAdmin || $isManager)
                                 <th>Email</th>
                                 <td>{{ $client['mail'] }}</td>
-                            @elseif($client['client_owner'])
+                            @elseif($client['client_owner'] || $user_id == $marketing_intern_user_id)
                                 <th>Email</th>
                                 <td colspan="3">{{ $client['mail'] }}</td>
                             @else

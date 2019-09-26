@@ -104,15 +104,7 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
-                    if($search == 'Yet' || $search == 'yet') {
-                        $search = 0;
-                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                    }
-                    if($search == 'Yet to' || $search == 'yet to') {
-                        $search = 0;
-                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                    }
-                    if($search == 'Yet to Assign' || $search == 'yet to assign') {
+                    if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
                         $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
                     }
@@ -170,15 +162,7 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
-                    if($search == 'Yet' || $search == 'yet') {
-                        $search = 0;
-                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                    }
-                    if($search == 'Yet to' || $search == 'yet to') {
-                        $search = 0;
-                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                    }
-                    if($search == 'Yet to Assign' || $search == 'yet to assign') {
+                    if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
                         $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
                     }
@@ -366,17 +350,9 @@ class ClientBasicinfo extends Ardent
                 $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                 $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
-                if($search == 'Yet' || $search == 'yet') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                }
-                if($search == 'Yet to' || $search == 'yet to') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
-                }
-                if($search == 'Yet to Assign' || $search == 'yet to assign') {
-                    $search = 0;
-                    $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
+                if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
+                        $search = 0;
+                        $query = $query->orwhere('client_basicinfo.account_manager_id','like',"%$search%");
                 }
             });
         }
