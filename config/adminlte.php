@@ -507,6 +507,11 @@ return [
                     'text' => 'Client Remarks Lsit',
                     'url'  => 'client-remarks',
                     'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'Email Template',
+                    'url'  => 'email-template',
+                    'icon' => 'circle-o',
                 ]
                     /* [
                          'text' => 'Permissions',

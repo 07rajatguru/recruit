@@ -35,5 +35,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientHeirarchySeeder::class);
         $this->call(ClientRemarksPermissionSeeder::class);
         $this->call(ClientRemarksSeeder::class);
+        $this->call(EmailTemplatePermissionSeeder::class);
     }
 }
