@@ -381,11 +381,14 @@ class ClientController extends Controller
                 $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
             else if($value['status']=='Left')
                 $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
-            if($isSuperAdmin || $isStrategy || $isAccountManager ){
+            if($isSuperAdmin){
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
+            else if($isStrategy || $isAccountManager ){
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address']);
+            }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address']);
             }
 
             $clients[$i] = $data;
