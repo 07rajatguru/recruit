@@ -129,7 +129,7 @@ class InterviewController extends Controller
             $delete = $delete_view->render();
             $action .= $delete;
 
-            $data = array(++$j,$checkbox,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$action,$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$color);
             $interview[$i] = $data;
             $i++;
         }

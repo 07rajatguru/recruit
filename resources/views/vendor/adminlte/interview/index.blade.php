@@ -52,6 +52,7 @@
             <tr>
                 <th>No</th>
                 <th>{{ Form::checkbox('interview[]',0 ,null,array('id'=>'allcb')) }}</th>
+                <th>Action</th>
                 {{--<th>Interview Name</th>--}}
                 <th>Posting Title</th>
                 <th>Candidate</th>
@@ -61,7 +62,6 @@
                 <th>Location</th>
                 <th>Status</th>
                 <th>Candidate Owner</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -159,7 +159,7 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    $('td:eq(2)', Row).css('background-color', Data[10]);
+                    $('td:eq(3)', Row).css('background-color', Data[10]);
                 }
             });
 
