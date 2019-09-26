@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
-                @if($isSuperAdmin || $isStrategy )
+                @if($isSuperAdmin)
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
                     </button>
                 @endif
