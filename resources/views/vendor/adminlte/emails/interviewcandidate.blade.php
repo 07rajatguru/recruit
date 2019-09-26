@@ -39,7 +39,7 @@
                         <p style="text-align: justify;">
                            <!--  Adler Talent Solutions Private Limited is one of the fastest growing company into Talent consulting business catering services to Top Corporates and MNCs.We are offering quality services into Executive Search and talent solutions across INDIA and Overseas. We cater talent solution services in industries like Infrastructure, Oil and Gas, EPC Projects, Port and SEZ, Manufacturing, Engineering, Automobile, Auto Ancillary, Construction,Real Estate, Telecom, Textile,Pharmaceutical, Logistic, Consumer Durable, FMCG, Retail, Hospitality, Media, Chemicals, Information Technology and service industries. -->
                            @if(isset($company_desc) && $company_desc != '')
-                                {{ $company_desc }}
+                                {!! $company_desc !!}
                            @endif
                             <br/><br/>For more details about our company, please visit : <a href="https://adlertalent.com/">www.adlertalent.com</a>
                         </p>
