@@ -1,54 +1,57 @@
-<div class="post__author author vcard inline-items">
-    <img class="profile-avatar-pic" src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="author">
-    <div class="author-date">
-        <a class="h6 post__author-name fn" href="javascript:void(0);">{{ $comment->creator()->name }}</a>
-        <div class="post__date">
-            <?php
+
+<?php
                 $comment_time = explode(" ", $comment->updated_at);
                 $time = App\Date::converttime($comment_time[1]);
                 $comment_date = date('d-m-Y' ,strtotime($comment->updated_at)) . ' at '. date('h:i A' ,$time);
             ?>
-            <!-- <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$comment->created_at->diffForHumans()}} </time>-->
 
-            &nbsp;&nbsp;&nbsp;{{ $comment_date }}
-        </div>
-    </div>
-    <div class="more">
-        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-        <ul class="more-dropdown">
-            <div class="auth-links" >
-                <!-- <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$comment->id }})">Add Comment</a></li> -->
-                @if((isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id ) || $isSuperAdmin)
-                    <li><a href="#" data-toggle="modal" data-target="#update-comment-{{$comment->id }}">Edit Comment</a></li>
-                @endif
-                @if($isSuperAdmin)
-                    <li> <a href="javascript:void(0);" onclick="deleteComment({{$comment->id }})">Delete Comment</a></li>
-                @endif
+<div class="singal-row-wrapper">
+    <div class="post__author author-date">
+        <img class="profile-avatar-pic" src="/images/default.png" alt="author"> 
+        <div class="comment-detail">
+            <div class="comment-desc">
+                <p>{{ $comment->body }}</p>
             </div>
-        </ul>
-    </div>
-</div>
-
-<!-- Window-popup Update Review -->
-
-<div class="modal fade" id="update-comment-{{$comment->id }}">
-    <div class="modal-dialog ui-block window-popup edit-widget update-review">
-        <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">X</a>
-
-        <div class="ui-block-title">
-            <h6 class="title">Update Comment</h6>
+            <div class="user-name">
+                <a class="h6 post__author-name fn" href="#">{{ $comment->creator()->name }}</a>
+            </div>
         </div>
+     </div>
+    <div class="right-detail"> 
+        <div class="user-option">
+            <ul>
+                <div class="auth-links">
+                    <li><a href="#" title="Add Comment" data-toggle="modal" onclick="showcommentbox({{$per_post->id }})"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li>
+                        <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" title="Dlete Post" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </li>
+                </div>
+            </ul>
+        </div>
+        <div class="author-date">
+           <div class="date-time">
+                <span>{{ $comment_date }}</span>
+            </div>
+        </div>   
+    </div>
 
-        <div class="ui-block-content">
-            {!! Form::textarea('content',  $comment->body, ['id'=>'update-comment-textarea-'.$comment->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onfocus' => "initUpdateSearchComment('$comment->id')"]) !!}
-            <input type="hidden" id="review_id" name="review_id" value="{{$comment->id }}"><br/>
-            <div class="update-button"><a href="javascript:void(0);" class="btn btn-primary btn-lg full-width" onclick="updateCommentReply({{$comment->id }})">Update</a></div>
+    <!-- Window-popup Update Review -->
+
+    <div class="modal fade" id="update-comment-{{$comment->id }}">
+        <div class="modal-dialog ui-block window-popup edit-widget update-review">
+            <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">X</a>
+            <div class="ui-block-title">
+                <h6 class="title">Update Comment</h6>
+            </div>
+            <div class="ui-block-content">
+                {!! Form::textarea('content',  $comment->body, ['id'=>'update-comment-textarea-'.$comment->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onfocus' => "initUpdateSearchComment('$comment->id')"]) !!}
+                <input type="hidden" id="review_id" name="review_id" value="{{$comment->id }}"><br/>
+                <div class="update-button"><a href="javascript:void(0);" class="btn btn-primary btn-lg full-width" onclick="updateCommentReply({{$comment->id }})">Update</a></div>
+            </div>
         </div>
     </div>
+    <!-- ... end Window-popup Update Review -->
 </div>
-
-<!-- ... end Window-popup Update Review -->
-
-<p>
-    {{ $comment->body }}
-</p>

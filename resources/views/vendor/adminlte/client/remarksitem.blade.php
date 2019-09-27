@@ -1,44 +1,49 @@
-<div class="post__author " style="padding: 0 0 0 20px;">
-    <img class="profile-avatar-pic" src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="author"> 
-    <div class="author-date">
-        <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
+<div class="singal-row-wrapper">
+    <div class="post__author author-date">
+        <img class="profile-avatar-pic" src="/images/default.png" alt="author"> 
+
         <?php
             $post_time = explode(" ", $per_post->updated_at);
             $time = App\Date::converttime($post_time[1]);
             $post_date = date('d-m-Y' ,strtotime($per_post->updated_at)) . ' at '. date('h:i A' ,$time);
         ?>
-        <!-- <time class="published" datetime="2018-04-05 10:48:23" title="05-04-2018 10:48 AM">{{$per_post->created_at->diffForHumans()}} </time> -->
-        &nbsp;&nbsp;&nbsp;{{ $post_date }}
-    </div>
-    <div class="more">
-        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-        <ul class="more-dropdown">
-            <div class="auth-links">
-            <li><a href="#" data-toggle="modal" onclick="showcommentbox({{$per_post->id }})">Add Comment</a></li>
-            @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id) || $isSuperAdmin )
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#update-review-{{$per_post->id }}">Edit Post</a>
-                </li>
-            @endif
-             @if($isSuperAdmin)
-                <li>
-                    <a href="javascript:void(0);" onclick="deletePost({{$per_post->id }})">Delete Post</a>
-                </li>
-             @endif
+
+        <div class="comment-detail">
+            <div class="comment-desc">
+                <p>{{$per_post->content}}</p>
             </div>
-        </ul>
-    </div>
-    <p>{{$per_post->content}} </p>
-
-    {{--<div class="post-additional-info inline-items">
-        <div class="comments-shared">
-            <a href="javascript:void(0);" title="Write a comment" data-form-id="write_a_review_11_comment" onclick="showcommentbox({{$per_post->id}})" class="reply post-add-icon inline-items">
-                    <i class="fa fa-commenting-o" aria-hidden="true" ></i>
-                </a>
+            <div class="user-name">
+                <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
+            </div>
         </div>
-    </div>--}}
-
-    <!-- Window-popup Update Review -->
+    </div>
+    <div class="right-detail"> 
+        <div class="user-option">
+            <ul>
+                <div class="auth-links">
+                    <li><a href="#" title="Add Comment" data-toggle="modal" onclick="showcommentbox({{$per_post->id }})"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id) || $isSuperAdmin )
+                        <li>
+                            <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        </li>
+                    @endif
+                    @if($isSuperAdmin)
+                        <li>
+                            <a href="javascript:void(0);" title="Dlete Post" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </li>
+                    @endif
+                </div>
+            </ul>
+        </div>
+        <div class="author-date">
+           <div class="date-time">
+                <span>{{ $post_date }}</span>
+            </div>
+        </div>   
+    </div>
+</div>
+<div class="clearfix"></div>
+        <!-- Window-popup Update Review -->
 
     <div class="modal fade" id="update-review-{{$per_post->id }}">
         <div class="modal-dialog ui-block window-popup edit-widget update-review">
@@ -69,8 +74,6 @@
         @include('adminlte::client.comment.new', array('per_post' => $per_post,'client_id'=>$client_id))
     </div>
 
-    <ul class="children">
+    <div class="children">
         @include('adminlte::client.comment.list', array('per_post' => $per_post))
-    </ul>
-
-</div>
+    </div>
