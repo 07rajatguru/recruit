@@ -259,7 +259,7 @@ class ClientController extends Controller
                     $order_column_name = "client_address.billing_street2";
                 }
                 else if ($order == 8) {
-                    $order_column_name = "post.content" || "comments.body";
+                    $order_column_name = "post.content";
                 }
             }
         }
@@ -284,7 +284,7 @@ class ClientController extends Controller
                     $order_column_name = "client_address.billing_street2";
                 }
                 else if ($order == 7) {
-                    $order_column_name = "post.content" || "comments.body";
+                    $order_column_name = "post.content";
                 }
             }
         }
