@@ -413,7 +413,7 @@ time.published{    display: inline-block;
     background-color: #c2c5d9;border-radius: 100%; z-index: 13;}
 .more-comments { text-align: center; padding: 15px 0 0;font-size: 12px;color: #515365;
     display: block;font-weight: 700; margin: 0 auto;}
-.reply {display: inline-block;width: 100%}
+.reply {display: inline-block;width: 100%;padding: 0 10px 15px;}
 .reply textarea {width: 100%;border: 1px solid #ddd;padding: 15px;margin-bottom: 15px;}
 
 input[type="file"] {display: block;}
@@ -529,4 +529,28 @@ input[type="file"] {display: block;}
     .content{overflow: scroll;}
    .pull-right.export-btn{margin: 28px 0 0;}  
    .filter-ex-btn, .attendance_submit{margin: 15px 0 0}
+}
+
+.comment-page{width: 47.8%;}
+.comment-page .user-option ul li{list-style-type: none;display: inline-block;background-color: transparent;border:0;padding: 0}
+.comment-page .post__author-name.fn{float: none;}
+.comment-page .post__author .profile-avatar-pic{vertical-align: top}
+.comment-page .comment-detail{display: inline-block;max-width: 390px;}
+.comment-page .post__author p{padding: 0}
+.comment-page .right-detail{display: inline-block;float: right;}
+.comment-page .right-detail .user-option .auth-links{text-align: right;}
+.comment-page .right-detail .user-option .auth-links a{
+    font-size: 18px;
+    text-transform: none;
+    color: #444;
+    }
+.comment-page .right-detail .user-option .auth-links a:hover i{color: #23527c}
+.comment-page .right-detail .user-option .auth-links li + li {margin-left: 5px}
+.comment-page .right-detail .user-option ul{margin: 0}
+.comment-page .singal-row-wrapper{padding: 10px 20px}
+.comment-page .comment-detail .comment-desc p{font-weight: 500;margin-bottom: 5px;}
+.comment-page .children{margin:0;padding-left: 15px;}
+@media (max-width: 1600px){
+    .comment-page{    width: 636.92px;}
+    .comment-page .comment-detail{    max-width: 370px;}
 }
