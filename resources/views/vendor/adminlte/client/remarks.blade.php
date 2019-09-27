@@ -108,9 +108,9 @@
         };
     }
 
-    function initSearchComment()
+    function initSearchComment(id)
     {
-        $("#comment").autocomplete(
+        $("#comment_"+id).autocomplete(
         {
             minLength: 1,
             source: '/search-remarks',
@@ -119,15 +119,15 @@
             {
                 if(ui.item.label == "No Remarks Found")
                 {
-                    $("#comment").val(ui.item.label);
+                    $("#comment_"+id).val(ui.item.label);
                 }
                 else if(ui.item.label !== '')
                 {
-                    $("#comment").val(ui.item.label);
+                    $("#comment_"+id).val(ui.item.label);
                 }
                 else
                 {
-                    $("#comment").val('');
+                    $("#comment_"+id).val('');
                 }
                 return false;
             },
@@ -141,7 +141,7 @@
                 .appendTo( ul )
             } 
             else{
-                $("#comment").val('');
+                $("#comment_"+id).val('');
             }
         };
     }
@@ -171,7 +171,7 @@
             if(item.label !== '')
             {
                 ul.addClass('srch-remarks');
-                return $( "<li>" )
+                return $( "<li style='background-color:white;'>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             }

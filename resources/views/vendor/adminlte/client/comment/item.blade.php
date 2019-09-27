@@ -21,12 +21,12 @@
         <div class="user-option">
             <ul>
                 <div class="auth-links">
-                    <li><a href="#" title="Add Comment" data-toggle="modal" onclick="showcommentbox({{$per_post->id }})"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
-                    <li>
-                        <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    {{--<li><a href="#" title="Add Comment" data-toggle="modal" onclick="showcommentbox({{$comment->id }})"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li>--}}
+                        <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);" title="Dlete Post" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a href="javascript:void(0);" title="Dlete Post" onclick="deletePost({{$comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                     </li>
                 </div>
             </ul>
