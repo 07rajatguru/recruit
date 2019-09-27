@@ -2335,4 +2335,53 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:clientremarks-delete']
     ]);
 
+
+    // Email Template Routes
+    Route::get('email-template',[
+        'as' => 'emailtemplate.index',
+        'uses' => 'EmailTemplateController@index',
+        'middleware' => ['permission:emailtemplate-list']
+    ]);
+
+    Route::get('email-template/create',[
+        'as' => 'emailtemplate.create',
+        'uses' => 'EmailTemplateController@create',
+        'middleware' => ['permission:emailtemplate-create']
+    ]);
+
+    Route::post('email-template/create',[
+        'as' => 'emailtemplate.store',
+        'uses' => 'EmailTemplateController@store',
+        'middleware' => ['permission:emailtemplate-create']
+    ]);
+
+    Route::any('/email-body-image',[
+        'as' => 'emailbody.image',
+        'uses' => 'EmailTemplateController@uploadEmailbodyImage'
+    ]);
+
+    Route::get('email-template/edit/{id}',[
+        'as' => 'emailtemplate.edit',
+        'uses' => 'EmailTemplateController@edit',
+        'middleware' => ['permission:emailtemplate-edit']
+    ]);
+
+    Route::patch('email-template/edit/{id}',[
+        'as' => 'emailtemplate.update',
+        'uses' => 'EmailTemplateController@update',
+        'middleware' => ['permission:emailtemplate-edit']
+    ]);
+
+    Route::get('email-template/{id}/show', [
+        'as' => 'emailtemplate.show',
+        'uses' => 'EmailTemplateController@show',
+        'middleware' => ['permission:emailtemplate-show']
+    ]);
+
+    Route::delete('email-template/{id}',[
+        'as' => 'emailtemplate.destroy',
+        'uses' => 'EmailTemplateController@destroy',
+        'middleware' => ['permission:emailtemplate-delete']
+    ]);
+
 });
