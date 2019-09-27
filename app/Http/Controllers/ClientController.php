@@ -21,6 +21,7 @@ use App\Events\NotificationMail;
 use App\EmailsNotifications;
 use App\JobVisibleUsers;
 use App\Post;
+use App\EmailTemplate;
 
 class ClientController extends Controller
 {
@@ -230,7 +231,9 @@ class ClientController extends Controller
         $all_account_manager = User::getAllUsers('recruiter','Yes');
         $all_account_manager[0] = 'Yet to Assign';
 
-        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager'));
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+
+        return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names'));
     }
 
     public static function getOrderColumnName($order,$admin){
@@ -2002,68 +2005,49 @@ class ClientController extends Controller
 
     }
 
-    public function postClientEmails()
+    public function postClientEmails(Request $request)
     {
-        $user =  \Auth::user();
+        $user = \Auth::user();
+        $user_id = $user->id;
 
-        $user_id=$user->id;
+        $first_name = $request->input('first_name');
 
-        $client_ids = $_POST['client_ids'];
+        $client_ids = $request->input('email_client_ids');
+        $client_ids_array = explode(",",$client_ids);
 
-        $client_ids_array=explode(",",$client_ids);
-
-
-
-      /*  $client_info=\DB::table('client_basicinfo')
-        ->select('client_basicinfo.*')
-        ->where()
-        ->get();*/
+        $email_subject = $request->input('email_subject');
+        $email_body = $request->input('email_body');
 
         foreach($client_ids_array as $key => $value)
         {
-            $client_email=ClientBasicinfo::getClientEmailByID($value);
+            $client_email = ClientBasicinfo::getClientEmailByID($value);
+            $client_name = ClientBasicinfo::getClientNameByID($value);
+            //$client_company = ClientBasicinfo::getCompanyOfClientByID($value);
 
-           // echo $client_email;
-
-            $client_name=ClientBasicinfo::getClientNameByID($value);
-
-          /// echo $client_name;
-
-            $client_company=ClientBasicinfo::getCompanyOfClientByID($value);
-
-           // echo $client_company;
-            
-
-            $message="Open Position List - $client_company";
-            
-        
-            /*$email_notification= new EmailsNotifications();
-            $email_notification->module='Client';
-            $email_notification->sender_name=$user_id;
-            $email_notification->to=$client_email;
-            $email_notification->cc='rajlalwani@adlertalent.com';
-            $email_notification->bcc="";
-            $email_notification->subject=$message;
-            $email_notification->message="";
-            $email_notification->sent_date=date("Y-m-d H:i:s");
-            $email_notification->status='0';
-            $email_notification->module_id=$value;*/
-
-            $module='Client';
-            $sender_name=$user_id;
-            $to=$client_email;
-           // $cc=$client_email;
-            $cc='rajlalwani@adlertalent.com';
-            $subject=$message;
-            $body_message="Dear $client_name, <br><br>Greetings From $client_company! <br><br> Request You to Kindly Advise on the list of Priority Positions for this Week to Focus Upon Accordingly.<br><br>Awaiting your revert to expedite accordingly.<br><br>Thanks.";
+            $module = 'Client Bulk Email';
+            $sender_name = $user_id;
+            $to = $client_email;
+            $subject = $email_subject;
            
-            $module_id=$value;
+            //$cc='rajlalwani@adlertalent.com';
+            $cc = 'dhara@trajinfotech.com';
+
+            if(strpos($email_body, $first_name) !== false)
+            {
+                $new_email_body = str_replace($first_name,"",$email_body);
+                $body_message = "<tr><td style='padding:8px;'>Dear $client_name,<br> $new_email_body </td></tr>";
+            }
+            else
+            {
+                $body_message = "<tr><td style='padding:8px;'>Dear $client_name, <br> $email_body </td></tr>";
+            }
+           
+            $module_id = $value;
             
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
-            
         }
 
-        return redirect()->route('client.index')->with('success','Successfully');
+        return redirect()->route('client.index')->with('success','Email Sent Successfully.');
     }
 
     public function checkClientId(){

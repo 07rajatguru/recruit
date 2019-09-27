@@ -67,6 +67,9 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" name="action" id="action" value="{{ $action }}">
+
 {!! Form::close() !!}
 
 @section('customscripts')
@@ -74,10 +77,18 @@
     <script>
         $(document).ready(function()
         {
+            var action = $("#action").val();
+
+            if(action == 'add')
+            {    
+                document.getElementById("email_body").defaultValue = "Dear Sir,";
+            }
+
             CKEDITOR.replace( 'email_body', 
             {
                 filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
-                customConfig: '/js/ckeditor_config.js'
+                customConfig: '/js/ckeditor_config.js',
+
             });
 
             CKEDITOR.on('dialogDefinition', function( ev )

@@ -13,8 +13,9 @@
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
                 @if($isSuperAdmin)
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
-                    </button>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
+
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager</button>
                 @endif
                 <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
             </div>
@@ -159,7 +160,7 @@
         </tbody>--}}
     </table>
 
-<div class="modal fade searchmodal" id="searchmodal" aria-labelledby="searchmodal" role="dialog">
+<div id="searchmodal" class="modal text-left fade email_modal" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
         
@@ -167,24 +168,34 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Send Mail To Clients</h4>
             </div>
-            <div class="modal-body">
-                <p>
-                    Are You Sure You Want to Send Mail To Clients ?
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" onclick="client_emails_notification()">
-                Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-            </div>
-         
+            {!! Form::open(['method' => 'POST', 'route' => 'client.emailnotification']) !!}
+                <div class="modal-body">
+                    <div class="clt_email_cls">
+
+                        <div class="form-group">
+                            <strong>Select Email Template : <span class = "required_fields">*</span></strong><br/><br/>
+                            {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setEmailTemplate()')) !!}
+                        </div>
+
+                    </div>
+                    <div class="email_error"></div>
+                    <div class="body_class" style="display:none;"></div>
+                </div>
+                <input type="hidden" name="email_client_ids" id="email_client_ids" value="">
+                <input type="hidden" name="first_name" id="first_name" value="Dear Sir,">
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="email_submit">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            {!! Form::close() !!}
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
 
 <!-- Account Manager Modal Popup -->
 
-<div id="accountmanagermodal" class="modal text-left fade priority" style="display: none;">
+<div id="accountmanagermodal" class="modal text-left fade acc_mngr_modal" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
         
@@ -195,10 +206,14 @@
             {!! Form::open(['method' => 'POST', 'route' => 'client.accountmanager']) !!}
                 <div class="modal-body">
                     <div class="ac_mngr_cls">
-                        <strong>Select Account Manager :</strong> <br><br>
-                        {!! Form::select('account_manager_id', $all_account_manager,null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+
+                        <div class="form-group">
+                            <strong>Select Account Manager : <span class = "required_fields">*</span></strong><br/><br/>
+                            {!! Form::select('account_manager_id',$all_account_manager,null, array('id'=>'account_manager_id','class' => 'form-control')) !!}
+                        </div>
+
                     </div>
-                    <div class="error"></div>
+                    <div class="act_mngr_error"></div>
                 </div>
 
                 <input type="hidden" name="client_ids" id="client_ids" value="">
@@ -213,13 +228,18 @@
 </div>
 
 <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+
 @stop
 
 @section('customscripts')
-    <script type="text/javascript">
-      jQuery( document ).ready(function() {
 
-        $("#account_manager_id").select2({width : "550px"});
+<script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+    <script type="text/javascript">
+    jQuery( document ).ready(function()
+    {
+        $("#account_manager_id").select2({width : '567px'});
+        $("#email_template_id").select2({width : "567px"});
+
         /*var table = jQuery('#client_table').DataTable( {
                     responsive: true,
                     "pageLength": 100,
@@ -249,50 +269,67 @@
             //stateSave : true,
         });
 
-            $('#allcb').change(function(){
-                if($(this).prop('checked')){
-                    $('tbody tr td input[type="checkbox"]').each(function(){
-                        $(this).prop('checked', true);
-                    });
-                }else{
-                    $('tbody tr td input[type="checkbox"]').each(function(){
-                        $(this).prop('checked', false);
-                    });
-                }
-            });
-            $('.others_client').change(function() {
-                if ($(this).prop('checked')) {
-                    if ($('.others_client:checked').length == $('.others_client').length) {
-                        $("#allcb").prop('checked', true);
-                    }
-                }
-                else{
-                    $("#allcb").prop('checked', false);
-                }
-            });
+        $('#allcb').change(function()
+        {
+            if($(this).prop('checked')){
+                $('tbody tr td input[type="checkbox"]').each(function(){
+                    $(this).prop('checked', true);
+                });
+            }else{
+                $('tbody tr td input[type="checkbox"]').each(function(){
+                    $(this).prop('checked', false);
+                });
+            }
         });
+        $('.others_client').change(function()
+        {
+            if ($(this).prop('checked')) {
+                if ($('.others_client:checked').length == $('.others_client').length) {
+                    $("#allcb").prop('checked', true);
+                }
+            }
+            else{
+                $("#allcb").prop('checked', false);
+            }
+        });
+    });
 
 function client_emails_notification()
 {
+    var token = $('input[name="csrf_token"]').val();
+    var app_url = "{!! env('APP_URL'); !!}";
     var client_ids = new Array();
-    var token = $("#token").val();
-    var table = $("#client_table").dataTable();
 
+    var table = $("#client_table").dataTable();
+    
     table.$("input:checkbox[name=client]:checked").each(function(){
         client_ids.push($(this).val());
     });
 
-    var url = '/client/emailnotification';
+    $("#email_client_ids").val(client_ids);
 
-    if(client_ids.length > 0){
-        var form = $('<form action="' + url + '" method="post">' +
-            '<input type="hidden" name="_token" value="'+token+'" />' +
-            '<input type="text" name="client_ids" value="'+client_ids+'" />' +
-            '</form>');
-
-        $('body').append(form);
-        form.submit();
-    }        
+    $.ajax(
+    {
+        type : 'POST',
+        url : app_url+'/client/checkClientId',
+        data : {client_ids : client_ids, '_token':token},
+        dataType : 'json',
+        success: function(msg)
+        {
+            $(".email_modal").show();
+            if (msg.success == 'Success') {
+                $(".clt_email_cls").show();
+                $(".email_error").empty();
+                $('#email_submit').removeAttr('disabled');
+            }
+            else{
+                $(".clt_email_cls").hide();
+                $(".email_error").empty();
+                $('#email_submit').attr('disabled','disabled');
+                $(".email_error").append(msg.err);
+            }
+        }
+    });    
 }
 
 function client_account_manager()
@@ -302,7 +339,6 @@ function client_account_manager()
     var client_ids = new Array();
 
     var table = $("#client_table").dataTable();
-    
 
     table.$("input:checkbox[name=client]:checked").each(function(){
         client_ids.push($(this).val());
@@ -318,18 +354,81 @@ function client_account_manager()
         dataType : 'json',
         success: function(msg)
         {
-            $(".priority").show();
+            $(".acc_mngr_modal").show();
             if (msg.success == 'Success') {
                 $(".ac_mngr_cls").show();
-                $(".error").empty();
+                $(".act_mngr_error").empty();
                 $('#submit').removeAttr('disabled');
             }
             else{
                 $(".ac_mngr_cls").hide();
-                $(".error").empty();
+                $(".act_mngr_error").empty();
                 $('#submit').attr('disabled','disabled');
-                $(".error").append(msg.err);
+                $(".act_mngr_error").append(msg.err);
             }
+        }
+    });
+}
+
+function setEmailTemplate()
+{
+    var token = $('input[name="csrf_token"]').val();
+    var app_url = "{!! env('APP_URL'); !!}";
+    var email_template_id = $("#email_template_id").val();
+
+    $(".body_class").html('');
+
+    $.ajax(
+    {
+        type : 'GET',
+        url : app_url+'/email-template/getDetailsById',
+        data : {email_template_id : email_template_id, '_token':token},
+        dataType : 'json',
+
+        success: function(data)
+        {
+           $(".body_class").html('');
+
+            var html = '';
+            html += '<br/><div>';
+            html += '<table class="table table-bordered">';
+            html += '<tr>';
+            html += '<td><b>&nbsp;Subject</b></td>';
+            html += '<td><input type="text" name="email_subject" id="email_subject" value="'+data.subject+'" style="width:460px;"/></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td><b>&nbsp; Body Message</b></td>';
+            html += '<td><textarea name="email_body" id="email_body" style="width:460px;">'+data.email_body+'</textarea></td>';
+            html += '</tr>';
+            html += '</table>';
+            html += '</div>';
+
+            $(".body_class").show();
+            $(".body_class").append(html);
+
+            CKEDITOR.replace( 'email_body', 
+            {
+                filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
+                customConfig: '/js/ckeditor_config.js',
+                height: '100px',
+
+            });
+
+            CKEDITOR.on('dialogDefinition', function( ev )
+            {
+               var dialogName = ev.data.name;  
+               var dialogDefinition = ev.data.definition;
+                     
+               switch (dialogName) {  
+               case 'image': //Image Properties dialog      
+               dialogDefinition.removeContents('Link');
+               dialogDefinition.removeContents('advanced');
+               break;      
+               case 'link': //image Properties dialog          
+               dialogDefinition.removeContents('advanced');   
+               break;
+               }
+            });
         }
     });
 }
