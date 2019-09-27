@@ -102,9 +102,7 @@
                 <th>Status</th>
                 <!-- <th>Client Address</th> -->
                 <th>City</th>
-                <?php if($isSuperAdmin) { ?>
                 <th>Remarks</th>
-                <?php }?>
             </tr>
         </thead>
         {{--<tbody>

@@ -377,7 +377,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isMARKETINGINTERN($user_role_id){
+    public static function isMarketingIntern($user_role_id){
 
         $admin_role_id = getenv('MARKETINGINTERN');
         if ($admin_role_id == $user_role_id) {

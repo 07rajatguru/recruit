@@ -310,7 +310,7 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
         $isAccountManager = $user_obj::isAccountManager($user->id);
-        $isMARKETINGINTERN = $user_obj::isMARKETINGINTERN($user->id);
+        $isMarketingIntern = $user_obj::isMarketingIntern($role_id);
         //$isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
@@ -359,7 +359,7 @@ class ClientController extends Controller
                 $account = $account_manager_view->render();
                 $action .= $account;
             }
-            if($isSuperAdmin || $value['client_owner'] || $isMARKETINGINTERN){
+            if($isSuperAdmin || $value['client_owner'] || $isMarketingIntern){
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
             }
 
@@ -381,14 +381,11 @@ class ClientController extends Controller
                 $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
             else if($value['status']=='Left')
                 $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
-            if($isSuperAdmin){
+            if($isSuperAdmin || $isStrategy || $isAccountManager){
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
-            else if($isStrategy || $isAccountManager ){
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address']);
-            }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address']);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
             }
 
             $clients[$i] = $data;
