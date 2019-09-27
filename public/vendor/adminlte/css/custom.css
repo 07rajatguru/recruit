@@ -535,7 +535,7 @@ input[type="file"] {display: block;}
 .comment-page .user-option ul li{list-style-type: none;display: inline-block;background-color: transparent;border:0;padding: 0}
 .comment-page .post__author-name.fn{float: none;}
 .comment-page .post__author .profile-avatar-pic{vertical-align: top}
-.comment-page .comment-detail{display: inline-block;}
+.comment-page .comment-detail{display: inline-block;max-width: 390px;}
 .comment-page .post__author p{padding: 0}
 .comment-page .right-detail{display: inline-block;float: right;}
 .comment-page .right-detail .user-option .auth-links{text-align: right;}
@@ -550,3 +550,7 @@ input[type="file"] {display: block;}
 .comment-page .singal-row-wrapper{padding: 10px 20px}
 .comment-page .comment-detail .comment-desc p{font-weight: 500;}
 .comment-page .children{margin:0;padding-left: 15px;}
+@media (max-width: 1600px){
+    .comment-page{    width: 636.92px;}
+    .comment-page .comment-detail{    max-width: 370px;}
+}
