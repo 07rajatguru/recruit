@@ -2355,6 +2355,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:emailtemplate-create']
     ]);
 
+    Route::get('email-template/getDetailsById',[
+        'as' => 'emailtemplate.getDetailsById',
+        'uses' => 'EmailTemplateController@getEmailTemplateById'
+    ]);
+
     Route::any('/email-body-image',[
         'as' => 'emailbody.image',
         'uses' => 'EmailTemplateController@uploadEmailbodyImage'

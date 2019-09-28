@@ -102,4 +102,12 @@ class EmailTemplateController extends Controller
 
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Deleted Successfully.');
     }
+
+    public function getEmailTemplateById()
+    {
+        $template_id = $_GET['email_template_id'];
+        $template_details = EmailTemplate::getEmailTemplateDetailsById($template_id);
+
+        return json_encode($template_details);exit;
+    }
 }

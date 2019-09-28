@@ -539,6 +539,25 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == 'Client Bulk Email') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = $cc_array;
+              
+                $input['module_id'] = $value['module_id'];
+                $input['bulk_message'] = $value['message'];
+
+                \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }
