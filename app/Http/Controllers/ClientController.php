@@ -21,7 +21,7 @@ use App\Events\NotificationMail;
 use App\EmailsNotifications;
 use App\JobVisibleUsers;
 use App\Post;
-use App\EmailTemplate;
+// use App\EmailTemplate;
 use App\ClientRemarks;
 
 class ClientController extends Controller
@@ -232,7 +232,7 @@ class ClientController extends Controller
         $all_account_manager = User::getAllUsers('recruiter','Yes');
         $all_account_manager[0] = 'Yet to Assign';
 
-        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+        // $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
         return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names'));
     }

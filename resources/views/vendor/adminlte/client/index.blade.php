@@ -13,7 +13,7 @@
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
                 @if($isSuperAdmin)
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
+                    {{--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>--}}
 
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager</button>
                 @endif
@@ -158,7 +158,7 @@
         </tbody>--}}
     </table>
 
-<div id="searchmodal" class="modal text-left fade email_modal" style="display: none;">
+{{--<div id="searchmodal" class="modal text-left fade email_modal" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
         
@@ -189,7 +189,7 @@
             {!! Form::close() !!}
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div>
+</div>--}}
 
 <!-- Account Manager Modal Popup -->
 
