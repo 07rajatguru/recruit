@@ -57,6 +57,7 @@
                 {!! Form::open(['route' => ['client.post.update', $client_id,$per_post->id], 'name' => 'update_a_review', 'id' => 'update_a_review', 'files' => 'true']) !!}
                 {!! Form::hidden('client_id', $client_id) !!}
                 {!! Form::hidden('user_id', auth()->id()) !!}
+                {!! Form::hidden('super_admin_userid', $super_admin_userid) !!}
                 {!! Form::textarea('content',  $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea', 'placeholder' => '', 'rows' => 1, "required" => true,'onfocus' => "initUpdateSearchRemarks('$per_post->id')"]) !!}
 
                 <div class="form-group is-empty update-preview-image-container"></div>
@@ -71,9 +72,9 @@
     </div>
 
     <div class="reply comment-{{$per_post->id}}" style="display: none;">
-        @include('adminlte::client.comment.new', array('per_post' => $per_post,'client_id'=>$client_id))
+        @include('adminlte::client.comment.new', array('per_post' => $per_post,'client_id'=>$client_id,'super_admin_userid' => $super_admin_userid))
     </div>
 
     <div class="children">
-        @include('adminlte::client.comment.list', array('per_post' => $per_post))
+        @include('adminlte::client.comment.list', array('per_post' => $per_post,'super_admin_userid' => $super_admin_userid))
     </div>

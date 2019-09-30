@@ -18,13 +18,15 @@
 </div>
 <div class="col-md-9"> 
     <div>
-     	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id))    	 
+     	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id,'super_admin_userid' => $super_admin_userid))    	 
     </div>
 
     <div>
-    	@include('adminlte::client.remarkslist',array('post' => $post))
+    	@include('adminlte::client.remarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid))
     </div>
 </div>
+
+<input type="hidden" name="super_admin_userid" id="super_admin_userid" value="{{ $super_admin_userid }}">
 @stop
 
 @section('customscripts')
@@ -38,68 +40,52 @@
         initSearchComment();
     });
 
-    function initSearchRemarks()
-    {
-        $("#content").autocomplete(
-        {
+    function initSearchRemarks() {
+
+        $("#content").autocomplete({
             minLength: 1,
             source: '/search-remarks',
             
-            select: function( event, ui ) 
-            {
-                if(ui.item.label == "No Remarks Found")
-                {
+            select: function( event, ui )  {
+                if(ui.item.label !== '') {
                     $("#content").val(ui.item.label);
                 }
-                else if(ui.item.label !== '')
-                {
-                    $("#content").val(ui.item.label);
-                }
-                else
-                {
+                else {
                     $("#content").val('');
                 }
                 return false;
             },
-        }).autocomplete( "instance" )._renderItem = function( ul,item )
-        {
-            if(item.label !== '')
-            {
+        }).autocomplete( "instance" )._renderItem = function( ul,item ) {
+            if(item.label !== '') {
                 ul.addClass('srch-remarks');
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             }
-            else{
-                $("#content").val('');
-            }
+            // else{
+            //     $("#content").val('');
+            // }
         };
     }
 
-    function initUpdateSearchRemarks(id)
-    {
-       $("#update-review-textarea-"+id).autocomplete(
-        {
+    function initUpdateSearchRemarks(id) {
+
+       $("#update-review-textarea-"+id).autocomplete({
             minLength: 1,
             source: '/search-remarks',
             appendTo : '#update-review-'+id+'',
             
-            select: function( event, ui ) 
-            {
-                if(ui.item.label == "No Remarks Found")
-                {
+            select: function( event, ui ) {
+                if(ui.item.label == "No Remarks Found") {
                     $("#update-review-textarea-"+id).val(ui.item.label);
                 }
-                if(ui.item.label !== '')
-                {
+                if(ui.item.label !== '') {
                     $("#update-review-textarea-"+id).val(ui.item.label);
                 }
                 return false;
             },
-        }).autocomplete( "instance" )._renderItem = function( ul,item )
-        {
-            if(item.label !== '')
-            {
+        }).autocomplete( "instance" )._renderItem = function( ul,item ) {
+            if(item.label !== '') {
                 ul.addClass('srch-remarks');
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
@@ -108,68 +94,52 @@
         };
     }
 
-    function initSearchComment(id)
-    {
-        $("#comment_"+id).autocomplete(
-        {
+    function initSearchComment(id) {
+
+        $("#comment_"+id).autocomplete({
             minLength: 1,
             source: '/search-remarks',
             
-            select: function( event, ui ) 
-            {
-                if(ui.item.label == "No Remarks Found")
-                {
+            select: function( event, ui ) {
+                if(ui.item.label !== '') {
                     $("#comment_"+id).val(ui.item.label);
                 }
-                else if(ui.item.label !== '')
-                {
-                    $("#comment_"+id).val(ui.item.label);
-                }
-                else
-                {
+                else {
                     $("#comment_"+id).val('');
                 }
                 return false;
             },
-        }).autocomplete( "instance" )._renderItem = function( ul,item )
-        {
-            if(item.label !== '')
-            {
+        }).autocomplete( "instance" )._renderItem = function( ul,item ) {
+            if(item.label !== '') {
                 ul.addClass('srch-remarks');
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             } 
-            else{
-                $("#comment_"+id).val('');
-            }
+            // else{
+            //     $("#comment_"+id).val('');
+            // }
         };
     }
 
-    function initUpdateSearchComment(id)
-    {
-        $("#update-comment-textarea-"+id).autocomplete(
-        {
+    function initUpdateSearchComment(id) {
+
+        $("#update-comment-textarea-"+id).autocomplete({
             minLength: 1,
             source: '/search-remarks',
             appendTo : '#update-comment-'+id+'',
             
-            select: function( event, ui ) 
-            {
-                if(ui.item.label == "No Remarks Found")
-                {
+            select: function( event, ui ) {
+                if(ui.item.label == "No Remarks Found") {
                     $("#update-comment-textarea-"+id).val(ui.item.label);
                 }
-                if(ui.item.label !== '')
-                {
+                if(ui.item.label !== '') {
                    $("#update-comment-textarea-"+id).val(ui.item.label);
                 }
                 return false;
             },
-        }).autocomplete( "instance" )._renderItem = function( ul,item )
-        {
-            if(item.label !== '')
-            {
+        }).autocomplete( "instance" )._renderItem = function( ul,item ) {
+            if(item.label !== '') {
                 ul.addClass('srch-remarks');
                 return $( "<li style='background-color:white;'>" )
                 .append( "<div><span>" + item.label + "</span></div>")
@@ -178,8 +148,7 @@
         };
     }
 
-	function showcommentbox(post_id)
-    {
+	function showcommentbox(post_id) {
         if($(".comment-"+post_id).is(':hidden')){
             $(".comment-"+post_id).show();
         }
@@ -188,14 +157,13 @@
         }
     }
 
-	function deletePost(id)
-    {
+	function deletePost(id) {
+
         msg = "Are you sure ?";
         var confirmvalue = confirm(msg);
 
         if(confirmvalue){
-            jQuery.ajax(
-            {
+            jQuery.ajax({
                 url:'/client/post/delete/'+id,
                 dataType:'json',
                 success: function(response){
@@ -211,17 +179,18 @@
         }
     }
 
-    function updateCommentReply(id)
-    {
+    function updateCommentReply(id) {
+
         var csrf_token = $("#csrf_token").val();
+        var super_admin_userid = $("#super_admin_userid").val();
         if(id>0){
             var content = $("#update-comment-textarea-"+id).val();
-            jQuery.ajax(
-            {
+            jQuery.ajax({
                 url:'/client/comment/update',
                 type:"POST",
                 dataType:'json',
-                data : "content="+content+"&id="+id+"&_token="+csrf_token,
+                // data : "content="+content+"&id="+id+"&_token="+csrf_token+"&super_admin_userid="+super_admin_userid,
+                data : {content:content,id:id,_token:csrf_token,super_admin_userid:super_admin_userid},
                 success: function(response){
                     if (response.returnvalue == 'valid') {
                         alert("Data updated Succesfully.");
@@ -235,14 +204,13 @@
         }
     }
 
-    function deleteComment(id)
-    {
+    function deleteComment(id) {
+
         msg = "Are you sure ?";
         var confirmvalue = confirm(msg);
 
         if(confirmvalue){
-            jQuery.ajax(
-            {
+            jQuery.ajax({
                 url:'/client/comment/delete/'+id,
                 dataType:'json',
                 success: function(response){
@@ -259,4 +227,3 @@
     }
 </script>
 @stop
-

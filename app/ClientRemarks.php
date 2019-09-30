@@ -53,4 +53,14 @@ class ClientRemarks extends Model
         }
         return $data;
     }
+
+    public static function checkClientRemark($remark){
+
+        $query = ClientRemarks::query();
+        $query = $query->where('client_remarks.remarks','=',$remark);
+        $query = $query->select('client_remarks.*');
+        $res = $query->first();
+
+        return $res;
+    }
 }

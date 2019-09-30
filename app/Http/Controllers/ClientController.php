@@ -22,6 +22,7 @@ use App\EmailsNotifications;
 use App\JobVisibleUsers;
 use App\Post;
 use App\EmailTemplate;
+use App\ClientRemarks;
 
 class ClientController extends Controller
 {
@@ -2235,6 +2236,7 @@ class ClientController extends Controller
 
 
     public function remarks($id){
+
         $user =  \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -2245,13 +2247,15 @@ class ClientController extends Controller
        $user_id = \Auth::user()->id;
        $client_id = $id;
 
+       $super_admin_userid = getenv('SUPERADMINUSERID');
+
        $client = ClientBasicinfo::find($client_id);
 
        $client_location = ClientBasicinfo::getBillingCityOfClientByID($client_id);
 
        $post = $client->post()->orderBy('created_at', 'desc')->get();
 
-       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location'));
+       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid'));
 
     }
 
@@ -2262,8 +2266,22 @@ class ClientController extends Controller
         $user_id = $input['user_id'];
         $client_id = $input['client_id'];
         $content = $input['content'];
+        $super_admin_userid = $input['super_admin_userid'];
 
         if(isset($user_id) && $user_id>0){
+            // If remarks not added then add that only by superadmin
+            if ($user_id == $super_admin_userid) {
+                // Check remark found or not
+                $client_remark_check = ClientRemarks::checkClientRemark($content);
+                if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+
+                }
+                else {
+                    $client_remarks = new ClientRemarks();
+                    $client_remarks->remarks = $content;
+                    $client_remarks->save();
+                }
+            }
 
             $post = new Post();
             $post->content = $content;
@@ -2284,8 +2302,24 @@ class ClientController extends Controller
         $input = $request->all();
 
         $client_id = $input['client_id'];
+        $super_admin_userid = $input['super_admin_userid'];
 
         $user_id = \Auth::user()->id;
+
+        // If remarks not added then add that only by superadmin
+        if ($user_id == $super_admin_userid) {
+            // Check remark found or not
+            $client_remark_check = ClientRemarks::checkClientRemark($input["content"]);
+            if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+
+            }
+            else {
+                $client_remarks = new ClientRemarks();
+                $client_remarks->remarks = $input["content"];
+                $client_remarks->save();
+            }
+        }
+
         $currentUser = User::find($user_id);
         $post = Post::find($post_id);
 
@@ -2307,6 +2341,21 @@ class ClientController extends Controller
 
         $user_id = $input['user_id'];
         $client_id = $input['client_id'];
+        $super_admin_userid = $input['super_admin_userid'];
+
+        // If remarks not added then add that only by superadmin
+        if ($user_id == $super_admin_userid) {
+            // Check remark found or not
+            $client_remark_check = ClientRemarks::checkClientRemark($input["content"]);
+            if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+
+            }
+            else {
+                $client_remarks = new ClientRemarks();
+                $client_remarks->remarks = $input["content"];
+                $client_remarks->save();
+            }
+        }
 
         $response = Post::updatePost($post_id,$input["content"]);
         $returnValue["success"] = true;
@@ -2321,6 +2370,22 @@ class ClientController extends Controller
 
         $id = $_POST['id'];
         $content = $_POST['content'];
+        $super_admin_userid = $_POST['super_admin_userid'];
+        $user_id = \Auth::user()->id;
+
+        // If remarks not added then add that only by superadmin
+        if ($user_id == $super_admin_userid) {
+            // Check remark found or not
+            $client_remark_check = ClientRemarks::checkClientRemark($content);
+            if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+
+            }
+            else {
+                $client_remarks = new ClientRemarks();
+                $client_remarks->remarks = $content;
+                $client_remarks->save();
+            }
+        }
 
         $response['returnvalue'] = 'invalid';
 
