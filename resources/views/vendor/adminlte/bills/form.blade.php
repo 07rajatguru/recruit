@@ -66,7 +66,7 @@
                         <div class="">
 
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
-                                <strong>Select Job Opening:</strong>
+                                <strong>Select Job Opening: <span class = "required_fields">*</span></strong>
                                 {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '1','onchange'=>'prefilleddata()' )) !!}
                                 @if ($errors->has('job'))
                                     <span class="help-block">
@@ -97,11 +97,11 @@
 
                             <div class="form-group {{ $errors->has('candidate_name') ? 'has-error' : '' }}">
                                 <strong>Candidate Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('candidate_name', array(),$candidate_id, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '7','onchange'=>'prefilledcandidatedata()' )) !!}
-                            @if ($errors->has('candidate_name'))
+                                {!! Form::select('candidate_name', array(''=>'Select Candidate'),null, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '7', 'onchange'=> 'prefilledcandidatedata()' )) !!}
+                                @if ($errors->has('candidate_name'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidate_name') }}</strong>
-                                </span>
+                                        <strong>{{ $errors->first('candidate_name') }}</strong>
+                                    </span>
                                 @endif
                             </div>
 
@@ -523,7 +523,7 @@
                         var response = data.data;
                         if(returnvalue=='valid'){
                             $('#candidate_name').empty();
-                            $('#candidate_name').append($('<option></option>').val(0).html(''));
+                            $('#candidate_name').append($('<option></option>').val('').html('Select'));
                             for(var i=0;i<response.length;i++){
                                 $('#candidate_name').append($('<option data-content="'+response[i].mobile+'"></option>').val(response[i].id).html(response[i].name));
                                 $('#candidate_name').select2();
