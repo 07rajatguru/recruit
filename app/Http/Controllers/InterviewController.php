@@ -332,7 +332,7 @@ class InterviewController extends Controller
         }
 
         $jobopen = array();
-        $jobopen[0] = 'Select';
+        $jobopen[''] = 'Select';
         foreach ($job_response as $k=>$v){
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
         }

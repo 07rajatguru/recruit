@@ -66,7 +66,7 @@
                             </div>--}}
 
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
-                                <strong>Posting Name:</strong>
+                                <strong>Posting Name: <span class = "required_fields">*</span></strong>
                                 {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '1' , 'onchange' => 'getCandidate()' )) !!}
                                 {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
                                 @if ($errors->has('posting_title'))
@@ -144,7 +144,7 @@
                                 {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('candidate_id'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidate_id') }}</strong>
+                                    <strong>{{ $errors->first('candidate_id') }}</strong>
                                 </span>
                                 @endif
                             </div>

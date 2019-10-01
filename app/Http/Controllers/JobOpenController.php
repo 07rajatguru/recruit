@@ -3128,7 +3128,7 @@ class JobOpenController extends Controller
         $i = 1;
         if(isset($associated_candidates) && sizeof($associated_candidates)>0){
             $response['returnvalue'] = 'valid';
-            $response['data'][0]['id'] = '0';
+            //$response['data'][0]['id'] = '0';
             $response['data'][0]['value'] = 'Select';
             foreach ($associated_candidates as $k=>$v){
                 $response['data'][$i]['id'] = $v->id;
