@@ -15,6 +15,7 @@ use App\JobAssociateCandidates;
 use Excel;
 use DB;
 use Calendar;
+use App\UserRemarks;
 
 class HomeController extends Controller
 {
@@ -288,7 +289,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         $user =  \Auth::user();
 
         // get role of logged in user
@@ -357,16 +357,19 @@ class HomeController extends Controller
                     $list[$key][date('j S', $time)]['login']='';
                 $list[$key][date('j S', $time)]['logout']='';
                 $list[$key][date('j S', $time)]['total']='';
+                $list[$key][date('j S', $time)]['remarks']='';
             }
         }
 
         if(in_array($user_role_id,$access_roles_id)){
             $response = UsersLog::getUsersAttendance(0,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksByUserid(0);
             /*$response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year group by date,users.id");*/
         }
         else{
             $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksByUserid(0);
            /* $response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
         }
@@ -382,11 +385,79 @@ class HomeController extends Controller
                 $total = ($logout_time - $login_time) / 60;
 
                 $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
+
+                if (isset($user_remark) && sizeof($user_remark)>0) {
+                    foreach ($user_remark as $k => $v) {
+
+                        $split_month = date('n',strtotime($v['remark_date']));
+                        $split_year = date('Y',strtotime($v['remark_date']));
+
+                        if (($v['user_name'] == $value->name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
+                            $list[$value->name][$v['converted_date']]['remarks'] = $v['remarks'];
+                        }
+                        else{
+
+                            if (($month == $split_month) && ($year == $split_year)) {
+                                $list[$v['user_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else{
+
+            if (isset($user_remark) && sizeof($user_remark)>0) {
+                foreach ($user_remark as $k => $v) {
+                    $split_month = date('n',strtotime($v['remark_date']));
+                    $split_year = date('Y',strtotime($v['remark_date']));
+                    if (($month == $split_month) && ($year == $split_year)) {
+                        $list[$v['user_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                    }
+                }
             }
         }
 
         //print_r($list);exit;
-        return view('home',array("list"=>$list,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year),compact('isSuperAdmin','isAdmin','isAccountant','isDirector'));
+
+        // New List1
+        $list1 = array();
+        for($d1=1; $d1<=31; $d1++)
+        {
+            $time1=mktime(12, 0, 0, $month, $d1, $year);
+            foreach ($users as $key => $value)
+            {
+                if (date('n', $time1)==$month)
+                    $list1[$key][date('j S', $time1)]='';
+            }
+        }
+
+        if(sizeof($list)>0) {
+            foreach ($list as $key => $value) {
+                if(sizeof($value)>0) {
+                    $i=0;
+                    foreach ($value as $key1 => $value1) {
+                        if (isset($user_remark) && sizeof($user_remark)>0) {
+                            foreach ($user_remark as $u_k1 => $u_v1) {
+
+                                $split_month = date('n',strtotime($u_v1['remark_date']));
+                                $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                if (($u_v1['user_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                    
+                                    $list1[$key][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                }
+                                $i++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $users_name = User::getAllUsersExpectSuperAdmin();
+
+        return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('isSuperAdmin','isAdmin','isAccountant','isDirector','users_name'));
 
         //return view('home');
         $from = date('Y-m-d 00:00:00');
@@ -424,6 +495,9 @@ class HomeController extends Controller
 
         // get logged in user attendance for current month
         $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
+
+        // get logged in user remarks
+        $user_remarks = UserRemarks::getUserRemarksByUserid($loggedin_userid);
 
         $date = new Date();
 
@@ -467,8 +541,57 @@ class HomeController extends Controller
             }
         }
 
+        foreach ($user_remarks as $k=>$v) {
+            $title = '';
+
+            $title .= $v['remarks'];
+            $color = '#5cb85c';
+            // Remarks
+            $events[] = Calendar::event(
+                $title,
+                true,
+                $v['remark_date'],
+                $v['remark_date'],
+                null,
+                [
+                    'color' => $color,
+                ]
+            );
+        }
+
         $calendar = Calendar::addEvents($events);
         return view('userattendance', compact('calendar'));
+    }
+
+    // Save User remarks in calendar
+    public function storeUserRemarks(Request $request){
+
+        $name = $_POST['name'];
+        $user = \Auth::user();
+        $dateClass = new Date();
+
+        if (isset($_POST['user_id']) && $_POST['user_id'] > 0) {
+            $user_id = $_POST['user_id'];
+        }
+        else {
+            $user_id = $user->id;
+        }
+
+        $date = $request->get('date');
+        $remarks = $request->get('remarks');
+
+        $user_remark = new UserRemarks();
+        $user_remark->user_id = $user_id;
+        $user_remark->date = $dateClass->changeDMYtoYMD($date);
+        $user_remark->remarks = $remarks;
+        $user_remark->save();
+
+        if($name == 'UserAttendance') {
+            return redirect('/userattendance');
+        }
+        if($name == 'HomeAttendance') {
+            return redirect('/home');
+        }
     }
 
     public function export(){

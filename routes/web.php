@@ -176,6 +176,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@userAttendance'
     ));
 
+    Route::post('/storerserremarks',[
+        'as' => 'userremarks.store',
+        'uses' => 'HomeController@storeUserRemarks'
+    ]);
+
     Route::post('home/calender',[
         'as' => 'home.calender',
         'uses' => 'HomeController@calenderevent'

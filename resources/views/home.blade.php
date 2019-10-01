@@ -27,14 +27,42 @@
                 </select>
             </div>
 
-            <div class="attendance_submit col-md-2 col-sm-6 col-xs-12">
+           <!--  <div class="attendance_submit col-md-2 col-sm-6 col-xs-12">
                 <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" />
             </div>
             <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
             <div class="filter-ex-btn pull-right col-md-2 col-sm-6 col-xs-12">
                 <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
             </div>
-            <?php   }?>
+            <?php   }?> -->
+
+            <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
+
+                <div class="attendance_submit col-md-1 col-sm-4">
+                    <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;" />
+                </div>
+                
+                <div class="filter-ex-btn col-md-1 col-sm-4">
+                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()" style="width:100px;"> Export</a>
+                </div>
+
+                <div class="attendance_submit col-md-1 col-sm-4">
+                   @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin])
+                </div>
+            <?php   
+            }
+            else{
+            ?>
+                <div class="attendance_submit col-md-1 col-sm-4">
+                    <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
+                </div>
+
+                <div class="col-md-1 col-sm-4">
+                    @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name])
+                </div>
+            <?php
+            }
+            ?>
           
         </div>
 
@@ -73,9 +101,14 @@
                     <table class="table table-bordered" id="attendance_table">
                         <thead>
                         <td style="border: 1px solid black;">
-                            @foreach($value as $key1=>$value1)
-                                <th style="border: 1px solid black;">{{ $key1 }}</th>
-                            @endforeach
+                            @if(isset($list) && sizeof($list)>0)
+                                @foreach($list as $key => $value)
+                                    @foreach($value as $key1=>$value1)
+                                        <th style="border: 1px solid black;">{{ $key1 }}</th>
+                                    @endforeach
+                                    @break
+                                @endforeach
+                            @endif
                         </td>
                         </thead>
                         <tbody>
@@ -87,11 +120,19 @@
                                 <span> Total </span>
                             </th>
                             @foreach($value as $key1=>$value1)
-                            <td style="border: 1px solid black;">
-                                {{ $value1['login'] }}<hr>
-                                {{ $value1['logout'] }}<hr>
-                                {{ $value1['total'] }}
-                            </td>
+                                @if($value1['remarks'] != '')
+                                    <td style="border: 1px solid black;background-color:#B0E0E6;" data-toggle="modal" data-target="#remarksModel-{{ str_replace(' ','',$key) }}{{ str_replace(' ','',$key1) }}">
+                                        {{ $value1['login'] }}<hr style="border-top: 1px solid #B0E0E6;">
+                                        {{ $value1['logout'] }}<hr style="border-top: 1px solid #B0E0E6;">
+                                        {{ $value1['total'] }}
+                                    </td>
+                                @else
+                                    <td style="border: 1px solid black;">
+                                        {{ $value1['login'] }}<hr style="border-top: 1px solid #FFFFFF;">
+                                        {{ $value1['logout'] }}<hr style="border-top: 1px solid #FFFFFF;">
+                                        {{ $value1['total'] }}
+                                    </td>
+                                @endif
                             @endforeach
                         </tr>
                         @endforeach
@@ -102,7 +143,38 @@
             @include('widgets.panel', array('header'=>true, 'as'=>'cotable'))
         </div>
     </div>
-
+    @foreach($list1 as $key=>$value)
+        @foreach($value as $key1=>$value1)
+            <div id="remarksModel-{{ str_replace(' ','',$key) }}{{ str_replace(' ','',$key1) }}" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h2 id="modalTitle" class="modal-title">Remarks</h2>
+                        </div>
+                        <div id="modalBody" class="modal-body">
+                            @if($value1 != '')
+                                @foreach($value1 as $k1 => $v1)
+                                    <b>Date : </b> {{ date("d/m/Y", strtotime($k1)) }}<br/><br/>
+                                    @if($v1 != '')
+                                        <b>Remarks : </b> <br/>
+                                        <ul>
+                                            @foreach($v1 as $k2 => $v2)
+                                                <li>{{ $v2 }}<br/></li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endforeach
 @stop
 
 
@@ -110,6 +182,14 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            $("#date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
+
+            $("#user_id").select2({width : '570px'});
+
             /*$('#calendar').fullCalendar({
                 header: {
                     left: 'title',
@@ -197,8 +277,6 @@
 
             $('body').append(form);
             form.submit();
-
-
         }
 
         function export_data() {
@@ -215,7 +293,6 @@
 
             $('body').append(form);
             form.submit();
-
         }
     </script>
 @stop
