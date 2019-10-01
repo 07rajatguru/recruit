@@ -184,17 +184,14 @@
                                         <strong>{{ $errors->first('status') }}</strong>
                                     </span>
                                 @endif
-                            
                         </div>
-
                     </div>
                 </div>
 
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <strong><!-- HR/Coordinator Name -->Contact Point: <span class = "required_fields">*</span></strong>
-                    <div class="">
-
+                        <div class="">
                             <div class="col-md-4 form-group {{ $errors->has('co_category') ? 'has-error' : '' }}" style="margin-left: -15px;">
                                 {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
 
@@ -214,7 +211,7 @@
                                 @endif
                             </div>
 
-                            @if($isSuperAdmin || $isStrategy)
+                            <!-- @if($isSuperAdmin || $isStrategy) 
                             <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
                                 <strong>Select Category: <span class = "required_fields">*</span></strong>
                                 {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5' )) !!}
@@ -225,51 +222,58 @@
                                     </span>
                                 @endif
                             </div>
-                            @endif
+                            @endif -->
+
+                            <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
+                                <strong>Select Category: <span class = "required_fields">*</span></strong>
+                                {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5' )) !!}
+
+                                @if ($errors->has('client_category'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('client_category') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                     
-                        <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
-                            <strong>Email: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7' )) !!}
-                            @if ($errors->has('mail'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('mail') }}</strong>
-                                </span>
+                            <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
+                                <strong>Email: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                @if ($errors->has('mail'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('mail') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('s_mail') ? 'has-error' : '' }}">
+                                <strong>Secondary Email: </strong>
+                                {!! Form::text('s_email', null, array('id'=>'s_email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '9' )) !!}
+                                @if ($errors->has('s_email'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('s_email') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group">
+                                <strong>Website:</strong>
+                                {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
+                            </div>
+                            @if($isSuperAdmin || $isAdmin)
+                            <div class="form-group">
+                                <strong>TAN:</strong>
+                                {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control', 'tabindex' => '13' )) !!}
+                            </div>
                             @endif
-                        </div>
 
-                        <div class="form-group {{ $errors->has('s_mail') ? 'has-error' : '' }}">
-                            <strong>Secondary Email: </strong>
-                            {!! Form::text('s_email', null, array('id'=>'s_email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '9' )) !!}
-                            @if ($errors->has('s_email'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('s_email') }}</strong>
-                                </span>
-                            @endif
+                            <div class="form-group">
+                                <strong>About:</strong>
+                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '15' )) !!}
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <strong>Website:</strong>
-                            {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
-                        </div>
-                        @if($isSuperAdmin || $isAdmin)
-                        <div class="form-group">
-                            <strong>TAN:</strong>
-                            {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control', 'tabindex' => '13' )) !!}
-                        </div>
-                        @endif
-
-                        <div class="form-group">
-                            <strong>About:</strong>
-                            {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '15' )) !!}
-                        </div>
-
-                    </div>
                 </div>
             </div>
-
         </div>
-
-
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -297,13 +301,21 @@
                             {!! Form::text('billing_street2', null, array('id'=>'billing_street2','placeholder' => 'Address Line 2','class' => 'form-control', 'tabindex' => '23')) !!}
                         </div>
 
-                        <div class="form-group">
-                            <strong>City:</strong>
-                            @if( $action == 'copy')
-                            {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
-                            @else
-                            {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '25')) !!}
-                            @endif
+
+                        <div class="form-group {{ $errors->has('billing_city') ? 'has-error' : '' }}">
+                            <strong>City:  <span class = "required_fields">*</span> </strong>
+
+                                @if( $action == 'copy')
+                                    {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
+                                @else
+                                    {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '25')) !!}
+                                @endif
+
+                                @if ($errors->has('billing_city'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('billing_city') }}</strong>
+                                    </span>
+                                @endif
                         </div>
 
                         <div class="form-group">
@@ -418,8 +430,8 @@
 @section('customscripts')
     <script>
 
-        $(document).ready(function() {
-
+        $(document).ready(function()
+        {
             $('#account_manager_id').on('change', function (e) {
                 $("#account_manager").val(this.value);
             });
@@ -439,8 +451,11 @@
             var strategy_userid = "{!! env('STRATEGYUSERID') !!}";
             var loggedin_userid = <?php echo Auth::user()->id ?>;
             //alert(superadmin_userid);alert(strategy_userid);alert(loggedin_userid);
-            if (loggedin_userid == superadmin_userid || loggedin_userid == strategy_userid){
-                $("#clientForm").validate({
+
+            /*if (loggedin_userid == superadmin_userid || loggedin_userid == strategy_userid){*/
+
+                $("#clientForm").validate(
+                {
                     rules: {
                         "name": {
                             required: true
@@ -465,7 +480,10 @@
                         },
                         "client_category" : {
                             required: true,
-                        }
+                        },
+                        "billing_city" : {
+                            required: true,
+                        },
                     },
                     messages: {
                         "name": {
@@ -491,10 +509,13 @@
                         },
                         "client_category" : {
                             required: "Client Category is required.",
-                        }
+                        },
+                        "billing_city" : {
+                            required: "City is required.",
+                        },
                     }
                 });
-            }
+          /*  }
             else {
                 $("#clientForm").validate({
                     rules: {
@@ -544,8 +565,7 @@
                         }
                     }
                 });
-            }
-
+            }*/
         });
 
         // This example displays an address form, using the autocomplete feature
