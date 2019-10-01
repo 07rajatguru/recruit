@@ -39,14 +39,16 @@
                 <th>No</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>   
-                <th>HR/Coordinator Name</th>
+                <!-- <th>HR/Coordinator Name</th> -->
+                <th>Contact Point</th>
                
                 <?php if($isSuperAdmin || $isStrategy) { ?>
                 <th>Client Category</th>
                 <?php }?>
                     
                 <th>Status</th>
-                <th>Client Address</th>
+                <!-- <th>Client Address</th> -->
+                <th>City</th>
             </tr>
         </thead>
          <?php $i=0; ?>
@@ -64,9 +66,15 @@
                 <?php }?>
 
                 @if($client['status']=='Active')
-                    <td ><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
-                @else
-                    <td ><span class="label label-sm label-danger">{{$client['status']}} </span></td>
+                    <td><span class="label label-sm label-success">{{ $client['status'] }}</span></td>
+                @elseif($client['status']=='Passive')
+                    <td><span class="label label-sm label-danger">{{ $client['status'] }}</span></td>
+                @elseif($client['status']=='Leaders')
+                    <td><span class="label label-sm label-primary">{{ $client['status'] }}</span></td>
+                @elseif($client['status']=='Forbid')
+                    <td><span class="label label-sm label-default">{{ $client['status'] }}</span></td>
+                @elseif($client['status']=='Left')
+                    <td><span class="label label-sm label-info">{{ $client['status'] }}</span></td>
                 @endif
 
                 <td>{{ $client['client_address'] or ''}}</td>

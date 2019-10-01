@@ -22,7 +22,7 @@ class Lead extends Model
     {
         return [
             'name.required' => 'Company Name is required field',
-            'coordinator_name.required' => 'Hr/Coodinator Name is required field',
+            'coordinator_name.required' => 'Contact Point is required field',
             'mail.required' => 'Email is required field',
             'mobile.required' => 'Mobile Number is required field',
 

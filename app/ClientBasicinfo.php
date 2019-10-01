@@ -89,10 +89,10 @@ class ClientBasicinfo extends Ardent
                         $search = 0;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
                     }
-                   /* if ($search == 'Forbid' || $search == 'forbid') {
+                    if ($search == 'Forbid' || $search == 'forbid') {
                         $search = 3;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                    }*/
+                    }
                     if ($search == 'Leaders' || $search == 'leaders') {
                         $search = 2;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -146,10 +146,10 @@ class ClientBasicinfo extends Ardent
                         $search = 0;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
                     }
-                    /* if ($search == 'Forbid' || $search == 'forbid') {
+                    if ($search == 'Forbid' || $search == 'forbid') {
                         $search = 3;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                    }*/
+                    }
                     if ($search == 'Leaders' || $search == 'leaders') {
                         $search = 2;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -334,10 +334,10 @@ class ClientBasicinfo extends Ardent
                     $search = 0;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
                 }
-                /* if ($search == 'Forbid' || $search == 'forbid') {
+                if ($search == 'Forbid' || $search == 'forbid') {
                     $search = 3;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
-                }*/
+                }
                 if ($search == 'Leaders' || $search == 'leaders') {
                     $search = 2;
                     $query = $query->orwhere('client_basicinfo.status','like',"%$search%");

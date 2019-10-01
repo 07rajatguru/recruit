@@ -237,7 +237,7 @@ class ClientController extends Controller
         return view('adminlte::client.index',compact('client_array','isAdmin','isSuperAdmin','count','active','passive','isStrategy','isAccountManager','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names'));
     }
 
-    public static function getOrderColumnName($order,$admin){
+/*    public static function getOrderColumnName($order,$admin){
         $order_column_name = '';
         if($admin){
             if (isset($order) && $order >= 0) {
@@ -293,6 +293,38 @@ class ClientController extends Controller
             }
         }
         return $order_column_name;
+    }*/
+
+    public static function getOrderColumnName($order){
+        $order_column_name = '';
+        if (isset($order) && $order >= 0)
+        {
+            if ($order == 1){
+                $order_column_name = "client_basicinfo.id";
+            }
+            else if ($order == 2){
+                $order_column_name = "users.name";
+            }
+            else if ($order == 3){
+                $order_column_name = "client_basicinfo.name";
+            }
+            else if ($order == 4){
+                $order_column_name = "client_basicinfo.coordinator_prefix";
+            }
+            else if ($order == 5){
+                $order_column_name = "client_basicinfo.category";
+            }
+            else if ($order == 6){
+                $order_column_name = "client_basicinfo.status";
+            }
+            else if ($order == 7){
+                $order_column_name = "client_address.billing_street2";
+            }
+            else if ($order == 8){
+                $order_column_name = "post.content";
+            }
+        }
+        return $order_column_name;
     }
 
     public function getAllClientsDetails(){
@@ -321,17 +353,26 @@ class ClientController extends Controller
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
         if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
-            $order_column_name = self::getOrderColumnName($order,1);
+
+            //$order_column_name = self::getOrderColumnName($order,1);
+            $order_column_name = self::getOrderColumnName($order);
+
             $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
         }
         else if($isAccountManager){
-            $order_column_name = self::getOrderColumnName($order,1);
+
+            //$order_column_name = self::getOrderColumnName($order,1);
+            $order_column_name = self::getOrderColumnName($order);
+
             $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
         else{
-            $order_column_name = self::getOrderColumnName($order,0);
+
+            //$order_column_name = self::getOrderColumnName($order,0);
+            $order_column_name = self::getOrderColumnName($order);
+
             $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
@@ -372,9 +413,9 @@ class ClientController extends Controller
             $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
             $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
-            if($isSuperAdmin || $isStrategy || $isAccountManager ){
+           /* if($isSuperAdmin || $isStrategy || $isAccountManager ){
                 $client_category = $value['category'];
-            }
+            }*/
             if($value['status']=='Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
             else if($value['status']=='Passive')
@@ -385,12 +426,16 @@ class ClientController extends Controller
                 $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
             else if($value['status']=='Left')
                 $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
-            if($isSuperAdmin || $isStrategy || $isAccountManager){
+
+            $client_category = $value['category'];
+            $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+
+            /*if($isSuperAdmin || $isStrategy || $isAccountManager){
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else{
                 $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
-            }
+            }*/
 
             $clients[$i] = $data;
             $i++;

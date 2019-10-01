@@ -381,25 +381,22 @@ class TrainingController extends Controller
          
     }
 
-
     public function upload(Request $request){
-
 	    
         $file = $request->file('file');
         $training_id = $request->id;
 
         $user_id = \Auth::user()->id;
 
-        if(isset($file) && $file->isValid()){
+        if(isset($file) && $file->isValid())
+        {
             $fileName = $file->getClientOriginalName();
-            $fileExtention = $file->getClientOriginalExtension();
-            $fileRealPath = $file->getRealPath();
             $fileSize = $file->getSize();
             
-
+            /*$fileExtention = $file->getClientOriginalExtension();
+            $fileRealPath = $file->getRealPath();
             $extention = File::extension($fileName);
-
-            $fileNameArray = explode('.',$fileName);
+            $fileNameArray = explode('.',$fileName);*/
 
             $dir = 'uploads/training/'.$training_id.'/';
 
@@ -408,17 +405,16 @@ class TrainingController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
-            $temp_file_name = trim($fileNameArray[0]);
-            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-            $file->move($dir,$fileNewName);
-
-            $fileNewPath = $dir.$fileNewName;
+            
+            $file->move($dir,$fileName);
+            $filePath = $dir . $fileName;
 
             $trainingFileUpload = new TrainingDoc();
             $trainingFileUpload->training_id = $training_id;
-            $trainingFileUpload->file = $fileNewPath;
+            $trainingFileUpload->file = $filePath;
+            $trainingFileUpload->name = $fileName;
             $trainingFileUpload->size = $fileSize;
-            $trainingFileUploadStored = $trainingFileUpload->save();
+            $trainingFileUpload->save();
         }
 
         return redirect()->route('training.show',[$training_id])->with('success','Attachment uploaded successfully');
@@ -476,12 +472,20 @@ class TrainingController extends Controller
 
     public function attachmentsDestroy($docid){
 
-        $trainingDocDelete = TrainingDoc::where('id',$docid)->delete();
+        $training_attch = \DB::table('training_doc')
+        ->select('training_doc.*')
+        ->where('id','=',$docid)->first();
+
+        if(isset($training_attch))
+        {
+            $path = "uploads/training/".$training_attch->training_id ."/". $training_attch->name;
+            unlink($path);
+
+            $trainingDocDelete = TrainingDoc::where('id',$docid)->delete();
+        }
 
         $id = $_POST['id'];
 
         return redirect()->route('training.show',[$id])->with('success','Attachment deleted Successfully');
-    } 
-
-
+    }
 }

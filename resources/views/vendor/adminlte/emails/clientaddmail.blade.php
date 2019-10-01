@@ -32,7 +32,7 @@
                     <h3>Basic Information</h3>
                 </td>
                 <tr>
-                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">HR/Coordinator Name</th>
+                    <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Contact Point</th>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{!! $client['coordinator_name'] !!}</td>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;">Display Name</th>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{!! $client['display_name'] !!}</td>

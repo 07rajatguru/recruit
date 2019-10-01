@@ -55,7 +55,7 @@
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.<br/>No.</b></td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Client Owner</b></td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Company Name</b></td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>HR/Coordinator Name</b></td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Contact Point</b></td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">
                             <b>Client Category</b></td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">

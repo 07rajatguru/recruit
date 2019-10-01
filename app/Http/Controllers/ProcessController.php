@@ -388,22 +388,20 @@ class ProcessController extends Controller
 
 	public function upload(Request $request){
 
-	  
         $file = $request->file('file');
         $process_id = $request->id;
 
         $user_id = \Auth::user()->id;
 
-        if(isset($file) && $file->isValid()){
+        if(isset($file) && $file->isValid())
+        {
             $fileName = $file->getClientOriginalName();
-            $fileExtention = $file->getClientOriginalExtension();
-            $fileRealPath = $file->getRealPath();
             $fileSize = $file->getSize();
-            
 
+           /* $fileExtention = $file->getClientOriginalExtension();
+            $fileRealPath = $file->getRealPath();
             $extention = File::extension($fileName);
-
-            $fileNameArray = explode('.',$fileName);
+            $fileNameArray = explode('.',$fileName);*/
 
             $dir = 'uploads/process/'.$process_id.'/';
 
@@ -412,17 +410,18 @@ class ProcessController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
-            $temp_file_name = trim($fileNameArray[0]);
-            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-            $file->move($dir,$fileNewName);
+            /*$temp_file_name = trim($fileNameArray[0]);
+            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;*/
 
-            $fileNewPath = $dir.$fileNewName;
+            $file->move($dir,$fileName);
+            $filePath = $dir . $fileName;
 
             $processFileUpload = new ProcessDoc();
             $processFileUpload->process_id = $process_id;
-            $processFileUpload->file = $fileNewPath;
+            $processFileUpload->file = $filePath;
+            $processFileUpload->name = $fileName;
             $processFileUpload->size = $fileSize;
-            $processFileUploadStored = $processFileUpload->save();
+            $processFileUpload->save();
         }
 
         return redirect()->route('process.show',[$process_id])->with('success','Attachment uploaded successfully');
@@ -518,7 +517,17 @@ class ProcessController extends Controller
 
     public function attachmentsDestroy($docid){
 
-        $processDocDelete = ProcessDoc::where('id',$docid)->delete();
+        $process_attch = \DB::table('process_doc')
+        ->select('process_doc.*')
+        ->where('id','=',$docid)->first();
+
+        if(isset($process_attch))
+        {
+            $path = "uploads/process/".$process_attch->process_id ."/". $process_attch->name;
+            unlink($path);
+
+            $processDocDelete = ProcessDoc::where('id',$docid)->delete();
+        }
 
         $id = $_POST['id'];
 

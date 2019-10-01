@@ -65,56 +65,55 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                        
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                                <strong>Company Name:<span class = "required_fields">*</span></strong>
-                                    {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1')) !!}
-                                     @if ($errors->has('name'))
+                                <strong>Company Name: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1')) !!}
+                                @if ($errors->has('name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span>
-                                    @endif
+                                @endif
                             </div>
                 
                             <div class="form-group">
-                                <strong>Email:<span class = "required_fields">*</span></strong>
-                                   {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
+                                <strong>Email: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
                             </div>
                        
                             <div class="form-group">
-                                <strong>Mobile:<span class = "required_fields">*</span></strong>
-                                     {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5')) !!}
+                                <strong>Mobile: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5')) !!}
                            </div>
                      
                             <div class="form-group">
                                 <strong>Display Name:</strong>
-                                     {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '7')) !!}
+                                {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '7')) !!}
                             </div>
                 
                             <div class="form-group">
                                 <strong>Status:</strong>
-                                    {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
+                                {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
                             </div>
                                                 
                             <div class="form-group">
                                 <strong>Remarks:</strong>
-                                     {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control','tabindex' => '11')) !!}
+                                {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control','tabindex' => '11')) !!}
                             </div>
                        </div>
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                       
                             <div class="form-group">
-                                <strong>Contact Point:<span class = "required_fields">*</span></strong>
-                                    {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2')) !!}
+                                <strong>Contact Point: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2')) !!}
                            </div>
                     
                             <div class="form-group">
                                 <strong>Secondary Email:</strong>
-                                     {!! Form::text('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4')) !!}
+                                {!! Form::text('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4')) !!}
                             </div>
                         
                             <div class="form-group">
                                 <strong>Other number:</strong>
-                                     {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6')) !!}
+                                {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6')) !!}
                             </div>
                         
 
@@ -194,9 +193,9 @@
          </div>
      </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+    <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 </div>
     {!! Form::close() !!}
     @endif
@@ -236,10 +235,10 @@
                         required: "Company Name is required."
                     },
                     "coordinator_name": {
-                        required: "Hr/Coodinator Name is required."
+                        required: "Contact Point is required."
                     },
                     "mail": {
-                        required: "mail is required."
+                        required: "Mail is required."
                     },
                     "mobile": {
                         required: "Mobile Number is required."
