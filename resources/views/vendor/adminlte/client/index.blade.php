@@ -13,7 +13,7 @@
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
                 @if($isSuperAdmin)
-                    {{--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>--}}
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
 
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager</button>
                 @endif
@@ -158,7 +158,7 @@
         </tbody>--}}
     </table>
 
-{{--<div id="searchmodal" class="modal text-left fade email_modal" style="display: none;">
+<div id="searchmodal" class="modal text-left fade email_modal" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
         
@@ -180,7 +180,7 @@
                     <div class="body_class" style="display:none;"></div>
                 </div>
                 <input type="hidden" name="email_client_ids" id="email_client_ids" value="">
-                <input type="hidden" name="first_name" id="first_name" value="Dear Sir,">
+                
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="email_submit">Submit</button>
@@ -189,7 +189,7 @@
             {!! Form::close() !!}
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div>--}}
+</div>
 
 <!-- Account Manager Modal Popup -->
 
@@ -319,6 +319,7 @@ function client_emails_notification()
                 $(".clt_email_cls").show();
                 $(".email_error").empty();
                 $('#email_submit').removeAttr('disabled');
+                setEmailTemplate();
             }
             else{
                 $(".clt_email_cls").hide();
@@ -327,7 +328,7 @@ function client_emails_notification()
                 $(".email_error").append(msg.err);
             }
         }
-    });    
+    });
 }
 
 function client_account_manager()
@@ -391,11 +392,15 @@ function setEmailTemplate()
             html += '<br/><div>';
             html += '<table class="table table-bordered">';
             html += '<tr>';
-            html += '<td><b>&nbsp;Subject</b></td>';
-            html += '<td><input type="text" name="email_subject" id="email_subject" value="'+data.subject+'" style="width:460px;"/></td>';
+            html += '<td><b>&nbsp;Template &nbsp;&nbsp; Name</b></td>';
+            html += '<td><input type="text" class="form-control" name="template_nm" id="template_nm" value="'+data.name+'" style="width:460px;"/></td>';
             html += '</tr>';
             html += '<tr>';
-            html += '<td><b>&nbsp; Body Message</b></td>';
+            html += '<td><b>&nbsp;Subject</b></td>';
+            html += '<td><input type="text" class="form-control" name="email_subject" id="email_subject" value="'+data.subject+'" style="width:460px;"/></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td><b>&nbsp;&nbsp; Body &nbsp; &nbsp; &nbsp; Message</b></td>';
             html += '<td><textarea name="email_body" id="email_body" style="width:460px;">'+data.email_body+'</textarea></td>';
             html += '</tr>';
             html += '</table>';
@@ -409,7 +414,6 @@ function setEmailTemplate()
                 filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
                 customConfig: '/js/ckeditor_config.js',
                 height: '100px',
-
             });
 
             CKEDITOR.on('dialogDefinition', function( ev )

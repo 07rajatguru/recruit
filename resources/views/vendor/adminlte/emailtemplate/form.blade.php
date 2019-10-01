@@ -79,20 +79,17 @@
         {
             var action = $("#action").val();
 
-            if(action == 'add')
-            {    
-                document.getElementById("email_body").defaultValue = "Dear Sir,";
+            if(action == 'add'){    
+                document.getElementById("email_body").defaultValue = "Dear Clientname, ";
             }
 
-            CKEDITOR.replace( 'email_body', 
-            {
+            CKEDITOR.replace( 'email_body', {
                 filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
                 customConfig: '/js/ckeditor_config.js',
 
             });
 
-            CKEDITOR.on('dialogDefinition', function( ev )
-            {
+            CKEDITOR.on('dialogDefinition', function( ev ){
                var dialogName = ev.data.name;  
                var dialogDefinition = ev.data.definition;
                      
