@@ -1,9 +1,16 @@
 @extends('adminlte::master')
 
+@section('title', 'Candidate | Add')
+
 @section('customs_css')
     <style>
         .error{
             color:#f56954 !important;
+        }
+        body {
+          margin: 5% 5% 5% 5%;
+          border: 2px solid #000000;
+          background-color: #9D5CAC;
         }
     </style>
 @endsection
@@ -25,8 +32,9 @@
 
 <div class="row">
     <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-                <h2>Create New Candidate</h2>
+        <div class="text-center">
+            <h1>Create New Candidate</h1>
+            <hr/>
         </div>
     </div>
 </div>
@@ -38,7 +46,7 @@
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Basic Information</h3>
                 </div>
@@ -129,7 +137,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Address Information</h3>
                 </div>
@@ -232,7 +240,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Education and Professional Information</h3>
                 </div>
@@ -344,55 +352,14 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Other Information</h3>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12">
-
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                        <div class="">
-                            <div class="form-group {{ $errors->has('candidateStatus') ? 'has-error' : '' }}">
-                                <strong>Candidate Status:</strong>
-                                {!! Form::select('candidateStatus', $candidateStatus,null, array('id'=>'candidateStatus','class' => 'form-control', 'tabindex' => '24' )) !!}
-                                @if ($errors->has('candidateStatus'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('candidateStatus') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                        <div class="">
-                            <div class="form-group {{ $errors->has('candidateSource') ? 'has-error' : '' }}">
-                                <strong>Candidate Source:</strong>
-                                {!! Form::select('candidateSource', $candidateSource,null, array('id'=>'candidateSource','class' => 'form-control', 'tabindex' => '25')) !!}
-                                @if ($errors->has('candidateSource'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('candidateSource') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-12">
             @if( $action == 'add')
-                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Attachment Information</h3>
                     </div>
-
-
+                    
                     <div class="col-xs-12 col-sm-12 col-md-12">
+                    <br/>
                         <div class="form-group {{ $errors->has('resume') ? 'has-error' : '' }}">
                             <strong>Resume:</strong>
                             {!! Form::file('resume', null, array('id'=>'resume','class' => 'form-control')) !!}
@@ -404,48 +371,13 @@
                         </div>
 
                     </div>
-
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group {{ $errors->has('formatted_resume') ? 'has-error' : '' }}">
-                            <strong>Formatted Resume:</strong>
-                            {!! Form::file('formatted_resume', null, array('id'=>'formatted_resume','class' => 'form-control')) !!}
-                            @if ($errors->has('formatted_resume'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('formatted_resume') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group {{ $errors->has('cover_latter') ? 'has-error' : '' }}">
-                            <strong>Cover Latter:</strong>
-                            {!! Form::file('cover_latter', null, array('id'=>'cover_latter','class' => 'form-control')) !!}
-                            @if ($errors->has('cover_latter'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('cover_latter') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group {{ $errors->has('others') ? 'has-error' : '' }}">
-                        <strong>Others:</strong>
-                        {!! Form::file('others', null, array('id'=>'others','class' => 'form-control')) !!}
-                        @if ($errors->has('others'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('others') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    </div>
                 </div>
             @endif
         </div>
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                {!! Form::submit(isset($candidate) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-bottom: 20px;">
+                {!! Form::submit(isset($candidate) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate','style="padding:.5% 4.5% .5% 4.5%"' ]) !!}
             </div>
         </div>
     </div>
