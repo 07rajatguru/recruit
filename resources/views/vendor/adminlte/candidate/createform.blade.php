@@ -33,7 +33,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb" style="background: #9D5CAC;border: 2px solid #9D5CAC;">
         <div class="text-center">
-            <h1>Create New Candidate</h1>
+            <h1 style="color: #ffffff;">Create New Candidate</h1>
         </div>
     </div>
 </div>
@@ -376,8 +376,12 @@
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-bottom: 20px;">
-                {!! Form::submit(isset($candidate) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate','style="padding:.5% 4.5% .5% 4.5%"' ]) !!}
+                {!! Form::submit(isset($candidate) ? 'Update' : 'SUBMIT', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate','style="font-size:18px;"' ]) !!}
             </div>
+        </div>
+
+        <div class="col-md-12 " style="background: #9D5CAC;border: 2px solid #9D5CAC;">
+            <h3 class="box-title"></h3>
         </div>
     </div>
 
