@@ -15,7 +15,7 @@
                 <div class="col-md-3"><div style="text-align:center;width:95%;background-color:#F08080;padding:9px 17px;font-weight: 600;border-radius: 22px;">Less than 8 hours</div></div>
 
                 <div class="col-md-2">
-                    @include('adminlte::partials.userRemarks', ['name' => 'UserAttendance'])
+                    @include('adminlte::partials.userRemarks', ['name' => 'UserAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin,'isAccountant' => $isAccountant])
                 </div>
             </div>
             <div class="col-md-9 col-md-offset-1" style="padding-top: 10px;">
@@ -44,6 +44,7 @@
                 autoclose: true,
             });
             
+            $("#user_id").select2({width : '570px'});
         });
 
     </script>

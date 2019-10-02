@@ -14,12 +14,10 @@
                     <input type="hidden" name="name" id="name" value="{{ $name }}">
                 @endif
 
-                @if(isset($name) && $name == 'HomeAttendance')
-                    @if($isSuperAdmin)
-                        <strong>Select User :</strong><br/>
-                        {!! Form::select('user_id', $users,null, array('id'=>'user_id','class' => 'form-control')) !!}
-                        <br/><br/>
-                    @endif
+                @if($isSuperAdmin || $isAccountant)
+                    <strong>Select User :</strong><br/>
+                    {!! Form::select('user_id', $users,null, array('id'=>'user_id','class' => 'form-control')) !!}
+                    <br/><br/>
                 @endif
                 
                 <strong>Select Date: </strong>

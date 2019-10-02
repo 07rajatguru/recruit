@@ -264,7 +264,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="4">No Task</td>
+                                    <td colspan = "4">No Task</td>
                                 </tr>
                             @endif
                             </tbody>

@@ -369,7 +369,7 @@ class HomeController extends Controller
         }
         else{
             $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
-            $user_remark = UserRemarks::getUserRemarksByUserid(0);
+            $user_remark = UserRemarks::getUserRemarksByUserid($loggedin_userid);
            /* $response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
         }
@@ -493,6 +493,14 @@ class HomeController extends Controller
         $month = date("n");
         $year = \date("Y");
 
+        // get role of logged in user
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAccountant = $user_obj::isAccountant($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         // get logged in user attendance for current month
         $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
 
@@ -560,7 +568,10 @@ class HomeController extends Controller
         }
 
         $calendar = Calendar::addEvents($events);
-        return view('userattendance', compact('calendar'));
+
+        $users_name = User::getAllUsersExpectSuperAdmin();
+        
+        return view('userattendance', compact('calendar','isSuperAdmin','isAccountant','users_name'));
     }
 
     // Save User remarks in calendar

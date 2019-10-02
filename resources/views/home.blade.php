@@ -43,11 +43,11 @@
                 </div>
                 
                 <div class="filter-ex-btn col-md-1 col-sm-4">
-                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()" style="width:100px;"> Export</a>
+                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()" style="width:100px;">Export</a>
                 </div>
 
                 <div class="attendance_submit col-md-1 col-sm-4">
-                   @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin])
+                   @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin,'isAccountant' => $isAccountant])
                 </div>
             <?php   
             }
@@ -67,37 +67,8 @@
         </div>
 
         <div class="col-sm-12" style="margin-top:2%;">
-            {{--<div id="calendar">
-
-            </div>--}}
-
             @section ('cotable_panel_body')
                 <div style ="overflow-x:scroll;">
-                    <!-- <table class="table table-bordered" id="attendance_table">
-
-                        @foreach($list as $key=>$value)
-                            <tr>
-                                <th class="headcol">{{ $key }}
-                                    <hr>
-                                    Login
-                                    <hr>
-                                    Logout
-                                    <hr>
-                                    Total
-                                </th>
-
-                                @foreach($value as $key1=>$value1)
-                                    <td >
-                                        {{ $key1 }}<hr>
-                                        {{ $value1['login'] }}<hr>
-                                        {{ $value1['logout'] }}<hr>
-                                    {{ $value1['total'] }}
-                                @endforeach
-                            </tr>
-                        @endforeach
-
-                    </table> -->
-
                     <table class="table table-bordered" id="attendance_table">
                         <thead>
                         <td style="border: 1px solid black;">
@@ -119,6 +90,7 @@
                                 <span> Logout </span><hr>
                                 <span> Total </span>
                             </th>
+                            
                             @foreach($value as $key1=>$value1)
                                 @if($value1['remarks'] != '')
                                     <td style="border: 1px solid black;background-color:#B0E0E6;" data-toggle="modal" data-target="#remarksModel-{{ str_replace(' ','',$key) }}{{ str_replace(' ','',$key1) }}">
