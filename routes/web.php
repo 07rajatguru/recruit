@@ -124,13 +124,13 @@ Route::post('/password/reset', [
 ]);
 
 // Create Form
-Route::get('candidate/createform',[
+Route::get('candidate-createform',[
     'as'=>'candidate.createf',
     'uses'=>'CandidateCreateFormController@createf'
 ]);
 
 //Store Form
-Route::post('candidate/createform',[
+Route::post('candidate-createform',[
     'as'=>'candidate.storef',
     'uses'=>'CandidateCreateFormController@storef'
 ]);

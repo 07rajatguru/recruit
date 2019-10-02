@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Input;
 
 class CandidateCreateFormController extends Controller
 {
-    //
-
- 
     public function createf(){
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
@@ -37,14 +34,15 @@ class CandidateCreateFormController extends Controller
 
     public function storef(Request $request){
 
+        $super_admin_user_id = getenv('SUPERADMINUSERID');
 
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
         $candiateFname = $request->input('fname');
-        $candiateLname = $request->input('lname');
+       // $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
-        $candiateFAX = $request->input('fax');
+     //   $candiateFAX = $request->input('fax');
         $candiateStreet1 = $request->input('street1');
         $candiateStreet2 = $request->input('street2');
         $candiateCity = $request->input('city');
@@ -75,11 +73,11 @@ class CandidateCreateFormController extends Controller
             $candidate->marital_status = $candiateMaritalStatus;
         }
         if(isset($candiateFname)){
-            $candidate->fname = $candiateFname;
+            $candidate->full_name = $candiateFname;
         }
-        if(isset($candiateFname)){
+       /* if(isset($candiateFname)){
             $candidate->lname = $candiateLname;
-        }
+        }*/
         if(isset($candidateEmail)){
             $candidate->email = $candidateEmail;
         }
@@ -117,20 +115,6 @@ class CandidateCreateFormController extends Controller
             return redirect('candidate/createform')->withInput(Input::all())->withErrors($validator->errors());
         }
 
-        /*$candidate->type = $request->input('candidateSex');
-        $candidate->marital_status = $request->input('maritalStatus');
-        $candidate->fname = $request->input('fname');
-        $candidate->lname = $request->input('lname');
-        $candidate->email = $request->input('email');
-        $candidate->mobile = $request->input('mobile');
-        $candidate->phone = $request->input('phone');
-        $candidate->fax = $request->input('fax');
-        $candidate->street1 = $request->input('street1');
-        $candidate->street2 = $request->input('street2');
-        $candidate->city = $request->input('city');
-        $candidate->state = $request->input('state');
-        $candidate->country = $request->input('country');
-        $candidate->zipcode = $request->input('zipcode');*/
         $candidateStored = $candidate->save();
 
         if($candidateStored){
@@ -141,61 +125,47 @@ class CandidateCreateFormController extends Controller
             $candidateOtherInfo = new CandidateOtherInfo();
 
             $candidateOtherInfo->candidate_id = $candidate_id;
-            if(isset($candiateHighest_qualification)){
-                $candidate->highest_qualification = $candiateHighest_qualification;
+            if(isset($candiateHighest_qualification) && $candiateHighest_qualification != ''){
+                $candidateOtherInfo->highest_qualification = $candiateHighest_qualification;
             }
-            if(isset($candiateExperience_years)){
-                $candidate->experience_years = $candiateExperience_years;
+            if(isset($candiateExperience_years) && $candiateExperience_years != ''){
+                $candidateOtherInfo->experience_years = $candiateExperience_years;
             }
-            if(isset($candiateExperience_months)){
-                $candidate->experience_months = $candiateHighest_qualification;
+            if(isset($candiateExperience_months) && $candiateExperience_months != ''){
+                $candidateOtherInfo->experience_months = $candiateExperience_months;
             }
-            if(isset($candiateCurrent_job_title)){
-                $candidate->current_job_title = $candiateCurrent_job_title;
+            if(isset($candiateCurrent_job_title) && $candiateCurrent_job_title != ''){
+                $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
             }
-            if(isset($candiateCurrent_employer)){
-                $candidate->current_employer = $candiateCurrent_employer;
+            if(isset($candiateCurrent_employer) && $candiateCurrent_employer != ''){
+                $candidateOtherInfo->current_employer = $candiateCurrent_employer;
             }
-            if(isset($candiateExpected_salary)){
-                $candidate->expected_salary = $candiateExpected_salary;
+            if(isset($candiateExpected_salary) && $candiateExpected_salary != ''){
+                $candidateOtherInfo->expected_salary = $candiateExpected_salary;
             }
-            if(isset($candiateCurrent_salary)){
-                $candidate->current_salary = $candiateCurrent_salary;
+            if(isset($candiateCurrent_salary) && $candiateCurrent_salary != ''){
+                $candidateOtherInfo->current_salary = $candiateCurrent_salary;
             }
-            if(isset($candiateSkill)){
-                $candidate->skill = $candiateSkill;
+            if(isset($candiateSkill) && $candiateSkill != ''){
+                $candidateOtherInfo->skill = $candiateSkill;
             }
-            if(isset($candiateSkype_id)){
-                $candidate->skype_id = $candiateSkype_id;
+            if(isset($candiateSkype_id) && $candiateSkype_id != ''){
+                $candidateOtherInfo->skype_id = $candiateSkype_id;
             }
-            if(isset($candiateStatus)){
-                $candidate->status_id = $candiateStatus;
+            if(isset($candiateStatus) && $candiateStatus != ''){
+                $candidateOtherInfo->status_id = $candiateStatus;
             }
-            if(isset($candidateSource)){
-                $candidate->source_id = $candidateSource;
+            if(isset($candidateSource) && $candidateSource != ''){
+                $candidateOtherInfo->source_id = $candidateSource;
             }
-            if(isset($user_id)){
-                $candidate->owner_id = $user_id;
+            if(isset($super_admin_user_id) && $super_admin_user_id != ''){
+                $candidateOtherInfo->owner_id = $super_admin_user_id;
             }
-            /*$candidateOtherInfo->candidate_id = $candidate_id;
-            $candidateOtherInfo->highest_qualification = $request->input('highest_qualification');
-            $candidateOtherInfo->experience_years = $request->input('experience_years');
-            $candidateOtherInfo->experience_months = $request->input('experience_months');
-            $candidateOtherInfo->current_job_title = $request->input('current_job_title');
-            $candidateOtherInfo->current_employer = $request->input('current_employer');
-            $candidateOtherInfo->expected_salary = $request->input('expected_salary');
-            $candidateOtherInfo->current_salary = $request->input('current_salary');
-            $candidateOtherInfo->skill = $request->input('skill');
-            $candidateOtherInfo->skype_id = $request->input('skype_id');
-            $candidateOtherInfo->status_id = $request->input('candidateStatus');
-            $candidateOtherInfo->source_id = $request->input('candidateSource');
-            $candidateOtherInfo->owner_id = $user_id;*/
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 
             if($candidateOtherInfoStored){
 
                 // Save Candidate Documentes
-
                 $fileResume = $request->file('resume');
                 $fileFormattedResume = $request->file('formatted_resume');
                 $fileCoverLatter = $request->file('cover_latter');
@@ -227,7 +197,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateFileUpload = new CandidateUploadedResume();
                     $candidateFileUpload->candidate_id = $candidate_id;
-                    $candidateFileUpload->uploaded_by = $user_id;
+                    $candidateFileUpload->uploaded_by = $super_admin_user_id;
                     $candidateFileUpload->file_name = $fileResumeNewName;
                     $candidateFileUpload->file_type = 'Candidate Resume';
                     $candidateFileUpload->file = $fileResumeNewPath;
@@ -263,7 +233,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateFormattedFileUpload = new CandidateUploadedResume();
                     $candidateFormattedFileUpload->candidate_id = $candidate_id;
-                    $candidateFormattedFileUpload->uploaded_by = $user_id;
+                    $candidateFormattedFileUpload->uploaded_by = $super_admin_user_id;
                     $candidateFormattedFileUpload->file_name = $fileFormattedResumeNewName;
                     $candidateFormattedFileUpload->file_type = 'Candidate Formatted Resume';
                     $candidateFormattedFileUpload->file = $fileFormattedResumeNewPath;
@@ -301,7 +271,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateCoverLatterUpload = new CandidateUploadedResume();
                     $candidateCoverLatterUpload->candidate_id = $candidate_id;
-                    $candidateCoverLatterUpload->uploaded_by = $user_id;
+                    $candidateCoverLatterUpload->uploaded_by = $super_admin_user_id;
                     $candidateCoverLatterUpload->file_name = $fileCoverLatterNewName;
                     $candidateCoverLatterUpload->file_type = 'Candidate Cover Latter';
                     $candidateCoverLatterUpload->file = $fileCoverLatterNewPath;
@@ -339,7 +309,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateOthersUpload = new CandidateUploadedResume();
                     $candidateOthersUpload->candidate_id = $candidate_id;
-                    $candidateOthersUpload->uploaded_by = $user_id;
+                    $candidateOthersUpload->uploaded_by = $super_admin_user_id;
                     $candidateOthersUpload->file_name = $fileOthersNewName;
                     $candidateOthersUpload->file_type = 'Others';
                     $candidateOthersUpload->file = $fileOthersNewPath;
@@ -352,7 +322,7 @@ class CandidateCreateFormController extends Controller
             }
         }
 
-        return redirect()->route('candidate.createf')->with('success','Candidate Created Successfully');
+        return redirect()->route('candidate.createf')->with('success','Candidate Details Saved Successfully');
     }     
 
 }
