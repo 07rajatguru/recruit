@@ -8,9 +8,9 @@
             color:#f56954 !important;
         }
         body {
-          margin: 5% 5% 5% 5%;
+          /*margin: 5% 5% 5% 5%;
           border: 2px solid #000000;
-          background-color: #9D5CAC;
+          background-color: #9D5CAC;*/
         }
     </style>
 @endsection
@@ -31,10 +31,9 @@
 @endif
 
 <div class="row">
-    <div class="col-lg-12 margin-tb">
+    <div class="col-lg-12 margin-tb" style="background: #9D5CAC;border: 2px solid #9D5CAC;">
         <div class="text-center">
             <h1>Create New Candidate</h1>
-            <hr/>
         </div>
     </div>
 </div>
