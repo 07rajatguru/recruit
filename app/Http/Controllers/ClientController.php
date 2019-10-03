@@ -23,6 +23,7 @@ use App\JobVisibleUsers;
 use App\Post;
 use App\EmailTemplate;
 use App\ClientRemarks;
+use App\ClientTimeline;
 
 class ClientController extends Controller
 {
@@ -406,6 +407,12 @@ class ClientController extends Controller
             }
             if($isSuperAdmin || $value['client_owner'] || $isMarketingIntern){
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            if($isSuperAdmin){
+                $delete_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
             }
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
@@ -1599,6 +1606,13 @@ class ClientController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
+            // Add Entry in Client Timeline.
+
+            $client_timeline = new ClientTimeline();
+            $client_timeline->user_id = $input['account_manager'];
+            $client_timeline->client_id = $client_id;
+            $client_timeline->save();
+
             return redirect()->route('client.index')->with('success','Client Added Successfully.');
         }
         else{
@@ -2041,11 +2055,25 @@ class ClientController extends Controller
                 }
             }
 
+
+            // Add Entry in Client Timeline.
+
+            $check_entry_exist = ClientTimeline::checkTimelineEntry($input->account_manager,$id);
+
+            if(isset($check_entry_exist) && sizeof($check_entry_exist) > 0){
+            }
+
+            else{
+                $client_timeline = new ClientTimeline();
+                $client_timeline->user_id = $input->account_manager;
+                $client_timeline->client_id = $id;
+                $client_timeline->save();
+            }
+
             return redirect()->route('client.index')->with('success','Client Updated Successfully.');
         }else{
             return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ( $client_basicinfo->errors() );
         }
-
     }
 
     public function postClientEmails(Request $request)
@@ -2122,8 +2150,15 @@ class ClientController extends Controller
 
         $updated_at = date('Y-m-d H:i:s');
 
-        foreach($client_ids_array as $key => $value)
-        {
+        foreach($client_ids_array as $key => $value){
+
+            // Add Entry in Client Timeline.
+
+            $client_timeline = new ClientTimeline();
+            $client_timeline->user_id = $account_manager_id;
+            $client_timeline->client_id = $value;
+            $client_timeline->save();
+
             \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id', updated_at = '$updated_at' where `id` = '$value'"); 
         }
         return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
@@ -2131,7 +2166,6 @@ class ClientController extends Controller
 
     public function getMonthWiseClient()
     {
-
         $user =  \Auth::user();
 
         // get role of logged in user
@@ -2192,6 +2226,13 @@ class ClientController extends Controller
                 }
             }
         }
+
+        // Add Entry in Client Timeline.
+
+        $client_timeline = new ClientTimeline();
+        $client_timeline->user_id = $account_manager;
+        $client_timeline->client_id = $id;
+        $client_timeline->save();
 
        return redirect()->route('client.index')->with('success', 'Client Account Manager Updated successfully');
     }

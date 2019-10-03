@@ -204,6 +204,7 @@ class ClientBasicinfo extends Ardent
             $client_array[$i]['account_mangr_id']=$value->account_manager_id;
             $client_array[$i]['mobile']= $value->mobile;
             $client_array[$i]['hr_name'] = $value->coordinator_prefix . " " . $value->coordinator_name;
+            $client_array[$i]['full_name'] = $value->name." - ".$value->coordinator_name." - ".$value->city;
 
             if(isset($client_array[$i]['status']))
             {
