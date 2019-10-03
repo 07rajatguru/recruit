@@ -455,7 +455,7 @@ class HomeController extends Controller
             }
         }
 
-        $users_name = User::getAllUsersExpectSuperAdmin();
+        $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
 
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('isSuperAdmin','isAdmin','isAccountant','isDirector','users_name'));
 
@@ -569,7 +569,7 @@ class HomeController extends Controller
 
         $calendar = Calendar::addEvents($events);
 
-        $users_name = User::getAllUsersExpectSuperAdmin();
+        $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
         
         return view('userattendance', compact('calendar','isSuperAdmin','isAccountant','users_name'));
     }
