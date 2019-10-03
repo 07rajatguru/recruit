@@ -2150,8 +2150,8 @@ class ClientController extends Controller
 
         $updated_at = date('Y-m-d H:i:s');
 
-        foreach($client_ids_array as $key => $value){
-
+        foreach($client_ids_array as $key => $value)
+        {
             // Add Entry in Client Timeline.
 
             $client_timeline = new ClientTimeline();
@@ -2234,7 +2234,7 @@ class ClientController extends Controller
         $client_timeline->client_id = $id;
         $client_timeline->save();
 
-       return redirect()->route('client.index')->with('success', 'Client Account Manager Updated successfully');
+       return redirect()->route('client.index')->with('success', 'Client Account Manager updated Successfully.');
     }
     public function importExport(){
 
