@@ -120,7 +120,7 @@
                                 @endif
                             </div>
 
-                             <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
                                 <strong>Sex:</strong>
                                 {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '6' )) !!}
                                 @if ($errors->has('candidateSex'))
@@ -268,7 +268,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('current_employer') ? 'has-error' : '' }}">
-                            <strong>Current Employer:</strong>
+                            <strong>Current Employer: <span class = "required_fields">*</span></strong>
                             {!! Form::text('current_employer', null, array('id'=>'current_employer','placeholder' => 'Current Employer','class' => 'form-control', 'tabindex' => '20' )) !!}
                             @if ($errors->has('current_employer'))
                                 <span class="help-block">
@@ -278,7 +278,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('current_salary') ? 'has-error' : '' }}">
-                            <strong>Current Salary:</strong>
+                            <strong>Current Salary: <span class = "required_fields">*</span></strong>
                             {!! Form::text('current_salary', null, array('id'=>'current_salary','placeholder' => 'Current Salary','class' => 'form-control', 'tabindex' => '22' )) !!}
                             @if ($errors->has('current_salary'))
                                 <span class="help-block">
@@ -313,7 +313,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('current_job_title') ? 'has-error' : '' }}">
-                            <strong>Current Job Title:</strong>
+                            <strong>Current Job Title: <span class = "required_fields">*</span></strong>
                             {!! Form::text('current_job_title', null, array('id'=>'current_job_title','placeholder' => 'Current Job Title','class' => 'form-control', 'tabindex' => '19' )) !!}
                             @if ($errors->has('current_job_title'))
                                 <span class="help-block">
@@ -322,19 +322,9 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('expected_salary') ? 'has-error' : '' }}">
-                            <strong>Expected Salary:</strong>
-                            {!! Form::text('expected_salary', null, array('id'=>'expected_salary','placeholder' => 'Expected Salary','class' => 'form-control', 'tabindex' => '21' )) !!}
-                            @if ($errors->has('expected_salary'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('expected_salary') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
                         <div class="form-group {{ $errors->has('skill') ? 'has-error' : '' }}">
-                            <strong>Skill:</strong>
-                            {!! Form::text('skill', null, array('id'=>'skill','placeholder' => 'Skill','class' => 'form-control', 'tabindex' => '23' )) !!}
+                            <strong>Key Skill:</strong>
+                            {!! Form::text('skill', null, array('id'=>'skill','placeholder' => 'Key Skill','class' => 'form-control', 'tabindex' => '21' )) !!}
                             @if ($errors->has('skill'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('skill') }}</strong>
@@ -342,8 +332,25 @@
                             @endif
                         </div>
 
+                        <div class="form-group {{ $errors->has('expected_salary') ? 'has-error' : '' }}">
+                            <strong>Expected Salary:</strong>
+                            {!! Form::text('expected_salary', null, array('id'=>'expected_salary','placeholder' => 'Expected Salary','class' => 'form-control', 'tabindex' => '23' )) !!}
+                            @if ($errors->has('expected_salary'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('expected_salary') }}</strong>
+                                </span>
+                            @endif
+                        </div>
 
-
+                        <div class="form-group {{ $errors->has('functional_roles_id') ? 'has-error' : '' }}">
+                            <strong>Functional Roles:</strong>
+                            {!! Form::select('functional_roles_id', $functionalRoles,null, array('id'=>'functional_roles_id','class' => 'form-control', 'tabindex' => '25' )) !!}
+                            @if ($errors->has('functional_roles_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('functional_roles_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -405,6 +412,8 @@
             getNotifications();
             var interval = 1000 * 60 * 1;
             setInterval(function(){getNotifications();},interval)
+
+            $("#functional_roles_id").select2();
         });
 
         function getNotifications(){
@@ -462,16 +471,34 @@
                     "email": {
                         required: true
                     },
+                    "current_employer": {
+                        required: true
+                    },
+                    "current_salary": {
+                        required: true
+                    },
+                    "current_job_title": {
+                        required: true
+                    },
                 },
                 messages: {
                     "fname": {
-                        required: "First Name is required."
+                        required: "Name is required."
                     },
                     "mobile": {
-                        required: "Mobile is required."
+                        required: "Mobile Number is required."
                     },
                     "email": {
                         required: "Email is required."
+                    },
+                    "current_employer": {
+                        required: "Current Employer is required."
+                    },
+                    "current_salary": {
+                        required: "Current Salary is required."
+                    },
+                    "current_job_title": {
+                        required: "Current Job Title is required."
                     },
                 }
             });

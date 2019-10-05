@@ -11,6 +11,7 @@ use App\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
+use App\FunctionalRoles;
 
 class CandidateCreateFormController extends Controller
 {
@@ -20,6 +21,7 @@ class CandidateCreateFormController extends Controller
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
+        $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
 
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
@@ -28,6 +30,7 @@ class CandidateCreateFormController extends Controller
         $viewVariable['candidateStatus'] = $candidateStatus;
         $viewVariable['emailDisabled'] = '';
         $viewVariable['action'] = 'add';
+        $viewVariable['functionalRoles'] = $functionalRoles;
 
         return view('adminlte::candidate.createform',$viewVariable);
     }
@@ -62,6 +65,8 @@ class CandidateCreateFormController extends Controller
         $candiateSkype_id = $request->input('skype_id');
         $candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
+
+        $functional_roles_id = $request->input('functional_roles_id');
 
         // Save Candidate Basic Info
         $candidate = new CandidateBasicInfo();
@@ -161,6 +166,13 @@ class CandidateCreateFormController extends Controller
             if(isset($super_admin_user_id) && $super_admin_user_id != ''){
                 $candidateOtherInfo->owner_id = $super_admin_user_id;
             }
+
+            //  Functional roles
+
+            if(isset($functional_roles_id) && $functional_roles_id != ''){
+                $candidateOtherInfo->functional_roles_id = $functional_roles_id;
+            }
+            
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 
             if($candidateOtherInfoStored){
