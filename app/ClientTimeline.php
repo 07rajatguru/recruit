@@ -23,9 +23,10 @@ class ClientTimeline extends Model
     public static function getDetailsByClientId($client_id){
 
         $query = ClientTimeline::query();
+        $query = $query->leftjoin('users','users.id','=','client_timeline.user_id');
         $query = $query->where('client_id','=',$client_id);
         $query = $query->orderBy('id','ASC');
-        $query = $query->select('client_timeline.*');
+        $query = $query->select('client_timeline.*','users.name as user_name');
 
         $response = $query->get();
         
@@ -38,18 +39,27 @@ class ClientTimeline extends Model
 
             $client_timeline_array[$i]['id'] = $value->id;
             $client_timeline_array[$i]['user_id'] = $value->user_id;
+            $client_timeline_array[$i]['user_name'] = $value->user_name;
             $client_timeline_array[$i]['client_id'] = $value->client_id;
+            $client_timeline_array[$i]['from_date'] = date("d-m-Y", strtotime($value->created_at));
 
-            $to_date = date('Y-m-d', strtotime($value->created_at));
-            $client_timeline_array['to_date'] = $to_date;
+            if($value->to_date != ''){
 
-            $from_date = date('Y-m-d', strtotime($value->created_at));
+                $client_timeline_array[$i]['to_date'] = date("d-m-Y", strtotime($value->to_date));
+            }
+            else{
 
-            $client_timeline_array[$i]['from_date'] = $from_date;
+                $client_timeline_array[$i]['to_date'] = '-';
+            }
 
-            $days = \Carbon\Carbon::parse($to_date)->diffInDays(\Carbon\Carbon::parse($from_date));
+            if($value->days == '0'){
 
-            $client_timeline_array[$i]['days'] = $days;
+                $client_timeline_array[$i]['days'] = '-';
+            }
+            else{
+
+                $client_timeline_array[$i]['days'] = $value->days;
+            }
             
             $i++;
         }

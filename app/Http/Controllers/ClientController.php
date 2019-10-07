@@ -28,6 +28,7 @@ use App\ClientTimeline;
 class ClientController extends Controller
 {
     public function index(Request $request){
+
         $utils = new Utils();
         $user =  \Auth::user();
 
@@ -410,9 +411,12 @@ class ClientController extends Controller
             }
 
             if($isSuperAdmin){
-                $delete_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
-                $delete = $delete_view->render();
-                $action .= $delete;
+
+                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+
+                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
+                $timeline = $timeline_view->render();
+                $action .= $timeline;
             }
 
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
@@ -2064,11 +2068,29 @@ class ClientController extends Controller
             }
 
             else{
-                $client_timeline = new ClientTimeline();
-                $client_timeline->user_id = $input->account_manager;
-                $client_timeline->client_id = $id;
-                $client_timeline->save();
-            }
+                    $get_latest_record = \DB::table('client_timeline')
+                        ->select('client_timeline.*')
+                        ->where('client_id','=',$id)
+                        ->orderBy('client_timeline.id','desc')
+                        ->first();
+
+                    $to_date = date('Y-m-d');
+
+                    if(isset($get_latest_record) && sizeof($get_latest_record) > 0)
+                    {
+
+                        $to = strtotime($to_date);
+                        $from = strtotime($get_latest_record->created_at);
+                        $diff_in_days = ($to - $from)/60/60/24;
+
+                        \DB::statement("UPDATE client_timeline SET to_date = '$to_date', days = '$diff_in_days' where client_id = $id AND user_id = $get_latest_record->user_id");
+                    }
+
+                    $client_timeline = new ClientTimeline();
+                    $client_timeline->user_id = $input->account_manager;
+                    $client_timeline->client_id = $id;
+                    $client_timeline->save();
+                }
 
             return redirect()->route('client.index')->with('success','Client Updated Successfully.');
         }else{
@@ -2146,13 +2168,34 @@ class ClientController extends Controller
         $account_manager_id = $_POST['account_manager_id'];
 
         $client_ids = $_POST['client_ids'];
-        $client_ids_array=explode(",",$client_ids);
+        $client_ids_array = explode(",",$client_ids);
 
         $updated_at = date('Y-m-d H:i:s');
 
         foreach($client_ids_array as $key => $value)
         {
             // Add Entry in Client Timeline.
+
+            $get_latest_record = \DB::table('client_timeline')
+                ->select('client_timeline.*')
+                ->where('client_id','=',$value)
+                ->orderBy('client_timeline.id','desc')
+                ->first();
+
+            $to_date = date('Y-m-d');
+
+            if(isset($get_latest_record) && sizeof($get_latest_record) > 0)
+            {
+                /*$to = \Carbon\Carbon::parse($to_date);
+                $from = \Carbon\Carbon::parse($get_latest_record->created_at);
+                $diff_in_days = $to->diffInDays($from);*/
+
+                $to = strtotime($to_date);
+                $from = strtotime($get_latest_record->created_at);
+                $diff_in_days = ($to - $from)/60/60/24;
+
+                \DB::statement("UPDATE client_timeline SET to_date = '$to_date', days = '$diff_in_days' where client_id = $value AND user_id = $get_latest_record->user_id");
+            }
 
             $client_timeline = new ClientTimeline();
             $client_timeline->user_id = $account_manager_id;
@@ -2229,6 +2272,23 @@ class ClientController extends Controller
 
         // Add Entry in Client Timeline.
 
+        $get_latest_record = \DB::table('client_timeline')
+            ->select('client_timeline.*')
+            ->where('client_id','=',$id)
+            ->orderBy('client_timeline.id','desc')
+            ->first();
+
+        $to_date = date('Y-m-d');
+
+        if(isset($get_latest_record) && sizeof($get_latest_record) > 0){
+
+            $to = strtotime($to_date);
+            $from = strtotime($get_latest_record->created_at);
+            $diff_in_days = ($to - $from)/60/60/24;
+
+            \DB::statement("UPDATE client_timeline SET to_date = '$to_date', days = '$diff_in_days' where client_id = $id AND user_id = $get_latest_record->user_id");
+        }
+        
         $client_timeline = new ClientTimeline();
         $client_timeline->user_id = $account_manager;
         $client_timeline->client_id = $id;

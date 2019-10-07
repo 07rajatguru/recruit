@@ -16,6 +16,17 @@
                         <td style="text-align: center;"><b>To Date</b></td>
                         <td style="text-align: center;"><b>Days</b></td>
                     </tr>
+
+                    @if(isset($days_array) && sizeof($days_array) > 0)
+                        @foreach($days_array as $key => $value)
+                            <tr>
+                                <td style="text-align: center;">{{ $value['user_name'] }}</td>
+                                <td style="text-align: center;">{{ $value['from_date'] }}</td>
+                                <td style="text-align: center;">{{ $value['to_date'] }}</td>
+                                <td style="text-align: center;">{{ $value['days'] }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </table>
             </div>
 
