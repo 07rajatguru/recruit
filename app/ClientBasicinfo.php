@@ -895,6 +895,8 @@ class ClientBasicinfo extends Ardent
 
             $client_array[$i]['mobile']= $value->mobile;
             $client_array[$i]['hr_name'] = $value->coordinator_prefix . " " . $value->coordinator_name;
+            $client_array[$i]['full_name'] = $value->name." - ".$value->coordinator_name." - ".$value->city;
+            
             if(isset($client_array[$i]['status'])){
                 if($client_array[$i]['status']== '1'){
                   $client_array[$i]['status']='Active';
@@ -1124,5 +1126,14 @@ class ClientBasicinfo extends Ardent
         if($remarks_date == $comments_date && $remarks_date != '' && $comments_date != ''){
             return $comments_res->comment_body;
         }
+    }
+
+    public static function getAllClientDetails()
+    {
+        $query = ClientBasicinfo::query();
+        $query = $query->select('client_basicinfo.*');
+        $response = $query->get();
+
+        return $response;
     }
 }

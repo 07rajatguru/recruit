@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\BillsPCAdd',
         'App\Console\Commands\RecoveryPrePCAdd',
         'App\Console\Commands\PassiveClientList',
+        'App\Console\Commands\ClientDataTimeline',
     ];
 
     /**

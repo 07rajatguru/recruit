@@ -78,6 +78,13 @@
                         <a title="Remarks" class="fa fa-plus"  href="{{ route('client.remarks',$client['id']) }}" style="margin:2px;"></a>
                     @endif
 
+                    @if($isSuperAdmin)
+                        <?php
+                            $days_array = App\ClientTimeline::getDetailsByClientId($client['id']);
+                        ?>
+                        @include('adminlte::partials.client_timeline_view', ['data' => $client,'days_array' => $days_array])
+                    @endif
+
                 </td>
 
                 <td>{{ $client['am_name'] }}</td>
