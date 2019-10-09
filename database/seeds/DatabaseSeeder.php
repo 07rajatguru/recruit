@@ -38,6 +38,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailTemplatePermissionSeeder::class);
         $this->call(FunctionalRolesSeeder::class);
         $this->call(AdditionalFunctionalRolesSeeder::class);
-        $this->call(EductionaListSeeder::class),
+        $this->call(EductionaListSeeder::class);
     }
 }
