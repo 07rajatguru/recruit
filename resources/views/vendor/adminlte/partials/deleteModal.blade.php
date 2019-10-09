@@ -1,6 +1,3 @@
-
-
-
 <a data-toggle="modal" href="#modal-delete-{!! $data['id'] !!}" class="fa fa-trash" title="Delete">
     {{--{!! Form::submit('', ['class' => '']) !!}--}}
     {{--<span class="glyphicon glyphicon-trash" style="color: #ffffff;"></span>--}}
@@ -20,6 +17,10 @@
                 <p>
                     Are you sure want to delete {!! $display_name !!}?
                 </p>
+
+                @if(isset($form_name) && $form_name != '')
+                    <input type="hidden" name="form_name" id="form_name" value="{{ $form_name }}">
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>

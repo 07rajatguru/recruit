@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use App\FunctionalRoles;
+use App\EducationQualification;
 
 class CandidateCreateFormController extends Controller
 {
@@ -19,18 +20,20 @@ class CandidateCreateFormController extends Controller
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
-        $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
-        $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
+        //$candidateSource = CandidateBasicInfo::getCandidateSourceArray();
+        //$candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
         $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
+        $educationqualification = EducationQualification::getAllEducationQualifications();
 
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
-        $viewVariable['candidateSource'] = $candidateSource;
-        $viewVariable['candidateStatus'] = $candidateStatus;
+        //$viewVariable['candidateSource'] = $candidateSource;
+        //$viewVariable['candidateStatus'] = $candidateStatus;
         $viewVariable['emailDisabled'] = '';
         $viewVariable['action'] = 'add';
         $viewVariable['functionalRoles'] = $functionalRoles;
+        $viewVariable['educationqualification'] = $educationqualification;
 
         return view('adminlte::candidate.createform',$viewVariable);
     }
@@ -57,16 +60,18 @@ class CandidateCreateFormController extends Controller
         $candiateHighest_qualification = $request->input('highest_qualification');
         $candiateExperience_years = $request->input('experience_years');
         $candiateExperience_months = $request->input('experience_months');
-        $candiateCurrent_job_title = $request->input('current_job_title');
+        //$candiateCurrent_job_title = $request->input('current_job_title');
         $candiateCurrent_employer = $request->input('current_employer');
         $candiateExpected_salary = $request->input('expected_salary');
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        $candiateStatus = $request->input('candidateStatus');
-        $candidateSource = $request->input('candidateSource');
+        //$candiateStatus = $request->input('candidateStatus');
+        //$candidateSource = $request->input('candidateSource');
 
         $functional_roles_id = $request->input('functional_roles_id');
+        $educational_qualification_id = $request->input('educational_qualification_id');
+        $specialization = $request->input('specialization');
 
         // Save Candidate Basic Info
         $candidate = new CandidateBasicInfo();
@@ -92,9 +97,9 @@ class CandidateCreateFormController extends Controller
         if(isset($candiatePhone)){
             $candidate->phone = $candiatePhone;
         }
-        if(isset($candiateFAX)){
+        /*if(isset($candiateFAX)){
             $candidate->fax = $candiateFAX;
-        }
+        }*/
         if(isset($candiateStreet1)){
             $candidate->street1 = $candiateStreet1;
         }
@@ -139,9 +144,9 @@ class CandidateCreateFormController extends Controller
             if(isset($candiateExperience_months) && $candiateExperience_months != ''){
                 $candidateOtherInfo->experience_months = $candiateExperience_months;
             }
-            if(isset($candiateCurrent_job_title) && $candiateCurrent_job_title != ''){
-                $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
-            }
+            // if(isset($candiateCurrent_job_title) && $candiateCurrent_job_title != ''){
+            //     $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
+            // }
             if(isset($candiateCurrent_employer) && $candiateCurrent_employer != ''){
                 $candidateOtherInfo->current_employer = $candiateCurrent_employer;
             }
@@ -157,21 +162,29 @@ class CandidateCreateFormController extends Controller
             if(isset($candiateSkype_id) && $candiateSkype_id != ''){
                 $candidateOtherInfo->skype_id = $candiateSkype_id;
             }
-            if(isset($candiateStatus) && $candiateStatus != ''){
+           /* if(isset($candiateStatus) && $candiateStatus != ''){
                 $candidateOtherInfo->status_id = $candiateStatus;
             }
             if(isset($candidateSource) && $candidateSource != ''){
                 $candidateOtherInfo->source_id = $candidateSource;
-            }
+            }*/
             if(isset($super_admin_user_id) && $super_admin_user_id != ''){
                 $candidateOtherInfo->owner_id = $super_admin_user_id;
             }
 
-            //  Functional roles
-
             if(isset($functional_roles_id) && $functional_roles_id != ''){
                 $candidateOtherInfo->functional_roles_id = $functional_roles_id;
             }
+
+            if(isset($specialization) && $specialization != ''){
+                $candidateOtherInfo->specialization = $specialization;
+            }
+
+            if(isset($educational_qualification_id) && $educational_qualification_id != ''){
+                $candidateOtherInfo->educational_qualification_id = $educational_qualification_id;
+            }
+
+            $candidateOtherInfo->login_candidate = '1';
             
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 

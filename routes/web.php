@@ -760,9 +760,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:candidate-list']
     ]);
 
+    Route::get('applicant-candidate', [
+        'as' => 'applicant.candidate',
+        'uses' => 'CandidateController@applicantIndex',
+        'middleware' => ['permission:candidate-list']
+    ]);
+
     Route::get('candidate/all', [
         'as' => 'candidate.all',
         'uses' => 'CandidateController@getAllCandidates',
+        'middleware' => ['permission:candidate-list']
+    ]);
+
+    Route::get('applicant-candidate/all', [
+        'as' => 'applicant-candidate.all',
+        'uses' => 'CandidateController@getAllApplicantCandidates',
         'middleware' => ['permission:candidate-list']
     ]);
 
@@ -784,9 +796,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:candidate-edit']
     ]);
 
+    Route::get('applicant-candidate/{id}/edit', [
+        'as' => 'applicant-candidate.edit',
+        'uses' => 'CandidateController@applicantCandidateEdit',
+        'middleware' => ['permission:candidate-edit']
+    ]);
+
     Route::put('candidate/{id}', [
         'as' => 'candidate.update',
         'uses' => 'CandidateController@update',
+        'middleware' => ['permission:candidate-edit']
+    ]);
+
+    Route::put('applicant-candidate/{id}', [
+        'as' => 'applicant-candidate.update',
+        'uses' => 'CandidateController@applicantCandidateUpdate',
         'middleware' => ['permission:candidate-edit']
     ]);
 
@@ -801,6 +825,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CandidateController@show',
         'middleware' => ['permission:candidate-show']
     ]);
+
+    Route::get('applicant-candidate/{id}/show', [
+        'as' => 'applicant-candidate.show',
+        'uses' => 'CandidateController@applicantCandidateShow',
+        'middleware' => ['permission:candidate-show']
+    ]);
+
     Route::post('candidateattachments/upload/{id}', [
         'as' => 'candidateattachments.upload',
         'uses' => 'CandidateController@upload',
@@ -823,6 +854,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('candidate/importExcel', 'CandidateController@importExcel');
     Route::get('candidate/fullname', 'CandidateController@fullname');
     Route::get('candidatejoin/salary', 'CandidateController@candidatesalary');
+
+    Route::post('candidate/candidate_owner',[
+        'as' => 'candidate.candidate_owner',
+        'uses' => 'CandidateController@getCandidateOwner',
+    ]);
 
     // Daily Report
     Route::get('dailyreport', [

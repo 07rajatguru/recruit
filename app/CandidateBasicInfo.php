@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CandidateBasicInfo extends Model
 {
-    //
     public $table = "candidate_basicinfo";
-
 
     public static $rules = array(
         'fname' => 'required',
@@ -61,6 +59,7 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
+
         if (isset($order) && $order >= 0) {
            $query = $query->orderBy($order,$type);
         }
@@ -70,7 +69,10 @@ class CandidateBasicInfo extends Model
         if (isset($offset) && $offset > 0) {
             $query = $query->offset($offset);
         }
+
         $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
+
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
@@ -79,7 +81,7 @@ class CandidateBasicInfo extends Model
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             });
         }
-        //$query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        
         $res = $query->get();
 
         $candidate = array();
@@ -104,13 +106,15 @@ class CandidateBasicInfo extends Model
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
         
         $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
+
         $query = $query->where(function($query) use ($search){
             $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
             $query = $query->orwhere('users.name','like',"%$search%");
             $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
             $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
         });
-       // $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+       
         $res = $query->count();
 
         return $res;
@@ -350,5 +354,146 @@ class CandidateBasicInfo extends Model
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
         });
+    }
+
+    public static function getApplicantCandidatesCount($search){
+
+        $query = CandidateBasicInfo::query();
+
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
+
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','functional_roles.name as functional_roles_name');
+
+        $query = $query->where('candidate_otherinfo.login_candidate','=',"1");
+        
+        if(isset($search) && ($search) != ''){
+
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('functional_roles.name','like',"%$search%");
+            });
+        }
+     
+        $response = $query->count();
+
+        return $response;
+    }
+
+    public static function getApplicantCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc'){
+
+        $query = CandidateBasicInfo::query();
+
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
+
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','functional_roles.name as functional_roles_name');
+
+        if (isset($order) && $order >= 0) {
+           $query = $query->orderBy($order,$type);
+        }
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+
+        $query = $query->where('candidate_otherinfo.login_candidate','=',"1");
+
+        if (isset($search) && $search != '') {
+            $query = $query->where(function($query) use ($search){
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('functional_roles.name','like',"%$search%");
+            });
+        }
+
+        $response = $query->get();
+
+        $candidate = array();
+        $i = 0;
+
+        foreach ($response as $key => $value){
+
+            $candidate[$i]['id'] = $value->id;
+            $candidate[$i]['full_name'] = $value->fname;
+            $candidate[$i]['owner'] = $value->owner;
+            $candidate[$i]['email'] = $value->email;
+            $candidate[$i]['mobile'] = $value->mobile;
+            $candidate[$i]['functional_roles_name'] = $value->functional_roles_name;
+            $i++;
+        }
+        return $candidate;
+    }
+
+    public static function getCandidateDetailsById($candidate_id){
+
+        $query = CandidateBasicInfo::query();
+
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
+        $query = $query->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.educational_qualification_id');
+
+        $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary',
+            'candidate_otherinfo.expected_salary as expected_salary',
+            'candidate_otherinfo.skype_id as skype_id',
+            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value');
+
+        $query = $query->where('candidate_basicinfo.id','=',$candidate_id);
+        $response = $query->first();
+
+        $candidate = array();
+        $utils = new Utils();
+
+        $candidate['candidate_id'] = $response->id;
+        $candidate['owner'] = $response->owner_name;
+        $candidate['full_name'] = $response->full_name;
+        $candidate['email'] = $response->email;
+        $candidate['mobile'] = $response->mobile;
+        $candidate['phone'] = $response->phone;
+        $candidate['gender'] = $response->type;
+        $candidate['marital_status'] = $response->marital_status;
+
+        $candidate['street1'] = $response->street1;
+        $candidate['street2'] = $response->street2;
+        $candidate['country'] = $response->country;
+        $candidate['state'] = $response->state;
+        $candidate['city'] = $response->city;
+        $candidate['zipcode'] = $response->zipcode;
+
+        $candidate['current_employer'] = $response->current_employer;
+        $candidate['current_job_title'] = $response->current_job_title;
+        $candidate['skill'] = $response->key_skills;
+
+        $candidate['functional_roles_id'] = $response->functional_roles_id;
+        $candidate['functional_roles_name'] = $response->functional_roles_name;
+
+        $candidate['educational_qualification_id'] = $response->educational_qualification_id;
+        $candidate['eduction_qualification'] = $response->eduction_qualification_value;
+        
+        $candidate['specialization'] = $response->specialization;
+        $candidate['experience_years'] = $response->experience_years;
+        $candidate['experience_months'] = $response->experience_months;
+        $candidate['current_salary'] = $response->current_salary;
+        $candidate['expected_salary'] = $response->expected_salary;
+        $candidate['skype_id'] = $response->skype_id;
+
+        $candidate['id'] = $response->file_id;
+        $candidate['resume_name'] = $response->resume_name;
+        $candidate['resume_path'] = "../../".$response->resume_path;
+        $candidate['resume_size'] = $utils->formatSizeUnits($response->resume_size);
+        $candidate['resume_file_type'] = $response->resume_file_type;
+        
+        return $candidate;
     }
 }

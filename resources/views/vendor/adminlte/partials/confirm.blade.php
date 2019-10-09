@@ -26,6 +26,10 @@
                 @if(isset($type) && $type != '')
                     <input type="hidden" name="type" id="type" value="{{ $type }}">
                 @endif
+
+                @if(isset($applicant_name) && $applicant_name != '')
+                    <input type="hidden" name="applicant_name" id="applicant_name" value="{{ $applicant_name }}">
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>

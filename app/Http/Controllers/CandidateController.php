@@ -18,6 +18,8 @@ use App\JobCandidateJoiningdate;
 use Excel;
 use DB;
 use App\Bills;
+use App\FunctionalRoles;
+use App\EducationQualification;
     
 class CandidateController extends Controller
 {
@@ -104,6 +106,12 @@ class CandidateController extends Controller
         return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count','letter','letter_array'));
     }
 
+    public function applicantIndex()
+    {
+        $count = CandidateBasicInfo::getApplicantCandidatesCount('');
+        return view('adminlte::candidate.applicantindex',compact('count'));
+    }
+
     public static function getCandidateOrderColumnName($order){
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
@@ -121,6 +129,9 @@ class CandidateController extends Controller
             }
             else if ($order == 5) {
                 $order_column_name = "candidate_basicinfo.mobile";
+            }
+            else if ($order == 6) {
+                $order_column_name = "functional_roles.name";
             }
         }
         return $order_column_name;
@@ -153,7 +164,7 @@ class CandidateController extends Controller
             $action .= '<a class="fa fa-circle" href="'.route('candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
             $action .= '<a class="fa fa-edit" href="'.route('candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
             if ($isSuperAdmin) {
-                $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate']);
+                $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate','form_name' => 'login']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
@@ -169,6 +180,62 @@ class CandidateController extends Controller
             'recordsFiltered' => intval($count),
             "data" => $candidate_details
         );
+        //print_r($json_data);exit;
+
+        echo json_encode($json_data);exit;
+    }
+
+    public function getAllApplicantCandidates(){
+
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getCandidateOrderColumnName($order);
+        $response = CandidateBasicInfo::getApplicantCandidatesDetails($limit,$offset,$search,$order_column_name,$type);
+        $count = CandidateBasicInfo::getApplicantCandidatesCount($search);
+
+        $candidate_details = array();
+        $i = 0;$j = 0;
+        $all_users = User::getAllUsers('recruiter');
+
+        foreach ($response as $key => $value) {
+            $action = '';
+            $action .= '<a class="fa fa-circle" href="'.route('applicant-candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
+            $action .= '<a class="fa fa-edit" href="'.route('applicant-candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate','form_name' => 'applicant']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+
+                $candidate_owner_view = \View::make('adminlte::partials.candidate_owner', ['data' => $value, 'name' => 'candidate','all_users' => $all_users]);
+                $owner = $candidate_owner_view->render();
+                $action .= $owner;
+            }
+
+            $functional_roles_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['functional_roles_name'].'</a>';
+
+            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$functional_roles_name);
+            $candidate_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $candidate_details
+        );
+        
         //print_r($json_data);exit;
 
         echo json_encode($json_data);exit;
@@ -1039,6 +1106,8 @@ class CandidateController extends Controller
 
     public function destroy($id){
 
+        $form_name = $_POST['form_name'];
+
         $res = CandidateBasicInfo::CheckAssociation($id);
 
         if($res){
@@ -1046,14 +1115,19 @@ class CandidateController extends Controller
             $candidateOtherInfoDel = CandidateOtherInfo::where('candidate_id',$id)->delete();
             $candidateBasicInfoDel = CandidateBasicInfo::where('id',$id)->delete();
 
-            return redirect()->route('candidate.index')->with('success','Candidate Deleted Successfully');
+            if(isset($form_name) && $form_name == 'applicant'){
+
+                return redirect()->route('applicant.candidate')->with('success','Candidate Deleted Successfully.');
+            }
+            else{
+
+                return redirect()->route('candidate.index')->with('success','Candidate Deleted Successfully.');
+            }
         }
         else{
             return redirect()->route('candidate.index')->with('error','Candidate is associated with job.!!');
         }
-
-        return redirect()->route('candidate.index'); 
-          
+        //return redirect()->route('candidate.index');
     }
 
     public function upload(Request $request){
@@ -1114,6 +1188,11 @@ class CandidateController extends Controller
         if (isset($_POST['edit']) && $_POST['edit'] != '') {
             $action = $_POST['edit'];
             return redirect()->route('candidate.edit',[$candidateId])->with('success','Attachment deleted Successfully');
+        }
+
+        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] != '') {
+            
+            return redirect()->route('applicant-candidate.show',[$candidateId])->with('success','Attachment Deleted Successfully.');
         }
 
         return redirect()->route('candidate.show',[$candidateId])->with('success','Attachment deleted Successfully');
@@ -1673,5 +1752,57 @@ class CandidateController extends Controller
         }
 
         return view('adminlte::candidate.import',compact('messages','candidateSource'));
+    }
+
+    public function getCandidateOwner(Request $request){
+
+        $candidate_owner = $request->get('candidate_owner');
+        $id = $request->get('id');
+
+        \DB::statement("UPDATE candidate_otherinfo SET owner_id = '$candidate_owner' where candidate_id = '$id'");
+
+        return redirect()->route('applicant.candidate')->with('success', 'Candidate owner Updated Successfully.');
+    }
+
+    public function applicantCandidateShow($id){
+
+        $candidateDetails = CandidateBasicInfo::getCandidateDetailsById($id);
+
+        return view('adminlte::candidate.applicantcandidateshow',compact('candidateDetails'));
+    }
+
+    public function applicantCandidateEdit($id){
+
+        $candidateSex = CandidateBasicInfo::getTypeArray();
+        $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
+        $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
+        $educationqualification = EducationQualification::getAllEducationQualifications();
+
+        $viewVariable = array();
+
+        $viewVariable['action'] = 'edit';
+        $viewVariable['candidateSex'] = $candidateSex;
+        $viewVariable['maritalStatus'] = $maritalStatus;
+        $viewVariable['functionalRoles'] = $functionalRoles;
+        $viewVariable['educationqualification'] = $educationqualification;
+
+        $candidate = CandidateBasicInfo::getCandidateDetailsById($id);
+
+        $candidate['candidate_id'] = $candidate['candidate_id'];
+        $candidate['fname'] = $candidate['full_name'];
+        $candidate['maritalStatus'] = $candidate['marital_status'];
+        $candidate['candidateSex'] = $candidate['gender'];
+        $candidate['functional_roles_id'] = $candidate['functional_roles_id'];
+        $candidate['educational_qualification_id'] = $candidate['educational_qualification_id'];
+
+
+        $viewVariable['candidate'] = $candidate;
+
+        return view('adminlte::candidate.createform',$viewVariable);
+    }
+
+    public function applicantCandidateUpdate(Request $request, $id){
+
+        
     }
 }

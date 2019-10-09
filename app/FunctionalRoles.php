@@ -12,12 +12,13 @@ class FunctionalRoles extends Model
 
     	$query = FunctionalRoles::query();
     	$query = $query->select('functional_roles.*');
-    	$query = $query->orderBy('functional_roles.id','desc');
+    	$query = $query->orderBy('functional_roles.name','ASC');
     	$respose = $query->get();
 
     	$functional_roles_array = array();
     	$i = 0;
 
+        $functional_roles_array[""] = "--- Select Functional Roles ---";
     	foreach ($respose as $key => $value){
 
     		$functional_roles_array[$value->id] = $value->name;

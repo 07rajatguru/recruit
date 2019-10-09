@@ -16,7 +16,7 @@ class Utils
         }
         elseif ($bytes >= 1024)
         {
-            $bytes = number_format($bytes / 1024, 2) . ' kB';
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
         }
         elseif ($bytes > 1)
         {

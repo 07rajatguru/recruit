@@ -203,8 +203,13 @@ return [
                         'icon' => 'plus',
                     ],
                     [
-                        'text' => 'List Candidates',
+                        'text' => 'Associated | Candidates',
                         'url'  => 'candidate',
+                        'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'Candidate Applicant Data',
+                        'url'  => 'applicant-candidate',
                         'icon' => 'list',
                     ],
                     /*[
