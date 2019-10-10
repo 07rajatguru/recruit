@@ -926,7 +926,9 @@ class CandidateController extends Controller
                         $candidateFileUpload->uploaded_date = date('Y-m-d');
                         $candidateFileUploadUpdated = $candidateFileUpload->save();
 
-                        return redirect('candidate/'.$candidate_id.'/edit');
+                        //return redirect('candidate/'.$candidate_id.'/edit');
+
+                        return redirect()->route('candidate.edit',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
                     }
                 }
                 $job_id = $request->input('jobopen');
@@ -1132,9 +1134,13 @@ class CandidateController extends Controller
 
     public function upload(Request $request){
 
+        // For Applicant candidate
+        $form_name = $request->form_name;
+
         $candidate_upload_type = $request->candidate_upload_type;
         $file = $request->file('file');
         $candidate_id = $request->id;
+
         $user_id = \Auth::user()->id;
 
         if(isset($file) && $file->isValid()){
@@ -1172,7 +1178,13 @@ class CandidateController extends Controller
             $candidateFileUpload->uploaded_date = date('Y-m-d');
             $candidateFileUploadStored = $candidateFileUpload->save();
         }
-        return redirect()->route('candidate.show',[$candidate_id])->with('success','Attachment uploaded successfully');
+
+        if(isset($form_name) && $form_name == 'applicantShow'){
+            return redirect()->route('applicant-candidate.show',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
+        }
+        else{
+            return redirect()->route('candidate.show',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
+        }
     }
 
     public function attachmentsDestroy($fileId){
@@ -1186,13 +1198,17 @@ class CandidateController extends Controller
         $candidateId = $_POST['id'];
 
         if (isset($_POST['edit']) && $_POST['edit'] != '') {
+
             $action = $_POST['edit'];
-            return redirect()->route('candidate.edit',[$candidateId])->with('success','Attachment deleted Successfully');
+            return redirect()->route('candidate.edit',[$candidateId])->with('success','Attachment Deleted Successfully.');
         }
 
-        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] != '') {
-            
+        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantShow'){
             return redirect()->route('applicant-candidate.show',[$candidateId])->with('success','Attachment Deleted Successfully.');
+        }
+
+        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantEdit'){
+            return redirect()->route('applicant-candidate.edit',[$candidateId])->with('success','Attachment Deleted Successfully.');
         }
 
         return redirect()->route('candidate.show',[$candidateId])->with('success','Attachment deleted Successfully');
@@ -1768,7 +1784,44 @@ class CandidateController extends Controller
 
         $candidateDetails = CandidateBasicInfo::getCandidateDetailsById($id);
 
-        return view('adminlte::candidate.applicantcandidateshow',compact('candidateDetails'));
+        $candidateModel = new CandidateBasicInfo();
+        $candidate_upload_type = $candidateModel->candidate_upload_type;
+
+        $candidateDetails['files'] = array();
+
+        $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')
+            ->select('candidate_uploaded_resume.*', 'users.name as upload_name')
+            ->where('candidate_uploaded_resume.candidate_id',$id)
+            ->get();
+
+        $utils = new Utils();
+        $i=0;
+        if(isset($candidateFiles) && sizeof($candidateFiles) > 0)
+        {
+            foreach ($candidateFiles as $candidateFile)
+            {
+                $candidateDetails['files'][$i]['id'] = $candidateFile->id;
+                $candidateDetails['files'][$i]['fileName'] = $candidateFile->file_name;
+                $candidateDetails['files'][$i]['url'] = "../../".$candidateFile->file;
+                $candidateDetails['files'][$i]['category'] = $candidateFile->file_type;
+                $candidateDetails['files'][$i]['uploaded_by'] = $candidateFile->upload_name ;
+                $candidateDetails['files'][$i]['size'] = $utils->formatSizeUnits($candidateFile->size);
+
+                if (array_search($candidateFile->file_type, $candidate_upload_type))
+                {
+                    unset($candidate_upload_type[array_search($candidateFile->file_type, $candidate_upload_type)]);
+                }
+
+                $i++;
+            }
+        }
+
+        $candidate_upload_type['Others'] = 'Others';
+        
+        $viewVariable['candidateDetails'] = $candidateDetails;    
+        $viewVariable['candidate_upload_type'] = $candidate_upload_type;
+
+        return view('adminlte::candidate.applicantcandidateshow',$viewVariable);
     }
 
     public function applicantCandidateEdit($id){
@@ -1777,14 +1830,6 @@ class CandidateController extends Controller
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
         $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
         $educationqualification = EducationQualification::getAllEducationQualifications();
-
-        $viewVariable = array();
-
-        $viewVariable['action'] = 'edit';
-        $viewVariable['candidateSex'] = $candidateSex;
-        $viewVariable['maritalStatus'] = $maritalStatus;
-        $viewVariable['functionalRoles'] = $functionalRoles;
-        $viewVariable['educationqualification'] = $educationqualification;
 
         $candidate = CandidateBasicInfo::getCandidateDetailsById($id);
 
@@ -1795,14 +1840,222 @@ class CandidateController extends Controller
         $candidate['functional_roles_id'] = $candidate['functional_roles_id'];
         $candidate['educational_qualification_id'] = $candidate['educational_qualification_id'];
 
+        // For candidate attchments
 
+        $candidateModel = new CandidateBasicInfo();
+        $candidate_upload_type = $candidateModel->candidate_upload_type;
+
+        $i = 0;
+        $candidateDetails = array();
+        $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')
+            ->select('candidate_uploaded_resume.*', 'users.name as upload_name')
+            ->where('candidate_uploaded_resume.candidate_id',$id)
+            ->get();
+
+        $utils = new Utils();
+        if(isset($candidateFiles) && sizeof($candidateFiles) > 0)
+        {
+            foreach ($candidateFiles as $candidateFile)
+            {
+                $candidateDetails[$i]['id'] = $candidateFile->id;
+                $candidateDetails[$i]['fileName'] = $candidateFile->file_name;
+                $candidateDetails[$i]['url'] = "../../".$candidateFile->file;
+                $candidateDetails[$i]['category'] = $candidateFile->file_type;
+                $candidateDetails[$i]['uploaded_by'] = $candidateFile->upload_name ;
+                $candidateDetails[$i]['size'] = $utils->formatSizeUnits($candidateFile->size);
+
+                if (array_search($candidateFile->file_type, $candidate_upload_type))
+                {
+                    unset($candidate_upload_type[array_search($candidateFile->file_type, $candidate_upload_type)]);
+                }
+                $i++;
+            }
+        }
+        $candidate_upload_type['Others'] = 'Others';
+
+
+        $viewVariable = array();
+
+        $viewVariable['action'] = 'edit';
+        $viewVariable['candidateSex'] = $candidateSex;
+        $viewVariable['maritalStatus'] = $maritalStatus;
+        $viewVariable['functionalRoles'] = $functionalRoles;
+        $viewVariable['educationqualification'] = $educationqualification;
         $viewVariable['candidate'] = $candidate;
+        $viewVariable['candidateDetails'] = $candidateDetails;
+        $viewVariable['candidate_upload_type'] = $candidate_upload_type;
 
-        return view('adminlte::candidate.createform',$viewVariable);
+        return view('adminlte::candidate.editform',$viewVariable);
     }
 
     public function applicantCandidateUpdate(Request $request, $id){
 
+        // For Applicant candidate Attchments
+        $form_name = $request->form_name;
+        $candidate_upload_type = $request->candidate_upload_type;
+        $file = $request->file('file');
+
+        $user_id = \Auth::user()->id;
+
+        if(isset($file) && $file->isValid()){
+            $fileName = $file->getClientOriginalName();
+            $fileExtention = $file->getClientOriginalExtension();
+            $fileRealPath = $file->getRealPath();
+            $fileSize = $file->getSize();
+            $fileMimeType = $file->getMimeType();
+
+            $extention = File::extension($fileName);
+
+            $fileNameArray = explode('.',$fileName);
+
+            $dir = 'uploads/candidate/'.$id.'/';
+
+            if (!file_exists($dir) && !is_dir($dir)) {
+
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+            $temp_file_name = trim($fileNameArray[0]);
+            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+            $file->move($dir,$fileNewName);
+
+            $fileNewPath = $dir.$fileNewName;
+
+            $candidateFileUpload = new CandidateUploadedResume();
+            $candidateFileUpload->candidate_id = $id;
+            $candidateFileUpload->uploaded_by = $user_id;
+            $candidateFileUpload->file_name = $fileNewName;
+            $candidateFileUpload->file_type = $candidate_upload_type;
+            $candidateFileUpload->file = $fileNewPath;
+            $candidateFileUpload->mime = $fileMimeType;
+            $candidateFileUpload->size = $fileSize;
+            $candidateFileUpload->uploaded_date = date('Y-m-d');
+            $candidateFileUpload->save();
+
+            return redirect()->route('applicant-candidate.edit',[$id])->with('success','Attachment Uploaded Successfully.');
+        }
+
+        $candiateFname = $request->input('fname');
+        $candidateEmail = $request->input('email');
+        $candidateSex = $request->input('candidateSex');
+        $candiateMaritalStatus = $request->input('maritalStatus');
+        $candiateMobile = $request->input('mobile');
+        $candiatePhone = $request->input('phone');
+
+        $candiateStreet1 = $request->input('street1');
+        $candiateStreet2 = $request->input('street2');
+        $candiateCountry = $request->input('country');
+        $candiateState = $request->input('state');
+        $candiateCity = $request->input('city');
+        $candiateZipCode = $request->input('zipcode');
         
+        $candiateCurrent_employer = $request->input('current_employer');
+        $candiateCurrent_job_title = $request->input('current_job_title');
+
+        $candiateExperience_years = $request->input('experience_years');
+        $candiateExperience_months = $request->input('experience_months');
+        
+        $candiateCurrent_salary = $request->input('current_salary');
+        $candiateExpected_salary = $request->input('expected_salary');
+
+        $candiateSkill = $request->input('skill');
+        $candiateSkype_id = $request->input('skype_id');
+
+        $functional_roles_id = $request->input('functional_roles_id');
+        $specialization = $request->input('specialization');
+        $educational_qualification_id = $request->input('educational_qualification_id');
+
+        // Save Candidate Basic Info
+        $candidate = CandidateBasicInfo::find($id);
+
+        if(isset($candiateFname)){
+            $candidate->full_name = $candiateFname;
+        }
+        if(isset($candidateEmail)){
+            $candidate->email = $candidateEmail;
+        }
+        if(isset($candidateSex)){
+            $candidate->type = $candidateSex;
+        }
+        if(isset($candiateMaritalStatus)){
+            $candidate->marital_status = $candiateMaritalStatus;
+        }
+        if(isset($candiateMobile)){
+            $candidate->mobile = $candiateMobile;
+        }
+        if(isset($candiatePhone)){
+            $candidate->phone = $candiatePhone;
+        }
+        if(isset($candiateStreet1)){
+            $candidate->street1 = $candiateStreet1;
+        }
+        if(isset($candiateStreet2)){
+            $candidate->street2 = $candiateStreet2;
+        }
+        if(isset($candiateCountry)){
+            $candidate->country = $candiateCountry;
+        }
+        if(isset($candiateState)){
+            $candidate->state = $candiateState;
+        }
+        if(isset($candiateCity)){
+            $candidate->city = $candiateCity;
+        }
+        if(isset($candiateZipCode)){
+            $candidate->zipcode = $candiateZipCode;
+        }
+
+        $candidateStored = $candidate->save();
+
+        if($candidateStored){
+
+            $candidate_id = $candidate->id;
+
+            // Save Candidate Other Info
+
+            $candidateOtherInfo = CandidateOtherInfo::where('candidate_id',$candidate_id)->first();
+
+            if(!isset($candidateOtherInfo) && sizeof($candidateOtherInfo) == 0){
+                $candidateOtherInfo = new CandidateOtherInfo();
+            }
+            if(isset($candiateCurrent_job_title) && $candiateCurrent_job_title != ''){
+                $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
+            }
+            if(isset($candiateCurrent_employer) && $candiateCurrent_employer != ''){
+                $candidateOtherInfo->current_employer = $candiateCurrent_employer;
+            }
+            if(isset($candiateExperience_years) && $candiateExperience_years != ''){
+                $candidateOtherInfo->experience_years = $candiateExperience_years;
+            }
+            if(isset($candiateExperience_months) && $candiateExperience_months != ''){
+                $candidateOtherInfo->experience_months = $candiateExperience_months;
+            }
+            if(isset($candiateCurrent_salary) && $candiateCurrent_salary != ''){
+                $candidateOtherInfo->current_salary = $candiateCurrent_salary;
+            }
+            if(isset($candiateExpected_salary) && $candiateExpected_salary != ''){
+                $candidateOtherInfo->expected_salary = $candiateExpected_salary;
+            }
+            if(isset($candiateSkill) && $candiateSkill != ''){
+                $candidateOtherInfo->skill = $candiateSkill;
+            }
+            if(isset($candiateSkype_id) && $candiateSkype_id != ''){
+                $candidateOtherInfo->skype_id = $candiateSkype_id;
+            }
+            if(isset($functional_roles_id) && $functional_roles_id != ''){
+                $candidateOtherInfo->functional_roles_id = $functional_roles_id;
+            }
+            if(isset($specialization) && $specialization != ''){
+                $candidateOtherInfo->specialization = $specialization;
+            }
+            if(isset($educational_qualification_id) && $educational_qualification_id != ''){
+                $candidateOtherInfo->educational_qualification_id = $educational_qualification_id;
+            }
+
+            $candidateOtherInfo->login_candidate = '1';
+            $candidateOtherInfo->save();
+        }
+
+        return redirect()->route('applicant.candidate')->with('success','Candidate Details Updated Successfully.');
     }
 }

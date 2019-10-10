@@ -1,22 +1,31 @@
-@extends('adminlte::master')
+@extends('adminlte::page')
 
-@section('title', 'Candidate | Add')
+@section('title', 'Candidate')
+
+@section('content_header')
+    <h1></h1>
+@stop
+
+@section('content')
 
 @section('customs_css')
     <style>
         .error{
             color:#f56954 !important;
         }
-        body {
-          /*margin: 5% 5% 5% 5%;
-          border: 2px solid #000000;
-          background-color: #9D5CAC;*/
-        }
     </style>
 @endsection
 
-
-@section('body')
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>Edit Candidate</h2>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="{{ route('applicant.candidate') }}"> Back</a>
+        </div>
+    </div>
+</div>
 
 @if($message = Session::get('success'))
     <div class="alert alert-success">
@@ -30,22 +39,13 @@
     </div>
 @endif
 
-<div class="row">
-    <div class="col-lg-12 margin-tb" style="background: #9D5CAC;border: 2px solid #9D5CAC;">
-        <div class="text-center">
-            <h1 style="color: #ffffff;">Create New Candidate</h1>
-        </div>
-    </div>
-</div>
-
-
-{!! Form::open(['files' => true,'autocomplete' => 'off','route' => 'candidate.storef' ,'id'=>'candidate_form']) !!}
+{!! Form::model($candidate,['method' => 'PUT','files' => true,'autocomplete' => 'off','id' => 'candidate_form', 'route' => ['applicant-candidate.update', $candidate['candidate_id']]] ) !!}
 
 {!! Form::hidden('action', $action, array('id'=>'action')) !!}
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Basic Information</h3>
                 </div>
@@ -53,7 +53,6 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
-
                             <div class="form-group {{ $errors->has('fname') ? 'has-error' : '' }}">
                                 <strong>Full Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('fname', null, array('id'=>'fname','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '1' )) !!}
@@ -93,8 +92,7 @@
                                 <strong>{{ $errors->first('job') }}</strong>
                                 </span>
                              @endif
-                             </div>--}}
-
+                            </div>--}}
                         </div>
                     </div>
 
@@ -136,110 +134,101 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Address Information</h3>
                 </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-12">
-
-                <div class="box-body col-sm-12 col-md-12">
-                    <div class="">
-
-                        <div class="form-group {{ $errors->has('candidate_address') ? 'has-error' : '' }}">
-                            <strong>Candidate Address:</strong>
-                            {!! Form::text('candidate_address', null, array('id'=>'candidate_address','placeholder' => 'Candidate Address','class' => 'form-control', 'tabindex' => '7' , 'onFocus'=>"geolocate()" )) !!}
-                            @if ($errors->has('candidate_address'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('candidate_address') }}</strong>
-                                </span>
-                            @endif
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-sm-12 col-md-12">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('candidate_address') ? 'has-error' : '' }}">
+                                <strong>Candidate Address:</strong>
+                                {!! Form::text('candidate_address', null, array('id'=>'candidate_address','placeholder' => 'Candidate Address','class' => 'form-control', 'tabindex' => '7' , 'onFocus'=>"geolocate()" )) !!}
+                                @if ($errors->has('candidate_address'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('candidate_address') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-
                     </div>
                 </div>
 
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('street1') ? 'has-error' : '' }}">
+                                <strong>Street 1:</strong>
+                                {!! Form::text('street1', null, array('id'=>'street1','placeholder' => 'Street1','class' => 'form-control', 'tabindex' => '8' )) !!}
+                                @if ($errors->has('street1'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('street1') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('city') ? 'has-error' : '' }}">
+                                <strong>City:</strong>
+                                {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '10' )) !!}
+                                @if ($errors->has('city'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('city') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('zipcode') ? 'has-error' : '' }}">
+                                <strong>Zip Code:</strong>
+                                {!! Form::text('zipcode', null, array('id'=>'zipcode','placeholder' => 'ZipCode','class' => 'form-control', 'tabindex' => '12' )) !!}
+                                @if ($errors->has('zipcode'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('zipcode') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('street2') ? 'has-error' : '' }}">
+                                <strong>Street 2:</strong>
+                                {!! Form::text('street2', null, array('id'=>'street2','placeholder' => 'Street2','class' => 'form-control', 'tabindex' => '9' )) !!}
+                                @if ($errors->has('street2'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('street2') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('state') ? 'has-error' : '' }}">
+                                <strong>State:</strong>
+                                {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '11' )) !!}
+                                @if ($errors->has('state'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('state') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('country') ? 'has-error' : '' }}">
+                                <strong>Country:</strong>
+                                {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '13' )) !!}
+                                @if ($errors->has('country'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('country') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-
-                <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <div class="">
-
-                        <div class="form-group {{ $errors->has('street1') ? 'has-error' : '' }}">
-                            <strong>Street 1:</strong>
-                            {!! Form::text('street1', null, array('id'=>'street1','placeholder' => 'Street1','class' => 'form-control', 'tabindex' => '8' )) !!}
-                            @if ($errors->has('street1'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('street1') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('city') ? 'has-error' : '' }}">
-                            <strong>City:</strong>
-                            {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '10' )) !!}
-                            @if ($errors->has('city'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('city') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('zipcode') ? 'has-error' : '' }}">
-                            <strong>Zip Code:</strong>
-                            {!! Form::text('zipcode', null, array('id'=>'zipcode','placeholder' => 'ZipCode','class' => 'form-control', 'tabindex' => '12' )) !!}
-                            @if ($errors->has('zipcode'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('zipcode') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <div class="">
-
-                        <div class="form-group {{ $errors->has('street2') ? 'has-error' : '' }}">
-                            <strong>Street 2:</strong>
-                            {!! Form::text('street2', null, array('id'=>'street2','placeholder' => 'Street2','class' => 'form-control', 'tabindex' => '9' )) !!}
-                            @if ($errors->has('street2'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('street2') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('state') ? 'has-error' : '' }}">
-                            <strong>State:</strong>
-                            {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '11' )) !!}
-                            @if ($errors->has('state'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('state') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('country') ? 'has-error' : '' }}">
-                            <strong>Country:</strong>
-                            {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '13' )) !!}
-                            @if ($errors->has('country'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('country') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Education and Professional Information</h3>
                 </div>
@@ -364,13 +353,13 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            @if( $action == 'add')
-                <div class="col-xs-12 col-sm-12 col-md-12">
+        @if( $action == 'add')
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Attachment Information</h3>
                     </div>
-                    
+                        
                     <div class="col-xs-12 col-sm-12 col-md-12">
                     <br/>
                         <div class="form-group {{ $errors->has('resume') ? 'has-error' : '' }}">
@@ -382,32 +371,70 @@
                                 </span>
                             @endif
                         </div>
-
                     </div>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
+
+        @if( $action == 'edit')
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header with-border col-md-6 ">
+                        <h3 class="box-title">Attachments</h3>
+                        &nbsp;&nbsp;
+                        @include('adminlte::candidate.upload', ['data' => $candidate, 'name' => 'candidateattachments','form_name' => 'applicantEdit'])
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>File Name</th>
+                                <th>Uploaded by</th>
+                                <th>Size</th>
+                                <th>Category</th>
+                            </tr>
+                            @if(isset($candidateDetails) && sizeof($candidateDetails) > 0)
+                                @foreach($candidateDetails as $key => $value)
+                                    <tr>
+                                        <td>
+                                            <a download href="{{ $value['url'] }}">
+                                                <i class="fa fa-fw fa-download"></i>
+                                            </a>
+                                            &nbsp;
+                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=> $candidate['candidate_id'], 'name' => 'candidateattachments' ,'display_name'=> 'Attachments','applicant_name' => 'applicantEdit'])
+                                        </td>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
+                                        <td>{{ $value['uploaded_by'] }}</td>
+                                        <td>{{ $value['size'] }}</td>
+                                        <td>{{ $value['category'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-bottom: 20px;">
                 {!! Form::submit(isset($candidate) ? 'Update' : 'SUBMIT', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate','style="font-size:18px;"' ]) !!}
             </div>
         </div>
-
-        <div class="col-md-12 " style="background: #9D5CAC;border: 2px solid #9D5CAC;">
-            <h3 class="box-title"></h3>
-        </div>
     </div>
 
-    {!! Form::close() !!}
-@endsection
+{!! Form::close() !!}
 
-@section('adminlte_js')
+@stop
+
+@section('customscripts')
     <script src="{{ asset('vendor/adminlte/dist/js/app.min.js') }}"></script>
     <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-
     <script>
-        jQuery(document).ready(function () {
+
+        $(document).ready(function() {
+
             getNotifications();
             var interval = 1000 * 60 * 1;
             setInterval(function(){getNotifications();},interval)
@@ -419,43 +446,6 @@
             jQuery(document).on('focus', '.select2', function() {
                 jQuery(this).siblings('select').select2('open');
             });
-        });
-
-        function getNotifications(){
-            jQuery.ajax({
-                url:'/notifications/all',
-                dataType:'json',
-                success: function(data){
-                    console.log(data);
-                    $(".notification-ul").empty();
-                    for (var i=0; i<data.length; i++){
-                        var li = '';
-                        li += '<li class="notification-li">';
-                            li += '<a href="'+data[i].link+'" target="_blank">';
-                                li += '<h4>';
-                                    li += data[i].module;
-                                li += '</h4>';
-                                li += '<p>'+data[i].msg+'</p>';
-                            li += '</a>';
-                        li += '</li>';
-                        $(".notification-ul").append(li);
-                       // $('#notification').append($('<li></li>').html(data[i].message));
-                    }
-                    $(".notification-number").html(data.length);
-                    $(".notification-display").html("You have "+data.length+" new notifications");
-                }
-            });
-        }
-    </script>
-
-    @stack('js')
-    @yield('js')
-@stop
-
-@section('customscripts')
-    <script>
-
-        $(document).ready(function() {
 
             $('#candidate_form').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
@@ -609,6 +599,31 @@
             }
         }
 
+        function getNotifications(){
+            jQuery.ajax({
+                url:'/notifications/all',
+                dataType:'json',
+                success: function(data){
+                    console.log(data);
+                    $(".notification-ul").empty();
+                    for (var i=0; i<data.length; i++){
+                        var li = '';
+                        li += '<li class="notification-li">';
+                            li += '<a href="'+data[i].link+'" target="_blank">';
+                                li += '<h4>';
+                                    li += data[i].module;
+                                li += '</h4>';
+                                li += '<p>'+data[i].msg+'</p>';
+                            li += '</a>';
+                        li += '</li>';
+                        $(".notification-ul").append(li);
+                       // $('#notification').append($('<li></li>').html(data[i].message));
+                    }
+                    $(".notification-number").html(data.length);
+                    $(".notification-display").html("You have "+data.length+" new notifications");
+                }
+            });
+        }
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>

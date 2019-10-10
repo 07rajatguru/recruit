@@ -158,9 +158,10 @@
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
+                    &nbsp;&nbsp;
+                    @include('adminlte::candidate.upload', ['data' => $candidateDetails, 'name' => 'candidateattachments','form_name' => 'applicantShow'])
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -168,27 +169,29 @@
                         <tr>
                             <th></th>
                             <th>File Name</th>
+                            <th>Uploaded by</th>
                             <th>Size</th>
                             <th>Category</th>
                         </tr>
 
-                        @if(isset($candidateDetails['resume_name']) && $candidateDetails['resume_name'] != '')
-                            <tr>
-                                <td>
-                                    <a download href="{{ $candidateDetails['resume_path'] }}">
-                                        <i class="fa fa-fw fa-download"></i>
-                                    </a>
+                        @if(isset($candidateDetails['files']) && sizeof($candidateDetails['files']) > 0)
+                            @foreach($candidateDetails['files'] as $key => $value)
+                                <tr>
+                                    <td>
+                                        <a download href="{{ $value['url'] }}">
+                                            <i class="fa fa-fw fa-download"></i>
+                                        </a>
+                                        &nbsp;
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $candidateDetails['candidate_id'], 'name' => 'candidateattachments' ,'display_name'=> 'Attachments','applicant_name' => 'applicantShow'])
+                                    </td>
 
-                                    &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $candidateDetails,'id'=> $candidateDetails ['candidate_id'],'applicant_name'=> 'ApplicantForm', 'name' => 'candidateattachments' ,'display_name'=> 'Attachments'])
-                                </td>
-                                <td>
-                                    <a target="_blank" href="{{ $candidateDetails ['resume_path'] }}">
-                                    {{ $candidateDetails['resume_name'] }}</a>
-                                </td>
-                                <td>{{ $candidateDetails['resume_size'] }}</td>
-                                <td>{{ $candidateDetails['resume_file_type'] }}</td>
-                            </tr>
+                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
+                                    <td>{{ $value['uploaded_by'] }}</td>
+                                    <td>{{ $value['size'] }}</td>
+                                    <td>{{ $value['category'] }}</td>
+
+                                </tr>
+                            @endforeach
                         @endif
                     </table>
                 </div>

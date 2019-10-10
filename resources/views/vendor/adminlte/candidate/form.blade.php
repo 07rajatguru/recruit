@@ -18,10 +18,20 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('candidate.index') }}"> Back</a>
         </div>
-
     </div>
-
 </div>
+
+@if($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
+@if($message = Session::get('error'))
+    <div class="alert alert-error">
+        <p>{{ $message }}</p>
+    </div>
+@endif
 
 @if(isset($action))
     @if($action == 'edit')

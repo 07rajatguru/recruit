@@ -60,7 +60,7 @@ class CandidateCreateFormController extends Controller
         $candiateHighest_qualification = $request->input('highest_qualification');
         $candiateExperience_years = $request->input('experience_years');
         $candiateExperience_months = $request->input('experience_months');
-        //$candiateCurrent_job_title = $request->input('current_job_title');
+        $candiateCurrent_job_title = $request->input('current_job_title');
         $candiateCurrent_employer = $request->input('current_employer');
         $candiateExpected_salary = $request->input('expected_salary');
         $candiateCurrent_salary = $request->input('current_salary');
@@ -85,7 +85,7 @@ class CandidateCreateFormController extends Controller
         if(isset($candiateFname)){
             $candidate->full_name = $candiateFname;
         }
-       /* if(isset($candiateFname)){
+       /* if(isset($candiateLname)){
             $candidate->lname = $candiateLname;
         }*/
         if(isset($candidateEmail)){
@@ -144,9 +144,9 @@ class CandidateCreateFormController extends Controller
             if(isset($candiateExperience_months) && $candiateExperience_months != ''){
                 $candidateOtherInfo->experience_months = $candiateExperience_months;
             }
-            // if(isset($candiateCurrent_job_title) && $candiateCurrent_job_title != ''){
-            //     $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
-            // }
+            if(isset($candiateCurrent_job_title) && $candiateCurrent_job_title != ''){
+                $candidateOtherInfo->current_job_title = $candiateCurrent_job_title;
+            }
             if(isset($candiateCurrent_employer) && $candiateCurrent_employer != ''){
                 $candidateOtherInfo->current_employer = $candiateCurrent_employer;
             }
@@ -346,8 +346,7 @@ class CandidateCreateFormController extends Controller
                 }
             }
         }
-
-        return redirect()->route('candidate.createf')->with('success','Candidate Details Saved Successfully');
+        return redirect()->route('candidate.createf')->with('success','Candidate Details Saved Successfully.');
     }     
 
 }
