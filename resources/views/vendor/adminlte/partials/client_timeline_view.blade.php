@@ -26,9 +26,31 @@
                                     <td style="text-align: center;">{{ $value['user_name'] }}
                                     </td>
                                 @endif
+
                                 <td style="text-align: center;">{{ $value['from_date'] }}</td>
-                                <td style="text-align: center;">{{ $value['to_date'] }}</td>
-                                <td style="text-align: center;">{{ $value['days'] }}</td>
+
+                                @if($value['to_date'] == '-')
+                                    <td style="text-align: center;">Present</td>
+                                @else
+                                    <td style="text-align: center;">{{ $value['to_date'] }}</td>
+                                @endif
+
+                                @if($value['days'] == '-')
+                                    <?php
+                                        $today_date = date('d-m-Y');
+                                        $to = strtotime($today_date);
+                                        $from = strtotime($value['from_date']);
+                                        $diff_in_days = ($to - $from)/60/60/24;
+                                    ?>
+
+                                    @if($to == $from)
+                                        <td style="text-align: center;">1</td>
+                                    @else
+                                        <td style="text-align: center;">{{ $diff_in_days }}</td>
+                                    @endif
+                                @else
+                                    <td style="text-align: center;">{{ $value['days'] }}</td>
+                                @endif
                             </tr>
                         @endforeach
                     @endif
