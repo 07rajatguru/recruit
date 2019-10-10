@@ -40,7 +40,8 @@ class CandidateCreateFormController extends Controller
 
     public function storef(Request $request){
 
-        $super_admin_user_id = getenv('SUPERADMINUSERID');
+        //$super_admin_user_id = getenv('SUPERADMINUSERID');
+        $owner_id = getenv('RECRUITMENTCONSULTANTUSERID');
 
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
@@ -168,8 +169,8 @@ class CandidateCreateFormController extends Controller
             if(isset($candidateSource) && $candidateSource != ''){
                 $candidateOtherInfo->source_id = $candidateSource;
             }*/
-            if(isset($super_admin_user_id) && $super_admin_user_id != ''){
-                $candidateOtherInfo->owner_id = $super_admin_user_id;
+            if(isset($owner_id) && $owner_id != ''){
+                $candidateOtherInfo->owner_id = $owner_id;
             }
 
             if(isset($functional_roles_id) && $functional_roles_id != ''){
@@ -222,7 +223,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateFileUpload = new CandidateUploadedResume();
                     $candidateFileUpload->candidate_id = $candidate_id;
-                    $candidateFileUpload->uploaded_by = $super_admin_user_id;
+                    $candidateFileUpload->uploaded_by = $owner_id;
                     $candidateFileUpload->file_name = $fileResumeNewName;
                     $candidateFileUpload->file_type = 'Candidate Resume';
                     $candidateFileUpload->file = $fileResumeNewPath;
@@ -258,7 +259,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateFormattedFileUpload = new CandidateUploadedResume();
                     $candidateFormattedFileUpload->candidate_id = $candidate_id;
-                    $candidateFormattedFileUpload->uploaded_by = $super_admin_user_id;
+                    $candidateFormattedFileUpload->uploaded_by = $owner_id;
                     $candidateFormattedFileUpload->file_name = $fileFormattedResumeNewName;
                     $candidateFormattedFileUpload->file_type = 'Candidate Formatted Resume';
                     $candidateFormattedFileUpload->file = $fileFormattedResumeNewPath;
@@ -296,7 +297,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateCoverLatterUpload = new CandidateUploadedResume();
                     $candidateCoverLatterUpload->candidate_id = $candidate_id;
-                    $candidateCoverLatterUpload->uploaded_by = $super_admin_user_id;
+                    $candidateCoverLatterUpload->uploaded_by = $owner_id;
                     $candidateCoverLatterUpload->file_name = $fileCoverLatterNewName;
                     $candidateCoverLatterUpload->file_type = 'Candidate Cover Latter';
                     $candidateCoverLatterUpload->file = $fileCoverLatterNewPath;
@@ -334,7 +335,7 @@ class CandidateCreateFormController extends Controller
 
                     $candidateOthersUpload = new CandidateUploadedResume();
                     $candidateOthersUpload->candidate_id = $candidate_id;
-                    $candidateOthersUpload->uploaded_by = $super_admin_user_id;
+                    $candidateOthersUpload->uploaded_by = $owner_id;
                     $candidateOthersUpload->file_name = $fileOthersNewName;
                     $candidateOthersUpload->file_type = 'Others';
                     $candidateOthersUpload->file = $fileOthersNewPath;
