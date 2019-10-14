@@ -314,11 +314,16 @@ class CandidateBasicInfo extends Model
         $user_company_details = User::getCompanyDetailsByUserID($user_id);
 
         // Candidate owner email
-        $candidate_owner_email = User::getUserEmailById($user_id);
-        $input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
+        //$candidate_owner_email = User::getUserEmailById($user_id);
+        //$input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
 
+        $candidate_details = self::getCandidateDetailsById($candidate_id);
+        $candidate_owner_email = User::getUserEmailById($candidate_details['candidate_owner_id']);
+        $input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
+        
         // Client Account Manager email
         $client_info = ClientBasicinfo::getClientInfoByJobId($job_id);
+        
         $client_owner_email = User::getUserEmailById($client_info['account_manager']);
 
         $to_address = array();
@@ -447,7 +452,7 @@ class CandidateBasicInfo extends Model
         $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary',
             'candidate_otherinfo.expected_salary as expected_salary',
             'candidate_otherinfo.skype_id as skype_id',
-            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value');
+            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value');
 
         $query = $query->where('candidate_basicinfo.id','=',$candidate_id);
         $response = $query->first();
@@ -470,7 +475,8 @@ class CandidateBasicInfo extends Model
         $candidate['state'] = $response->state;
         $candidate['city'] = $response->city;
         $candidate['zipcode'] = $response->zipcode;
-
+        $candidate['candidate_owner_id'] = $response->candidate_owner_id;
+        
         $candidate['current_employer'] = $response->current_employer;
         $candidate['current_job_title'] = $response->current_job_title;
         $candidate['skill'] = $response->key_skills;

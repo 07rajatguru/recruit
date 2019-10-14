@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
+use App\ClientTimeline;
 
 class LeadController extends Controller
 {
@@ -538,8 +539,8 @@ class LeadController extends Controller
 
         $action = "copy" ;
 
-         $co_prefix=ClientBasicinfo::getcoprefix();
-         $co_category='';
+        $co_prefix=ClientBasicinfo::getcoprefix();
+        $co_category='';
         $percentage_charged_below = '8.33';
         $percentage_charged_above = '8.33';
 
@@ -635,6 +636,12 @@ class LeadController extends Controller
             $client_id = $client_basic_info->id;
             $client_name = $client_basic_info->name;
 
+            // Add Entry in Client Timeline.
+            $client_timeline = new ClientTimeline();
+            $client_timeline->user_id = $input['account_manager'];
+            $client_timeline->client_id = $client_id;
+            $client_timeline->save();
+            
             $client_address = new ClientAddress();
             $client_address->client_id = $client_id;
 
@@ -803,6 +810,7 @@ class LeadController extends Controller
             $cc = implode(",",$cc_users_array);
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
 
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }

@@ -1873,6 +1873,10 @@ class ClientController extends Controller
                 $response = $client_doc->recursiveRemoveDirectory($dir_name);
             }
 
+            // Delete Timeline table entry
+
+            \DB::table('client_timeline')->where('client_id', '=', $id)->delete();
+
             return redirect()->route('client.index')->with('success','Client Deleted Successfully.');
         }else{
             return redirect()->route('client.index')->with('error','Client is associated with job.!!');

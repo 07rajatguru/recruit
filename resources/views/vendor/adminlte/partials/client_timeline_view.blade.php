@@ -37,19 +37,20 @@
 
                                 @if($value['days'] == '-')
                                     <?php
-                                        $today_date = date('d-m-Y');
-                                        $to = strtotime($today_date);
-                                        $from = strtotime($value['from_date']);
-                                        $diff_in_days = ($to - $from)/60/60/24;
+                                        if($value['to_date'] == $value['from_date']){
+                                            $diff_in_days = '1';
+                                        }
+                                        else{
+                                            $today_date = date('d-m-Y');
+                                            $to = strtotime($today_date);
+                                            $from = strtotime($value['from_date']);
+                                            $diff_in_days = ($to - $from)/60/60/24;
+                                        }
                                     ?>
-
-                                    @if($to == $from)
-                                        <td style="text-align: center;">1</td>
-                                    @else
-                                        <td style="text-align: center;">{{ $diff_in_days }}</td>
-                                    @endif
+                                    <td style="text-align: center;">{{ $diff_in_days }}</td>
                                 @else
-                                    <td style="text-align: center;">{{ $value['days'] }}</td>
+                                    <td style="text-align: center;">{{ $value['days'] }}
+                                    </td>
                                 @endif
                             </tr>
                         @endforeach
