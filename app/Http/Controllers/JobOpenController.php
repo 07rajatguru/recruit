@@ -1722,7 +1722,7 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
         $job_open = JobOpen::find($id);
-        $job_open->job_id = $job_unique_id;
+        //$job_open->job_id = $job_unique_id;
         //$job_open->job_show = $job_show;
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
