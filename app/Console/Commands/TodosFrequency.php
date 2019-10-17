@@ -9,6 +9,7 @@ use DB;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
 use App\User;
+use App\Date;
 
 class TodosFrequency extends Command
 {
@@ -63,88 +64,87 @@ class TodosFrequency extends Command
                 // Daily Reminder
                 if ($reminder == 1) {
 
+                    $start_date = date('Y-m-d h:i:s');
+                    $start_time = explode(" ", $start_date);
+                    $time = Date::converttime($start_time[1]);
+                    $post_date = date('Y-m-d h:i:s' ,$time);
+
                     $todos = ToDos::find($value['id']);
                     $todos->status = $inprogress;
                     $todos->due_date = date('Y-m-d h:i:s',strtotime("$due_date tomorrow"));
-                    $todos->start_date = date('Y-m-d h:i:s');
+                    $todos->start_date = $post_date;
                     $todos->save();
 
-                    $start_date = $todos->start_date;
+                    $reminder_date = date('Y-m-d h:i:s',strtotime("$post_date tomorrow"));
+                    $todo_reminder_id = $value['id'];
 
-                    $reminder_date = date('Y-m-d h:i:s',strtotime("$start_date tomorrow"));
-
-                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
-                    $todo_reminder_id = $todo_reminder->todo_id;
-
-                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
-                    //print_r($todo_reminder_id);exit;
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id = $todo_reminder_id");
                 }
 
                 // Weekly Reminder
                 if ($reminder == 2) {
 
+                    $start_date = date('Y-m-d h:i:s');
+                    $start_time = explode(" ", $start_date);
+                    $time = Date::converttime($start_time[1]);
+                    $post_date = date('Y-m-d h:i:s' ,$time);
+
                     $todos = ToDos::find($value['id']);
                     $todos->status = $inprogress;
                     $todos->due_date = date('Y-m-d h:i:s',strtotime("$due_date +1 week"));
-                    $todos->start_date = date('Y-m-d h:i:s');
+                    $todos->start_date = $post_date;
                     $todos->save();
 
-                    $start_date = $todos->start_date;
+                    $reminder_date = date('Y-m-d h:i:s',strtotime("$post_date +1 week"));
+                    $todo_reminder_id = $value['id'];
 
-                    $reminder_date = date('Y-m-d h:i:s',strtotime("$start_date +1 week"));
-
-                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
-                    $todo_reminder_id = $todo_reminder->todo_id;
-
-                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
-                    //print_r($todo_reminder_id);exit;
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id = $todo_reminder_id");
                 }
 
                 // Monthly Reminder
                 if ($reminder == 3) {
 
+                    $start_date = date('Y-m-d h:i:s');
+                    $start_time = explode(" ", $start_date);
+                    $time = Date::converttime($start_time[1]);
+                    $post_date = date('Y-m-d h:i:s' ,$time);
+
                     $todos = ToDos::find($value['id']);
                     $todos->status = $inprogress;
                     $todos->due_date = date('Y-m-d h:i:s',strtotime("$due_date +1 month"));
-                    $todos->start_date = date('Y-m-d h:i:s');
+                    $todos->start_date = $post_date;
                     $todos->save();
 
-                    $start_date = $todos->start_date;
+                    $reminder_date = date('Y-m-d h:i:s',strtotime("$post_date +1 month"));
+                    $todo_reminder_id = $value['id'];
 
-                    $reminder_date = date('Y-m-d h:i:s',strtotime("$start_date +1 month"));
-
-                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
-                    $todo_reminder_id = $todo_reminder->todo_id;
-
-                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
-                    //print_r($todo_reminder_id);exit;
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id = $todo_reminder_id");
                 }
-
 
                 // Quarterly Reminder
                 if ($reminder == 4) {
 
+                    $start_date = date('Y-m-d h:i:s');
+                    $start_time = explode(" ", $start_date);
+                    $time = Date::converttime($start_time[1]);
+                    $post_date = date('Y-m-d h:i:s' ,$time);
+
                     $todos = ToDos::find($value['id']);
                     $todos->status = $inprogress;
                     $todos->due_date = date('Y-m-d h:i:s',strtotime("$due_date +3 month"));
-                    $todos->start_date = date('Y-m-d h:i:s');
+                    $todos->start_date = $post_date;
                     $todos->save();
 
-                    $start_date = $todos->start_date;
+                    $reminder_date = date('Y-m-d h:i:s',strtotime("$post_date +3 month"));
+                    $todo_reminder_id = $value['id'];
 
-                    $reminder_date = date('Y-m-d h:i:s',strtotime("$start_date +3 month"));
-
-                    $todo_reminder = TodoFrequency::where('todo_id',$value['id'])->select('todo_frequency.todo_id')->first();
-                    $todo_reminder_id = $todo_reminder->todo_id;
-
-                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
-                    //print_r($todo_reminder_id);exit;
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id = $todo_reminder_id");
                 }
 
                 // Yearly Reminder
                 if ($reminder == 5) {
 
-                    $todos = ToDos::find($value['id']);
+                    /*$todos = ToDos::find($value['id']);
                     $todos->status = $inprogress;
                     $todos->due_date = date('Y-m-d h:i:s',strtotime("$due_date +1 year"));
                     $todos->start_date = date('Y-m-d h:i:s');
@@ -158,14 +158,29 @@ class TodosFrequency extends Command
                     $todo_reminder_id = $todo_reminder->todo_id;
 
                     DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id=$todo_reminder_id");
-                    //print_r($todo_reminder_id);exit;
+                    print_r($todo_reminder_id);exit;*/
+
+                    $start_date = date('Y-m-d h:i:s');
+                    $start_time = explode(" ", $start_date);
+                    $time = Date::converttime($start_time[1]);
+                    $post_date = date('Y-m-d h:i:s' ,$time);
+
+                    $todos = ToDos::find($value['id']);
+                    $todos->status = $inprogress;
+                    $todos->due_date = date('Y-m-d h:i:s',strtotime("$due_date +1 year"));
+                    $todos->start_date = $post_date;
+                    $todos->save();
+
+                    $reminder_date = date('Y-m-d h:i:s',strtotime("$post_date +1 year"));
+                    $todo_reminder_id = $value['id'];
+
+                    DB::statement("UPDATE todo_frequency SET reminder_date = '$reminder_date' where todo_id = $todo_reminder_id");
                 }
 
                 foreach ($userid as $key1=>$value1){
                     if($value1!=$task_owner){
-                        $user_arr= $value1;
+                        $user_arr = $value1;
 
-                       
                         $assigned_to = User::getUserNameById($value1);
                         $assigned_to_array = explode(" ", $assigned_to);
                         $assigned_to_name = $assigned_to_array[0];
@@ -184,6 +199,7 @@ class TodosFrequency extends Command
 
                                 $module = "Todos";
                                 $sender_name = $task_owner;
+                                $message = "$assigned_to_name: New task has been assigned to you";
                                 $to = $user_email;
 
                                 $cc_users_array = array_filter($cc_users_array);
@@ -195,13 +211,12 @@ class TodosFrequency extends Command
                                 event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
                                 // Notification entry
-                                $module_id = $value['id'];
-                                $module = 'Todos';
-                                $message = "$assigned_to_name: New task has been assigned to you";
+                                //$module_id = $value['id'];
+                                //$module = 'Todos';
+                                //$message = "$assigned_to_name: New task has been assigned to you";
                                 $link = route('todos.index');
 
                                 event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
-
                             //}
                         }
                     }
