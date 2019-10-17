@@ -134,7 +134,8 @@ class ClientStatus extends Command
             }
         }
 
-        foreach ($clientids as $key => $value) {
+        /*foreach ($clientids as $key => $value) {
+
             // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
             $client_status_query = ClientBasicinfo::query();
             $client_status_query = $client_status_query->where('id',$value);
@@ -151,6 +152,39 @@ class ClientStatus extends Command
             DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$value'");
 
             echo " status - 0 :".$value;
+        }*/
+
+        foreach ($clientids as $key => $value) {
+
+            // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
+
+            $client_status_query = ClientBasicinfo::query();
+            $client_status_query = $client_status_query->where('id',$value);
+            $client_res = $client_status_query->first();
+            $client_status = $client_res->status;
+
+            if($client_status==2 or $client_status==3 or $client_status==4)
+                continue;
+
+            // Set Passive date for Passive Clients
+
+            // Get Created_at data of client
+            $client_created_at_date = $client_res->created_at;
+
+            // Get one month before date from current date
+            $before_one_month_date = date('Y-m-d',strtotime("-30 days"));
+
+            if($client_created_at_date < $before_one_month_date){
+
+                $today_date = date('Y-m-d');
+                DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$value'");
+                echo " status - 0 :".$value;
+            }
+            else{
+                
+                DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$value'");
+                echo " status - 1 :".$value;
+            }
         }
 
         // get all jobs which are created before 1 month
@@ -199,6 +233,7 @@ class ClientStatus extends Command
                 DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_res2->client_id'");
             }
             else{
+
                 // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
                 $client_status_query = ClientBasicinfo::query();
                 $client_status_query = $client_status_query->where('id',$c_id[$j]);
