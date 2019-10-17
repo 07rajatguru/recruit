@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Client Hierarchy</h2>
+            <h2>Client Hierarchy ({{ $count or '0' }})</h2>
         </div>
         <div class="pull-right">
             <a class="btn btn-success" href="{{ route('clientheirarchy.create') }}"> Add New Client Hierarchy</a>
@@ -36,6 +36,7 @@
 	       <th width="50px">No</th>
 	       <th width="100px">Action</th>
 	       <th>Name</th>
+           <th>Position</th>
            {{--<th>Order</th>--}}
 	    </tr>
     </thead>
@@ -50,6 +51,7 @@
                     @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Client Hierarchy'])
                 </td>
                 <td>{{ $value['name'] }}</td>
+                <td>{{ $value['position'] }}</td>
                 {{--<td>{{ $value['order'] }}</td>--}}
             </tr>
         @endforeach

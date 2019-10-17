@@ -10,14 +10,13 @@ class ClientHeirarchyController extends Controller
     public function index(){
 
     	$client_heirarchy = ClientHeirarchy::getAllClientHeirarchy();
-
-    	return view('adminlte::clientheirarchy.index',compact('client_heirarchy'));
+        $count = sizeof($client_heirarchy);
+    	return view('adminlte::clientheirarchy.index',compact('client_heirarchy','count'));
     }
 
     public function create(){
 
     	$action = 'add';
-
     	return view('adminlte::clientheirarchy.create',compact('action'));
     }
 
@@ -25,10 +24,12 @@ class ClientHeirarchyController extends Controller
 
     	$name = $request->get('name');
     	$order = $request->get('order');
+        $position = $request->get('position');
 
     	$client_heirarchy = new ClientHeirarchy();
     	$client_heirarchy->name = $name;
     	$client_heirarchy->order = $order;
+        $client_heirarchy->position = $position;
     	$client_heirarchy->save();
 
     	return redirect()->route('clientheirarchy.index')->with('success','Client Heirarchy Added Successfully');
@@ -36,22 +37,22 @@ class ClientHeirarchyController extends Controller
 
     public function edit($id){
 
+        $action = 'edit';
     	$client_heirarchy = ClientHeirarchy::find($id);
 
-    	$action = 'edit';
-
     	return view('adminlte::clientheirarchy.edit',compact('client_heirarchy','action'));
-
     }
 
     public function update($id,Request $request){
 
     	$name = $request->get('name');
     	$order = $request->get('order');
+        $position = $request->get('position');
 
     	$client_heirarchy = ClientHeirarchy::find($id);
     	$client_heirarchy->name = $name;
     	$client_heirarchy->order = $order;
+        $client_heirarchy->position = $position;
     	$client_heirarchy->save();
 
     	return redirect()->route('clientheirarchy.index')->with('success','Client Heirarchy Updated Successfully');

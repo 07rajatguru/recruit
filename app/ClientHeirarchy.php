@@ -28,6 +28,15 @@ class ClientHeirarchy extends Model
     		$client_heirarchy[$i]['id'] = $value->id;
     		$client_heirarchy[$i]['name'] = $value->name;
     		$client_heirarchy[$i]['order'] = $value->order;
+
+            if($value->position == '0'){
+
+                $client_heirarchy[$i]['position'] = 'AM';
+            }
+            else{
+
+                $client_heirarchy[$i]['position'] = 'PM';
+            }
     		$i++;
     	}
 
@@ -38,6 +47,7 @@ class ClientHeirarchy extends Model
 
         $query = ClientHeirarchy::query();
         $query = $query->select('client_heirarchy.*');
+        $query = $query->orderBy('order','asc');
         $res = $query->get();
 
         $client_heirarchy_name = array('0' => 'Select Position');

@@ -30,7 +30,6 @@ use App\ClientHeirarchy;
 
 class JobOpenController extends Controller
 {
-
     public function salary()
     {
         $job_salary = JobOpen::select('job_openings.id as id','job_openings.salary_from as salary_from','job_openings.salary_to as salary_to')
@@ -135,7 +134,6 @@ class JobOpenController extends Controller
         $job_work = JobOpen::select('job_openings.id as id','job_openings.work_experience_from as work_exp_from','job_openings.work_experience_to as work_exp_to')
                                   ->limit(13)
                                   ->get();
-
 
         $i=0;
         foreach ($job_work as $jobwork) {
@@ -323,7 +321,6 @@ class JobOpenController extends Controller
         $viewVariable['year'] = $year;
 
         return view('adminlte::jobopen.index', $viewVariable,compact('count','priority_0','priority_1','priority_2','priority_3','priority_5','priority_6','priority_7','priority_8'));
-
     }
 
     // Job open to all page
@@ -367,7 +364,6 @@ class JobOpenController extends Controller
         $viewVariable['count'] = $count;
 
         return view('adminlte::jobopen.opentoall', $viewVariable,compact('count'));
-
     }
 
     // Function for priority wise job page
@@ -852,7 +848,6 @@ class JobOpenController extends Controller
 
     public function create()
     {
-
         $user = \Auth::user();
         $user_id = $user->id;
 
@@ -894,7 +889,6 @@ class JobOpenController extends Controller
         for($i=1;$i<=30;$i++){
             $work_to[$i] = $i;
         }
-
 
         $user_role_id = User::getLoggedinUserRole($user);
         $admin_role_id = env('ADMIN');
@@ -955,19 +949,17 @@ class JobOpenController extends Controller
         $work_exp_from = '';
         $work_exp_to = '';
 
-        // $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
 
         $action = "add";
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'/*,'client_hierarchy_name'*/));
-
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
     }
 
     public function store(Request $request)
     {
-
         $dateClass = new Date();
 
         $user_id = \Auth::user()->id;
@@ -1069,7 +1061,8 @@ class JobOpenController extends Controller
             }
         //print_r($open_to_all);exit;
         }
-        // $level_id = $input['level_id'];
+
+        $level_id = $input['level_id'];
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -1105,7 +1098,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
         $job_open->open_to_all_date = $open_to_all;
-        // $job_open->level_id = $level_id;
+        $job_open->level_id = $level_id;
 
 //     print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
@@ -1213,8 +1206,8 @@ class JobOpenController extends Controller
             if(isset($users) && sizeof($users)>0)
             {
                 $user_emails = array();
-                foreach ($users as $key=>$value)
-                {
+                foreach ($users as $key=>$value){
+
                     if($user_id!=$value)
                     {
                         $module_id = $job_id;
@@ -1233,30 +1226,28 @@ class JobOpenController extends Controller
 
                 // Email Notification : data store in datebase
 
-                        $superadminsecondemail=User::getUserEmailById($superadminuserid);
+                $superadminsecondemail=User::getUserEmailById($superadminuserid);
 
-                        //$cc1 = "adler.rgl@gmail.com";
-                        //$cc2 = "tarikapanjwani@gmail.com";
+                //$cc1 = "adler.rgl@gmail.com";
+                //$cc2 = "tarikapanjwani@gmail.com";
 
-                        $cc_users_array=array($loggedin_email,$superadminsecondemail);
+                $cc_users_array=array($loggedin_email,$superadminsecondemail);
 
-                        $module = "Job Open";
-                        $sender_name = $user_id;
-                        $to = implode(",",$user_emails);
-                        $cc = implode(",",$cc_users_array);
+                $module = "Job Open";
+                $sender_name = $user_id;
+                $to = implode(",",$user_emails);
+                $cc = implode(",",$cc_users_array);
 
-                        $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
-                        $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
+                $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
+                $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
                         
-                        $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
-                        $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
-                        $module_id = $job_id;
+                $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
+                $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
+                $module_id = $job_id;
 
-                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
-
         }
-
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully');
     }
 
@@ -1266,12 +1257,12 @@ class JobOpenController extends Controller
         $job_open=array();
 
         $job_open_detail = \DB::table('job_openings')
-            // ->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id')
+             ->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id')
             ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
             ->join('client_address','client_address.client_id','=','client_basicinfo.id')
             ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
             ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
-            ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name'/*,'client_heirarchy.name as level_name'*/)
+            ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name','client_heirarchy.name as level_name')
             ->where('job_openings.id', '=', $id)
             ->get();
 
@@ -1398,12 +1389,12 @@ class JobOpenController extends Controller
             }
 
           //  $salary = $min_ctc.'-'.$max_ctc;
-            /*if (isset($value->level_name) && $value->level_name != '') {
+            if (isset($value->level_name) && $value->level_name != '') {
                 $job_open['posting_title'] = $value->level_name." - ".$value->posting_title;
             }
-            else {*/
+            else {
                 $job_open['posting_title'] = $value->posting_title;   
-            /*}*/
+            }
             $job_open['job_id'] = $value->job_id;
             $job_open['client_name'] = $value->client_name . "-" . $value->bill_city;
             $job_open['client_id'] = $value->client_id;
@@ -1594,7 +1585,7 @@ class JobOpenController extends Controller
         // job priority
         $job_priorities = JobOpen::getJobPriorities();
         // get Client hierarchy names
-        // $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
 
         $job_open = JobOpen::find($id);
         if(in_array($user_role_id,$access_roles_id) || ($job_open->hiring_manager_id==$user_id)) {    
@@ -1640,13 +1631,11 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type'));
-
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
     }
 
     public function update(Request $request, $id)
     {
-
         $dateClass = new Date();
 
         $user_id = \Auth::user()->id;
@@ -1717,7 +1706,7 @@ class JobOpenController extends Controller
         if (isset($work_exp_to) && $work_exp_to == '')
             $work_exp_to = 0;
 
-        // $level_id = $input['level_id'];
+        $level_id = $input['level_id'];
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -1753,7 +1742,7 @@ class JobOpenController extends Controller
         $job_open->thousand_to = $thousand_to;
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
-        // $job_open->level_id = $level_id;
+        $job_open->level_id = $level_id;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -1929,14 +1918,13 @@ class JobOpenController extends Controller
 
         // job priority
         $job_priorities = JobOpen::getJobPriorities();
+
         // get Client hierarchy names
-        // $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
 
         $action = "clone";
 
-        
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users'/*,'client_hierarchy_name'*/));
-
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
     }
 
     public function clonestore(Request $request){
@@ -2010,7 +1998,7 @@ class JobOpenController extends Controller
         if (isset($work_exp_to) && $work_exp_to == '')
             $work_exp_to = 0;
 
-        // $level_id = $input['level_id'];
+        $level_id = $input['level_id'];
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
@@ -2043,9 +2031,9 @@ class JobOpenController extends Controller
         $job_open->thousand_to = $thousand_to;
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
-        // $job_open->level_id = $level_id;
+        $job_open->level_id = $level_id;
 
-//     print_r($job_open);exit;
+        //print_r($job_open);exit;
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
         if($validator->fails()){
@@ -2196,7 +2184,6 @@ class JobOpenController extends Controller
 
     public function upload(Request $request)
     {
-
         $upload_type = $request->upload_type;
         $file = $request->file('file');
         $job_id = $request->id;
@@ -2227,7 +2214,6 @@ class JobOpenController extends Controller
                 $jobopen_doc->updated_at = time();
                 $jobopen_doc->save();
             }
-
         }
 
         return redirect()->route('jobopen.show', [$job_id])->with('success', 'Attachment uploaded successfully');
@@ -2235,7 +2221,6 @@ class JobOpenController extends Controller
 
     public function attachmentsDestroy($docid)
     {
-
         $file_name = JobOpenDoc::where('id', $docid)->first();
         $delete_file_name = $file_name->file;
 
@@ -2353,7 +2338,6 @@ class JobOpenController extends Controller
             // Candidate Vacancy Details email
 
             $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
-
         }
 
         $jobDetail = JobOpen::find($job_id);
@@ -2403,7 +2387,6 @@ class JobOpenController extends Controller
 
         echo json_encode($response);
         exit;
-
     }
 
     public function associatedCandidates($id)
@@ -2659,7 +2642,6 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
 
         }
-
     }
 
     public function moreOptions(Request $request){
@@ -2713,7 +2695,6 @@ class JobOpenController extends Controller
         else{
             return redirect()->route('jobopen.show', [$job_id])->with('success', 'Error while updating data');
         }
-
     }
 
     public function status(Request $request){
@@ -2741,7 +2722,6 @@ class JobOpenController extends Controller
         else if ($display_name == 'Job Open') {
             return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated successfully');
         }
-       
     }
 
     public function close(Request $request){
@@ -2849,7 +2829,6 @@ class JobOpenController extends Controller
         $viewVariable['close_priority'] = $close_priority;
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
-
 
         return view('adminlte::jobopen.close',$viewVariable);   
     }
@@ -3302,5 +3281,4 @@ class JobOpenController extends Controller
         //print_r($candidate_details);exit;
         return view('adminlte::jobopen.candidatedetails',compact('candidate_details'));
     }
-
 }

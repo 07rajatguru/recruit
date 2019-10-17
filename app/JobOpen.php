@@ -836,10 +836,10 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        // $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
 
@@ -936,12 +936,12 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            /*if (isset($value->level_name) && $value->level_name != '') {
+            if (isset($value->level_name) && $value->level_name != '') {
                 $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
             }
-            else {*/
+            else {
                 $jobs_list[$i]['posting_title'] = $value->posting_title;
-            /*}*/
+            }
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){

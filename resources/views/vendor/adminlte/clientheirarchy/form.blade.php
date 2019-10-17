@@ -45,6 +45,19 @@
                             </span>
                         @endif
                     </div>
+
+                    <div class="form-group {{ $errors->has('position') ? 'has-error' : '' }}">
+                        <strong>Select Position: <span class = "required_fields">*</span> </strong>
+                        {!! Form::radio('position','0') !!}
+                        {!! Form::label('AM') !!} &nbsp;&nbsp;
+                        {!! Form::radio('position','1') !!}
+                        {!! Form::label('PM') !!}
+                        @if ($errors->has('position'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('position') }}</strong>
+                            </span>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -67,3 +80,35 @@
     </div>
 </div>
 {!! Form::close() !!}
+
+@section('customscripts')
+    <script>
+        $(document).ready(function(){
+
+            $("#client_heirarchy_form").validate({
+                rules: {
+                    "name": {
+                        required: true
+                    },
+                    "order": {
+                        required: true
+                    },
+                    "position": {
+                        required: true
+                    },
+                },
+                messages: {
+                    "name": {
+                        required: "Name is required field."
+                    },
+                    "order": {
+                        required: "Order is required field."
+                    },
+                    "position": {
+                        required: "Please select position."
+                    },
+                }
+            });
+        });
+    </script>
+@endsection
