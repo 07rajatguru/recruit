@@ -25,7 +25,7 @@ class ClientTimeline extends Model
         $query = ClientTimeline::query();
         $query = $query->leftjoin('users','users.id','=','client_timeline.user_id');
         $query = $query->where('client_id','=',$client_id);
-        $query = $query->orderBy('id','ASC');
+        $query = $query->orderBy('id','DESC');
         $query = $query->select('client_timeline.*','users.name as user_name');
 
         $response = $query->get();
