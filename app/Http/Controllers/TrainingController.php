@@ -119,7 +119,14 @@ class TrainingController extends Controller
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
-            $title = '<a target="_blank" href="'.$value['file_url'].'">'.$value['title'].'</a>';
+
+            $doc_count = TrainingDoc::getTrainingDocCount($value['id']);
+            if ($doc_count == 1) {
+                $title = '<a target="_blank" href="'.$value['file_url'].'">'.$value['title'].'</a>';
+            }
+            else {
+                $title = $value['title'];
+            }
             $data = array(++$j,$title,$action);
             $training_data[$i] = $data;
             $i++;
