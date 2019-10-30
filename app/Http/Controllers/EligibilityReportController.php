@@ -34,9 +34,19 @@ class EligibilityReportController extends Controller
             	$year = $_POST['year'];
             }
             else{
-            	$y = date('Y');
-                $n = $y-1;
-                $year = $n.'-4-'.$y.'-3';
+                $y = date('Y');
+                $m = date('m');
+                if ($m > 3) {
+                    $n = $y + 1;
+                    $year = $y.'-4-'.$n.'-3';
+                }
+                else{
+                    $n = $y-1;
+                    $year = $n.'-4-'.$y.'-3';
+                }
+            	// $y = date('Y');
+             //    $n = $y-1;
+             //    $year = $n.'-4-'.$y.'-3';
             }
 
             $year_data = explode('-', $year); // [result : Array ( [0] => 2018 [1] => 4 [2] => 2019 [3] => 3 )] by default
@@ -149,8 +159,18 @@ class EligibilityReportController extends Controller
                 }
                 else{
                     $y = date('Y');
-                    $n = $y-1;
-                    $year = $n.'-4-'.$y.'-3';
+                    $m = date('m');
+                    if ($m > 3) {
+                        $n = $y + 1;
+                        $year = $y.'-4-'.$n.'-3';
+                    }
+                    else{
+                        $n = $y-1;
+                        $year = $n.'-4-'.$y.'-3';
+                    }
+                    // $y = date('Y');
+                    // $n = $y-1;
+                    // $year = $n.'-4-'.$y.'-3';
                 }
 
                 $year_data = explode('-', $year);
