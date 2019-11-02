@@ -33,7 +33,8 @@
 <div class="row">
     <div class="col-lg-12 margin-tb" style="background: #9D5CAC;border: 2px solid #9D5CAC;">
         <div class="text-center">
-            <h1 style="color: #ffffff;">Create New Candidate</h1>
+            <!-- <h1 style="color: #ffffff;">Create New Candidate</h1> -->
+            <h1 style="color: #ffffff;">Submit Your Resume</h1>
         </div>
     </div>
 </div>
