@@ -95,6 +95,7 @@ class ProcessController extends Controller
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
+        $edit_perm = $user->can('training-edit');
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
@@ -115,7 +116,7 @@ class ProcessController extends Controller
         foreach ($process_response as $key => $value) {
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',$value['id']).'" style="margin:2px;"></a>';
-            if(isset($value['access']) && $value['access']==1){
+            if(isset($value['access']) && $value['access']==1 || $edit_perm){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($isSuperAdmin) {
