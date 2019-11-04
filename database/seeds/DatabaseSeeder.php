@@ -39,5 +39,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FunctionalRolesSeeder::class);
         $this->call(AdditionalFunctionalRolesSeeder::class);
         $this->call(EductionaListSeeder::class);
+        $this->call(EducationSpecializationSeeder::class);
     }
 }
