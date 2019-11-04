@@ -16,7 +16,7 @@
         <a class="btn btn-primary" href="{{ url()->previous() }}">Back</a>
     </div>--}}
 </div>
-<div class="col-md-9"> 
+<div class="col-md-7"> 
     <div>
      	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id,'super_admin_userid' => $super_admin_userid))    	 
     </div>
@@ -24,6 +24,57 @@
     <div>
     	@include('adminlte::client.remarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid))
     </div>
+</div>
+
+<div class="col-md-5">
+    <div style="text-align: center;">
+        <h3>Client History</h3>
+    </div>
+    <table id="timeline_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+        <tr>
+            <th style="text-align: center;">Username</th>
+            <th style="text-align: center;">From Date</th>
+            <th style="text-align: center;">To Date</th>
+            <th style="text-align: center;">Days</th>
+        </tr>
+        @if(isset($days_array) && sizeof($days_array) > 0)
+            @foreach($days_array as $key => $value)
+                <tr>
+                    @if($value['user_id'] == 0)
+                        <td style="text-align: center;">Yet to Assign</td>
+                    @else
+                        <td style="text-align: center;">{{ $value['user_name'] }}</td>
+                    @endif
+
+                    <td style="text-align: center;">{{ $value['from_date'] }}</td>
+
+                    @if($value['to_date'] == '-')
+                        <td style="text-align: center;">Present</td>
+                    @else
+                        <td style="text-align: center;">{{ $value['to_date'] }}</td>
+                    @endif
+
+                    @if($value['days'] == '-')
+                        <?php
+                            if($value['to_date'] == $value['from_date']){
+                                $diff_in_days = '1';
+                            }
+                            else{
+                                $today_date = date('d-m-Y');
+                                $to = strtotime($today_date);
+                                $from = strtotime($value['from_date']);
+                                $diff_in_days = ($to - $from)/60/60/24;
+                            }
+                        ?>
+                        <td style="text-align: center;">{{ $diff_in_days }}</td>
+                    @else
+                        <td style="text-align: center;">{{ $value['days'] }}
+                        </td>
+                    @endif
+                </tr>
+            @endforeach
+        @endif
+    </table>
 </div>
 
 <input type="hidden" name="super_admin_userid" id="super_admin_userid" value="{{ $super_admin_userid }}">

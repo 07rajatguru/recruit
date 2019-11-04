@@ -1,4 +1,4 @@
-<a data-toggle="modal" href="#modal-timeline-{!! $data['id'] !!}" class="fa fa-times-circle-o" title="Heirarchy" style="margin:2px;"></a>
+<a data-toggle="modal" href="#modal-timeline-{!! $data['id'] !!}" class="fa fa-times-circle-o" title="History" style="margin:2px;"></a>
 <div id="modal-timeline-{!! $data['id'] !!}" class="modal text-left fade">
 	<div class="modal-dialog">
         <div class="modal-content">

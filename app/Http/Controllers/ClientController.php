@@ -2408,7 +2408,9 @@ class ClientController extends Controller
 
        $post = $client->post()->orderBy('created_at', 'desc')->get();
 
-       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid'));
+       $days_array = ClientTimeline::getDetailsByClientId($id);
+
+       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','days_array'));
 
     }
 
