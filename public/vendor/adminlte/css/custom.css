@@ -368,8 +368,8 @@ tr.disabled > td a {
     border-left: 0;
     border-top: 0;}
  .m-post-row .button-area{    width: auto;
-   padding: 0 !important;} 
-.m-post-row .button-area .btn{    padding: 12px 15px;
+   padding: 0 !important; margin: 0 0 0 1% !important;} 
+.m-post-row .button-area .btn{    padding: 5px 10px;
     border-radius: 0;}    
 .m-post-row.comment-box{    background: transparent;
     border: 0;}

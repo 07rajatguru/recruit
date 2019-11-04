@@ -63,4 +63,19 @@ class ClientRemarks extends Model
 
         return $res;
     }
+
+    public static function getAllClientRemarksData(){
+
+        $query = ClientRemarks::query();
+        $query = $query->select('client_remarks.*');
+        $query = $query->orderBy('id','desc');
+        $res = $query->get();
+
+        $remarks = array('' => 'Select Remarks');
+        foreach ($res as $key => $value) {
+            $remarks[$value->remarks] = $value->remarks;
+        }
+
+        return $remarks;
+    }
 }

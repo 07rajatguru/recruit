@@ -18,11 +18,11 @@
 </div>
 <div class="col-md-7"> 
     <div>
-     	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id,'super_admin_userid' => $super_admin_userid))    	 
+     	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id,'super_admin_userid' => $super_admin_userid,'client_remarks'=>$client_remarks))    	 
     </div>
 
     <div>
-    	@include('adminlte::client.remarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid))
+    	@include('adminlte::client.remarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid, 'client_remarks'=>$client_remarks, 'client_remarks_edit' => $client_remarks_edit))
     </div>
 </div>
 
@@ -77,6 +77,52 @@
     </table>
 </div>
 
+<div class="modal fade" id="new-comment">
+    <div class="modal-dialog ui-block window-popup edit-widget add-comment">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title">Add Remarks</h2>
+        </div>
+
+        <div class="modal-body">
+            {!! Form::open(['route' => ['client.post.write', $client_id], 'name' => 'write_a_post', 'id' => 'write_a_post', 'files' => 'true']) !!}
+            {!! Form::hidden('client_id', $client_id) !!}
+            {!! Form::hidden('user_id', auth()->id()) !!}
+            {!! Form::hidden('super_admin_userid', $super_admin_userid) !!}
+            {!! Form::text('content', null, ['id' => 'new_content','class' => 'form-control','required' => true, 'placeholder' => 'Write Remark']) !!}
+        </div>
+
+        <div class="modal-footer">
+            <div class="add-button"><button class="btn btn-primary btn-md-2">Add</button></div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
+
+<div class="modal fade" id="new-remark-comment">
+    <div class="modal-dialog ui-block window-popup edit-widget add-comment">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title">Add Remarks</h2>
+        </div>
+
+        <div class="modal-body">
+            {!! Form::open(['route' => ['client.post.write', $client_id], 'name' => 'write_a_post', 'id' => 'write_a_post', 'files' => 'true']) !!}
+            {!! Form::hidden('client_id', $client_id) !!}
+            {!! Form::hidden('user_id', auth()->id()) !!}
+            {!! Form::hidden('super_admin_userid', $super_admin_userid) !!}
+            {!! Form::text('content', null, ['id' => 'new_content','class' => 'form-control','required' => true, 'placeholder' => 'Write Remark']) !!}
+        </div>
+
+        <div class="modal-footer">
+            <div class="add-button"><button class="btn btn-primary btn-md-2">Add</button></div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
+
 <input type="hidden" name="super_admin_userid" id="super_admin_userid" value="{{ $super_admin_userid }}">
 @stop
 
@@ -87,9 +133,27 @@
 
     jQuery(document).ready(function(){
 
-        initSearchRemarks();
-        initSearchComment();
+        $("#content").select2({'placeholder': 'Select Remark'});
+        $(".update-review-textarea").select2({'placeholder': 'Select Remark','width': '100%'});
+        // initSearchRemarks();
+        // initSearchComment();
     });
+
+    function AddnewRemarkspopup(){
+        var content = $("#content").val();
+
+        if (content == 'other') {
+            $("#new-comment").modal('show');
+        }
+    }
+
+    function AddnewRemarkCommentpopup(id){
+        var content = $("#comment_"+id).val();
+
+        if (content == 'other') {
+            $("#new-remark-comment").modal('show');
+        }
+    }
 
     function initSearchRemarks() {
 
@@ -119,7 +183,7 @@
         };
     }
 
-    function initUpdateSearchRemarks(id) {
+    /*function initUpdateSearchRemarks(id) {
 
        $("#update-review-textarea-"+id).autocomplete({
             minLength: 1,
@@ -143,7 +207,7 @@
                 .appendTo( ul )
             }
         };
-    }
+    }*/
 
     function initSearchComment(id) {
 
@@ -200,6 +264,7 @@
     }
 
 	function showcommentbox(post_id) {
+        $("#comment_"+post_id).select2({'placeholder' : 'Select Remark','width':'100%'});
         if($(".comment-"+post_id).is(':hidden')){
             $(".comment-"+post_id).show();
         }

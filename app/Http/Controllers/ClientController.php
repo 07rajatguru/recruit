@@ -2396,21 +2396,22 @@ class ClientController extends Controller
 
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = \Auth::user()->id;
+        $client_id = $id;
 
-       $user_id = \Auth::user()->id;
-       $client_id = $id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
 
-       $super_admin_userid = getenv('SUPERADMINUSERID');
+        $client = ClientBasicinfo::find($client_id);
+        $client_location = ClientBasicinfo::getBillingCityOfClientByID($client_id);
+        $post = $client->post()->orderBy('created_at', 'desc')->get();
 
-       $client = ClientBasicinfo::find($client_id);
+        $days_array = ClientTimeline::getDetailsByClientId($id);
+        $client_remarks = ClientRemarks::getAllClientRemarksData();
+        $client_remarks['other'] = 'Others';
 
-       $client_location = ClientBasicinfo::getBillingCityOfClientByID($client_id);
+        $client_remarks_edit = ClientRemarks::getAllClientRemarksData();
 
-       $post = $client->post()->orderBy('created_at', 'desc')->get();
-
-       $days_array = ClientTimeline::getDetailsByClientId($id);
-
-       return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','days_array'));
+        return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','days_array','client_remarks','client_remarks_edit'));
 
     }
 
