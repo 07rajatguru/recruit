@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use App\FunctionalRoles;
 use App\EducationQualification;
+use App\EducationSpecialization;
 
 class CandidateCreateFormController extends Controller
 {
@@ -24,6 +25,7 @@ class CandidateCreateFormController extends Controller
         //$candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
         $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
         $educationqualification = EducationQualification::getAllEducationQualifications();
+        $specializations = EducationSpecialization::getAllSpecializations();
 
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
@@ -34,6 +36,7 @@ class CandidateCreateFormController extends Controller
         $viewVariable['action'] = 'add';
         $viewVariable['functionalRoles'] = $functionalRoles;
         $viewVariable['educationqualification'] = $educationqualification;
+        $viewVariable['specializations'] = $specializations;
 
         return view('adminlte::candidate.createform',$viewVariable);
     }
@@ -347,8 +350,16 @@ class CandidateCreateFormController extends Controller
                 }
             }
         }
-        return redirect()->route('candidate.createf')->with('success','Candidate Details Saved Successfully.');
-    }     
+        return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');
+    }
 
+    public function getSpecialization() {
+
+        $educational_qualification_id = $_GET['educational_qualification_id'];
+
+        $specialization_res = EducationSpecialization::getSpecializationByEducationId($educational_qualification_id);
+
+        return json_encode($specialization_res);exit;
+    }
 }
 

@@ -258,7 +258,7 @@
 
                         <div class="form-group {{ $errors->has('educational_qualification_id') ? 'has-error' : '' }}">
                             <strong>Education Qualification: <span class = "required_fields">*</span></strong>
-                            {!! Form::select('educational_qualification_id', $educationqualification,null, array ('id'=> 'educational_qualification_id','class' => 'form-control', 'tabindex' => '18' )) !!}
+                            {!! Form::select('educational_qualification_id', $educationqualification,null, array ('id'=> 'educational_qualification_id','class' => 'form-control', 'tabindex' => '18','onchange' => 'getSpecialization()')) !!}
                             @if ($errors->has('educational_qualification_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('educational_qualification_id') }}</strong>
@@ -311,7 +311,7 @@
 
                         <div class="form-group {{ $errors->has('functional_roles_id') ? 'has-error' : '' }}">
                             <strong>Functional Roles: <span class = "required_fields">*</span></strong>
-                            {!! Form::select('functional_roles_id', $functionalRoles,null, array('id'=>'functional_roles_id','class' => 'form-control', 'tabindex' => '17' )) !!}
+                            {!! Form::select('functional_roles_id', $functionalRoles,null, array('id'=>'functional_roles_id','class' => 'form-control', 'tabindex' => '17')) !!}
                             @if ($errors->has('functional_roles_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('functional_roles_id') }}</strong>
@@ -321,7 +321,7 @@
 
                         <div class="form-group {{ $errors->has('specialization') ? 'has-error' : '' }}">
                             <strong>Specialization: </strong>
-                            {!! Form::text('specialization', null, array('id'=>'specialization','placeholder' => 'Specialization','class' => 'form-control', 'tabindex' => '19' )) !!}
+                            {!! Form::select('specialization',$specializations,null,array ('id'=> 'specialization','class' => 'form-control', 'tabindex' => '19')) !!}
                             @if ($errors->has('specialization'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('specialization') }}</strong>
@@ -330,8 +330,8 @@
                         </div>
 
                         <div class="col-md-6 form-group {{ $errors->has('current_salary') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                            <strong>Current Salary: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('current_salary', null, array('id'=>'current_salary','placeholder' => 'Current Salary','class' => 'form-control', 'tabindex' => '22' )) !!}
+                            <strong>Current Salary: (Per Anum.) &nbsp;<span class = "required_fields">*</span></strong>
+                            {!! Form::number('current_salary', null, array('id'=>'current_salary','placeholder' => 'Current Salary','class' => 'form-control', 'tabindex' => '22','onchange' => 'currentSalaryValidation()')) !!}
                             @if ($errors->has('current_salary'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('current_salary') }}</strong>
@@ -340,8 +340,8 @@
                         </div>
 
                         <div class="col-md-6 form-group {{ $errors->has('expected_salary') ? 'has-error' : '' }}" style="margin-left: 15px;">
-                            <strong>Expected Salary:</strong>
-                            {!! Form::text('expected_salary', null, array('id'=>'expected_salary','placeholder' => 'Expected Salary','class' => 'form-control', 'tabindex' => '23' )) !!}
+                            <strong>Expected Salary: (Per Anum.)</strong>
+                            {!! Form::number('expected_salary', null, array('id'=>'expected_salary','placeholder' => 'Expected Salary','class' => 'form-control', 'tabindex' => '23','onchange' => 'expectedSalaryValidation()')) !!}
                             @if ($errors->has('expected_salary'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('expected_salary') }}</strong>
@@ -435,12 +435,14 @@
 
         $(document).ready(function() {
 
+            getSpecialization();
             getNotifications();
             var interval = 1000 * 60 * 1;
             setInterval(function(){getNotifications();},interval)
 
             $("#functional_roles_id").select2();
             $("#educational_qualification_id").select2();
+            $("#specialization").select2();
 
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {
@@ -624,6 +626,89 @@
                 }
             });
         }
+
+        function getSpecialization() {
+
+            var educational_qualification_id = $("#educational_qualification_id").val();
+            var specialization = $("#specialization").val();
+            
+            if(educational_qualification_id>0) {
+                $.ajax(
+                {
+                    url:'/specialization/getspecializationbyid',
+                    data:{educational_qualification_id:educational_qualification_id},
+                    dataType:'json',
+
+                    success: function(data) {
+                        if(data) {
+                            $("#specialization").empty();
+                            $("#specialization").append('<option value=""> --- Select Specialization --- </option>');
+
+                            $.each(data,function(key, value)
+                            {
+                                if (value.specalization_id == specialization) {
+                                    $('select[id="specialization"]').append('<option value="'+ value.specalization_id +'" selected="selected">' + value.specalization_nm + '</option>');    
+                                }
+                                else {
+                                    $('select[id="specialization"]').append('<option value="'+ value.specalization_id +'">' + value.specalization_nm + '</option>');
+                                }
+                            });
+
+                            $("#specialization").focus();
+                        }
+                        else {
+                            $("#specialization").empty();
+                        }
+                    }
+                });
+            }
+            else {
+                $("#specialization").empty();
+            }
+        }
+
+        function currentSalaryValidation() {
+
+            var current_salary = $("#current_salary").val();
+
+            if(current_salary < 100000) {
+
+                alert("Enter Salary Between 1,00,000 to 1,00,00,000");
+                $("#current_salary").val(" ");
+                $("#current_salary").focus();
+                return false;
+            }
+
+            if(current_salary > 10000000) {
+
+                alert("Enter Salary Between 1,00,000 to 1,00,00,000");
+                $("#current_salary").val(" ");
+                $("#current_salary").focus();
+                return false;
+            }
+        }
+
+        function expectedSalaryValidation() {
+
+            var expected_salary = $("#expected_salary").val();
+
+            if(expected_salary < 100000) {
+
+                alert("Enter Salary Between 1,00,000 to 1,00,00,000");
+                $("#expected_salary").val(" ");
+                $("#expected_salary").focus();
+                return false;
+            }
+
+            if(expected_salary > 10000000) {
+
+                alert("Enter Salary Between 1,00,000 to 1,00,00,000");
+                $("#expected_salary").val(" ");
+                $("#expected_salary").focus();
+                return false;
+            }
+        }
+
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>

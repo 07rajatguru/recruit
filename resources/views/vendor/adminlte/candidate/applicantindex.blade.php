@@ -37,9 +37,13 @@
                 <th>No</th>
                 <th>Action</th>
                 <th>Candidate Name</th>
-                <th>Candidate Owner</th>
+                <!-- <th>Candidate Owner</th> -->
                 <th>Candidate Email</th>
                 <th>Mobile Number</th>
+                <th>Current Employer</th>
+                <th>Current Job Title</th>
+                <th>Current Salary</th>
+                <th>Expected Salary</th>
                 <th>Functional Roles</th>
             </tr>
         </thead>

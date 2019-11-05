@@ -130,7 +130,7 @@
                             <th>Education Qualification</th>
                             <td>{{ $candidateDetails['eduction_qualification'] }}</td>
                             <th>Specialization</th>
-                            <td>{{ $candidateDetails['specialization'] }}</td>
+                            <td>{{ $candidateDetails['education_specialization'] }}</td>
                         </tr>
 
                         <tr>
