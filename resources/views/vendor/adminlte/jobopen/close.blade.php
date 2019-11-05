@@ -78,9 +78,9 @@
             <th>Location</th>
             <th>Min CTC<br/>(in Lacs)</th>
             <th>Max CTC<br/>(in Lacs)</th>
-            <th>HR/Coordinator <br/> Name</th>
             <th>Added Date</th>
-            <th>No. Of Positions</th>
+            <th>No. Of <br/> Positions</th>
+            <th>Contact <br/> Point</th>
             <th>Edu Qualifications</th>
             <th>Target Industries</th>
             <th>Desired Candidate</th>
