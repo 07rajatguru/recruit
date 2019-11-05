@@ -410,7 +410,7 @@ class ClientController extends Controller
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
             }
 
-            if($isSuperAdmin){
+            if($isSuperAdmin || $value['client_owner']){
 
                 $days_array = ClientTimeline::getDetailsByClientId($value['id']);
 
