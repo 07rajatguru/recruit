@@ -619,7 +619,6 @@ class BillsController extends Controller
 
     public function store(Request $request)
     {
-
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
 
@@ -1175,6 +1174,7 @@ class BillsController extends Controller
 
         BillsEffort::where('bill_id',$id)->delete();
         BillsDoc::where('bill_id',$id)->delete();
+        BillsLeadEfforts::where('bill_id',$id)->delete();
         $todo = Bills::where('id',$id)->delete();
 
         return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully');
