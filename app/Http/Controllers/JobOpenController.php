@@ -681,7 +681,7 @@ class JobOpenController extends Controller
             }*/
 
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['coordinator_name'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
