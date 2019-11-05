@@ -20,6 +20,7 @@ use DB;
 use App\Bills;
 use App\FunctionalRoles;
 use App\EducationQualification;
+use App\EducationSpecialization;
     
 class CandidateController extends Controller
 {
@@ -112,7 +113,7 @@ class CandidateController extends Controller
         return view('adminlte::candidate.applicantindex',compact('count'));
     }
 
-    public static function getCandidateOrderColumnName($order){
+    public function getCandidateOrderColumnName($order){
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
             if ($order == 0) {
@@ -131,6 +132,41 @@ class CandidateController extends Controller
                 $order_column_name = "candidate_basicinfo.mobile";
             }
             else if ($order == 6) {
+                $order_column_name = "functional_roles.name";
+            }
+        }
+        return $order_column_name;
+    }
+
+    public function getApplicantCandidateOrderColumnName($order){
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "candidate_basicinfo.id";
+            }
+            else if ($order == 2) {
+                $order_column_name = "candidate_basicinfo.full_name";
+            }
+            else if ($order == 3) {
+                $order_column_name = "candidate_basicinfo.email";
+            }
+            else if ($order == 4) {
+                $order_column_name = "candidate_basicinfo.mobile";
+            }
+            else if ($order == 5) {
+                $order_column_name = "candidate_otherinfo.current_employer";
+            }
+            else if ($order == 6) {
+                $order_column_name = "candidate_otherinfo.current_job_title";
+            }
+            else if ($order == 7) {
+                $order_column_name = "candidate_otherinfo.current_salary";
+            }
+            else if ($order == 8) {
+                $order_column_name = "candidate_otherinfo.expected_salary";
+            }
+            else if ($order == 9) {
                 $order_column_name = "functional_roles.name";
             }
         }
@@ -200,7 +236,7 @@ class CandidateController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
 
-        $order_column_name = self::getCandidateOrderColumnName($order);
+        $order_column_name = self::getApplicantCandidateOrderColumnName($order);
         $response = CandidateBasicInfo::getApplicantCandidatesDetails($limit,$offset,$search,$order_column_name,$type);
         $count = CandidateBasicInfo::getApplicantCandidatesCount($search);
 
@@ -224,7 +260,7 @@ class CandidateController extends Controller
 
             $functional_roles_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['functional_roles_name'].'</a>';
 
-            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$functional_roles_name);
+            $data = array(++$j,$action,$value['full_name'],$value['email'],$value['mobile'],$value['current_employer'],$value['current_job_title'],$value['current_salary'],$value['expected_salary'],$functional_roles_name);
             $candidate_details[$i] = $data;
             $i++;
         }
@@ -1830,6 +1866,7 @@ class CandidateController extends Controller
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
         $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
         $educationqualification = EducationQualification::getAllEducationQualifications();
+        $specializations = EducationSpecialization::getAllSpecializations();
 
         $candidate = CandidateBasicInfo::getCandidateDetailsById($id);
 
@@ -1839,6 +1876,7 @@ class CandidateController extends Controller
         $candidate['candidateSex'] = $candidate['gender'];
         $candidate['functional_roles_id'] = $candidate['functional_roles_id'];
         $candidate['educational_qualification_id'] = $candidate['educational_qualification_id'];
+        $candidate['specialization'] = $candidate['education_specialization_id'];
 
         // For candidate attchments
 
@@ -1881,6 +1919,7 @@ class CandidateController extends Controller
         $viewVariable['maritalStatus'] = $maritalStatus;
         $viewVariable['functionalRoles'] = $functionalRoles;
         $viewVariable['educationqualification'] = $educationqualification;
+        $viewVariable['specializations'] = $specializations;
         $viewVariable['candidate'] = $candidate;
         $viewVariable['candidateDetails'] = $candidateDetails;
         $viewVariable['candidate_upload_type'] = $candidate_upload_type;

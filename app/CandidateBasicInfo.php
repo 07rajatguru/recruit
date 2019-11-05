@@ -369,7 +369,7 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
 
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','functional_roles.name as functional_roles_name');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name');
 
         $query = $query->where('candidate_otherinfo.login_candidate','=',"1");
         
@@ -377,9 +377,12 @@ class CandidateBasicInfo extends Model
 
             $query = $query->where(function($query) use ($search){
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
-                $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.current_employer','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.current_job_title','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.current_salary','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.expected_salary','like',"%$search%");
                 $query = $query->orwhere('functional_roles.name','like',"%$search%");
             });
         }
@@ -396,8 +399,8 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
-
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','functional_roles.name as functional_roles_name');
+        
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name');
 
         if (isset($order) && $order >= 0) {
            $query = $query->orderBy($order,$type);
@@ -414,9 +417,12 @@ class CandidateBasicInfo extends Model
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
-                $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.current_employer','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.current_job_title','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.current_salary','like',"%$search%");
+                $query = $query->orwhere('candidate_otherinfo.expected_salary','like',"%$search%");
                 $query = $query->orwhere('functional_roles.name','like',"%$search%");
             });
         }
@@ -433,6 +439,10 @@ class CandidateBasicInfo extends Model
             $candidate[$i]['owner'] = $value->owner;
             $candidate[$i]['email'] = $value->email;
             $candidate[$i]['mobile'] = $value->mobile;
+            $candidate[$i]['current_employer'] = $value->current_employer;
+            $candidate[$i]['current_job_title'] = $value->current_job_title;
+            $candidate[$i]['current_salary'] = $value->current_salary;
+            $candidate[$i]['expected_salary'] = $value->expected_salary;
             $candidate[$i]['functional_roles_name'] = $value->functional_roles_name;
             $i++;
         }
@@ -448,11 +458,13 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
         $query = $query->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.educational_qualification_id');
+        $query = $query->leftjoin('education_specialization','education_specialization.id','=','candidate_otherinfo.specialization');
+
 
         $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary',
             'candidate_otherinfo.expected_salary as expected_salary',
             'candidate_otherinfo.skype_id as skype_id',
-            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value');
+            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization');
 
         $query = $query->where('candidate_basicinfo.id','=',$candidate_id);
         $response = $query->first();
@@ -487,7 +499,8 @@ class CandidateBasicInfo extends Model
         $candidate['educational_qualification_id'] = $response->educational_qualification_id;
         $candidate['eduction_qualification'] = $response->eduction_qualification_value;
         
-        $candidate['specialization'] = $response->specialization;
+        $candidate['education_specialization_id'] = $response->education_specialization_id;
+        $candidate['education_specialization'] = $response->education_specialization;
         $candidate['experience_years'] = $response->experience_years;
         $candidate['experience_months'] = $response->experience_months;
         $candidate['current_salary'] = $response->current_salary;

@@ -135,6 +135,13 @@ Route::post('candidate/add',[
     'uses'=>'CandidateCreateFormController@storef'
 ]);
 
+// For get specialization of selected education
+
+Route::get('specialization/getspecializationbyid',[
+    'as'=>'get.specialization',
+    'uses'=>'CandidateCreateFormController@getSpecialization'
+]);
+
 // Report > Daily , Weekly
     Route::get('report/daily' ,[
         'as' => 'report.daily',
