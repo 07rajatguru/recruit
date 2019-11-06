@@ -102,7 +102,7 @@ class MonthlyReport extends Command
             $input['to_array']= $v1;
 
             $cc_array = array();
-            $cc_array[] = 'tarikapanjwani@gmail.com';
+            // $cc_array[] = 'tarikapanjwani@gmail.com';
             $cc_array[] = 'rajlalwani@adlertalent.com';
             $input['cc_array']= $cc_array;
 
