@@ -527,13 +527,13 @@ class JobOpenController extends Controller
                 $order_column_name = "job_openings.lacs_to";
             }
             else if ($order == 10) {
-                $order_column_name = "client_basicinfo.coordinator_name";
-            }
-            else if ($order == 11) {
                 $order_column_name = "job_openings.created_at";
             }
-            else if ($order == 12) {
+            else if ($order == 11) {
                 $order_column_name = "job_openings.no_of_positions";
+            }
+            else if ($order == 12) {
+                $order_column_name = "client_basicinfo.coordinator_name";
             }
         }
         return $order_column_name;
