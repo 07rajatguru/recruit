@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Input;
 use App\FunctionalRoles;
 use App\EducationQualification;
 use App\EducationSpecialization;
+use App\Events\NotificationMail;
 
 class CandidateCreateFormController extends Controller
 {
@@ -349,7 +350,17 @@ class CandidateCreateFormController extends Controller
 
                 }
             }
+
+            $module = "Applicant Candidate";
+            $sender_name = $owner_id;
+            $to = 'careers@adlertalent.com';
+            $subject = "New Applicant Candidate - " . $candiateFname;
+            $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate </td></tr>";
+            $module_id = $candidate_id;
+            $cc = '';
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
+
         return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');
     }
 
