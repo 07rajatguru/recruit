@@ -509,6 +509,7 @@ class CandidateBasicInfo extends Model
 
         $candidate['id'] = $response->file_id;
         $candidate['resume_name'] = $response->resume_name;
+        $candidate['org_resume_path'] = "/" . $response->resume_path;
         $candidate['resume_path'] = "../../".$response->resume_path;
         $candidate['resume_size'] = $utils->formatSizeUnits($response->resume_size);
         $candidate['resume_file_type'] = $response->resume_file_type;

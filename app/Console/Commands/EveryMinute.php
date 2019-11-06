@@ -13,6 +13,7 @@ use App\Interview;
 use App\Bills;
 use App\ClientBasicinfo;
 use App\LeaveDoc;
+use App\CandidateBasicInfo;
 
 class EveryMinute extends Command
 {
@@ -554,6 +555,29 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Applicant Candidate') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = $cc_array;
+              
+                $input['module_id'] = $value['module_id'];
+                $candidate_details = CandidateBasicInfo::getCandidateDetailsById($input['module_id']);
+
+                $input['candidate_details'] = $candidate_details;
+                $input['resume'] = public_path() . $candidate_details['org_resume_path'];
+
+                \Mail::send('adminlte::emails.applicantcandidatemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->subject($input['subject']);
+                    $message->attach($input['resume']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
