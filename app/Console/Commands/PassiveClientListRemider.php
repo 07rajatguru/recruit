@@ -7,6 +7,7 @@ use App\ClientBasicinfo;
 use App\JobOpen;
 use App\JobAssociateCandidates;
 use App\User;
+use App\Events\NotificationMail;
 
 class PassiveClientListRemider extends Command
 {
@@ -52,6 +53,7 @@ class PassiveClientListRemider extends Command
             $client = $client->where('client_basicinfo.account_manager_id',$k1);
             $client_res = $client->get();
 
+            $clientids = array();
             foreach ($client_res as $key => $value) {
                 $clientids[$value->id] = $value->id;
             }
@@ -79,108 +81,131 @@ class PassiveClientListRemider extends Command
                     }
                 }
             }
-        }
-        print_r($passiveClients);exit;
 
-        $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id)'));
+            $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE (created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id) AND hiring_manager_id = '.$k1.')'));
 
-        if(isset($job_data) && $job_data != ''){
-            $i = 0;
-            foreach($job_data as $key1=>$value1){
-                $client_id=$value1->client_id;
+            if(isset($job_data) && $job_data != ''){
+                $i = 0;
+                foreach($job_data as $key1=>$value1){
+                    $client_id=$value1->client_id;
 
-                $job_created_at = $value1->created_at; // job added date
+                    $job_created_at = $value1->created_at; // job added date
 
-                // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
-                $client_status_query = ClientBasicinfo::query();
-                $client_status_query = $client_status_query->where('id',$client_id);
-                $client_res = $client_status_query->first();
-                $client_status = $client_res->status;
+                    // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
+                    $client_status_query = ClientBasicinfo::query();
+                    $client_status_query = $client_status_query->where('id',$client_id);
+                    $client_res = $client_status_query->first();
+                    $client_status = $client_res->status;
 
-                if($client_status==2 or $client_status==3 or $client_status==4)
-                    continue;
+                    if($client_status==2 or $client_status==3 or $client_status==4)
+                        continue;
 
-                $date1=date('Y-m-d',strtotime("-21 days"));
-                if(isset($job_created_at)){
-                   if(($job_created_at) < $date1){
+                    $date1=date('Y-m-d',strtotime("-21 days"));
+                    if(isset($job_created_at)){
+                       if(($job_created_at) < $date1){
+                            // get client id for passive clients
+                            $passiveClients[$client_id] = $client_id;
+                       }
+                       else {
+                            if (array_search($client_id,$passiveClients)) {
+                                unset($passiveClients[array_search($client_id,$passiveClients)]);
+                            }
+                       }
+                    }
+                    else{
                         // get client id for passive clients
                         $passiveClients[$client_id] = $client_id;
-                   }
-                   else {
-                        if (array_search($client_id,$passiveClients)) {
-                            unset($passiveClients[array_search($client_id,$passiveClients)]);
-                        }
-                   }
+                    }
+                    $i++;
                 }
-                else{
-                    // get client id for passive clients
-                    $passiveClients[$client_id] = $client_id;
-                }
+            }
+
+            // get all jobs which are created before 21 days
+            $date1=date('Y-m-d 00:00:00',strtotime("-21 days"));
+            $jo_query = JobOpen::query();
+            $jo_query = $jo_query->where('created_at','<',"$date1");
+            $jo_query = $jo_query->where('hiring_manager_id',$k1);
+            $job_res = $jo_query->get();
+
+            $all_jobs = array();
+            $i = 0;
+            foreach ($job_res as $k=>$v){
+                $all_jobs[$i]['job_id'] = $v->id;
+                $all_jobs[$i]['client_id'] = $v->client_id;
                 $i++;
             }
-        }
 
-        // get all jobs which are created before 21 days
-        $date1=date('Y-m-d 00:00:00',strtotime("-21 days"));
-        $jo_query = JobOpen::query();
-        $jo_query = $jo_query->where('created_at','<',"$date1");
-        $job_res = $jo_query->get();
+            // in that jobs find in which jobs no cvs are associated within 21 days and get their client ids
+            $j = 0;
+            foreach ($all_jobs as $k=>$v){
+                $j_id[$j] = $v['job_id'];
+                $c_id[$j] = $v['client_id'];
 
-        $all_jobs = array();
-        $i = 0;
-        foreach ($job_res as $k=>$v){
-            $all_jobs[$i]['job_id'] = $v->id;
-            $all_jobs[$i]['client_id'] = $v->client_id;
-            $i++;
-        }
+                $jo_query1 = JobAssociateCandidates::query();
+                $jo_query1 = $jo_query1->where('job_associate_candidates.job_id',$j_id[$j]);
+                $jo_query1 = $jo_query1->where('job_associate_candidates.created_at','>=',"$date1");
+                $job_res1 = $jo_query1->first();
+                
+                if(isset($job_res1->job_id)) {
+                   // get client id from job id
+                   $jo_query2 = JobOpen::query();
+                   $jo_query2 = $jo_query2->where('id',$job_res1->job_id);
+                   $client_res2 = $jo_query2->first();
 
-        // in that jobs find in which jobs no cvs are associated within 21 days and get their client ids
-        $j = 0;
-        foreach ($all_jobs as $k=>$v){
-            $j_id[$j] = $v['job_id'];
-            $c_id[$j] = $v['client_id'];
+                    // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
+                    $client_status_query = ClientBasicinfo::query();
+                    $client_status_query = $client_status_query->where('id',$client_res2->client_id);
+                    $client_res = $client_status_query->first();
+                    $client_status = $client_res['status'];
 
-            $jo_query1 = JobAssociateCandidates::query();
-            $jo_query1 = $jo_query1->where('job_associate_candidates.job_id',$j_id[$j]);
-            $jo_query1 = $jo_query1->where('job_associate_candidates.created_at','>=',"$date1");
-            $job_res1 = $jo_query1->first();
-            
-            if(isset($job_res1->job_id)) {
-               // get client id from job id
-               $jo_query2 = JobOpen::query();
-               $jo_query2 = $jo_query2->where('id',$job_res1->job_id);
-               $client_res2 = $jo_query2->first();
+                    if($client_status==2 or $client_status==3 or $client_status==4)
+                        continue;
 
-                // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
-                $client_status_query = ClientBasicinfo::query();
-                $client_status_query = $client_status_query->where('id',$client_res2->client_id);
-                $client_res = $client_status_query->first();
-                $client_status = $client_res['status'];
-
-                if($client_status==2 or $client_status==3 or $client_status==4)
-                    continue;
-
-                if (array_search($client_res2->client_id,$passiveClients)) {
-                    unset($passiveClients[array_search($client_res2->client_id,$passiveClients)]);
+                    if (array_search($client_res2->client_id,$passiveClients)) {
+                        unset($passiveClients[array_search($client_res2->client_id,$passiveClients)]);
+                    }
                 }
+                // else{
+
+                //     // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
+                //     $client_status_query = ClientBasicinfo::query();
+                //     $client_status_query = $client_status_query->where('id',$c_id[$j]);
+                //     $client_res = $client_status_query->first();
+                //     $client_status = $client_res['status'];
+
+                //     if($client_status==2 or $client_status==3 or $client_status==4)
+                //         continue;
+
+                //     if(!in_array($c_id[$j],$passiveClients))
+                //         // get client id for passive clients
+                //         $passiveClients[$client_res->client_id] = $client_res->client_id;
+                // }
+                $j++;
             }
-            else{
 
-                // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
-                $client_status_query = ClientBasicinfo::query();
-                $client_status_query = $client_status_query->where('id',$c_id[$j]);
-                $client_res = $client_status_query->first();
-                $client_status = $client_res['status'];
+            if (isset($passiveClients) && sizeof($passiveClients) > 0) {
+                $superadminuserid = getenv('SUPERADMINUSERID');
+                $super_admin_email = User::getUserEmailById($superadminuserid);
 
-                if($client_status==2 or $client_status==3 or $client_status==4)
-                    continue;
+                $to_array = array();
+                $to_array[] = $v1;
 
-                if(!in_array($c_id[$j],$passiveClients))
-                    // get client id for passive clients
-                    $passiveClients[$client_res->client_id] = $client_res->client_id;
+                $cc_array = array();
+                $cc_array[] = $super_admin_email;
+                $cc_array[] = 'saloni@trajinfotech.com';
+
+                $module = "Expected Passive Client";
+                $subject = 'Email of expected passive client in next week';
+                $message = "";
+                $to_array = array_filter($to_array);
+                $to = implode(",",$to_array);
+                $cc_array = array_filter($cc_array);
+                $cc = implode(",",$cc_array);
+                $module_id = implode(",", $passiveClients);
+                $sender_name = $superadminuserid;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
-            $j++;
         }
-        print_r($passiveClients);exit;
     }
 }
