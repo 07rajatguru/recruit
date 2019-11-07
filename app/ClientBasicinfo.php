@@ -1061,7 +1061,7 @@ class ClientBasicinfo extends Ardent
      }
 
     // Get Passive Clients of Current Week
-    public static function getPassiveClients(){
+    public static function getPassiveClients($user_id){
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
@@ -1072,6 +1072,7 @@ class ClientBasicinfo extends Ardent
         $query = $query->where('client_basicinfo.status','=','0');
         $query = $query->where('client_basicinfo.passive_date','>=',date('Y-m-d',strtotime('Monday this week')));
         $query = $query->where('client_basicinfo.passive_date','<=',date('Y-m-d',strtotime("$date +6days")));
+        $query = $query->where('client_basicinfo.account_manager_id',$user_id);
         $query_response = $query->get();
 
         return $query_response;

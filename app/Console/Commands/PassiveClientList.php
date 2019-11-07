@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Events\NotificationMail;
+use App\User;
+Use App\ClientBasicinfo;
 
 class PassiveClientList extends Command
 {
@@ -38,15 +40,36 @@ class PassiveClientList extends Command
      */
     public function handle()
     {
-        $user_id = getenv('SUPERADMINUSERID');
-        $module = "Passive Client List";
-        $sender_name = $user_id;
-        $subject = 'Passive Client Listing';
-        $message = "";
-        $to = 'rajlalwani@adlertalent.com';
-        $cc = 'saloni@trajinfotech.com';
-        $module_id = 0;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        $users = User::getAllUsersEmails('recruiter');
+    
+        foreach ($users as $k1 => $v1) {
+
+            $client_res = ClientBasicinfo::getPassiveClients($k1);
+
+            if (isset($client_res) && sizeof($client_res)>0) {
+                $superadminuserid = getenv('SUPERADMINUSERID');
+                $super_admin_email = User::getUserEmailById($superadminuserid);
+
+                $to_array = array();
+                $to_array[] = $v1;
+                $to_array = array_filter($to_array);
+
+                $cc_array = array();
+                $cc_array[] = $super_admin_email;
+                $cc_array[] = 'saloni@trajinfotech.com';
+                $cc_array = array_filter($cc_array);
+
+                $module = "Passive Client List";
+                $sender_name = $superadminuserid;
+                $subject = 'Passive Client Listing';
+                $message = "";
+                $to = implode(",",$to_array);
+                $cc = implode(",",$cc_array);
+                $module_id = $k1;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
+        }
     }
 }
