@@ -519,13 +519,9 @@ class EveryMinute extends Command
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
 
-                /*$user_name = User::getUserNameById($sender_id);
-                $input['value'] = $user_name;*/
+                $user_id = $value['module_id'];
 
-                $client_res = ClientBasicinfo::getPassiveClients();
-
-                //print_r($client_res);exit;
-
+                $client_res = ClientBasicinfo::getPassiveClients($user_id);
                 $clients_count = sizeof($client_res);
                 
                 $input['client_res'] = $client_res;
@@ -594,7 +590,7 @@ class EveryMinute extends Command
                 /*$user_name = User::getUserNameById($sender_id);
                 $input['value'] = $user_name;*/
 
-                $client_res = ClientBasicinfo::getPassiveClients();
+                // $client_res = ClientBasicinfo::getPassiveClients();
 
                 //print_r($client_res);exit;
 
