@@ -30,11 +30,31 @@
         </div>
     </div>
 
+    @if($title == "Recovery")
+      @if($isSuperAdmin || $isAccountant)
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-2 col-sm-4">
+                  <div style="margin:5px;height:35px;width:200px;background-color:#00B0F0;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;"><b>Joining Confirmation Sent</b></div>
+              </div>
+              <div class="col-md-2 col-sm-4">
+                  <div style="margin:5px;height:35px;width:200px;background-color:#FFA500;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;"><b>Got Confirmation</b></div>
+              </div>
+              <div class="col-md-2 col-sm-4">
+                  <div style="margin:5px;height:35px;width:200px;background-color:#FFC0CB;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;"><b>Invoice Generated</b></div>
+              </div>
+              <div class="col-md-2 col-sm-4">
+                  <div style="margin:5px;height:35px;width:200px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;"><b>Payment Received</b></div>
+              </div>
+            </div>
+          </div><br/>
+      @endif
+    @endif
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     <div>
