@@ -1110,9 +1110,13 @@ class ClientBasicinfo extends Ardent
             $remarks_time = explode(" ", $remarks_res->updated_date);
             $remarks_new_time = Date::converttime($remarks_time[1]);
             $remarks_date = date('d-m-Y' ,strtotime($remarks_res->updated_date)) . " " . date('h:i A' ,$remarks_new_time);
+            $remarks_front_date = date('d/m/Y' ,strtotime($remarks_res->updated_date));
+            $user_name = User::getUserNameById($remarks_res->user_id);
         }
         else{
             $remarks_date = '';
+            $remarks_front_date = '';
+            $user_name = '';
         }
 
         // Get Latest Comments time
@@ -1123,21 +1127,25 @@ class ClientBasicinfo extends Ardent
             $comments_time = explode(" ", $comments_res->comments_updated_date);
             $comments_new_time = Date::converttime($comments_time[1]);
             $comments_date = date('d-m-Y' ,strtotime($comments_res->comments_updated_date)) . " " . date('h:i A' ,$comments_new_time);
+            $comments_front_date = date('d/m/Y' ,strtotime($comments_res->comments_updated_date));
+            $user_name = User::getUserNameById($comments_res->user_id);
         }
         else{
             $comments_date = '';
+            $comments_front_date = '';
+            $user_name = '';
         }
 
         // Check Dates
 
         if($remarks_date > $comments_date){
-            return $remarks_res->content;
+            return $remarks_res->content . ' - ' . $remarks_front_date . ' - ' . $user_name;
         }
         if($comments_date > $remarks_date){
-            return $comments_res->comment_body;
+            return $comments_res->comment_body . ' - ' . $comments_front_date . ' - ' . $user_name;
         }
         if($remarks_date == $comments_date && $remarks_date != '' && $comments_date != ''){
-            return $comments_res->comment_body;
+            return $comments_res->comment_body . ' - ' . $comments_front_date . ' - ' . $user_name;
         }
     }
 
