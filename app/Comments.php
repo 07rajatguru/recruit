@@ -32,7 +32,7 @@ class Comments extends Model
         $query = $query->leftjoin('client_basicinfo', 'client_basicinfo.id', '=', 'post.client_id');
         $query = $query->where('client_basicinfo.id','=',$id);
         $query = $query->orderBy('comments.updated_at','DESC');
-        $query = $query->select('comments.body as comment_body','comments.updated_at as comments_updated_date');
+        $query = $query->select('comments.body as comment_body','comments.updated_at as comments_updated_date','comments.creator_id as user_id');
         $response = $query->first();
 
         return $response;

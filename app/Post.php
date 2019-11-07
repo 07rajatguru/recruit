@@ -45,7 +45,7 @@ class Post extends Model
         $query = $query->leftjoin('client_basicinfo', 'client_basicinfo.id', '=', 'post.client_id');
         $query = $query->where('post.client_id','=',$id);
         $query = $query->orderBy('post.updated_at','DESC');
-        $query = $query->select('post.content as content','post.updated_at as updated_date');
+        $query = $query->select('post.content as content','post.user_id as user_id','post.updated_at as updated_date');
         $response = $query->first();
 
         return $response;
