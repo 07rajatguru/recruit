@@ -600,12 +600,12 @@ class ClientBasicinfo extends Ardent
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager',
-            'job_openings.posting_title','job_openings.city');
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id');
         $response = $query->get();
 
         $client = array();
         foreach ($response as $k=>$v){
+            $client['client_id'] = $v->client_id;
             $client['cname'] = $v->cname;
             $client['coordinator_name'] = $v->coordinator_name;
             $client['mail'] = $v->mail;
@@ -613,8 +613,19 @@ class ClientBasicinfo extends Ardent
             $client['account_manager'] = $v->account_manager;
             $client['designation'] = $v->posting_title;
             $client['job_location'] = $v->city;
-        }
+            
+            // Get Percentage charged
+            $position = ClientHeirarchy::getClientHeirarchyPositionById($v->level_id);
 
+            if($position == 'Above AM') {
+                $percentage_charged = $v->percentage_charged_above;
+            }
+            if($position == 'Below AM') {
+                $percentage_charged = $v->percentage_charged_below;
+            }
+
+            $client['percentage_charged'] = $percentage_charged;
+        }
         return $client;
     }
 
@@ -1027,6 +1038,7 @@ class ClientBasicinfo extends Ardent
             $client['shipping_code'] = $res->shipping_code;
             $client['shipping_city'] = $res->shipping_city;
             $client['percentage_charged'] = $res->percentage_charged_above;
+            $client['percentage_charged_below'] = $res->percentage_charged_below;
         }
 
         return $client;

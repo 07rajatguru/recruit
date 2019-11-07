@@ -31,11 +31,11 @@ class ClientHeirarchy extends Model
 
             if($value->position == '0'){
 
-                $client_heirarchy[$i]['position'] = 'AM';
+                $client_heirarchy[$i]['position'] = 'Below AM';
             }
             else{
 
-                $client_heirarchy[$i]['position'] = 'PM';
+                $client_heirarchy[$i]['position'] = 'Above AM';
             }
     		$i++;
     	}
@@ -56,5 +56,24 @@ class ClientHeirarchy extends Model
         }
 
         return $client_heirarchy_name;
+    }
+
+    public static function getClientHeirarchyPositionById($position_id){
+
+        $query = ClientHeirarchy::query();
+        $query = $query->where('id','=',$position_id);
+        $query = $query->select('client_heirarchy.*');
+        $res = $query->first();
+
+        if(isset($res) && sizeof($res) > 0) {
+
+            if($res->position == '0'){
+                $position = 'Below AM';
+            }
+            else{
+                $position = 'Above AM';
+            }
+        }
+        return $position;
     }
 }

@@ -347,15 +347,10 @@
             </div>
             @endif
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-
                 <button type="submit" class="btn btn-primary">Submit</button>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 {!! Form::close() !!}
 
@@ -503,6 +498,7 @@
                         var mobile = data.mobile;
                         var designation = data.designation;
                         var location = data.job_location;
+                        var percentage_charged = data.percentage_charged;
 
                         $("#company_name").val(cname);
                         $("#client_name").val(coordinator_name);
@@ -510,6 +506,7 @@
                         $("#client_contact_number").val(mobile);
                         $("#designation_offered").val(designation);
                         $("#job_location").val(location);
+                        $("#percentage_charged").val(percentage_charged);
                     }
                 });
 

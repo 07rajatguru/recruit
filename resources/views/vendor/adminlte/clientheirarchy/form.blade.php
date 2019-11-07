@@ -49,9 +49,9 @@
                     <div class="form-group {{ $errors->has('position') ? 'has-error' : '' }}">
                         <strong>Select Position: <span class = "required_fields">*</span> </strong>
                         {!! Form::radio('position','0') !!}
-                        {!! Form::label('AM') !!} &nbsp;&nbsp;
+                        {!! Form::label('Below AM') !!} &nbsp;&nbsp;
                         {!! Form::radio('position','1') !!}
-                        {!! Form::label('PM') !!}
+                        {!! Form::label('Above AM') !!}
                         @if ($errors->has('position'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('position') }}</strong>
