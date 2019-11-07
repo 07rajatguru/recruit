@@ -138,9 +138,9 @@
 
                             <div class="form-group" id="default_image">
                                 @if($user['type'] == "Photo")
-                                    <img src= "../../{!!$user['photo']!!}" height="150px" width="150px" />
+                                    <img src= "../../{!!$user['photo']!!}" style="height: 200px;width: 200px;border-radius: 50%;" />
                                 @else
-                                    <img src= "../../uploads/User_Default.jpg" height="150px" width="150px" />
+                                    <img src= "../../uploads/User_Default.jpg" style="height: 200px;width: 200px;border-radius: 50%;" />
                                 @endif
                             </div>
 
@@ -153,7 +153,7 @@
                                         </div>
                                         <div id = "upload_images_div">
                                         </div>
-                                        <div>
+                                        <div style="padding-left: 25px;">
                                             <span class="btn btn-default btn-file">
                                             <span class="fileinput-new">Select Profile Photo</span>
                                            <!--  <span class="fileinput-exists" style="">Change</span> -->
@@ -697,7 +697,7 @@
                 var total_file=document.getElementById("upload_img").files.length;
                 for(var i=0;i<total_file;i++){
                     $('#default_image').hide();
-                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px'>");
+                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' style='height: 150px;width: 200px;border-radius: 50%;'>");
                     $('#upload_images_div').append("<br/><br/>");
                 }
             });

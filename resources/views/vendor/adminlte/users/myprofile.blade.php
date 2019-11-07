@@ -102,7 +102,7 @@
                         @endif
                         <br/>
                         <div>
-                            <h3 style="padding-left: 55px;">{{ $user['name'] }}</h3>
+                            <h3>{{ $user['name'] }}</h3>
                         </div>
                     </div>
                 </div>
