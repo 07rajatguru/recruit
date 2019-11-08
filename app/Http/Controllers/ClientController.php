@@ -1234,7 +1234,6 @@ class ClientController extends Controller
     }
     public function edit($id)
     {
-
         $generate_lead = '1';
 
         $co_prefix=ClientBasicinfo::getcoprefix();
@@ -2060,6 +2059,26 @@ class ClientController extends Controller
                 }
             }
 
+            // Email Notifications : On change account manager of client.
+
+            $module_id = $id;
+            $module = 'Client Account Manager';
+            $link = route('client.show',$id);
+            $subject = "Client Account Manager changed - " . $input->name . " - " . $input->billing_city;
+            $message = "<tr><td>" . $input->name . " Change Account Manager </td></tr>";
+            $sender_name = $user_id;
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+
+            $strategy_userid = getenv('STRATEGYUSERID');
+            $strategy_email = User::getUserEmailById($strategy_userid);
+
+            $to = $superadminemail;
+            $cc = $strategy_email;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
             // Add Entry in Client Timeline.
             $check_entry_exist = ClientTimeline::checkTimelineEntry($input->account_manager,$id);
 
@@ -2248,7 +2267,33 @@ class ClientController extends Controller
             $client_timeline->client_id = $value;
             $client_timeline->save();
 
-            \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id', updated_at = '$updated_at' where `id` = '$value'"); 
+            \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id', updated_at = '$updated_at' where `id` = '$value'");
+
+            // Email Notifications : On change account manager of client.
+
+            $client_res = ClientBasicinfo::getClientDetailsById($value);
+            $client_name = $client_res['name'];
+            $billing_city = $client_res['billing_city'];
+            $user_id = \Auth::user()->id;
+                    
+            $module_id = $value;
+            $module = 'Client Account Manager';
+            $link = route('client.show',$value);
+            $subject = "Client Account Manager changed - " . $client_name . " - " . 
+                        $billing_city;
+            $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
+            $sender_name = $user_id;
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+
+            $strategy_userid = getenv('STRATEGYUSERID');
+            $strategy_email = User::getUserEmailById($strategy_userid);
+
+            $to = $superadminemail;
+            $cc = $strategy_email;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
         return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
     }
@@ -2289,7 +2334,7 @@ class ClientController extends Controller
         $a_m='';
 
         if(isset($act_man)){
-            $a_m=$account_manager;
+            $a_m = $account_manager;
         }
 
         $act_man->account_manager_id=$a_m;
@@ -2339,6 +2384,31 @@ class ClientController extends Controller
         $client_timeline->user_id = $account_manager;
         $client_timeline->client_id = $id;
         $client_timeline->save();
+
+        // Email Notifications : On change account manager of client.
+
+        $client_name = $act_man->name;
+        $billing_city = ClientBasicinfo::getBillingCityOfClientByID($id);
+        $user_id = \Auth::user()->id;
+
+        $module_id = $id;
+        $module = 'Client Account Manager';
+        $link = route('client.show',$id);
+        $subject = "Client Account Manager changed - " . $client_name . " - " . 
+                    $billing_city;
+        $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
+        $sender_name = $user_id;
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $strategy_userid = getenv('STRATEGYUSERID');
+        $strategy_email = User::getUserEmailById($strategy_userid);
+
+        $to = $superadminemail;
+        $cc = $strategy_email;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
        return redirect()->route('client.index')->with('success', 'Client Account Manager updated Successfully.');
     }

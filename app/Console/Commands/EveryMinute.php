@@ -445,7 +445,7 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
-            else if ($value['module'] == 'Client' || $value['module'] == 'Forbid Client') {
+            else if ($value['module'] == 'Client' || $value['module'] == 'Forbid Client' || $value['module'] == 'Client Account Manager') {
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
