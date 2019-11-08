@@ -31,6 +31,7 @@
     {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off', 'route' => ['client.update', $client->id]] ) !!}
 @elseif( $action == 'copy')
     {!! Form::model($lead,['method' => 'POST','files' => true, 'id' => 'clientForm','autocomplete' => 'off', 'route' => ['lead.clonestore', $lead->id]] ) !!}
+    <input type="hidden" id="referredby" name="referredby" value="{{ $referredby }}"/>
 @else
     {!! Form::open(array('route' => 'client.store','files' => true,'method'=>'POST', 'id' => 'clientForm','autocomplete' => 'off')) !!}
 @endif
