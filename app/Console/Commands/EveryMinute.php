@@ -585,14 +585,8 @@ class EveryMinute extends Command
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
                 $client_ids = $value['module_id'];
-                print_r($client_ids);exit;
-
-                /*$user_name = User::getUserNameById($sender_id);
-                $input['value'] = $user_name;*/
-
-                // $client_res = ClientBasicinfo::getPassiveClients();
-
-                //print_r($client_res);exit;
+                
+                $client_res = ClientBasicinfo::getExpectedPassiveClients($client_ids);
 
                 $clients_count = sizeof($client_res);
                 
@@ -601,10 +595,10 @@ class EveryMinute extends Command
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
 
-                // \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
-                //     $message->from($input['from_address'], $input['from_name']);
-                //     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Passive Client Listing');
-                // });
+                \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }

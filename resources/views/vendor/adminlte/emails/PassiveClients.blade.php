@@ -75,30 +75,13 @@
                                 {{ $value['name'] }}
                             </td>
                             <td align="center" style="border-top: black 1px solid;padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">
-                                <?php
-                                    $coordinator = $value['coordinator_prefix'] . $value['coordinator_name'];
-                                ?>
-                                {{ $coordinator }}
+                                {{ $value['coordinator'] }}
                             </td>
                             <td align="center" style="border-top: black 1px solid;padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">
                                 {{ $value['category'] }}
                             </td>
                             <td align="center" style="border-top: black 1px solid;padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid;">
-                                <?php
-                                    $address ='';
-                                    if($value['area'] != '')
-                                    {
-                                        $address .= $value['area'];
-                                    }
-                                    if($value['city'] != '')
-                                    {
-                                        if($address=='')
-                                            $address .= $value['city'];
-                                        else
-                                            $address .= ", ".$value['city'];
-                                    }
-                                ?>
-                                {{ $address }}
+                                {{ $value['address'] }}
                             </td>
                         </tr>
                     <?php $i++; ?>
