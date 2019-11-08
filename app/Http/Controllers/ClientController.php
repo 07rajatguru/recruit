@@ -2407,8 +2407,12 @@ class ClientController extends Controller
 
         $days_array = ClientTimeline::getDetailsByClientId($id);
         $client_remarks = ClientRemarks::getAllClientRemarksData();
-        $client_remarks['other'] = 'Others';
 
+        if($user_id == $super_admin_userid) {
+
+            $client_remarks['other'] = 'Others';    
+        }
+        
         $client_remarks_edit = ClientRemarks::getAllClientRemarksData();
 
         return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','days_array','client_remarks','client_remarks_edit'));
