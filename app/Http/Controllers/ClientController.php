@@ -2096,6 +2096,28 @@ class ClientController extends Controller
                     $client_timeline->save();
                 }
 
+                if($status == '3'){
+
+                    // Forbid Client Email Notifications : On change status of client as forbid
+                    $module_id = $id;
+                    $module = 'Forbid Client';
+                    $link = route('client.show',$id);
+                    $subject = "Forbid Client - " . $input->name . " - " . $input->billing_city;
+                    $message = "<tr><td>" . $input->name . " Convert as forbid Client </td></tr>";
+                    $sender_name = $user_id;
+
+                    $super_admin_userid = getenv('SUPERADMINUSERID');
+                    $superadminemail = User::getUserEmailById($super_admin_userid);
+
+                    $account_manager_id = $input->account_manager;
+                    $account_manager_email = User::getUserEmailById($account_manager_id);
+
+                    $to = $account_manager_email;
+                    $cc = $superadminemail;
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                }
+
             return redirect()->route('client.index')->with('success','Client Updated Successfully.');
         }else{
             return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ( $client_basicinfo->errors() );
