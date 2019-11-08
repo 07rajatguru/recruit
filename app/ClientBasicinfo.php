@@ -617,11 +617,18 @@ class ClientBasicinfo extends Ardent
             // Get Percentage charged
             $position = ClientHeirarchy::getClientHeirarchyPositionById($v->level_id);
 
-            if($position == 'Above AM') {
-                $percentage_charged = $v->percentage_charged_above;
+            if(isset($position) && $position != '') {
+
+                if($position == 'Above AM') {
+                    $percentage_charged = $v->percentage_charged_above;
+                }
+                if($position == 'Below AM') {
+                    $percentage_charged = $v->percentage_charged_below;
+                }
             }
-            if($position == 'Below AM') {
-                $percentage_charged = $v->percentage_charged_below;
+            else {
+
+                $percentage_charged = '';
             }
 
             $client['percentage_charged'] = $percentage_charged;

@@ -68,12 +68,19 @@ class ClientHeirarchy extends Model
         if(isset($res) && sizeof($res) > 0) {
 
             if($res->position == '0'){
+
                 $position = 'Below AM';
             }
             else{
+                
                 $position = 'Above AM';
             }
         }
+        else {
+
+            $position = '';
+        }
+
         return $position;
     }
 }
