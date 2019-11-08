@@ -238,17 +238,43 @@ class LeadController extends Controller
     }
 
     public function cancel($id){
-        
-        $cancel_lead =1;
-        $lead = array();
+
         $lead = Lead::find($id);
-        $lead->cancel_lead = $cancel_lead;
+        $lead->cancel_lead = '1';
         $lead_cancel = $lead->save();
 
-        //print_r($lead_cancel);exit;
+        $company_name = $lead->name;
+        $service = $lead->service;
+        $city = $lead->city;
+        $referredby_id = $lead->referredby;
 
-        return redirect()->route('lead.index')->with('success', 'BNM Updated Successfully');
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_email = $user->email;
 
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        $strategyuserid = getenv('STRATEGYUSERID');
+        $strategyemail = User::getUserEmailById($strategyuserid);
+        
+        $referredby_email = User::getUserEmailById($referredby_id);
+
+        $cc_users_array = array($superadminemail,$strategyemail,$referredby_email);
+
+        $module = "Cancel Lead";
+        $sender_name = $user_id;
+        $to = $user_email;
+
+        $cc_users_array = array_filter($cc_users_array);
+        $cc = implode(",",$cc_users_array);
+        
+        $subject = "Cancel Lead for " . $service . " - ". $company_name . " - " . $city;
+        $message = "Cancel Lead for " . $service . " - ". $company_name . " - " . $city;
+        $module_id = $id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        return redirect()->route('lead.index')->with('success','Lead Canceled Successfully.');
     }
 
     public function create(){
@@ -273,47 +299,47 @@ class LeadController extends Controller
         $user = \Auth::user();
  	    $input = $request->all();
 
-         $company_name = $input['name'];
-         $coordinator_name = $input['coordinator_name'];
-         $email=$input['mail'];
-         $s_email=$input['s_email'];
-         $mobile=$input['mobile'];
-         $other_number=$input['other_number'];
-         $display_name=$input['display_name'];
-         $leads=$input['leads'];
-         $remark=$input['remarks'];
-         $city=$input['city'];
-         $state=$input['state'];
-         $country=$input['country'];
-         $website=$input['website'];
-         $source=$input['source'];
-         $designation=$input['designation'];
-         $referredby_id=$input['referredby_id'];
-         $lead_status = $input['status'];
+        $company_name = $input['name'];
+        $coordinator_name = $input['coordinator_name'];
+        $email=$input['mail'];
+        $s_email=$input['s_email'];
+        $mobile=$input['mobile'];
+        $other_number=$input['other_number'];
+        $display_name=$input['display_name'];
+        $leads=$input['leads'];
+        $remark=$input['remarks'];
+        $city=$input['city'];
+        $state=$input['state'];
+        $country=$input['country'];
+        $website=$input['website'];
+        $source=$input['source'];
+        $designation=$input['designation'];
+        $referredby_id=$input['referredby_id'];
+        $lead_status = $input['status'];
 
-         $lead=new Lead();
-         $lead->name=$company_name;
-         $lead->coordinator_name=$coordinator_name;
-         $lead->mail=$email;
-         $lead->s_email=$s_email;
-         $lead->mobile=$mobile;
-         $lead->other_number=$other_number;
-         $lead->display_name=$display_name;
-         $lead->service=$leads;
-         $lead->remarks=$remark;
-         $lead->city=$city;
-         $lead->state=$state;
-         $lead->country=$country;
-         $lead->convert_client = 0;
-         $lead->account_manager_id = $user->id;
-         $lead->website=$website;
-         $lead->source=$source;
-         $lead->designation=$designation;
-         $lead->referredby=$referredby_id;
-         $lead->lead_status=$lead_status;
-         $lead->save();
+        $lead=new Lead();
+        $lead->name=$company_name;
+        $lead->coordinator_name=$coordinator_name;
+        $lead->mail=$email;
+        $lead->s_email=$s_email;
+        $lead->mobile=$mobile;
+        $lead->other_number=$other_number;
+        $lead->display_name=$display_name;
+        $lead->service=$leads;
+        $lead->remarks=$remark;
+        $lead->city=$city;
+        $lead->state=$state;
+        $lead->country=$country;
+        $lead->convert_client = 0;
+        $lead->account_manager_id = $user->id;
+        $lead->website=$website;
+        $lead->source=$source;
+        $lead->designation=$designation;
+        $lead->referredby=$referredby_id;
+        $lead->lead_status=$lead_status;
+        $lead->save();
 
-         $validator = \Validator::make(Input::all(),$lead::$rules);
+        $validator = \Validator::make(Input::all(),$lead::$rules);
 
         if($validator->fails()){
             return redirect('lead/create')->withInput(Input::all())->withErrors($validator->errors());
@@ -328,8 +354,9 @@ class LeadController extends Controller
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $strategyemail = User::getUserEmailById($strategyuserid);
+        $referredby_email = User::getUserEmailById($referredby_id);
 
-        $cc_users_array = array($superadminemail,$strategyemail);
+        $cc_users_array = array($superadminemail,$strategyemail,$referredby_email);
 
         $module = "Lead";
         $sender_name = $user_id;
@@ -348,7 +375,6 @@ class LeadController extends Controller
 
 	}
 	 public function edit($id){
-        
 
         $action = 'edit';
         $generate_lead = '0';
@@ -482,7 +508,6 @@ class LeadController extends Controller
 
      public function leadClone($id)
      {
-
         $co_prefix=ClientBasicinfo::getcoprefix();
         $co_category='';
 
@@ -543,8 +568,9 @@ class LeadController extends Controller
         $co_category='';
         $percentage_charged_below = '8.33';
         $percentage_charged_above = '8.33';
+        $referredby = $lead->referredby;
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
 
      }
 
@@ -794,11 +820,14 @@ class LeadController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
+            $referredby_id = $input['referredby'];
             // Email Notification : data store in datebase
             $strategyuserid = getenv('STRATEGYUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
             $strategyemail = User::getUserEmailById($strategyuserid);
-            $cc_users_array = array($superadminemail,$strategyemail);
+            $referredby_email = User::getUserEmailById($referredby_id);
+
+            $cc_users_array = array($superadminemail,$strategyemail,$referredby_email);
 
             $module = "Client";
             $sender_name = $user_id;
@@ -810,7 +839,6 @@ class LeadController extends Controller
             $cc = implode(",",$cc_users_array);
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
 
             return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
