@@ -1885,9 +1885,6 @@ class ClientController extends Controller
     }
 
    /* public function deleteAssociatedJob($id){
-        
-        
-
     }*/
 
     public function update(Request $request, $id){
@@ -2063,60 +2060,58 @@ class ClientController extends Controller
                 }
             }
 
-
             // Add Entry in Client Timeline.
-
             $check_entry_exist = ClientTimeline::checkTimelineEntry($input->account_manager,$id);
 
             if(isset($check_entry_exist) && sizeof($check_entry_exist) > 0){
             }
 
-            else{
-                    $get_latest_record = \DB::table('client_timeline')
-                        ->select('client_timeline.*')
-                        ->where('client_id','=',$id)
-                        ->orderBy('client_timeline.id','desc')
-                        ->first();
+            else
+            {
+                $get_latest_record = \DB::table('client_timeline')
+                ->select('client_timeline.*')
+                ->where('client_id','=',$id)
+                ->orderBy('client_timeline.id','desc')
+                ->first();
 
-                    $to_date = date('Y-m-d');
+                $to_date = date('Y-m-d');
 
-                    if(isset($get_latest_record) && sizeof($get_latest_record) > 0)
-                    {
+                if(isset($get_latest_record) && sizeof($get_latest_record) > 0) {
 
-                        $to = strtotime($to_date);
-                        $from = strtotime($get_latest_record->created_at);
-                        $diff_in_days = ($to - $from)/60/60/24;
+                    $to = strtotime($to_date);
+                    $from = strtotime($get_latest_record->created_at);
+                    $diff_in_days = ($to - $from)/60/60/24;
 
-                        \DB::statement("UPDATE client_timeline SET to_date = '$to_date', days = '$diff_in_days' where client_id = $id AND user_id = $get_latest_record->user_id");
-                    }
-
-                    $client_timeline = new ClientTimeline();
-                    $client_timeline->user_id = $input->account_manager;
-                    $client_timeline->client_id = $id;
-                    $client_timeline->save();
+                    \DB::statement("UPDATE client_timeline SET to_date = '$to_date', days = '$diff_in_days' where client_id = $id AND user_id = $get_latest_record->user_id");
                 }
 
-                if($status == '3'){
+                $client_timeline = new ClientTimeline();
+                $client_timeline->user_id = $input->account_manager;
+                $client_timeline->client_id = $id;
+                $client_timeline->save();
+            }
 
-                    // Forbid Client Email Notifications : On change status of client as forbid
-                    $module_id = $id;
-                    $module = 'Forbid Client';
-                    $link = route('client.show',$id);
-                    $subject = "Forbid Client - " . $input->name . " - " . $input->billing_city;
-                    $message = "<tr><td>" . $input->name . " Convert as forbid Client </td></tr>";
-                    $sender_name = $user_id;
+            if($status == '3'){
 
-                    $super_admin_userid = getenv('SUPERADMINUSERID');
-                    $superadminemail = User::getUserEmailById($super_admin_userid);
+                // Forbid Client Email Notifications : On change status of client as forbid
+                $module_id = $id;
+                $module = 'Forbid Client';
+                $link = route('client.show',$id);
+                $subject = "Forbid Client - " . $input->name . " - " . $input->billing_city;
+                $message = "<tr><td>" . $input->name . " Convert as forbid Client </td></tr>";
+                $sender_name = $user_id;
 
-                    $account_manager_id = $input->account_manager;
-                    $account_manager_email = User::getUserEmailById($account_manager_id);
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $superadminemail = User::getUserEmailById($super_admin_userid);
 
-                    $to = $account_manager_email;
-                    $cc = $superadminemail;
+                $account_manager_id = $input->account_manager;
+                $account_manager_email = User::getUserEmailById($account_manager_id);
 
-                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-                }
+                $to = $account_manager_email;
+                $cc = $superadminemail;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
 
             return redirect()->route('client.index')->with('success','Client Updated Successfully.');
         }else{
@@ -2200,6 +2195,31 @@ class ClientController extends Controller
 
         foreach($client_ids_array as $key => $value)
         {
+            // If account manager change then jobs hiring manager all changes
+
+            $job_ids = JobOpen::getJobIdByClientId($value);
+            if ($account_manager_id == '0') {
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $a_m = $super_admin_userid;
+            }
+            else {
+                $a_m = $account_manager_id;
+            }
+
+            foreach ($job_ids as $k1 => $v1) {
+
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id= $v1");
+
+                $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($v1,$a_m);
+
+                if ($check_job_user_id == false) {
+                    $job_visible_users = new JobVisibleUsers();
+                    $job_visible_users->job_id = $v1;
+                    $job_visible_users->user_id = $a_m;
+                    $job_visible_users->save();
+                }
+            }
+
             // Add Entry in Client Timeline.
 
             $get_latest_record = \DB::table('client_timeline')
@@ -2261,7 +2281,7 @@ class ClientController extends Controller
 
     public function getAccountManager(Request $request)
     {
-        $account_manager=$request->get('account_manager');
+        $account_manager = $request->get('account_manager');
         $id = $request->get('id');
 
         $act_man=ClientBasicinfo::find($id);
