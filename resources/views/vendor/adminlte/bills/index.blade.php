@@ -31,7 +31,7 @@
     </div>
 
     @if($title == "Recovery")
-      @if($isSuperAdmin || $isAccountant)
+      {{--@if($isSuperAdmin || $isAccountant)
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-2 col-sm-4">
@@ -48,7 +48,7 @@
               </div>
             </div>
           </div><br/>
-      @endif
+      @endif--}}
     @endif
 
     @if ($message = Session::get('success'))
