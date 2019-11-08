@@ -1063,19 +1063,41 @@ class ClientBasicinfo extends Ardent
     // Get Passive Clients of Current Week
     public static function getPassiveClients($user_id){
 
-        $date = date('Y-m-d',strtotime('Monday this week'));
+        $date = date('Y-m-d',strtotime('last Monday'));
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->select('client_basicinfo.*','users.name as account_manager','client_address.billing_street2 as area','client_address.billing_city as city');
         $query = $query->where('client_basicinfo.status','=','0');
-        $query = $query->where('client_basicinfo.passive_date','>=',date('Y-m-d',strtotime('Monday this week')));
+        $query = $query->where('client_basicinfo.passive_date','>=',date('Y-m-d',strtotime('last Monday')));
         $query = $query->where('client_basicinfo.passive_date','<=',date('Y-m-d',strtotime("$date +6days")));
         $query = $query->where('client_basicinfo.account_manager_id',$user_id);
         $query_response = $query->get();
 
-        return $query_response;
+        $passive_clients = array();
+        $i = 0;
+        foreach ($query_response as $key => $value) {
+            $passive_clients[$i]['account_manager'] = $value->account_manager;
+            $passive_clients[$i]['name'] = $value->name;
+            $passive_clients[$i]['coordinator'] = $value->coordinator_prefix . $value->coordinator_name;
+            $passive_clients[$i]['category'] = $value->category;
+
+            $address ='';
+            if($value->area != '') {
+                $address .= $value->area;
+            }
+            if($value->city != '') {
+                if($address == '')
+                    $address .= $value->city;
+                else
+                    $address .= ", ".$value->city;
+            }
+            $passive_clients[$i]['address'] = $address;
+            $i++;
+        }
+
+        return $passive_clients;
     }
 
     // Get Latest Client Remarks in Listing
@@ -1156,5 +1178,43 @@ class ClientBasicinfo extends Ardent
         $response = $query->get();
 
         return $response;
+    }
+
+    // Get Expected Passive Clients details in next week
+    public static function getExpectedPassiveClients($client_id){
+
+        $client_ids = explode(",", $client_id);
+
+        $query = ClientBasicinfo::query();
+        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->select('client_basicinfo.*','users.name as account_manager','client_address.billing_street2 as area','client_address.billing_city as city');
+        // $query = $query->where('client_basicinfo.status','=','0');
+        $query = $query->whereIn('client_basicinfo.id',$client_ids);
+        $query_response = $query->get();
+
+        $expected_client = array();
+        $i = 0;
+        foreach ($query_response as $key => $value) {
+            $expected_client[$i]['account_manager'] = $value->account_manager;
+            $expected_client[$i]['name'] = $value->name;
+            $expected_client[$i]['coordinator'] = $value->coordinator_prefix . $value->coordinator_name;
+            $expected_client[$i]['category'] = $value->category;
+
+            $address ='';
+            if($value->area != '') {
+                $address .= $value->area;
+            }
+            if($value->city != '') {
+                if($address == '')
+                    $address .= $value->city;
+                else
+                    $address .= ", ".$value->city;
+            }
+            $expected_client[$i]['address'] = $address;
+            $i++;
+        }
+
+        return $expected_client;
     }
 }

@@ -51,6 +51,7 @@ class PassiveClientListRemider extends Command
             $client = ClientBasicinfo::query();
             $client = $client->select('client_basicinfo.id');
             $client = $client->where('client_basicinfo.account_manager_id',$k1);
+            $client = $client->where('client_basicinfo.status','=','1');
             $client_res = $client->get();
 
             $clientids = array();
@@ -82,7 +83,9 @@ class PassiveClientListRemider extends Command
                 }
             }
 
-            $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE (created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id) AND hiring_manager_id = '.$k1.')'));
+            // $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE (created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id) AND hiring_manager_id = '.$k1.')'));
+
+            $job_data = \DB::select(\DB::raw('SELECT job_openings.id,job_openings.job_id,job_openings.client_id,job_openings.created_at FROM job_openings JOIN client_basicinfo ON job_openings.client_id=client_basicinfo.id WHERE (job_openings.created_at IN (SELECT MAX(job_openings.created_at) FROM job_openings GROUP BY client_id) AND hiring_manager_id = '.$k1.' AND client_basicinfo.status = "1")'));
 
             if(isset($job_data) && $job_data != ''){
                 $i = 0;
@@ -123,8 +126,11 @@ class PassiveClientListRemider extends Command
             // get all jobs which are created before 21 days
             $date1=date('Y-m-d 00:00:00',strtotime("-21 days"));
             $jo_query = JobOpen::query();
-            $jo_query = $jo_query->where('created_at','<',"$date1");
-            $jo_query = $jo_query->where('hiring_manager_id',$k1);
+            $jo_query = $jo_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+            $jo_query = $jo_query->where('job_openings.created_at','<',"$date1");
+            $jo_query = $jo_query->where('job_openings.hiring_manager_id',$k1);
+            $jo_query = $jo_query->where('client_basicinfo.status','=','1');
+            $jo_query = $jo_query->select('job_openings.id as id','job_openings.client_id as client_id');
             $job_res = $jo_query->get();
 
             $all_jobs = array();
