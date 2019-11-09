@@ -106,10 +106,14 @@ class ClientStatus extends Command
                         //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
 
                         // set passive date for passive clients
-                        $today_date = date('Y-m-d');
-                        DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
-
-                        echo " status - 0 :".$client_id;
+                        if ($client_status == 0) {
+                            continue;
+                        }
+                        else {
+                            $today_date = date('Y-m-d');
+                            DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
+                            echo " status - 0 :".$client_id;
+                        }
                    }
                    else{
                         DB::statement("UPDATE client_basicinfo SET `status`='1' WHERE `id`='$client_id'");
@@ -121,10 +125,15 @@ class ClientStatus extends Command
                     //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$client_id'");
 
                     // set passive date for passive clients
-                    $today_date = date('Y-m-d');
-                    DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
+                    if ($client_status == 0) {
+                        continue;
+                    }
+                    else{
+                        $today_date = date('Y-m-d');
+                        DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
 
-                    echo " status - 0 :".$client_id;
+                        echo " status - 0 :".$client_id;
+                    }
                 }
             //} 
                 if (array_search($value1->client_id,$clientids)) {
@@ -177,9 +186,14 @@ class ClientStatus extends Command
             if($client_created_at_date < $before_one_month_date){
 
                 if(!in_array($value,$active_clients)){
-                    $today_date = date('Y-m-d');
-                    DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$value'");
-                    echo " status - 0 :".$value;
+                    if ($client_status == 0) {
+                        continue;
+                    }
+                    else {
+                        $today_date = date('Y-m-d');
+                        DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$value'");
+                        echo " status - 0 :".$value;
+                    }
                 }
             }
             else{
@@ -250,8 +264,13 @@ class ClientStatus extends Command
                     //DB::statement("UPDATE client_basicinfo SET `status`='0' WHERE `id`='$c_id[$j]'");
 
                     // set passive date for passive clients
-                    $today_date = date('Y-m-d');
-                    DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$c_id[$j]'");
+                    if ($client_status == 0) {
+                        continue;
+                    }
+                    else {
+                        $today_date = date('Y-m-d');
+                        DB::statement("UPDATE client_basicinfo SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$c_id[$j]'");
+                    }
                 }
             }
             $j++;

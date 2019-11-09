@@ -531,7 +531,7 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Passive Client Listing');
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");

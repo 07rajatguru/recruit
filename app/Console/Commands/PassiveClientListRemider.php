@@ -66,10 +66,10 @@ class PassiveClientListRemider extends Command
                     $client_status_query = ClientBasicinfo::query();
                     $client_status_query = $client_status_query->where('id',$value);
                     $client_res = $client_status_query->first();
-                    $client_status = $client_res->status;
+                    // $client_status = $client_res->status;
 
-                    if($client_status==2 or $client_status==3 or $client_status==4)
-                        continue;
+                    // if($client_status==2 or $client_status==3 or $client_status==4)
+                    //     continue;
 
                     // Get Created_at data of client
                     $client_created_at_date = $client_res->created_at;
@@ -95,13 +95,13 @@ class PassiveClientListRemider extends Command
                     $job_created_at = $value1->created_at; // job added date
 
                     // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
-                    $client_status_query = ClientBasicinfo::query();
-                    $client_status_query = $client_status_query->where('id',$client_id);
-                    $client_res = $client_status_query->first();
-                    $client_status = $client_res->status;
+                    // $client_status_query = ClientBasicinfo::query();
+                    // $client_status_query = $client_status_query->where('id',$client_id);
+                    // $client_res = $client_status_query->first();
+                    // $client_status = $client_res->status;
 
-                    if($client_status==2 or $client_status==3 or $client_status==4)
-                        continue;
+                    // if($client_status==2 or $client_status==3 or $client_status==4)
+                    //     continue;
 
                     $date1=date('Y-m-d',strtotime("-21 days"));
                     if(isset($job_created_at)){
@@ -159,13 +159,13 @@ class PassiveClientListRemider extends Command
                    $client_res2 = $jo_query2->first();
 
                     // if client status is 2(i.e for leaders), status is 3 (i.e for forbid) and status is 4 (i.e for left) ignore that clients
-                    $client_status_query = ClientBasicinfo::query();
-                    $client_status_query = $client_status_query->where('id',$client_res2->client_id);
-                    $client_res = $client_status_query->first();
-                    $client_status = $client_res['status'];
+                    // $client_status_query = ClientBasicinfo::query();
+                    // $client_status_query = $client_status_query->where('id',$client_res2->client_id);
+                    // $client_res = $client_status_query->first();
+                    // $client_status = $client_res['status'];
 
-                    if($client_status==2 or $client_status==3 or $client_status==4)
-                        continue;
+                    // if($client_status==2 or $client_status==3 or $client_status==4)
+                    //     continue;
 
                     if (array_search($client_res2->client_id,$passiveClients)) {
                         unset($passiveClients[array_search($client_res2->client_id,$passiveClients)]);
@@ -193,6 +193,8 @@ class PassiveClientListRemider extends Command
                 $superadminuserid = getenv('SUPERADMINUSERID');
                 $super_admin_email = User::getUserEmailById($superadminuserid);
 
+                $user_name = User::getUserNameById($k1);
+
                 $to_array = array();
                 $to_array[] = $v1;
 
@@ -201,7 +203,7 @@ class PassiveClientListRemider extends Command
                 $cc_array[] = 'saloni@trajinfotech.com';
 
                 $module = "Expected Passive Client";
-                $subject = 'Email of expected passive client in next week';
+                $subject = 'List of expected passive client in next week - '. $user_name;
                 $message = "";
                 $to_array = array_filter($to_array);
                 $to = implode(",",$to_array);
