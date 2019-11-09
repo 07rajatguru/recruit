@@ -203,7 +203,7 @@ class PassiveClientListRemider extends Command
                 $cc_array[] = 'saloni@trajinfotech.com';
 
                 $module = "Expected Passive Client";
-                $subject = 'Email of expected passive client in next week - '. $user_name;
+                $subject = 'List of expected passive client in next week - '. $user_name;
                 $message = "";
                 $to_array = array_filter($to_array);
                 $to = implode(",",$to_array);

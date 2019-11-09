@@ -51,6 +51,8 @@ class PassiveClientList extends Command
                 $superadminuserid = getenv('SUPERADMINUSERID');
                 $super_admin_email = User::getUserEmailById($superadminuserid);
 
+                $user_name = User::getUserNameById($k1);
+
                 $to_array = array();
                 $to_array[] = $v1;
                 $to_array = array_filter($to_array);
@@ -62,7 +64,7 @@ class PassiveClientList extends Command
 
                 $module = "Passive Client List";
                 $sender_name = $superadminuserid;
-                $subject = 'Passive Client Listing';
+                $subject = 'List of Passive Clients - ' . $user_name;
                 $message = "";
                 $to = implode(",",$to_array);
                 $cc = implode(",",$cc_array);
