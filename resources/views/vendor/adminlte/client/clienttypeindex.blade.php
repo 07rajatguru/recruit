@@ -83,15 +83,19 @@
                 <th>Company Name</th>   
                 <!-- <th>HR/Coordinator Name</th> -->
                 <th>Contact Point</th>
+
                 <?php if($isSuperAdmin || $isStrategy || $isAccountManager ) { ?>
                 <th>Client Category</th>
                 <?php }?>
+
                 <th>Status</th>
                 <!-- <th>Client Address</th> -->
                 <th>City</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
+
         @foreach ($client_array as $key => $client)
             <tr>
                 <td>{{ Form::checkbox('client',$client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
@@ -121,13 +125,20 @@
                         <a title="Remarks" class="fa fa-plus"  href="{{ route('client.remarks',$client['id']) }}" style="margin:2px;"></a>
                     @endif
 
+                    @if($isSuperAdmin || $client['client_owner'] )
+                        <?php
+
+                            $days_array = App\ClientTimeline::getDetailsByClientId($client['id']);
+                        ?>
+                        @include('adminlte::partials.client_timeline_view', ['data' => $client,'days_array' => $days_array])
+                    @endif
                 </td>
 
                 <td>{{ $client['am_name'] }}</td>
 
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{ $client['name'] }}</td>
 
-                <td>{{ $client['hr_name'] }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{ $client['hr_name'] }}</td>
 
                 @if($isSuperAdmin || $isStrategy || $isAccountManager)
                     <td>{{ $client['category']}}</td>
@@ -146,6 +157,8 @@
                 @endif
 
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
+
+                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{ $client['latest_remarks'] }}</td>
 
             </tr>
         @endforeach
