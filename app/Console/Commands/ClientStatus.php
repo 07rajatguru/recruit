@@ -46,15 +46,26 @@ class ClientStatus extends Command
 
         $active_clients = array();
 
-        $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id)'));
+        // $job_data = \DB::select(\DB::raw('SELECT id,job_id,client_id,created_at FROM job_openings WHERE created_at IN (SELECT MAX(created_at) FROM job_openings GROUP BY client_id)'));
 
+        $job_data = \DB::select(\DB::raw('SELECT job_openings.id,job_openings.job_id,job_openings.client_id,job_openings.created_at FROM job_openings JOIN client_basicinfo ON job_openings.client_id=client_basicinfo.id WHERE (job_openings.created_at IN (SELECT MAX(job_openings.created_at) FROM job_openings GROUP BY client_id) AND client_basicinfo.status = "1")'));
         //print_r($job_data);exit;
 
         $client = ClientBasicinfo::query();
         $client = $client->select('client_basicinfo.id');
+        $client = $client->where('client_basicinfo.status','=','1');
         $client_res = $client->get();
 
         //print_r($client_res);exit;
+
+        // get all jobs which are created before 1 month
+        $date1=date('Y-m-d 00:00:00',strtotime("-30 days"));
+        $jo_query = JobOpen::query();
+        $jo_query = $jo_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $jo_query = $jo_query->where('job_openings.created_at','<',"$date1");
+        $jo_query = $jo_query->where('client_basicinfo.status','=','1');
+        $jo_query = $jo_query->select('job_openings.id as id','job_openings.client_id as client_id');
+        $job_res = $jo_query->get();
 
         $j = 0;
         foreach ($client_res as $key => $value) {
@@ -87,15 +98,15 @@ class ClientStatus extends Command
                 // $job_associated_created_at = $job_associated_data->created_at; // job candidate associate date
 
                 // if client status is 2(i.e for leaders) and status is 3 (i.e for forbid) ignore that clients
-                $client_status_query = ClientBasicinfo::query();
-                $client_status_query = $client_status_query->where('id',$client_id);
-                $client_res = $client_status_query->first();
-                $client_status = $client_res->status;
+                // $client_status_query = ClientBasicinfo::query();
+                // $client_status_query = $client_status_query->where('id',$client_id);
+                // $client_res = $client_status_query->first();
+                // $client_status = $client_res->status;
 
-                //echo $client_status;exit;
+                // //echo $client_status;exit;
 
-                if($client_status==2 or $client_status==3 or $client_status==4)
-                     continue;
+                // if($client_status==2 or $client_status==3 or $client_status==4)
+                //      continue;
 
                 $date1=date('Y-m-d',strtotime("-30 days"));
                 //echo $date1;exit;
@@ -161,10 +172,10 @@ class ClientStatus extends Command
             $client_status_query = ClientBasicinfo::query();
             $client_status_query = $client_status_query->where('id',$value);
             $client_res = $client_status_query->first();
-            $client_status = $client_res->status;
+            // $client_status = $client_res->status;
 
-            if($client_status==2 or $client_status==3 or $client_status==4)
-                continue;
+            // if($client_status==2 or $client_status==3 or $client_status==4)
+            //     continue;
 
             // Set Passive date for Passive Clients
 
@@ -188,12 +199,6 @@ class ClientStatus extends Command
                 echo " status - 1 :".$value;
             }
         }
-
-        // get all jobs which are created before 1 month
-        $date1=date('Y-m-d 00:00:00',strtotime("-30 days"));
-        $jo_query = JobOpen::query();
-        $jo_query = $jo_query->where('created_at','<',"$date1");
-        $job_res = $jo_query->get();
 
         $all_jobs = array();
         $i = 0;
