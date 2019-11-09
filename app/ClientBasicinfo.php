@@ -600,7 +600,7 @@ class ClientBasicinfo extends Ardent
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city',/*'job_openings.level_id'*/);
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id');
         $response = $query->get();
 
         $client = array();
@@ -615,7 +615,7 @@ class ClientBasicinfo extends Ardent
             $client['job_location'] = $v->city;
             
             // Get Percentage charged
-            /*$position = ClientHeirarchy::getClientHeirarchyPositionById($v->level_id);
+            $position = ClientHeirarchy::getClientHeirarchyPositionById($v->level_id);
 
             if(isset($position) && $position != '') {
 
@@ -631,7 +631,7 @@ class ClientBasicinfo extends Ardent
                 $percentage_charged = '';
             }
 
-            $client['percentage_charged'] = $percentage_charged;*/
+            $client['percentage_charged'] = $percentage_charged;
         }
         return $client;
     }
