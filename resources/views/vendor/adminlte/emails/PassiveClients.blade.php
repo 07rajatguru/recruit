@@ -46,7 +46,7 @@
                     <tr>
                         <td colspan="7">
                             <u>
-                                <b><h1>No of Passive Clients : {{ $clients_count or '0' }}</h1></b>
+                                <b><h1>No of expected passive clients in next week : {{ $clients_count or '0' }}</h1></b>
                             </u>
                         </td>
                     </tr>

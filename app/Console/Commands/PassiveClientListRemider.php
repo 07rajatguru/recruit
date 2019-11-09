@@ -193,6 +193,8 @@ class PassiveClientListRemider extends Command
                 $superadminuserid = getenv('SUPERADMINUSERID');
                 $super_admin_email = User::getUserEmailById($superadminuserid);
 
+                $user_name = User::getUserNameById($k1);
+
                 $to_array = array();
                 $to_array[] = $v1;
 
@@ -201,7 +203,7 @@ class PassiveClientListRemider extends Command
                 $cc_array[] = 'saloni@trajinfotech.com';
 
                 $module = "Expected Passive Client";
-                $subject = 'Email of expected passive client in next week';
+                $subject = 'Email of expected passive client in next week - '. $user_name;
                 $message = "";
                 $to_array = array_filter($to_array);
                 $to = implode(",",$to_array);
