@@ -491,6 +491,9 @@ class UserController extends Controller
             }
 
             $user_info = User::getProfileInfo($user_id);
+
+            //print_r($user_info);exit;
+
             foreach($user_info as $key=>$value){
                 $user['user_id'] = $user_id;
                 $user['name'] = $value->name;
@@ -511,6 +514,10 @@ class UserController extends Controller
                 $user['current_address'] = $value->current_address;
                 $user['permanent_address'] = $value->permanent_address;
                 $user['signature'] = $value->signature;
+                //$user['official_gmail'] = $value->official_gmail;
+                $user['personal_email'] = $value->personal_email;
+                $user['contact_no_official'] = $value->contact_no_official;
+                $user['blood_group'] = $value->blood_group;
 
                 for ($i=1; $i <= 5 ; $i++) {
                     $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
@@ -568,6 +575,8 @@ class UserController extends Controller
             $user_basic_info = User::find($user_id);
             $user_basic_info->name = Input::get('name');
             //$user_basic_info->email = Input::get('email');
+
+            // Official gmail
             $user_basic_info->secondary_email = Input::get('semail');
             $user_basic_info->save();
 
@@ -582,6 +591,9 @@ class UserController extends Controller
             $current_address = Input::get('current_address');
             $permanent_address = Input::get('permanent_address');
             $signature = Input::get('signature');
+            $personal_email = Input::get('personal_email');
+            $contact_no_official = Input::get('contact_no_official');
+            $blood_group = Input::get('blood_group');
 
             $users_otherinfo = UserOthersInfo::find($user_other_info->id);
             if (isset($date_of_joining) && $date_of_joining != '') {
@@ -628,6 +640,9 @@ class UserController extends Controller
             $users_otherinfo->current_address = $current_address;
             $users_otherinfo->permanent_address = $permanent_address;
             $users_otherinfo->signature = $signature;
+            $users_otherinfo->personal_email = $personal_email;
+            $users_otherinfo->contact_no_official = $contact_no_official;
+            $users_otherinfo->blood_group = $blood_group;
             $users_otherinfo->save();
 
             // User Family Details update

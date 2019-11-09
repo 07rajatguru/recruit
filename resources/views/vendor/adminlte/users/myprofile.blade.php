@@ -23,7 +23,9 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>My Profile</h2>
+                <!-- <h2>My Profile</h2> -->
+                <h3>{{ $user['name'] }}</h3>
+                      
                 {{--@if($user['type'] == "Photo")
                     <img src= "../../{!!$user['photo']!!}" height="100px" width="100px" />
                 @else
@@ -101,9 +103,6 @@
                             <img src= "../../uploads/User_Default.jpg"/ style="height: 200px;width: 200px;border-radius: 50%;">
                         @endif
                         <br/>
-                        <div>
-                            <h3>{{ $user['name'] }}</h3>
-                        </div>
                     </div>
                 </div>
             </div>

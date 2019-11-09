@@ -63,11 +63,11 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <strong>Email: <span class = "required_fields">*</span> </strong>
+                                <strong>Official Email: <span class = "required_fields">*</span> </strong>
                                 @if($isSuperAdmin || $isAccountant)
-                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control','tabindex' => '1')) !!}
+                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '1')) !!}
                                 @else
-                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Email','class' => 'form-control','disabled')) !!}
+                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','disabled','tabindex' => '1')) !!}
                                 @endif
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -76,13 +76,28 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
+                                <strong>Official Gmail: </strong>
+                                {!! Form::text('semail',$user['s_email'], array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control', 'tabindex' => '2' )) !!}
+                                @if ($errors->has('semail'))
+                                    <span class="help-block">
+                                <strong>{{ $errors->first('semail') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group">
+                                <strong>Personal Email:  </strong>
+                                {!! Form::text('personal_email',$user['personal_email'], array('id'=>'personal_email','placeholder' => 'Personal Email','class' => 'form-control','tabindex' => '3')) !!}
+                            </div>
+
                             <div class="form-group {{ $errors->has('date_of_birth') ? 'has-error' : '' }}">
                                 <strong>Birth Date: </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                {!! Form::text('date_of_birth', isset($user['birth_date']) ? $user['birth_date'] : null, array('id'=>'date_of_birth','placeholder' => 'Birth Date','class' => 'form-control','tabindex' => '2')) !!}
+                                {!! Form::text('date_of_birth', isset($user['birth_date']) ? $user['birth_date'] : null, array('id'=>'date_of_birth','placeholder' => 'Birth Date','class' => 'form-control','tabindex' => '4')) !!}
                                 </div>
                             </div>
 
@@ -92,23 +107,13 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                {!! Form::text('date_of_joining', isset($user['join_date']) ? $user['join_date'] : null, array('id'=>'date_of_joining','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '3')) !!}
-                                </div>
-                            </div>
-
-                            <div class="form-group {{ $errors->has('date_of_anni') ? 'has-error' : '' }}">
-                                <strong>Anniversary Date: </strong>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                {!! Form::text('date_of_anni',isset($user['anni_date']) ? $user['anni_date'] : null, array('id'=>'date_of_anni','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '4')) !!}
+                                {!! Form::text('date_of_joining', isset($user['join_date']) ? $user['join_date'] : null, array('id'=>'date_of_joining','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '5')) !!}
                                 </div>
                             </div>
 
                             <div class="form-group {{ $errors->has('contact') ? 'has-error' : '' }}">
-                                <strong>Contact Number: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('contact',isset($user['contact_number']) ? $user['contact_number'] : null, array('id'=>'contact','placeholder' => 'Contact Number','class' => 'form-control','tabindex' => '6')) !!}
+                                <strong>Personal Contact Number: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('contact',isset($user['contact_number']) ? $user['contact_number'] : null, array('id'=>'contact','placeholder' => 'Personal Contact Number','class' => 'form-control','tabindex' => '7')) !!}
                                 @if ($errors->has('contact'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('contact') }}</strong>
@@ -117,8 +122,13 @@
                             </div>
 
                             <div class="form-group">
+                                <strong>Official Contact Number: </strong>
+                                {!! Form::text('contact_no_official',isset($user['contact_no_official']) ? $user['contact_no_official'] : null, array('id'=>'contact_no_official','placeholder' => 'Official Contact Number','class' => 'form-control','tabindex' => '8')) !!}
+                            </div>
+
+                            <div class="form-group">
                                 <strong>Current Address: </strong>
-                                {!! Form::textarea('current_address', $user['current_address'], array('id'=>'current_address' ,'placeholder' => 'Current Address','class' => 'form-control','tabindex' => '7','rows' => '4')) !!}
+                                {!! Form::textarea('current_address', $user['current_address'], array('id'=>'current_address' ,'placeholder' => 'Current Address','class' => 'form-control','tabindex' => '9','rows' => '4')) !!}
                             </div>
                         </div>
                     </div>
@@ -168,9 +178,9 @@
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
                                 <strong>Designation: </strong>
                                 @if($isSuperAdmin || $isAccountant)
-                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '3')) !!}
+                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '10')) !!}
                                 @else
-                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','disabled')) !!}
+                                    {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','disabled','tabindex' => '10')) !!}
                                 @endif
                                 @if ($errors->has('designation'))
                                     <span class="help-block">
@@ -179,14 +189,14 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
-                                <strong>Secondary Gmail: </strong>
-                                {!! Form::text('semail',$user['s_email'], array('id'=>'semail','placeholder' => 'Secondary Gmail','class' => 'form-control', 'tabindex' => '5' )) !!}
-                                @if ($errors->has('semail'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('semail') }}</strong>
-                                </span>
-                                @endif
+                             <div class="form-group {{ $errors->has('date_of_anni') ? 'has-error' : '' }}">
+                                <strong>Anniversary Date: </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                {!! Form::text('date_of_anni',isset($user['anni_date']) ? $user['anni_date'] : null, array('id'=>'date_of_anni','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '12')) !!}
+                                </div>
                             </div>
 
                             <?php if($isSuperAdmin || $isAccountant) { ?>
@@ -196,14 +206,24 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '6')) !!}
+                                {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '12')) !!}
                                 </div>
                             </div> 
                             <?php }?>
 
+                            <div class="form-group {{ $errors->has('blood_group') ? 'has-error' : '' }}">
+                                <strong>Blood Group: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('blood_group',$user['blood_group'], array('id'=>'blood_group','placeholder' => 'Blood Group','class' => 'form-control', 'tabindex' => '13' )) !!}
+                                @if ($errors->has('blood_group'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('blood_group') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
                             <div class="form-group">
                                 <strong>Permanent Address: </strong>
-                                {!! Form::textarea('permanent_address',$user['permanent_address'], array('id'=>'permanent_address','placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '8','rows' => '4')) !!}
+                                {!! Form::textarea('permanent_address',$user['permanent_address'], array('id'=>'permanent_address','placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '13','rows' => '4')) !!}
                             </div>
                         </div>
                     </div>
@@ -214,7 +234,7 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>Signature : </strong>
-                                {!! Form::textarea('signature',$user['signature'], array('id'=>'signature','placeholder' => 'Signature','class' => 'form-control','tabindex' => '8','rows' => '4')) !!}
+                                {!! Form::textarea('signature',$user['signature'], array('id'=>'signature','placeholder' => 'Signature','class' => 'form-control','tabindex' => '14','rows' => '4')) !!}
                             </div>
                         </div>
                     </div>
@@ -232,8 +252,8 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('name_1') ? 'has-error' : '' }}">
-                            <strong>Name: </strong>
-                            {!! Form::text('name_1', $user['name_1'],array('id'=>'name_1','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '8' )) !!}
+                            <strong>Name: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('name_1', $user['name_1'],array('id'=>'name_1','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '15' )) !!}
                             @if ($errors->has('name_1'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name_1') }}</strong>
@@ -245,8 +265,8 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('relationship_1') ? 'has-error' : '' }}">
-                            <strong>Relationship : </strong>
-                            {!! Form::text('relationship_1', $user['relationship_1'], array('id'=>'relationship_1','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '9'  )) !!}
+                            <strong>Relationship : <span class = "required_fields">*</span></strong>
+                            {!! Form::text('relationship_1', $user['relationship_1'], array('id'=>'relationship_1','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '16'  )) !!}
                             @if ($errors->has('relationship_1'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('relationship_1') }}</strong>
@@ -258,8 +278,8 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('occupation_1') ? 'has-error' : '' }}">
-                            <strong>Occupation : </strong>
-                            {!! Form::text('occupation_1', $user['occupation_1'], array('id'=>'occupation_1','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '10'  )) !!}
+                            <strong>Occupation : <span class = "required_fields">*</span></strong>
+                            {!! Form::text('occupation_1', $user['occupation_1'], array('id'=>'occupation_1','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '17'  )) !!}
                             @if ($errors->has('occupation_1'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('occupation_1') }}</strong>
@@ -271,8 +291,8 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_1') ? 'has-error' : '' }}">
-                            <strong>Contact Number: </strong>
-                            {!! Form::text('contact_no_1', $user['contact_no_1'], array('id'=>'contact_no_1','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '11'  )) !!}
+                            <strong>Contact Number: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('contact_no_1', $user['contact_no_1'], array('id'=>'contact_no_1','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '18'  )) !!}
                             @if ($errors->has('contact_no_1'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_1') }}</strong>
@@ -286,7 +306,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('name_2') ? 'has-error' : '' }}">
-                            {!! Form::text('name_2', $user['name_2'],array('id'=>'name_2','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '12' )) !!}
+                            {!! Form::text('name_2', $user['name_2'],array('id'=>'name_2','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '19' )) !!}
                             @if ($errors->has('name_2'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name_2') }}</strong>
@@ -298,7 +318,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('relationship_2') ? 'has-error' : '' }}">
-                            {!! Form::text('relationship_2', $user['relationship_2'], array('id'=>'relationship_2','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '13'  )) !!}
+                            {!! Form::text('relationship_2', $user['relationship_2'], array('id'=>'relationship_2','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '20'  )) !!}
                             @if ($errors->has('relationship_2'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('relationship_2') }}</strong>
@@ -310,7 +330,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('occupation_2') ? 'has-error' : '' }}">
-                            {!! Form::text('occupation_2', $user['occupation_2'], array('id'=>'occupation_2','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '14'  )) !!}
+                            {!! Form::text('occupation_2', $user['occupation_2'], array('id'=>'occupation_2','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '21'  )) !!}
                             @if ($errors->has('occupation_2'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('occupation_2') }}</strong>
@@ -322,7 +342,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_2') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_2', $user['contact_no_2'], array('id'=>'contact_no_2','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '15'  )) !!}
+                            {!! Form::text('contact_no_2', $user['contact_no_2'], array('id'=>'contact_no_2','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '22'  )) !!}
                             @if ($errors->has('contact_no_2'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_2') }}</strong>
@@ -336,7 +356,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('name_3') ? 'has-error' : '' }}">
-                            {!! Form::text('name_3', $user['name_3'],array('id'=>'name_3','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '16' )) !!}
+                            {!! Form::text('name_3', $user['name_3'],array('id'=>'name_3','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '23' )) !!}
                             @if ($errors->has('name_3'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name_3') }}</strong>
@@ -348,7 +368,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('relationship_3') ? 'has-error' : '' }}">
-                            {!! Form::text('relationship_3', $user['relationship_3'], array('id'=>'relationship_3','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '17'  )) !!}
+                            {!! Form::text('relationship_3', $user['relationship_3'], array('id'=>'relationship_3','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '24'  )) !!}
                             @if ($errors->has('relationship_3'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('relationship_3') }}</strong>
@@ -360,7 +380,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('occupation_3') ? 'has-error' : '' }}">
-                            {!! Form::text('occupation_3', $user['occupation_3'], array('id'=>'occupation_3','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '18'  )) !!}
+                            {!! Form::text('occupation_3', $user['occupation_3'], array('id'=>'occupation_3','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '25'  )) !!}
                             @if ($errors->has('occupation_3'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('occupation_3') }}</strong>
@@ -372,7 +392,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_3') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_3', $user['contact_no_3'], array('id'=>'contact_no_3','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '19'  )) !!}
+                            {!! Form::text('contact_no_3', $user['contact_no_3'], array('id'=>'contact_no_3','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '26'  )) !!}
                             @if ($errors->has('contact_no_3'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_3') }}</strong>
@@ -386,7 +406,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('name_4') ? 'has-error' : '' }}">
-                            {!! Form::text('name_4', $user['name_4'],array('id'=>'name_4','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '20' )) !!}
+                            {!! Form::text('name_4', $user['name_4'],array('id'=>'name_4','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '27' )) !!}
                             @if ($errors->has('name_4'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name_4') }}</strong>
@@ -398,7 +418,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('relationship_4') ? 'has-error' : '' }}">
-                            {!! Form::text('relationship_4', $user['relationship_4'], array('id'=>'relationship_4','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '21'  )) !!}
+                            {!! Form::text('relationship_4', $user['relationship_4'], array('id'=>'relationship_4','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '28'  )) !!}
                             @if ($errors->has('relationship_4'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('relationship_4') }}</strong>
@@ -410,7 +430,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('occupation_4') ? 'has-error' : '' }}">
-                            {!! Form::text('occupation_4', $user['occupation_4'], array('id'=>'occupation_4','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '22'  )) !!}
+                            {!! Form::text('occupation_4', $user['occupation_4'], array('id'=>'occupation_4','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '29'  )) !!}
                             @if ($errors->has('occupation_4'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('occupation_4') }}</strong>
@@ -422,7 +442,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_4') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_4', $user['contact_no_4'], array('id'=>'contact_no_4','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '23'  )) !!}
+                            {!! Form::text('contact_no_4', $user['contact_no_4'], array('id'=>'contact_no_4','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '30'  )) !!}
                             @if ($errors->has('contact_no_4'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_4') }}</strong>
@@ -436,7 +456,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('name_5') ? 'has-error' : '' }}">
-                            {!! Form::text('name_5', $user['name_5'],array('id'=>'name_5','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '24' )) !!}
+                            {!! Form::text('name_5', $user['name_5'],array('id'=>'name_5','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '31' )) !!}
                             @if ($errors->has('name_5'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name_5') }}</strong>
@@ -448,7 +468,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('relationship_5') ? 'has-error' : '' }}">
-                            {!! Form::text('relationship_5', $user['relationship_5'], array('id'=>'relationship_5','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '25'  )) !!}
+                            {!! Form::text('relationship_5', $user['relationship_5'], array('id'=>'relationship_5','placeholder' => 'Relationship','class' => 'form-control', 'tabindex' => '32'  )) !!}
                             @if ($errors->has('relationship_5'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('relationship_5') }}</strong>
@@ -460,7 +480,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('occupation_5') ? 'has-error' : '' }}">
-                            {!! Form::text('occupation_5', $user['occupation_5'], array('id'=>'occupation_5','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '26'  )) !!}
+                            {!! Form::text('occupation_5', $user['occupation_5'], array('id'=>'occupation_5','placeholder' => 'Occupation','class' => 'form-control', 'tabindex' => '33'  )) !!}
                             @if ($errors->has('occupation_5'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('occupation_5') }}</strong>
@@ -472,7 +492,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_5') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_5', $user['contact_no_5'], array('id'=>'contact_no_5','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '27'  )) !!}
+                            {!! Form::text('contact_no_5', $user['contact_no_5'], array('id'=>'contact_no_5','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '34')) !!}
                             @if ($errors->has('contact_no_5'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_5') }}</strong>
@@ -495,7 +515,7 @@
                     <div class="">
                         <div class="form-group {{ $errors->has('bank_name') ? 'has-error' : '' }}">
                             <strong>Bank Name: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('bank_name',$user['bank_name'],array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control', 'tabindex' => '28' )) !!}
+                            {!! Form::text('bank_name',$user['bank_name'],array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control', 'tabindex' => '35' )) !!}
                             @if ($errors->has('bank_name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('bank_name') }}</strong>
@@ -505,7 +525,7 @@
 
                         <div class="form-group {{ $errors->has('account_no') ? 'has-error' : '' }}">
                             <strong>Account Number: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('account_no',$user['acc_no'], array('id'=>'account_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '29'  )) !!}
+                            {!! Form::text('account_no',$user['acc_no'], array('id'=>'account_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '36'  )) !!}
                             @if ($errors->has('account_no'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('account_no') }}</strong>
@@ -515,7 +535,7 @@
 
                         <div class="form-group {{ $errors->has('user_full_name') ? 'has-error' : '' }}">
                             <strong>Full Name: </strong>
-                            {!! Form::text('user_full_name',$user['user_full_name'], array('id'=>'user_full_name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '30'  )) !!}
+                            {!! Form::text('user_full_name',$user['user_full_name'], array('id'=>'user_full_name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '37'  )) !!}
                             @if ($errors->has('user_full_name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('user_full_name') }}</strong>
@@ -528,7 +548,7 @@
                     <div class="">
                             <div class="form-group {{ $errors->has('branch_name') ? 'has-error' : '' }}">
                                <strong>Branch Name: </strong>
-                                {!! Form::text('branch_name',$user['branch_name'], array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '31'  )) !!}
+                                {!! Form::text('branch_name',$user['branch_name'], array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '38'  )) !!}
                                 @if ($errors->has('branch_name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('branch_name') }}</strong>
@@ -538,7 +558,7 @@
 
                             <div class="form-group {{ $errors->has('ifsc') ? 'has-error' : '' }}">
                                 <strong>IFSC Code: </strong>
-                                {!! Form::text('ifsc',$user['ifsc_code'], array('id'=>'ifsc','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '32' )) !!}
+                                {!! Form::text('ifsc',$user['ifsc_code'], array('id'=>'ifsc','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '39' )) !!}
                                 @if ($errors->has('ifsc'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('ifsc') }}</strong>
@@ -562,7 +582,7 @@
                     <div class="">
                         <div class="form-group {{ $errors->has('fixed_salary') ? 'has-error' : '' }}">
                             <strong>Fixed Salary: </strong>
-                            {!! Form::text('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Saraly','class' => 'form-control', 'tabindex' => '33' )) !!}
+                            {!! Form::text('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Saraly','class' => 'form-control', 'tabindex' => '40' )) !!}
                             @if ($errors->has('fixed_salary'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('fixed_salary') }}</strong>
@@ -648,22 +668,76 @@
                     "account_no": {
                         required: true,
                     },
+                    "blood_group": {
+                        required: true,
+                    },
+                    "name_1": {
+                        required: true,
+                    },
+                    "relationship_1": {
+                        required: true,
+                    },
+                    "occupation_1": {
+                        required: true,
+                    },
+                    "contact_no_1": {
+                        required: true,
+                    },
+                    "name_2": {
+                        required: true,
+                    },
+                    "relationship_2": {
+                        required: true,
+                    },
+                    "occupation_2": {
+                        required: true,
+                    },
+                    "contact_no_2": {
+                        required: true,
+                    },
                 },
                 messages: {
                     "name": {
                         required: "Name is required."
                     },
                     "email": {
-                        required: "Email is required.",
+                        required: "Official email is required.",
                     },
                     "contact": {
-                        required: "Contact Number is required.",
+                        required: "Personal Contact Number is required.",
                     },
                     "bank_name": {
                         required: "Bank Name is required.",
                     },
                     "account_no": {
                         required: "Account Number is required.",
+                    },
+                    "blood_group": {
+                        required: "Blood Group is required.",
+                    },
+                    "name_1": {
+                        required: "Name is required.",
+                    },
+                    "relationship_1": {
+                        required: "Relationship is required.",
+                    },
+                    "occupation_1": {
+                        required: "Occupation is required.",
+                    },
+                    "contact_no_1": {
+                        required: "Contact Number is required.",
+                    },
+                    "name_2": {
+                        required: "Name is required.",
+                    },
+                    "relationship_2": {
+                        required: "Relationship is required.",
+                    },
+                    "occupation_2": {
+                        required: "Occupation is required.",
+                    },
+                    "contact_no_2": {
+                        required: "Contact Number is required.",
                     },
                 }
             });
@@ -697,7 +771,7 @@
                 var total_file=document.getElementById("upload_img").files.length;
                 for(var i=0;i<total_file;i++){
                     $('#default_image').hide();
-                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' style='height: 150px;width: 200px;border-radius: 50%;'>");
+                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' style='height: 200px;width: 200px;border-radius: 50%;'>");
                     $('#upload_images_div').append("<br/><br/>");
                 }
             });
