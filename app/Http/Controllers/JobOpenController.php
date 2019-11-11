@@ -509,7 +509,7 @@ class JobOpenController extends Controller
                 $order_column_name = "users.name";
             }
             else if ($order == 4) {
-                $order_column_name = "client_basicinfo.name";
+                $order_column_name = "client_basicinfo.display_name";
             }
             else if ($order == 5) {
                 $order_column_name = "job_openings.posting_title";
