@@ -435,6 +435,9 @@ class UserController extends Controller
                 $user['current_address'] = $value->current_address;
                 $user['permanent_address'] = $value->permanent_address;
                 $user['signature'] = $value->signature;
+                $user['personal_email'] = $value->personal_email;
+                $user['contact_no_official'] = $value->contact_no_official;
+                $user['blood_group'] = $value->blood_group;
             }
 
             // User Family Details show

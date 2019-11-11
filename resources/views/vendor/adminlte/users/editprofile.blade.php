@@ -148,9 +148,9 @@
 
                             <div class="form-group" id="default_image">
                                 @if($user['type'] == "Photo")
-                                    <img src= "../../{!!$user['photo']!!}" style="height: 200px;width: 200px;border-radius: 50%;" />
+                                    <img src= "../../{!!$user['photo']!!}" style="height: 150px;width: 150px;border-radius: 50%;" />
                                 @else
-                                    <img src= "../../uploads/User_Default.jpg" style="height: 200px;width: 200px;border-radius: 50%;" />
+                                    <img src= "../../uploads/User_Default.jpg" style="height: 150px;width: 150px;border-radius: 50%;" />
                                 @endif
                             </div>
 
@@ -163,7 +163,7 @@
                                         </div>
                                         <div id = "upload_images_div">
                                         </div>
-                                        <div style="padding-left: 25px;">
+                                        <div>
                                             <span class="btn btn-default btn-file">
                                             <span class="fileinput-new">Select Profile Photo</span>
                                            <!--  <span class="fileinput-exists" style="">Change</span> -->
@@ -611,6 +611,39 @@
         </div>
     </div>
 
+<!-- 
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="box-header with-border col-md-6 ">
+                <h3 class="box-title">Attachment Information</h3>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Aadhar Card :</strong>
+                    {!! Form::file('aadhar_card', null, array('id'=>'aadhar_card','class' => 'form-control')) !!}
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Pan Card :</strong>
+                    {!! Form::file('pan_card', null, array('id'=>'pan_card','class' => 'form-control')) !!}
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Cancel Check :</strong>
+                    {!! Form::file('cancel_check', null, array('id'=>'cancel_check','class' => 'form-control')) !!}
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Others :</strong>
+                    {!! Form::file('others', null, array('id'=>'others','class' => 'form-control')) !!}
+                </div>
+            </div>
+        </div>
+    </div> -->
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -771,7 +804,7 @@
                 var total_file=document.getElementById("upload_img").files.length;
                 for(var i=0;i<total_file;i++){
                     $('#default_image').hide();
-                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' style='height: 200px;width: 200px;border-radius: 50%;'>");
+                    $('#upload_images_div').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' style='height: 150px;width: 150px;border-radius: 50%;'>");
                     $('#upload_images_div').append("<br/><br/>");
                 }
             });

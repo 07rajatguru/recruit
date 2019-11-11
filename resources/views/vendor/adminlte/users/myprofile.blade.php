@@ -41,11 +41,11 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
+                <div class="box-header with-border col-md-6">
                     <h3 class="box-title">Basic Information</h3>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="col-xs-7 col-sm-7 col-md-7">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
                         <br/>
                         <table class="table table-bordered">
                             {{--<tr>
@@ -57,16 +57,24 @@
                                 <td>{{ $user['designation'] }}</td>
                             </tr>
                             <tr>
-                                <th>Email</th>
+                                <th>Official Email</th>
                                 <td>{{ $user['email'] }}</td>
                             </tr>
                             <tr>
-                                <th>Secondary Email</th>
+                                <th>Official Gmail</th>
                                 <td>{{ $user['s_email'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Personal Email</th>
+                                <td>{{ $user['personal_email'] }}</td>
                             </tr>
                             <tr>
                                 <th>Birth Date</th>
                                 <td>{{ $user['birth_date'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Blood Group</th>
+                                <td>{{ $user['blood_group'] }}</td>
                             </tr>
                             <tr>
                                 <th>Joining Date</th>
@@ -76,16 +84,32 @@
                                 <th>Anniversary Date</th>
                                 <td>{{ $user['anni_date'] }}</td>
                             </tr>
-                            <tr>
-                                <th>Contact Number</th>
-                                <td>{{ $user['contact_number'] }}</td>
-                            </tr>
                             @if($isSuperAdmin || $isAccountant) 
                                 <tr>
                                     <th>Exit Date</th>
                                     <td>{{ $user['exit_date'] }}</td>
                                 </tr>
                             @endif
+                        </table>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6" style="padding-left: 200px;">
+                        @if($user['type'] == "Photo")
+                            <img src= "../../{!!$user['photo']!!}"/ style="height: 150px;width: 150px;border-radius: 50%;">
+                        @else
+                            <img src= "../../uploads/User_Default.jpg"/ style="height: 150px;width: 150px;border-radius: 50%;">
+                        @endif
+                        <br/><br/>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Personal Contact Number</th>
+                                <td>{{ $user['contact_number'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Official Contact Number</th>
+                                <td>{{ $user['contact_no_official'] }}</td>
+                            </tr>
                             <tr>
                                 <th>Current Address</th>
                                 <td>{{ $user['current_address'] }}</td>
@@ -95,14 +119,6 @@
                                 <td>{{ $user['permanent_address'] }}</td>
                             </tr>
                         </table>
-                    </div>
-                    <div class="col-xs-5 col-sm-5 col-md-5" style="padding-left: 120px;">
-                        @if($user['type'] == "Photo")
-                            <img src= "../../{!!$user['photo']!!}"/ style="height: 200px;width: 200px;border-radius: 50%;">
-                        @else
-                            <img src= "../../uploads/User_Default.jpg"/ style="height: 200px;width: 200px;border-radius: 50%;">
-                        @endif
-                        <br/>
                     </div>
                 </div>
             </div>
