@@ -887,16 +887,33 @@ class JobOpen extends Model
         if (isset($offset) && $offset > 0) {
             $job_open_query = $job_open_query->offset($offset);
         }
+
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
-                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+
+            // For check date wise search
+            list($day, $month, $year) = explode("-",$search);
+            $a = checkdate($month, $day, $year);
+
+            if($a == 1) {
+                $new_date = date('Y-m-d',strtotime($search));
+            }
+            else {
+                $new_date = NULL;
+            }
+
+            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+            $job_open_query = $job_open_query->orwhere('job_openings.created_at','like',"%$new_date%");
             });
         }
+
+       /* $job_response = $job_open_query->toSql();
+        echo $job_response;exit;*/
 
         $job_response = $job_open_query->get();
 //print_r($job_response);exit;
