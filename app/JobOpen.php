@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Date;
 
 class JobOpen extends Model
 {
@@ -891,24 +892,49 @@ class JobOpen extends Model
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
 
-            // For check date wise search
-            list($day, $month, $year) = explode("-",$search);
-            $a = checkdate($month, $day, $year);
+                // For check date wise search
+                /*list($day, $month, $year) = explode("-",$search);
+                $a = checkdate($month, $day, $year);
 
-            if($a == 1) {
-                $new_date = date('Y-m-d',strtotime($search));
-            }
-            else {
-                $new_date = NULL;
-            }
+                if($a == 1) {
+                    $new_date = date('Y-m-d',strtotime($search));
+                }
+                else {
+                    $new_date = NULL;
+                }*/
 
-            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
-            $job_open_query = $job_open_query->orwhere('job_openings.created_at','like',"%$new_date%");
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('job_openings.created_at','like',"%$new_date%");
+
+                if($date_search){
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $job_open_query = $job_open_query->orwhere('job_openings.created_at','>=',"$from_date");
+                    $job_open_query = $job_open_query->Where('job_openings.created_at','<=',"$to_date");
+                }
             });
         }
 
@@ -1214,12 +1240,50 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
+
+                // For check date wise search
+                /*list($day, $month, $year) = explode("-",$search);
+                $a = checkdate($month, $day, $year);
+
+                if($a == 1) {
+                    $new_date = date('Y-m-d',strtotime($search));
+                }
+                else {
+                    $new_date = NULL;
+                }*/
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('job_openings.created_at','like',"%$new_date%");
+
+                if($date_search){
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $job_open_query = $job_open_query->orwhere('job_openings.created_at','>=',"$from_date");
+                    $job_open_query = $job_open_query->Where('job_openings.created_at','<=',"$to_date");
+                }
             });
         }
         $job_response = $job_open_query->get();
