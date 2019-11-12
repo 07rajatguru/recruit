@@ -121,11 +121,11 @@
                         @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
                     @endif
 
-                    @if($isSuperAdmin || $client['client_owner'] )
+                    @if($isSuperAdmin || $client['client_owner'] || $isAllClientVisibleUser)
                         <a title="Remarks" class="fa fa-plus"  href="{{ route('client.remarks',$client['id']) }}" style="margin:2px;"></a>
                     @endif
 
-                    @if($isSuperAdmin || $client['client_owner'] )
+                    @if($isSuperAdmin || $client['client_owner'] || $isAllClientVisibleUser)
                         <?php
 
                             $days_array = App\ClientTimeline::getDetailsByClientId($client['id']);

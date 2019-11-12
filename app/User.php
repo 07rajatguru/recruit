@@ -386,6 +386,15 @@ class User extends Authenticatable
         return false;
     }
 
+    public static function isAllClientVisibleUser($user_id){
+
+        $loggedin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        if ($loggedin_user_id == $user_id) {
+            return true;
+        }
+        return false;
+    }
+
     public static function isAccountManager($user_id){
         $is_am = false;
 
