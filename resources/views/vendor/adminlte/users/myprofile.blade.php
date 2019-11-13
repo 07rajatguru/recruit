@@ -216,6 +216,7 @@
                             <th></th>
                             <th>File Name</th>
                             <th>Size</th>
+                            <th>Type</th>
                         </tr>
                         @if(sizeof($user['doc'])>0)
                             @foreach($user['doc'] as $key=>$value)
@@ -230,6 +231,7 @@
                                     </a>
                                     </td>
                                     <td>{{ $value['size'] }}</td>
+                                    <td>{{ $value['type'] }}</td>
                                 </tr>
                             @endforeach
                         @endif

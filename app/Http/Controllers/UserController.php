@@ -443,12 +443,14 @@ class UserController extends Controller
             // User Family Details show
             $user_family = UsersFamily::getAllFamilyDetailsofUser($user_id);
 
+            $userModel = new User();
+            $users_upload_type = $userModel->users_upload_type;
             $j=0;
             $user['doc'] = array();
             $users_docs = \DB::table('users_doc')
                           ->select('users_doc.*')
                           ->where('user_id','=',$user_id)
-                          ->where('type','=','Others')
+                          /*->where('type','=','Others')*/
                           ->get();
 
             $utils = new Utils();
@@ -457,10 +459,17 @@ class UserController extends Controller
                 $user['doc'][$j]['id'] = $value->id;
                 $user['doc'][$j]['url'] = "../".$value->file;
                 $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+                $user['doc'][$j]['type'] = $value->type;
+
+                if (array_search($value->type, $users_upload_type)) {
+                    unset($users_upload_type[array_search($value->type, $users_upload_type)]);
+                }
                 $j++;
             }
 
-            return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family'));
+            $users_upload_type['Others'] = 'Others';
+
+            return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family','users_upload_type'));
         }
         else {
             return view('errors.403');
@@ -539,12 +548,15 @@ class UserController extends Controller
                 }
             }
 
+            $userModel = new User();
+            $users_upload_type = $userModel->users_upload_type;
+
             $j=0;
             $user['doc'] = array();
             $users_docs = \DB::table('users_doc')
                           ->select('users_doc.*')
                           ->where('user_id','=',$user_id)
-                          ->where('type','=','Others')
+                          /*->where('type','=','Others')*/
                           ->get();
 
             $utils = new Utils();
@@ -553,10 +565,17 @@ class UserController extends Controller
                 $user['doc'][$j]['id'] = $value->id;
                 $user['doc'][$j]['url'] = "../".$value->file;
                 $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+                $user['doc'][$j]['type'] = $value->type;
+
+                if (array_search($value->type, $users_upload_type)) {
+                    unset($users_upload_type[array_search($value->type, $users_upload_type)]);
+                }
                 $j++;
             }
 
-            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id'));
+            $users_upload_type['Others'] = 'Others';
+
+            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','users_upload_type'));
         }
         else {
             return view('errors.403');
@@ -721,6 +740,9 @@ class UserController extends Controller
 
             //stored others documents
             if (isset($upload_documents) && sizeof($upload_documents) > 0){
+
+                $users_upload_type = Input::get('users_upload_type');
+
                 foreach ($upload_documents as $k => $v) {
                     if (isset($v) && $v->isValid()) {
                         // echo "here";
@@ -744,16 +766,20 @@ class UserController extends Controller
                         $users_doc->file = $file_path;
                         $users_doc->name = $file_name;
                         $users_doc->size = $file_size;
-                        $users_doc->type = "Others";
+                        //$users_doc->type = "Others";
+                        $users_doc->type = $users_upload_type;
                         $users_doc->save();
                     }
                 }
             }
         }
         else{
+
             $user_basic_info = User::find($user_id);
             $user_basic_info->name = Input::get('name');
             //$user_basic_info->email = Input::get('email');
+
+            // Official gmail
             $user_basic_info->secondary_email = Input::get('semail');
             $user_basic_info->save();
 
@@ -765,6 +791,12 @@ class UserController extends Controller
             $acc_no = Input::get('account_no');
             $ifsc_code = Input::get('ifsc');
             $contact_number = Input::get('contact');
+            $current_address = Input::get('current_address');
+            $permanent_address = Input::get('permanent_address');
+            $signature = Input::get('signature');
+            $personal_email = Input::get('personal_email');
+            $contact_no_official = Input::get('contact_no_official');
+            $blood_group = Input::get('blood_group');
 
             $users_otherinfo= new UserOthersInfo;
             $users_otherinfo->user_id = $user_id;
@@ -809,10 +841,17 @@ class UserController extends Controller
             }
             $users_otherinfo->fixed_salary = Input::get('fixed_salary');
             $users_otherinfo->contact_number = $contact_number;
+            $users_otherinfo->current_address = $current_address;
+            $users_otherinfo->permanent_address = $permanent_address;
+            $users_otherinfo->signature = $signature;
+            $users_otherinfo->personal_email = $personal_email;
+            $users_otherinfo->contact_no_official = $contact_no_official;
+            $users_otherinfo->blood_group = $blood_group;
             $users_otherinfo->save();
 
             // Users Family data store
             for ($i=1; $i <=5 ; $i++) {
+
                 $name = Input::get('name_'.$i);
                 $relationship = Input::get('relationship_'.$i);
                 $occupation = Input::get('occupation_'.$i);
@@ -857,6 +896,9 @@ class UserController extends Controller
             }
             //stores attachmensts
             if (isset($upload_documents) && sizeof($upload_documents) > 0){
+
+                $users_upload_type = Input::get('users_upload_type');
+
                 foreach ($upload_documents as $k => $v) {
                     if (isset($v) && $v->isValid()) {
                         // echo "here";
@@ -880,19 +922,21 @@ class UserController extends Controller
                         $users_doc->file = $file_path;
                         $users_doc->name = $file_name;
                         $users_doc->size = $file_size;
-                        $users_doc->type = "Others";
+                        //$users_doc->type = "Others";
+                        $users_doc->type = $users_upload_type;
                         $users_doc->save();
                     }
                 }
             }
         }
 
-        return redirect()->route('users.index')->with('success','Profile Updated Successfully'); 
+        return redirect()->route('users.index')->with('success','Profile Updated Successfully.'); 
     }
 
     public function Upload(Request $request)
     {
         $file = $request->file('file');
+        $users_upload_type = Input::get('users_upload_type');
 
         $id = $request->id;
 
@@ -920,20 +964,22 @@ class UserController extends Controller
                 $users_doc->file = $others_doc_key;
                 $users_doc->name = $doc_name;
                 $users_doc->size = $doc_filesize;
-                $users_doc->type = "Others";
+                //$users_doc->type = "Others";
+                $users_doc->type = $users_upload_type;
                 $users_doc->save();
             }
         }
 
-         return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully'); 
+         return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully.'); 
     }
     public function attachmentsDestroy($docid)
     {
+        $user_id = \Auth::user()->id;
 
         $doc_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
-        ->where('type','=','Others')
+        // ->where('type','=','Others')
         ->first();
 
         if(isset($doc_attach))
@@ -947,7 +993,7 @@ class UserController extends Controller
 
         }
 
-        return redirect()->route('users.myprofile',$doc_attach->user_id)->with('success','Attachment Deleted Successfully'); 
+        return redirect()->route('users.myprofile',$user_id)->with('success','Attachment Deleted Successfully.'); 
     }
 
     /*public function userLeaveAdd()

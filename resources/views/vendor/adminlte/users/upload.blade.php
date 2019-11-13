@@ -13,6 +13,13 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
+                        <strong>Select type</strong>
+                        {!! Form::select('users_upload_type', $users_upload_type,null, array('id'=>'users_upload_type','class' => 'form-control')) !!}
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
                         {!! Form::file('file', null, array('id'=>'file','class' => 'form-control')) !!}
                     </div>
 

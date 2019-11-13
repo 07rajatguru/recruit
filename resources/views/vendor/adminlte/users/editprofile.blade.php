@@ -596,7 +596,7 @@
     </div>
 @endif
 
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    <!-- <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Attachment Information</h3>
@@ -609,9 +609,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
-<!-- 
+ 
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
@@ -619,34 +619,32 @@
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Aadhar Card :</strong>
-                    {!! Form::file('aadhar_card', null, array('id'=>'aadhar_card','class' => 'form-control')) !!}
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <strong>Select type</strong>
+                        {!! Form::select('users_upload_type', $users_upload_type,null, array('id'=>'users_upload_type','class' => 'form-control','onchange' => "displayDoc();")) !!}
+                    </div>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Pan Card :</strong>
-                    {!! Form::file('pan_card', null, array('id'=>'pan_card','class' => 'form-control')) !!}
+
+                <div class="col-xs-6 col-sm-6 col-md-6 singledoc" style="display:none;">
+                    <div class="form-group">
+                        <strong>Upload :</strong>
+                        <input type="file" name="upload_documents[]" class="form-control" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Cancel Check :</strong>
-                    {!! Form::file('cancel_check', null, array('id'=>'cancel_check','class' => 'form-control')) !!}
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Others :</strong>
-                    {!! Form::file('others', null, array('id'=>'others','class' => 'form-control')) !!}
+
+                <div class="col-xs-6 col-sm-6 col-md-6 multidoc" style="display:none;">
+                    <div class="form-group">
+                        <strong>Upload Documents:</strong>
+                        <input type="file" name="upload_documents[]" multiple class="form-control" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div> 
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </div>
 </div>
@@ -661,6 +659,10 @@
         jQuery(document).ready(function () {
 
             //$("#signature").wysihtml5();
+
+            displayDoc();
+
+            $("#users_upload_type").select2();
 
             CKEDITOR.replace( 'signature', 
             {
@@ -810,5 +812,20 @@
             });
         });
     
+    function displayDoc() {
+
+        var doc_type = $("#users_upload_type").val();
+
+        if(doc_type == 'Others')
+        {
+            $(".multidoc").show();
+            $(".singledoc").hide();
+        }
+        else
+        {
+            $(".multidoc").hide();
+            $(".singledoc").show();
+        }
+    }
     </script>
 @endsection

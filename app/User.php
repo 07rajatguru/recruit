@@ -29,6 +29,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public $users_upload_type = array('Aadhar Card'=>'Aadhar Card',
+        'Pan Card'=>'Pan Card',
+        'Cancel Cheque' => 'Cancel Cheque',
+        'Others' => 'Others');
+
     public static function getUserArray($user_id){
         $users = User::select('*')
             ->where('users.id','!=',$user_id)
