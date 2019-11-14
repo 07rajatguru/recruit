@@ -7,90 +7,60 @@
 @stop
 
 @section('content')
-    <div class="row">
-
-        <div class="col-lg-12 margin-tb">
-
-            <div class="pull-left">
-
-                <h2>Candidate Source Management</h2>
-
-            </div>
-
-            <div class="pull-right">
-
-                {{--@permission(('permision-create'))--}}
-
-                <a class="btn btn-success" href="{{ route('candidateSource.create') }}"> Create New Candidate Source</a>
-
-                {{--@endpermission--}}
-
-            </div>
-
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>Candidate Source Management</h2>
         </div>
 
+        <div class="pull-right">
+            {{--@permission(('permision-create'))--}}
+
+            <a class="btn btn-success" href="{{ route('candidateSource.create') }}"> Create New Candidate Source</a>
+
+            {{--@endpermission--}}
+        </div>
     </div>
+</div>
 
-    @if ($message = Session::get('success'))
+@if($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
 
-        <div class="alert alert-success">
+@if($message = Session::get('error'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
 
-            <p>{{ $message }}</p>
+<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="source_table">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th width="280px">Action</th>
+        </tr>
+    </thead>
 
-        </div>
-
-    @endif
-
-    @if ($message = Session::get('error'))
-
-        <div class="alert alert-success">
-
-            <p>{{ $message }}</p>
-
-        </div>
-
-    @endif
-
-    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="source_table">
-        <thead>
-
-            <tr>
-
-                <th>No</th>
-
-                <th>Name</th>
-
-                <th width="280px">Action</th>
-
-            </tr>
-
-        </thead>
-        <tbody>
+    <tbody>
         <?php $i=0; ?>
         @foreach ($candidateSource as $key => $source)
-
             <tr>
-
                 <td>{{ ++$i }}</td>
-
                 <td>{{ $source->name }}</td>
-
-
                 <td>
+                    <a class="fa fa-edit" href="{{ route('candidateSource.edit',$source->id) }}"></a>
 
-                    <a class="btn btn-primary" href="{{ route('candidateSource.edit',$source->id) }}">Edit</a>
-
-
-                    @include('adminlte::partials.deleteModal', ['data' => $source, 'name' => 'candidateSource','display_name'=>'Candidate Source'])
-
-
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModal', ['data' => $source, 'name' => 'candidateSource','display_name'=>'Candidate Source'])
+                    @endif
                 </td>
-
             </tr>
-
         @endforeach
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
 @endsection
 

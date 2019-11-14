@@ -114,7 +114,8 @@ class TrainingController extends Controller
             if($value['owner_id'] == $user_id || $isSuperAdmin || $edit_perm){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-            if ($isSuperAdmin || $value['owner_id'] == $user_id || $delete_perm) {
+            /*if ($isSuperAdmin || $value['owner_id'] == $user_id || $delete_perm) {*/
+            if ($isSuperAdmin) {
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training']);
                 $delete = $delete_view->render();
                 $action .= $delete;

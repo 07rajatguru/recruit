@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CandidateStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\USer;
 
 class candidateStatusController extends Controller
 {
@@ -13,8 +14,14 @@ class candidateStatusController extends Controller
         /*$candidateStatus = CandidateStatus::orderBy('id','desc')->paginate(15);
         return view('adminlte::candidateStatus.index',compact('candidateStatus'))->with('i', ($request->input('page', 1) - 1) * 15);*/
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $candidateStatus = CandidateStatus::orderBy('id','desc')->get();
-        return view('adminlte::candidateStatus.index',compact('candidateStatus'));
+        return view('adminlte::candidateStatus.index',compact('candidateStatus','isSuperAdmin'));
     }
 
     public function create(Request $request){
@@ -46,7 +53,6 @@ class candidateStatusController extends Controller
         $viewVariable['action'] = 'edit';
 
         return view('adminlte::candidateStatus.edit',$viewVariable);
-
     }
 
     public function update(Request $request,$id){
@@ -67,6 +73,5 @@ class candidateStatusController extends Controller
         $candidateStatusDelete = CandidateStatus::where('id',$id)->delete();
 
         return redirect()->route('candidateStatus.index')->with('success','Candidate Status deleted Successfully');
-
     }
 }

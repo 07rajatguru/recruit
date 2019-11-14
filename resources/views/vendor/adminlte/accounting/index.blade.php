@@ -46,7 +46,9 @@
                 <td>            
                     <a class="fa fa-edit" title="Edit" href="{{route('accounting.edit',$value['id']) }}"></a>
                    
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'accounting','display_name'=>'Accounting Head'])
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'accounting','display_name'=>'Accounting Head'])
+                    @endif
                     
                 </td>
             </tr>

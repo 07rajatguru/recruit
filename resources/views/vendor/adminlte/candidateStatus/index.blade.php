@@ -7,84 +7,59 @@
 @stop
 
 @section('content')
-    <div class="row">
-
-        <div class="col-lg-12 margin-tb">
-
-            <div class="pull-left">
-
-                <h2>Candidate Status Management</h2>
-
-            </div>
-
-            <div class="pull-right">
-
-                {{--@permission(('permision-create'))--}}
-
-                <a class="btn btn-success" href="{{ route('candidateStatus.create') }}"> Create New Candidate Status</a>
-
-                {{--@endpermission--}}
-
-            </div>
-
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>Candidate Status Management</h2>
         </div>
 
+        <div class="pull-right">
+            {{--@permission(('permision-create'))--}}
+
+            <a class="btn btn-success" href="{{ route('candidateStatus.create') }}"> Create New Candidate Status</a>
+
+            {{--@endpermission--}}
+        </div>
     </div>
+</div>
 
-    @if ($message = Session::get('success'))
+@if($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
 
-        <div class="alert alert-success">
+@if ($message = Session::get('error'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
 
-            <p>{{ $message }}</p>
-
-        </div>
-
-    @endif
-
-    @if ($message = Session::get('error'))
-
-        <div class="alert alert-success">
-
-            <p>{{ $message }}</p>
-
-        </div>
-
-    @endif
-
-    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="status_table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Name</th>
-                <th width="280px">Action</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="status_table">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th width="280px">Action</th>
+        </tr>
+    </thead>
+    <tbody>
         <?php $i=0; ?>
         @foreach ($candidateStatus as $key => $status)
-
             <tr>
-
                 <td>{{ ++$i }}</td>
-
                 <td>{{ $status->name }}</td>
-
-
                 <td>
+                    <a class="fa fa-edit" href="{{ route('candidateStatus.edit',$status->id) }}"></a>
 
-                    <a class="btn btn-primary" href="{{ route('candidateStatus.edit',$status->id) }}">Edit</a>
-
-
-                    @include('adminlte::partials.deleteModal', ['data' => $status, 'name' => 'candidateStatus','display_name'=>'Candidate Status'])
-
-
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModal', ['data' => $status, 'name' => 'candidateStatus','display_name'=>'Candidate Status'])
+                    @endif
                 </td>
-
             </tr>
-
         @endforeach
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
 @endsection
 

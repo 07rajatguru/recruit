@@ -14,11 +14,16 @@ class AccountingController extends Controller
 {
     public function index(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$accountings = AccountingHeads::All();
 
-    	return view('adminlte::accounting.index',compact('accountings'));
+    	return view('adminlte::accounting.index',compact('accountings','isSuperAdmin'));
     }
-
 
     public function create(){
 

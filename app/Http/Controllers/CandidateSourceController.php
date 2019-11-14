@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CandidateSource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\USer;
 
 class CandidateSourceController extends Controller
 {
@@ -12,8 +13,14 @@ class CandidateSourceController extends Controller
 
     public function index(Request $request) {
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $candidateSource = CandidateSource::orderBy('id','desc')->get();
-        return view('adminlte::candidateSource.index',compact('candidateSource'));
+        return view('adminlte::candidateSource.index',compact('candidateSource','isSuperAdmin'));
 
         //$candidateSource = CandidateSource::orderBy('id','desc')->paginate(10);
 
@@ -68,8 +75,5 @@ class CandidateSourceController extends Controller
         $candidateSourceDelete = CandidateSource::where('id',$id)->delete();
 
         return redirect()->route('candidateSource.index')->with('success','Candidate Source deleted Successfully');
-
     }
-
-
 }
