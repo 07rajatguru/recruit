@@ -326,9 +326,24 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-      $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
+        return redirect()->route('users.index')->with('error','User can not be delete because associated with other modules.');
+
+        $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
         if(isset($user_photo)) {
+
+            $photo_path = "uploads/users/" . $user_photo->user_id . "/photo/";
+
+            $photo_files = glob($photo_path . "/*");
+
+            foreach($photo_files as $file_nm) {
+                if(is_file($file_nm)) {
+                    unlink($file_nm);
+                }
+            }
+
+            rmdir($photo_path);
+
             $path="uploads/users/" . $user_photo->user_id;
             $files=glob($path . "/*");
 
@@ -346,12 +361,14 @@ class UserController extends Controller
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
+            UsersFamily::where('user_id',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
         else {
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
+            UsersFamily::where('user_id',$id)->delete();
             $user = User::where('id','=',$id)->delete();
         }
 
@@ -496,10 +513,24 @@ class UserController extends Controller
             if(isset($user_doc_info)){
                 $user['photo'] = $user_doc_info->file;
                 $user['type'] = $user_doc_info->type;
+                $user_photo_updated_date = date('Y-m-d',strtotime($user_doc_info->updated_at));
+                $next_date =  date('Y-m-d',strtotime("$user_photo_updated_date  +30 days"));
             }
             else{
                 $user['photo'] = '';
                 $user['type'] = '';
+                $next_date = date('Y-m-d');
+            }
+
+            $curr_date = date('Y-m-d');
+
+            if($next_date == $curr_date || $next_date < $curr_date) {
+
+                $user['edit_photo'] = '1';
+            }
+            else {
+
+                $user['edit_photo'] = '0';
             }
 
             $user_info = User::getProfileInfo($user_id);
@@ -930,7 +961,9 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('users.index')->with('success','Profile Updated Successfully.'); 
+        //return redirect()->route('users.index')->with('success','Profile Updated Successfully.'); 
+
+        return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
     }
 
     public function Upload(Request $request)
@@ -970,7 +1003,7 @@ class UserController extends Controller
             }
         }
 
-         return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully.'); 
+        return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully.'); 
     }
     public function attachmentsDestroy($docid)
     {

@@ -39,7 +39,7 @@
     </div>
 </div>
 
-    {!! Form::open(array('route' => ['users.profilestore',$user_id],'method'=>'POST','id' => 'editprofile','files' => true)) !!}
+    {!! Form::open(array('route' => ['users.profilestore',$user_id],'method'=>'POST','id' => 'editprofile','files' => true,'autocomplete' => 'off')) !!}
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -113,7 +113,7 @@
 
                             <div class="form-group {{ $errors->has('contact') ? 'has-error' : '' }}">
                                 <strong>Personal Contact Number: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('contact',isset($user['contact_number']) ? $user['contact_number'] : null, array('id'=>'contact','placeholder' => 'Personal Contact Number','class' => 'form-control','tabindex' => '7')) !!}
+                                {!! Form::number('contact',isset($user['contact_number']) ? $user['contact_number'] : null, array('id'=>'contact','placeholder' => 'Personal Contact Number','class' => 'form-control','tabindex' => '7')) !!}
                                 @if ($errors->has('contact'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('contact') }}</strong>
@@ -123,7 +123,7 @@
 
                             <div class="form-group">
                                 <strong>Official Contact Number: </strong>
-                                {!! Form::text('contact_no_official',isset($user['contact_no_official']) ? $user['contact_no_official'] : null, array('id'=>'contact_no_official','placeholder' => 'Official Contact Number','class' => 'form-control','tabindex' => '8')) !!}
+                                {!! Form::number('contact_no_official',isset($user['contact_no_official']) ? $user['contact_no_official'] : null, array('id'=>'contact_no_official','placeholder' => 'Official Contact Number','class' => 'form-control','tabindex' => '8')) !!}
                             </div>
 
                             <div class="form-group">
@@ -136,16 +136,6 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
 
-                           <!--  <div class="form-group">
-                                <strong>Profile Photo: </strong><br/>
-
-                                @if($user['type'] == "Photo")
-                                <img src= "../{!!$user['photo']!!}" height="172px" width="170px" />
-                                @else
-                                <img src= "../../uploads/User_Default.jpg" height="100px" width="100px" />
-                                @endif
-                            </div> -->
-
                             <div class="form-group" id="default_image">
                                 @if($user['type'] == "Photo")
                                     <img src= "../../{!!$user['photo']!!}" style="height: 150px;width: 150px;border-radius: 50%;" />
@@ -154,26 +144,26 @@
                                 @endif
                             </div>
 
-                            <div class="form-group" id="image_div">
-                            
-                                <div class="form-group file_input_redesign upload_img1">
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div style="width: 22px; height: 70px;display:none;" class="fileinput-new thumbnail" data-trigger="fileinput">
-                                            <span>Select Image</span>
-                                        </div>
-                                        <div id = "upload_images_div">
-                                        </div>
-                                        <div>
-                                            <span class="btn btn-default btn-file">
-                                            <span class="fileinput-new">Select Profile Photo</span>
-                                           <!--  <span class="fileinput-exists" style="">Change</span> -->
-                                            <input type="file" name="image" id="upload_img" accept="image/x-png,image/gif,image/jpeg" />
-                                            </span>
-                                            <!-- <a href="#" class="btn-default fileinput-exists" data-dismiss="fileinput">Remove</a> -->
-                                        </div>
-                                    </div>  
+                            @if($user['edit_photo'] == '1')
+                                <div class="form-group" id="image_div">
+                                
+                                    <div class="form-group file_input_redesign upload_img1">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <div style="width: 22px; height: 70px;display:none;" class="fileinput-new thumbnail" data-trigger="fileinput">
+                                                <span>Select Image</span>
+                                            </div>
+                                            <div id = "upload_images_div">
+                                            </div>
+                                            <div>
+                                                <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Select Profile Photo</span>
+                                                <input type="file" name="image" id="upload_img" accept="image/x-png,image/gif,image/jpeg" />
+                                                </span>
+                                            </div>
+                                        </div>  
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                        
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
                                 <strong>Designation: </strong>
@@ -246,6 +236,7 @@
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Family Details</h3>
+                <span class = "required_fields"><b>(Minimum two details are required)</b></span>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 {{--First family member details--}}
@@ -292,7 +283,7 @@
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_1') ? 'has-error' : '' }}">
                             <strong>Contact Number: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('contact_no_1', $user['contact_no_1'], array('id'=>'contact_no_1','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '18'  )) !!}
+                            {!! Form::number('contact_no_1', $user['contact_no_1'], array('id'=>'contact_no_1','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '18'  )) !!}
                             @if ($errors->has('contact_no_1'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_1') }}</strong>
@@ -342,7 +333,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_2') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_2', $user['contact_no_2'], array('id'=>'contact_no_2','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '22'  )) !!}
+                            {!! Form::number('contact_no_2', $user['contact_no_2'], array('id'=>'contact_no_2','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '22'  )) !!}
                             @if ($errors->has('contact_no_2'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_2') }}</strong>
@@ -392,7 +383,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_3') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_3', $user['contact_no_3'], array('id'=>'contact_no_3','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '26'  )) !!}
+                            {!! Form::number('contact_no_3', $user['contact_no_3'], array('id'=>'contact_no_3','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '26'  )) !!}
                             @if ($errors->has('contact_no_3'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_3') }}</strong>
@@ -442,7 +433,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_4') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_4', $user['contact_no_4'], array('id'=>'contact_no_4','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '30'  )) !!}
+                            {!! Form::number('contact_no_4', $user['contact_no_4'], array('id'=>'contact_no_4','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '30'  )) !!}
                             @if ($errors->has('contact_no_4'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_4') }}</strong>
@@ -492,7 +483,7 @@
                 <div class="box-body col-xs-3 col-sm-3 col-md-3">
                     <div class="">
                         <div class="form-group {{ $errors->has('contact_no_5') ? 'has-error' : '' }}">
-                            {!! Form::text('contact_no_5', $user['contact_no_5'], array('id'=>'contact_no_5','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '34')) !!}
+                            {!! Form::number('contact_no_5', $user['contact_no_5'], array('id'=>'contact_no_5','placeholder' => 'Contact No','class' => 'form-control', 'tabindex' => '34')) !!}
                             @if ($errors->has('contact_no_5'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact_no_5') }}</strong>
