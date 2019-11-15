@@ -130,13 +130,39 @@ class Bills extends Model
             $bills_query = $bills_query->orderBy($order,$type);
         }
         $bills_query = $bills_query->where(function($bills_query) use ($search){
+
+            $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)){
+                        $date_search = true;
+                    }
+                }
+            }
+
             $bills_query = $bills_query->where('users.name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+
+            if($date_search){
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($search);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+            }
+            
         });
 
         $bills_query = $bills_query->where('bills.status',$status);
@@ -230,13 +256,38 @@ class Bills extends Model
             //});
         }
         $bills_query = $bills_query->where(function($bills_query) use ($search){
+
+            $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)){
+                        $date_search = true;
+                    }
+                }
+            }
+
             $bills_query = $bills_query->where('users.name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+
+            if($date_search){
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($search);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+            }
         });
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
@@ -274,13 +325,38 @@ class Bills extends Model
             $bills_query = $bills_query->orderBy($order,$type);
         }
         $bills_query = $bills_query->where(function($bills_query) use ($search){
+
+            $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)){
+                        $date_search = true;
+                    }
+                }
+            }
+
             $bills_query = $bills_query->where('users.name','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+
+            if($date_search){
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($search);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+            }
         });
 
         $bills_query = $bills_query->where('bills.status',$status);
@@ -374,13 +450,38 @@ class Bills extends Model
             //});
         }
         $bills_query = $bills_query->where(function($bills_query) use ($search){
+
+            $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)){
+                        $date_search = true;
+                    }
+                }
+            }
+            
             $bills_query = $bills_query->where('users.name','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
+            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+
+            if($date_search){
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($search);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+            }
         });
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);

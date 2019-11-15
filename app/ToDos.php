@@ -72,10 +72,36 @@ class ToDos extends Model
         }
         if (isset($search) && $search != '') {
             $todo_query = $todo_query->where(function($todo_query) use ($search){
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
                 $todo_query = $todo_query->where('users.name','like',"%$search%");
                 $todo_query = $todo_query->orwhere('to_dos.subject','like',"%$search%");
                 $todo_query = $todo_query->orwhere('to_dos.due_date','like',"%$search%");
                 $todo_query = $todo_query->orwhere('status.name','like',"%$search%");
+
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $todo_query = $todo_query->orwhere('to_dos.due_date','>=',"$from_date");
+                    $todo_query = $todo_query->Where('to_dos.due_date','<=',"$to_date");
+                }
+
             });
         }
         //$todo_query = $todo_query->orderBy('to_dos.id','desc');
@@ -127,10 +153,36 @@ class ToDos extends Model
 
         if (isset($search) && $search != '') {
             $todo_query = $todo_query->where(function($todo_query) use ($search){
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+                
                 $todo_query = $todo_query->where('users.name','like',"%$search%");
                 $todo_query = $todo_query->orwhere('to_dos.subject','like',"%$search%");
                 $todo_query = $todo_query->orwhere('to_dos.due_date','like',"%$search%");
                 $todo_query = $todo_query->orwhere('status.name','like',"%$search%");
+
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $todo_query = $todo_query->orwhere('to_dos.due_date','>=',"$from_date");
+                    $todo_query = $todo_query->Where('to_dos.due_date','<=',"$to_date");
+                }
+                
             });
         }
         $todo_query = $todo_query->whereNotIn('to_dos.status',explode(',', $todo_status));

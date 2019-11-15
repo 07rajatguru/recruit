@@ -155,12 +155,38 @@ class Interview extends Model
         }
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
                 $query = $query->where('job_openings.posting_title','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
+
+                if($date_search){
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('interview.interview_date','>=',"$from_date");
+                    $query = $query->Where('interview.interview_date','<=',"$to_date");
+                }
             });
         }
         $response = $query->get();
@@ -213,12 +239,38 @@ class Interview extends Model
         }
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
                 $query = $query->where('job_openings.posting_title','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
+
+                if($date_search){
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('interview.interview_date','>=',"$from_date");
+                    $query = $query->Where('interview.interview_date','<=',"$to_date");
+                }
             });
         }
         $response = $query->count();
