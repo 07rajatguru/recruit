@@ -569,16 +569,27 @@
                 <h3 class="box-title">Salary Information</h3>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
-                        <div class="form-group {{ $errors->has('fixed_salary') ? 'has-error' : '' }}">
-                            <strong>Fixed Salary: </strong>
-                            {!! Form::text('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Saraly','class' => 'form-control', 'tabindex' => '40' )) !!}
-                            @if ($errors->has('fixed_salary'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('fixed_salary') }}</strong>
-                                </span>
-                            @endif
+                        <div class="form-group">
+                            <strong>Fixed Salary : (Monthly)</strong>
+                            {!! Form::number('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '40' )) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="">
+                        <div class="form-group">
+                            <strong>Performance Bonus : </strong>
+                            {!! Form::number('performance_bonus',$user['performance_bonus'],array('id'=>'performance_bonus','placeholder' => 'Performance Bonus','class' => 'form-control', 'tabindex' => '41','onfocusout' => 'countTotalSalary();')) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="">
+                        <div class="form-group">
+                            <strong>Total Salary : </strong>
+                            {!! Form::number('total_salary',$user['total_salary'],array('id'=>'total_salary','placeholder' => 'Total Salary','class' => 'form-control', 'tabindex' => '42')) !!}
                         </div>
                     </div>
                 </div>
@@ -817,6 +828,14 @@
             $(".multidoc").hide();
             $(".singledoc").show();
         }
+    }
+
+    function countTotalSalary() {
+
+        var fixed_salary = $("#fixed_salary").val();
+        var performance_bonus = $("#performance_bonus").val();
+        var total_salary = parseFloat(fixed_salary) + parseFloat(performance_bonus);
+        $("#total_salary").val(total_salary);
     }
     </script>
 @endsection

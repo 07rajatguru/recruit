@@ -189,10 +189,14 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <br/>
                     <table class="table table-bordered">
-                         <tr>
+                        <tr>
                             <th>Fixed Salary</th>
                             <td>{{ $user['salary'] }}</td>
-                         </tr>
+                            <th>Performance Bonus</th>
+                            <td>{{ $user['performance_bonus'] }}</td>
+                            <th>Total Salary</th>
+                            <td>{{ $user['total_salary'] }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

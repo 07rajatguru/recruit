@@ -441,6 +441,8 @@ class UserController extends Controller
                 $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
                 $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
                 $user['salary'] = $value->fixed_salary;
+                $user['performance_bonus'] = $value->performance_bonus;
+                $user['total_salary'] = $value->total_salary;
                 $user['acc_no'] = $value->acc_no;
                 $user['bank_name'] = $value->bank_name;
                 $user['branch_name'] = $value->branch_name;
@@ -546,6 +548,8 @@ class UserController extends Controller
                 $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
                 $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
                 $user['salary'] = $value->fixed_salary;
+                $user['performance_bonus'] = $value->performance_bonus;
+                $user['total_salary'] = $value->total_salary;
                 $user['acc_no'] = $value->acc_no;
                 $user['bank_name'] = $value->bank_name;
                 $user['branch_name'] = $value->branch_name;
@@ -561,7 +565,7 @@ class UserController extends Controller
                 $user['personal_email'] = $value->personal_email;
                 $user['contact_no_official'] = $value->contact_no_official;
                 $user['blood_group'] = $value->blood_group;
-
+                
                 for ($i=1; $i <= 5 ; $i++) {
                     $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
                     if (isset($users_family) && $users_family != '') {
@@ -689,6 +693,8 @@ class UserController extends Controller
                 $users_otherinfo->date_of_exit = NULL;
             }
             $users_otherinfo->fixed_salary = Input::get('fixed_salary');
+            $users_otherinfo->performance_bonus = Input::get('performance_bonus');
+            $users_otherinfo->total_salary = Input::get('total_salary');
             $users_otherinfo->contact_number = $contact_number;
             $users_otherinfo->current_address = $current_address;
             $users_otherinfo->permanent_address = $permanent_address;
