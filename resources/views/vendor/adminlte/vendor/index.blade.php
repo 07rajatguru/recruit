@@ -62,9 +62,11 @@
                         <a title="Edit" class="fa fa-edit" href="{{ route('vendor.edit',$vendor['id']) }}"></a>
                         @endpermission
 
-                        @permission(('vendor-delete'))
-                        @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor',''])
-                        @endpermission
+                        @if($isSuperAdmin)
+                            @permission(('vendor-delete'))
+                            @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor',''])
+                            @endpermission
+                        @endif
                 </td>
             </tr>
         @endforeach

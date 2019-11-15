@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ClientRemarks;
+use App\User;
 
 class ClientRemarksController extends Controller
 {
     public function index(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$client_remarks = ClientRemarks::getAllClientRemarks();
     	$count = sizeof($client_remarks);
 
-    	return view('adminlte::clientremarks.index',compact('client_remarks','count'));
+    	return view('adminlte::clientremarks.index',compact('client_remarks','count','isSuperAdmin'));
     }
 
     public function create(){

@@ -23,7 +23,12 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
+    @endif
 
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
     @endif
 
     <table id="team_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
@@ -50,10 +55,17 @@
                 </td>
 
                 <td>
-                    <a class="btn btn-primary" href="{{ route('team.edit',$key) }}">Edit</a>
-                    {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $key],'style'=>'display:inline']) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                    {!! Form::close() !!}
+                    <a class="fa fa-edit" href="{{ route('team.edit',$key) }}"></a>
+
+                    @if($isSuperAdmin)
+
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'team','display_name'=>'Team'])
+
+                        {{-- {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $key],'style'=>'display:inline']) !!}
+                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                        {!! Form::close() !!} --}}
+                        
+                    @endif
                 </td>
 
             </tr>

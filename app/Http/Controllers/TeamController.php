@@ -25,6 +25,7 @@ class TeamController extends Controller
 
             $j = 0;
             foreach ($users as $key1=>$value1){
+                $team_response[$value->id]['id'] = $value->id;
                 $team_response[$value->id]['team_name'] = $value->team_name;
                 $team_response[$value->id]['users'][$j] = $value1->name;
                 $i++;
@@ -32,7 +33,13 @@ class TeamController extends Controller
             }
         }
 
-        return view('adminlte::team.index',compact('team_response'));
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        return view('adminlte::team.index',compact('team_response','isSuperAdmin'));
     }
 
     public function create(){
@@ -98,7 +105,7 @@ class TeamController extends Controller
 
     public function update(Request $request, $id){
 
-        $team = Team :: find($id);
+        $team = Team::find($id);
         $team->team_name = $request->input('team_name');
         $users = $request->input('user_ids');
 
@@ -126,7 +133,11 @@ class TeamController extends Controller
         }
     }
 
-    public function destroy(){
+    public function destroy($id){
 
+        TeamMates::where('team_id',$id)->delete();
+        Team::where('id',$id)->delete();
+
+        return redirect()->route('team.index')->with('success','Team Deleted Successfully.');
     }
 }

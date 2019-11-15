@@ -52,7 +52,10 @@
                 <td>{{++$i}}</td>
                 <td>
                     <a title="Edit" class="fa fa-edit" href="{{ route('holidays.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'holidays','display_name'=>'Holiday'])
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'holidays','display_name'=>'Holiday'])
+                    @endif
                 </td>
                 <td>{{$value['title']}}</td>
                 <td>{{$value['type']}}</td>

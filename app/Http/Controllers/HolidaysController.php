@@ -13,11 +13,16 @@ class HolidaysController extends Controller
 {
     public function index(){
     	
-    	$holidays = Holidays::getAllholidaysList();
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
+    	$holidays = Holidays::getAllholidaysList();
     	$count = sizeof($holidays);
 
-    	return view('adminlte::holidays.index',compact('holidays','count'));
+    	return view('adminlte::holidays.index',compact('holidays','count','isSuperAdmin'));
     }
 
     public function create(){

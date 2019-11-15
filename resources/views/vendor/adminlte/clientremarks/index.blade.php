@@ -45,7 +45,11 @@
                 <td>{{ ++$i }}</td>
                 <td>
                     <a class="fa fa-edit" href="{{ route('clientremarks.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientremarks','display_name'=>'Client Remarks'])
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModalNew', ['data' => $value, 
+                        'name' => 'clientremarks','display_name'=>'Client Remarks'])
+                    @endif
                 </td>
                 <td>{{ $value['remarks'] }}</td>
             </tr>

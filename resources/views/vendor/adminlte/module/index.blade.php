@@ -42,7 +42,10 @@
                 <td>{{ $value['description'] }}</td>
                 <td>
                     <a class="fa fa-edit" title="edit" href="{{ route('module.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'module','display_name'=>'Module'])
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'module','display_name'=>'Module'])
+                    @endif
                 </td>
             </tr>
         @endforeach

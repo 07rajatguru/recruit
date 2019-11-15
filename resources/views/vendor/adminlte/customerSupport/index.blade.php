@@ -50,11 +50,13 @@
                 <td>{{ $value['subject'] }}</td>
 
                 <td>
-
-                    <a class="fa fa-circle" href="{{ route('customer.show',$value['id']) }}"></a>
+                    <a class="fa fa-circle" href="{{ route('customer.show',$value['id']) }}">
+                    </a>
                     <a class="fa fa-edit" href="{{ route('customer.edit',$value['id']) }}"></a>
 
-                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'customer','display_name'=>'Support'])
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'customer','display_name'=>'Support'])
+                    @endif
                 </td>
             </tr>
         @endforeach

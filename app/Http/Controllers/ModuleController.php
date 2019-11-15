@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Module;
 use App\ModuleVisibleUser;
+use App\User;
 
 class ModuleController extends Controller
 {
     public function index(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$modules = Module::getAllModules();
 
-    	return view('adminlte::module.index',compact('modules'));
+    	return view('adminlte::module.index',compact('modules','isSuperAdmin'));
     }
 
     public function create(){

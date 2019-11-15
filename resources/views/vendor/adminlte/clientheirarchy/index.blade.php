@@ -48,7 +48,9 @@
                 <td>
                     {{--<a class="fa fa-circle" href="{{ route('clientheirarchy.show',$value['id']) }}"></a>--}}
                     <a class="fa fa-edit" href="{{ route('clientheirarchy.edit',$value['id']) }}"></a>
-                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Client Hierarchy'])
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Client Hierarchy'])
+                    @endif
                 </td>
                 <td>{{ $value['name'] }}</td>
                 <td>{{ $value['position'] }}</td>

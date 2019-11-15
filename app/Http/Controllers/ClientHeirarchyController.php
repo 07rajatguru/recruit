@@ -4,14 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ClientHeirarchy;
+use App\User;
 
 class ClientHeirarchyController extends Controller
 {
     public function index(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$client_heirarchy = ClientHeirarchy::getAllClientHeirarchy();
         $count = sizeof($client_heirarchy);
-    	return view('adminlte::clientheirarchy.index',compact('client_heirarchy','count'));
+    	return view('adminlte::clientheirarchy.index',compact('client_heirarchy','count','isSuperAdmin'));
     }
 
     public function create(){

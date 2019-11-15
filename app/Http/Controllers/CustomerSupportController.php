@@ -13,9 +13,16 @@ class CustomerSupportController extends Controller
 {
     public function index()
     {
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$customer_support_res = CustomerSupport::getAllDetails();
     	$count = sizeof($customer_support_res);
-    	return view('adminlte::customerSupport.index',compact('customer_support_res','count'));
+        
+    	return view('adminlte::customerSupport.index',compact('customer_support_res','count','isSuperAdmin'));
     }
 
     public function create()

@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EmailTemplate;
 use Illuminate\Support\Facades\Input;
+use App\User;
 
 class EmailTemplateController extends Controller
 {
     public function index(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$email_template = EmailTemplate::getAllEmailTemplates();
     	$count = sizeof($email_template);
 
-    	return view('adminlte::emailtemplate.index',compact('email_template','count'));
+    	return view('adminlte::emailtemplate.index',compact('email_template','count','isSuperAdmin'));
     }
 
     public function create(){

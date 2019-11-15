@@ -11,9 +11,15 @@ class ModuleVisibleController extends Controller
 {
     public function index(){
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
     	$module_user = ModuleVisibleUser::getAllModuleVisibleUser();
 
-    	return view('adminlte::modulevisible.index',compact('module_user'));
+    	return view('adminlte::modulevisible.index',compact('module_user','isSuperAdmin'));
     }
 
     public function create(){

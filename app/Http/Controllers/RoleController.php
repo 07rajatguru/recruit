@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Role;
 use App\Permission;
 use DB;
+use App\User;
 
 class RoleController extends Controller
 {
@@ -17,8 +18,15 @@ class RoleController extends Controller
 
     public function index(Request $request)
     {
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $roles = Role::orderBy('id','ASC')->get();
-        return view('adminlte::roles.index',compact('roles'));
+        return view('adminlte::roles.index',compact('roles','isSuperAdmin'));
+
        // $roles = Role::orderBy('id','ASC')->paginate(10);
         //return view('adminlte::roles.index',compact('roles'))->with('i', ($request->input('page', 1) - 1) * 10);
 

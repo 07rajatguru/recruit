@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Industry;
 use DB;
+use App\User;
 
 class IndustryController extends Controller
 {
@@ -16,8 +17,16 @@ class IndustryController extends Controller
 
     public function index(Request $request)
     {
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         $industry = Industry::orderBy('id','DESC')->get();
-        return view('adminlte::industry.index',compact('industry'));
+        $count = sizeof($industry);
+
+        return view('adminlte::industry.index',compact('industry','count','isSuperAdmin'));
 
     }
 
@@ -116,9 +125,13 @@ class IndustryController extends Controller
 
     public function destroy($id)
     {
+        $client_industry = Industry::existIndustryInClient($id);
 
+        if($client_industry) {
+
+            return redirect()->route('industry.index')->with('error','Cannot delete Industry because use with client module.');
+        }
         DB::table("industry")->where('id',$id)->delete();
-        return redirect()->route('industry.index')->with('success','Industry deleted successfully');
-
+        return redirect()->route('industry.index')->with('success','Industry deleted successfully.');
     }
 }

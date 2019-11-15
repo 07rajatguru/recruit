@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use App\Events\PermissionSeederEvent;
 use App\Permission;
 use Illuminate\Http\Request;
-
+use App\User;
 class PermissionsController extends Controller
 {
     //
 
     public function index(Request $request) {
-//        print_r("here");exit;
-        $permissions = Permission::orderBy('id','desc')->get();
-        return view('adminlte::permissions.index',compact('permissions'));
-        //return view('adminlte::permissions.index',compact('permissions'))->with('i', ($request->input('page', 1) - 1) * 5);
 
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $permissions = Permission::orderBy('id','desc')->get();
+        return view('adminlte::permissions.index',compact('permissions','isSuperAdmin'));
+        //return view('adminlte::permissions.index',compact('permissions'))->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     public function create(Request $request) {

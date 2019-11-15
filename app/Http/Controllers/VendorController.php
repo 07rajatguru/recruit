@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Input;
 use DB;
 use Excel;
 use App\Utils;
+use App\User;
 
 class VendorController extends Controller
 {
@@ -36,7 +37,14 @@ class VendorController extends Controller
         }
 
         $count=sizeof($vendors);
-        return view('adminlte::vendor.index',compact('vendor_array','count'));
+
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        return view('adminlte::vendor.index',compact('vendor_array','count','isSuperAdmin'));
     }
     public function create()
     {
@@ -502,7 +510,7 @@ class VendorController extends Controller
 
         if(isset($vendor_expense))
         {
-               return redirect()->route('vendor.index')->with('error','Cannot Delete Vendor Because Expense is Added for the same.');
+            return redirect()->route('vendor.index')->with('error','Cannot Delete Vendor Because Expense is Added for the same.');
         }
         else
         {

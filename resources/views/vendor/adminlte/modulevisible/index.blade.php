@@ -40,7 +40,10 @@
                 <td>{{ ++$i }}</td>
                 <td>
                     <a class="fa fa-edit" title="edit" href="{{ route('modulevisible.edit',$value['main_id']) }}"></a>
-                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'modulevisible','display_name'=>'Module Visible User'])
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'modulevisible','display_name'=>'Module Visible User'])
+                    @endif
                 </td>
                 <td>{{ $value['uname'] }}</td>
                 <td>{{ $value['mname'] }}</td>

@@ -61,10 +61,15 @@
                 <td>
                     <a class="fa fa-eye" title="Show" href="{{ route('users.show',$user->id) }}"></a>
                     <a class="fa fa-edit" title="Edit" href="{{ route('users.edit',$user->id) }}"></a>
-                    {{--{!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
+
+                    {{-- {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                    {!! Form::close() !!}--}}
-                    @include('adminlte::partials.deleteModalUser', ['data' => $user, 'name' => 'users','display_name'=>'User'])
+                    {!! Form::close() !!} --}}
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteModalUser', ['data' => $user, 'name' => 'users','display_name'=>'User'])
+                    @endif
+                    
                     @if($isSuperAdmin || $isAccountant)
                         <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
                     @endif
