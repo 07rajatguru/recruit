@@ -112,12 +112,11 @@
                         <tr>
                             <th>Type Of Account</th>
                             <td>{{ $vendor['acc_type'] }}</td>
-                            <th>NICR No</th>
+                            <th>MICR No</th>
                             <td>{{ $vendor['nicr_no'] }}</td>   
                         </tr>
                     </table>
                  </div>
-
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">

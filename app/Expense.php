@@ -96,8 +96,25 @@ class Expense extends Model
           $query = $query->orderBy($order,$type);
         }
         if (isset($search) && $search != '') {
+
             $query = $query->where(function($query) use ($search){
-                $query = $query->where('expense.date','like',"%$search%");
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day = date( 'd', $stamp );
+                        $year = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                //$query = $query->where('expense.date','like',"%$search%");
                 $query = $query->orwhere('expense.paid_amount','like',"%$search%");
                 $query = $query->orwhere('vendor_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('accounting_heads.name','like',"%$search%");
@@ -105,6 +122,17 @@ class Expense extends Model
                 $query = $query->orwhere('expense.payment_mode','like',"%$search%");
                 $query = $query->orwhere('expense.type_of_payment','like',"%$search%");
                 $query = $query->orwhere('expense.reference_number','like',"%$search%");
+
+
+                if($date_search){        
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('expense.date','>=',"$from_date");
+                    $query = $query->Where('expense.date','<=',"$to_date");
+                }
+
             });
         }
         $query = $query->select('expense.*','accounting_heads.name as aname','vendor_basicinfo.name as vname');
