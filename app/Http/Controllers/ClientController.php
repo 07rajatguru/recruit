@@ -24,6 +24,7 @@ use App\Post;
 use App\EmailTemplate;
 use App\ClientRemarks;
 use App\ClientTimeline;
+use App\Notifications;
 
 class ClientController extends Controller
 {
@@ -1782,7 +1783,7 @@ class ClientController extends Controller
         return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy','isManager','user_id','marketing_intern_user_id'));
     }
 
-        public function attachmentsDestroy($docid){
+    public function attachmentsDestroy($docid){
 
         $client_attach=\DB::table('client_doc')
         ->select('client_doc.*')
@@ -1869,6 +1870,11 @@ class ClientController extends Controller
 
             // delete attachments
             \DB::table('client_doc')->where('client_id', '=', $id)->delete();
+
+            // Delete from notifications table
+            Notifications::where('module','=','Client')
+            ->where('module_id','=',$id)
+            ->delete();
 
             // delete basic info
             ClientBasicinfo::where('id',$id)->delete();

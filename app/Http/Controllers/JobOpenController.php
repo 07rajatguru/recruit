@@ -27,6 +27,7 @@ use Excel;
 use App\Events\NotificationMail;
 use App\Holidays;
 use App\ClientHeirarchy;
+use App\Notifications;
 
 class JobOpenController extends Controller
 {
@@ -2177,6 +2178,12 @@ class JobOpenController extends Controller
         $job_open_doc_delete = DB::table('job_openings_doc')->where('job_id', '=', $id)->delete();
         $job_visible_user_delete = DB::table('job_visible_users')->where('job_id', '=', $id)->delete();
         $job_joining_date_delete = DB::table('job_candidate_joining_date')->where('job_id', '=', $id)->delete();
+
+        // Delete from notifications table
+        Notifications::where('module','=','Job Openings')
+        ->where('module_id','=',$id)
+        ->delete();
+
         $job_open_delete = JobOpen::where('id',$id)->delete();
 
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Deleted Successfully');

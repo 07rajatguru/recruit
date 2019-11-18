@@ -14,11 +14,11 @@ use Illuminate\Http\Request;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use App\Notifications;
 
 class InterviewController extends Controller
 {
     //
-
     public function index(){
 
         $user = \Auth::user();
@@ -630,6 +630,11 @@ class InterviewController extends Controller
     }
 
     public function destroy($id,$source){
+
+        // Delete from notifications table
+        Notifications::where('module','=','Interview')
+        ->where('module_id','=',$id)
+        ->delete();
 
         $interviewDelete = Interview::where('id',$id)->delete();
 

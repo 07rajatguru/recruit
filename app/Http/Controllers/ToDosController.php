@@ -19,6 +19,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use App\Notifications;
 
 class ToDosController extends Controller
 {
@@ -1066,9 +1067,15 @@ class ToDosController extends Controller
     }
 
     public function destroy($id){
+
         TodoFrequency::where('todo_id',$id)->delete();
         AssociatedTypeList::where('todo_id',$id)->delete();
         TodoAssignedUsers::where('todo_id',$id)->delete();
+
+        Notifications::where('module','=','Todos')
+        ->where('module_id','=',$id)
+        ->delete();
+
         $todo = ToDos::where('id',$id)->delete();
 
         return redirect()->route('todos.index')->with('success','ToDo Deleted Successfully');
