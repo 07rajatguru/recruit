@@ -310,12 +310,40 @@ class JobOpen extends Model
         }
         if (isset($search) && $search != '') {
             $job_close_query = $job_close_query->where(function($job_close_query) use ($search){
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
+
                 $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('users.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('job_openings.city','like',"%$search%");
+                
+
+                if($date_search){
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $job_close_query = $job_close_query->orwhere('job_openings.created_at','>=',"$from_date");
+                    $job_close_query = $job_close_query->Where('job_openings.created_at','<=',"$to_date");
+                }
             });
         }
         $job_response = $job_close_query->get();
