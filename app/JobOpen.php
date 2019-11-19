@@ -326,7 +326,6 @@ class JobOpen extends Model
                     }
                 }
 
-
                 $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('users.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.display_name','like',"%$search%");
@@ -334,7 +333,6 @@ class JobOpen extends Model
                 $job_close_query = $job_close_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('job_openings.city','like',"%$search%");
                 
-
                 if($date_search){
                    
                     $dateClass = new Date();
@@ -343,6 +341,24 @@ class JobOpen extends Model
                     $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
                     $job_close_query = $job_close_query->orwhere('job_openings.created_at','>=',"$from_date");
                     $job_close_query = $job_close_query->Where('job_openings.created_at','<=',"$to_date");
+                }
+
+                if(($search == 'on') || ($search == 'On') || ($search == 'On Hold') || ($search == 'on hold') || ($search == 'hold') || ($search == 'Hold') || ($search == 'On hold') || ($search == 'on Hold'))
+                {
+                    $search = 4;
+                    $job_close_query = $job_close_query->orwhere('job_openings.priority','like',"%$search%");
+                }
+
+                if(($search == 'Closed') || ($search == 'closed') || ($search == 'Closed By') || ($search == 'closed by') || ($search == 'Closed By Us') || ($search == 'closed by us'))
+                {
+                    $search = 9;
+                    $job_close_query = $job_close_query->orwhere('job_openings.priority','like',"%$search%");
+                }
+
+                if(($search == 'Closed') || ($search == 'closed') || ($search == 'Closed By') || ($search == 'closed by') || ($search == 'Closed By Client') || ($search == 'closed by client'))
+                {
+                    $search = 10;
+                    $job_close_query = $job_close_query->orwhere('job_openings.priority','like',"%$search%");
                 }
             });
         }
