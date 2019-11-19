@@ -35,6 +35,10 @@ Route::get('/reportmonthly',  [
     'uses' => 'IndexController@reportmonthly'
 ]);
 
+Route::get('/passiveclient',  [
+    'uses' => 'IndexController@passiveclient'
+]);
+
 Route::get('/index', [
     'uses' => 'IndexController@getIndex'
 ]);

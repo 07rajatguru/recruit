@@ -18,15 +18,19 @@ class IndexController extends Controller
     }
 
     public function reportdaily(){
-         \Artisan::call('report:daily');
+        \Artisan::call('report:daily');
     }
 
     public function reportweekly(){
-         \Artisan::call('report:weekly');
+        \Artisan::call('report:weekly');
     }
 
     public function reportmonthly(){
-         \Artisan::call('report:monthly');
+        \Artisan::call('report:monthly');
+    }
+
+    public function passiveclient(){
+        \Artisan::call('client:status');
     }
 
     // Home Page
