@@ -49,7 +49,7 @@
                             <th scope="row"  >Contact Point</th>
                             <td>{{ $client['coordinator_name'] }}</td>
 
-                            @if($isSuperAdmin || $isAdmin || $isStrategy || $isManager)
+                            @if($isSuperAdmin || $isAdmin || $isStrategy || $isManager || $isAllClientVisibleUser)
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
                             @elseif($client['client_owner'] || $user_id == $marketing_intern_user_id)
@@ -62,7 +62,7 @@
                         </tr>
 
                         <tr>
-                            @if($isSuperAdmin || $isAdmin || $isManager)
+                            @if($isSuperAdmin || $isAdmin || $isManager  || $isAllClientVisibleUser)
                                 <th>Email</th>
                                 <td>{{ $client['mail'] }}</td>
                             @elseif($client['client_owner'] || $user_id == $marketing_intern_user_id)
