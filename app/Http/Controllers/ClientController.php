@@ -467,6 +467,218 @@ class ClientController extends Controller
         echo json_encode($json_data);exit;
     }
 
+    public function getAllClientsDetailsByType()
+    {
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        $source = $_GET['source'];
+
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isAdmin = $user_obj::isAdmin($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAccountant = $user_obj::isAccountant($role_id);
+        $isAccountManager = $user_obj::isAccountManager($user->id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
+
+        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
+            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+
+        // Get active clients
+        if($source == 'Active')
+        {
+            if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,1,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else if($isAccountManager){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,1,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else{
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,1,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+        }
+
+        // Get passive clients
+        if($source == 'Passive')
+        {
+            if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,0,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else if($isAccountManager){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,0,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else{
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,0,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+        }
+
+        // Get leaders clients
+        if($source == 'Leaders')
+        {
+            if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,2,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else if($isAccountManager){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,2,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else{
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,2,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+        }
+
+        // Get left clients
+        if($source == 'Left')
+        {
+            if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,4,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else if($isAccountManager){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,4,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else{
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,4,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+        }
+
+        // Get Paramount,Moderate,Standard clients
+        if($source == 'Paramount' || $source == 'Moderate' || $source == 'Standard')
+        {
+            if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,NULL,$source,$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else if($isAccountManager){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,NULL,$source,$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else{
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,NULL,$source,$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+        }
+
+        $account_manager = User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
+
+        $clients = array();
+        $i = 0;
+        foreach ($client_res as $key => $value) {
+            $action = '';
+            
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+           
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner']){
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($isSuperAdmin){
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+                if(isset($value['url']) && $value['url']!=''){
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
+            }
+            if($isSuperAdmin || $isStrategy){
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
+                $account = $account_manager_view->render();
+                $action .= $account;
+            }
+            if($isSuperAdmin || $value['client_owner'] || $isMarketingIntern || $isAllClientVisibleUser){
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            if($isSuperAdmin || $value['client_owner'] || $isAllClientVisibleUser){
+
+                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+
+                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
+                $timeline = $timeline_view->render();
+                $action .= $timeline;
+            }
+
+            $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+
+            if($value['status']=='Active')
+                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+            else if($value['status']=='Passive')
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+            else if($value['status']=='Leaders')
+                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+            else if($value['status']=='Forbid')
+                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+            else if($value['status']=='Left')
+                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
+
+            $client_category = $value['category'];
+            $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+
+            $clients[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $clients
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     // Active client listing page function
     public function ActiveClient(){
 

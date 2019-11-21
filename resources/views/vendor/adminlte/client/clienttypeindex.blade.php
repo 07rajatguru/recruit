@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -20,8 +19,9 @@
         </div>
     </div>
 
-    <div class="row">
+    <input type="hidden" name="source" id="source" value="{{ $source }}">
 
+    <div class="row">
         <div class="col-md-12">
             <div class="col-md-1" style="width: 11%;">
                 <a href="{{ route('client.active') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Active({{ $active }})</div></a>
@@ -34,10 +34,6 @@
             <div class="col-md-1" style="width: 11%;">
                 <a href="{{ route('client.leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Leaders({{ $leaders }})</div></a>
             </div>
-
-            <!-- <div class="col-md-1" style="width: 11%;">
-                <a href="{{ route('client.forbid') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#777;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Forbid({{ $forbid }}) </div></a>
-            </div> -->
 
             <div class="col-md-1" style="width: 11%;">
                 <a href="{{ route('client.left') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Left({{ $left }}) </div>
@@ -80,8 +76,7 @@
                 <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
                 <th>Client Owner</th>
-                <th>Company Name</th>   
-                <!-- <th>HR/Coordinator Name</th> -->
+                <th>Company Name</th>
                 <th>Contact Point</th>
 
                 <?php if($isSuperAdmin || $isStrategy || $isAccountManager ) { ?>
@@ -89,79 +84,11 @@
                 <?php }?>
 
                 <th>Status</th>
-                <!-- <th>Client Address</th> -->
                 <th>City</th>
                 <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
-
-        @foreach ($client_array as $key => $client)
-            <tr>
-                <td>{{ Form::checkbox('client',$client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
-                <td>
-
-                    @if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility'] || $isAccountant || $isAllClientVisibleUser)
-                        <a title="Show" class="fa fa-circle"  href="{{ route('client.show',$client['id']) }}"></a>
-                    @endif
-
-                    {{-- Only Client Owner, Admin and Super admin have access to edit rights --}}
-                    @if($isSuperAdmin || $isAdmin || $client['client_owner'])
-                        <a title="Edit" class="fa fa-edit" href="{{ route('client.edit',$client['id']) }}"></a>
-                    @endif
-
-                    @if($isSuperAdmin)
-                    @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
-                        @if(isset($client['url']) && $client['url']!='')
-                            <a target="_blank" href="{{$client['url']}}"><i  class="fa fa-fw fa-download"></i></a>
-                        @endif
-                    @endif
-
-                    @if($isSuperAdmin || $isStrategy )
-                        @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
-                    @endif
-
-                    @if($isSuperAdmin || $client['client_owner'] || $isAllClientVisibleUser)
-                        <a title="Remarks" class="fa fa-plus"  href="{{ route('client.remarks',$client['id']) }}" style="margin:2px;"></a>
-                    @endif
-
-                    @if($isSuperAdmin || $client['client_owner'] || $isAllClientVisibleUser)
-                        <?php
-
-                            $days_array = App\ClientTimeline::getDetailsByClientId($client['id']);
-                        ?>
-                        @include('adminlte::partials.client_timeline_view', ['data' => $client,'days_array' => $days_array])
-                    @endif
-                </td>
-
-                <td>{{ $client['am_name'] }}</td>
-
-                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{ $client['name'] }}</td>
-
-                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{ $client['hr_name'] }}</td>
-
-                @if($isSuperAdmin || $isStrategy || $isAccountManager)
-                    <td>{{ $client['category']}}</td>
-                @endif
-
-                @if($client['status']=='Active')
-                    <td><span class="label label-sm label-success"> {{ $client['status'] }}</span></td>
-                @elseif($client['status']=='Passive')
-                    <td><span class="label label-sm label-danger">{{$client['status']}} </span></td>
-                @elseif($client['status']=='Leaders')
-                    <td><span class="label label-sm label-primary">{{$client['status']}} </span></td>
-                @elseif($client['status']=='Forbid')
-                    <td><span class="label label-sm label-default">{{$client['status']}} </span></td>
-                @elseif($client['status']=='Left')
-                    <td><span class="label label-sm label-info">{{$client['status']}} </span></td>
-                @endif
-
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
-
-                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{ $client['latest_remarks'] }}</td>
-
-            </tr>
-        @endforeach
         </tbody>
     </table>
 @stop
@@ -170,10 +97,26 @@
     <script type="text/javascript">
 
         jQuery( document ).ready(function() {
-            var table = jQuery('#clienttype_table').DataTable( {
+
+            var source = $("#source").val();
+
+            $("#clienttype_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [1,'desc'],
+                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}
+                            ],
+                "ajax" : {
+                    'url' : '/client/allbytype',
+                    data : {"source" : source},
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
                 responsive: true,
-                "pageLength": 50,
-                stateSave : true,
+                "pageLength": 25,
+                "pagingType": "full_numbers",
             });
 
             $('#allcb').change(function(){
