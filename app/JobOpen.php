@@ -263,12 +263,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
                                             );
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_close_query = $job_close_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -327,6 +327,7 @@ class JobOpen extends Model
                 }
 
                 $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$search%");
+                $job_close_query = $job_close_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('users.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -400,7 +401,13 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting_title'] = $value->posting_title;
+
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){
@@ -494,12 +501,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
                                             );
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_close_query = $job_close_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_close_query = $job_close_query->whereIn('priority',$job_status);
         $job_close_query = $job_close_query->where('job_associate_candidates.deleted_at',NULL);
@@ -529,6 +536,7 @@ class JobOpen extends Model
         if (isset($search) && $search != '') {
             $job_close_query = $job_close_query->where(function($job_close_query) use ($search){
                 $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$search%");
+                $job_close_query = $job_close_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('users.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -572,7 +580,12 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){
@@ -630,12 +643,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -653,6 +666,7 @@ class JobOpen extends Model
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -963,6 +977,7 @@ class JobOpen extends Model
                 }
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -1122,11 +1137,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
@@ -1158,6 +1174,7 @@ class JobOpen extends Model
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -1201,7 +1218,12 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){
@@ -1253,12 +1275,13 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at',
+                                                'client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -1312,6 +1335,7 @@ class JobOpen extends Model
                 }
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -1447,12 +1471,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.open_to_all as open_to_all','job_openings.open_to_all_date as open_to_all_date'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.open_to_all as open_to_all','job_openings.open_to_all_date as open_to_all_date','client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -1508,7 +1532,12 @@ class JobOpen extends Model
             $jobs_open_list[$i]['display_name'] = $value->display_name;
             $jobs_open_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_open_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_open_list[$i]['posting_title'] = $value->posting_title;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_open_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_open_list[$i]['posting_title'] = $value->posting_title;
+            }
             $location ='';
             if($value->city!=''){
                 $location .= $value->city;
@@ -1592,12 +1621,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -1691,7 +1720,12 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){
@@ -1774,12 +1808,12 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-
+        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         if ($priority == '-None-') {
@@ -1856,7 +1890,12 @@ class JobOpen extends Model
             $jobs_list[$i]['display_name'] = $value->display_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
             $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
             //$jobs_list[$i]['location'] = $value->city.",".$value->state.",".$value->country;
             $location ='';
             if($value->city!=''){
