@@ -40,5 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AdditionalFunctionalRolesSeeder::class);
         $this->call(EductionaListSeeder::class);
         $this->call(EducationSpecializationSeeder::class);
+        $this->call(ClientHeirarchyListSeeder::class);
     }
 }
