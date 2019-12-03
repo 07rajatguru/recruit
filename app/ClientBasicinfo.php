@@ -966,13 +966,14 @@ class ClientBasicinfo extends Ardent
             elseif ($category == 'Standard') {
                 $query = $query->where('client_basicinfo.category','=',$category);
             }
+
+            // Not display Forbid clients
+
+            $status_id = '3';
+            $status_id_array = array($status_id);
+            $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
         }
 
-        // Not display Forbid clients
-
-        $status_id = '3';
-        $status_id_array = array($status_id);
-        $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
 
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);

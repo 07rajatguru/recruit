@@ -477,6 +477,7 @@ class ClientController extends Controller
         $type = $_GET['order'][0]['dir'];
         $source = $_GET['source'];
 
+
         $user =  \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -584,6 +585,29 @@ class ClientController extends Controller
             }
         }
 
+        // Get left clients
+        if($source == 'Forbid')
+        {
+            if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,3,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else if($isAccountManager){
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,3,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+            else{
+
+                $order_column_name = self::getOrderColumnName($order);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,3,'',$limit,$offset,$search,$order_column_name,$type);
+                $count = sizeof($client_res);
+            }
+        }
+
         // Get Paramount,Moderate,Standard clients
         if($source == 'Paramount' || $source == 'Moderate' || $source == 'Standard')
         {
@@ -678,6 +702,7 @@ class ClientController extends Controller
 
         echo json_encode($json_data);exit;
     }
+
 
     // Active client listing page function
     public function ActiveClient(){

@@ -20,6 +20,8 @@
         </div>
     </div>
 
+    <input type="hidden" name="source" id="source" value="Forbid">
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
@@ -38,73 +40,16 @@
                 <th>Action</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>   
-                <!-- <th>HR/Coordinator Name</th> -->
                 <th>Contact Point</th>
                 <?php if($isSuperAdmin || $isStrategy || $isAccountManager ) { ?>
                 <th>Client Category</th>
                 <?php }?>
                 <th>Status</th>
-                <!-- <th>Client Address</th> -->
                 <th>City</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
-        @foreach ($client_array as $key => $client)
-            <tr>
-                <td>{{ Form::checkbox('client',$client['id'],null,array('class'=>'others_client' ,'id'=>$client['id'] )) }}</td>
-                <td>
-
-                    @if($isSuperAdmin || $isAdmin || $isStrategy || $client['client_visibility'] || $isAccountant)
-                        <a title="Show" class="fa fa-circle"  href="{{ route('client.show',$client['id']) }}"></a>
-                    @endif
-
-                    {{-- Only Client Owner, Admin and Super admin have access to edit rights --}}
-                    @if($isSuperAdmin || $isAdmin || $client['client_owner'])
-                        <a title="Edit" class="fa fa-edit" href="{{ route('client.edit',$client['id']) }}"></a>
-                    @endif
-
-                    @if($isSuperAdmin)
-                    @include('adminlte::partials.deleteModalNew', ['data' => $client, 'name' => 'client','display_name'=>'Client'])
-                        @if(isset($client['url']) && $client['url']!='')
-                            <a target="_blank" href="{{$client['url']}}"><i  class="fa fa-fw fa-download"></i></a>
-                        @endif
-                    @endif
-
-                    @if($isSuperAdmin || $isStrategy )
-                        @include('adminlte::partials.client_account_manager', ['data' => $client, 'name' => 'client','display_name'=>'More Information'])
-                    @endif
-
-                    @if($isSuperAdmin || $client['client_owner'] )
-                        <a title="Remarks" class="fa fa-plus"  href="{{ route('client.remarks',$client['id']) }}" style="margin:2px;"></a>
-                    @endif
-
-                    @if($isSuperAdmin)
-                        <?php
-                            $days_array = App\ClientTimeline::getDetailsByClientId($client['id']);
-                        ?>
-                        @include('adminlte::partials.client_timeline_view', ['data' => $client,'days_array' => $days_array])
-                    @endif
-
-                </td>
-
-                <td>{{ $client['am_name'] }}</td>
-
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['name'] }}</td>
-
-                <td>{{ $client['hr_name'] }}</td>
-
-                @if($isSuperAdmin || $isStrategy || $isAccountManager)
-                    <td>{{ $client['category']}}</td>
-                @endif
-                
-                @if($client['status']=='Forbid')
-                    <td><span class="label label-sm label-default">{{$client['status']}} </span></td>
-                @endif
-
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $client['address'] }}</td>
-
-            </tr>
-        @endforeach
         </tbody>
     </table>
 @stop
@@ -113,10 +58,31 @@
     <script type="text/javascript">
 
         jQuery( document ).ready(function() {
-            var table = jQuery('#clienttype_table').DataTable( {
+            /*var table = jQuery('#clienttype_table').DataTable( {
                 responsive: true,
                 "pageLength": 50,
                 stateSave : true,
+            });*/
+
+            var source = $("#source").val();
+
+            $("#clienttype_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [1,'desc'],
+                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}
+                            ],
+                "ajax" : {
+                    'url' : '/client/allbytype',
+                    data : {"source" : source},
+                    'type' : 'get',
+                    error: function(){
+
+                    }
+                },
+                responsive: true,
+                "pageLength": 25,
+                "pagingType": "full_numbers",
             });
 
             $('#allcb').change(function(){
