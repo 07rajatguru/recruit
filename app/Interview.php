@@ -694,6 +694,12 @@ class Interview extends Model
         // job Details
         $job_details = JobOpen::getJobById($posting_title);
 
+        // Get Interview Date & Time
+        $interview = Interview::getInterviewsByIds($interview_id);
+        $datearray = explode(' ', $interview->interview_date);
+        $interview_date = $datearray[0];
+        $interview_time = $datearray[1];
+
         $input['cname'] = $cname;
         $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
@@ -703,9 +709,9 @@ class Interview extends Model
         $input['job_designation'] = $job_details['posting_title'];
         $input['job_location'] = $job_details['job_location'];
         $input['job_description'] = $job_details['job_description'];
-        $input['interview_date'] = $job_details['interview_date'];
-        $input['interview_day'] = '';
-        $input['interview_time'] = $job_details['interview_time'];
+        $input['interview_date'] = $interview_date;
+        //$input['interview_day'] = '';
+        $input['interview_time'] = $interview_time;
         $input['interview_location'] = $job_details['interview_location'];
         $input['contact_person'] = $job_details['contact_person'];
 
@@ -791,7 +797,7 @@ class Interview extends Model
         $input['interview_type'] =$interview->interview_type;
         $input['skype_id'] = $interview->skype_id;
         $input['candidate_location'] = $interview->candidate_location;
-        $input['company_name'] = $interview->company_name;
+        $input['company_name'] = $interview->client_name;
         $input['city'] = $interview->job_city;
         $input['interview_location'] = $interview->interview_location;
 
