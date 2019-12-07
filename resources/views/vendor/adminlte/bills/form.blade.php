@@ -231,7 +231,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
                             <div class="form-group">
-                                <strong>Employee Name :  <span class = "required_fields">*</span> </strong>
+                                <strong>Employee Name :  </strong>
                                 {!! Form::select('employee_name_1', $users,$employee_name[0], array('id'=>'employee_name_1','class' => 'form-control', 'tabindex' => '15' )) !!}
                                 {!! Form::select('employee_name_2', $users,$employee_name[1], array('id'=>'employee_name_2','class' => 'form-control', 'tabindex' => '17' )) !!}
                                 {!! Form::select('employee_name_3', $users,$employee_name[2], array('id'=>'employee_name_3','class' => 'form-control', 'tabindex' => '19' )) !!}
@@ -245,7 +245,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
                             <div class="form-group">
-                                <strong>Employee Percentage:  <span class = "required_fields">*</span> </strong>
+                                <strong>Employee Percentage: </strong>
                                 {!! Form::number('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' , 'tabindex' => '16')) !!}
                                 {!! Form::number('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce', 'tabindex' => '18' )) !!}
                                 {!! Form::number('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce', 'tabindex' => '20')) !!}
@@ -271,7 +271,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             <div class="">
                                 <div class="form-group">
-                                    <strong>Employee Name :  <span class = "required_fields">*</span> </strong>
+                                    <strong>Employee Name :  </strong>
                                     {!! Form::select('lead_name', $users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25' )) !!}
                                 </div>
                             </div>
@@ -280,7 +280,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             <div class="">
                                 <div class="form-group">
-                                    <strong>Employee Percentage:  <span class = "required_fields">*</span> </strong>
+                                    <strong>Employee Percentage:  </strong>
                                     {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce' , 'tabindex' => '26')) !!}
                                 </div>
                             </div>
