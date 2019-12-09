@@ -505,10 +505,10 @@ class ClientBasicinfo extends Ardent
         return $client_city;
      }
 
-    public static function getMonthWiseClientByUserId($user_id,$all=0)
+    public static function getMonthWiseClientByUserId($user_id,$all=0,$month=NULL,$year=NULL)
     {
-        $month = date('m');
-        $year = date('Y');
+        //$month = date('m');
+        //$year = date('Y');
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');

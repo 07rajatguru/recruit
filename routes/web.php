@@ -698,7 +698,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@getAllClientsDetailsByType',
     ]);
 
-    Route::get('monthwiseclient', [
+    Route::get('monthwiseclient/{month}/{year}', [
         'as' => 'monthwiseclient.index',
         'uses' => 'ClientController@getMonthWiseClient'
     ]);
@@ -860,7 +860,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'candidate.candidateinfo',
         'uses' => 'CandidateController@getCandidateInfo'
     ]);
-    Route::get('candidatejoin', [
+    Route::get('candidatejoin/{month}/{year}', [
         'as' => 'candidatejoin.index',
         'uses' => 'CandidateController@candidatejoin',
         'middleware' => ['permission:candidate-list']
@@ -1136,7 +1136,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // get list of associated cvs
-    Route::get('associatedcvs', [
+    Route::get('associatedcvs/{month}/{year}', [
         'as' => 'jobopen.associatedcvs',
         'uses' => 'JobOpenController@associatedCVS',
         //'middleware' => ['permission:industry-edit']
@@ -1201,7 +1201,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:interview-list']
     ]);
 
-    Route::get('attendedinterview',[
+    Route::get('attendedinterview/{month}/{year}',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview',
         'middleware' => ['permission:interview-list']

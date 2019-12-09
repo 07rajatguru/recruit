@@ -267,7 +267,7 @@ class InterviewController extends Controller
         return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source'));
     }
 
-    public function attendedinterview(){
+    public function attendedinterview($month,$year){
 
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
@@ -277,10 +277,10 @@ class InterviewController extends Controller
         $superadmin_role_id =  env('SUPERADMIN');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $attended_interview = Interview::getAttendedInterviews(1,$user->id);
+            $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year);
         }
         else{
-            $attended_interview = Interview::getAttendedInterviews(0,$user->id);
+            $attended_interview = Interview::getAttendedInterviews(0,$user->id,$month,$year);
         }
 
         $count = sizeof($attended_interview);

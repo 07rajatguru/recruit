@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Job Openings')
+@section('title', 'Associated CV')
 
 @section('content_header')
     <h1></h1>
@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Number of cvs associated this month ( {{ date("M, Y") }} ) - {{$count}}</h2>
+                <h2>Number of cvs associated this month ({{ $short_month_name }} , {{ $year }}) - {{$count}}</h2>
             </div>
         </div>
     </div>

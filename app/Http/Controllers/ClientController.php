@@ -2550,7 +2550,7 @@ class ClientController extends Controller
         return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
     }
 
-    public function getMonthWiseClient()
+    public function getMonthWiseClient($month,$year)
     {
         $user =  \Auth::user();
 
@@ -2565,11 +2565,11 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
 
         if($isSuperAdmin){
-            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1);
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year);
             $count = sizeof($response);
         }
         else{
-            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0);
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0,$month,$year);
             $count = sizeof($response);
         }
 

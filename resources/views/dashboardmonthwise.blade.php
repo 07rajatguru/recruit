@@ -21,16 +21,11 @@
         </div>
  -->
     </div>
-
 </div>
-
 @stop
 
 @section('content')
-
-
     <div class="row">
-
         <div class="filter_section">
             <div class="month_div col-md-5" >
                 <select class="form-control" name="month" id="month">
@@ -65,7 +60,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="/monthwiseclient" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/monthwiseclient/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -104,7 +99,7 @@
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="/associatedcvs" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/associatedcvs/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -117,7 +112,7 @@
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="/attendedinterview" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/attendedinterview/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -130,7 +125,7 @@
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="/candidatejoin" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/candidatejoin/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

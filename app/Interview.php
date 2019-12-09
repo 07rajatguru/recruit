@@ -376,10 +376,10 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getAttendedInterviews($all=0,$user_id){
+    public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL){
 
-        $month = date('m');
-        $year = date('Y');
+        //$month = date('m');
+        //$year = date('Y');
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');

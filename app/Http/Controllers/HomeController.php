@@ -182,6 +182,8 @@ class HomeController extends Controller
         $viewVariable['associatedCount'] = $associate_count;
         $viewVariable['interviewAttendCount'] = $interview_attend;
         $viewVariable['date'] = $date;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
 
         return view('dashboard',$viewVariable);
     }

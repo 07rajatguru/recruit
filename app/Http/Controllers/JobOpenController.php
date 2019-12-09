@@ -3126,13 +3126,13 @@ class JobOpenController extends Controller
         echo json_encode($response);exit;
     }
 
-    public function associatedCVS(){
+    public function associatedCVS($month,$year){
 
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $month = date("m");
-        $year = date("Y");
+        //$month = date("m");
+        //$year = date("Y");
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -3158,7 +3158,9 @@ class JobOpenController extends Controller
         }
 
         $count = sizeof($response);
-        return view ('adminlte::jobopen.associatedcvs',compact('response','count'));
+
+        $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
+        return view ('adminlte::jobopen.associatedcvs',compact('response','count','short_month_name','year'));
     }
 
     public function checkJobId(){

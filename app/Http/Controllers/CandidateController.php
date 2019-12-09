@@ -277,7 +277,7 @@ class CandidateController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function candidatejoin(){
+    public function candidatejoin($month,$year){
 
         $user =  \Auth::user();
 
@@ -290,11 +290,11 @@ class CandidateController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
         if($isSuperAdmin){
-            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1);
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year);
             $count = sizeof($response);
         }
         else{
-            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0);
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year);
             $count = sizeof($response);
         }
         
