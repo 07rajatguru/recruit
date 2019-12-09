@@ -142,10 +142,22 @@
 
                             <div class="form-group">
                                 <strong> Generate Report : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('daily_report','Yes', true) !!}
+                                {!! Form::radio('daily_report','Yes', true, array('onclick' => 'reportSelection();')) !!}
                                 {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('daily_report','No') !!}
+                                {!! Form::radio('daily_report','No',false,array('onclick' => 'reportSelection();')) !!}
                                 {!! Form::label('No') !!}
+                            </div>
+
+                            <div class="report_class" style="display:none;">
+                                <div class="form-group">
+                                    <strong> Report Status : </strong> &nbsp;&nbsp;
+                                    {!! Form::checkbox('cv_report','Yes', true, array('id' => 'cv_report')) !!}
+                                    {!! Form::label('CVs Associated') !!} &nbsp;&nbsp;
+                                    {!! Form::checkbox('interview_report','Yes',true, array('id' => 'interview_report')) !!}
+                                    {!! Form::label('Interviews Scheduled') !!}&nbsp;&nbsp;
+                                    {!! Form::checkbox('lead_report','Yes',true, array('id' => 'lead_report')) !!}
+                                    {!! Form::label('Leads Added') !!}
+                                </div>
                             </div>
                           
                             <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
@@ -190,3 +202,40 @@
 
     {!! Form::close() !!}
 @endsection
+
+@section('customscripts')
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            reportSelection();
+        });
+
+        function reportSelection()
+        {
+            var report_value = document.getElementsByName('daily_report');
+            var report_item_value="";
+            for(var i=0; i<report_value.length; i++)
+            {
+                if(report_value[i].type=='radio' && report_value[i].checked==true)
+                {
+                    report_item_value += report_value[i].value;
+                }
+            }
+
+            if(report_item_value == 'Yes')
+            {
+                $("#cv_report").prop("checked", true);
+                $("#interview_report").prop("checked", true);
+                $("#lead_report").prop("checked", true);
+                $(".report_class").show();
+            }
+            else
+            {
+                $("#cv_report").prop("checked", false);
+                $("#interview_report").prop("checked", false);
+                $("#lead_report").prop("checked", false);
+                $(".report_class").hide();
+            }
+        }
+    </script>
+@stop

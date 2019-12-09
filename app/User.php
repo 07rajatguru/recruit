@@ -715,4 +715,14 @@ class User extends Authenticatable
 
         return $userArr;
     }
+
+    public static function getAllDetailsByUserID($user_id)
+    {
+        $user_query = User::query();
+        $user_query = $user_query->where('users.id',$user_id);
+        $user_query = $user_query->select('users.*');
+        $response = $user_query->first();
+
+        return $response;
+    }
 }

@@ -90,7 +90,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
@@ -116,12 +115,45 @@ class UserController extends Controller
         $role_id = $request->input('roles');
         //print_r($account_manager);exit;
 
+        // Start Report Status
+
+        $cv_report = $request->input('cv_report');
+
+        if(isset($cv_report) && $cv_report != '') {
+            $user->cv_report = $cv_report;
+        }
+        else {
+            $user->cv_report = NULL;
+        }
+
+        $interview_report = $request->input('interview_report');
+
+        if(isset($interview_report) && $interview_report != '') {
+            $user->interview_report = $interview_report;
+        }
+        else {
+            $user->interview_report = NULL;
+        }
+
+        $lead_report = $request->input('lead_report');
+
+        if(isset($lead_report) && $lead_report != '') {
+            $user->lead_report = $lead_report;
+        }
+        else {
+            $user->lead_report = NULL;
+        }
+
+        // End Report Status
+
         $user->secondary_email=$request->input('semail');
         $user->daily_report = $check_report;
         $user->reports_to = $reports_to;
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
         $user->account_manager = $account_manager;
+
+        
         $users = $user->save();
 
         $user_id = $user->id;
@@ -234,8 +266,6 @@ class UserController extends Controller
         $type  = User::getTypeArray();
         $type = array_fill_keys(array(''),'Select type')+$type;
       
-    
-
         return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail'));
 
     }
@@ -303,6 +333,46 @@ class UserController extends Controller
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
         $user->account_manager = $account_manager;
+
+        // Start Report Status
+
+        if($check_report == 'Yes'){
+
+            $cv_report = $request->input('cv_report');
+
+            if(isset($cv_report) && $cv_report != '') {
+                $user->cv_report = $cv_report;
+            }
+            else {
+                $user->cv_report = NULL;
+            }
+
+            $interview_report = $request->input('interview_report');
+
+            if(isset($interview_report) && $interview_report != '') {
+                $user->interview_report = $interview_report;
+            }
+            else {
+                $user->interview_report = NULL;
+            }
+
+            $lead_report = $request->input('lead_report');
+
+            if(isset($lead_report) && $lead_report != '') {
+                $user->lead_report = $lead_report;
+            }
+            else {
+                $user->lead_report = NULL;
+            }
+        }
+        else {
+
+            $user->cv_report = NULL;
+            $user->interview_report = NULL;
+            $user->lead_report = NULL;
+        }
+        // End Report Status
+        
         $users = $user->save();
 
         //  If status is inactive then delete this user process and training

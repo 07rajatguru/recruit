@@ -177,10 +177,26 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong> Generate Report : </strong> &nbsp;&nbsp;
-                {!! Form::radio('daily_report','Yes', true) !!}
+                {!! Form::radio('daily_report','Yes', true, array('onclick' => 'reportSelection();')) !!}
                 {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                {!! Form::radio('daily_report','No') !!}
+                {!! Form::radio('daily_report','No','',array('onclick' => 'reportSelection();')) !!}
                 {!! Form::label('No') !!}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="report_class" style="display:none;">
+                <div class="form-group">
+                    <strong> Report Status : </strong> &nbsp;&nbsp;
+                    {!! Form::checkbox('cv_report','Yes') !!}
+                    {!! Form::label('CVs Associated') !!} &nbsp;&nbsp;
+                   
+                    {!! Form::checkbox('interview_report','Yes') !!}
+                    {!! Form::label('Interviews Scheduled') !!}&nbsp;&nbsp;
+                   
+                    {!! Form::checkbox('lead_report','Yes') !!}
+                    {!! Form::label('Leads Added') !!}
+                </div>
             </div>
         </div>
 
@@ -224,3 +240,34 @@
     {!! Form::close() !!}
 
 @endsection
+
+@section('customscripts')
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            reportSelection();
+        });
+
+        function reportSelection()
+        {
+            var report_value = document.getElementsByName('daily_report');
+            var report_item_value="";
+            for(var i=0; i<report_value.length; i++)
+            {
+                if(report_value[i].type=='radio' && report_value[i].checked==true)
+                {
+                    report_item_value += report_value[i].value;
+                }
+            }
+
+            if(report_item_value == 'Yes')
+            {
+                $(".report_class").show();
+            }
+            else
+            {
+                $(".report_class").hide();
+            }
+        }
+    </script>
+@stop
