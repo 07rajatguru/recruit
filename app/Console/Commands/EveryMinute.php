@@ -205,59 +205,60 @@ class EveryMinute extends Command
             }
             else if ($value['module'] == 'Daily Report'){
 
-                $to_array=explode(",",$input['to']);
+                /*$to_array=explode(",",$input['to']);
                 $cc_array=explode(",",$input['cc']);
 
+                $associate_response = JobAssociateCandidates::getDailyReportAssociate($sender_id,NULL);
+                //print_r($associate_response);exit;
+                $associate_daily = $associate_response['associate_data'];
+                $associate_count = $associate_response['cvs_cnt'];
+
+                $lead_count = Lead::getDailyReportLeadCount($sender_id,NULL);
+
+                $interview_daily = Interview::getDailyReportInterview($sender_id,NULL);
+                $user_name = User::getUserNameById($sender_id);
+
+                $input['value'] = $user_name;
+                $input['associate_daily'] = $associate_daily;
+                $input['associate_count'] = $associate_count;
+                $input['lead_count'] = $lead_count;
+                $input['interview_daily'] = $interview_daily;
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
+
+                \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); */
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $associate_response = JobAssociateCandidates::getDailyReportAssociate($sender_id,NULL);
+                $associate_daily = $associate_response['associate_data'];
+                $associate_count = $associate_response['cvs_cnt'];
+                   
+                $lead_count = Lead::getDailyReportLeadCount($sender_id,NULL);
+                    
+                $interview_daily = Interview::getDailyReportInterview($sender_id,NULL);
+                   
                 $user_details = User::getAllDetailsByUserID($sender_id);
 
-                if(isset($user_details) && sizeof($user_details) > 0)
-                {
-                    if($user_details->cv_report == 'Yes'){
+                $input['value'] = $user_details->name;
+                $input['user_details'] = $user_details;
+                $input['associate_daily'] = $associate_daily;
+                $input['associate_count'] = $associate_count;
+                $input['lead_count'] = $lead_count;
+                $input['interview_daily'] = $interview_daily;
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
 
-                        $associate_response = JobAssociateCandidates::getDailyReportAssociate($sender_id,NULL);
-                        //print_r($associate_response);exit;
-                        $associate_daily = $associate_response['associate_data'];
-                        $associate_count = $associate_response['cvs_cnt'];
-                    }
-                    else{
-
-                        $associate_daily = '';
-                        $associate_count = '';
-                    }
-
-                    if($user_details->lead_report == 'Yes'){
-
-                        $lead_count = Lead::getDailyReportLeadCount($sender_id,NULL);
-                    }
-                    else {
-
-                        $lead_count = '';
-                    }
-
-                    if($user_details->interview_report == 'Yes'){
-
-                        $interview_daily = Interview::getDailyReportInterview($sender_id,NULL);
-                    }
-                    else {
-
-                        $interview_daily = '';
-                    }
-
-                    $user_name = User::getUserNameById($sender_id);
-
-                    $input['value'] = $user_name;
-                    $input['associate_daily'] = $associate_daily;
-                    $input['associate_count'] = $associate_count;
-                    $input['lead_count'] = $lead_count;
-                    $input['interview_daily'] = $interview_daily;
-                    $input['to_array'] = array_unique($to_array);
-                    $input['cc_array'] = array_unique($cc_array);
-
-                    \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
-                        $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
-                    });
-                }
+                \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }

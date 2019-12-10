@@ -47,6 +47,7 @@
     <tr>
         <td>
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+                @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
                 <tr>
                     <td colspan="7">
                         <u><b><h1>No of CVs Associated : {{$associate_count or '0'}}</h1></b></u>
@@ -78,7 +79,9 @@
                     </tr>
                     <?php $i++; ?>
                 @endforeach
+                @endif
 
+                @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
                 <?php $total_interview_cnt = sizeof($interview_daily); ?>
 
                 <tr>
@@ -125,14 +128,15 @@
                     </tr>
                     <?php $i++; ?>
                 @endforeach
+                @endif
 
+                @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
                 <tr>
                     <td colspan="7">
                         <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
                     </td>
                 </tr>
-
-
+                @endif
             </table>
         </td>
     </tr>
@@ -140,8 +144,5 @@
         <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
     </tr>
 </table>
-
-
-
 </body>
 </html>
