@@ -30,6 +30,7 @@
     <tr>
         <td>
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
+                @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
                 <tr>
                     <td colspan="3">
                         <u><b><h1>No of CVs Associated in this week : {{$associate_count or '0'}}</h1></b></u>
@@ -72,6 +73,8 @@
                         <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">No of resumes not <br/> achieved</td>
                         <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid; color: red"><?php if ($associate_count<40): ?>{{$associate_count-40}}<?php endif ?></td>
                     </tr>
+                @endif
+                @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
 
                     <tr>
                         <td colspan="3">
@@ -103,14 +106,15 @@
                         <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">Total</td>
                         <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid;">{{$interview_count or '0'}}</td>
                     </tr>
+                @endif
 
+                @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
                     <tr>
-
-                    <td colspan="3">
-                        <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
-                    </td>
-                </tr>
-
+                        <td colspan="3">
+                            <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
+                        </td>
+                    </tr>
+                @endif
             </table>
         </td>
     </tr>

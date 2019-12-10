@@ -263,8 +263,9 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
             else if ($value['module'] == 'Weekly Report') {
-                $to_array=explode(",",$input['to']);
-                $cc_array=explode(",",$input['cc']);
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
 
                 $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($sender_id,NULL,NULL);
 
@@ -276,9 +277,14 @@ class EveryMinute extends Command
                 $interview_count = $interview_weekly_response['interview_cnt'];
 
                 $lead_count = Lead::getWeeklyReportLeadCount($sender_id,NULL,NULL);
-                $user_name = User::getUserNameById($sender_id);
 
-                $input['value'] = $user_name;
+                $user_details = User::getAllDetailsByUserID($sender_id);
+
+                /*$user_name = User::getUserNameById($sender_id);
+                $input['value'] = $user_name;*/
+
+                $input['value'] = $user_details->name;
+                $input['user_details'] = $user_details;
                 $input['associate_weekly'] = $associate_weekly;
                 $input['associate_count'] = $associate_count;
                 $input['interview_weekly'] = $interview_weekly;
