@@ -127,8 +127,6 @@ class JobOpenController extends Controller
         DB::statement("UPDATE job_openings SET lacs_from = '$lacs_from', thousand_from = '$thousand_from', lacs_to = '$lacs_to', thousand_to = '$thousand_to' where id=$sid");
             $i++;
         }
-        
-
     }
 
     public function work()
@@ -150,7 +148,6 @@ class JobOpenController extends Controller
             DB::statement("UPDATE job_openings SET work_exp_from = '$wfrom', work_exp_to = '$wto' where id=$wid");
         }
         //echo $job_work;exit;
-
     }
 
     //Script for set open_to_all_date based on created_date
@@ -1156,7 +1153,7 @@ class JobOpenController extends Controller
                     $job_open_doc = new JobOpenDoc();
 
                     $job_open_doc->job_id = $job_id;
-                    $job_open_doc->category = 'Job Summary';
+                    $job_open_doc->category = 'Job Description';
                     $job_open_doc->name = $job_summary_name;
                     $job_open_doc->file = $job_summary_key;
                     $job_open_doc->uploaded_by = $user_id;
@@ -1165,7 +1162,6 @@ class JobOpenController extends Controller
                     $job_open_doc->updated_at = time();
                     $job_open_doc->save();
                 }
-
             }
 
             if (isset($others_doc) && $others_doc->isValid()) {
@@ -1194,7 +1190,37 @@ class JobOpenController extends Controller
                     $job_open_doc->updated_at = time();
                     $job_open_doc->save();
                 }
+            }
 
+            // For candidate tracker
+            $candidate_tracker = $request->file('candidate_tracker');
+
+            if (isset($candidate_tracker) && $candidate_tracker->isValid()) {
+                $candidate_tracker_name = $candidate_tracker->getClientOriginalName();
+                $filesize = filesize($candidate_tracker);
+
+                $dir_name = "uploads/jobs/" . $job_id . "/";
+                $candidate_tracker_key = $dir_name . $candidate_tracker_name;
+
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/jobs/$job_id", 0777, true);
+                }
+
+                if (!$candidate_tracker->move($dir_name, $candidate_tracker_name)) {
+                    return false;
+                } else {
+
+                    $job_open_doc = new JobOpenDoc();
+                    $job_open_doc->job_id = $job_id;
+                    $job_open_doc->category = 'Candidate Tracker';
+                    $job_open_doc->name = $candidate_tracker_name;
+                    $job_open_doc->file = $candidate_tracker_key;
+                    $job_open_doc->uploaded_by = $user_id;
+                    $job_open_doc->size = $filesize;
+                    $job_open_doc->created_at = time();
+                    $job_open_doc->updated_at = time();
+                    $job_open_doc->save();
+                }
             }
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
@@ -2135,7 +2161,6 @@ class JobOpenController extends Controller
                     $job_open_doc->save();
                 }
             }
-            
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
             $user_arr = array();

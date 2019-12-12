@@ -453,7 +453,15 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Job Summary:</strong>
+                        <strong>Candidate Tracker: <span class = "required_fields"> *</span></strong>
+                        {!! Form::file('candidate_tracker', null, array('id'=>'candidate_tracker','class' => 'form-control')) !!}
+                    </div>
+
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Job Description:</strong>
                         {!! Form::file('job_summary', null, array('id'=>'job_summary','class' => 'form-control')) !!}
                     </div>
 
@@ -609,6 +617,9 @@
                     },
                     "user_ids[]": {
                         required : true,
+                    },
+                    "candidate_tracker": {
+                        required : true,
                     }
                 },
                 messages: {
@@ -641,6 +652,9 @@
                     },
                     "user_ids[]": {
                         required : "User is required field.",
+                    },
+                    "candidate_tracker": {
+                        required : "Please Select file.",
                     }
                 }
             });

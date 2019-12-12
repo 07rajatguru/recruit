@@ -26,7 +26,7 @@ class JobOpen extends Model
         ];
     }
 
-    public $upload_type = array('Job Summary'=>'Job Summary');
+    public $upload_type = array('Job Description'=>'Job Description','Candidate Tracker'=>'Candidate Tracker');
 
     public static function getPostingTitleArray(){
         $postingArray = array('' => 'Select Posting Title');
