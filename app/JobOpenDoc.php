@@ -29,6 +29,7 @@ class JobOpenDoc extends Model
             $job_doc[$i]['category'] = $value->category;
             $job_doc[$i]['uploaded_by'] = $value->upload_name;
             $job_doc[$i]['size'] = $utils->formatSizeUnits($value->size);
+            $job_doc[$i]['org_size'] = $value->size;
 
             if (array_search($value->category, $upload_type)) {
                 unset($upload_type[array_search($value->category, $upload_type)]);

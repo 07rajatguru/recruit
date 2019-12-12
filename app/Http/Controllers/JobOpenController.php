@@ -28,6 +28,7 @@ use App\Events\NotificationMail;
 use App\Holidays;
 use App\ClientHeirarchy;
 use App\Notifications;
+use Illuminate\Support\Facades\File;
 
 class JobOpenController extends Controller
 {
@@ -1129,7 +1130,7 @@ class JobOpenController extends Controller
 
             $job_users = sizeof($users);
             if ($job_users == $user_count) {
-                \DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
+                //\DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
             }
             else {
                 \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
@@ -1769,7 +1770,7 @@ class JobOpenController extends Controller
 
         $job_users = sizeof($users);
         if ($job_users == $user_count) {
-            \DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
+            //\DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
         }
         else {
             \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
@@ -1914,6 +1915,17 @@ class JobOpenController extends Controller
             }
         }
 
+        $jobopen_model = new JobOpen();
+        $upload_type = $jobopen_model->upload_type;
+
+        $job_open['doc'] = JobOpenDoc::getJobDocByJobId($id);
+        foreach ($job_open['doc'] as $key => $value) {
+            if (array_search($value['category'], $upload_type)) {
+                unset($upload_type[array_search($value['category'], $upload_type)]);
+            }
+        }
+        $upload_type['Others'] = 'Others';
+
         // job type
         $job_type = JobOpen::getJobTypes();
 
@@ -1925,10 +1937,11 @@ class JobOpenController extends Controller
 
         $action = "clone";
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type'));
     }
 
     public function clonestore(Request $request){
+
         $dateClass = new Date();
 
         $user_id = \Auth::user()->id;
@@ -1952,6 +1965,7 @@ class JobOpenController extends Controller
         $client_id = $input['client_id'];
         $no_of_positions = $input['no_of_positions'];
         $date_open = $input['date_opened'];
+        $target_date=$input['target_date'];
         //$formatted_date_open = Carbon::parse($date_open)->format('Y/m/d');
         $job_type = $input['job_type'];
         $job_description = $input['job_description'];
@@ -1974,14 +1988,16 @@ class JobOpenController extends Controller
         $work_exp_from = $input['work_experience_from'];
         $work_exp_to = $input['work_experience_to'];
 
-        if (isset($work_experience_from) && $work_experience_from == '')
+        /*if (isset($work_experience_from) && $work_experience_from == '')
             $work_experience_from = 0;
         if (isset($work_experience_to) && $work_experience_to == '')
             $work_experience_to = 0;
-      //  if (isset($salary_from) && $salary_from == '')
-        //    $salary_from = 0;
-        //if (isset($salary_to) && $salary_to == '')
-        //    $salary_to = 0;
+        if (isset($salary_from) && $salary_from == '')
+            $salary_from = 0;
+        if(isset($salary_to) && $salary_to == '')
+            $salary_to = 0;*/
+        if (isset($no_of_positions) && $no_of_positions == '')
+            $no_of_positions = 0;
         if (isset($qualifications) && $qualifications == '')
             $qualifications = '';
         if (isset($desired_candidate) && $desired_candidate == '')
@@ -1999,6 +2015,31 @@ class JobOpenController extends Controller
         if (isset($work_exp_to) && $work_exp_to == '')
             $work_exp_to = 0;
 
+        //From when Job Open to all Date set
+        $date = date('Y-m-d H:i:s');
+        $date_day = date('l',strtotime($date));
+        if ($date_day == 'Friday') {
+            $open_to_all = date('Y-m-d H:i:s',strtotime("$date +3 days"));
+        }
+        else if ($date_day == 'Saturday') {
+            $open_to_all = date('Y-m-d H:i:s',strtotime("$date +3 days"));
+        }
+        else{
+            $open_to_all = date('Y-m-d H:i:s',strtotime("$date +2 days"));
+        }
+        $change_date = date('Y-m-d',strtotime("$open_to_all"));
+        $fixed_date = Holidays::getFixedLeaveDate();
+        if (in_array($change_date, $fixed_date)) {
+            $open_to_all_day = date('l',strtotime("$open_to_all"));
+            if ($open_to_all_day == 'Saturday') {
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$open_to_all +2 days"));
+            }
+            else{
+                $open_to_all = date('Y-m-d H:i:s',strtotime("$open_to_all +1 days"));   
+            }
+        //print_r($open_to_all);exit;
+        }
+
         $level_id = $input['level_id'];
 
         $increment_id = $max_id + 1;
@@ -2013,7 +2054,9 @@ class JobOpenController extends Controller
         $job_open->industry_id = $industry_id;
         $job_open->client_id = $client_id;
         $job_open->no_of_positions = $no_of_positions;
-        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open); //'2016-01-01';//$formatted_date_open;
+        $job_open->date_opened = $dateClass->changeDMYtoYMD($date_open);
+        $job_open->target_date = $dateClass->changeDMYtoYMD($target_date);
+        //'2016-01-01';//$formatted_date_open;
         $job_open->job_type = $job_type;
         $job_open->job_description = $job_description;
         //$job_open->work_experience_from = $work_experience_from;
@@ -2062,70 +2105,37 @@ class JobOpenController extends Controller
 
             $job_users = sizeof($users);
             if ($job_users == $user_count) {
-                \DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
+                //\DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
             }
             else {
                 \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
             }
 
-            $job_summary = $request->file('job_summary');
-            $others_doc = $request->file('others_doc');
+            // Attched Documents from old job
 
-            if (isset($job_summary) && $job_summary->isValid()) {
-                $job_summary_name = $job_summary->getClientOriginalName();
-                $filesize = filesize($job_summary);
+            $old_job_id = $request->input('job_id');
+            $job_docs = JobOpenDoc::getJobDocByJobId($old_job_id);
 
-                $dir_name = "uploads/jobs/" . $job_id . "/";
-                $job_summary_key = "uploads/jobs/" . $job_id . "/" . $job_summary_name;
+            if(isset($job_docs) && sizeof($job_docs) > 0)
+            {
+                File::makeDirectory("uploads/jobs/$job_id", 0777, true);
+                File::copyDirectory(public_path()."/uploads/jobs/".$old_job_id."/",public_path()."/uploads/jobs/".$job_id."/");
 
-                if (!file_exists($dir_name)) {
-                    mkdir("uploads/jobs/$job_id", 0777, true);
-                }
+                foreach ($job_docs as $key => $value) {
 
-                if (!$job_summary->move($dir_name, $job_summary_name)) {
-                    return false;
-                } else {
                     $job_open_doc = new JobOpenDoc();
-
                     $job_open_doc->job_id = $job_id;
-                    $job_open_doc->category = 'Job Summary';
-                    $job_open_doc->name = $job_summary_name;
-                    $job_open_doc->file = $job_summary_key;
+                    $job_open_doc->category = $value['category'];
+                    $job_open_doc->file = "uploads/jobs/".$job_id."/".$value['name'];
+                    $job_open_doc->name = $value['name'];
                     $job_open_doc->uploaded_by = $user_id;
-                    $job_open_doc->size = $filesize;
+                    $job_open_doc->size = $value['org_size'];
                     $job_open_doc->created_at = time();
                     $job_open_doc->updated_at = time();
                     $job_open_doc->save();
                 }
             }
-
-            if (isset($others_doc) && $others_doc->isValid()) {
-                $others_doc_name = $others_doc->getClientOriginalName();
-                $others_filesize = filesize($others_doc);
-
-                $dir_name = "uploads/jobs/" . $job_id . "/";
-                $others_doc_key = "uploads/jobs/" . $job_id . "/" . $others_doc_name;
-
-                if (!file_exists($dir_name)) {
-                    mkdir("uploads/jobs/$job_id", 0777, true);
-                }
-
-                if (!$others_doc->move($dir_name, $others_doc_name)) {
-                    return false;
-                } else {
-                    $job_open_doc = new JobOpenDoc;
-
-                    $job_open_doc->job_id = $job_id;
-                    $job_open_doc->category = 'Others';
-                    $job_open_doc->name = $others_doc_name;
-                    $job_open_doc->file = $others_doc_key;
-                    $job_open_doc->uploaded_by = $user_id;
-                    $job_open_doc->size = $others_filesize;
-                    $job_open_doc->created_at = time();
-                    $job_open_doc->updated_at = time();
-                    $job_open_doc->save();
-                }
-            }
+            
 
             // TODO:: Notifications : On creating job openings : send notification to selected users that new job openings is added (except user who created jobopening) . default send notificaations to admin user .
             $user_arr = array();
@@ -2137,7 +2147,7 @@ class JobOpenController extends Controller
                         $module = 'Job Openings';
                         $message = $user_name . " added new job";
                         $link = route('jobopen.show',$job_id);
-                        $user_arr =trim($value);
+                        $user_arr = trim($value);
 
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
@@ -2169,7 +2179,7 @@ class JobOpenController extends Controller
             }
         }
 
-        return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully');
+        return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully.');
     }
 
     public function destroy($id)

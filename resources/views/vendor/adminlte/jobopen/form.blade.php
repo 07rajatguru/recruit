@@ -505,6 +505,41 @@
 
                 </div>
             </div>
+        @elseif($action == 'clone')
+            <input type="hidden" value="{{ $job_open->id }}" name="job_id" id="job_id"/>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header  col-md-6 ">
+                        <h3 class="box-title">Attachments</h3>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>File Name</th>
+                                <th>Uploaded by</th>
+                                <th>Size</th>
+                                <th>Category</th>
+                            </tr>
+                            @if(sizeof($job_open['doc'])>0)
+                                @foreach($job_open['doc'] as $key=>$value)
+                                    <tr>
+                                        <td>
+                                            <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                        </td>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                        <td>{{ $value['uploaded_by'] }}</td>
+                                        <td>{{ $value['size'] }}</td>
+                                        <td>{{ $value['category'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </table>
+                    </div>
+
+                </div>
+            </div>
         @endif
     </div>
 
