@@ -16,12 +16,14 @@
             </div>
 
             <div class="pull-right">
+                <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate()">Shortlist Candidates</button>
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>
                 <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
+
                {{-- <ul class="nav navbar-nav">
                     <li class="dropdown messages-menu">
                         <a class="btn bg-red" class="dropdown-toggle" style="line-height: 3px " data-toggle="dropdown" aria-expanded="false">More Option</a>
-                      @foreach ($candidates as $candidate)
+                        @foreach ($candidates as $candidate)
                             <ul class="dropdown-menu">
                                 <li>
                                     <!-- inner menu: contains the actual data -->
@@ -40,21 +42,21 @@
                                             </li>
                                             @if(isset($access) && $access==true)
                                                 <li>
-                                                    <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
+                                                    <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted">Shortlist Candidate</a>
                                                 </li>
                                                 
-                                                    <li>
-                                                        <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo" >Undo Shortlisted Candidate</a>
-                                                    </li>                                            
-                                                
+                                                <li>
+                                                    <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo">Undo Shortlisted Candidate</a>
+                                                </li>
                                             @endif
                                         </ul>
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
                                 </li>
                             </ul>
-                        </li>
+                        @endforeach
+                    </li>
                     </ul>
-            @endforeach--}}
+                --}}
             </div>
 
             <!-- Schedule interview popup starts -->
@@ -288,16 +290,13 @@
                     </div>
                 </div>
             </div>
-             <!-- End Undo Shortlisted Candidate popup -->
-
-
+            <!-- End Undo Shortlisted Candidate popup -->
         </div>
     </div>
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     <table class="table table-bordered">
@@ -342,9 +341,9 @@
                                                 <a class="joining-date" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-joining-date" >Add Joining Date</a>
                                             </li>
                                             @if(isset($access) && $access==true)
-                                                <li>
+                                                <!-- <li>
                                                     <a class="sorted-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-shortlisted" >Shortlist Candidate</a>
-                                                </li>
+                                                </li> -->
                                                 @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
                                                     <li>
                                                         <a class="undo-candidate" data-toggle="modal" data-id="{{$candidate->id}}" href="#modal-undo" >Undo Shortlisted Candidate</a>
@@ -375,13 +374,23 @@
                     $dt->setTimezone($tz);
                     $associated_date = $dt->format('Y-m-d H:i:s');
                 ?>
-                @if($candidate->shortlisted==1 || $candidate->shortlisted==2 || $candidate->shortlisted==3)
+                @if($candidate->shortlisted==1 || $candidate->shortlisted==2)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
                 <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($candidate->shortlisted==3)
+                <td style="background:#32CD32"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color:blue;">
+                   {{ $candidate->fname or '' }}</a></td>
+                <td>{{ $candidate->owner or '' }}</td>
+                <td>{{ $candidate->email or '' }}</td>
+                <td>{{ $candidate->status or '' }}</td>
+                <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
+                <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
                 @else
                 <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
@@ -442,6 +451,40 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div id="modal-shortlist" class="modal text-left fade shortlist-candidate" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Shortlist Candidate</h2>
+            </div>
+            {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
+
+            <div class="modal-body">
+                <div class="check-all-candidate-ids" style="display:none;">
+                
+                </div>
+
+                <div class="shortlist-round" style="display:none;">
+                    <p>
+                    {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
+                    </p>
+                </div>
+
+                <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
+                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="shortlist-btn">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+            {!! Form::close() !!}
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
    
 @stop
 
@@ -684,5 +727,40 @@
             });
         }
 
+        function shortlistcandidate() {
+
+            var token = $("#token").val();  
+            var candidate_ids = new Array();
+            var app_url = "{!! env('APP_URL'); !!}";
+            
+            $("input:checkbox[name=candidate]:checked").each(function(){
+                candidate_ids.push($(this).val());
+            });
+
+            $("#all_can_ids").val(candidate_ids);
+            $(".check-all-candidate-ids").empty();
+
+            $.ajax(
+            {
+                type: 'POST',
+                url: app_url+'/jobs/checkcandidateids',
+                data: { can_ids:candidate_ids, '_token':token },
+                success: function(msg)
+                { 
+                    $(".shortlist-candidate").show();
+                    if (msg.success == 'success') {
+
+                        $(".shortlist-round").show();
+                        document.getElementById("shortlist-btn").disabled = false;
+                    }
+                    else{
+
+                        $(".check-all-candidate-ids").show();
+                        $(".check-all-candidate-ids").append(msg.err);
+                        document.getElementById("shortlist-btn").disabled = true;
+                    }
+                }
+            });
+        }
     </script>
 @endsection

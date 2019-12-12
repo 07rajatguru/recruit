@@ -3232,6 +3232,7 @@ class JobOpenController extends Controller
 
         return $msg;
     }
+
     // Users get for send mail
     public function UsersforSendMail(){
 
@@ -3299,5 +3300,42 @@ class JobOpenController extends Controller
         $candidate_details = JobAssociateCandidates::getAssociatedCandidatesDetailsByJobId($id);
         //print_r($candidate_details);exit;
         return view('adminlte::jobopen.candidatedetails',compact('candidate_details'));
+    }
+
+    // For check wherther associated candidate selected for shortlist or not
+    public function CheckCandidateIds(){
+
+        if (isset($_POST['can_ids']) && $_POST['can_ids'] != '') {
+            $can_ids = $_POST['can_ids'];
+        }
+
+        if (isset($can_ids) && sizeof($can_ids) > 0) {
+            $msg['success'] = 'success';
+        }
+        else{
+            $msg['err'] = '<b>Please select Candidate</b>';
+            $msg['msg'] = "fail";
+        }
+
+        return $msg;
+    }
+
+    // For shortlist associated candidate
+    public function shortlistedCandidates(Request $request){
+
+        $input = $request->all();
+        $shortlist = $input['shortlist_type'];
+
+        $all_can_ids = $_POST['all_can_ids'];
+        $ids = explode(",", $all_can_ids);
+
+        $job_id = $_POST['job_id'];
+
+        foreach ($ids as $key => $value)
+        {
+            DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $value and job_id = $job_id");
+        }
+
+        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted Successfully.');
     }
 }

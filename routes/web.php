@@ -1148,6 +1148,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@CheckIds'
     ]);
 
+    Route::post('/jobs/checkcandidateids',[
+        'as' => 'jobs.checkcandidateids',
+        'uses' => 'JobOpenController@CheckCandidateIds'
+    ]);
+
     Route::post('/jobs/usersforsendmail',[
         'as' => 'jobs.usersforsendmail',
         'uses' => 'JobOpenController@UsersforSendMail'
@@ -1156,6 +1161,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/jobs/associatedcandidatemail',[
         'as' => 'jobs.associatedcandidatemail',
         'uses' => 'JobOpenController@AssociatedCandidateMail'
+    ]);
+
+    Route::post('/jobs/shortlistedcandidate',[
+        'as' => 'jobs.shortlistedcandidate',
+        'uses' => 'JobOpenController@shortlistedCandidates'
     ]);
 
     // Interview Module
