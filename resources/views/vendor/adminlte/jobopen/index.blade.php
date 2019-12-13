@@ -142,7 +142,7 @@
     </div>--}}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+            {{-- <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                 <a id="priority_0" href="" title="-None-" style="text-decoration: none;color: black;"><div class="priority_0" style="width:max-content;height:40px;padding:9px 25px;border:solid 1px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_0 }}</div></a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
@@ -166,7 +166,27 @@
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                 <a id="priority_8" href="" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="priority_8">{{ $priority_8 }}</div></a>
+            </div> --}}
 
+            {{-- Changes from 12-12-2019 --}}
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a id="priority_1" href="" title="Urgent Positions" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_1 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a id="priority_8" href="" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="priority_8">{{ $priority_8 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a id="priority_2" href="" title="New Positions" style="text-decoration: none;color: black;"><div class="priority_2" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_2 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a id="priority_3" href="" title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div class="priority_3" style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_3 }}
+                </div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a id="priority_5" href="" title="Revived Positions" style="text-decoration: none;color: black;"><div class="priority_5" style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_5 }}</div></a>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                <a id="priority_7" href="" title="No Deliveries Needed" style="text-decoration: none;color: black;"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_7 }}</div></a>
             </div>
         </div>
     </div>
