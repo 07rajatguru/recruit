@@ -40,9 +40,13 @@ class ProcessController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
+
+            $process_response = ProcessManual::getAllprocess(1,$user_id);
             $count = ProcessManual::getAllprocessCount(1,$user_id);
         }
         else{
+
+            $process_response = ProcessManual::getAllprocess(0,$user_id);
             $count = ProcessManual::getAllprocessCount(0,$user_id);
         }
 
@@ -50,7 +54,7 @@ class ProcessController extends Controller
 	    //$processFiles = ProcessDoc::select('process_doc.file')->get();
 
         $viewVariable = array();
-        //$viewVariable['processList'] = $process_response;
+        $viewVariable['processList'] = $process_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         //$viewVariable['processFiles'] = $processFiles;
         $viewVariable['count'] = $count;   
@@ -533,6 +537,19 @@ class ProcessController extends Controller
         $id = $_POST['id'];
 
         return redirect()->route('process.show',[$id])->with('success','Attachment deleted Successfully');
-    } 
+    }
 
+    public function UpdatePosition(){
+
+        $ids_array = explode(",", $_GET['ids']);
+
+        $i = 1;
+        foreach ($ids_array as $id) {
+
+            $order = ProcessManual::find($id);
+            $order->position = $i;
+            $order->save();
+            $i++;
+        }
+    }
 }

@@ -41,7 +41,7 @@ class Training extends Model
         if (isset($order) && $order !='') {
             $training_open_query = $training_open_query->orderBy($order,$type);
         }
-        //$training_open_query = $training_open_query->orderBy('id','asc');
+        $training_open_query = $training_open_query->orderBy('position','asc');
         $training_open_query = $training_open_query->groupBy('training.id');
         $training_response = $training_open_query->get();
 

@@ -1664,7 +1664,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@update',
         'middleware' => ['permission:training-edit']
     ]);
-    
 
     Route::post('training/upload/{id}', [
         'as' => 'trainingattachments.upload',
@@ -1688,7 +1687,13 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'trainingattachments.destroy',
         'uses' => 'TrainingController@attachmentsDestroy',
         'middleware' => ['permission:training-delete']
-   ]);
+    ]);
+
+    Route::get('training/update-position',[
+        'as' => 'training.update-position',
+        'uses' => 'TrainingController@UpdatePosition',
+        'middleware' => ['permission:training-list']
+    ]);
 
     // Admin > Process Manual
     
@@ -1746,7 +1751,13 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'processattachments.destroy',
         'uses' => 'ProcessController@attachmentsDestroy',
         'middleware' => ['permission:process-delete']
-   ]);
+    ]);
+
+    Route::get('process/update-position',[
+        'as' => 'process.update-position',
+        'uses' => 'ProcessController@UpdatePosition',
+        'middleware' => ['permission:process-list']
+    ]);
 
     // Admin > Accounting Heads
     

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Process Manual')
 
 @section('content_header')
     <h1></h1>
@@ -20,58 +20,53 @@
     </div>
 
     @if ($message = Session::get('success'))
-        <div class="alert alert-success">
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+    @endif
+
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     <table id="process_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th>No</th>
+                <th width="10%">No</th>
                 <th>Process Name</th>
-                <!-- <th>Team Mates</th> -->
-                <th width="280px">Action</th>
+                <th width="10%">Action</th>
             </tr>
         </thead>
-        {{--<tbody>
+        <tbody id="process_table_tbody_id">
+            <?php $i=0; ?>
+            @foreach ($processList as $key => $value)
+                <tr id="{{ $value['id'] }}">
 
-        @foreach($processFiles as $processFile)
-      
-        @endforeach
-    
-        php $i = 0 ;
-        @foreach ($processList as $key => $value)
-           
-            <tr>
-                
-                <td>{{ ++$i }}</td>
-                @if(isset($value['url']) && $value['url'] != '')
-                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['title'] }}</a></td>
-                @else
+                    <td>{{ ++$i }}</td>
+                   
                     <td>{{ $value['title'] }}</td>
-                @endif
-                <td>
-                  
-                    <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>
-                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $processFile['file'] }}"></a>
-                    @if(isset($value['access']) && $value['access']==1)
-                        <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
-                    @endif
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process'])
-                    @endif
-                </td>
-                
-           </tr>
-        
-        @endforeach
-        </tbody>--}}
+                    
+                    <td>
+                        <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>
+
+                        @if(isset($value['access']) && $value['access']==1 || $isSuperAdmin)
+                            <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
+                        @endif
+
+                        @if($isSuperAdmin)
+                            @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process'])
+                        @endif
+                    </td>
+               </tr>
+            @endforeach
+        </tbody>
     </table>
     
 @stop
 @section('customscripts')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             /*var table = jQuery('#process_table').DataTable( {
@@ -82,7 +77,7 @@
 
             new jQuery.fn.dataTable.FixedHeader( table );*/
 
-            $("#process_table").DataTable({
+            /*$("#process_table").DataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0, 'asc'],
@@ -98,6 +93,27 @@
                 "pageLength": 100,
                 "pagingType" : "full_numbers",
                 stateSave : true,
+            });*/
+
+            jQuery("#process_table_tbody_id").sortable(
+            {
+                update: function (event, ui)
+                {
+                    var order = $(this).sortable('toArray');
+                    var dataString = 'ids=' + order;
+                    $.ajax
+                    ({
+                        type: "GET",
+                        url: '/process/update-position',
+                        data: dataString,
+                        cache: false,
+                        success: function (data)
+                        {
+                            if (data == 'success') {
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

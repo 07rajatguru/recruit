@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Training Material')
 
 @section('content_header')
     <h1></h1>
@@ -12,7 +12,6 @@
             <div class="pull-left">
                 <h2>Training Material ({{$count or '0'}})</h2>
             </div>
-
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('training.create') }}"> Create New Training Material</a>
             </div>
@@ -20,50 +19,53 @@
     </div>
 
     @if ($message = Session::get('success'))
-        <div class="alert alert-success">
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+    @endif
+
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     <table id="training_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th>No</th>
+                <th width="10%">No</th>
                 <th>Training Name</th>
-                <th width="280px">Action</th>
+                <th width="10%">Action</th>
             </tr>
         </thead>
-        {{--<tbody>
+        <tbody id="training_table_tbody_id">
+            <?php $i=0; ?>
+            @foreach ($training as $key => $value)
+                <tr id="{{ $value['id'] }}">
 
-        @foreach($trainingFiles as $trainingFile)
-      
-        @endforeach
-    
-        php $i = 0 ;
-        @foreach ($training as $key => $value)
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td><a target="_blank" href="{{ $value['file_url'] }}">{{ $value['title'] }}</td>
-                <td>
+                    <td>{{ ++$i }}</td>
                   
-                    <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
-                    {{--<a class="fa fa-fw fa-download" title="Download" target="_blank" href="{{ $trainingFile['file'] }}"></a>
-                    @if($value['owner_id'] == $user_id || $isSuperAdmin)         
-                    <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
-                    @endif
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training'])                  
-                    @endif
+                    <td>{{ $value['title'] }}</td>
                     
-                </td>
-           </tr>
-        @endforeach
-        </tbody>--}}
+                    <td>
+                        <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
+                       
+                        @if($value['owner_id'] == $user_id || $isSuperAdmin)         
+                        <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
+                        @endif
+
+                        @if($isSuperAdmin)
+                            @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training'])                  
+                        @endif
+                    </td>
+               </tr>
+            @endforeach
+        </tbody>
     </table>
     
 @stop
 @section('customscripts')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             /*var table = jQuery('#training_table').DataTable( {
@@ -74,7 +76,8 @@
 
             new jQuery.fn.dataTable.FixedHeader( table );*/
 
-            $("#training_table").DataTable({
+
+            /*$("#training_table").DataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0, 'asc'],
@@ -90,6 +93,27 @@
                 "pageLength": 100,
                 "pagingType" : "full_numbers",
                 stateSave : true,
+            });*/
+
+            jQuery("#training_table_tbody_id").sortable(
+            {
+                update: function (event, ui)
+                {
+                    var order = $(this).sortable('toArray');
+                    var dataString = 'ids=' + order;
+                    $.ajax
+                    ({
+                        type: "GET",
+                        url: '/training/update-position',
+                        data: dataString,
+                        cache: false,
+                        success: function (data)
+                        {
+                            if (data == 'success') {
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

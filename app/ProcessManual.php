@@ -39,7 +39,8 @@ class ProcessManual extends Model
     if (isset($order) && $order !='') {
       $process_open_query = $process_open_query->orderBy($order,$type);
     }
-    //$process_open_query = $process_open_query->orderBy('process_manual.id','asc');
+    
+    $process_open_query = $process_open_query->orderBy('process_manual.position','asc');
     $process_open_query = $process_open_query->groupBy('process_manual.id');
     $process_response = $process_open_query->get();
 

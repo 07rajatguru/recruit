@@ -37,16 +37,18 @@ class TrainingController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
+
+            $training = Training::getAlltraining(1,$user_id);
 	        $count = Training::getAlltrainingCount(1,$user_id);
         }
         else{
+
+            $training = Training::getAlltraining(0,$user_id);
             $count = Training::getAlltrainingCount(0,$user_id);   
         }
 
-        //$count = sizeof($training);
-
 	   //$trainingFiles = TrainingDoc::select('training_doc.file')->get();
-	//print_r($trainingFiles);die;
+	   //print_r($trainingFiles);die;
 	
     return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id','count'));
    
@@ -495,5 +497,19 @@ class TrainingController extends Controller
         $id = $_POST['id'];
 
         return redirect()->route('training.show',[$id])->with('success','Attachment deleted Successfully');
+    }
+
+    public function UpdatePosition(){
+
+        $ids_array = explode(",", $_GET['ids']);
+
+        $i = 1;
+        foreach ($ids_array as $id) {
+
+            $order = Training::find($id);
+            $order->position = $i;
+            $order->save();
+            $i++;
+        }
     }
 }
