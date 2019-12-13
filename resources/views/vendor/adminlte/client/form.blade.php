@@ -178,6 +178,24 @@
                         <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                             <strong>Status: <span class = "required_fields">*</span></strong>
 
+                                @if( $action == 'edit')
+                                    <?php
+                                        if($client_status == '1')
+                                        {
+                                            if (in_array('Passive', $client_status_key)) 
+                                            {
+                                                unset($client_status_key[array_search('Passive',$client_status_key)]);
+                                            }
+                                        }
+                                        if($client_status == '0')
+                                        {
+                                            if (in_array('Active', $client_status_key)) 
+                                            {
+                                                unset($client_status_key[array_search('Active',$client_status_key)]);
+                                            }
+                                        }
+                                    ?>
+                                @endif
                                 {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
 
                                 @if ($errors->has('status'))
