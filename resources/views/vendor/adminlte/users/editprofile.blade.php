@@ -573,7 +573,7 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Fixed Salary : (Monthly)</strong>
-                            {!! Form::number('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '40' )) !!}
+                            {!! Form::number('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '40','onfocusout' => 'countTotalSalary();')) !!}
                         </div>
                     </div>
                 </div>
