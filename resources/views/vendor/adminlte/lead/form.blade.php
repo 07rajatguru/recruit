@@ -168,7 +168,7 @@
 
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>City:</strong>
+                                <strong>City: <span class = "required_fields">*</span></strong>
                                     {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '16')) !!}
                             </div>
                         </div>
@@ -228,6 +228,9 @@
                     },
                     "mobile": {
                         required: true
+                    },
+                    "city": {
+                        required: true
                     }
                 },
                 messages: {
@@ -242,6 +245,9 @@
                     },
                     "mobile": {
                         required: "Mobile Number is required."
+                    },
+                    "city": {
+                        required: "City is required."
                     }
                 }
             });
