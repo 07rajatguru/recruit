@@ -361,9 +361,11 @@
                         <i class="fa fa-edit"></i>
                     </a>
                     &nbsp;
-                    <a title="Deassociate Candidate" onclick="deassociate_candidate('{{ $job_id }}' , '{{ $candidate->id }}');" style="cursor: pointer;">
-                        <i class="fa fa-trash-o"></i>
-                    </a>
+                    @if(isset($access) && $access==true)
+                        <a title="Deassociate Candidate" onclick="deassociate_candidate('{{ $job_id }}' , '{{ $candidate->id }}');" style="cursor: pointer;">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    @endif
                 </td>
 
                 <?php
