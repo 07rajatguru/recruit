@@ -146,14 +146,20 @@ class UserController extends Controller
 
         // End Report Status
 
+        // Get first & last name
+
+        $first_name = $request->input('first_name');
+        $last_name = $request->input('last_name');
+
         $user->secondary_email=$request->input('semail');
         $user->daily_report = $check_report;
         $user->reports_to = $reports_to;
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
         $user->account_manager = $account_manager;
+        $user->first_name = $first_name;
+        $user->last_name = $last_name;
 
-        
         $users = $user->save();
 
         $user_id = $user->id;
@@ -372,7 +378,14 @@ class UserController extends Controller
             $user->lead_report = NULL;
         }
         // End Report Status
+
+        // Get first & last name
+
+        $first_name = $request->input('first_name');
+        $last_name = $request->input('last_name');
         
+        $user->first_name = $first_name;
+        $user->last_name = $last_name;
         $users = $user->save();
 
         //  If status is inactive then delete this user process and training
@@ -1169,8 +1182,6 @@ class UserController extends Controller
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('test');
         });
-
-
     }
 
     public function UserAttendanceAdd(){
