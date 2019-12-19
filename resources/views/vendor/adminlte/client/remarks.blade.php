@@ -90,6 +90,7 @@
             {!! Form::hidden('client_id', $client_id) !!}
             {!! Form::hidden('user_id', auth()->id()) !!}
             {!! Form::hidden('super_admin_userid', $super_admin_userid) !!}
+            {!! Form::hidden('manager_user_id', $manager_user_id) !!}
             {!! Form::text('content', null, ['id' => 'new_content','class' => 'form-control','required' => true, 'placeholder' => 'Write Remark']) !!}
         </div>
 
@@ -101,6 +102,7 @@
 </div>
 
 <input type="hidden" name="super_admin_userid" id="super_admin_userid" value="{{ $super_admin_userid }}">
+
 @stop
 
 @section('customscripts')

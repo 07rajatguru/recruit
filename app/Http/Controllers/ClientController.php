@@ -2326,6 +2326,7 @@ class ClientController extends Controller
         $client_id = $id;
 
         $super_admin_userid = getenv('SUPERADMINUSERID');
+        $manager_user_id = env('MANAGERUSERID');
 
         $client = ClientBasicinfo::find($client_id);
         $client_location = ClientBasicinfo::getBillingCityOfClientByID($client_id);
@@ -2334,14 +2335,14 @@ class ClientController extends Controller
         $days_array = ClientTimeline::getDetailsByClientId($id);
         $client_remarks = ClientRemarks::getAllClientRemarksData();
 
-        if($user_id == $super_admin_userid) {
+        if($user_id == $super_admin_userid || $user_id == $manager_user_id) {
 
             $client_remarks['other'] = 'Others';    
         }
         
         $client_remarks_edit = ClientRemarks::getAllClientRemarksData();
 
-        return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','days_array','client_remarks','client_remarks_edit'));
+        return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','manager_user_id','days_array','client_remarks','client_remarks_edit'));
 
     }
 
@@ -2353,10 +2354,11 @@ class ClientController extends Controller
         $client_id = $input['client_id'];
         $content = $input['content'];
         $super_admin_userid = $input['super_admin_userid'];
+        $manager_user_id = $input['manager_user_id'];
 
         if(isset($user_id) && $user_id>0){
             // If remarks not added then add that only by superadmin
-            if ($user_id == $super_admin_userid) {
+            if ($user_id == $super_admin_userid || $user_id == $manager_user_id) {
                 // Check remark found or not
                 $client_remark_check = ClientRemarks::checkClientRemark($content);
                 if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
