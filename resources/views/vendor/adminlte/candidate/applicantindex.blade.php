@@ -34,16 +34,15 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="candidate_table">
         <thead>
             <tr>
-                <th>No</th>
+                <th width="2%">No</th>
                 <th>Action</th>
                 <th>Candidate Name</th>
-                <!-- <th>Candidate Owner</th> -->
                 <th>Candidate Email</th>
-                <th>Mobile Number</th>
+                <th width="10%">Mobile<br/>Number</th>
                 <th>Current Employer</th>
                 <th>Current Job Title</th>
-                <th>Current Salary</th>
-                <th>Expected Salary</th>
+                <th width="7%">Current<br/>Salary</th>
+                <th width="7%">Expected<br/>Salary</th>
                 <th>Functional Roles</th>
             </tr>
         </thead>
