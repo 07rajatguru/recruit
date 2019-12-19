@@ -98,12 +98,12 @@
                                 <td>{{ $client['gst_no'] }}</td>
                             @endif
                         </tr>
-                        @if($isSuperAdmin || $isAdmin)
+                        {{-- @if($isSuperAdmin || $isAdmin)
                             <tr>
                                 <th>TAN</th>
                                 <td>{{ $client['tan'] }}</td>
                             </tr>
-                        @endif
+                        @endif --}}
 
                         <tr>
                             <th>About</th>

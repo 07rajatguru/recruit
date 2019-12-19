@@ -278,12 +278,12 @@
                                 <strong>Website:</strong>
                                 {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
                             </div>
-                            @if($isSuperAdmin || $isAdmin)
+                            {{-- @if($isSuperAdmin || $isAdmin)
                             <div class="form-group">
                                 <strong>TAN:</strong>
                                 {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control', 'tabindex' => '13' )) !!}
                             </div>
-                            @endif
+                            @endif --}}
 
                             <div class="form-group">
                                 <strong>About:</strong>

@@ -987,7 +987,8 @@ class ClientController extends Controller
         $client_status = 1;
 
         $generate_lead = '1';
-        $industry_res = Industry::orderBy('id','DESC')->get();
+        //$industry_res = Industry::orderBy('id','DESC')->get();
+        $industry_res = Industry::orderBy('name','ASC')->get();
         $industry = array();
 
         $user = \Auth::user();
