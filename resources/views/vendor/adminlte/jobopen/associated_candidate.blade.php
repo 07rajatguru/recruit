@@ -9,7 +9,56 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-12 margin-tb">
+
+        <div class="col-xs-12 col-sm-12 col-md-12" style="display:none;">
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#40E0D0;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Jan.</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#DEB887;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Feb.</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#A9A9A9;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">March</div>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:red;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">April</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#00BFFF;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">May</div>
+            </div>
+
+            <div class="ccol-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#D2691E;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">June</div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;display:none;">
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:lightgreen;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">July</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#FFD700;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Aug.</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Sept.</div>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#BDB76B;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Oct.</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#BC8F8F;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Nov.</div>
+            </div>
+
+            <div class="ccol-xs-2 col-sm-2 col-md-2">
+                <div style="width:120px;height:35px;background-color:#20B2AA;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Dec.</div>
+            </div>
+        </div>
+        <div class="col-lg-12 margin-tb" style="margin-top:15px;">
             <div class="pull-left">
                 <h3>Associated Candidates to Job Opening : {{ $posting_title }}</h3>
                 <span> </span>
@@ -305,6 +354,7 @@
             <th>Action</th>
             <th>Candidate Name</th>
             <th>Candidate Owner</th>
+            <th width="13%">Candidate Mobile No.</th>
             <th>Candidate Email</th>
             <th>Candidate Status</th>
             <th>Round Cleared</th>
@@ -375,31 +425,72 @@
 
                     $dt->setTimezone($tz);
                     $associated_date = $dt->format('Y-m-d H:i:s');
+                    $month = date('m',strtotime($associated_date));
                 ?>
                 @if($candidate->shortlisted==1 || $candidate->shortlisted==2)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
+                <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
-                <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
 
                 @elseif($candidate->shortlisted==3)
                 <td style="background:#32CD32"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color:blue;">
                    {{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
+                <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
-                <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
 
                 @else
                 <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
                 <td>{{ $candidate->owner or '' }}</td>
+                <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
                 <td>{{ $candidate->status or '' }}</td>
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
-                <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+                @endif
+
+                @if($month == '1')
+                    <td style="background:#40E0D0;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '2')
+                    <td style="background:#DEB887;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '3')
+                    <td style="background:#A9A9A9;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '4')
+                    <td style="background:red;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '5')
+                    <td style="background:#00BFFF;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '6')
+                    <td style="background:#D2691E;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '7')
+                    <td style="background:lightgreen;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '8')
+                    <td style="background:#FFD700;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '9')
+                    <td style="background:#F08080;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '10')
+                    <td style="background:#BDB76B;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '11')
+                    <td style="background:#BC8F8F;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @elseif($month == '12')
+                    <td style="background:#20B2AA;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+
+                @else
+                    <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
                 @endif
 
             </tr>
