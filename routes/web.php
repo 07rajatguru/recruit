@@ -633,7 +633,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:client-list']
     ]);
 
-    Route::get('client/active',[
+/*    Route::get('client/active',[
         'as' => 'client.active',
         'uses' => 'ClientController@ActiveClient',
         'middleware' => ['permission:client-list']
@@ -679,9 +679,9 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'client.standard',
         'uses' => 'ClientController@StandardClient',
         'middleware' => ['permission:client-list']
-    ]);
+    ]);*/
 
-    Route::get('clients/forbid',[
+    Route::get('client-list/Forbid',[
         'as' => 'clients.forbid',
         'uses' => 'ClientController@getForbidClient',
         'middleware' => ['permission:client-list']
@@ -691,6 +691,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'client.all',
         'uses' => 'ClientController@getAllClientsDetails',
         //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+    ]);
+
+    Route::get('client-list/{source}', [
+        'as' => 'client.list',
+        'uses' => 'ClientController@getAllClientsBySource',
     ]);
 
     Route::get('client/allbytype', [

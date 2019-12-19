@@ -160,7 +160,7 @@ return [
                    ],
                                       [
                        'text' => 'Forbid Clients',
-                       'url'  => 'clients/forbid',
+                       'url'  => 'client-list/Forbid',
                        'icon' => 'list',
                    ]/*,
                    [

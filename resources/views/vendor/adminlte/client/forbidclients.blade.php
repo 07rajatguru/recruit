@@ -49,8 +49,6 @@
                 <th>Remarks</th>
             </tr>
         </thead>
-        <tbody>
-        </tbody>
     </table>
 @stop
 
