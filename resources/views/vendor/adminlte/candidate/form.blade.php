@@ -440,7 +440,7 @@
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group {{ $errors->has('cover_latter') ? 'has-error' : '' }}">
-                    <strong>Cover Latter:</strong>
+                    <strong>Cover Letter:</strong>
                     {!! Form::file('cover_latter', null, array('id'=>'cover_latter','class' => 'form-control')) !!}
                     @if ($errors->has('cover_latter'))
                         <span class="help-block">
