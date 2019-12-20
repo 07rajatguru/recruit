@@ -679,8 +679,8 @@ class JobOpenController extends Controller
                 $priority_8++;
             }*/
 
-            $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            //$location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,/*$location*/$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
@@ -2982,8 +2982,8 @@ class JobOpenController extends Controller
             else{
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
-            $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
-            $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,$location,$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            //$location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
+            $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,/*$location*/$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }

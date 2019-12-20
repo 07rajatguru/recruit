@@ -425,6 +425,7 @@ class JobOpen extends Model
                 else
                     $location .= ", ".$value->country;
             }
+            $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $min_ctc;
@@ -603,6 +604,7 @@ class JobOpen extends Model
                 else
                     $location .= ", ".$value->country;
             }
+            $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $min_ctc;
@@ -1062,6 +1064,7 @@ class JobOpen extends Model
                     $location .= ", ".$value->country;
             }
             $jobs_list[$i]['location'] = $location;
+            $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $min_ctc;
             $jobs_list[$i]['max_ctc'] = $max_ctc;
@@ -1744,6 +1747,7 @@ class JobOpen extends Model
                 else
                     $location .= ", ".$value->country;
             }
+            $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $min_ctc;
@@ -1914,6 +1918,7 @@ class JobOpen extends Model
                 else
                     $location .= ", ".$value->country;
             }
+            $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['location'] = $location;
             $jobs_list[$i]['qual'] = $value->qualifications;
             $jobs_list[$i]['min_ctc'] = $min_ctc;

@@ -306,7 +306,7 @@
                 <td style="background-color: {{ $value['color'] }}">{{ $value['display_name'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or ''}}</td>
                 <td ><a title="Show Associated Candidates" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or ''}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['city'] or ''}}</td>
                 <td>{{ $value['min_ctc'] or ''}}</td>
                 <td>{{ $value['max_ctc'] or ''}}</td>
                 <td>{{ $value['created_date'] or ''}}</td>
@@ -365,11 +365,12 @@
                     { "width": "10px", "targets": 2, "searchable": false, "orderable": false },
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
-                    { "width": "10px", "targets": 5 },
+                    { "width": "150px", "targets": 5 },
                     { "width": "10px", "targets": 6 },
                     { "width": "10px", "targets": 7 },
                     { "width": "10px", "targets": 8 },
-                    { "width": "10px", "targets": 9 }
+                    { "width": "10px", "targets": 9 },
+                    { "width": "5px", "targets": 10 },
                 ],
                 "pageLength": 100,
                 stateSave: true
