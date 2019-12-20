@@ -876,7 +876,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL){
+    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -997,6 +997,12 @@ class JobOpen extends Model
                     $job_open_query = $job_open_query->Where('job_openings.created_at','<=',"$to_date");
                 }
             });
+        }
+
+        // For Client Heirarchy
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
        /* $job_response = $job_open_query->toSql();
@@ -1185,6 +1191,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
+
         $job_response = $job_open_query->get();
 
         $jobs_list = array();
@@ -1266,7 +1273,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL){
+    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL,$client_heirarchy=0){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1357,6 +1364,13 @@ class JobOpen extends Model
                 }
             });
         }
+
+        // For Client Heirarchy
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+
         $job_response = $job_open_query->get();
 
         return sizeof($job_response);
@@ -1558,6 +1572,7 @@ class JobOpen extends Model
                 else
                     $location .= ", ".$value->country;
             }
+            $jobs_open_list[$i]['city'] = $value->city;
             $jobs_open_list[$i]['location'] = $location;
             $jobs_open_list[$i]['qual'] = $value->qualifications;
             $jobs_open_list[$i]['min_ctc'] = $min_ctc;

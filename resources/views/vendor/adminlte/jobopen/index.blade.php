@@ -81,13 +81,14 @@
             <div class="pull-left">
                 <h2>Job Openings List <span id="count">({{ $count or 0}})</span></h2>
             </div>
-
-            @permission('job-create')
+            
             <div class="pull-right">
-                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
-                <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                <button type="button" class="btn bg-green" data-toggle="modal" data-target="#modal-advanced-search">Advanced Search</button>
+                @permission('job-create')
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
+                    <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                @endpermission
             </div>
-            @endpermission
 
             <div class="pull-right">
                 {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>--}}
@@ -347,6 +348,37 @@
     </table>--}}
     </div>
 
+<div id="modal-advanced-search" class="modal text-left fade">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Select Job Position</h1>
+            </div>
+            
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="">
+                    <div class="form-group"><br>
+                        <strong>Select Job Position :</strong> <br><br>
+                        {!! Form::select('client_heirarchy', $client_heirarchy_name,null, array('id'=>'client_heirarchy','class' => 'form-control')) !!}
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" onclick="getJobsByPosition()">Submit</button>
+
+                <button type="button" class="btn btn-primary" id="btnmodelreset" name="btnmodelreset">Reset
+                </button>
+                
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <div id="modal-status" class="modal text-left fade priority" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -379,7 +411,10 @@
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function(){
-            
+
+            var client_heirarchy = $("#client_heirarchy").val();
+            $("#client_heirarchy").select2({width:"565px"});
+
             var year = $("#year").val();
             $("#jo_table").dataTable({
                 'bProcessing' : true,
@@ -399,7 +434,7 @@
                             ],
                 "ajax" : {
                     'url' : 'jobs/all',
-                    data : {year:year},
+                    data : {year:year,client_heirarchy:client_heirarchy},
                     'type' : 'get',
                     error: function(){
 
@@ -486,8 +521,18 @@
                 }
             });
 
-        $("#priority").select2();
+            $("#priority").select2();
 
+            $("#btnmodelreset").bind("click", function () 
+            {
+                $("#client_heirarchy").val('0');
+                $("#client_heirarchy")[0].selectedIndex = 0;
+
+                $("#year").val('0');
+                $("#year")[0].selectedIndex = 0
+
+                getJobsByPosition();
+            });
         });
 
         function select_data(){
@@ -495,6 +540,8 @@
             $("#jo_table").dataTable().fnDestroy();
 
             var year = $("#year").val();
+            var client_heirarchy = $("#client_heirarchy").val();
+
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
@@ -513,7 +560,7 @@
                             ],
                 "ajax" : {
                     'url' : 'jobs/all',
-                    data : {year:year},
+                    data : {year:year,client_heirarchy:client_heirarchy},
                     'type' : 'get',
                     error: function(){
 
@@ -649,6 +696,25 @@
 
             $('body').append(form);
             form.submit();
+        }
+
+        function getJobsByPosition()
+        {
+            var client_heirarchy=$("#client_heirarchy").val();
+            var year = $("#year").val();
+            
+            var url = '/jobs';
+            if(client_heirarchy>=0)
+            {
+                var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="client_heirarchy" value="'+client_heirarchy+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+                $('body').append(form);
+                form.submit();
+            }
         }
     </script>
 @endsection

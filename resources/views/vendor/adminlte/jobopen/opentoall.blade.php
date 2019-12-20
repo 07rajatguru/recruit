@@ -46,9 +46,10 @@
             <th>Location</th>
             <th>Min CTC<br/>(in Lacs)</th>
             <th>Max CTC<br/>(in Lacs)</th>
-            <th>HR/Coordinator  <br/> Name</th>
+            <!-- <th>HR/Coordinator  <br/> Name</th> -->
             <th>Added Date</th>
             <th>No. Of <br/> Positions</th>
+            <th>Contact <br/> Point</th>
             <th>Edu Qualifications</th>
             <th>Target Industries</th>
             <th>Desired Candidate</th>
@@ -87,12 +88,13 @@
                 <td style="background-color: {{ $value['color'] }}">{{ $value['display_name'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or ''}}</td>
                 <td ><a title="Show Associated Candidates" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or ''}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['city'] or ''}}</td>
                 <td>{{ $value['min_ctc'] or ''}}</td>
                 <td>{{ $value['max_ctc'] or ''}}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or '' }}</td>
+                <!-- <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or '' }}</td> -->
                 <td>{{ $value['created_date'] or ''}}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['no_of_positions'] or ''}}</td>
+                <td>{{ $value['no_of_positions'] or ''}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or ''}}</td>
                 <td>{{ $value['qual'] or ''}}</td>
                 <td>{{ $value['industry'] or ''}}</td>
                 <td>{!! $value['desired_candidate'] or ''!!}</td>
@@ -117,12 +119,13 @@
                     { "width": "10px", "targets": 1 },
                     { "width": "10px", "targets": 2 },
                     { "width": "10px", "targets": 3 },
-                    { "width": "10px", "targets": 4 },
+                    { "width": "150px", "targets": 4 },
                     { "width": "10px", "targets": 5 },
                     { "width": "10px", "targets": 6 },
                     { "width": "10px", "targets": 7 },
                     { "width": "10px", "targets": 8 },
-                    { "width": "10px", "targets": 9 }
+                    { "width": "10px", "targets": 9 },
+                    { "width": "5px", "targets": 10 },
                 ],
                 "pageLength": 100,
                 stateSave: true
