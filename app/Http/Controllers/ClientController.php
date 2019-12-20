@@ -987,6 +987,10 @@ class ClientController extends Controller
         $client_status_key=ClientBasicinfo::getStatus();
         $client_status = 1;
 
+        // For Superadmin,Strategy,Manager Users
+        $client_all_status_key=ClientBasicinfo::getAllStatus();
+        $client_all_status = 1;
+
         $generate_lead = '1';
         //$industry_res = Industry::orderBy('id','DESC')->get();
         $industry_res = Industry::orderBy('name','ASC')->get();
@@ -1000,6 +1004,7 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isManager = $user_obj::isManager($role_id);
         $user_id = $user->id;
 
         // For account manager
@@ -1027,7 +1032,7 @@ class ClientController extends Controller
         $percentage_charged_above = '8.33';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status'));
     }
 
 
@@ -1050,6 +1055,9 @@ class ClientController extends Controller
         $client_cat=ClientBasicinfo::getCategory();
         $client_status_key=ClientBasicinfo::getStatus();
 
+        // For Superadmin,Strategy,Manager Users
+        $client_all_status_key=ClientBasicinfo::getAllStatus();
+
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -1058,6 +1066,7 @@ class ClientController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isManager = $user_obj::isManager($role_id);
         $user_id = $user->id;
 
         $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy);
@@ -1104,6 +1113,8 @@ class ClientController extends Controller
             $client['percentage_charged_above']=$value->percentage_charged_above;
 
             $client_status=$value->status;
+
+            $client_all_status=$value->status;
 
             $client_category=$value->category;
             /*echo $client_status;
@@ -1152,7 +1163,7 @@ class ClientController extends Controller
         $yet_to_assign_users[0] = '--Select User--';
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status'));
     }
 
     public function store(Request $request){

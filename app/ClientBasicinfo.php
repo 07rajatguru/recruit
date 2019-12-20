@@ -698,6 +698,13 @@ class ClientBasicinfo extends Ardent
         $status = array();
         $status[0] = 'Passive';
         $status[1] = 'Active';
+        return $status;
+    }
+
+    public static function getAllStatus(){
+        $status = array();
+        $status[0] = 'Passive';
+        $status[1] = 'Active';
         $status[2] = 'Leaders';
         $status[3] = 'Forbid';
         $status[4] = 'Left';

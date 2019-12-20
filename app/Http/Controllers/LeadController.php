@@ -517,6 +517,10 @@ class LeadController extends Controller
         $client_status_key=ClientBasicinfo::getStatus();
         $client_status = 1;
 
+        // For Superadmin,Strategy,Manager Users
+        $client_all_status_key=ClientBasicinfo::getAllStatus();
+        $client_all_status = 1;
+
         $generate_lead = '0';
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
@@ -529,6 +533,7 @@ class LeadController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isManager = $user_obj::isManager($role_id);
 
         $user_id = $user->id;
 
@@ -570,7 +575,7 @@ class LeadController extends Controller
         $percentage_charged_above = '8.33';
         $referredby = $lead->referredby;
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status'));
 
      }
 
