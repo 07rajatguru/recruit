@@ -913,11 +913,12 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
         $isAccountManager = $user_obj::isAccountManager($user->id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
 
         $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
             ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant){
+        if($isSuperAdmin || $isAdmin || $isStrategy || $isAccountant || $isAllClientVisibleUser){
             $client_array = ClientBasicinfo::getForbidClients(1,$user->id,$rolePermissions,3);
             $count = sizeof($client_array);
 
