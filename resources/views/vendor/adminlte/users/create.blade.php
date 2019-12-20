@@ -160,6 +160,14 @@
                             </div>
 
                             <div class="form-group">
+                                <strong> Floor Incharge : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('check_floor_incharge','Yes', true) !!}
+                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                                {!! Form::radio('check_floor_incharge','No',false) !!}
+                                {!! Form::label('No') !!}
+                            </div>
+
+                            <div class="form-group">
                                 <strong> Generate Report : </strong> &nbsp;&nbsp;
                                 {!! Form::radio('daily_report','Yes', true, array('onclick' => 'reportSelection();')) !!}
                                 {!! Form::label('Yes') !!} &nbsp;&nbsp;

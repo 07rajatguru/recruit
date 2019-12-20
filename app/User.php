@@ -725,4 +725,28 @@ class User extends Authenticatable
 
         return $response;
     }
+
+    public static function getAllFloorInchargeUsers(){
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client_type = array('client');
+
+        $user_query = User::query();
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
+        $user_query = $user_query->where('check_floor_incharge','Yes');
+        $user_query = $user_query->orderBy('name');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+        if(isset($users) && sizeof($users)){
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->name;
+            }
+        }
+        return $userArr;
+    }
 }

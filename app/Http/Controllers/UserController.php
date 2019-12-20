@@ -68,7 +68,8 @@ class UserController extends Controller
         $reports_to = User::getUserArray($user_id);
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
-        $floor_incharge = User::getAllUsers();
+        //$floor_incharge = User::getAllUsers();
+        $floor_incharge = User::getAllFloorInchargeUsers();
         $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
 
         $companies = Companies::getCompanies();
@@ -151,6 +152,10 @@ class UserController extends Controller
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
 
+        // Floor incharge or not
+
+        $check_floor_incharge = $request->input('check_floor_incharge');
+
         $user->secondary_email=$request->input('semail');
         $user->daily_report = $check_report;
         $user->reports_to = $reports_to;
@@ -159,6 +164,7 @@ class UserController extends Controller
         $user->account_manager = $account_manager;
         $user->first_name = $first_name;
         $user->last_name = $last_name;
+        $user->check_floor_incharge = $check_floor_incharge;
 
         $users = $user->save();
 
@@ -242,7 +248,6 @@ class UserController extends Controller
         return view('adminlte::users.show',compact('user'));
     }
 
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -258,7 +263,8 @@ class UserController extends Controller
         $reports_to = User::getUserArray($id);
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
-        $floor_incharge = User::getAllUsers();
+        //$floor_incharge = User::getAllUsers();
+        $floor_incharge = User::getAllFloorInchargeUsers();
         $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
 
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -273,9 +279,7 @@ class UserController extends Controller
         $type = array_fill_keys(array(''),'Select type')+$type;
       
         return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail'));
-
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -386,6 +390,12 @@ class UserController extends Controller
         
         $user->first_name = $first_name;
         $user->last_name = $last_name;
+
+        // Floor incharge or not
+
+        $check_floor_incharge = $request->input('check_floor_incharge');
+        $user->check_floor_incharge = $check_floor_incharge;
+
         $users = $user->save();
 
         //  If status is inactive then delete this user process and training
