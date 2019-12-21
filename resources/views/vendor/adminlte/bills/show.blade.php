@@ -211,8 +211,8 @@
 
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Attachmetns</h3>
-                         &nbsp;&nbsp;
-                         @include('adminlte::bills.upload', ['data' => $billsdetails, 'name' => 'billattachments'])
+                        &nbsp;&nbsp;
+                        @include('adminlte::bills.upload', ['data' => $billsdetails, 'name' => 'billattachments'])
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -222,6 +222,7 @@
                             <th>File Name</th>
                             <th>Name</th>
                             <th>Size</th>
+                            <th>Category</th>
                         </tr>
                                 @if(isset($billsdetails['files']) && sizeof($billsdetails['files']) > 0)
                                 @foreach($billsdetails['files'] as $key => $value)
@@ -237,7 +238,8 @@
 
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
                                     <td>{{ $value['name'] }}</td>
-                                    <td>{{ $value['size'] }}</td>    
+                                    <td>{{ $value['size'] }}</td>
+                                    <td>{{ $value['category'] }}</td>
                                 </tr>
                              @endforeach
                             @endif

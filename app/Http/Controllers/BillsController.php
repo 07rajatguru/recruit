@@ -622,6 +622,10 @@ class BillsController extends Controller
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
 
+        // Get all documents
+
+        $unedited_resume = $request->file('unedited_resume');
+        $offer_letter = $request->file('offer_letter');
         $upload_documents = $request->file('upload_documents');
 
         $input = $request->all();
@@ -742,13 +746,77 @@ class BillsController extends Controller
                 $bill_lead_efforts->save();
             }
 
+            // Save unedited resume
+
+            if (isset($unedited_resume) && $unedited_resume->isValid()) 
+            {
+                $file_name = $unedited_resume->getClientOriginalName();
+                $file_size = fileSize($unedited_resume);
+
+                $dir = "uploads/bills/" . $bill_id . '/';
+                $file_path = $dir . $file_name;
+
+                if (!file_exists($dir) && !is_dir($dir)) 
+                {
+                    mkdir("uploads/bills/$bill_id", 0777, true);
+                    chmod($dir, 0777);
+                }
+
+                if(!$unedited_resume->move($dir, $file_name))
+                {
+                    return false;
+                }
+                else
+                {
+                    $bills_doc = new BillsDoc();
+                    $bills_doc->bill_id = $bill_id;
+                    $bills_doc->category = "Unedited Resume";
+                    $bills_doc->file = $file_path;
+                    $bills_doc->name = $file_name;
+                    $bills_doc->size = $file_size;
+                    $bills_doc->save();
+                }
+            }
+
+            // Save offer letter
+
+            if (isset($offer_letter) && $offer_letter->isValid()) 
+            {
+                $file_name = $offer_letter->getClientOriginalName();
+                $file_size = fileSize($offer_letter);
+
+                $dir = "uploads/bills/" . $bill_id . '/';
+                $file_path = $dir . $file_name;
+
+                if (!file_exists($dir) && !is_dir($dir)) 
+                {
+                    mkdir("uploads/bills/$bill_id", 0777, true);
+                    chmod($dir, 0777);
+                }
+
+                if(!$offer_letter->move($dir, $file_name))
+                {
+                    return false;
+                }
+                else
+                {
+                    $bills_doc = new BillsDoc();
+                    $bills_doc->bill_id = $bill_id;
+                    $bills_doc->category = "Offer Letter";
+                    $bills_doc->file = $file_path;
+                    $bills_doc->name = $file_name;
+                    $bills_doc->size = $file_size;
+                    $bills_doc->save();
+                }
+            }
+
+            // Save other documents
+
             if (isset($upload_documents) && sizeof($upload_documents) > 0) {
                 foreach ($upload_documents as $k => $v) {
                     if (isset($v) && $v->isValid()) {
-                        // echo "here";
+                        
                         $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
                         $file_size = $v->getSize();
 
                         //$extention = File::extension($file_name);
@@ -765,18 +833,14 @@ class BillsController extends Controller
 
                         $bills_doc = new BillsDoc();
                         $bills_doc->bill_id = $bill_id;
+                        $bills_doc->category = "Others";
                         $bills_doc->file = $file_path;
                         $bills_doc->name = $file_name;
                         $bills_doc->size = $file_size;
-                        $bills_doc->created_at = date('Y-m-d');
-                        $bills_doc->updated_at = date('Y-m-d');
-
                         $bills_doc->save();
                     }
-
                 }
             }
-
         }
 
         JobCandidateJoiningdate::where('job_id','=',$job_id)->where('candidate_id','=',$candidate_id)->delete();
@@ -828,7 +892,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
-       $viewVariable = Bills::getShowBill($id);
+        $viewVariable = Bills::getShowBill($id);
 
        return view('adminlte::bills.show', $viewVariable,compact('isSuperAdmin','isAccountant'));
     }
@@ -916,28 +980,37 @@ class BillsController extends Controller
         $users = User::getAllUsersCopy('recruiter');
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
-            $i = 0;
+        $billModel = new Bills();
+        $upload_type = $billModel->upload_type;
+
+        $i = 0;
             
-            $billsdetails['files'] = array();
-            $billsFiles = BillsDoc::select('bills_doc.*')
-                ->where('bills_doc.bill_id',$id)
-                ->get();
-            $utils = new Utils();
-            if(isset($billsFiles) && sizeof($billsFiles) > 0){
-                foreach ($billsFiles as $billfile) {
-                    $billsdetails['files'][$i]['id'] = $billfile->id;
-                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
-                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
-                    $billsdetails['files'][$i]['name'] = $billfile->name ;
-                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+        $billsdetails['files'] = array();
+        $billsFiles = BillsDoc::select('bills_doc.*')
+        ->where('bills_doc.bill_id',$id)
+        ->get();
 
-                    $i++;
+        $utils = new Utils();
+        if(isset($billsFiles) && sizeof($billsFiles) > 0){
+            foreach ($billsFiles as $billfile) {
+                $billsdetails['files'][$i]['id'] = $billfile->id;
+                $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                $billsdetails['files'][$i]['name'] = $billfile->name;
+                $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+                $billsdetails['files'][$i]['category'] = $billfile->category;
 
+                if (array_search($billfile->category, $upload_type)) {
+                    unset($upload_type[array_search($billfile->category, $upload_type)]);
                 }
+
+                $i++;
             }
+        }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
+        $upload_type['Others'] = 'Others';
 
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','upload_type'));
     }
 
     public function update(Request $request, $id)
@@ -1172,13 +1245,35 @@ class BillsController extends Controller
 
     public function delete($id){
 
-        BillsEffort::where('bill_id',$id)->delete();
+        // Destroy Attchments
+
+        $bills_attach=\DB::table('bills_doc')
+        ->select('bills_doc.*')
+        ->where('bill_id','=',$id)->get();
+
+        // Delete all atttchments
+        if(isset($bills_attach) && sizeof($bills_attach)>0)
+        {
+            foreach ($bills_attach as $key => $value) {
+
+                $path = "uploads/bills/".$id . "/" . $value->name;
+                unlink($path);
+           }
+        }
+
+        // Delete Empty Directory
+        $dir_path = "uploads/bills/".$id;
+        if(is_dir($dir_path))
+        {
+            rmdir($dir_path);
+        }
+
         BillsDoc::where('bill_id',$id)->delete();
+        BillsEffort::where('bill_id',$id)->delete();
         BillsLeadEfforts::where('bill_id',$id)->delete();
-        $todo = Bills::where('id',$id)->delete();
+        Bills::where('id',$id)->delete();
 
-        return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully');
-
+        return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully.');
     }
 
     public function cancel($id){
@@ -1360,16 +1455,13 @@ class BillsController extends Controller
 
     public function upload(Request $request){
 
-        $user_id = \Auth::user()->id;
-        $upload_documents = $request->upload_documents;
+        $upload_type = $request->upload_type;
         $file = $request->file('file');
         $bill_id = $request->id;
-       // print_r($bill_id);exit;
 
+        
         if (isset($file) && $file->isValid()) {
             $file_name = $file->getClientOriginalName();
-            $file_extension = $file->getClientOriginalExtension();
-            $file_realpath = $file->getRealPath();
             $file_size = $file->getSize();
             $dir = 'uploads/bills/' . $bill_id . '/';
 
@@ -1382,15 +1474,13 @@ class BillsController extends Controller
 
             $bills_doc = new BillsDoc();
             $bills_doc->bill_id = $bill_id;
+            $bills_doc->category = $upload_type;
             $bills_doc->file = $file_path;
             $bills_doc->name = $file_name;
             $bills_doc->size = $file_size;
-            $bills_doc->created_at = date('Y-m-d');
-            $bills_doc->updated_at = date('Y-m-d');
-
             $bills_doc->save();
         }
-        return redirect()->route('forecasting.show',[$bill_id])->with('success','Attachment uploaded successfully');
+        return redirect()->route('forecasting.show',[$bill_id])->with('success','Attachment uploaded successfully.');
     }
 
     public function generateBM($id){

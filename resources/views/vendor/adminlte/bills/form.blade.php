@@ -281,7 +281,7 @@
                             <div class="">
                                 <div class="form-group">
                                     <strong>Employee Percentage:  </strong>
-                                    {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce' , 'tabindex' => '26')) !!}
+                                    {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26')) !!}
                                 </div>
                             </div>
                         </div>
@@ -298,11 +298,25 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group">
-                            <strong>Upload Documents:</strong>
-                            <input type="file" name="upload_documents[]" multiple class="form-control" />
+                        <div class="form-group {{ $errors->has('unedited_resume') ? 'has-error' : '' }}">
+                            <strong>Candidate Unedited Resume : <span class = "required_fields">*</span></strong>
+                            <input type="file" name="unedited_resume" id="unedited_resume" class="form-control" tabindex="27"/>
+                            @if ($errors->has('unedited_resume'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('unedited_resume') }}</strong>
+                                </span>
+                            @endif
                         </div>
 
+                        <div class="form-group">
+                            <strong>Offer Letter : </strong>
+                            <input type="file" name="offer_letter" id="offer_letter" class="form-control" tabindex="28"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Other Documents:</strong>
+                            <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" multiple="true" tabindex="29"/>
+                        </div>
                     </div>
 
                 </div>
@@ -311,7 +325,7 @@
 
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Attachmetns</h3>
-                         &nbsp;&nbsp;
+                        &nbsp;&nbsp;
                         @include('adminlte::bills.upload', ['data' => $bnm, 'name' => 'billattachments'])
                     </div>
 
@@ -322,6 +336,7 @@
                             <th>File Name</th>
                             <th>Name</th>
                             <th>Size</th>
+                            <th>Category</th>
                         </tr>
                                 @if(isset($billsdetails['files']) && sizeof($billsdetails['files']) > 0)
                                 @foreach($billsdetails['files'] as $key => $value)
@@ -338,12 +353,12 @@
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
                                     <td>{{ $value['name'] }}</td>
                                     <td>{{ $value['size'] }}</td>    
+                                    <td>{{ $value['category'] }}</td>
                                 </tr>
                              @endforeach
                             @endif
                     </table>
                 </div>
-
             </div>
             @endif
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -430,6 +445,9 @@
                     },
                     "lead_percentage": {
                         required: true
+                    },
+                    "unedited_resume": {
+                        response: true
                     }
                 },
                 messages: {
@@ -474,6 +492,9 @@
                     },
                     "lead_percentage": {
                         required: "Lead Percentage is required field."
+                    },
+                    "unedited_resume": {
+                        response: "Please Select file."
                     }
                 }
             });

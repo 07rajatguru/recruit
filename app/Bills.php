@@ -27,6 +27,7 @@ class Bills extends Model
             'client_contact_number'=>'required',
             'client_email_id'=>'required',
             'address_of_communication'=>'required',
+            'unedited_resume'=>'required',
         );
 
     public static $customMessages = array(
@@ -43,7 +44,12 @@ class Bills extends Model
         'client_contact_number.required' => 'Client Contact Number is required field',
         'client_email_id.required' => 'Client Email ID is required field',
         'address_of_communication.required' => 'Address of Communication is required field',
+        'unedited_resume'=>'Please select file.',
     );
+
+    public $upload_type = array('Unedited Resume'=>'Unedited Resume',
+        'Offer Letter' => 'Offer Letter',
+        'Others' => 'Others');
 
     public static function getBillsByIds(array $ids){
         $date_class = new Date();
@@ -538,6 +544,10 @@ class Bills extends Model
             }
         }
           
+
+        $billModel = new Bills();
+        $upload_type = $billModel->upload_type;
+
         $i = 0;
         $billsdetails['files'] = array();
         $billsFiles = BillsDoc::select('bills_doc.*')
@@ -551,11 +561,17 @@ class Bills extends Model
                 $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
                 $billsdetails['files'][$i]['name'] = $billfile->name ;
                 $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+                $billsdetails['files'][$i]['category'] = $billfile->category;
+
+                if (array_search($billfile->category, $upload_type)) {
+                    unset($upload_type[array_search($billfile->category, $upload_type)]);
+                }
 
                 $i++;
-
             }
         }
+
+        $upload_type['Others'] = 'Others';
 
         // Lead Employees name
         $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($id);
@@ -576,6 +592,7 @@ class Bills extends Model
         $viewVariable['employee_percentage'] = $employee_percentage;
         $viewVariable['lead_name'] = $lead_name;
         $viewVariable['lead_percentage'] = $lead_percentage;
+        $viewVariable['upload_type'] = $upload_type;
         //print_r($viewVariable);exit;
 
         return $viewVariable;
