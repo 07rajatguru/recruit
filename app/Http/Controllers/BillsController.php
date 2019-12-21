@@ -50,6 +50,7 @@ class BillsController extends Controller
             $access = false;
         }
 
+
         $title = "Forecasting";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
     }
@@ -143,6 +144,37 @@ class BillsController extends Controller
         $isAccountant = $user_obj::isAccountant($role_id);
         $isManager = $user_obj::isManager($role_id);
 
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        $year_array[0] = "Select Year";
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+            if (isset($year) && $year != 0) {
+                $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+                $year1 = $year_data[0]; // [result : 2019-4]
+                $year2 = $year_data[1]; // [result : 2020-3]
+                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            }
+            else {
+                $year = NULL;
+                $current_year = NULL;
+                $next_year = NULL;    
+            }
+        }
+        else{
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+        }
+
         if ($title == 'Forecasting') {
             $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
             if(in_array($user_role_id,$access_roles_id)){
@@ -162,14 +194,14 @@ class BillsController extends Controller
             $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
-                $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
-                $count = Bills::getAllBillsCount(1,1,$user_id,$search);
+                $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+                $count = Bills::getAllBillsCount(1,1,$user_id,$search,$current_year,$next_year);
                 $access = true;
             }
             else{
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
-                $bnm = Bills::getAllBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
-                $count = Bills::getAllBillsCount(1,0,$user_id,$search);
+                $bnm = Bills::getAllBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+                $count = Bills::getAllBillsCount(1,0,$user_id,$search,$current_year,$next_year);
                 $access = false;
             }
         }
@@ -510,18 +542,50 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        $year_array[0] = "Select Year";
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+            if (isset($year) && $year != 0) {
+                $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+                $year1 = $year_data[0]; // [result : 2019-4]
+                $year2 = $year_data[1]; // [result : 2020-3]
+                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            }
+            else {
+                $year = NULL;
+                $current_year = NULL;
+                $next_year = NULL;    
+            }
+        }
+        else{
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+        }
+
+
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $count = Bills::getAllBillsCount(1,1,$user_id);
+            $count = Bills::getAllBillsCount(1,1,$user_id,$current_year,$next_year);
             $access = true;
         }
         else{
-            $count = Bills::getAllBillsCount(1,0,$user_id);
+            $count = Bills::getAllBillsCount(1,0,$user_id,$current_year,$next_year);
             $access = false;
         }
 
         $title = "Recovery";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','year_array','year'));
 
     }
 
@@ -1166,7 +1230,8 @@ class BillsController extends Controller
                 $bill_lead_efforts->save();
             }
         }
-         $file = $request->file('file');
+
+        $file = $request->file('file');
         if (isset($file) && $file->isValid()) {
             $file_name = $file->getClientOriginalName();
             $file_extension = $file->getClientOriginalExtension();
@@ -1560,27 +1625,37 @@ class BillsController extends Controller
         $users = User::getAllUsersCopyWithInactive('recruiter');
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
-         $i = 0;
+        $billModel = new Bills();
+        $upload_type = $billModel->upload_type;
+
+        $i = 0;
             
-            $billsdetails['files'] = array();
-            $billsFiles = BillsDoc::select('bills_doc.*')
-                ->where('bills_doc.bill_id',$id)
-                ->get();
-            $utils = new Utils();
-            if(isset($billsFiles) && sizeof($billsFiles) > 0){
-                foreach ($billsFiles as $billfile) {
-                    $billsdetails['files'][$i]['id'] = $billfile->id;
-                    $billsdetails['files'][$i]['fileName'] = $billfile->file;
-                    $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
-                    $billsdetails['files'][$i]['name'] = $billfile->name ;
-                    $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+        $billsdetails['files'] = array();
+        $billsFiles = BillsDoc::select('bills_doc.*')
+        ->where('bills_doc.bill_id',$id)
+        ->get();
 
-                    $i++;
+        $utils = new Utils();
+        if(isset($billsFiles) && sizeof($billsFiles) > 0){
+            foreach ($billsFiles as $billfile) {
+                $billsdetails['files'][$i]['id'] = $billfile->id;
+                $billsdetails['files'][$i]['fileName'] = $billfile->file;
+                $billsdetails['files'][$i]['url'] = "../../".$billfile->file;
+                $billsdetails['files'][$i]['name'] = $billfile->name ;
+                $billsdetails['files'][$i]['size'] = $utils->formatSizeUnits($billfile->size);
+                $billsdetails['files'][$i]['category'] = $billfile->category;
 
+                if (array_search($billfile->category, $upload_type)) {
+                    unset($upload_type[array_search($billfile->category, $upload_type)]);
                 }
-            }
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj'));
+                $i++;
+            }
+        }
+
+        $upload_type['Others'] = 'Others';
+
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type'));
 
     }
 

@@ -104,7 +104,7 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
+    public static function getAllBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL){
         $date_class = new Date();
 
         $cancel_bill = 1;
@@ -168,8 +168,15 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
                 $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
             }
-            
         });
+
+         // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
+        }
 
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
@@ -242,7 +249,7 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0){
+    public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0,$current_year=NULL,$next_year=NULL){
         $cancel_bill = 1;
         $cancel = array($cancel_bill);
 
@@ -297,6 +304,15 @@ class Bills extends Model
         });
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
+        }
+
         $bills_count = $bills_query->count();
 
         return $bills_count;
@@ -541,6 +557,11 @@ class Bills extends Model
                     $employee_percentage[$i] = $v;
                     $i++;
                 }
+            }
+            else
+            {
+                $employee_name = '';
+                $employee_percentage = '';
             }
         }
           

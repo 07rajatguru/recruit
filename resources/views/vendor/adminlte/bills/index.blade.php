@@ -57,6 +57,22 @@
         </div>
     @endif
 
+    @if($title == "Recovery")
+      <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="box-body col-xs-12 col-sm-6 col-md-3">
+              <div class="form-group">
+                  <strong>Select Financial Year:</strong>
+                  {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+              </div>
+          </div>
+
+          <div class="box-body col-xs-12 col-sm-3 col-md-2">
+              <div class="form-group" style="margin-top: 19px;">
+                  {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+              </div>
+          </div>
+      </div>
+    @endif
     <div>
         {{--{!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm')) !!}
             <button type="button" class="btn btn-primary" onclick="downloadExcel();">Download Excel</button>
@@ -353,6 +369,50 @@
            });
 
        }
+       function select_data()
+       {
+          $("#bill_table").dataTable().fnDestroy();
+
+          var year = $("#year").val();
+          var title = $("#title").val();
+
+          $("#bill_table").dataTable(
+          {
+            'bProcessing' : true,
+            'serverSide' : true,
+            'order' : [2,'desc'],
+            "columnDefs": [ {orderable: false, targets: [0]},
+                            {orderable: false, targets: [1]},
+                          ],
+            "ajax" : {
+                'url' : 'bills/all',
+                data : {year:year,title:title},
+                'type' : 'get',
+                error: function(){
+
+                },
+            },
+
+            responsive: true,
+            "pageLength": 25,
+            "pagingType": "full_numbers",
+            stateSave : true,
+            "fnRowCallback": function( Row, Data ) {
+                if ( Data[17] == "1" ){
+                  $('td:eq(5)', Row).css('background-color', '#00B0F0');
+                }
+                else if ( Data[17] == "2" ){
+                  $('td:eq(5)', Row).css('background-color', '#FFA500');
+                }
+                else if ( Data[17] == "3" ){
+                  $('td:eq(5)', Row).css('background-color', '#FFC0CB');
+                }
+                else if ( Data[17] == "4" ){
+                  $('td:eq(5)', Row).css('background-color', '#32CD32');
+                }
+            }
+          });
+        }
 
    </script>
 @endsection
