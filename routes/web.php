@@ -1291,7 +1291,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:bills-list']
     ]);
 
-    Route::get('bills/all', [
+    Route::any('bills/all', [
         'as' => 'bills.all',
         'uses' => 'BillsController@getAllBillsDetails',
         'middleware' => ['permission:bills-list']

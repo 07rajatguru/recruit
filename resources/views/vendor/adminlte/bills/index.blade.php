@@ -249,6 +249,8 @@
 
            new jQuery.fn.dataTable.FixedHeader( table );*/
             var title = $("#title").val();
+            var year = $("#year").val();
+
             if (title == 'Forecasting' || title == 'Recovery') {
               $("#bill_table").dataTable({
                 'bProcessing' : true,
@@ -260,7 +262,7 @@
                 "ajax" : {
                     'url' : 'bills/all',
                     'type' : 'get',
-                    "data": {title:title},
+                    "data": {year:year,title:title},
                     error: function(){
 
                     }

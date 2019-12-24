@@ -124,6 +124,7 @@ class BillsController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
         $title = $_GET['title'];
+        $year = $_GET['year'];
 
         $cancel_bill = 0;
 
@@ -154,8 +155,9 @@ class BillsController extends Controller
             $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
         }
 
-        if (isset($_POST['year']) && $_POST['year'] != '') {
-            $year = $_POST['year'];
+        if (isset($_GET['year']) && $_GET['year'] != '') {
+            $year = $_GET['year'];
+            
             if (isset($year) && $year != 0) {
                 $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
                 $year1 = $year_data[0]; // [result : 2019-4]
