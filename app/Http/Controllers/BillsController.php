@@ -1243,6 +1243,8 @@ class BillsController extends Controller
 
         $file = $request->file('file');
         if (isset($file) && $file->isValid()) {
+
+            $upload_type = $request->upload_type;
             $file_name = $file->getClientOriginalName();
             $file_extension = $file->getClientOriginalExtension();
             $file_realpath = $file->getRealPath();
@@ -1258,6 +1260,7 @@ class BillsController extends Controller
 
             $bills_doc = new BillsDoc();
             $bills_doc->bill_id = $id;
+            $bills_doc->category = $upload_type;
             $bills_doc->file = $file_path;
             $bills_doc->name = $file_name;
             $bills_doc->size = $file_size;
@@ -1267,10 +1270,14 @@ class BillsController extends Controller
             $bills_doc->save();
 
             if ($status == 1) {
-                return redirect('recovery/'.$id.'/generaterecovery');
+                //return redirect('recovery/'.$id.'/generaterecovery');
+
+                return redirect()->route('bills.generaterecovery',$id)->with('success', 'Attchment Upload Successfully.');
             }
             else{
-             return redirect('forecasting/'.$id.'/edit');
+            //return redirect('forecasting/'.$id.'/edit');
+
+            return redirect()->route('forecasting.edit',$id)->with('success', 'Attchment Upload Successfully.');
             }
         }
 

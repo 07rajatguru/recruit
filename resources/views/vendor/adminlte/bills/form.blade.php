@@ -298,24 +298,19 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group {{ $errors->has('unedited_resume') ? 'has-error' : '' }}">
+                        <div class="form-group">
                             <strong>Candidate Unedited Resume : <span class = "required_fields">*</span></strong>
-                            <input type="file" name="unedited_resume" id="unedited_resume" class="form-control" tabindex="27"/>
-                            @if ($errors->has('unedited_resume'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('unedited_resume') }}</strong>
-                                </span>
-                            @endif
+                            {!! Form::file('unedited_resume',null, array('id'=>'unedited_resume','class' => 'form-control','tabindex' => '27')) !!}
                         </div>
 
                         <div class="form-group">
                             <strong>Offer Letter : </strong>
-                            <input type="file" name="offer_letter" id="offer_letter" class="form-control" tabindex="28"/>
+                            {!! Form::file('offer_letter',null, array('id'=>'offer_letter','class' => 'form-control','tabindex' => '28')) !!}
                         </div>
 
                         <div class="form-group">
                             <strong>Other Documents:</strong>
-                            <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" multiple="true" tabindex="29"/>
+                            {{ Form::file('upload_documents[]', array('multiple'=>true,'tabindex' => '29')) }}
                         </div>
                     </div>
 
@@ -447,8 +442,8 @@
                         required: true
                     },
                     "unedited_resume": {
-                        response: true
-                    }
+                        required: true
+                    },
                 },
                 messages: {
                     "company_name": {
@@ -494,8 +489,8 @@
                         required: "Lead Percentage is required field."
                     },
                     "unedited_resume": {
-                        response: "Please Select file."
-                    }
+                        required: "Please Select file."
+                    },
                 }
             });
         });

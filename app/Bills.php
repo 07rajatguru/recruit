@@ -27,7 +27,6 @@ class Bills extends Model
             'client_contact_number'=>'required',
             'client_email_id'=>'required',
             'address_of_communication'=>'required',
-            'unedited_resume'=>'required',
         );
 
     public static $customMessages = array(
@@ -43,8 +42,7 @@ class Bills extends Model
         'client_name.required' => 'Client Name is required field',
         'client_contact_number.required' => 'Client Contact Number is required field',
         'client_email_id.required' => 'Client Email ID is required field',
-        'address_of_communication.required' => 'Address of Communication is required field',
-        'unedited_resume'=>'Please select file.',
+        'address_of_communication.required' => 'Address of Communication is required field'
     );
 
     public $upload_type = array('Unedited Resume'=>'Unedited Resume',
