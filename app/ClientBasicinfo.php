@@ -193,6 +193,9 @@ class ClientBasicinfo extends Ardent
             $client_array[$i]['id'] = $value->id;
             $client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
 
+
+            //echo $client_array[$i]['latest_remarks'];exit;
+
             $client_array[$i]['name'] = $value->name;
             if ($value->account_manager_id == 0) {
                 $client_array[$i]['am_name'] = 'Yet to Assign';
@@ -1506,7 +1509,7 @@ class ClientBasicinfo extends Ardent
         // Get Latest Comments time
         $comments_res = Comments::getClientLatestComments($id);
       
-        if(isset($comments_res) && $comments_res != '')      
+        if(isset($comments_res) && $comments_res != '')
         {
             $comments_time = explode(" ", $comments_res->comments_updated_date);
             $comments_new_time = Date::converttime($comments_time[1]);
@@ -1529,7 +1532,8 @@ class ClientBasicinfo extends Ardent
             return $comments_res->comment_body . ' - ' . $comments_front_date . ' - ' . $comments_user_name;
         }
         if($remarks_date == $comments_date && $remarks_date != '' && $comments_date != ''){
-            return $comments_res->comment_body . ' - ' . $comments_front_date . ' - ' . $comments_user_name;
+            //return $comments_res->comment_body . ' - ' . $comments_front_date . ' - ' . $comments_user_name;
+            return $remarks_res->content . ' - ' . $remarks_front_date . ' - ' . $remarks_user_name;
         }
     }
 

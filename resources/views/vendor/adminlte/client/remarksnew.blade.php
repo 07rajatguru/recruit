@@ -3,6 +3,7 @@
         {!! Form::hidden('client_id', $client_id) !!}
         {!! Form::hidden('user_id', $user_id) !!}
         {!! Form::hidden('super_admin_userid',$super_admin_userid) !!}
+        {!! Form::hidden('manager_user_id', $manager_user_id) !!}
         <!-- <div class="thumb">
             <img src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="Avatar" class="avatar">
         </div>  -->
