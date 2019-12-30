@@ -240,8 +240,13 @@ class EveryMinute extends Command
                 $associate_daily = $associate_response['associate_data'];
                 $associate_count = $associate_response['cvs_cnt'];
                    
-                $lead_count = Lead::getDailyReportLeadCount($sender_id,NULL);
-                    
+                // Get Leads with count
+
+                $leads = Lead::getDailyReportLeads($sender_id,NULL);
+                $leads_daily = $leads['leads_data'];
+               
+                $leads_count = Lead::getDailyReportLeadCount($sender_id,NULL);
+
                 $interview_daily = Interview::getDailyReportInterview($sender_id,NULL);
                    
                 $user_details = User::getAllDetailsByUserID($sender_id);
@@ -250,7 +255,9 @@ class EveryMinute extends Command
                 $input['user_details'] = $user_details;
                 $input['associate_daily'] = $associate_daily;
                 $input['associate_count'] = $associate_count;
-                $input['lead_count'] = $lead_count;
+                //$input['lead_count'] = $lead_count;
+                $input['leads_daily'] = $leads_daily;
+                $input['leads_count'] = $leads_count;
                 $input['interview_daily'] = $interview_daily;
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
@@ -276,7 +283,10 @@ class EveryMinute extends Command
                 $interview_weekly = $interview_weekly_response['interview_data'];
                 $interview_count = $interview_weekly_response['interview_cnt'];
 
-                $lead_count = Lead::getWeeklyReportLeadCount($sender_id,NULL,NULL);
+                // Get Leads with count
+                $leads = Lead::getWeeklyReportLeads($sender_id,NULL,NULL);
+                $leads_weekly = $leads['leads_data'];
+                $leads_count = Lead::getWeeklyReportLeadCount($sender_id,NULL,NULL);
 
                 $user_details = User::getAllDetailsByUserID($sender_id);
 
@@ -289,7 +299,8 @@ class EveryMinute extends Command
                 $input['associate_count'] = $associate_count;
                 $input['interview_weekly'] = $interview_weekly;
                 $input['interview_count'] = $interview_count;
-                $input['lead_count'] = $lead_count;
+                $input['leads_weekly'] = $leads_weekly;
+                $input['leads_count'] = $leads_count;
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
 

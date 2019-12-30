@@ -111,8 +111,34 @@
                 @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
                     <tr>
                         <td colspan="3">
-                            <u><b><h1>No of Leads added : {{$lead_count or '0'}}</h1></b></u>
+                            <u><b><h1>No of Leads Added : {{$leads_count or '0'}}</h1></b></u>
                         </td>
+                    </tr>
+
+                    <tr style="background-color: #C4D79B;">
+                        <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Day(Date)</b></td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>No of Leads</b></td>
+                    </tr>
+
+                    <?php
+                        $j=1;
+                        $total_cnt = $leads_count;
+                    ?>
+
+                    @foreach($leads_weekly as $key=>$value)
+                        <tr>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $j }}</td>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('l (jS F,y) ',strtotime($value['lead_date']))}}</td>
+                            <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;border-right: black 1px solid;">{{$value['lead_count']}}</td>
+                        </tr>
+                        <?php $j++; ?>
+                    @endforeach
+
+                    <tr>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;"></td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;">Total</td>
+                        <td align="center" style="padding: 8px;border-bottom: black 1px solid;border-left: black 1px solid;border-right: black 1px solid;">{{$leads_count or '0'}}</td>
                     </tr>
                 @endif
             </table>

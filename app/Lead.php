@@ -341,6 +341,65 @@ class Lead extends Model
         return $response;
     }
 
+    public static function getDailyReportLeads($user_id,$date=NULL){
+
+        $from_date = date("Y-m-d 00:00:00");
+        $to_date = date("Y-m-d 23:59:59");
+
+        $query = Lead::query();
+        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->where('lead_management.account_manager_id','=',$user_id);
+
+        if ($date == NULL) {
+            $query = $query->where('created_at','>=',"$from_date");
+            $query = $query->where('created_at','<=',"$to_date");
+        }
+
+        if ($date != '') {
+            $query = $query->where(\DB::raw('date(created_at)'),$date);
+        }
+
+        $query = $query->groupBy('lead_management.id');
+        $query_response = $query->get();
+
+        $response['leads_data'] = array();
+        $i = 0;
+
+        foreach ($query_response as $key1 => $value1) {
+
+            $response['leads_data'][$i]['company_name'] = $value1->name;
+            $response['leads_data'][$i]['contact_point'] = $value1->coordinator_name;
+            $response['leads_data'][$i]['designation'] = $value1->designation;
+            $response['leads_data'][$i]['email'] = $value1->mail;
+            $response['leads_data'][$i]['mobile'] = $value1->mobile;
+
+            $location ='';
+            if($value1->city!=''){
+                $location .= $value1->city;
+            }
+            if($value1->state!=''){
+                if($location=='')
+                    $location .= $value1->state;
+                else
+                    $location .= ", ".$value1->state;
+            }
+            if($value1->country!=''){
+                if($location=='')
+                    $location .= $value1->country;
+                else
+                    $location .= ", ".$value1->country;
+            }
+
+            $response['leads_data'][$i]['location'] = $location;
+            $response['leads_data'][$i]['website'] = $value1->website;
+            $response['leads_data'][$i]['service'] = $value1->service;
+            $response['leads_data'][$i]['lead_status'] = $value1->lead_status;
+            $response['leads_data'][$i]['source'] = $value1->source;
+            $i++;
+        }
+        
+        return $response;   
+    }
     public static function getDailyReportLeadCount($user_id,$date=NULL){
 
         $from_date = date("Y-m-d 00:00:00");
@@ -362,6 +421,40 @@ class Lead extends Model
         $lead_cnt = $query->count();
 
         return $lead_cnt;
+    }
+
+    public static function getWeeklyReportLeads($user_id,$from_date=NULL,$to_date=NULL){
+
+        $date = date('Y-m-d',strtotime('Monday this week'));
+
+        $query = Lead::query();
+        $query = $query->select(\DB::raw("COUNT(lead_management.id) as count"),'lead_management.created_at');
+        $query = $query->where('lead_management.account_manager_id','=',$user_id);
+
+        if ($from_date == NULL && $to_date == NULL) {
+            $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
+            $query = $query->where('created_at','<=',date('Y-m-d',strtotime("$date +6days")));
+        }
+
+        if ($from_date != '' && $to_date != '') {
+            $query = $query->where(\DB::raw('date(created_at)'),'>=',$from_date);
+            $query = $query->where(\DB::raw('date(created_at)'),'<=',$to_date);
+        }
+
+        $query = $query->groupBy(\DB::raw('Date(lead_management.created_at)'));
+        $query_response = $query->get();
+
+        $response['leads_data'] = array();
+        $i = 0;
+      
+        foreach ($query_response as $key => $value) {
+       
+            $datearry = explode(' ', $value->created_at);
+            $response['leads_data'][$i]['lead_date'] = $datearry[0];
+            $response['leads_data'][$i]['lead_count'] = $value->count;
+            $i++;
+        }
+        return $response;  
     }
 
     public static function getWeeklyReportLeadCount($user_id,$from_date=NULL,$to_date=NULL){
