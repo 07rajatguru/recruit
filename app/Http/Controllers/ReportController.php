@@ -52,13 +52,15 @@ class ReportController extends Controller
             $date = date('Y-m-d');
         }
 
+        //echo $date;exit;
+
         $associate_res = JobAssociateCandidates::getDailyReportAssociate($user_id,$date);
         $associate_daily = $associate_res['associate_data'];
         $associate_count = $associate_res['cvs_cnt'];
 
          // Get Leads with count
 
-        $leads = Lead::getDailyReportLeads($user_id,NULL);
+        $leads = Lead::getDailyReportLeads($user_id,$date);
         $leads_daily = $leads['leads_data'];
 
         $lead_count = Lead::getDailyReportLeadCount($user_id,$date);
