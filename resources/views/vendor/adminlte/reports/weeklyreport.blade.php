@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -43,93 +42,126 @@
     </div>
 
     <div style="padding: 10px;">
-        <table width="100%" cellspacing="0">
-        	<tr>
-                <td colspan="7">
-                    <u><b><h3>No of CVs Associated in this week: {{ $associate_count or '0'}}</h3></b></u>
-                </td>
-            </tr>
-        </table>
-        <div class = "table-responsive">
-        	<table class="table table-striped table-bordered nowrap" cellspacing="0" style="width:50%;" id="weekly_report_cv_table">
-            	<thead>
-            		<tr style="background-color: #f39c12;">
-            			<th style="text-align: center;">Sr. No.</th>
-            			<th style="text-align: center;">Day(Date)</th>
-            			<th style="text-align: center;">No of resumes associated</th>
-            		</tr>
-            	</thead>
-            	<?php $i=0;?>
-            	<tbody>
-            	@foreach($associate_weekly as $key => $value)
-            		<tr style="text-align: center;">
-            			<td>{{ ++$i }}</td>
-            			<td>{{ date('l (jS F,y) ',strtotime($value['associate_date'])) }}</td>
-            			<td>{{ $value['associate_candidate_count'] }}</td>
-            		</tr>
-            	@endforeach
-            	</tbody>
-            		<tr style="text-align: center;">
-            			<td></td>
-            			<td>Total Associated</td>
-            			<td>{{ $associate_count or '0' }}</td>
-            		</tr>
-            		<tr style="text-align: center;">
-            			<td></td>
-            			<td>Benchmark</td>
-            			<td>40</td>
-            		</tr>
-            		<tr style="text-align: center;">
-            			<td></td>
-            			<td>No. of resumes not achieved</td>
-            			<td><?php if($associate_count<40):?>{{	$associate_count-40 }}<?php endif ?></td>
-            		</tr>
+        @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+            <table width="100%" cellspacing="0">
+            	<tr>
+                    <td colspan="7">
+                        <u><b><h3>No of CVs Associated in this week: {{ $associate_count or '0'}}</h3></b></u>
+                    </td>
+                </tr>
             </table>
-        </div>
+            <div class = "table-responsive">
+            	<table class="table table-striped table-bordered nowrap" cellspacing="0" style="width:50%;" id="weekly_report_cv_table">
+                	<thead>
+                		<tr style="background-color: #f39c12;">
+                			<th style="text-align: center;">Sr. No.</th>
+                			<th style="text-align: center;">Day(Date)</th>
+                			<th style="text-align: center;">No of resumes associated</th>
+                		</tr>
+                	</thead>
+                	<?php $i=0;?>
+                	<tbody>
+                	@foreach($associate_weekly as $key => $value)
+                		<tr style="text-align: center;">
+                			<td>{{ ++$i }}</td>
+                			<td>{{ date('l (jS F,y) ',strtotime($value['associate_date'])) }}</td>
+                			<td>{{ $value['associate_candidate_count'] }}</td>
+                		</tr>
+                	@endforeach
+                	</tbody>
+                	<tr style="text-align: center;">
+                		<td></td>
+                		<td>Total Associated</td>
+                		<td>{{ $associate_count or '0' }}</td>
+                	</tr>
+                	<tr style="text-align: center;">
+                		<td></td>
+                		<td>Benchmark</td>
+                		<td>40</td>
+                	</tr>
+                	<tr style="text-align: center;">
+                		<td></td>
+                		<td>No. of resumes not achieved</td>
+                		<td><?php if($associate_count<40):?>{{	$associate_count-40 }}<?php endif ?></td>
+                	</tr>
+                </table>
+            </div>
+        @endif
 
-        <table width="100%" cellspacing="0">
-        	<tr>
-                <td colspan="7">
-                    <u><b><h3>No of Interview Scheduled : {{ $interview_count or '0'}}</h3></b></u>
-                </td>
-            </tr>
-        </table>
-        <div class = "table-responsive">
-        	<table  style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0"  id="weekly_report_interview_table">
-            	<thead>
-            		<tr style="background-color: #7598d9;">
-            			<th style="text-align: center;">Sr. No.</th>
-            			<th style="text-align: center;">Day(Date)</th>
-            			<th style="text-align: center;">No of Interviews</th>
-            		</tr>
-            	</thead>
-            	<?php $i=0;?>
-            	<tbody>
-            		@foreach($interview_weekly as $key => $value)
-            		<tr style="text-align: center;">
-            			<td>{{ ++$i }}</td>
-            			<td>{{ date('l (jS F,y) ',strtotime($value['interview_date'])) }}</td>
-            			<td>{{ $value['interview_daily_count'] }}</td>
-            		</tr>
-            		@endforeach
-            	</tbody>
-            	<tr style="text-align: center;">
-            		<td></td>
-            		<td>Total</td>
-            		<td>{{ $interview_count or '0'}}</td>
-            	</tr>
+        @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+            <table width="100%" cellspacing="0">
+            	<tr>
+                    <td colspan="7">
+                        <u><b><h3>No of Interview Scheduled : {{ $interview_count or '0'}}</h3></b>
+                        </u>
+                    </td>
+                </tr>
             </table>
-        </div>
+            <div class = "table-responsive">
+            	<table style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_interview_table">
+                	<thead>
+                		<tr style="background-color: #7598d9;">
+                			<th style="text-align: center;">Sr. No.</th>
+                			<th style="text-align: center;">Day(Date)</th>
+                			<th style="text-align: center;">No of Interviews</th>
+                		</tr>
+                	</thead>
+                	<?php $i=0;?>
+                	<tbody>
+                		@foreach($interview_weekly as $key => $value)
+                		<tr style="text-align: center;">
+                			<td>{{ ++$i }}</td>
+                			<td>{{ date('l (jS F,y) ',strtotime($value['interview_date'])) }}</td>
+                			<td>{{ $value['interview_daily_count'] }}</td>
+                		</tr>
+                		@endforeach
+                	</tbody>
+                	<tr style="text-align: center;">
+                		<td></td>
+                		<td>Total</td>
+                		<td>{{ $interview_count or '0'}}</td>
+                	</tr>
+                </table>
+            </div>
+        @endif
 
-        <table width="100%" cellspacing="0">
-        	<tr>
-                <td colspan="7">
-                    <u><b><h3>No of Leads added : {{ $lead_count or '0'}}</h3></b></u>
-                </td>
-            </tr>
-        </table>
+        @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+            <table width="100%" cellspacing="0">
+            	<tr>
+                    <td colspan="7">
+                        <u><b><h3>No of Leads Added : {{ $lead_count or '0'}}</h3></b></u>
+                    </td>
+                </tr>
+            </table>
+
+            <div class = "table-responsive">
+                <table style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_leads_table">
+                    <thead>
+                        <tr style="background-color: #C4D79B;">
+                            <th style="text-align: center;">Sr. No.</th>
+                            <th style="text-align: center;">Day(Date)</th>
+                            <th style="text-align: center;">No of Leads</th>
+                        </tr>
+                    </thead>
+                    <?php $i=0;?>
+                    <tbody>
+                        @foreach($leads_weekly as $key => $value)
+                        <tr style="text-align: center;">
+                            <td>{{ ++$i }}</td>
+                            <td>{{ date('l (jS F,y) ',strtotime($value['lead_date'])) }}</td>
+                            <td>{{ $value['lead_count'] }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tr style="text-align: center;">
+                        <td></td>
+                        <td>Total</td>
+                        <td>{{ $lead_count or '0'}}</td>
+                    </tr>
+                </table>
+            </div>
+        @endif
     </div>
-
 @stop
 
 @section('customscripts')

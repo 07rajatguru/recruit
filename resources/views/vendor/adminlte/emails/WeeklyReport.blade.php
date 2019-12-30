@@ -37,7 +37,7 @@
                     </td>
                 </tr>
 
-                <tr style="background-color: #C4D79B;">
+                <tr style="background-color: #f39c12;">
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Day(Date)</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>No of resumes<br/>associated</b></td>
@@ -82,7 +82,7 @@
                         </td>
                     </tr>
 
-                    <tr style="background-color: #C4D79B;">
+                    <tr style="background-color: #7598d9;">
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Day(Date)</b></td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>No of Interviews</b></td>

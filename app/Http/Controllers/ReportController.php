@@ -56,12 +56,20 @@ class ReportController extends Controller
         $associate_daily = $associate_res['associate_data'];
         $associate_count = $associate_res['cvs_cnt'];
 
+         // Get Leads with count
+
+        $leads = Lead::getDailyReportLeads($user_id,NULL);
+        $leads_daily = $leads['leads_data'];
+
         $lead_count = Lead::getDailyReportLeadCount($user_id,$date);
 
         $interview_daily = Interview::getDailyReportInterview($user_id,$date);
         $interview_count = sizeof($interview_daily);
 
-        return view('adminlte::reports.dailyreport',compact('date','users','user_id','users_id','associate_daily','associate_count','lead_count','interview_daily','interview_count'));
+        // Get users reports
+        $user_details = User::getAllDetailsByUserID($user_id);
+
+        return view('adminlte::reports.dailyreport',compact('date','users','user_id','users_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
     }
 
     public function weeklyreportIndex(){
@@ -82,7 +90,7 @@ class ReportController extends Controller
 
         $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsers('recruiter');
         }
         else{
             $users = User::getAssignedUsers($user_id,'recruiter');
@@ -92,12 +100,7 @@ class ReportController extends Controller
             $user_id = $_POST['users_id'];
         }
         else{
-            if(in_array($user_id,$users)){
-                $user_id = $user_id;
-            }
-            else{
-                $user_id = key($users);
-            }
+            $user_id = $user_id;
         }
 
         $date = date('l');
@@ -129,14 +132,19 @@ class ReportController extends Controller
         $associate_count = $associate_weekly_response['cvs_cnt'];
         //print_r($associate_weekly_response);exit;
 
+        // Get Leads with count
+        $leads = Lead::getWeeklyReportLeads($user_id,$from_date,$to_date);
+        $leads_weekly = $leads['leads_data'];
         $lead_count = Lead::getWeeklyReportLeadCount($user_id,$from_date,$to_date);
 
         $interview_weekly_response = Interview::getWeeklyReportInterview($user_id,$from_date,$to_date);
         $interview_weekly = $interview_weekly_response['interview_data'];
         $interview_count = $interview_weekly_response['interview_cnt'];
 
+        // Get users reports
+        $user_details = User::getAllDetailsByUserID($user_id);
 
-        return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','from_date','to_date','associate_weekly','associate_count','lead_count','interview_weekly','interview_count'));
+        return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','from_date','to_date','associate_weekly','associate_count','leads_weekly','lead_count','interview_weekly','interview_count','user_details'));
     }
 
     public function userWiseMonthlyReport(){

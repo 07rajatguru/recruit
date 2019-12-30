@@ -137,7 +137,7 @@
                     </td>
                 </tr>
 
-                <tr style="background-color: #7598d9">
+                <tr style="background-color: #C4D79B">
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.<br/>No.</b></td>
                     <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Company Name</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Contact Point</b></td>
