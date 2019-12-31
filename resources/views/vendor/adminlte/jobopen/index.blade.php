@@ -419,10 +419,11 @@
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [0,'desc'],
-                "columnDefs": [ { "width": "10px", "targets": 0, "order": 'desc' },
-                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
-                    { "width": "10px", "targets": 2, "searchable": false, "orderable": false },
+                "order" : [10,'desc'],
+                "columnDefs": [ 
+                    { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
+                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
+                    { "width": "10px", "targets": 2, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
                     { "width": "150px", "targets": 5 },
@@ -458,7 +459,6 @@
                 responsive: true,
                 "pageLength": 50,
                 "pagingType": "full_numbers",
-                stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
                     if ( Data[16] == "0" ){
                         $('td:eq(4)', Row).css('background-color', '');
@@ -545,10 +545,11 @@
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [0,'desc'],
-                "columnDefs": [ { "width": "10px", "targets": 0, "order": 'desc' },
-                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
-                    { "width": "10px", "targets": 2, "searchable": false, "orderable": false },
+                "order" : [10,'desc'],
+                "columnDefs": [ 
+                    { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
+                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
+                    { "width": "10px", "targets": 2, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
                     { "width": "150px", "targets": 5 },
