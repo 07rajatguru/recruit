@@ -1,4 +1,4 @@
-<a href="#" data-toggle="modal" data-target="#calendarModal" class="btn btn-success">Add Remark</a>
+<a href="#" data-toggle="modal" data-target="#calendarModal" class="btn btn-success">Add Remarks</a>
 
 <div id="calendarModal" class="modal fade">
     <div class="modal-dialog">

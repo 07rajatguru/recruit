@@ -182,7 +182,8 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@index'
     ));
 
-    Route::get('/userattendance', array (
+    Route::any('/userattendance', array (
+        'as' => 'user.attendance',
         'middleware' => ['permission:attendance'],
         'uses' => 'HomeController@userAttendance'
     ));

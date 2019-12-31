@@ -503,11 +503,23 @@ class HomeController extends Controller
         $isAccountant = $user_obj::isAccountant($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
-        // get logged in user attendance for current month
-        $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
+        if(isset($_POST['selected_user_id']) && $_POST['selected_user_id'] != '')
+        {
+            $user_id = $_POST['selected_user_id'];
+             // get logged in user attendance for current month
+            $response = UsersLog::getUsersAttendance($user_id,0,0);
 
-        // get logged in user remarks
-        $user_remarks = UserRemarks::getUserRemarksByUserid($loggedin_userid);
+            // get logged in user remarks
+            $user_remarks = UserRemarks::getUserRemarksByUserid($user_id);
+        }
+        else
+        {
+            // get logged in user attendance for current month
+            $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
+
+            // get logged in user remarks
+            $user_remarks = UserRemarks::getUserRemarksByUserid($loggedin_userid);
+        }
 
         $date = new Date();
 
