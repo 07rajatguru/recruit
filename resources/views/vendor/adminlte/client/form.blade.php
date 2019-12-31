@@ -485,6 +485,7 @@
 
             $("#account_manager_id").select2();
             $("#yet_to_assign_id").select2();
+            $("#industry_id").select2();
 
             var superadmin_userid = "{!! env('SUPERADMINUSERID') !!}";
             var strategy_userid = "{!! env('STRATEGYUSERID') !!}";
