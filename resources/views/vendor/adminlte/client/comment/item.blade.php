@@ -7,7 +7,16 @@
 
 <div class="singal-row-wrapper">
     <div class="post__author author-date">
-        <img class="profile-avatar-pic" src="/images/default.png" alt="author"> 
+        <?php
+            $data = App\UsersDoc::getUserPhotoInfo($comment->creator_id);    
+        ?>
+
+        @if(isset($data['file']) && $data['file'] != '')
+            <img class="profile-avatar-pic" src="../../{{ $data['file'] }}" alt="author">
+        @else
+            <img class="profile-avatar-pic" src="/images/default.png" alt="author">
+        @endif
+
         <div class="comment-detail">
             <div class="comment-desc">
                 <p>{{ $comment->body }}</p>

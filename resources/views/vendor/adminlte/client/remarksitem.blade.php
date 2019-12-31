@@ -1,6 +1,14 @@
 <div class="singal-row-wrapper">
     <div class="post__author author-date">
-        <img class="profile-avatar-pic" src="/images/default.png" alt="author"> 
+        <?php
+            $data = App\UsersDoc::getUserPhotoInfo($per_post->user_id);    
+        ?>
+
+        @if(isset($data['file']) && $data['file'] != '')
+            <img class="profile-avatar-pic" src="../../{{ $data['file'] }}" alt="author">
+        @else
+            <img class="profile-avatar-pic" src="/images/default.png" alt="author">
+        @endif
 
         <?php
             $post_time = explode(" ", $per_post->updated_at);
