@@ -144,7 +144,7 @@
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Designation</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Email ID</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Mobile No.</b></td>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Location</b></td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>City</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Website</b></td>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Service</b></td>
                     <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Lead Status</b></td>
@@ -161,7 +161,7 @@
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['designation']}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['email']}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['mobile']}}</td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['city']}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['website']}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['service']}}</td>
                         <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['lead_status']}}</td>

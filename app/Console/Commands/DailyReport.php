@@ -62,7 +62,15 @@ class DailyReport extends Command
 
                 //Get Floor Incharge Email
                 $floor_res = User::getUsersFloorInchargeEmail($key);
-                $floor_incharge_email = $floor_res->email;
+
+                if(isset($floor_res) && sizeof($floor_res) > 0)
+                {
+                    $floor_incharge_email = $floor_res->email;
+                }
+                else
+                {
+                    $floor_incharge_email = '';
+                }
 
                 $to_array = array();
                 $to_array[] = $value;

@@ -144,7 +144,7 @@
 						<th>Designation</th>
 						<th>Email ID</th>
 						<th>Mobile No.</th>
-						<th>Location</th>
+						<th>City</th>
 						<th>Website</th>
 						<th>Service</th>
 						<th>Lead Status</th>
@@ -160,7 +160,7 @@
 							<td>{{ $value['designation'] }}</td>
 							<td>{{ $value['email'] }}</td>
 							<td>{{ $value['mobile'] }}</td>
-							<td>{{ $value['location'] }}</td>
+							<td>{{ $value['city'] }}</td>
 							<td>{{ $value['website'] }}</td>
 							<td>{{ $value['service'] }}</td>
 							<td>{{ $value['lead_status'] }}</td>

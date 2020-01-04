@@ -170,7 +170,7 @@
             </table>
 
             <div class = "table-responsive">
-                <table style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_leads_table">
+                <table class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_leads_table">
                     <thead>
                         <tr style="background-color: #C4D79B;">
                             <th style="text-align: center;">Sr. No.</th>
@@ -179,7 +179,7 @@
                             <th style="text-align: center;">Designation</th>
                             <th style="text-align: center;">Email ID</th>
                             <th style="text-align: center;">Mobile No.</th>
-                            <th style="text-align: center;">Location</th>
+                            <th style="text-align: center;">City</th>
                             <th style="text-align: center;">Website</th>
                             <th style="text-align: center;">Service</th>
                             <th style="text-align: center;">Lead Status</th>
@@ -196,7 +196,7 @@
                                 <td>{{ $value['designation'] }}</td>
                                 <td>{{ $value['email'] }}</td>
                                 <td>{{ $value['mobile'] }}</td>
-                                <td>{{ $value['location'] }}</td>
+                                <td>{{ $value['city'] }}</td>
                                 <td>{{ $value['website'] }}</td>
                                 <td>{{ $value['service'] }}</td>
                                 <td>{{ $value['lead_status'] }}</td>
