@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\User;
 use App\JobAssociateCandidates;
 use App\Interview;
+use App\Lead;
 
 class MonthlyReport extends Command
 {
@@ -40,7 +41,6 @@ class MonthlyReport extends Command
      */
     public function handle()
     {
-
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         // $to_address = 'saloni@trajinfotech.com';
@@ -76,6 +76,8 @@ class MonthlyReport extends Command
             foreach ($users as $k=>$v) {
                 $response[$k]['cvs'] = 0;
                 $response[$k]['interviews'] = 0;
+                $response[$k]['lead_count'] = 0;
+                $response[$k]['leads_data'] = 0;
                 $response[$k]['uname'] = $users[$k];
             }
 
@@ -91,13 +93,34 @@ class MonthlyReport extends Command
                 }
             }
 
+            $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
+            if(sizeof($lead_count)>0){
+                foreach ($lead_count as $k=>$v) {
+                    $response[$k]['lead_count'] = $v;
+                }
+            }
+
+            $leads_details = Lead::getUserWiseMonthlyReportLeads($k1,$month,$year);
+            if(sizeof($leads_details)>0){
+                foreach ($leads_details as $k=>$v) {
+                    $response[$k]['leads_data'] = $v;
+                }
+            }
+
+            $total_leads = sizeof($leads_details);
+
+            // Get users reports
+            $user_details = User::getAllDetailsByUserID($k1);
+
             $user_name = User::getUserNameById($k1);
 
             $input = array();
             $input['from_name'] = $from_name;
             $input['from_address'] = $from_address;
             $input['value'] = $user_name;
+            $input['user_details'] = $user_details;
             $input['response'] = $response;
+            $input['total_leads'] = $total_leads;
             $input['app_url'] = $app_url;
             $input['to_array']= $v1;
 
@@ -110,7 +133,6 @@ class MonthlyReport extends Command
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F",strtotime("last month"))." ".date("Y"));
             });
-
         }
     }
 }

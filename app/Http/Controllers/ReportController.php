@@ -193,6 +193,7 @@ class ReportController extends Controller
 
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
         $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
@@ -210,9 +211,10 @@ class ReportController extends Controller
         foreach ($users as $k=>$v) {
             $response[$k]['cvs'] = 0;
             $response[$k]['interviews'] = 0;
+            $response[$k]['lead_count'] = 0;
+            $response[$k]['leads_data'] = 0;
             $response[$k]['uname'] = $users[$k];
         }
-
 
         foreach ($associate_monthly_response as $k=>$v) {
             $response[$k]['cvs'] = $v;
@@ -225,8 +227,28 @@ class ReportController extends Controller
             }
         }
 
+        $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
+        if(sizeof($lead_count)>0){
+            foreach ($lead_count as $k=>$v) {
+                $response[$k]['lead_count'] = $v;
+            }
+        }
+
+        $leads_details = Lead::getUserWiseMonthlyReportLeads($user_id,$month,$year);
+        if(sizeof($leads_details)>0){
+            foreach ($leads_details as $k=>$v) {
+                $response[$k]['leads_data'] = $v;
+            }
+        }
+
+        $total_leads = sizeof($leads_details);
+        //print_r($response);exit;
+
+        // Get users reports
+        $user_details = User::getAllDetailsByUserID($user_id);
+
        // print_r($response);exit;
-        return view('adminlte::reports.userwise-monthlyreport',compact('month_array','year_array','month','year','response'));
+        return view('adminlte::reports.userwise-monthlyreport',compact('month_array','year_array','month','year','response','user_details','total_leads','isSuperAdmin'));
     }
 
     public function monthlyreportIndex(){

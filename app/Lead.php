@@ -390,6 +390,7 @@ class Lead extends Model
                     $location .= ", ".$value1->country;
             }
 
+            $response['leads_data'][$i]['city'] = $value1->city;
             $response['leads_data'][$i]['location'] = $location;
             $response['leads_data'][$i]['website'] = $value1->website;
             $response['leads_data'][$i]['service'] = $value1->service;
@@ -479,6 +480,7 @@ class Lead extends Model
                     $location .= ", ".$value->country;
             }
 
+            $response['leads_data'][$i]['city'] = $value->city;
             $response['leads_data'][$i]['location'] = $location;
             $response['leads_data'][$i]['website'] = $value->website;
             $response['leads_data'][$i]['service'] = $value->service;
@@ -537,6 +539,64 @@ class Lead extends Model
         }
 
         return $lead_count;
+    }
+
+    public static function getUserWiseMonthlyReportLeads($user_id,$month,$year){
+
+        $query = Lead::query();
+        $query = $query->select('lead_management.*');
+        $query = $query->where('lead_management.account_manager_id',$user_id);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(created_at)'),'=',$year);
+        }
+
+        $query = $query->groupBy('lead_management.account_manager_id');
+
+        $response = $query->get();
+
+        $lead_res = array();
+        $i=0;
+
+        if($response->count()>0)
+        {
+            foreach ($response as $key=>$value)
+            {
+                $lead_res[$value->account_manager_id][$i]['company_name'] = $value->name;
+                $lead_res[$value->account_manager_id][$i]['contact_point'] = $value->coordinator_name;
+                $lead_res[$value->account_manager_id][$i]['designation'] = $value->designation;
+                $lead_res[$value->account_manager_id][$i]['email'] = $value->mail;
+                $lead_res[$value->account_manager_id][$i]['mobile'] = $value->mobile;
+
+                $location ='';
+                if($value->city!=''){
+                    $location .= $value->city;
+                }
+                if($value->state!=''){
+                    if($location=='')
+                        $location .= $value->state;
+                    else
+                        $location .= ", ".$value->state;
+                }
+                if($value->country!=''){
+                    if($location=='')
+                        $location .= $value->country;
+                    else
+                        $location .= ", ".$value->country;
+                }
+
+                $lead_res[$value->account_manager_id][$i]['city'] = $value->city;
+                $lead_res[$value->account_manager_id][$i]['location'] = $location;
+                $lead_res[$value->account_manager_id][$i]['website'] = $value->website;
+                $lead_res[$value->account_manager_id][$i]['service'] = $value->service;
+                $lead_res[$value->account_manager_id][$i]['lead_status'] = $value->lead_status;
+                $lead_res[$value->account_manager_id][$i]['source'] = $value->source;
+                $i++;
+            }
+        }
+
+        return $lead_res;
     }
 
     public static function getMonthlyReportLeadCount($user_id,$month=NULL,$year=NULL){
