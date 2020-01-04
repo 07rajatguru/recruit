@@ -428,7 +428,7 @@ class Lead extends Model
         $date = date('Y-m-d',strtotime('Monday this week'));
 
         $query = Lead::query();
-        $query = $query->select(\DB::raw("COUNT(lead_management.id) as count"),'lead_management.created_at');
+        $query = $query->select(\DB::raw("COUNT(lead_management.id) as count"),'lead_management.*');
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
 
         if ($from_date == NULL && $to_date == NULL) {
@@ -449,9 +449,41 @@ class Lead extends Model
       
         foreach ($query_response as $key => $value) {
        
+            // Get Weekwise lead count
             $datearry = explode(' ', $value->created_at);
             $response['leads_data'][$i]['lead_date'] = $datearry[0];
             $response['leads_data'][$i]['lead_count'] = $value->count;
+
+            // Get all data
+
+            $response['leads_data'][$i]['company_name'] = $value->name;
+            $response['leads_data'][$i]['contact_point'] = $value->coordinator_name;
+            $response['leads_data'][$i]['designation'] = $value->designation;
+            $response['leads_data'][$i]['email'] = $value->mail;
+            $response['leads_data'][$i]['mobile'] = $value->mobile;
+
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
+
+            $response['leads_data'][$i]['location'] = $location;
+            $response['leads_data'][$i]['website'] = $value->website;
+            $response['leads_data'][$i]['service'] = $value->service;
+            $response['leads_data'][$i]['lead_status'] = $value->lead_status;
+            $response['leads_data'][$i]['source'] = $value->source;
             $i++;
         }
         return $response;  

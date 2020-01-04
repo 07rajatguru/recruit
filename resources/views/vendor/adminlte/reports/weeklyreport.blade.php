@@ -135,7 +135,7 @@
             </table>
 
             <div class = "table-responsive">
-                <table style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_leads_table">
+                <table style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_leads_count_table">
                     <thead>
                         <tr style="background-color: #C4D79B;">
                             <th style="text-align: center;">Sr. No.</th>
@@ -160,6 +160,52 @@
                     </tr>
                 </table>
             </div>
+
+            <table width="100%" cellspacing="0">
+                <tr>
+                    <td colspan="7">
+                        <u><b><h3>Lead Details : {{ $lead_count or '0'}}</h3></b></u>
+                    </td>
+                </tr>
+            </table>
+
+            <div class = "table-responsive">
+                <table style="width:50%;" class="table table-striped table-bordered nowrap" cellspacing="0" id="weekly_report_leads_table">
+                    <thead>
+                        <tr style="background-color: #C4D79B;">
+                            <th style="text-align: center;">Sr. No.</th>
+                            <th style="text-align: center;">Company Name</th>
+                            <th style="text-align: center;">Contact Point</th>
+                            <th style="text-align: center;">Designation</th>
+                            <th style="text-align: center;">Email ID</th>
+                            <th style="text-align: center;">Mobile No.</th>
+                            <th style="text-align: center;">Location</th>
+                            <th style="text-align: center;">Website</th>
+                            <th style="text-align: center;">Service</th>
+                            <th style="text-align: center;">Lead Status</th>
+                            <th style="text-align: center;">Source</th>
+                        </tr>
+                    </thead>
+                    <?php $i=0;?>
+                    <tbody>
+                        @foreach($leads_weekly as $key => $value)
+                            <tr style="text-align: center;">
+                                <td>{{ ++$i }}</td>
+                                <td>{{ $value['company_name'] }}</td>
+                                <td>{{ $value['contact_point'] }}</td>
+                                <td>{{ $value['designation'] }}</td>
+                                <td>{{ $value['email'] }}</td>
+                                <td>{{ $value['mobile'] }}</td>
+                                <td>{{ $value['location'] }}</td>
+                                <td>{{ $value['website'] }}</td>
+                                <td>{{ $value['service'] }}</td>
+                                <td>{{ $value['lead_status'] }}</td>
+                                <td>{{ $value['source'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @endif
     </div>
 @stop
@@ -167,30 +213,30 @@
 @section('customscripts')
 	<script type="text/javascript">
 		$(document).ready(function(){
-			/*var table = jQuery("#weekly_report_cv_table").DataTable({
-				responsive: true,
-				"pageLength": 100,
-				stateSave: true
-			});
-			var table = jQuery("#weekly_report_interview_table").DataTable({
-				responsive: true,
-				"pageLength": 100,
-				stateSave: true
-			});
-			new jQuery.fn.dataTable.FixedHeader( table );*/
 
-			$("#users_id").select2();
+            $("#users_id").select2();
 
-			$("#from_date").datepicker({
+            $("#from_date").datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
             });
-            //$('#date').datepicker().datepicker('setDate', 'today');
-
+        
             $("#to_date").datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
             });
+            
+			/*var table = jQuery("#weekly_report_cv_table").DataTable({
+				responsive: true,
+				"pageLength": 100,
+				stateSave: true
+			});*/
+			var table = jQuery("#weekly_report_leads_table").DataTable({
+				responsive: true,
+				"pageLength": 100,
+				stateSave: true
+			});
+			new jQuery.fn.dataTable.FixedHeader( table );
 		});
 
 		function select_data(){
