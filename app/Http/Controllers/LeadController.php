@@ -17,7 +17,6 @@ use App\ClientTimeline;
 
 class LeadController extends Controller
 {
-
     public function index(){
 
         $user = \Auth::user();
@@ -27,9 +26,9 @@ class LeadController extends Controller
         $strategy_role_id =  env('STRATEGY');
 
         // Display Lead & Client to one user
-        $lead_client_id = env('LEADCLIENT');
+        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
         if(in_array($user_role_id,$access_roles_id))
         {
             $count = Lead::getAllLeadsCount(1,$user->id);
@@ -105,9 +104,10 @@ class LeadController extends Controller
         $strategy_role_id =  env('STRATEGY');
 
         // Display Lead & Client to one user
-        $lead_client_id = env('LEADCLIENT');
+        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
+
         if(in_array($user_role_id,$access_roles_id))
         {   
             $count = Lead::getAllLeadsCount(1,$user->id,$search);
@@ -171,9 +171,10 @@ class LeadController extends Controller
         $strategy_role_id =  env('STRATEGY');
 
         // Display Lead & Client to one user
-        $lead_client_id = env('LEADCLIENT');
+        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
+
         if(in_array($user_role_id,$access_roles_id)){
             $leads = Lead::getCancelLeads(1,$user->id,$user_role_id);
         }
@@ -206,10 +207,10 @@ class LeadController extends Controller
         $strategy_role_id =  env('STRATEGY');
 
         // Display Lead & Client to one user
-        $lead_client_id = env('LEADCLIENT');
+        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
-        //$access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
+
         if(in_array($user_role_id,$access_roles_id)){
             $leads_res = Lead::getCancelLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Lead::getCancelLeadsCount(1,$user->id,$search);
