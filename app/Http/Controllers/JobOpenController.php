@@ -248,19 +248,30 @@ class JobOpenController extends Controller
             $next_year = NULL;
         }
 
+        // Get Client Heirarchy
+
+        if (isset($_POST['client_heirarchy']) && $_POST['client_heirarchy'] != '') {
+
+            $client_heirarchy = $_POST['client_heirarchy'];
+        }
+        else {
+
+            $client_heirarchy = '0';
+        }
+
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL);
+            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,NULL,NULL,$client_heirarchy);
         }
         else if ($isClient) {
-            $job_response = JobOpen::getAllJobsByCLient($client_id);
+            $job_response = JobOpen::getAllJobsByCLient($client_id,0,0,0,NULL,'',$client_heirarchy);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$client_heirarchy);
         }
         else{
-            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL);
+            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,NULL,NULL,$client_heirarchy);
         }
 
         $priority_0 = 0;
@@ -606,17 +617,17 @@ class JobOpenController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
         }
         else if ($isClient) {
-            $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type);
+            $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type,$client_heirarchy);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,$client_heirarchy);
         }
         else{
             $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
             $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
         }
 
         $jobs = array();

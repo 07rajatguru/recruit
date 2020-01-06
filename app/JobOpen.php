@@ -1126,7 +1126,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobsByCLient($client_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+    public static function getAllJobsByCLient($client_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$client_heirarchy=0){
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1192,6 +1192,12 @@ class JobOpen extends Model
             });
         }
 
+        // For Client Heirarchy
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+        
         $job_response = $job_open_query->get();
 
         $jobs_list = array();
@@ -1626,7 +1632,7 @@ class JobOpen extends Model
         return $jobs_open_list;
     }
 
-    public static function getPriorityWiseJobs($all=0,$user_id,$priority,$current_year=NULL,$next_year=NULL){
+    public static function getPriorityWiseJobs($all=0,$user_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0){
 
         $user =  \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -1688,6 +1694,12 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('priority','=','10');
         }
 
+        // For Client Heirarchy
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+        
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
@@ -1697,6 +1709,12 @@ class JobOpen extends Model
         }
         if (isset($next_year) && $next_year != NULL) {
             $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
+        }
+
+        // For Client Heirarchy
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
@@ -1814,7 +1832,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getPriorityWiseJobsByClient($client_id,$priority){
+    public static function getPriorityWiseJobsByClient($client_id,$priority,$client_heirarchy=0){
 
         $user =  \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -1868,6 +1886,12 @@ class JobOpen extends Model
         }
         else if ($priority == 'Closed By Client') {
             $job_open_query = $job_open_query->where('priority','=','10');
+        }
+
+        // For Client Heirarchy
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
