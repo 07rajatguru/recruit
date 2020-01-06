@@ -26,7 +26,10 @@ class LeadController extends Controller
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id =  env('STRATEGY');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        // Display Lead & Client to one user
+        $lead_client_id = env('LEADCLIENT');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
         if(in_array($user_role_id,$access_roles_id))
         {
             $count = Lead::getAllLeadsCount(1,$user->id);
@@ -41,7 +44,6 @@ class LeadController extends Controller
         $convert_client_count = sizeof($convert_client);
         //print_r($convert_client_count);exit;
         return view('adminlte::lead.index',compact(/*'leads','lead_count',*/'count','convert_client_count'));
-
     }
 
      public static function getLeadOrderColumnName($order){
@@ -102,16 +104,19 @@ class LeadController extends Controller
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id =  env('STRATEGY');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        // Display Lead & Client to one user
+        $lead_client_id = env('LEADCLIENT');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
         if(in_array($user_role_id,$access_roles_id))
         {   
             $count = Lead::getAllLeadsCount(1,$user->id,$search);
-            $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $leads_res = Lead::getAllLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
         }
         else
         {   
             $count = Lead::getAllLeadsCount(0,$user->id,$search);
-            $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $leads_res = Lead::getAllLeads(0,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
         }
 
         $lead = array();
@@ -163,13 +168,17 @@ class LeadController extends Controller
         $user_role_id = User::getLoggedinUserRole($user);
 
         $superadmin_role_id = env('SUPERADMIN');
+        $strategy_role_id =  env('STRATEGY');
 
-        $access_roles_id = array($superadmin_role_id);
+        // Display Lead & Client to one user
+        $lead_client_id = env('LEADCLIENT');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $leads = Lead::getCancelLeads(1,$user->id);
+            $leads = Lead::getCancelLeads(1,$user->id,$user_role_id);
         }
         else{
-            $leads = Lead::getCancelLeads(0,$user->id);
+            $leads = Lead::getCancelLeads(0,$user->id,$user_role_id);
         }
        // print_r($leads);exit;
 
@@ -196,14 +205,17 @@ class LeadController extends Controller
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id =  env('STRATEGY');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        // Display Lead & Client to one user
+        $lead_client_id = env('LEADCLIENT');
+
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$lead_client_id);
+        //$access_roles_id = array($superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $leads_res = Lead::getCancelLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $leads_res = Lead::getCancelLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Lead::getCancelLeadsCount(1,$user->id,$search);
         }
         else {
-            $leads_res = Lead::getCancelLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $leads_res = Lead::getCancelLeads(0,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Lead::getCancelLeadsCount(0,$user->id,$search);
         }
 

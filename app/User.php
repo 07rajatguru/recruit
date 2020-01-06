@@ -391,6 +391,15 @@ class User extends Authenticatable
         return false;
     }
 
+    public static function isLeadClient($user_role_id){
+
+        $admin_role_id = getenv('LEADCLIENT');
+        if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        return false;
+    }
+
     public static function isAllClientVisibleUser($user_id){
 
         $loggedin_user_id = getenv('ALLCLIENTVISIBLEUSERID');

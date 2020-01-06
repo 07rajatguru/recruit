@@ -54,7 +54,7 @@ class Lead extends Model
         return $statusArray;
     }
 
-    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
+    public static function getAllLeads($all=0,$user_id,$user_role_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
 
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id = env('STRATEGY');
@@ -133,7 +133,11 @@ class Lead extends Model
             if($user_id==$value->account_manager_id){
                 $response[$i]['access'] = true;
             }
-            else if ($superadmin_role_id || $strategy_role_id) {
+            /*else if ($superadmin_role_id || $strategy_role_id) {
+                $response[$i]['access'] = true;
+            }*/
+            else if($user_role_id == $superadmin_role_id || $user_role_id == $strategy_role_id)
+            {           
                 $response[$i]['access'] = true;
             }
             $i++;
@@ -190,7 +194,7 @@ class Lead extends Model
         return $response;
     }
 
-    public static function getCancelLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
+    public static function getCancelLeads($all=0,$user_id,$user_role_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
 
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id = env('STRATEGY');
@@ -268,7 +272,11 @@ class Lead extends Model
             if($user_id==$value->account_manager_id){
                 $response[$i]['access'] = true;
             }
-            else if ($superadmin_role_id || $strategy_role_id) {
+            /*else if ($superadmin_role_id || $strategy_role_id) {
+                $response[$i]['access'] = true;
+            }*/
+            else if($user_role_id == $superadmin_role_id || $user_role_id == $strategy_role_id)
+            {           
                 $response[$i]['access'] = true;
             }
             $i++;
