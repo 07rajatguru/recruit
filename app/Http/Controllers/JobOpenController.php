@@ -3383,4 +3383,22 @@ class JobOpenController extends Controller
 
         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted Successfully.');
     }
+
+    public function getAllPositionsJobs()
+    {
+        $jobList = JobOpen::getAllJobsPostingTitle();
+        $count = sizeof($jobList);
+
+        return view('adminlte::jobopen.alljobs', compact('jobList','count'));
+    }
+
+    public function getAllJobsAssociatedCandidates($id)
+    {
+        $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
+        $job_details = JobOpen::getJobById($id);
+
+        $posting_title = $job_details['new_posting_title'];
+
+        return view('adminlte::jobopen.alljobs_associated_candidate',compact('candidateDetails','posting_title'));
+    }
 }

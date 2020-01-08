@@ -186,18 +186,47 @@ class JobOpen extends Model
         return $jobOpenId;
     }
 
-    public static function getPostingTitle(){
+    public static function getAllJobsPostingTitle(){
 
-        $jobOpenDetails = JobOpen::all();
+        $job_query = JobOpen::query();
+        
+        $job_query = $job_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-     //   $jobOpenPostingTitle = array('' => 'Select Posting Title');
+        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name');
 
-        if(isset($jobOpenDetails) && sizeof($jobOpenDetails)>0){
-            foreach ($jobOpenDetails as $jobOpenDetail) {
-                $jobOpenPostingTitle[$jobOpenDetail->posting_title] = $jobOpenDetail->posting_title;
+        $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_query = $job_query->groupBy('job_openings.id');
+        $job_query = $job_query->orderBy('job_openings.id','desc');
+        $job_response = $job_query->get();
+
+        $jobs_list = array();
+        $colors = self::getJobPrioritiesColor();
+        $i = 0;
+
+        foreach ($job_response as $key=>$value){
+
+            $jobs_list[$i]['id'] = $value->id;
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
             }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
+
+            if(isset($value->priority) && $value->priority!='') {
+                $jobs_list[$i]['color'] = $colors[$value->priority];
+            }
+            else {
+                $jobs_list[$i]['color'] ='';
+            }
+
+            $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
+            
+            $i++;
         }
-        return $jobOpenPostingTitle;
+
+        return $jobs_list;
     }
 
     public static function getJobOpen(){
@@ -1395,10 +1424,11 @@ class JobOpen extends Model
          */
 
         $job_query = JobOpen::query();
+        $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_query = $job_query->leftjoin('interview', 'interview.posting_title','=', 'job_openings.id');
         $job_query = $job_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id','interview.candidate_location as candidate_location','client_heirarchy.name as level_name');
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
 
@@ -1440,6 +1470,13 @@ class JobOpen extends Model
             $response['user_name'] = $v->user_name;
             $response['skype_id'] = $v->skype_id;
             $response['candidate_location'] = $v->candidate_location;
+
+            if (isset($v->level_name) && $v->level_name != '') {
+                $response['new_posting_title'] = $v->level_name." - ".$v->posting_title;
+            }
+            else {
+                $response['new_posting_title'] = $v->posting_title;
+            }
         }
 
         return $response;

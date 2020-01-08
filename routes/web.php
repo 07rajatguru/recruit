@@ -158,8 +158,6 @@ Route::get('specialization/getspecializationbyid',[
     ]);
 
 
-
-
 Route::group(['middleware' => ['auth']], function () {
 
     Route::any('/dashboard', array (
@@ -929,6 +927,18 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Job Opening
+
+    Route::get('all-jobs', [
+        'as' => 'all.jobs',
+        'uses' => 'JobOpenController@getAllPositionsJobs'
+    ]);
+
+    Route::get('all-jobs/{id}/associated_candidates', [
+        'as' => 'alljobs.associated_candidates_get',
+        'uses' => 'JobOpenController@getAllJobsAssociatedCandidates',
+        //'middleware' => ['permission:associated-candidate-list']
+    ]);
+
     Route::get('jobs/create', [
         'as' => 'jobopen.create',
         'uses' => 'JobOpenController@create',
@@ -2473,5 +2483,4 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'EmailTemplateController@destroy',
         'middleware' => ['permission:emailtemplate-delete']
     ]);
-
 });

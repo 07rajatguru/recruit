@@ -14,6 +14,8 @@
             </div>
 
             <div class="pull-right">
+                <a class="btn btn-primary" href="{{ route('all.jobs') }}"> Advanced Search</a>
+
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
         </div>
