@@ -355,8 +355,10 @@ class Lead extends Model
         $to_date = date("Y-m-d 23:59:59");
 
         $query = Lead::query();
-        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->select('lead_management.*');
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
+        $query = $query->where('lead_management.cancel_lead','=','0');
+        $query = $query->where('lead_management.convert_client','=','0');
 
         if ($date == NULL) {
             $query = $query->where('created_at','>=',"$from_date");
@@ -415,8 +417,10 @@ class Lead extends Model
         $to_date = date("Y-m-d 23:59:59");
 
         $query = Lead::query();
-        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->select('lead_management.*');
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
+        $query = $query->where('lead_management.cancel_lead','=','0');
+        $query = $query->where('lead_management.convert_client','=','0');
 
         if ($date == NULL) {
             $query = $query->where('created_at','>=',"$from_date");
@@ -427,6 +431,7 @@ class Lead extends Model
             $query = $query->where(\DB::raw('date(created_at)'),$date);
         }
 
+        $query = $query->groupBy('lead_management.id');
         $lead_cnt = $query->count();
 
         return $lead_cnt;
@@ -439,6 +444,8 @@ class Lead extends Model
         $query = Lead::query();
         $query = $query->select(\DB::raw("COUNT(lead_management.id) as count"),'lead_management.*');
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
+        $query = $query->where('lead_management.cancel_lead','=','0');
+        $query = $query->where('lead_management.convert_client','=','0');
 
         if ($from_date == NULL && $to_date == NULL) {
             $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
@@ -504,8 +511,11 @@ class Lead extends Model
         $date = date('Y-m-d',strtotime('Monday this week'));
 
         $query = Lead::query();
-        $query = $query->select('lead_management.*','lead_management.created_at');
+        $query = $query->select('lead_management.*');
         $query = $query->where('lead_management.account_manager_id','=',$user_id);
+        $query = $query->where('lead_management.cancel_lead','=','0');
+        $query = $query->where('lead_management.convert_client','=','0');
+        
 
         if ($from_date == NULL && $to_date == NULL) {
             $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
@@ -533,6 +543,8 @@ class Lead extends Model
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(created_at)'),'=',$month);
             $query = $query->where(\DB::raw('year(created_at)'),'=',$year);
+            $query = $query->where('lead_management.cancel_lead','=','0');
+            $query = $query->where('lead_management.convert_client','=','0');
         }
 
         $query = $query->groupBy('lead_management.account_manager_id');
@@ -540,27 +552,32 @@ class Lead extends Model
         $lead_res = $query->get();
 
         $lead_count = array();
+
         if($lead_res->count()>0){
+
             foreach ($lead_res  as $k=>$v){
                 $lead_count[$v->account_manager_id] = $v->count;
             }
         }
-
         return $lead_count;
     }
 
-    public static function getUserWiseMonthlyReportLeads($user_id,$month,$year){
+    public static function getUserWiseMonthlyReportLeads($users,$month,$year){
+
+        $u_keys = array_keys($users);
 
         $query = Lead::query();
         $query = $query->select('lead_management.*');
-        $query = $query->where('lead_management.account_manager_id',$user_id);
+        $query = $query->whereIn('lead_management.account_manager_id',$u_keys);
+        $query = $query->where('lead_management.cancel_lead','=','0');
+        $query = $query->where('lead_management.convert_client','=','0');
 
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(created_at)'),'=',$month);
             $query = $query->where(\DB::raw('year(created_at)'),'=',$year);
         }
 
-        $query = $query->groupBy('lead_management.account_manager_id');
+        //$query = $query->groupBy('lead_management.account_manager_id');
 
         $response = $query->get();
 
@@ -603,7 +620,6 @@ class Lead extends Model
                 $i++;
             }
         }
-
         return $lead_res;
     }
 

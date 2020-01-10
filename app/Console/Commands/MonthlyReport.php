@@ -100,7 +100,7 @@ class MonthlyReport extends Command
                 }
             }
 
-            $leads_details = Lead::getUserWiseMonthlyReportLeads($k1,$month,$year);
+            $leads_details = Lead::getUserWiseMonthlyReportLeads($users,$month,$year);
             if(sizeof($leads_details)>0){
                 foreach ($leads_details as $k=>$v) {
                     $response[$k]['leads_data'] = $v;

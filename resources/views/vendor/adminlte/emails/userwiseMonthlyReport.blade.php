@@ -3,7 +3,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Adler Talent</title>
-
     @yield('style')
 </head>
 
@@ -55,48 +54,50 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php $i=1; ?>
-                @foreach($response as $k=>$v)
-                    <tr>
-                        <td>{!! $i !!}</td>
-                        <td>{!! $v['uname'] !!}</td>
+                    <?php $i=1; ?>
+                    @if(isset($response) && sizeof($response) > 0)
+                        @foreach($response as $k=>$v)
+                            <tr>
+                                <td>{!! $i !!}</td>
+                                <td>{!! $v['uname'] !!}</td>
 
-                        @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
-                            <td>{!! $v['cvs'] !!}</td>
-                            <td>150</td>
-                            <?php
-                            $not_ach = $v['cvs'] -150
-                            ?>
-                            @if($not_ach<0)
-                                <td style="color:red;">{!! $not_ach !!}</td>
-                            @else
-                                <td style="background-color:#92D050;">{!! $not_ach !!}</td>
-                            @endif
-                        @endif
+                                @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+                                    <td>{!! $v['cvs'] !!}</td>
+                                    <td>150</td>
+                                    <?php
+                                    $not_ach = $v['cvs'] -150
+                                    ?>
+                                    @if($not_ach<0)
+                                        <td style="color:red;">{!! $not_ach !!}</td>
+                                    @else
+                                        <td style="background-color:#92D050;">{!! $not_ach !!}</td>
+                                    @endif
+                                @endif
 
-                        @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
-                            <td>{!! $v['interviews'] !!}</td>
-                            <td>38</td>
-                            <?php
-                            $not_ach_in = $v['interviews'] - 38
-                            ?>
-                            @if($not_ach_in<0)
-                                <td style="color:red;">{!! $not_ach_in !!}</td>
-                            @else
-                                <td style="background-color:#92D050;">{!! $not_ach_in !!}</td>
-                            @endif
-                        @endif
+                                @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+                                    <td>{!! $v['interviews'] !!}</td>
+                                    <td>38</td>
+                                    <?php
+                                    $not_ach_in = $v['interviews'] - 38
+                                    ?>
+                                    @if($not_ach_in<0)
+                                        <td style="color:red;">{!! $not_ach_in !!}</td>
+                                    @else
+                                        <td style="background-color:#92D050;">{!! $not_ach_in !!}</td>
+                                    @endif
+                                @endif
 
-                        @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
-                            @if(isset($v['lead_count']) && sizeof($v['lead_count']) > 0)
-                                <td>{!! $v['lead_count'] !!}</td>
-                            @else
-                                <td></td>
-                            @endif
-                        @endif
-                    </tr>
-                    <?php $i++; ?>
-                @endforeach
+                                @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+                                    @if(isset($v['lead_count']) && sizeof($v['lead_count']) > 0)
+                                        <td>{!! $v['lead_count'] !!}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
+                                @endif
+                            </tr>
+                            <?php $i++; ?>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
             @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
@@ -129,7 +130,7 @@
                             <?php $i=0;?>
                             <tbody>
                                 @foreach($response as $key => $value)
-                                    @if(isset($value['leads_data']) && $value['leads_data'] != 0)
+                                    @if(isset($value['leads_data']) && sizeof ($value['leads_data']) > 0 && $value['leads_data']!='' && $value['leads_data']!=0)
                                         @foreach($value['leads_data'] as $k1 => $v1)
                                             <tr style="text-align: center;">
                                                 <td>{{ ++$i }}</td>
@@ -158,12 +159,11 @@
         <td width="800">
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                 <tr >
-                    <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
+                    <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved.</td>
                 </tr>
             </table>
         </td>
     </tr>
 </table>
-
 </body>
 </html>

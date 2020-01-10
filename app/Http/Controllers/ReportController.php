@@ -227,14 +227,14 @@ class ReportController extends Controller
             }
         }
 
-        $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
+       $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
         if(sizeof($lead_count)>0){
             foreach ($lead_count as $k=>$v) {
                 $response[$k]['lead_count'] = $v;
             }
         }
 
-        $leads_details = Lead::getUserWiseMonthlyReportLeads($user_id,$month,$year);
+        $leads_details = Lead::getUserWiseMonthlyReportLeads($users,$month,$year);
         if(sizeof($leads_details)>0){
             foreach ($leads_details as $k=>$v) {
                 $response[$k]['leads_data'] = $v;
