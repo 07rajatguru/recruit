@@ -2483,4 +2483,54 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'EmailTemplateController@destroy',
         'middleware' => ['permission:emailtemplate-delete']
     ]);
+
+    // Admin > New User Permissions
+    Route::group(['middleware' => ['permission:permission-list']], function () {
+        Route::resource('user-permissions', 'NewPermissionsController', [
+            'names' => [
+                'index' => 'userpermission.index',
+                'create' => 'userpermission.create',
+                'store' => 'userpermission.store',
+                'update' => 'userpermission.update',
+                'edit' => 'userpermission.edit',
+                'destroy' => 'userpermission.destroy',
+            ],
+        ]);
+    });
+
+    // Admin > New User Roles
+
+    Route::get('getPermissions', [
+        'as' => 'get.permissions',
+        'uses' => 'NewRoleController@getPermissions',
+    ]);
+
+    Route::get('user-role', [
+        'as' => 'userrole.index',
+        'uses' => 'NewRoleController@index',
+    ]);
+    Route::get('user-role/create', [
+        'as' => 'userrole.create',
+        'uses' => 'NewRoleController@create'
+    ]);
+    Route::post('user-role/create', [
+        'as' => 'userrole.store',
+        'uses' => 'NewRoleController@store'
+    ]);
+    Route::get('user-role/{id}', [
+        'as' => 'userrole.show',
+        'uses' => 'NewRoleController@show'
+    ]);
+    Route::get('user-role/{id}/edit', [
+        'as' => 'userrole.edit',
+        'uses' => 'NewRoleController@edit'
+    ]);
+    Route::patch('user-role/{id}', [
+        'as' => 'userrole.update',
+        'uses' => 'NewRoleController@update'
+    ]);
+    Route::delete('user-role/{id}', [
+        'as' => 'userrole.destroy',
+        'uses' => 'NewRoleController@destroy'
+    ]);
 });
