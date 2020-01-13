@@ -186,7 +186,7 @@ class JobOpen extends Model
         return $jobOpenId;
     }
 
-    public static function getAllJobsPostingTitle(){
+    public static function getAllJobsPostingTitleCount($search=0){
 
         $job_query = JobOpen::query();
         
@@ -197,7 +197,51 @@ class JobOpen extends Model
 
         $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
         $job_query = $job_query->groupBy('job_openings.id');
-        $job_query = $job_query->orderBy('job_openings.id','desc');
+        //$job_query = $job_query->orderBy('job_openings.id','desc');
+
+        if (isset($search) && $search != '') {
+            $job_query = $job_query->where(function($job_query) use ($search){
+
+                $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
+                $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
+            });
+        }
+
+        $job_response = $job_query->get();
+
+        return sizeof($job_response);
+    }
+
+    public static function getAllJobsPostingTitle($limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+
+        $job_query = JobOpen::query();
+        
+        $job_query = $job_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+
+        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name');
+
+        $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_query = $job_query->groupBy('job_openings.id');
+        //$job_query = $job_query->orderBy('job_openings.id','desc');
+
+        if (isset($order) && $order != '') {
+            $job_query = $job_query->orderBy($order,$type);
+        }
+        if (isset($limit) && $limit > 0) {
+            $job_query = $job_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $job_query = $job_query->offset($offset);
+        }
+        if (isset($search) && $search != '') {
+            $job_query = $job_query->where(function($job_query) use ($search){
+
+                $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
+                $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
+            });
+        }
+
         $job_response = $job_query->get();
 
         $jobs_list = array();
@@ -222,10 +266,8 @@ class JobOpen extends Model
             }
 
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
-            
             $i++;
         }
-
         return $jobs_list;
     }
 

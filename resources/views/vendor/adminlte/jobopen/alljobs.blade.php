@@ -32,7 +32,7 @@
         <?php $i=0; ?>
         <tbody>
 
-        @foreach($jobList as $key=>$value)
+        {{-- @foreach($jobList as $key=>$value)
             <tr>
                 <td>{{ ++$i }}</td>
                
@@ -40,7 +40,7 @@
 
                 <td ><a title="Show Associated Candidates" href="{{ route('alljobs.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
             </tr>
-        @endforeach
+        @endforeach --}}
         </tbody>
     </table>
 @stop
@@ -49,12 +49,22 @@
     <script type="text/javascript">
         $(document).ready(function()
         {
-            var table = jQuery('#jo_table').DataTable(
-            {
-                responsive: true
-            });
+            $("#jo_table").DataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [0, 'desc'],
+                "ajax" : {
+                    'url' : 'get-alljobs',
+                    'type' : 'get',
+                    error: function(){
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+                    }
+                },
+                responsive : true,
+                "pageLength": 50,
+                "pagingType" : "full_numbers",
+                stateSave : true,
+            });
         });
     </script>
 @endsection

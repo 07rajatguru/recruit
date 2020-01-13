@@ -3392,6 +3392,58 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.alljobs', compact('jobList','count'));
     }
 
+    public function getOrderColumnName($order){
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "job_openings.id";
+            }
+            else if ($order == 1) {
+                $order_column_name = "job_openings.posting_title";
+            }
+            else if ($order == 2) {
+                $order_column_name = "count";
+            }
+        }
+
+        return $order_column_name;
+    }
+
+    public function getAllPositionsJobsByAJAX(){
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getOrderColumnName($order);
+        $jobList = JobOpen::getAllJobsPostingTitle($limit,$offset,$search,$order_column_name,$type);
+        $count = JobOpen::getAllJobsPostingTitleCount($search);
+
+        $job_data = array();
+        $i = 0; $j = 0;
+        foreach ($jobList as $key => $value) {
+         
+            $associated_cvs_count = '<a title="Show Associated Candidates" href="'.route('alljobs.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $data = array(++$j,$value['posting_title'],$associated_cvs_count);
+
+            $job_data[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $job_data
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
     public function getAllJobsAssociatedCandidates($id)
     {
         $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);

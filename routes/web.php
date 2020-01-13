@@ -933,6 +933,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@getAllPositionsJobs'
     ]);
 
+     Route::get('get-alljobs', [
+        'as' => 'get.alljobs',
+        'uses' => 'JobOpenController@getAllPositionsJobsByAJAX'
+    ]);
+
     Route::get('all-jobs/{id}/associated_candidates', [
         'as' => 'alljobs.associated_candidates_get',
         'uses' => 'JobOpenController@getAllJobsAssociatedCandidates',
