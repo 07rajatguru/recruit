@@ -141,7 +141,7 @@
 
                             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
                                 <strong> Role : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('roles[]', $roles,[], array('class' => 'form-control','tabindex' => '11' )) !!}
+                                {!! Form::select('roles[]', $roles,[], array('class' => 'form-control','tabindex' => '11','id'=>'roles')) !!}
                                 @if ($errors->has('roles'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('roles') }}</strong>
@@ -231,6 +231,8 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            $("#roles").select2();
            
             $("#users_form").validate({
                 rules: {

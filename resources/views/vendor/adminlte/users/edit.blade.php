@@ -110,7 +110,7 @@
       
                             <div class="form-group">
                                 <strong>Role:</strong>
-                                {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','tabindex' => '11')) !!}
+                                {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','tabindex' => '11','id'=>'roles')) !!}
                             </div>
 
                             <div class="form-group">
@@ -181,6 +181,8 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            $("#roles").select2();
 
             $("#users_form").validate({
                 rules: {

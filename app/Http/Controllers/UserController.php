@@ -64,7 +64,7 @@ class UserController extends Controller
     {
         $user_id = \Auth::user()->id;
 
-        $roles = Role::pluck('display_name','id')->toArray();
+        $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id')->toArray();
         $reports_to = User::getUserArray($user_id);
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
@@ -258,7 +258,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('display_name','id');
+        $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id');
 
         $reports_to = User::getUserArray($id);
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
