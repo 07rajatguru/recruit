@@ -236,12 +236,21 @@ class ReportController extends Controller
 
         $leads_details = Lead::getUserWiseMonthlyReportLeads($users,$month,$year);
         if(sizeof($leads_details)>0){
+            $j=1;
             foreach ($leads_details as $k=>$v) {
                 $response[$k]['leads_data'] = $v;
+                $j++;
             }
         }
 
-        $total_leads = sizeof($leads_details);
+        if(isset($j) && $j != '0') {
+
+            $total_leads = $j;
+        }
+        else {
+
+            $total_leads = '0';
+        }
         //print_r($response);exit;
 
         // Get users reports
