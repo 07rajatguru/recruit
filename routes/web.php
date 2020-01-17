@@ -2510,6 +2510,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'NewRoleController@getPermissions',
     ]);
 
+    Route::get('getPermissionsByRoleID', [
+        'as' => 'getpermissions.byroleid',
+        'uses' => 'NewRoleController@getPermissionsByRoleID',
+    ]);
+
     Route::get('user-role', [
         'as' => 'userrole.index',
         'uses' => 'NewRoleController@index',

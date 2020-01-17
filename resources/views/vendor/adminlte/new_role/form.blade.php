@@ -101,6 +101,7 @@
         </div>
     </div>
     <input type="hidden" name="action" id="action" value="{{ $action }}">
+    <input type="hidden" name="selected_permissions" id="selected_permissions" value="">
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
@@ -110,7 +111,25 @@
     <script>
         $(document).ready(function(){
 
-            $( "#user_ids" ).select2();
+            var action = $("#action").val();
+
+            if(action == 'edit')
+            {
+                // for permission_ids
+                var permissions=document.getElementsByName('permission[]');
+                var selected_permissions = "";
+
+                for(var i=0; i<permissions.length; i++) {
+                    if(permissions[i].type=='checkbox')
+                        selected_permissions += permissions[i].value+",";
+                }
+
+                $("#selected_permissions").val(selected_permissions);
+            }
+            else {
+
+                selected_permissions = '';
+            }
 
             $("#role_form").validate({
                 rules: {
@@ -146,27 +165,34 @@
 
         function getModulePermissions()
         {
+            // first get exist permissions
+            var selected_permissions = $("#selected_permissions").val();
+
             // for module_ids
             var module_items=document.getElementsByName('module_ids[]');
             var module_selected_items="";
-            var arr = [];
 
             for(var i=0; i<module_items.length; i++) {
                 if(module_items[i].type=='checkbox' && module_items[i].checked==true)
-                    arr.push(module_items[i].value);
+                    module_selected_items += module_items[i].value+",";
             }
+
+            // Get Action
+
+            var action = $("#action").val();
 
             $.ajax(
             {
                 url:'/getPermissions',
                 method:'GET',
-                data:'arr='+arr,
+                data:{'module_selected_items':module_selected_items,'selected_permissions':selected_permissions},
                 dataType:'json',
                 success: function(data)
                 {
                     if(data.length > 0)
                     {
                         $(".append_permissions").html('');
+
                         var html = '';
                         html += '<div>';
 
@@ -177,14 +203,31 @@
                             html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
                             html += '&nbsp;&nbsp;<br/>';
                         }
-                        $(".append_permissions").append(html);
-                        $(".append_permissions").show();
+
+                        if(action == 'edit')
+                        {
+                            $(".edit_append_permissions").append(html);
+                            $(".edit_append_permissions").show();
+                        }
+                        else
+                        {
+                            $(".append_permissions").append(html);
+                            $(".append_permissions").show();
+                        }
                         html += '</div>';
                     }
                     else
                     {
-                        $(".append_permissions").html('');
-                        $(".append_permissions").hide();
+                        if(action == 'edit')
+                        {
+                            $(".edit_append_permissions").html('');
+                            $(".edit_append_permissions").hide();
+                        }
+                        else
+                        {
+                            $(".append_permissions").html('');
+                            $(".append_permissions").hide();
+                        }
                     }
                 }
             });

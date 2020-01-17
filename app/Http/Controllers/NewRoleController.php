@@ -23,12 +23,11 @@ class NewRoleController extends Controller
 
     public function create()
     {
-        $action = 'add';
-        $permissions = New_Permissions::get();
+        $permissions = New_Permissions::getAllPermissionsDetails();
         $modules = Module::getModules();
         $module_ids_array = array();
        
-        return view('adminlte::new_role.create',compact('permissions','action','modules','module_ids_array'));
+        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array'));
     }
 
     public function store(Request $request)
@@ -71,26 +70,20 @@ class NewRoleController extends Controller
     public function edit($id)
     {
         $role = New_Role::find($id);
-        $action = 'edit';
         $modules = Module::getModules();
 
         $rolePermissions = New_PermissionRole::getPermissionsByRoleID($id);
 
         $module_ids_array = array();
-        $permissions_ids_array = array();
         $i=0;
 
         foreach ($rolePermissions as $key => $value) {
             $module_ids_array[$i] = $value['module_id'];
-            $permissions_ids_array[$i] = $value['permission_id'];
             $i++;       
         }
 
         $module_ids_array = array_unique($module_ids_array);
-        $implode_module_ids_array = implode(",", $module_ids_array);
-        $get_permissions = New_Permissions::getPermissionsByModuleID($implode_module_ids_array);
-
-        return view('adminlte::new_role.edit',compact('role','action','modules','module_ids_array','permissions_ids_array','get_permissions'));
+        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array'));
     }
 
     public function update(Request $request,$id)
@@ -133,9 +126,54 @@ class NewRoleController extends Controller
 
     public function getPermissions()
     {
-    	$module_ids = $_GET['arr'];
-    	$permissions = New_Permissions::getPermissionsByModuleID($module_ids);
+    	$module_id = $_GET['module_id'];
+    	$permissions = New_Permissions::getPermissionsByModuleID($module_id);
 
     	return $permissions;
+    }
+
+    public function getPermissionsByRoleID()
+    {
+        $module_ids = $_GET['module_selected_items'];
+        $role_id = $_GET['role_id'];
+
+        $permissions = New_Permissions::getPermissionsByModuleIDArray($module_ids);
+        $rolePermissions = New_PermissionRole::getPermissionsByRoleID($role_id);
+
+        $selected_permissions = array();
+        $i=0;
+
+        foreach ($rolePermissions as $key => $value) {
+            $selected_permissions[$i] = $value['permission_id'];
+            $i++;       
+        }
+
+        $data = array();
+        $j=0;
+
+        foreach ($permissions as $key => $value)
+        {
+            if(in_array($value['id'], $selected_permissions))
+            {
+                $data[$j]['id'] = $value['id'];
+                $data[$j]['module_id'] = $value['module_id'];
+                $data[$j]['module_name'] = $value['module_name'];
+                $data[$j]['checked'] = '1';
+                $data[$j]['display_name'] = $value['display_name'];
+                $data[$j]['description'] = $value['description'];
+            }
+            else
+            {
+                $data[$j]['id'] = $value['id'];
+                $data[$j]['module_id'] = $value['module_id'];
+                $data[$j]['module_name'] = $value['module_name'];
+                $data[$j]['checked'] = '0';
+                $data[$j]['display_name'] = $value['display_name'];
+                $data[$j]['description'] = $value['description'];
+            }
+            $j++;
+        }
+      
+        return $data;exit;
     }
 }
