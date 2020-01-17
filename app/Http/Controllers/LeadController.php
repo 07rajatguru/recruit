@@ -124,7 +124,7 @@ class LeadController extends Controller
         foreach ($leads_res as $key => $value) {
             $action = '';
 
-            if($value['access']){
+            if($value['access'] || $user_role_id == $asst_manager_marketing_id){
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
 
@@ -401,8 +401,10 @@ class LeadController extends Controller
 
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id =  env('STRATEGY');
+        // Display Lead & Client to one user
+        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
 
         if(in_array($user_role_id,$access_roles_id) || ($lead->referredby==$user_id))
         {
