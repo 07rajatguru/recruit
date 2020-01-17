@@ -48,25 +48,25 @@ class InterviewController extends Controller
             if ($order == 0) {
                 $order_column_name = "interview.id";
             }
-            if ($order == 2) {
+            if ($order == 3) {
                 $order_column_name = "job_openings.posting_title";
             }
-            else if ($order == 3) {
+            else if ($order == 4) {
                 $order_column_name = "candidate_basicinfo.full_name";
             }
-            else if ($order == 4) {
+            else if ($order == 5) {
                 $order_column_name = "candidate_basicinfo.mobile";
             }
-            else if ($order == 5) {
+            else if ($order == 6) {
                 $order_column_name = "interview.interview_date";
             }
-            else if ($order == 6) {
+            else if ($order == 7) {
                 $order_column_name = "interview.location";
             }
-            else if ($order == 7) {
+            else if ($order == 8) {
                 $order_column_name = "interview.status";
             }
-            else if ($order == 8) {
+            else if ($order == 9) {
                 $order_column_name = "users.name";
             }
         }
@@ -419,7 +419,6 @@ class InterviewController extends Controller
 
         // Interview Schedule Mail
         $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
-
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
 

@@ -200,7 +200,7 @@ class Interview extends Model
             $interview[$i]['city'] = $value->city;
             $interview[$i]['candidate_fname'] = $value->candidate_fname;
             $interview[$i]['contact'] = $value->contact;
-            $interview[$i]['interview_date'] = $value->interview_date;
+            $interview[$i]['interview_date'] = date('d-m-Y h:i A', strtotime("$value->interview_date"));
             $interview[$i]['interview_date_ts'] = strtotime($value->interview_date);
             $interview[$i]['location'] = $value->location;
             $interview[$i]['status'] = $value->status;
