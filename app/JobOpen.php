@@ -968,7 +968,7 @@ class JobOpen extends Model
                                                 'job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from',
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
-                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name'
+                                                'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at as updated_at'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
@@ -989,7 +989,7 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
-        //$job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
+        //$job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
 
         if (isset($order) && $order != '') {
             if ($order == 'job_openings.lacs_from') {
@@ -1154,6 +1154,7 @@ class JobOpen extends Model
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
             $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
+            $jobs_list[$i]['updated_date'] = date('d-m-Y',strtotime($value->updated_at));
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
             }
@@ -1363,7 +1364,7 @@ class JobOpen extends Model
                                                 'job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened',
                                                 'job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name',
                                                 'job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at',
-                                                'client_heirarchy.name as level_name'
+                                                'client_heirarchy.name as level_name','job_openings.updated_at as updated_at'
                                             );
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
@@ -1391,7 +1392,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
         }
 
-        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        //$job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search){
 
@@ -1593,8 +1594,8 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->where('open_to_all','=','1');
         $job_open_query = $job_open_query->having('count','<','5');
-        //$job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
-        $job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        //$job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
 
         if (isset($limit) && $limit > 0) {
             $job_open_query = $job_open_query->limit($limit);

@@ -545,9 +545,12 @@ class JobOpenController extends Controller
                 $order_column_name = "job_openings.created_at";
             }
             else if ($order == 11) {
-                $order_column_name = "job_openings.no_of_positions";
+                $order_column_name = "job_openings.updated_at";
             }
             else if ($order == 12) {
+                $order_column_name = "job_openings.no_of_positions";
+            }
+            else if ($order == 13) {
                 $order_column_name = "client_basicinfo.coordinator_name";
             }
         }
@@ -700,7 +703,7 @@ class JobOpenController extends Controller
             }*/
 
             //$location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['location'].'</a>';
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,/*$location*/$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name/*,$level_name*/,$posting_title,$associated_count,/*$location*/$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }

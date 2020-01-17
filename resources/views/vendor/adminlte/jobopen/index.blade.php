@@ -284,6 +284,7 @@
             <th>Min CTC<br/>(in Lacs)</th>
             <th>Max CTC<br/>(in Lacs)</th>
             <th>Added Date</th>
+            <th>Updated Date</th>
             <th>No. Of <br/> Positions</th>
             <th>Contact <br/> Point</th>
             <th>Edu Qualifications</th>
@@ -340,8 +341,6 @@
                 <td>{!! $value['desired_candidate'] or ''!!}</td>
 
                 <td>{{ $value['close_date'] or ''}}</td>
-
-
             </tr>
         @endforeach
         </tbody>
@@ -419,8 +418,8 @@
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [10,'desc'],
                 stateSave : true,
+                "order" : [11,'desc'],
                 "columnDefs": [ 
                     { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
@@ -432,8 +431,9 @@
                     { "width": "10px", "targets": 7 },
                     { "width": "10px", "targets": 8 },
                     { "width": "10px", "targets": 9 },
-                    { "width": "5px", "targets": 10 },
-                            ],
+                    { "width": "5px",  "targets": 10 },
+                    { "visible": false,  "targets": 11 },
+                ],
                 "ajax" : {
                     'url' : 'jobs/all',
                     data : {year:year,client_heirarchy:client_heirarchy},
@@ -461,37 +461,38 @@
                 "pageLength": 50,
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[16] == "0" ){
+
+                    if ( Data[17] == "0" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[16] == "1" ){
+                    else if ( Data[17] == "1" ){
                         $('td:eq(4)', Row).css('background-color', '#FF0000');
                     }
-                    else if ( Data[16] == "2" ){
+                    else if ( Data[17] == "2" ){
                         $('td:eq(4)', Row).css('background-color', '#00B0F0');
                     }
-                    else if ( Data[16] == "3" ){
+                    else if ( Data[17] == "3" ){
                         $('td:eq(4)', Row).css('background-color', '#FABF8F');
                     }
-                    else if ( Data[16] == "4" ){
+                    else if ( Data[17] == "4" ){
                         $('td:eq(4)', Row).css('background-color', '#B1A0C7');
                     }
-                    else if ( Data[16] == "5" ){
+                    else if ( Data[17] == "5" ){
                         $('td:eq(4)', Row).css('background-color', 'yellow');
                     }
-                    else if ( Data[16] == "6" ){
+                    else if ( Data[17] == "6" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[16] == "7" ){
+                    else if ( Data[17] == "7" ){
                         $('td:eq(4)', Row).css('background-color', '#808080');
                     }
-                    else if ( Data[16] == "8" ){
+                    else if ( Data[17] == "8" ){
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[16] == "9" ){
+                    else if ( Data[17] == "9" ){
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[16] == "10" ){
+                    else if ( Data[17] == "10" ){
                         $('td:eq(4)', Row).css('background-color', '#FFFFFF');
                     }
                     else{
@@ -546,7 +547,8 @@
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [10,'desc'],
+                stateSave : true,
+                "order" : [11,'desc'],
                 "columnDefs": [ 
                     { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
@@ -559,7 +561,8 @@
                     { "width": "10px", "targets": 8 },
                     { "width": "10px", "targets": 9 },
                     { "width": "5px", "targets": 10 },
-                            ],
+                    { "visible": false,  "targets": 11 },
+                ],
                 "ajax" : {
                     'url' : 'jobs/all',
                     data : {year:year,client_heirarchy:client_heirarchy},
@@ -612,39 +615,38 @@
                 responsive: true,
                 "pageLength": 50,
                 "pagingType": "full_numbers",
-                stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[16] == "0" ){
+                    if ( Data[17] == "0" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[16] == "1" ){
+                    else if ( Data[17] == "1" ){
                         $('td:eq(4)', Row).css('background-color', '#FF0000');
                     }
-                    else if ( Data[16] == "2" ){
+                    else if ( Data[17] == "2" ){
                         $('td:eq(4)', Row).css('background-color', '#00B0F0');
                     }
-                    else if ( Data[16] == "3" ){
+                    else if ( Data[17] == "3" ){
                         $('td:eq(4)', Row).css('background-color', '#FABF8F');
                     }
-                    else if ( Data[16] == "4" ){
+                    else if ( Data[17] == "4" ){
                         $('td:eq(4)', Row).css('background-color', '#B1A0C7');
                     }
-                    else if ( Data[16] == "5" ){
+                    else if ( Data[17] == "5" ){
                         $('td:eq(4)', Row).css('background-color', 'yellow');
                     }
-                    else if ( Data[16] == "6" ){
+                    else if ( Data[17] == "6" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[16] == "7" ){
+                    else if ( Data[17] == "7" ){
                         $('td:eq(4)', Row).css('background-color', '#808080');
                     }
-                    else if ( Data[16] == "8" ){
+                    else if ( Data[17] == "8" ){
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[16] == "9" ){
+                    else if ( Data[17] == "9" ){
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[16] == "10" ){
+                    else if ( Data[17] == "10" ){
                         $('td:eq(4)', Row).css('background-color', '#FFFFFF');
                     }
                     else{
