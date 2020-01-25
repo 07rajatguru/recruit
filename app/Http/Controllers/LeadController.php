@@ -139,7 +139,7 @@ class LeadController extends Controller
             }
 
             if ($value['convert_client'] == 0){
-                if($value['access']){
+                if($value['access'] || $user_role_id == $asst_manager_marketing_id){
                     $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
                 }
             }
