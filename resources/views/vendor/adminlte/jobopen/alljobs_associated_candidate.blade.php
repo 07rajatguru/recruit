@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb" style="margin-top:15px;">
             <div class="pull-left">
-                <h3>Associated Candidates to Job Opening : {{ $posting_title }}</h3>
+                <h3>Associated Candidates to Job Opening : {{ $posting_title }} ({{ $count or '0'}})</h3>
                 <span> </span>
             </div>
 
@@ -28,6 +28,7 @@
                 <th>Candidate Owner</th>
                 <th>Candidate Email</th>
                 <th>Mobile Number</th>
+                <th>Added Date</th>
             </tr>
         </thead>
         <tbody>
@@ -39,6 +40,10 @@
                     <td>{{ $candidate->owner or '' }}</td>
                     <td>{{ $candidate->email or '' }}</td>
                     <td>{{ $candidate->mobile or '' }}</td>
+                    <?php
+                        $created_at = date('d-m-Y',strtotime($candidate->created_at));
+                    ?>
+                    <td>{{ $created_at or '' }}</td>
                 </tr>
             @endforeach
         </tbody>

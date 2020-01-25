@@ -3406,6 +3406,9 @@ class JobOpenController extends Controller
                 $order_column_name = "job_openings.posting_title";
             }
             else if ($order == 2) {
+                $order_column_name = "job_openings.city";
+            }
+            else if ($order == 3) {
                 $order_column_name = "count";
             }
         }
@@ -3431,7 +3434,7 @@ class JobOpenController extends Controller
         foreach ($jobList as $key => $value) {
          
             $associated_cvs_count = '<a title="Show Associated Candidates" href="'.route('alljobs.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
-            $data = array(++$j,$value['posting_title'],$associated_cvs_count);
+            $data = array(++$j,$value['posting_title'],$value['city'],$associated_cvs_count);
 
             $job_data[$i] = $data;
             $i++;
@@ -3450,10 +3453,12 @@ class JobOpenController extends Controller
     public function getAllJobsAssociatedCandidates($id)
     {
         $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
+        $count = sizeof($candidateDetails);
+
         $job_details = JobOpen::getJobById($id);
 
         $posting_title = $job_details['new_posting_title'];
 
-        return view('adminlte::jobopen.alljobs_associated_candidate',compact('candidateDetails','posting_title'));
+        return view('adminlte::jobopen.alljobs_associated_candidate',compact('candidateDetails','posting_title','count'));
     }
 }

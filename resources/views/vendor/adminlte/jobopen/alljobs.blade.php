@@ -25,7 +25,8 @@
         <thead>
         <tr>
             <th width="7%">No</th>
-            <th width="43%">Position Title</th>
+            <th width="33%">Position Title</th>
+            <th width="10%">Location</th>
             <th width="10%">Associated Candidates Count</th>
         </tr>
         </thead>
@@ -37,6 +38,8 @@
                 <td>{{ ++$i }}</td>
                
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $value['color'] }};">{{ $value['posting_title'] or ''}}</td>
+
+                <td>{{ $value['city'] }}</td>
 
                 <td ><a title="Show Associated Candidates" href="{{ route('alljobs.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
             </tr>

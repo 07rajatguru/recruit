@@ -11,6 +11,7 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Candidate List <span id="candidate_count">({{ $count or 0 }})</span></h2>
+                <h4><span>Total No. of Candidates - {{ $total_count }}</span></h4>
             </div>
 
             <div class="pull-right">
@@ -55,6 +56,7 @@
                 <th>Candidate Owner</th>
                 <th>Candidate Email</th>
                 <th>Mobile Number</th>
+                <th>Added Date</th>
             </tr>
         </thead>
         <?php $i=0; ?>

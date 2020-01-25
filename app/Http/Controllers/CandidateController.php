@@ -103,8 +103,9 @@ class CandidateController extends Controller
         }
 
         $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
+        $total_count = CandidateBasicInfo::getAllCandidatesCount('','');
         
-        return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count','letter','letter_array'));
+        return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count','letter','letter_array','total_count'));
     }
 
     public function applicantIndex()
@@ -132,7 +133,7 @@ class CandidateController extends Controller
                 $order_column_name = "candidate_basicinfo.mobile";
             }
             else if ($order == 6) {
-                $order_column_name = "functional_roles.name";
+                $order_column_name = "candidate_basicinfo.created_at";
             }
         }
         return $order_column_name;
@@ -191,6 +192,7 @@ class CandidateController extends Controller
 
         $order_column_name = self::getCandidateOrderColumnName($order);
         $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter);
+
         $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter);
 
         $candidate_details = array();
@@ -205,7 +207,7 @@ class CandidateController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile']);
+            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$value['created_at']);
             $candidate_details[$i] = $data;
             $i++;
         }

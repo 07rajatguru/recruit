@@ -193,7 +193,7 @@ class JobOpen extends Model
         $job_query = $job_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name');
+        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name','job_openings.city as city');
 
         $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
         $job_query = $job_query->groupBy('job_openings.id');
@@ -204,6 +204,7 @@ class JobOpen extends Model
 
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
                 $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
+                $job_query = $job_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
 
@@ -219,7 +220,7 @@ class JobOpen extends Model
         $job_query = $job_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name');
+        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name','job_openings.city as city');
 
         $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
         $job_query = $job_query->groupBy('job_openings.id');
@@ -239,6 +240,7 @@ class JobOpen extends Model
 
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
                 $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
+                $job_query = $job_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
 
@@ -266,6 +268,7 @@ class JobOpen extends Model
             }
 
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
+            $jobs_list[$i]['city'] = $value->city;
             $i++;
         }
         return $jobs_list;

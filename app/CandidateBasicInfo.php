@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Date;
 
 class CandidateBasicInfo extends Model
 {
@@ -58,7 +59,7 @@ class CandidateBasicInfo extends Model
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
 
         if (isset($order) && $order >= 0) {
            $query = $query->orderBy($order,$type);
@@ -75,10 +76,36 @@ class CandidateBasicInfo extends Model
 
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+
+                if($date_search){
+
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+                    $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+                }
             });
         }
         
@@ -92,6 +119,8 @@ class CandidateBasicInfo extends Model
             $candidate[$i]['owner'] = $value->owner;
             $candidate[$i]['email'] = $value->email;
             $candidate[$i]['mobile'] = $value->mobile;
+            $candidate[$i]['created_at'] = date('d-m-Y',strtotime($value->created_at));
+            
             $i++;
         }
 
@@ -103,16 +132,42 @@ class CandidateBasicInfo extends Model
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
         
         $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
 
         $query = $query->where(function($query) use ($search){
+
+            $date_search = false;
+            $date_array = explode("-",$search);
+            if(isset($date_array) && sizeof($date_array)>0){
+                $stamp = strtotime($search);
+                if (is_numeric($stamp)){
+                    $month = date( 'm', $stamp );
+                    $day   = date( 'd', $stamp );
+                    $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)){
+                        $date_search = true;
+                    }
+                }
+            }
+
             $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
             $query = $query->orwhere('users.name','like',"%$search%");
             $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
             $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+
+            if($date_search){
+                   
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($search);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+                $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+            }
         });
        
         $res = $query->count();
