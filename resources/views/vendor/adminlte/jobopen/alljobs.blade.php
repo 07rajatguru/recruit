@@ -27,7 +27,7 @@
             <th width="7%">No</th>
             <th width="33%">Position Title</th>
             <th width="10%">Location</th>
-            <th width="10%">Associated Candidates Count</th>
+            <th width="10%">Associated Candidates Count ( <span id="total_order" style="color: #337ab7;"></span> )</th>
         </tr>
         </thead>
         <?php $i=0; ?>
@@ -49,6 +49,7 @@
 @stop
 
 @section('customscripts')
+
     <script type="text/javascript">
         $(document).ready(function()
         {
@@ -63,11 +64,18 @@
 
                     }
                 },
+                drawCallback:function(settings)
+                {
+                 $('#total_order').html(settings.json.total);
+                },
                 responsive : true,
                 "pageLength": 50,
                 "pagingType" : "full_numbers",
                 stateSave : true,
+
             });
+
+            //$('#jo_table tr:eq(0) th:eq(0)').text("Text");
         });
     </script>
 @endsection

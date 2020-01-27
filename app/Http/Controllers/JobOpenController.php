@@ -3431,9 +3431,14 @@ class JobOpenController extends Controller
 
         $job_data = array();
         $i = 0; $j = 0;
+        $total_order = 0;
+
         foreach ($jobList as $key => $value) {
          
-            $associated_cvs_count = '<a title="Show Associated Candidates" href="'.route('alljobs.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $associated_cvs_count = '<center><a title="Show Associated Candidates" href="'.route('alljobs.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a></center>';
+
+            $total_order = $total_order + $value['associate_candidate_cnt'];
+
             $data = array(++$j,$value['posting_title'],$value['city'],$associated_cvs_count);
 
             $job_data[$i] = $data;
@@ -3444,7 +3449,8 @@ class JobOpenController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $job_data
+            "data" => $job_data,
+            "total" => number_format($total_order)
         );
 
         echo json_encode($json_data);exit;
