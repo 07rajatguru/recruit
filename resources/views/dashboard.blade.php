@@ -488,7 +488,7 @@
                     else{
                         var html = '';
                         html += '<tr>';
-                        html += '<td>No Jobs open to all</td>';
+                        html += '<td colspan="8" style="border: 1px solid #00c0ef;">No Jobs open to all</td>';
                         html += '</tr>';
 
                         $("#job_open_to_all").append(html);
