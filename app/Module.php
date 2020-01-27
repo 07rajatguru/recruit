@@ -76,4 +76,19 @@ class Module extends Model
 
         return $module_name;
     }
+
+    public static function getModuleNameById($module_id){
+
+        $module_name = '';
+
+        $query = Module::query();
+        $query = $query->where('id','=',$module_id);
+        $query = $query->first();
+
+        if(isset($query)){
+            $module_name = $query->name;
+        }
+
+        return $module_name;
+    }
 }

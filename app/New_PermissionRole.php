@@ -14,7 +14,11 @@ class New_PermissionRole extends Model
     	$query = New_PermissionRole::query();
     	$query = $query->leftjoin('new_permissions','new_permissions.id','=','new_permission_role.permission_id');
     	$query = $query->select('new_permissions.module_id as module_id','new_permission_role.permission_id');
-    	$query = $query->where('new_permission_role.role_id','=',$role_id);
+
+        if(isset($role_id) && $role_id > 0) {
+    	   $query = $query->where('new_permission_role.role_id','=',$role_id);
+        }
+        
     	$response = $query->get();
 
     	$module_permissions = array();

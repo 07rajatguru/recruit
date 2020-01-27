@@ -80,7 +80,9 @@
                     </div>
 
                     @foreach($modules as $k=>$v)
-                        <div class="div_{{ $v }}" style="border:1px dotted black;display:none;"></div>
+                        <div class="div_{{ $v }}" style="border:1px dotted black;display:none;">
+                            <span><b>{{ $v }}: </b></span><br/><br/>
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -154,14 +156,11 @@
                     {
                         if(data.length > 0)
                         {
+                            var arr = module_selected_items.split(",");
+                         
                             for (var i = 0; i < data.length; i++) 
                             {
-                                $(".div_"+data[i].module_name).html('');
-
                                 var html = '';
-
-                                html += '<div>';
-                                html += '<span><b>'+data[i].module_name+' : </b></span><br/><br/>';
 
                                 if(data[i].checked == '1')
                                 {
@@ -177,8 +176,6 @@
                                     html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
                                     html += '&nbsp;&nbsp;';
                                 }
-                                
-                                html += '</div>';
 
                                 $(".div_"+data[i].module_name).append(html);
                                 $(".div_"+data[i].module_name).show();
@@ -211,11 +208,11 @@
                     if(check_bool == true) {
                         if(data.length > 0)
                         {
-                            $(".div_"+module_name).html('');
+                            //$(".div_"+module_name).html('');
 
                             var html = '';
                             html += '<div>';
-                            html += '<span><b>'+module_name+' : </b></span><br/><br/>';
+                            //html += '<span><b>'+module_name+' : </b></span><br/><br/>';
 
                             for (var i = 0; i < data.length; i++) 
                             {

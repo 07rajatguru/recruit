@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Module;
 
 class New_Permissions extends Model
 {
@@ -33,7 +34,11 @@ class New_Permissions extends Model
     public static function getPermissionsByModuleID($module_id)
     {
         $query = New_Permissions::query();
-        $query = $query->where('new_permissions.module_id',$module_id);
+
+        if(isset($module_id) && $module_id > 0) {
+            $query = $query->where('new_permissions.module_id',$module_id);
+        }
+        
         $query = $query->select('new_permissions.*');
         $query = $query->orderBy('new_permissions.id','asc');
         $response = $query->get();
@@ -45,6 +50,7 @@ class New_Permissions extends Model
             $permissions[$i]['id'] = $value->id;
             $permissions[$i]['display_name'] = $value->display_name;
             $permissions[$i]['description'] = $value->description;
+            $permissions[$i]['module_name'] = Module::getModuleNameById($value->module_id);
             $i++;
         }
         return $permissions;
