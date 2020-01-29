@@ -2771,16 +2771,11 @@ class JobOpenController extends Controller
 
         $job_open = JobOpen::find($job_id);
 
-        $job = '';
-        if (isset($priority) && sizeof($priority)>0){
-
-                 $job = $priority;
-            
+        if (isset($priority) && $priority != ''){
+            $job_open->priority = $priority;
+            $job_open->save();
         }
-        $job_open->priority = $job;
-         
-        $job_open->save();
-
+    
         if ($display_name == 'Job Close') {
             return redirect()->route('jobopen.close')->with('success', 'Job Priority Updated successfully');
         }
