@@ -418,7 +418,6 @@
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                stateSave : true,
                 "order" : [11,'desc'],
                 "columnDefs": [ 
                     { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
@@ -498,7 +497,8 @@
                     else{
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                }
+                },
+                stateSave : true,
             });
 
             $('#allcb').change(function(){
@@ -547,7 +547,6 @@
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                stateSave : true,
                 "order" : [11,'desc'],
                 "columnDefs": [ 
                     { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
@@ -652,7 +651,8 @@
                     else{
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                }
+                },
+                stateSave : true,
             });
         }
 
