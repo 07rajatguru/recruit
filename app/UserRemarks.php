@@ -25,9 +25,9 @@ class UserRemarks extends Model
                 $remarks[$i]['id'] = $value->id;
                 $remarks[$i]['user_id'] = $value->user_id;
                 $remarks[$i]['user_name'] = $value->user_name;
-                $remarks[$i]['full_name'] = $value->first_name." ".$value->last_name;
+                $remarks[$i]['full_name'] = $value->first_name."-".$value->last_name;
                 $remarks[$i]['remark_date'] = $value->date;
-                $remarks[$i]['converted_date'] = date("j S",strtotime($value->date));
+                $remarks[$i]['converted_date'] = date("j",strtotime($value->date));
                 $remarks[$i]['remarks'] = $value->remarks;
                 $i++;
             }

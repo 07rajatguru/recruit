@@ -75,7 +75,10 @@
                             @if(isset($list) && sizeof($list)>0)
                                 @foreach($list as $key => $value)
                                     @foreach($value as $key1=>$value1)
-                                        <th style="border: 1px solid black;">{{ $key1 }}</th>
+                                        <?php
+                                            $con_dt = date("j S", mktime(0, 0, 0, 0, $key1, 0));
+                                        ?>
+                                        <th style="border: 1px solid black;">{{ $con_dt }}</th>
                                     @endforeach
                                     @break
                                 @endforeach
@@ -85,7 +88,10 @@
                         <tbody>
                         @foreach($list as $key=>$value)
                         <tr style="border: 1px solid black;">
-                            <th style="color: red; border: 1px solid black;">{{ $key }}<hr>
+                            <?php
+                                $replce_nm = str_replace("-"," ", $key);
+                            ?>
+                            <th style="color: red; border: 1px solid black;">{{ $replce_nm }}<hr>
                                 <span> Login </span><hr>
                                 <span> Logout </span><hr>
                                 <span> Total </span>

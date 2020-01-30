@@ -356,10 +356,10 @@ class HomeController extends Controller
             foreach ($users as $key => $value) {
               //  echo date('m', $time);exit;
                 if (date('n', $time)==$month)
-                    $list[$key][date('j S', $time)]['login']='';
-                $list[$key][date('j S', $time)]['logout']='';
-                $list[$key][date('j S', $time)]['total']='';
-                $list[$key][date('j S', $time)]['remarks']='';
+                    $list[$key][date('j', $time)]['login']='';
+                $list[$key][date('j', $time)]['logout']='';
+                $list[$key][date('j', $time)]['total']='';
+                $list[$key][date('j', $time)]['remarks']='';
             }
         }
 
@@ -376,6 +376,8 @@ class HomeController extends Controller
                         join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
         }
 
+        //print_r($response);exit;
+
         $date = new Date();
         if(sizeof($response)>0){
             foreach ($response as $key => $value) {
@@ -383,14 +385,14 @@ class HomeController extends Controller
                 $login_time = $date->converttime($value->login);
                 $logout_time = $date->converttime($value->logout);
 
-                $combine_name = $value->first_name." ".$value->last_name;
+                $combine_name = $value->first_name."-".$value->last_name;
 
-                $list[$combine_name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time);
-                $list[$combine_name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
+                $list[$combine_name][date("j",strtotime($value->date))]['login'] = date("h:i A",$login_time);
+                $list[$combine_name][date("j",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
 
                 $total = ($logout_time - $login_time) / 60;
 
-                $list[$combine_name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
+                $list[$combine_name][date("j",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
 
                 if (isset($user_remark) && sizeof($user_remark)>0) {
                     foreach ($user_remark as $k => $v) {
@@ -403,7 +405,7 @@ class HomeController extends Controller
                         }
                         else{
 
-                            if (($month == $split_month) && ($year == $split_year)) {
+                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
                                 $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                             }
                         }
@@ -424,7 +426,7 @@ class HomeController extends Controller
             }
         }
 
-        //print_r($list);exit;
+       //print_r($list);exit;
 
         // New List1
         $list1 = array();
