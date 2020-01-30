@@ -12,7 +12,7 @@ class UserRemarks extends Model
 
     	$query = UserRemarks::query();
         $query = $query->join('users','users.id','=','user_remarks.user_id');
-    	$query = $query->select('user_remarks.*','users.name as user_name');
+    	$query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name');
     	if (isset($user_id) && $user_id > 0) {
     		$query = $query->where('user_remarks.user_id',$user_id);
     	}
@@ -25,6 +25,7 @@ class UserRemarks extends Model
                 $remarks[$i]['id'] = $value->id;
                 $remarks[$i]['user_id'] = $value->user_id;
                 $remarks[$i]['user_name'] = $value->user_name;
+                $remarks[$i]['full_name'] = $value->first_name." ".$value->last_name;
                 $remarks[$i]['remark_date'] = $value->date;
                 $remarks[$i]['converted_date'] = date("j S",strtotime($value->date));
                 $remarks[$i]['remarks'] = $value->remarks;

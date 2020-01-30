@@ -506,7 +506,9 @@ class User extends Authenticatable
         if(sizeof($user_response)>0)
         {
             foreach ($user_response as $key => $value) {
-                $list[$value->name]= "";
+
+                $full_name = $value->first_name." ".$value->last_name;
+                $list[$full_name]= "";
             }
         }
 

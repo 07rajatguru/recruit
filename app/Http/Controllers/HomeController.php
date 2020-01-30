@@ -379,14 +379,18 @@ class HomeController extends Controller
         $date = new Date();
         if(sizeof($response)>0){
             foreach ($response as $key => $value) {
+
                 $login_time = $date->converttime($value->login);
                 $logout_time = $date->converttime($value->logout);
-                $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time);
-                $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
+
+                $combine_name = $value->first_name." ".$value->last_name;
+
+                $list[$combine_name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time);
+                $list[$combine_name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
 
                 $total = ($logout_time - $login_time) / 60;
 
-                $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
+                $list[$combine_name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
 
                 if (isset($user_remark) && sizeof($user_remark)>0) {
                     foreach ($user_remark as $k => $v) {
@@ -394,13 +398,13 @@ class HomeController extends Controller
                         $split_month = date('n',strtotime($v['remark_date']));
                         $split_year = date('Y',strtotime($v['remark_date']));
 
-                        if (($v['user_name'] == $value->name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
-                            $list[$value->name][$v['converted_date']]['remarks'] = $v['remarks'];
+                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
+                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                         }
                         else{
 
                             if (($month == $split_month) && ($year == $split_year)) {
-                                $list[$v['user_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                             }
                         }
                     }
@@ -414,7 +418,7 @@ class HomeController extends Controller
                     $split_month = date('n',strtotime($v['remark_date']));
                     $split_year = date('Y',strtotime($v['remark_date']));
                     if (($month == $split_month) && ($year == $split_year)) {
-                        $list[$v['user_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
                     }
                 }
             }
@@ -434,6 +438,8 @@ class HomeController extends Controller
             }
         }
 
+        //print_r($list1);exit;
+
         if(sizeof($list)>0) {
             foreach ($list as $key => $value) {
                 if(sizeof($value)>0) {
@@ -445,9 +451,9 @@ class HomeController extends Controller
                                 $split_month = date('n',strtotime($u_v1['remark_date']));
                                 $split_year = date('Y',strtotime($u_v1['remark_date']));
 
-                                if (($u_v1['user_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
                                     
-                                    $list1[$key][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
                                 }
                                 $i++;
                             }
@@ -458,6 +464,8 @@ class HomeController extends Controller
         }
 
         $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
+
+        //print_r($list1);exit;
 
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('isSuperAdmin','isAdmin','isAccountant','isDirector','users_name'));
 

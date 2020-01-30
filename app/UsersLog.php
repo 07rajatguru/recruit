@@ -34,7 +34,7 @@ class UsersLog extends Model
         }
 
         $query = $query->groupBy('users_log.date','users.id','users.name');
-        $query = $query->select('users.id' ,'users.name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
         $query = $query->whereNotIn('status',$status_array);
 
 
