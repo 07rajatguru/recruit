@@ -143,7 +143,6 @@
             $("#interview_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [5,'desc'],
                 "columnDefs": [ { "targets": 1, "searchable": false, "orderable": false },
                                 { "targets": 2, "searchable": false, "orderable": false },
                             ],
