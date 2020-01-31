@@ -469,10 +469,11 @@ class Interview extends Model
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->join('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location','interview.interview_location as interview_location');
+            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location','interview.interview_location as interview_location','client_heirarchy.name as level_name');
         $query = $query->where('interview.id',$ids);
         $query = $query->orderBy('interview.interview_date','asc');
         $response = $query->first();
@@ -706,7 +707,7 @@ class Interview extends Model
         $input['company_url'] = $job_details['company_url'];
         $input['company_desc'] = $user_company_details['description'];
         $input['client_desc'] = $job_details['client_desc'];
-        $input['job_designation'] = $job_details['posting_title'];
+        $input['job_designation'] = $job_details['new_posting_title'];
         $input['job_location'] = $job_details['job_location'];
         $input['job_description'] = $job_details['job_description'];
         $input['interview_date'] = $interview_date;
@@ -790,7 +791,7 @@ class Interview extends Model
         $input['ccity'] = '';
         $input['cmobile'] = $cmobile;
         $input['cemail'] = $cemail;
-        $input['job_designation'] = $interview->posting_title;
+        $input['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
         $input['job_location'] = $location;
         $input['interview_date'] = $interview_date;
         $input['interview_time'] = $interview_time;
@@ -863,7 +864,7 @@ class Interview extends Model
         $interview_details['ccity'] = '';
         $interview_details['cmobile'] = $cmobile;
         $interview_details['cemail'] = $cemail;
-        $interview_details['job_designation'] = $interview->posting_title;
+        $interview_details['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
         $interview_details['job_location'] = $location;
         $interview_details['interview_date'] = $interview_date;
         $interview_details['interview_time'] = $interview_time;

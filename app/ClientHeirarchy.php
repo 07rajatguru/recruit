@@ -65,7 +65,7 @@ class ClientHeirarchy extends Model
         $query = $query->select('client_heirarchy.*');
         $res = $query->first();
 
-        if(isset($res) && sizeof($res) > 0) {
+        if(isset($res) && $res != '') {
 
             if($res->position == '0'){
 
@@ -82,5 +82,21 @@ class ClientHeirarchy extends Model
         }
 
         return $position;
+    }
+    public static function getClientHeirarchyNameById($level_id){
+
+        $query = ClientHeirarchy::query();
+        $query = $query->where('id','=',$level_id);
+        $query = $query->select('client_heirarchy.*');
+        $res = $query->first();
+
+        $level_name = '';
+
+        if(isset($res) && $res != '') {
+
+            $level_name = $res->name;
+        }
+
+        return $level_name;
     }
 }

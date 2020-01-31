@@ -405,7 +405,7 @@ class CandidateBasicInfo extends Model
         $input['company_url'] = $job_details['company_url'];
         $input['company_desc'] = $user_company_details['description'];
         $input['client_desc'] = $job_details['client_desc'];
-        $input['job_designation'] = $job_details['posting_title'];
+        $input['job_designation'] = $job_details['new_posting_title'];
         $input['job_location'] = $job_details['job_location'];
         $input['job_description'] = $job_details['job_description'];
      

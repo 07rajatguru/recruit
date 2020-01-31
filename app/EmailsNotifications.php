@@ -38,7 +38,9 @@ class EmailsNotifications extends Model
         $query = $query->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id');
         $query = $query->join('users', 'users.id', '=', 'job_openings.hiring_manager_id');
         $query = $query->join('industry', 'industry.id', '=', 'job_openings.industry_id');
-        $query = $query->select('emails_notification.module_id as module_id','emails_notification.sender_name as sender_name','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name');
+        $query = $query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+
+        $query = $query->select('emails_notification.module_id as module_id','emails_notification.sender_name as sender_name','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name','client_heirarchy.name as level_name');
         $query = $query->where('emails_notification.id',$id);
         $query_res = $query->get();
 
@@ -74,6 +76,14 @@ class EmailsNotifications extends Model
             $salary = $min_ctc.'-'.$max_ctc;
 
             $job_open['posting_title'] = $value->posting_title;
+
+            if (isset($value->level_name) && $value->level_name != '') {
+                $job_open['new_posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $job_open['new_posting_title'] = $value->posting_title;
+            }
+
             $job_open['job_id'] = $value->job_id;
             $job_open['client_name'] = $value->client_name;
             $job_open['client_id'] = $value->client_id;

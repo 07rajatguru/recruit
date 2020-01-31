@@ -1291,8 +1291,9 @@ class JobOpenController extends Controller
 
                 $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
                 $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
+                $level_nm = ClientHeirarchy::getClientHeirarchyNameById($level_id);
                         
-                $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
+                $subject = "Job Opening - " . $level_nm. " - ". $posting_title . "@" .$client_name . "-" . $client_city;
                 $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                 $module_id = $job_id;
 
@@ -2219,7 +2220,10 @@ class JobOpenController extends Controller
                 $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
                 $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
                 
-                $subject = "Job Opening - ". $posting_title . "@" .$client_name . "-" . $client_city;
+                $level_nm = ClientHeirarchy::getClientHeirarchyNameById($level_id);
+                        
+                $subject = "Job Opening - " . $level_nm. " - ". $posting_title . "@" . $client_name . "-" . $client_city;
+
                 $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                 $module_id = $job_id;
 

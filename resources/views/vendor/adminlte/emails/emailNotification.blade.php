@@ -36,11 +36,13 @@
             </td>
                 <tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Posting Title</th>
-                    <td align="center" colspan="3" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{!! $job['posting_title'] !!}</td>
+                    <td align="center" colspan="3" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">
+                        {!! $job['new_posting_title'] !!}</td>
 			    </tr>
                 <tr>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Client Name</th>
-                    <td align="center" colspan="3" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{{ $job['client_name'] }}</td>
+                    <td align="center" colspan="3" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">
+                        {{ $job['client_name'] }}</td>
                 </tr>
                 <tr>
                    	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Hiring Manager</th>
@@ -58,7 +60,8 @@
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Job Type</th>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">{{ $job['job_type'] }}</td>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Industry</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">{{ $job['industry_name'] }}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">
+                        {{ $job['industry_name'] }}</td>
                 </tr>
                 <tr>
 		            <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Work Experience (In years)</th>
@@ -68,15 +71,18 @@
                 </tr>
                 <tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Job Description</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{!! $job['description'] !!}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">
+                        {!! $job['description'] !!}</td>
                 </tr>
                 <tr>
 		            <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Desired Candidates</th>
-                	<td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{!! $job['desired_candidate'] !!}</td>
+                	<td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">
+                        {!! $job['desired_candidate'] !!}</td>
                 </tr>
 				<tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Users who can access the job</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">{{ implode(",",$job['users']) }}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;" colspan="3">
+                        {{ implode(",",$job['users']) }}</td>
                 </tr>
                 <tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">Education Qualification</th>
@@ -92,9 +98,11 @@
                
             	<tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">Country</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">{{ $job['country'] }}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">{{ $job['country'] }}
+                    </td>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">State</th>
-                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">{{ $job['state'] }}</td>
+                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">{{ $job['state'] }}
+                    </td>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-bottom: black 1px solid;">City</th>
                     <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;border-bottom: black 1px solid;">{{ $job['city'] }}</td>
                 </tr>
