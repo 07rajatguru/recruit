@@ -68,6 +68,8 @@
 
                     <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}">
                         <strong>Select Module Permissions : <span class = "required_fields">*</span></strong>
+                        <input type="checkbox" id="all_roles"/><strong>Select All</strong>
+                        <br/><br/>
                         @foreach($modules as $k=>$v) &nbsp;&nbsp;
                             {!! Form::checkbox('module_ids[]', $k, in_array($k,$module_ids_array), array('id'=>'module_ids','class' => 'module_ids','onclick' => 'getModulePermissions("'.$k.'","'.$v.'")')) !!}
                             {!! Form::label ($v) !!}
@@ -78,11 +80,23 @@
                                 <strong>{{ $errors->first('module_ids') }}</strong>
                             </span>
                         @endif
-
-                        @foreach($modules as $k=>$v)
-                            <div class="div_{{ $v }}" style="border:1px dotted black;display:none;"></div>
-                        @endforeach
                     </div>
+
+                    <?php 
+                        $str = '';
+                        $id = '';
+                    ?>
+                    @foreach($modules as $k=>$v)
+                        <div class="div_{{ $v }}" style="border:1px dotted black;display:none;">
+                            <span><b>{{ $v }} : </b></span><br/><br/>
+                        </div>
+                        <?php
+                            $id = $id . "," . $k;
+                            $str = $str . "," . $v;
+                        ?>
+                    @endforeach
+                    <input type="hidden" name="name_string" id="name_string" value="{{ $str }}">
+                    <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
                 </div>
             </div>
         </div>
@@ -129,6 +143,35 @@
             });
         });
 
+        $("#all_roles").click(function () {
+            var isChecked = $("#all_roles").is(":checked");
+
+            var id_string = $("#id_string").val();
+            var id_arr = id_string.split(",");
+
+            var name_string = $("#name_string").val();
+            var name_arr = name_string.split(",");
+
+            if(isChecked == true) {
+                $('.module_ids').prop('checked', this.checked);
+                for (var i = 1; i < id_arr.length; i++) {
+                    getModulePermissions(id_arr[i],name_arr[i]);
+                }
+            }
+            else {
+                $('.module_ids').prop('checked', false);
+                $('.permission_class').prop('checked', false);
+
+                for (var i = 1; i < name_arr.length; i++) {
+                    $(".div_"+name_arr[i]).hide();
+                }
+            }
+        });
+
+        $(".module_ids").click(function () {
+            $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
+        });
+
         function getModulePermissions(module_id,module_name)
         {
             $.ajax(
@@ -148,9 +191,14 @@
                             module_selected_items += module_items[i].value+",";
                     }
 
-                    var check_bool = module_selected_items.includes(module_id);
+                    var search_str = ","+module_id+",";
+                    var search_str_2 = module_id+",";
 
-                    if(check_bool == true) {
+                    var bool_1 = module_selected_items.includes(module_id);
+                    var bool_2 = module_selected_items.search(search_str) > -1;
+                    var bool_3 = module_selected_items.search(search_str_2) > -1;
+
+                    if(bool_1 == true || bool_2 == true || bool_3 == true) {
                         if(data.length > 0)
                         {
                             $(".div_"+module_name).html('');
@@ -161,7 +209,7 @@
 
                             for (var i = 0; i < data.length; i++) 
                             {
-                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
+                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
                                 html += '&nbsp;&nbsp;';
@@ -170,7 +218,8 @@
                             html += '</div>';
 
                             $(".div_"+module_name).append(html);
-                            $(".div_"+module_name).show();   
+                            $(".div_"+module_name).show();
+                            $('.permission_class').prop('checked', true);
                         }
                     }
                     else {
