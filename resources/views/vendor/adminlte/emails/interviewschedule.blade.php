@@ -26,9 +26,15 @@
                     <td align="center"><b>Interview Location</b></td>
                     <td align="center"><b>Candidate Location</b></td>
                     <td align="center"><b>Mode of Interview</b></td>
-                    @if(isset($interview_type) && $interview_type == 'General Interview')
+
+                    {{-- @if(isset($interview_type) && $interview_type == 'General Interview')
+                        <td align="center"><b>Video ID</b></td>
+                    @endif --}}
+
+                    @if(isset($interview_type) && $interview_type == 'Video Interview')
                         <td align="center"><b>Video ID</b></td>
                     @endif
+
                     <td align="center"><b>Contact No.</b></td>
                     <td align="center"><b>Email ID</b></td>
                     <td align="center"><b>Confirmed</b></td>
@@ -45,7 +51,7 @@
                     <td align="center">{{$interview_location}}</td>
                     <td align="center">{{$candidate_location}}</td>
 
-                    @if(isset($interview_type) && $interview_type == 'General Interview')
+                    {{-- @if(isset($interview_type) && $interview_type == 'General Interview')
                         <td align="center">Video</td>
                     @else
                         <td align="center">{{$interview_type}}</td>
@@ -53,7 +59,13 @@
 
                     @if(isset($interview_type) && $interview_type == 'General Interview')
                         <td align="center">{{$skype_id}}</td>
-                    @endif
+                    @endif --}}
+
+                    <td align="center">{{$interview_type}}</td>
+                    
+                    @if(isset($interview_type) && $interview_type == 'Video Interview')
+                        <td align="center">{{$skype_id}}</td>
+                    @endif 
 
                     <td align="center">{{$cmobile}}</td>
                     <td align="center">{{$cemail}}</td>

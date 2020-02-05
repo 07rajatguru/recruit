@@ -728,7 +728,8 @@
         function skype() {
             var type = $("#type").val();
             
-            if (type == 'General Interview') {
+            //if (type == 'General Interview') {
+            if (type == 'Video Interview') {
                 $(".skype").show();
             }
             else{

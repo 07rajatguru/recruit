@@ -68,7 +68,7 @@
                             @if(isset($skype_id) && $skype_id != '')
                                 <th scope="row">Interview Round :</th>
                                 <td>{{ isset($interview_round)? $interview_round : null }}</td>
-                                <th scope="row">Skype Id :</th>
+                                <th scope="row">Video Id :</th>
                                 <td>{{ isset($skype_id)? $skype_id : null }}</td>
                             @else
                                 <th scope="row">Interview Round :</th>

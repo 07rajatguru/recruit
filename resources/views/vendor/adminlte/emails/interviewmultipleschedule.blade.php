@@ -26,7 +26,7 @@
                     <td align="center"style="font-family: Cambria;"><b>Interview Location</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Candidate Location</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Mode of Interview</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Skype ID</b></td>
+                    <td align="center"style="font-family: Cambria;"><b>Video ID</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Contact No.</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Email ID</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Confirmed</b></td>
