@@ -791,7 +791,13 @@ class Interview extends Model
         $input['ccity'] = '';
         $input['cmobile'] = $cmobile;
         $input['cemail'] = $cemail;
-        $input['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
+
+        if(isset($interview->level_name) && $interview->level_name != '') {
+            $input['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
+        }
+        else {
+            $input['job_designation'] = $interview->posting_title;
+        }
         $input['job_location'] = $location;
         $input['interview_date'] = $interview_date;
         $input['interview_time'] = $interview_time;
@@ -864,7 +870,14 @@ class Interview extends Model
         $interview_details['ccity'] = '';
         $interview_details['cmobile'] = $cmobile;
         $interview_details['cemail'] = $cemail;
-        $interview_details['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
+
+        if(isset($interview->level_name) && $interview->level_name != '') {
+            $interview_details['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
+        }
+        else {
+            $interview_details['job_designation'] = $interview->posting_title;
+        }
+
         $interview_details['job_location'] = $location;
         $interview_details['interview_date'] = $interview_date;
         $interview_details['interview_time'] = $interview_time;
