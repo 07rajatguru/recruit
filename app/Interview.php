@@ -469,7 +469,7 @@ class Interview extends Model
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->join('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        $query = $query->leftJoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
@@ -814,7 +814,7 @@ class Interview extends Model
 
     public static function ScheduleMailMultiple($value){
 
-        $interview = Interview::find($value);
+        $interview_data = Interview::find($value);
 
         /*$candidate_email = Interview::getCandidateOwnerEmail($value);
         $candidate_owner_email = $candidate_email->candidateowneremail;*/
@@ -823,14 +823,14 @@ class Interview extends Model
         $client_owner_email = $client_email->clientowneremail;
 
         // Candidate details
-        $candidate_response  = CandidateBasicInfo::find($interview['candidate_id']);
+        $candidate_response  = CandidateBasicInfo::find($interview_data['candidate_id']);
         $cname = $candidate_response->full_name;
 
         /*$to_address = array();
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;*/
 
-        $candidate_response  = CandidateBasicInfo::find($interview['candidate_id']);
+        $candidate_response  = CandidateBasicInfo::find($interview_data['candidate_id']);
         $cname = $candidate_response->full_name;
         //$ccity = $candidate_response->city;
         $cmobile = $candidate_response->mobile;
