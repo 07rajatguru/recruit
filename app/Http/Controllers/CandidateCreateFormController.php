@@ -353,7 +353,8 @@ class CandidateCreateFormController extends Controller
 
             $module = "Applicant Candidate";
             $sender_name = $owner_id;
-            $to = 'careers@adlertalent.com';
+            //$to = 'careers@adlertalent.com';
+            $to = 'info@adlertalent.com';
             $subject = "New Applicant Candidate - " . $candiateFname;
             $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate </td></tr>";
             $module_id = $candidate_id;
