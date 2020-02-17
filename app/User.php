@@ -719,6 +719,8 @@ class User extends Authenticatable
 
         $userArr = array();
         if(isset($users) && sizeof($users)){
+
+            $userArr[""] = "Select User";
             foreach ($users as $user) {
                 $userArr[$user->id] = $user->name;
             }

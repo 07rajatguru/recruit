@@ -71,7 +71,7 @@
             });
             
             $("#user_id").select2({width : '570px'});
-            $("#selected_user_id").select2({width : '470px'});
+            $("#selected_user_id").select2({width : '470px',placeholder : 'Select User'});
         });
 
         function attendanceSubmit()
