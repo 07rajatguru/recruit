@@ -431,9 +431,8 @@ class Lead extends Model
             $query = $query->where(\DB::raw('date(created_at)'),$date);
         }
 
-        $query = $query->groupBy('lead_management.id');
+        //$query = $query->groupBy('lead_management.id');
         $lead_cnt = $query->count();
-
         return $lead_cnt;
     }
 
