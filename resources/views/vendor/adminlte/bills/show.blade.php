@@ -110,13 +110,13 @@
                         <table class="table table-bordered">
                             <tr>
                                 <th scope="row">Employee Name 1 :</th>
-                                @if(isset($employee_name[0]) && sizeof($employee_name[0])>0)
+                                @if(isset($employee_name[0]) && $employee_name[0] != '')
                                 <td>{{ $employee_name[0] }}</td>
                                 @else
                                 <td></td>
                                 @endif
                                 <th>Employee Percentage 1 :</th>
-                                @if(isset($employee_percentage[0]) && sizeof($employee_percentage[0])>0)
+                                @if(isset($employee_percentage[0]) && $employee_percentage[0] != '')
                                 <td>{{ (int)$employee_percentage[0] }}</td>
                                 @else
                                 <td></td>
@@ -124,13 +124,13 @@
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 2 :</th>
-                                @if(isset($employee_name[1]) && sizeof($employee_name[1])>0)
+                                @if(isset($employee_name[1]) && $employee_name[1] != '')
                                 <td>{{ $employee_name[1] }}</td>
                                 @else
                                 <td></td>
                                 @endif
                                 <th>Employee Percentage 2 :</th>
-                                @if(isset($employee_percentage[1]) && sizeof($employee_percentage[1])>0)
+                                @if(isset($employee_percentage[1]) && $employee_percentage[1] != '')
                                 <td>{{ (int)$employee_percentage[1] }}</td>
                                 @else
                                 <td></td>
@@ -138,13 +138,13 @@
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 3 :</th>
-                                @if(isset($employee_name[2]) && sizeof($employee_name[2])>0)
+                                @if(isset($employee_name[2]) && $employee_name[2] != '')
                                 <td>{{ $employee_name[2] }}</td>
                                 @else
                                 <td></td>
                                 @endif
                                 <th>Employee Percentage 3 :</th>
-                                @if(isset($employee_percentage[2]) && sizeof($employee_percentage[2])>0)
+                                @if(isset($employee_percentage[2]) && $employee_percentage[2] != '')
                                 <td>{{ (int)$employee_percentage[2] }}</td>
                                 @else
                                 <td></td>
@@ -152,13 +152,13 @@
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 4 :</th>
-                                @if(isset($employee_name[3]) && sizeof($employee_name[3])>0)
+                                @if(isset($employee_name[3]) && $employee_name[3] != '')
                                 <td>{{ $employee_name[3] }}</td>
                                 @else
                                 <td></td>
                                 @endif
                                 <th>Employee Percentage 4 :</th>
-                                @if(isset($employee_percentage[3]) && sizeof($employee_percentage[3])>0)
+                                @if(isset($employee_percentage[3]) && $employee_percentage[3] != '')
                                 <td>{{ (int)$employee_percentage[3] }}</td>
                                 @else
                                 <td></td>
@@ -166,13 +166,13 @@
                             </tr>
                             <tr>
                                 <th scope="row">Employee Name 5 :</th>
-                                @if(isset($employee_name[4]) && sizeof($employee_name[4])>0)
+                                @if(isset($employee_name[4]) && $employee_name[4] != '')
                                 <td>{{ $employee_name[4] }}</td>
                                 @else
                                 <td></td>
                                 @endif
                                 <th>Employee Percentage 5 :</th>
-                                @if(isset($employee_percentage[4]) && sizeof($employee_percentage[4])>0)
+                                @if(isset($employee_percentage[4]) && $employee_percentage[4]) != '')
                                 <td>{{ (int)$employee_percentage[4] }}</td>
                                 @else
                                 <td></td>

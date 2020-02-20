@@ -115,7 +115,8 @@ class Bills extends Model
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id');
+        $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','client_heirarchy.name as level_name');
 
         if($all==0){
             //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
@@ -157,6 +158,9 @@ class Bills extends Model
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
             if($date_search){
                 $dateClass = new Date();
@@ -242,6 +246,8 @@ class Bills extends Model
             }
             $bills[$i]['lead_efforts'] = $lead_efforts_str;
             $bills[$i]['client_id'] = $value->client_id;
+
+            $bills[$i]['level_name'] = $value->level_name;
             $i++;
         }
         return $bills;
@@ -257,8 +263,9 @@ class Bills extends Model
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname');
+        ,'candidate_basicinfo.lname','client_heirarchy.name as level_name');
         if($all==0){
             //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
               //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
@@ -290,6 +297,9 @@ class Bills extends Model
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
             if($date_search){
                 $dateClass = new Date();
@@ -328,8 +338,9 @@ class Bills extends Model
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname');
+        ,'candidate_basicinfo.lname','client_heirarchy.name as level_name');
 
         if($all==0){
             $bills_query = $bills_query->where('uploaded_by',$user_id);
@@ -368,6 +379,9 @@ class Bills extends Model
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
             if($date_search){
                 $dateClass = new Date();
@@ -444,6 +458,8 @@ class Bills extends Model
                 }
             }
             $bills[$i]['lead_efforts'] = $lead_efforts_str;
+
+            $bills[$i]['level_name'] = $value->level_name;
             $i++;
         }
 
@@ -460,8 +476,9 @@ class Bills extends Model
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname');
+        ,'candidate_basicinfo.lname','client_heirarchy.name as level_name');
         if($all==0){
             //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
               //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
@@ -493,6 +510,9 @@ class Bills extends Model
             $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
             $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
             $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
             if($date_search){
                 $dateClass = new Date();
@@ -525,7 +545,7 @@ class Bills extends Model
         $employeename = array();
         $employeepercentage = array();
     
-         if(isset($bills) && sizeof($bills) > 0){
+         if(isset($bills) && $bills != ''){
             $billsdetails['id'] = $bills->id;
             $billsdetails['company_name'] = $bills->company_name;
             $billsdetails['candidate_name'] = $bills->candidate_name;

@@ -48,7 +48,6 @@ class ClientBasicinfo extends Ardent
 
     public static function getAllClients($all=0,$user_id,$rolePermissions,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
 
-
         $client_visibility = false;
         $client_visibility_id = env('CLIENTVISIBILITY');
         if(isset($client_visibility_id) && in_array($client_visibility_id,$rolePermissions)){
@@ -181,7 +180,6 @@ class ClientBasicinfo extends Ardent
         if (isset($order) && $order !='') {
             $query = $query->orderBy($order,$type);
         }
-
 
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
@@ -477,8 +475,7 @@ class ClientBasicinfo extends Ardent
     }
 
     public static function getCompanyOfClientByID($id)
-     {
-
+    {
         $client_company='';
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->where('id','=',$id);
@@ -494,7 +491,6 @@ class ClientBasicinfo extends Ardent
 
     public static function getBillingCityOfClientByID($id)
     {
-
         $client_city='';
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
@@ -603,8 +599,9 @@ class ClientBasicinfo extends Ardent
 
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id');
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_heirarchy.name as level_name');
         $response = $query->get();
 
         $client = array();
@@ -615,7 +612,15 @@ class ClientBasicinfo extends Ardent
             $client['mail'] = $v->mail;
             $client['mobile'] = $v->mobile;
             $client['account_manager'] = $v->account_manager;
-            $client['designation'] = $v->posting_title;
+            //$client['designation'] = $v->posting_title;
+
+            if (isset($v->level_name) && $v->level_name != '') {
+                $client['designation'] = $v->level_name." - ".$v->posting_title;
+            }
+            else {
+                $client['designation'] = $v->posting_title;
+            }
+
             $client['job_location'] = $v->city;
             
             // Get Percentage charged
@@ -642,20 +647,17 @@ class ClientBasicinfo extends Ardent
 
     public static function getClientInfo($client_ids)
     {
-            $query=\DB::table('client_basicinfo')
-                ->select('client_basicinfo.*')
-                ->where('client_basicinfo.id','=',$client_ids)
-                ->get();
+        $query=\DB::table('client_basicinfo')
+            ->select('client_basicinfo.*')
+            ->where('client_basicinfo.id','=',$client_ids)
+            ->get();
 
-            /*print_r($qyery);
-            exit;*/
+        /*print_r($qyery);exit;*/
             
-            foreach($response as $k=>$v)
-            {
-                $client['coordinator_name'] = $v->coordinator_prefix." " .$v->coordinator_name;
-            }
-            return $client;
-
+        foreach($response as $k=>$v) {
+            $client['coordinator_name'] = $v->coordinator_prefix." " .$v->coordinator_name;
+        }
+        return $client;
     }
 
     public static function getClientAboutByJobId($job_id){
@@ -665,7 +667,6 @@ class ClientBasicinfo extends Ardent
         $query = $query->where('job_openings.id','=',$job_id);
         $query = $query->select('client_basicinfo.description as cabout');
         $response = $query->get();
-
 
         $client = array();
         foreach ($response as $k=>$v){
@@ -677,7 +678,6 @@ class ClientBasicinfo extends Ardent
 
     public static function getcoprefix()
     {
-
         $type = array();
         $type['']='Select';
         $type['Mr.'] = 'Mr.';
@@ -688,7 +688,6 @@ class ClientBasicinfo extends Ardent
 
     public static function getCategory()
     {
-
         $type = array();
         $type['']='Select Category';
         $type['Paramount'] = 'Paramount';
@@ -697,14 +696,16 @@ class ClientBasicinfo extends Ardent
         return $type;
     }
 
-    public static function getStatus(){
+    public static function getStatus()
+    {
         $status = array();
         $status[0] = 'Passive';
         $status[1] = 'Active';
         return $status;
     }
 
-    public static function getAllStatus(){
+    public static function getAllStatus()
+    {
         $status = array();
         $status[0] = 'Passive';
         $status[1] = 'Active';

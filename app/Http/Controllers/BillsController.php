@@ -302,7 +302,11 @@ class BillsController extends Controller
             if($access=='true'){
                 $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
             }
-            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+            //$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+
+
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
             if($isSuperAdmin || $isAccountant/* || $isManager*/) {
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
@@ -507,7 +511,10 @@ class BillsController extends Controller
             if($access=='true'){
                 $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
             }
-            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+            //$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
             if($isSuperAdmin || $isAccountant) {
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
@@ -1678,7 +1685,6 @@ class BillsController extends Controller
         $upload_type['Others'] = 'Others';
 
         return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type'));
-
     }
 
     public function downloadExcel(){
@@ -1702,7 +1708,6 @@ class BillsController extends Controller
         })->export('xlsx');
         ob_flush();
         exit();
-
     }
 
     public function getClientInfo(){
@@ -1713,7 +1718,6 @@ class BillsController extends Controller
         $client = ClientBasicinfo::getClientInfoByJobId($job_id);
 
         echo json_encode($client);exit;
-
     }
 
     public function getCandidateInfo(){
@@ -1732,7 +1736,6 @@ class BillsController extends Controller
         }
 
         echo json_encode($response);exit;
-
     }
 
     // Joining Confirmation Mail to SA & Acc
