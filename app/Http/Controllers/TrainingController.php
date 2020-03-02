@@ -264,10 +264,12 @@ class TrainingController extends Controller
 
     public function edit($id){
 
-     	$users_recruit = User::getAllUsers('recruiter');
+     	/*$users_recruit = User::getAllUsers('recruiter');
         $users_hr = User::getAllUsers('hr');
 
-        $users = $users_recruit + $users_hr;
+        $users = $users_recruit + $users_hr;*/
+
+        $users = User::getAllUsers();
 
      	$training = Training::find($id);
         

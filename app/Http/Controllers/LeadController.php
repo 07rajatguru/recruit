@@ -202,6 +202,7 @@ class LeadController extends Controller
         $order_column_name = self::getLeadOrderColumnName($order);
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
         $superadmin_role_id = env('SUPERADMIN');
         $strategy_role_id =  env('STRATEGY');
@@ -227,6 +228,8 @@ class LeadController extends Controller
 
             if($value['access']){
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if ($isSuperAdmin) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
                 $delete = $delete_view->render();
                 $action .= $delete;
