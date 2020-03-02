@@ -152,10 +152,12 @@ class TrainingController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $users_recruit = User::getAllUsers('recruiter');
+        /*$users_recruit = User::getAllUsers('recruiter');
         $users_hr = User::getAllUsers('hr');
 
-        $users = $users_recruit + $users_hr;
+        $users = $users_recruit + $users_hr;*/
+
+        $users = User::getAllUsers();
         
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
