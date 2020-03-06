@@ -12,12 +12,12 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 @if($cancel_bill == 0)
-                  <h2>{{$title}} ({{$count}})</h2>
+                  <h2>{{$title}} <span id="count">({{ $count or 0 }})</h2>
                 @else
                   @if($cancel_bnm == 1)
-                    <h2>{{$title}} ({{$count}})</h2>
+                    <h2>{{$title}} ({{ $count or 0 }})</h2>
                   @else
-                    <h2>{{$title}} ({{$count}})</h2>
+                    <h2>{{$title}} ({{ $count or 0 }})</h2>
                   @endif
                 @endif
             </div>
@@ -267,6 +267,10 @@
 
                     }
                 },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+                    $("#count").html("(" + count + ")");
+                },
                 responsive: true,
                 "pageLength": 25,
                 "pagingType": "full_numbers",
@@ -394,7 +398,10 @@
 
                 },
             },
-
+            initComplete:function( settings, json){
+              var count = json.recordsTotal;
+              $("#count").html("(" + count + ")");
+            },
             responsive: true,
             "pageLength": 25,
             "pagingType": "full_numbers",
