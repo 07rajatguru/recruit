@@ -476,24 +476,12 @@ class ToDosController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
-        // get assigned to todos
-        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
-        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
-        $cc_todo_ids = ToDos::getAllCCtodoIds($user->id);
-
-        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
-        $todo_ids = array_unique($todo_ids);
-
-        $todos = array();
-        if(isset($todo_ids) && sizeof($todo_ids)>0){
-            $todos = ToDos::getAllTodos($todo_ids);
-        }
 
         $status = Status::getStatusArray();
 
-        $count = sizeof($todos);
+        $count = ToDos::getAllTodosCount();
 
-        return view('adminlte::toDo.index', array('todos' => $todos),compact('todo_status','user_id','isSuperAdmin','status','count','isStrategyCoordination'));
+        return view('adminlte::toDo.index', compact('todo_status','user_id','isSuperAdmin','status','count','isStrategyCoordination'));
 
     }
 
@@ -1098,6 +1086,7 @@ class ToDosController extends Controller
     }
 
     public function completetodo(Request $request){
+
         $todo_status = env('COMPLETEDSTATUS');
 
         $user = \Auth::user();
@@ -1107,20 +1096,9 @@ class ToDosController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
-        
-        // get assigned to todos
-        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
-        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
 
-        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
-
-        $todos = array();
-        if(isset($todo_ids) && sizeof($todo_ids)>0){
-            $todos = ToDos::getCompleteTodos($todo_ids);
-        }
-
-        $count = sizeof($todos);
-        return view('adminlte::toDo.complete', array('todos' => $todos),compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
+        $count = ToDos::getCompleteTodosCount();
+        return view('adminlte::toDo.complete',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
 
     }
 
@@ -1188,6 +1166,7 @@ class ToDosController extends Controller
     }
 
     public function mytask(Request $request){
+        
         $todo_status = env('COMPLETEDSTATUS');
 
         $user = \Auth::user();
@@ -1197,21 +1176,10 @@ class ToDosController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
-        
-        // get assigned to todos
-        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
-        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
 
-        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $count = ToDos::getMyTodosCount();
 
-        $todos = array();
-        if(isset($todo_ids) && sizeof($todo_ids)>0){
-            $todos = ToDos::getMyTodos($todo_ids);
-        }
-
-        $count = sizeof($todos);
-
-        return view('adminlte::toDo.mytask', array('todos' => $todos),compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
+        return view('adminlte::toDo.mytask',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
     }
 
     public function getMyTodosDetails(){
@@ -1285,7 +1253,7 @@ class ToDosController extends Controller
         $status_todo = ToDos::find($id);
 
         $todos = '';
-        if (isset($todostatus) && sizeof($todostatus)>0){
+        if (isset($todostatus) && $todostatus != ''){
 
                  $todos = $todostatus;
             

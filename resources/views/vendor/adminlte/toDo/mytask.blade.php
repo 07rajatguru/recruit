@@ -8,47 +8,31 @@
 
 @section('content')
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-left">
-
-                <h2>My To Do's ({{$count}})</h2>
-
+                <h2>My To Do's ({{ $count or 0 }})</h2>
             </div>
 
             <div class="pull-right">
-
                 {{--@permission(('permision-create'))--}}
 
                 <a class="btn btn-success" href="{{ route('todos.create') }}"> Create New To Do</a>
 
                 {{--@endpermission--}}
-
             </div>
-
         </div>
-
     </div>
 
     @if ($message = Session::get('success'))
-
         <div class="alert alert-success">
-
             <p>{{ $message }}</p>
-
         </div>
-
     @endif
 
     @if ($message = Session::get('error'))
-
         <div class="alert alert-success">
-
             <p>{{ $message }}</p>
-
         </div>
-
     @endif
 
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="todos_table">
