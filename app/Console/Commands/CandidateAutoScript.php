@@ -52,6 +52,10 @@ class CandidateAutoScript extends Command
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
         $input['app_url'] = $app_url;
+        $input['company_name'] = 'Adler Talent Solution';
+        $input['subject'] = 'Thanks for your application - '.$input['company_name'];
+
+        //echo $input['subject'];exit;
 
         //print_r($input);exit;
 
@@ -69,7 +73,7 @@ class CandidateAutoScript extends Command
                 \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input)
                 {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc'])->subject('Candidate Email');
+                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
