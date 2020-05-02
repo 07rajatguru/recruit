@@ -770,4 +770,9 @@ class ReportController extends Controller
             });
         })->export('xls');
     }
+
+    public function weeklyGoalSheet() {
+
+        return view('adminlte::reports.weekly-goal-sheet');
+    }
 }

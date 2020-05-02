@@ -347,6 +347,11 @@ return [
                    'icon' => 'circle-o',
                ],
                [
+                   'text' => 'Weekly Goal Sheet',
+                   'url'  => 'weekly-goal-sheet',
+                   'icon' => 'circle-o',
+               ],
+               [
                    'text' => 'Person-wise report',
                    'url'  => 'personwise-report',
                    'icon' => 'circle-o',

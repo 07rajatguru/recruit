@@ -2005,6 +2005,15 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReportController@clientWiseReportExport'
     ]);
 
+    Route::get('weekly-goal-sheet',[
+        'as' => 'goal.sheet',
+        'uses' => 'ReportController@weeklyGoalSheet',
+        'middleware' => ['permission:weekly-report']
+    ]);
+
+    // Report End
+
+    // Vendors start
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',
