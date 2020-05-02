@@ -33,6 +33,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\PassiveClientList',
         'App\Console\Commands\ClientDataTimeline',
         'App\Console\Commands\PassiveClientListRemider',
+        'App\Console\Commands\CandidateAutoScript',
+        'App\Console\Commands\ExistCandidateAutoScript',
     ];
 
     /**

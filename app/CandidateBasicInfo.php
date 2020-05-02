@@ -571,4 +571,43 @@ class CandidateBasicInfo extends Model
         
         return $candidate;
     }
+
+    public static function getCandidateDetails($limit=0,$offset=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = CandidateBasicInfo::query();
+        $query = $query->select('candidate_basicinfo.*');
+
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+
+        if (isset($from_date) && $from_date != NULL && isset($to_date) && $to_date != NULL) {
+
+            $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+            $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+        }
+
+        $query = $query->where('candidate_basicinfo.autoscript_status','=',0);
+        $query = $query->orderBy('candidate_basicinfo.id','ASC');
+        
+        $res = $query->get();
+
+        $candidate = array();
+        $i = 0;
+
+        foreach ($res as $key => $value) {
+
+            $candidate[$i]['id'] = $value->id;
+            $candidate[$i]['full_name'] = $value->full_name;
+            $candidate[$i]['email'] = $value->email;
+            $candidate[$i]['mobile'] = $value->mobile;
+            
+            $i++;
+        }
+
+        return $candidate;
+    }
 }
