@@ -479,7 +479,15 @@ class ToDosController extends Controller
 
         $status = Status::getStatusArray();
 
-        $count = ToDos::getAllTodosCount();
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
+
+        $count = ToDos::getAllTodosCount($todo_ids,'');
 
         return view('adminlte::toDo.index', compact('todo_status','user_id','isSuperAdmin','status','count','isStrategyCoordination'));
 
@@ -1097,7 +1105,16 @@ class ToDosController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
 
-        $count = ToDos::getCompleteTodosCount();
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
+
+        $count = ToDos::getCompleteTodosCount($todo_ids,'');
+
         return view('adminlte::toDo.complete',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
 
     }
@@ -1177,7 +1194,15 @@ class ToDosController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
 
-        $count = ToDos::getMyTodosCount();
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+        $cc_todo_ids = ToDos::getAllCCtodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
+        $todo_ids = array_unique($todo_ids);
+
+        $count = ToDos::getMyTodosCount($todo_ids,'');
 
         return view('adminlte::toDo.mytask',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
     }
