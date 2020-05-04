@@ -514,13 +514,18 @@ return [
                     'icon' => 'circle-o',
                 ],
                 [
-                    'text' => 'Client Remarks Lsit',
+                    'text' => 'Client Remarks List',
                     'url'  => 'client-remarks',
                     'icon' => 'circle-o',
                 ],
                 [
                     'text' => 'Email Template',
                     'url'  => 'email-template',
+                    'icon' => 'circle-o',
+                ],
+                [
+                    'text' => 'User Bench Mark',
+                    'url'  => 'user-bench-mark',
                     'icon' => 'circle-o',
                 ]
                     /* [

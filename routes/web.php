@@ -2552,4 +2552,38 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'userrole.destroy',
         'uses' => 'NewRoleController@destroy'
     ]);
+
+    // User Bench Mark Routes
+
+    Route::get('user-bench-mark',[
+        'as' => 'userbenchmark.index',
+        'uses' => 'UserBenchMarkController@index'
+    ]);
+
+    Route::get('user-bench-mark/add',[
+        'as' => 'userbenchmark.create',
+        'uses' => 'UserBenchMarkController@create'
+    ]);
+
+    Route::post('user-bench-mark/add',[
+        'as' => 'userbenchmark.store',
+        'uses' => 'UserBenchMarkController@store'
+    ]);
+
+    Route::get('user-bench-mark/edit/{id}',[
+        'as' => 'userbenchmark.edit',
+        'uses' => 'UserBenchMarkController@edit'
+    ]);
+
+    Route::patch('user-bench-mark/edit/{id}',[
+        'as' => 'userbenchmark.update',
+        'uses' => 'UserBenchMarkController@update'
+    ]);
+
+    Route::delete('user-bench-mark/{id}',[
+        'as' => 'userbenchmark.destroy',
+        'uses' => 'UserBenchMarkController@destroy'
+    ]);
+
+    // User Bench Mark Routes End
 });
