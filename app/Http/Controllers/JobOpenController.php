@@ -2487,10 +2487,12 @@ class JobOpenController extends Controller
         $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
 
         // get candidate status
-        $candidateresult = CandidateStatus::orderBy('name','asc')->select('id','name')->get()->toArray();
+        /*$candidateresult = CandidateStatus::orderBy('name','asc')->select('id','name')->get()->toArray();
         foreach ($candidateresult as $key=>$value){
             $candidateStatus[$value['id']] = $value['name'];
-        }
+        }*/
+
+        $candidateStatus = CandidateStatus::getCandidateStatus();
 
         $shortlist_type = JobOpen::getShortlistType();
 
@@ -2554,6 +2556,7 @@ class JobOpenController extends Controller
         $candidate_id = $_POST['candidate_id'];
         $status_id = $_POST['status_id'];
 
+        echo $status_id;exit;
         DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
         DB::statement("UPDATE  candidate_otherinfo SET status_id =$status_id where candidate_id = $candidate_id");
 

@@ -19,4 +19,13 @@ class CandidateStatus extends Model
             'name.required' => 'Name is required field',
         ];
     }
+
+    public static function getCandidateStatus() {
+    
+        $interviewStatus['Shortlist'] = 'Shortlist';
+        $interviewStatus['Shortlisted and Schedule Interview'] = 'Shortlisted and Schedule Interview';
+        $interviewStatus['Selected'] = 'Selected';
+
+        return $interviewStatus;
+    }
 }
