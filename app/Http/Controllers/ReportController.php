@@ -868,15 +868,15 @@ class ReportController extends Controller
 
         // Get no of cv's associated in this week
 
-        $ass_cvs_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),0);
+        $ass_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),0);
 
-        $ass_cvs_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),0);
+        $ass_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),0);
 
-        $ass_cvs_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),0);
+        $ass_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),0);
 
-        $ass_cvs_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),0);
+        $ass_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),0);
 
-        $ass_cvs_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),0);
+        $ass_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),0);
 
         // Get no of weeks in month
 
@@ -897,10 +897,22 @@ class ReportController extends Controller
 
         $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),1);
 
-        $shortlist_cvs_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),1);
+        $shortlist_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),1);
 
-        $shortlist_cvs_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),1);
+        $shortlist_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),1);
 
-        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','ass_cvs_cnt_first_week','ass_cvs_cnt_second_week','ass_cvs_cnt_third_week','ass_cvs_cnt_fourth_week','ass_cvs_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cvs_cnt_fourth_week','shortlist_cvs_cnt_fifth_week'));
+        // Get no of interview of candidates count in this week
+
+        $interview_cnt_first_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('first Monday this week')));
+
+        $interview_cnt_second_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('second Monday this week')));
+
+        $interview_cnt_third_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('third Monday this week')));
+
+        $interview_cnt_fourth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')));
+
+        $interview_cnt_fifth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')));
+
+        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','ass_cnt_first_week','ass_cnt_second_week','ass_cnt_third_week','ass_cnt_fourth_week','ass_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cnt_fourth_week','shortlist_cnt_fifth_week','interview_cnt_first_week','interview_cnt_second_week','interview_cnt_third_week','interview_cnt_fourth_week','interview_cnt_fifth_week'));
     }
 }

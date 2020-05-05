@@ -322,26 +322,41 @@ class JobAssociateCandidates extends Model
         $query = JobAssociateCandidates::query();
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
         $query = $query->where('job_associate_candidates.associate_by',$user_id);
-       
-        if (isset($shortlisted) && $shortlisted > 0) {
-
-            $query = $query->where('job_associate_candidates.shortlisted','=','1');
-            $query = $query->orwhere('job_associate_candidates.shortlisted','=','2');
-            $query = $query->orwhere('job_associate_candidates.shortlisted','=','3');
-        }
-
         $query = $query->where('job_associate_candidates.created_at','>=',$date);
         $query = $query->where('job_associate_candidates.created_at','<=',date('Y-m-d',strtotime("$date +6days")));
+
+        if (isset($shortlisted) && $shortlisted > 0) {
+
+            $query = $query->where('job_associate_candidates.shortlisted','>=','1');
+        }
        
         $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
         $query_response = $query->get();
 
         $cnt= 0;
-
         foreach ($query_response as $key => $value) {
 
             $cnt += $value->count;
         }
         return $cnt;  
+    }
+
+    public static function getProductivityReportInterviewCount($user_id,$date){
+
+        $query = Interview::query();
+        $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"));
+        $query = $query->where('interview.interview_owner_id',$user_id);
+        $query = $query->where('interview.interview_date','>=',$date);
+        $query = $query->where('interview.interview_date','<=',date('Y-m-d',strtotime("$date +6days")));
+     
+        $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
+        $query_response = $query->get();
+       
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+
+            $cnt += $value->count;
+        }
+        return $cnt;
     }
 }

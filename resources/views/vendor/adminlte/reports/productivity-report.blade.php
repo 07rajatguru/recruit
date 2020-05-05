@@ -120,19 +120,19 @@
                             <p align="center" style="text-align: center;"><span class="no_of_resumes_weekly"></span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_first_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_first_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_second_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_second_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_third_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_third_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_fourth_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_fourth_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_fifth_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_fifth_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="no_of_resumes_monthly_achievement"></span></p>
@@ -167,10 +167,10 @@
                             <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_third_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cvs_cnt_fourth_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_fourth_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cvs_cnt_fifth_week }}</span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_fifth_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="shortlist_ratio_monthly_achievement"></span></p>
@@ -195,19 +195,19 @@
                             <p align="center" style="text-align: center;"><span class="interview_ratio_weekly"></span></p>
                         </td>
                         <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_first_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_second_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_third_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_fourth_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_fifth_week }}</span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="interview_ratio_monthly_achievement"></span></p>
