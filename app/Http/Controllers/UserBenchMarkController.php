@@ -18,7 +18,7 @@ class UserBenchMarkController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
-    	$user_bench_mark = UserBenchMark::getAllUsersBenchMarK();
+    	$user_bench_mark = UserBenchMark::getAllUsersBenchMark();
     	$count = sizeof($user_bench_mark);
 
     	return view('adminlte::userbenchmark.index',compact('user_bench_mark','count','isSuperAdmin'));

@@ -8,7 +8,7 @@ class UserBenchMark extends Model
 {
     public $table = "user_bench_mark";
 
-    public static function getAllUsersBenchMarK() {
+    public static function getAllUsersBenchMark() {
 
     	$query = UserBenchMark::query();
         $query = $query->leftjoin('users','users.id','=','user_bench_mark.user_id');
@@ -37,5 +37,35 @@ class UserBenchMark extends Model
         	}
         }
         return $user_bench_mark_array;
+    }
+
+    public static function getBenchMarkByUserID($user_id) {
+
+        $query = UserBenchMark::query();
+        $query = $query->leftjoin('users','users.id','=','user_bench_mark.user_id');
+        $query = $query->select('user_bench_mark.*','users.name as user_name');
+
+        if(isset($user_id) && $user_id > 0) {
+
+            $query = $query->where('user_bench_mark.user_id','=',$user_id);
+        }
+
+        $response = $query->first();
+
+        $user_bench_mark = array();
+
+        if(isset($response) && $response != '') {
+
+            $user_bench_mark['id'] = $response->id;
+            $user_bench_mark['user_name'] = $response->user_name;
+            $user_bench_mark['no_of_resumes'] = $response->no_of_resumes;
+            $user_bench_mark['shortlist_ratio'] = $response->shortlist_ratio;
+            $user_bench_mark['interview_ratio'] = $response->interview_ratio;
+            $user_bench_mark['selection_ratio'] = $response->selection_ratio;
+            $user_bench_mark['offer_acceptance_ratio'] = $response->offer_acceptance_ratio;
+            $user_bench_mark['joining_ratio'] = $response->joining_ratio;
+            $user_bench_mark['after_joining_success_ratio'] = $response->after_joining_success_ratio;
+        }
+        return $user_bench_mark;
     }
 }

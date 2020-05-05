@@ -1,0 +1,599 @@
+@extends('adminlte::page')
+
+@section('title', 'Productivity Report')
+
+@section('content_header')
+    <h1></h1>
+@stop
+
+@section('content')
+	<div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left">
+                <h2>Productivity Report</h2>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box-body col-xs-4 col-sm-5 col-md-4">
+                <div class="form-group">
+                    {{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control'))}}
+                </div>
+            </div>
+
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
+                <div class="form-group">
+                    {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0)
+
+    <input type="hidden" name="no_of_weeks" id="no_of_weeks" value="{{ $no_of_weeks }}">
+    <div style="padding: 10px;">
+        <div class="table-responsive">
+            <table border="0" cellspacing="0" cellpadding="0" style="width: 100%;border-collapse: collapse;" id="productivity_report_table">
+                <thead></thead>
+                <tbody>
+                    <tr style="height: 15px;">
+                        <td colspan="12" valign="bottom" style="border: solid black 2px;background: rgb(70,189,198);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+
+                            <?php 
+                                $full_year =  date('Y');
+                                $year = substr($full_year, -2);
+                                $month = date('F');
+                            ?>
+
+                            @if(isset($role_name) && $role_name != '')
+                                <p align="center" style="text-align: center;">
+                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $role_name }} - {{ $month }}' {{ $year }}
+                                    </span></b>
+                                </p>
+                            @else
+                                 <p align="center" style="text-align: center;">
+                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $month }}' {{ $year }}</span></b>
+                                </p>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td rowspan="2" valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;width: 20px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Sr. No.</span></b></p>
+                        </td>
+                        <td rowspan="2" valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;width: 200px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Particular</span></b></p>
+                        </td>
+                        <td rowspan="2" valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;width: 165px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Minimum % / Benchmark</span></b><b><span></p>
+                        </td>
+                        <td width="122" rowspan="2" valign="bottom" style="width: 105.25pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Standard Numbers / Monthly</span></b></p>
+                        </td>
+                        <td width="217" rowspan="2" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Standard Numbers / <br/>Weekly</span></b></p>
+                        </td>
+                        <td width="220" colspan="5" valign="bottom" style="width: 164.7pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: rgb(191,191,191);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Actual Weekly Numbers</span></b></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                        <td rowspan="2" valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;width: 165px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Monthly Feedback by Reviewer / Action Points</span></b></p>
+                        </td>
+                    </tr>
+                    <tr style="height: 30px;">
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week1</span></b></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week2</span></b></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week3</span></b></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week4</span></b></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week5</span></b></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(191,191,191);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: rgb(153,0,0);">Monthly Achievement</span></b></p>
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>1</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>Number of Resumes delivered to client</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>NA</span></p>
+                        </td>
+                        <td width="122" valign="bottom" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_monthly">
+                            <p align="center" style="text-align: center;"><span style="color: black;" >{{ $user_bench_mark['no_of_resumes'] }}</span></p>
+                        </td>
+                        <td width="217" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="no_of_resumes_weekly"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_first_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_second_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_third_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_fourth_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $ass_cvs_cnt_fifth_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="no_of_resumes_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>2</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>Shortlist Ratio</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio">
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['shortlist_ratio'] }}% (of Total CVs)
+                            </span></p>
+                        </td>
+                        <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="shortlist_ratio_monthly"></span></p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="shortlist_ratio_weekly"></span></p>
+                        </td>
+                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_first_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_second_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_third_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cvs_cnt_fourth_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cvs_cnt_fifth_week }}</span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="shortlist_ratio_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>3</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>Interview Ratio</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio">
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['interview_ratio'] }}% (Shortlist Ratio)</span></p>
+                        </td>
+                        <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="interview_ratio_monthly"></span></p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="interview_ratio_weekly"></span></p>
+                        </td>
+                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="interview_ratio_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>4</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>Selection Ratio</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio">
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['selection_ratio'] }}% (of Interview Ratio)</span></p>
+                        </td>
+                        <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="selection_ratio_monthly"></span></p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height:15px;">
+                            <p align="center" style="text-align: center;"><span class="selection_ratio_weekly"></span></p>
+                        </td>
+                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="selection_ratio_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>5</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>Offer Acceptance Ratio
+                            </span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio">
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['offer_acceptance_ratio'] }}% (of Selection Ratio)</span></p>
+                        </td>
+                        <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_monthly"></span></p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_weekly"></span></p>
+                        </td>
+                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>6</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>Joining Ratio</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio">
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['joining_ratio'] }}% (of offer acceptance)</span></p>
+                        </td>
+                        <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="joining_ratio_monthly"></span></p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p  align="center" style="text-align: center;"><span class="joining_ratio_weekly"></span></p>
+                        </td>
+                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="joining_ratio_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>7</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span>After Joining Success Ratio</span></p>
+                        </td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio">
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['after_joining_success_ratio'] }}% (Joining Ratio)
+                            </span></p>
+                        </td>
+                        <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_monthly"></span></p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_weekly"></span></p>
+                        </td>
+                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;" class="after_joining_success_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                            <p align="center" style="text-align: center;"><span></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_monthly_achievement"></span></p>
+                        </td>
+                        <td style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        </td>
+                    </tr>
+                    <tr style="height: 15px;">
+                        <td valign="bottom" style="border: solid rgb(204,204,204) 1px;border-top: none;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td width="122" valign="bottom" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td width="217" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td width="74" valign="bottom" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;background: lime;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+@stop
+
+@section('customscripts')
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+            // Call Function for calculate ratio
+            calCulation();
+
+            $("#users_id").select2();
+           
+			var table = jQuery("#productivity_report_table").DataTable({
+				responsive: true,
+				"pageLength": 100,
+				stateSave: true
+			});
+			new jQuery.fn.dataTable.FixedHeader( table );
+		});
+
+        function select_data() {
+
+            var users_id = $("#users_id").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+
+            var url = app_url+'/productivity-report';
+
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="users_id" value="'+users_id+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
+        function calCulation() {
+
+            var no_of_weeks = $("#no_of_weeks").val();
+
+            // Variables for Display Dynamic data in cell 
+
+            // For No of Resumes
+
+            var no_of_resumes_monthly = 0;
+            var no_of_resumes_weekly = 0;
+            var no_of_resumes_weeks = 0;
+
+            $('.no_of_resumes_monthly').each(function() {
+                no_of_resumes_monthly += parseInt($(this).text());
+            });
+
+            no_of_resumes_weekly = (no_of_resumes_monthly / no_of_weeks);
+            $(".no_of_resumes_weekly").text(no_of_resumes_weekly.toFixed());
+
+            $('.no_of_resumes_weeks').each(function() {
+                no_of_resumes_weeks += parseInt($(this).text());
+            });
+
+            if(no_of_resumes_weeks >= 0) {
+                $(".no_of_resumes_monthly_achievement").text(no_of_resumes_weeks);
+            }
+
+            // For Shortlist Ratio
+
+            var shortlist_ratio = 0;
+            var shortlist_ratio_monthly = 0;
+            var shortlist_ratio_weekly = 0;
+            var shortlist_ratio_weeks = 0;
+
+            $('.shortlist_ratio').each(function() {
+                shortlist_ratio += parseInt($(this).text());
+            });
+
+            shortlist_ratio_monthly = no_of_resumes_monthly * shortlist_ratio/100;
+            $(".shortlist_ratio_monthly").text(shortlist_ratio_monthly.toFixed());
+
+            shortlist_ratio_weekly = (shortlist_ratio_monthly / no_of_weeks);
+            $(".shortlist_ratio_weekly").text(shortlist_ratio_weekly.toFixed());
+
+            $('.shortlist_ratio_weeks').each(function() {
+                shortlist_ratio_weeks += parseInt($(this).text());
+            });
+
+            if(shortlist_ratio_weeks >= 0) {
+                $(".shortlist_ratio_monthly_achievement").text(shortlist_ratio_weeks);
+            }
+
+            // For Interview Ratio
+
+            var interview_ratio = 0;
+            var interview_ratio_monthly = 0;
+            var interview_ratio_weekly = 0;
+            var interview_ratio_weeks = 0 ;
+
+            $('.interview_ratio').each(function() {
+                interview_ratio += parseInt($(this).text());
+            });
+
+            interview_ratio_monthly = shortlist_ratio_monthly * interview_ratio/100;
+            $(".interview_ratio_monthly").text(interview_ratio_monthly.toFixed());
+
+            interview_ratio_weekly = (interview_ratio_monthly / no_of_weeks);
+            $(".interview_ratio_weekly").text(interview_ratio_weekly.toFixed());
+
+            $('.interview_ratio_weeks').each(function() {
+                interview_ratio_weeks += parseInt($(this).text());
+            });
+
+            if(interview_ratio_weeks >= 0) {
+                $(".interview_ratio_monthly_achievement").text(interview_ratio_weeks);
+            }
+
+            // For Selection Ratio
+
+            var selection_ratio = 0;
+            var selection_ratio_monthly = 0;
+            var selection_ratio_weekly = 0;
+            var selection_ratio_weeks = 0;
+
+            $('.selection_ratio').each(function() {
+                selection_ratio += parseInt($(this).text());
+            });
+
+            selection_ratio_monthly = interview_ratio_monthly * selection_ratio/100;
+            $(".selection_ratio_monthly").text(selection_ratio_monthly.toFixed());
+
+            selection_ratio_weekly = (selection_ratio_monthly / no_of_weeks);
+            $(".selection_ratio_weekly").text(selection_ratio_weekly.toFixed());
+
+            $('.selection_ratio_weeks').each(function() {
+                selection_ratio_weeks += parseInt($(this).text());
+            });
+
+            if(selection_ratio_weeks >= 0) {
+                $(".selection_ratio_monthly_achievement").text(selection_ratio_weeks);
+            }
+
+            // For Offer Acceptance Ratio
+
+            var offer_acceptance_ratio = 0;
+            var offer_acceptance_ratio_monthly = 0;
+            var offer_acceptance_ratio_weekly = 0;
+            var offer_acceptance_ratio_weeks = 0;
+
+            $('.offer_acceptance_ratio').each(function() {
+                offer_acceptance_ratio += parseInt($(this).text());
+            });
+
+            offer_acceptance_ratio_monthly = selection_ratio_monthly * offer_acceptance_ratio/100;
+            $(".offer_acceptance_ratio_monthly").text(offer_acceptance_ratio_monthly.toFixed());
+
+            offer_acceptance_ratio_weekly = (offer_acceptance_ratio_monthly / no_of_weeks);
+            $(".offer_acceptance_ratio_weekly").text(offer_acceptance_ratio_weekly.toFixed());
+
+            $('.offer_acceptance_ratio_weeks').each(function() {
+                offer_acceptance_ratio_weeks += parseInt($(this).text());
+            });
+
+            if(offer_acceptance_ratio_weeks >= 0) {
+                $(".offer_acceptance_ratio_monthly_achievement").text(offer_acceptance_ratio_weeks);
+            }
+
+            // For Joining Ratio
+
+            var joining_ratio = 0;
+            var joining_ratio_monthly = 0;
+            var joining_ratio_weekly = 0;
+            var joining_ratio_weeks = 0;
+
+            $('.joining_ratio').each(function() {
+                joining_ratio += parseInt($(this).text());
+            });
+
+            joining_ratio_monthly = offer_acceptance_ratio_monthly * joining_ratio/100;
+            $(".joining_ratio_monthly").text(joining_ratio_monthly.toFixed());
+
+            joining_ratio_weekly = (joining_ratio_monthly / no_of_weeks);
+            $(".joining_ratio_weekly").text(joining_ratio_weekly.toFixed());
+
+            $('.joining_ratio_weeks').each(function() {
+                joining_ratio_weeks += parseInt($(this).text());
+            });
+
+            if(joining_ratio_weeks >= 0) {
+                $(".joining_ratio_monthly_achievement").text(joining_ratio_weeks);
+            }
+
+            // For After Joining Success Ratio
+
+            var after_joining_success_ratio = 0;
+            var after_joining_success_ratio_monthly = 0;
+            var after_joining_success_ratio_weekly = 0;
+            var after_joining_success_ratio_weeks = 0;
+
+            $('.after_joining_success_ratio').each(function() {
+                after_joining_success_ratio += parseInt($(this).text());
+            });
+
+            after_joining_success_ratio_monthly = joining_ratio_monthly * after_joining_success_ratio/100;
+            $(".after_joining_success_ratio_monthly").text(after_joining_success_ratio_monthly.toFixed());
+
+            after_joining_success_ratio_weekly = (after_joining_success_ratio_monthly / no_of_weeks);
+            $(".after_joining_success_ratio_weekly").text(after_joining_success_ratio_weekly.toFixed());
+
+            $('.after_joining_success_ratio_weeks').each(function() {
+                after_joining_success_ratio_weeks += parseInt($(this).text());
+            });
+
+            if(after_joining_success_ratio_weeks >= 0) {
+                $(".after_joining_success_ratio_monthly_achievement").text(after_joining_success_ratio_weeks);
+            }
+        }
+	</script>
+@endsection

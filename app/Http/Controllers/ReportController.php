@@ -10,6 +10,8 @@ use App\Interview;
 use App\Bills;
 use App\ClientBasicinfo;
 use Excel;
+use App\UserBenchMark;
+use App\Role;
 
 class ReportController extends Controller
 {
@@ -771,8 +773,134 @@ class ReportController extends Controller
         })->export('xls');
     }
 
-    public function weeklyGoalSheet() {
+    public function productivityReport() {
 
-        return view('adminlte::reports.weekly-goal-sheet');
+        /*get monday of current month
+
+        //echo date("j, d-M-Y", strtotime("first monday 2020-05"));exit;
+
+        //$firstday = date('l', strtotime("this month"));
+
+        //echo $firstday;exit;
+
+        // First day of this month
+        //$d = date("l", strtotime("first day of this month"));
+
+        //echo $d;exit;
+
+        $month = date('m');
+        $year = date('Y');
+
+        $num_of_days = date("t", mktime(0,0,0,$month,4,$year)); 
+        $lastday = date("t", mktime(0, 0, 0,$month, 4, $year));
+
+        $no_of_weeks = 0; 
+        $count_weeks = 0;
+
+        while($no_of_weeks < $lastday){ 
+            $no_of_weeks += 7; 
+            $count_weeks++; 
+        } 
+
+        //echo  $count_weeks;exit;
+    
+        $month = date('m');
+        $year = date('Y');
+        $day = date("j", strtotime("first Monday 2020-05"));
+
+        $firstday = date("w", mktime(0, 0, 0, $month, $day, $year)); 
+        $lastday = date("t", mktime(0, 0, 0, $month, $day, $year));
+        $count_weeks = 1 + ceil(($lastday-8+$firstday)/7);
+        echo $count_weeks;exit;
+
+        $year = date('Y');
+        $month = date('m');
+        $day = date("j", strtotime("first monday $year-$month"));
+
+        $start = mktime(0, 0, 0, $month, $day, $year);
+        $end = mktime(0, 0, 0, $month, date('t', $start), $year);
+
+        $start_week = date('W', $start);
+        $end_week = date('W', $end);
+
+        if ($end_week < $start_week) { // Month wraps
+            echo ((52 + $end_week) - $start_week) + 1;
+        }
+
+        echo ($end_week - $start_week) + 1;
+
+        exit;*/
+
+        $user_id = \Auth::user()->id;
+
+        // get role of logged in user
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $superadmin_role_id = env('SUPERADMIN');
+        $manager_role_id = env('MANAGER');
+        
+        $access_roles_id = array($superadmin_role_id,$manager_role_id);
+
+        if(in_array($role_id,$access_roles_id)) {
+
+            $users = User::getAllUsers('recruiter');
+        }
+        else{
+
+            $users = User::getAssignedUsers($user_id,'recruiter');
+        }
+
+        if (isset($_POST['users_id']) && $_POST['users_id'] != 0) {
+
+            $user_id = $_POST['users_id'];
+            $select_user_role_id = User::getRoleIdByUserId($user_id);
+            $role_name = Role::getUserRoleNameById($select_user_role_id['role_id']);
+        }
+        else{
+            $user_id = $user_id;
+            $role_name = '';
+        }
+
+        // Get user Bench Mark from master
+        $user_bench_mark = UserBenchMark::getBenchMarkByUserID($user_id);
+
+        // Get no of cv's associated in this week
+
+        $ass_cvs_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),0);
+
+        $ass_cvs_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),0);
+
+        $ass_cvs_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),0);
+
+        $ass_cvs_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),0);
+
+        $ass_cvs_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),0);
+
+        // Get no of weeks in month
+
+        if(isset($ass_cvs_cnt_fifth_week) && $ass_cvs_cnt_fifth_week > 0) {
+
+            $no_of_weeks = '5';
+        }
+        else{
+
+            $no_of_weeks = '4';
+        }
+
+        // Get no of shortlisted candidate count in this week
+
+        $shortlist_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),1);
+
+        $shortlist_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),1);
+
+        $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),1);
+
+        $shortlist_cvs_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),1);
+
+        $shortlist_cvs_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),1);
+
+        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','ass_cvs_cnt_first_week','ass_cvs_cnt_second_week','ass_cvs_cnt_third_week','ass_cvs_cnt_fourth_week','ass_cvs_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cvs_cnt_fourth_week','shortlist_cvs_cnt_fifth_week'));
     }
 }

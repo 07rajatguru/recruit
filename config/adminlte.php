@@ -347,8 +347,8 @@ return [
                    'icon' => 'circle-o',
                ],
                [
-                   'text' => 'Weekly Goal Sheet',
-                   'url'  => 'weekly-goal-sheet',
+                   'text' => 'Productivity Report',
+                   'url'  => 'productivity-report',
                    'icon' => 'circle-o',
                ],
                [

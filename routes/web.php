@@ -2005,9 +2005,9 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ReportController@clientWiseReportExport'
     ]);
 
-    Route::get('weekly-goal-sheet',[
-        'as' => 'goal.sheet',
-        'uses' => 'ReportController@weeklyGoalSheet',
+    Route::any('productivity-report',[
+        'as' => 'productivity.report',
+        'uses' => 'ReportController@productivityReport',
         'middleware' => ['permission:weekly-report']
     ]);
 
