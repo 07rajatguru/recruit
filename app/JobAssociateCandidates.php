@@ -315,7 +315,7 @@ class JobAssociateCandidates extends Model
         return $job_cvs_res;
     }*/
 
-    public static function getProductivityReportCount($user_id,$date,$shortlisted=0){
+    public static function getProductivityReportCount($user_id,$date,$shortlisted=0,$month,$year){
 
         $query = JobAssociateCandidates::query();
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
@@ -326,6 +326,11 @@ class JobAssociateCandidates extends Model
         if (isset($shortlisted) && $shortlisted > 0) {
 
             $query = $query->where('job_associate_candidates.shortlisted','>=','1');
+        }
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
         }
        
         $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
@@ -339,13 +344,19 @@ class JobAssociateCandidates extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportInterviewCount($user_id,$date){
+    public static function getProductivityReportInterviewCount($user_id,$date,$month,$year){
 
         $query = Interview::query();
         $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"));
         $query = $query->where('interview.interview_owner_id',$user_id);
         $query = $query->where('interview.interview_date','>=',$date);
         $query = $query->where('interview.interview_date','<=',date('Y-m-d',strtotime("$date +6days")));
+        $query = $query->where('interview.status','=','Attended');
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(interview.interview_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(interview.interview_date)'),'=',$year);
+        }
      
         $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
         $query_response = $query->get();

@@ -15,13 +15,25 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box-body col-xs-4 col-sm-5 col-md-4">
+            <div class="box-body col-xs-3 col-sm-3 col-md-3">
                 <div class="form-group">
                     {{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control'))}}
                 </div>
             </div>
 
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-3 col-sm-3 col-md-3">
+                <div class="form-group">
+                    {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control'))}}
+                </div>
+            </div>
+
+            <div class="box-body col-xs-3 col-sm-3 col-md-3">
+                <div class="form-group">
+                    {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+                </div>
+            </div>
+
+            <div class="box-body col-xs-3 col-sm-3 col-md-3">
                 <div class="form-group">
                     {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
                 </div>
@@ -41,19 +53,19 @@
                         <td colspan="12" valign="bottom" style="border: solid black 2px;background: rgb(70,189,198);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
 
                             <?php 
-                                $full_year =  date('Y');
-                                $year = substr($full_year, -2);
-                                $month = date('F');
+                                $full_year =  $year;
+                                $year_display = substr($full_year, -2);
+                                $month_display = date('F', mktime(0, 0, 0, $month, 10));
                             ?>
 
                             @if(isset($role_name) && $role_name != '')
                                 <p align="center" style="text-align: center;">
-                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $role_name }} - {{ $month }}' {{ $year }}
+                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $role_name }} - {{ $month_display }}' {{ $year_display }}
                                     </span></b>
                                 </p>
                             @else
                                  <p align="center" style="text-align: center;">
-                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $month }}' {{ $year }}</span></b>
+                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $month_display }}' {{ $year_display }}</span></b>
                                 </p>
                             @endif
                         </td>
@@ -406,12 +418,16 @@
 
             var users_id = $("#users_id").val();
             var app_url = "{!! env('APP_URL'); !!}";
+            var month = $("#month").val();
+            var year = $("#year").val();
 
             var url = app_url+'/productivity-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="text" name="users_id" value="'+users_id+'" />' +
+                '<input type="text" name="month" value="'+month+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);

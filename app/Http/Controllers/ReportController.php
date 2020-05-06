@@ -775,6 +775,35 @@ class ReportController extends Controller
 
     public function productivityReport() {
 
+        // Month data
+        $month_array = array();
+        for ($i=1; $i <=12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Year Data
+        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+        $ending_year = date('Y',strtotime('+5 year'));
+
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month']!=0) {
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year']!=0) {
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date('Y');
+        }
+
         /*get monday of current month
 
         //echo date("j, d-M-Y", strtotime("first monday 2020-05"));exit;
@@ -868,15 +897,15 @@ class ReportController extends Controller
 
         // Get no of cv's associated in this week
 
-        $ass_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),0);
+        $ass_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),0,$month,$year);
 
-        $ass_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),0);
+        $ass_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),0,$month,$year);
 
-        $ass_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),0);
+        $ass_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),0,$month,$year);
 
-        $ass_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),0);
+        $ass_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),0,$month,$year);
 
-        $ass_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),0);
+        $ass_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),0,$month,$year);
 
         // Get no of weeks in month
 
@@ -891,28 +920,28 @@ class ReportController extends Controller
 
         // Get no of shortlisted candidate count in this week
 
-        $shortlist_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),1);
+        $shortlist_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),1,$month,$year);
 
-        $shortlist_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),1);
+        $shortlist_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),1,$month,$year);
 
-        $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),1);
+        $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),1,$month,$year);
 
-        $shortlist_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),1);
+        $shortlist_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),1,$month,$year);
 
-        $shortlist_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),1);
+        $shortlist_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),1,$month,$year);
 
         // Get no of interview of candidates count in this week
 
-        $interview_cnt_first_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('first Monday this week')));
+        $interview_cnt_first_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('first Monday this week')),$month,$year);
 
-        $interview_cnt_second_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('second Monday this week')));
+        $interview_cnt_second_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('second Monday this week')),$month,$year);
 
-        $interview_cnt_third_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('third Monday this week')));
+        $interview_cnt_third_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('third Monday this week')),$month,$year);
 
-        $interview_cnt_fourth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')));
+        $interview_cnt_fourth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),$month,$year);
 
-        $interview_cnt_fifth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')));
+        $interview_cnt_fifth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),$month,$year);
 
-        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','ass_cnt_first_week','ass_cnt_second_week','ass_cnt_third_week','ass_cnt_fourth_week','ass_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cnt_fourth_week','shortlist_cnt_fifth_week','interview_cnt_first_week','interview_cnt_second_week','interview_cnt_third_week','interview_cnt_fourth_week','interview_cnt_fifth_week'));
+        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','ass_cnt_first_week','ass_cnt_second_week','ass_cnt_third_week','ass_cnt_fourth_week','ass_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cnt_fourth_week','shortlist_cnt_fifth_week','interview_cnt_first_week','interview_cnt_second_week','interview_cnt_third_week','interview_cnt_fourth_week','interview_cnt_fifth_week'));
     }
 }
