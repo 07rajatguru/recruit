@@ -22,9 +22,9 @@ class CandidateStatus extends Model
 
     public static function getCandidateStatus() {
     
-        $interviewStatus['Shortlist'] = 'Shortlist';
-        $interviewStatus['Shortlisted and Schedule Interview'] = 'Shortlisted and Schedule Interview';
-        $interviewStatus['Selected'] = 'Selected';
+        $interviewStatus['1'] = 'Shortlist';
+        $interviewStatus['2'] = 'Shortlisted and Schedule Interview';
+        $interviewStatus['3'] = 'Selected';
 
         return $interviewStatus;
     }

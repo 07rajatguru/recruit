@@ -65,7 +65,10 @@
             </div>
 
             <div class="pull-right">
-                <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate()">Shortlist Candidates</button>
+                <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(1)">Shortlist</button>
+                <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(2)">Shortlisted & Schedule Interview
+                </button>
+                <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(3)">Selected</button>
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>
                 <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
 
@@ -122,6 +125,8 @@
                                 {!! Form::hidden('posting_title',  $job_id , array('id'=>'posting_title','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 {!! Form::hidden('job_id',  $job_id , array('id'=>'job_id','class' => 'form-control', 'tabindex' => '1' )) !!}
 
+                                <input type="hidden" name="all_can_ids_interview" id="all_can_ids_interview" value="">
+
                                 <div class="form-group {{ $errors->has('interview_date') ? 'has-error' : '' }}">
                                     <strong>Interview Date: <span class = "required_fields">*</span> </strong>
                                     <div class="input-group date">
@@ -166,7 +171,6 @@
                                     </span>
                                     @endif
                                 </div>
-
                             </div>
 
                             <div class="col-md-6 ">
@@ -209,7 +213,6 @@
                                     </span>
                                     @endif
                                 </div>
-
                             </div>
 
                             <div class="form-group">
@@ -269,7 +272,7 @@
                             </div>
                             {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1' )) !!}
                             <div class="form-group {{ $errors->has('candiate_status_id') ? 'has-error' : '' }}">
-                                {!! Form::select('candiate_status_id', $candidatestatus,null, array('id'=>'candiate_status_id','class' => 'form-control')) !!}
+                                {!! Form::select('candiate_status_id', $candidatestatus,null, array('id'=>'candiate_status_id','class' => 'form-control','onchange' => 'showInterview();')) !!}
                                 @if ($errors->has('candiate_status_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candiate_status_id') }}</strong>
@@ -356,7 +359,7 @@
             <th>Candidate Owner</th>
             <th width="13%">Candidate Mobile No.</th>
             <th>Candidate Email</th>
-            <th>Candidate Status</th>
+            <!-- <th>Candidate Status</th> -->
             <th>Round Cleared</th>
             <th>Associated Date/Time</th>
 
@@ -429,29 +432,20 @@
                 ?>
                 @if($candidate->shortlisted==1 || $candidate->shortlisted==2)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
-                <td>{{ $candidate->owner or '' }}</td>
-                <td>{{ $candidate->mobile or '' }}</td>
-                <td>{{ $candidate->email or '' }}</td>
-                <td>{{ $candidate->status or '' }}</td>
-                <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
 
                 @elseif($candidate->shortlisted==3)
                 <td style="background:#32CD32"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color:blue;">
                    {{ $candidate->fname or '' }}</a></td>
-                <td>{{ $candidate->owner or '' }}</td>
-                <td>{{ $candidate->mobile or '' }}</td>
-                <td>{{ $candidate->email or '' }}</td>
-                <td>{{ $candidate->status or '' }}</td>
-                <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
 
                 @else
                 <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
+                @endif
+
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
-                <td>{{ $candidate->status or '' }}</td>
+                <!-- <td>{{ $candidate->status or '' }}</td> -->
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
-                @endif
 
                 @if($month == '1')
                     <td style="background:#40E0D0;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
@@ -550,7 +544,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2 class="modal-title">Shortlist Candidate</h2>
+                <h2 class="modal-title">Update Candidate Status</h2>
             </div>
             {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
 
@@ -560,9 +554,12 @@
                 </div>
 
                 <div class="shortlist-round" style="display:none;">
-                    <p>
+                    <!-- <p>
                     {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
-                    </p>
+                    </p> -->
+                    Are You sure want to update Candidate Status?
+
+                    <input type="hidden" name="update_status_id" id="update_status_id" value="">
                 </div>
 
                 <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
@@ -821,7 +818,7 @@
             });
         }
 
-        function shortlistcandidate() {
+        function shortlistcandidate(update_status_id) {
 
             var token = $("#token").val();  
             var candidate_ids = new Array();
@@ -831,30 +828,59 @@
                 candidate_ids.push($(this).val());
             });
 
-            $("#all_can_ids").val(candidate_ids);
-            $(".check-all-candidate-ids").empty();
+            if(update_status_id == '2' && candidate_ids.length > 1) {
+                alert('Please Select any one Candidate for Scheduled Interview.');
+                $("#modal-shortlist").modal('hide');
+                window.location.reload();
+            }
+            else {
+                $("#all_can_ids").val(candidate_ids);
+                $("#all_can_ids_interview").val(candidate_ids);
+                $(".check-all-candidate-ids").empty();
 
-            $.ajax(
-            {
-                type: 'POST',
-                url: app_url+'/jobs/checkcandidateids',
-                data: { can_ids:candidate_ids, '_token':token },
-                success: function(msg)
-                { 
-                    $(".shortlist-candidate").show();
-                    if (msg.success == 'success') {
+                $.ajax(
+                {
+                    type: 'POST',
+                    url: app_url+'/jobs/checkcandidateids',
+                    data: { can_ids:candidate_ids, '_token':token },
+                    success: function(msg)
+                    { 
+                        $(".shortlist-candidate").show();
+                        if (msg.success == 'success') {
 
-                        $(".shortlist-round").show();
-                        document.getElementById("shortlist-btn").disabled = false;
+                            if(update_status_id == '2') {
+
+                                $("#modal-shortlist").modal('hide');
+                                $("#modal-schedule-interview").modal('show');
+                            }
+                            else {
+
+                                $(".shortlist-round").show();
+                                $("#update_status_id").val(update_status_id);
+                                document.getElementById("shortlist-btn").disabled = false;
+                            }
+                        }
+                        else{
+
+                            $(".check-all-candidate-ids").show();
+                            $(".check-all-candidate-ids").append(msg.err);
+                            document.getElementById("shortlist-btn").disabled = true;
+                        }
                     }
-                    else{
+                });
+            }
+        }
 
-                        $(".check-all-candidate-ids").show();
-                        $(".check-all-candidate-ids").append(msg.err);
-                        document.getElementById("shortlist-btn").disabled = true;
-                    }
-                }
-            });
+        function showInterview() {
+
+            var candiate_status_id = $("#candiate_status_id").val();
+
+            if(candiate_status_id == '2') {
+
+                $("#modal-update-status").modal('hide');
+                $("#modal-schedule-interview").modal('show');
+                
+            }
         }
     </script>
 @endsection

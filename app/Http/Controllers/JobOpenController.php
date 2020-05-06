@@ -2556,16 +2556,41 @@ class JobOpenController extends Controller
         $candidate_id = $_POST['candidate_id'];
         $status_id = $_POST['status_id'];
 
-        echo $status_id;exit;
-        DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
-        DB::statement("UPDATE  candidate_otherinfo SET status_id =$status_id where candidate_id = $candidate_id");
+        $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->first();
 
-        $jobDetail = JobOpen::find($job_id);
+        if($status_id == '1') {
+
+            if($response->shortlisted == '0') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+            else if($response->shortlisted == '1') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+            else if($response->shortlisted == '2') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+        }
+        else if ($status_id == '2') {
+
+            DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+        }
+        else if ($status_id == '3') {
+
+            DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
+        }
+        
+        DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
+        //DB::statement("UPDATE  candidate_otherinfo SET status_id =$status_id where candidate_id = $candidate_id");
+
+        /*$jobDetail = JobOpen::find($job_id);
 
         $hiring_manager_id = $jobDetail->hiring_manager_id;
         $job_show = $jobDetail->job_show;
 
-        /*$authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
+        $authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
 
         if($job_show == 0){
             $user_details = TeamMates::select('user_id')
@@ -2599,13 +2624,13 @@ class JobOpenController extends Controller
     public function scheduleInterview(Request $request){
 
         $user_id = \Auth::user()->id;
-        $dateClass = new Date();
+        
+        $job_id = $request->get('job_id');
 
         $data = array();
-        //$data['interview_name'] = $request->get('interview_name');
-        $data['candidate_id'] = $request->get('candidate_id');
+        $dateClass = new Date();
+
         $data['interviewer_id'] = $request->get('interviewer_id');
-        $data['client'] = $request->get('client_id');
         $data['interview_date'] = $dateClass->changeDMYHMStoYMDHMS($request->get('interview_date'));
         $data['location'] = $request->get('location');
         $data['comments'] = '';
@@ -2614,34 +2639,95 @@ class JobOpenController extends Controller
         $data['about'] = '';
         $data['status'] = $request->get('status');
         $data['interview_owner_id'] = $user_id;
-        $data['location'] = $request->get('location');
         $data['skype_id'] = $request->get('skype_id');
         $data['round'] = '1';
         $data['candidate_location'] = $request->get('candidate_location');
         $data['interview_location'] = $request->get('interview_location');
 
-        $job_id = $request->get('job_id');
+        // For single candidate
+        if($request->get('candidate_id') != '') {
 
-        $interview = Interview::createInterview($data);
+            $candidate_id = $request->get('candidate_id');
+            $data['candidate_id'] = $candidate_id;
+            $interview = Interview::createInterview($data);
+            $interview->save();
 
-        $validator = \Validator::make(Input::all(),$interview::$rules);
+            $interview_id = $interview->id;
+            $posting_title = $request->get('job_id');
 
-        if($validator->fails()){
-            return redirect('interview/create')->withInput(Input::all())->withErrors($validator->errors());
+            $candidate_mail = Interview::getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id);
+
+            $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
+
+            // Update single candidate status
+
+            $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->first();
+
+            if($response->shortlisted == '0') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+            else if($response->shortlisted == '1') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+            else if($response->shortlisted == '2') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+              
+            DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+
+            // End
         }
 
-        $interviewStored = $interview->save();
+        // For single candidate End
 
-        $interview_id = $interview->id;
-        $candidate_id = $request->get('candidate_id');
-        $posting_title = $request->get('job_id');
+        // For multiple candidate
 
-        $candidate_mail = Interview::getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id);
+        $all_can_ids_interview = $_POST['all_can_ids_interview'];
+        $ids = explode(",", $all_can_ids_interview);
 
-        $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
+        if(isset($ids) && sizeof($ids) > 0) {
 
-        return redirect('jobs/'.$job_id.'/associated_candidates')->with('success','Interview scheduled successfully');
+            foreach ($ids as $key => $value) {
+                
+                $data['candidate_id'] = $value;
+                $interview = Interview::createInterview($data);
+                $interview->save();
 
+                $interview_id = $interview->id;
+                $job_id = $request->get('job_id');
+
+                $candidate_mail = Interview::getCandidateEmail($user_id,$value,$job_id,$interview_id);
+
+                $scheduled_mail = Interview::getScheduleEmail($value,$job_id,$interview_id);
+
+                // Update single candidate status
+
+                $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
+
+                if($response->shortlisted == '0') {
+
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($value) and job_id = $job_id");
+                }
+                else if($response->shortlisted == '1') {
+
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($value) and job_id = $job_id");
+                }
+                else if($response->shortlisted == '2') {
+
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
+                }
+                  
+                DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($value) and job_id = $job_id");
+
+                // End
+            }
+        }
+        // For multiple candidate End
+
+        return redirect('jobs/'.$job_id.'/associated_candidates')->with('success','Interview Scheduled Successfully.');
     }
 
     public function addJoiningDate(){
@@ -3363,7 +3449,7 @@ class JobOpenController extends Controller
             $msg['success'] = 'success';
         }
         else{
-            $msg['err'] = '<b>Please select Candidate</b>';
+            $msg['err'] = '<b>Select candidate to Update Status</b>';
             $msg['msg'] = "fail";
         }
 
@@ -3374,7 +3460,7 @@ class JobOpenController extends Controller
     public function shortlistedCandidates(Request $request){
 
         $input = $request->all();
-        $shortlist = $input['shortlist_type'];
+        /*$shortlist = $input['shortlist_type'];
 
         $all_can_ids = $_POST['all_can_ids'];
         $ids = explode(",", $all_can_ids);
@@ -3386,7 +3472,47 @@ class JobOpenController extends Controller
             DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $value and job_id = $job_id");
         }
 
-        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted Successfully.');
+        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted Successfully.');*/
+        
+
+        $update_status_id = $input['update_status_id'];
+        $job_id = $_POST['job_id'];
+
+        $all_can_ids = $_POST['all_can_ids'];
+        $ids = explode(",", $all_can_ids);
+
+        foreach ($ids as $key => $value)
+        {
+            $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
+
+            if($update_status_id == '1') {
+
+                if($response->shortlisted == '0') {
+
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($value) and job_id = $job_id");
+                }
+                else if($response->shortlisted == '1') {
+
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($value) and job_id = $job_id");
+                }
+                else if($response->shortlisted == '2') {
+
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
+                }
+            }
+            else if ($update_status_id == '2') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($value) and job_id = $job_id");
+            }
+            else if ($update_status_id == '3') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
+            }
+
+            DB::statement("UPDATE job_associate_candidates SET status_id = $update_status_id where candidate_id in ($value) and job_id = $job_id");
+        }
+
+        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Status Updated Successfully.');
     }
 
     public function getAllPositionsJobs()
