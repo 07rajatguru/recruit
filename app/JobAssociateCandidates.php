@@ -9,7 +9,7 @@ class JobAssociateCandidates extends Model
 {
     public $table = "job_associate_candidates";
 
-    use SoftDeletes;
+    //use SoftDeletes;
 
 
     public static function getAssociatedJobIdByCandidateId($candidate_id){
@@ -19,12 +19,10 @@ class JobAssociateCandidates extends Model
         $res = $query->first();
 
         $job_id = 0;
-        if(isset($res) && sizeof($res)>0){
+        if(isset($res) && $res != ''){
             $job_id = $res->job_id;
         }
-
         return $job_id;
-        
     }
 
     public static function getAssociatedCandidatesByJobId($job_id){

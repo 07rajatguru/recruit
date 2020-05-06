@@ -62,8 +62,13 @@
                         <tr>
                             <th>Mobile Number</th>
                             <td>{{ $candidateDetails['mobile'] }}</td>
-                            <th>Phone</th>
+                            <th>Other Number</th>
                             <td>{{ $candidateDetails['phone'] }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>CandidateSource</th>
+                            <td colspan="3">{{ $candidateDetails['candidate_source'] }}</td>
                         </tr>
 
                     </table>
@@ -147,27 +152,6 @@
                         <tr>
                             <th>Skype Id</th>
                             <td>{{ $candidateDetails['skype_id'] }}</td>
-                        </tr>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Other Information</h3>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th scope="row">Candidate Status</th>
-                            <td>{{ $candidateDetails['candidate_status'] }}</td>
-                            <th>CandidateSource</th>
-                            <td>{{ $candidateDetails['candidate_source'] }}</td>
                         </tr>
                     </table>
                 </div>

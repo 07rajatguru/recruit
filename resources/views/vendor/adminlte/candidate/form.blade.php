@@ -57,7 +57,7 @@
 
                             <div class="form-group {{ $errors->has('fname') ? 'has-error' : '' }}">
                                 <strong>Full Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('fname', null, array('id'=>'fname','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::text('fname', null, array('id'=>'fname','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '1' )) !!}
                                 @if ($errors->has('fname'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('fname') }}</strong>
@@ -76,14 +76,9 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
-                                <strong>Phone Number:</strong>
-                                {!! Form::text('phone', null, array('id'=>'phone','placeholder' => 'Phone Number','class' => 'form-control', 'tabindex' => '5'  )) !!}
-                                @if ($errors->has('phone'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('phone') }}</strong>
-                                </span>
-                                @endif
+                            <div class="form-group">
+                                <strong>Other Number:</strong>
+                                {!! Form::text('phone', null, array('id'=>'phone','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '5'  )) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
@@ -114,7 +109,7 @@
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'EMAIL','class' => 'form-control', '', 'tabindex' => '2' )) !!}
+                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', '', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>
@@ -122,249 +117,229 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('maritalStatus') ? 'has-error' : '' }}">
+                            <div class="form-group">
                                 <strong>Marital Status:  </strong>
                                 {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '4' )) !!}
-                                @if ($errors->has('maritalStatus'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('maritalStatus') }}</strong>
-                                </span>
-                                @endif
                             </div>
 
-                             <div class="form-group {{ $errors->has('candidateSex') ? 'has-error' : '' }}">
+                             <div class="form-group ">
                                 <strong>Sex:</strong>
                                 {!! Form::select('candidateSex', $candidateSex,null, array('id'=>'candidateSex','class' => 'form-control', 'tabindex' => '6' )) !!}
-                                @if ($errors->has('candidateSex'))
+                            </div>
+
+                            <div class="form-group">
+                                <strong>Candidate Source:</strong>
+                                {!! Form::select('candidateSource', $candidateSource,null, array('id'=>'candidateSource','class' => 'form-control', 'tabindex' => '8')) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Address Information</h3>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-sm-12 col-md-12">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('candidate_address') ? 'has-error' : '' }}">
+                                <strong>Candidate Address:</strong>
+                                {!! Form::text('candidate_address', null, array('id'=>'candidate_address','placeholder' => 'Candidate Address','class' => 'form-control', 'tabindex' => '9' , 'onFocus'=>"geolocate()" )) !!}
+                                @if ($errors->has('candidate_address'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('candidateSex') }}</strong>
-                                </span>
+                                    <strong>{{ $errors->first('candidate_address') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('street1') ? 'has-error' : '' }}">
+                                <strong>Street 1:</strong>
+                                {!! Form::text('street1', null, array('id'=>'street1','placeholder' => 'Street1','class' => 'form-control', 'tabindex' => '10' )) !!}
+                                @if ($errors->has('street1'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('street1') }}</strong>
+                                        </span>
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('city') ? 'has-error' : '' }}">
+                                <strong>City:</strong>
+                                {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '12' )) !!}
+                                @if ($errors->has('city'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('city') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('zipcode') ? 'has-error' : '' }}">
+                                <strong>Zip Code:</strong>
+                                {!! Form::text('zipcode', null, array('id'=>'zipcode','placeholder' => 'ZipCode','class' => 'form-control', 'tabindex' => '14' )) !!}
+                                @if ($errors->has('zipcode'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('zipcode') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('street2') ? 'has-error' : '' }}">
+                                <strong>Street 2:</strong>
+                                {!! Form::text('street2', null, array('id'=>'street2','placeholder' => 'Street2','class' => 'form-control', 'tabindex' => '11' )) !!}
+                                @if ($errors->has('street2'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('street2') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('state') ? 'has-error' : '' }}">
+                                <strong>State:</strong>
+                                {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '13' )) !!}
+                                @if ($errors->has('state'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('state') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('country') ? 'has-error' : '' }}">
+                                <strong>Country:</strong>
+                                {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '15' )) !!}
+                                @if ($errors->has('country'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('country') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Address Information</h3>
-            </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Education and Professional Information</h3>
+                </div>
 
-            <div class="box-body col-sm-12 col-md-12">
-                <div class="">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('highest_qualification') ? 'has-error' : '' }}">
+                                <strong>Highest Qualification:</strong>
+                                {!! Form::text('highest_qualification', null, array('id'=>'highest_qualification','placeholder' => 'Highest Qualification','class' => 'form-control', 'tabindex' => '16' )) !!}
+                                @if ($errors->has('highest_qualification'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('highest_qualification') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
 
-                    <div class="form-group {{ $errors->has('candidate_address') ? 'has-error' : '' }}">
-                        <strong>Candidate Address:</strong>
-                        {!! Form::text('candidate_address', null, array('id'=>'candidate_address','placeholder' => 'Candidate Address','class' => 'form-control', 'tabindex' => '9' , 'onFocus'=>"geolocate()" )) !!}
-                        @if ($errors->has('candidate_address'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('candidate_address') }}</strong>
-                                </span>
-                        @endif
+                            <div class="form-group {{ $errors->has('experience_months') ? 'has-error' : '' }}">
+                                <strong>Experience Months:</strong>
+                                {!! Form::number('experience_months', null, array('id'=>'experience_months','placeholder' => 'Experience Months','class' => 'form-control', 'min' => '0', 'tabindex' => '18' )) !!}
+                                @if ($errors->has('experience_months'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('experience_months') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('current_employer') ? 'has-error' : '' }}">
+                                <strong>Current Employer:</strong>
+                                {!! Form::text('current_employer', null, array('id'=>'current_employer','placeholder' => 'Current Employer','class' => 'form-control', 'tabindex' => '20' )) !!}
+                                @if ($errors->has('current_employer'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('current_employer') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('current_salary') ? 'has-error' : '' }}">
+                                <strong>Current Salary:</strong>
+                                {!! Form::text('current_salary', null, array('id'=>'current_salary','placeholder' => 'Current Salary','class' => 'form-control', 'tabindex' => '22' )) !!}
+                                @if ($errors->has('current_salary'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('current_salary') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('skype_id') ? 'has-error' : '' }}">
+                                <strong>Skype Id:</strong>
+                                {!! Form::text('skype_id', null, array('id'=>'skype_id','placeholder' => 'Skype Id','class' => 'form-control', 'tabindex' => '24' )) !!}
+                                @if ($errors->has('skype_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('skype_id') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('experience_years') ? 'has-error' : '' }}">
+                                <strong>Experience years:</strong>
+                                {!! Form::number('experience_years', null, array('id'=>'experience_years','placeholder' => 'Experience years','class' => 'form-control', 'min' => '0', 'tabindex' => '17' )) !!}
+                                @if ($errors->has('experience_years'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('experience_years') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('current_job_title') ? 'has-error' : '' }}">
+                                <strong>Current Job Title:</strong>
+                                {!! Form::text('current_job_title', null, array('id'=>'current_job_title','placeholder' => 'Current Job Title','class' => 'form-control', 'tabindex' => '19' )) !!}
+                                @if ($errors->has('current_job_title'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('current_job_title') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('expected_salary') ? 'has-error' : '' }}">
+                                <strong>Expected Salary:</strong>
+                                {!! Form::text('expected_salary', null, array('id'=>'expected_salary','placeholder' => 'Expected Salary','class' => 'form-control', 'tabindex' => '21' )) !!}
+                                @if ($errors->has('expected_salary'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('expected_salary') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('skill') ? 'has-error' : '' }}">
+                                <strong>Skill:</strong>
+                                {!! Form::text('skill', null, array('id'=>'skill','placeholder' => 'Skill','class' => 'form-control', 'tabindex' => '23' )) !!}
+                                @if ($errors->has('skill'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('skill') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-
-            <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                <div class="">
-
-                    <div class="form-group {{ $errors->has('street1') ? 'has-error' : '' }}">
-                        <strong>Street 1:</strong>
-                        {!! Form::text('street1', null, array('id'=>'street1','placeholder' => 'Street1','class' => 'form-control', 'tabindex' => '10' )) !!}
-                        @if ($errors->has('street1'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('street1') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('city') ? 'has-error' : '' }}">
-                        <strong>City:</strong>
-                        {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '12' )) !!}
-                        @if ($errors->has('city'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('city') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('zipcode') ? 'has-error' : '' }}">
-                        <strong>Zip Code:</strong>
-                        {!! Form::text('zipcode', null, array('id'=>'zipcode','placeholder' => 'ZipCode','class' => 'form-control', 'tabindex' => '14' )) !!}
-                        @if ($errors->has('zipcode'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('zipcode') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                <div class="">
-
-                    <div class="form-group {{ $errors->has('street2') ? 'has-error' : '' }}">
-                        <strong>Street 2:</strong>
-                        {!! Form::text('street2', null, array('id'=>'street2','placeholder' => 'Street2','class' => 'form-control', 'tabindex' => '11' )) !!}
-                        @if ($errors->has('street2'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('street2') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('state') ? 'has-error' : '' }}">
-                        <strong>State:</strong>
-                        {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '13' )) !!}
-                        @if ($errors->has('state'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('state') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('country') ? 'has-error' : '' }}">
-                        <strong>Country:</strong>
-                        {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '15' )) !!}
-                        @if ($errors->has('country'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('country') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Education and Professional Information</h3>
-            </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                <div class="">
-                    <div class="form-group {{ $errors->has('highest_qualification') ? 'has-error' : '' }}">
-                        <strong>Highest Qualification:</strong>
-                        {!! Form::text('highest_qualification', null, array('id'=>'highest_qualification','placeholder' => 'Highest Qualification','class' => 'form-control', 'tabindex' => '16' )) !!}
-                        @if ($errors->has('highest_qualification'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('highest_qualification') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('experience_months') ? 'has-error' : '' }}">
-                        <strong>Experience Months:</strong>
-                        {!! Form::number('experience_months', null, array('id'=>'experience_months','placeholder' => 'Experience Months','class' => 'form-control', 'min' => '0', 'tabindex' => '18' )) !!}
-                        @if ($errors->has('experience_months'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('experience_months') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('current_employer') ? 'has-error' : '' }}">
-                        <strong>Current Employer:</strong>
-                        {!! Form::text('current_employer', null, array('id'=>'current_employer','placeholder' => 'Current Employer','class' => 'form-control', 'tabindex' => '20' )) !!}
-                        @if ($errors->has('current_employer'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('current_employer') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('current_salary') ? 'has-error' : '' }}">
-                        <strong>Current Salary:</strong>
-                        {!! Form::text('current_salary', null, array('id'=>'current_salary','placeholder' => 'Current Salary','class' => 'form-control', 'tabindex' => '22' )) !!}
-                        @if ($errors->has('current_salary'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('current_salary') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('skype_id') ? 'has-error' : '' }}">
-                        <strong>Skype Id:</strong>
-                        {!! Form::text('skype_id', null, array('id'=>'skype_id','placeholder' => 'Skype Id','class' => 'form-control', 'tabindex' => '24' )) !!}
-                        @if ($errors->has('skype_id'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('skype_id') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                <div class="">
-                    <div class="form-group {{ $errors->has('experience_years') ? 'has-error' : '' }}">
-                        <strong>Experience years:</strong>
-                        {!! Form::number('experience_years', null, array('id'=>'experience_years','placeholder' => 'Experience years','class' => 'form-control', 'min' => '0', 'tabindex' => '17' )) !!}
-                        @if ($errors->has('experience_years'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('experience_years') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('current_job_title') ? 'has-error' : '' }}">
-                        <strong>Current Job Title:</strong>
-                        {!! Form::text('current_job_title', null, array('id'=>'current_job_title','placeholder' => 'Current Job Title','class' => 'form-control', 'tabindex' => '19' )) !!}
-                        @if ($errors->has('current_job_title'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('current_job_title') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('expected_salary') ? 'has-error' : '' }}">
-                        <strong>Expected Salary:</strong>
-                        {!! Form::text('expected_salary', null, array('id'=>'expected_salary','placeholder' => 'Expected Salary','class' => 'form-control', 'tabindex' => '21' )) !!}
-                        @if ($errors->has('expected_salary'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('expected_salary') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('skill') ? 'has-error' : '' }}">
-                        <strong>Skill:</strong>
-                        {!! Form::text('skill', null, array('id'=>'skill','placeholder' => 'Skill','class' => 'form-control', 'tabindex' => '23' )) !!}
-                        @if ($errors->has('skill'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('skill') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-
-
-                </div>
-            </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    {{-- <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Other Information</h3>
@@ -383,7 +358,6 @@
                                 </span>
                             @endif
                         </div>
-
                     </div>
                 </div>
 
@@ -400,18 +374,16 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
+    </div> --}}
 
-<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="col-xs-12 col-sm-12 col-md-12">
     @if( $action == 'add')
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Attachment Information</h3>
             </div>
-
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group {{ $errors->has('resume') ? 'has-error' : '' }}">
@@ -419,8 +391,8 @@
                     {!! Form::file('resume', null, array('id'=>'resume','class' => 'form-control')) !!}
                     @if ($errors->has('resume'))
                         <span class="help-block">
-                                <strong>{{ $errors->first('resume') }}</strong>
-                                </span>
+                            <strong>{{ $errors->first('resume') }}</strong>
+                        </span>
                     @endif
                 </div>
 
@@ -432,8 +404,8 @@
                     {!! Form::file('formatted_resume', null, array('id'=>'formatted_resume','class' => 'form-control')) !!}
                     @if ($errors->has('formatted_resume'))
                         <span class="help-block">
-                                <strong>{{ $errors->first('formatted_resume') }}</strong>
-                                </span>
+                            <strong>{{ $errors->first('formatted_resume') }}</strong>
+                        </span>
                     @endif
                 </div>
             </div>
@@ -444,8 +416,8 @@
                     {!! Form::file('cover_latter', null, array('id'=>'cover_latter','class' => 'form-control')) !!}
                     @if ($errors->has('cover_latter'))
                         <span class="help-block">
-                                <strong>{{ $errors->first('cover_latter') }}</strong>
-                                </span>
+                            <strong>{{ $errors->first('cover_latter') }}</strong>
+                        </span>
                     @endif
                 </div>
             </div>
@@ -455,8 +427,8 @@
                 {!! Form::file('others', null, array('id'=>'others','class' => 'form-control')) !!}
                 @if ($errors->has('others'))
                     <span class="help-block">
-                                <strong>{{ $errors->first('others') }}</strong>
-                                </span>
+                        <strong>{{ $errors->first('others') }}</strong>
+                    </span>
                 @endif
             </div>
             </div>
@@ -505,8 +477,6 @@
             {!! Form::submit(isset($candidate) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
         </div>
     </div>
-
-
     </div>
 
     {!! Form::close() !!}
@@ -515,8 +485,8 @@
     <div class="error-page">
         <h2 class="headline text-info"> 403</h2>
         <div class="error-content">
-            <h3><i class="fa fa-warning text-yellow"></i> Whoops, looks like something went wrong.</h3>
-
+            <h3><i class="fa fa-warning text-yellow"></i> Whoops, looks like something went wrong.
+            </h3>
         </div><!-- /.error-content -->
     </div>
 
@@ -524,7 +494,6 @@
 
 @section('customscripts')
     <script>
-
         $(document).ready(function() {
 
             $('#candidate_form').on('keyup keypress', function(e) {
@@ -540,48 +509,25 @@
                     "fname": {
                         required: true
                     },
-                    /*"lname": {
-                        required: true
-                    },*/
                     "mobile": {
                         required: true
                     },
                     "email": {
                         required: true
-                    },
-
-                    "expected_salary":{
-                        number:true
-                    },
-                    "current_salary":{
-                        number:true
                     }
-                    },
-
+                },
                 
                 messages: {
                     "fname": {
-                        required: "Full Name is required."
+                        required: "Full Name is Required."
                     },
-                   /* "lname": {
-                        required: "Last Name is required."
-                    },*/
-                    
                     "mobile": {
-                        required: "Mobile is required."
+                        required: "Mobile Number is Required."
                     },
                     "email": {
-                        required: "Email is required."
+                        required: "Email is Required."
                     }
-
-                    },
-                    "expected_salary":{
-                        number:true
-                    },
-                    "current_salary":{
-                        number:true
-                    }
-                
+                }
             });
 
         });

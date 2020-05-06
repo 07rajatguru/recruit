@@ -379,7 +379,7 @@ class CandidateController extends Controller
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        $candiateStatus = $request->input('candidateStatus');
+        //$candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
         $job_id = $request->input('jobopen');
 
@@ -472,9 +472,9 @@ class CandidateController extends Controller
             if(isset($candiateSkype_id)){
                 $candidateOtherInfo->skype_id = $candiateSkype_id;
             }
-            if(isset($candiateStatus) && $candiateStatus>0){
+            /*if(isset($candiateStatus) && $candiateStatus>0){
                 $candidateOtherInfo->status_id = $candiateStatus;
-            }
+            }*/
             if(isset($candidateSource)){
                 $candidateOtherInfo->source_id = $candidateSource;
             }
@@ -786,10 +786,7 @@ class CandidateController extends Controller
     public function update(Request $request, $id){
 
         $this->validate($request, [
-           // 'candidateSex' => 'required',
             'fname' => 'required',
-       //     'lname' => 'required',
-//            'email' => 'unique:candidate_basicinfo,email',
             'mobile'  => 'required',
             'email' => 'required'
         ]);
@@ -822,11 +819,11 @@ class CandidateController extends Controller
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        $candiateStatus = $request->input('candidateStatus');
+        //$candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
 
         $candidate = CandidateBasicInfo::find($id);
-        if(isset($candidate) && sizeof($candidate) > 0){
+        if(isset($candidate) && $candidate != ''){
             if(isset($candidateEmail)){
                 $candidate->email = $candidateEmail;
             }
@@ -869,7 +866,6 @@ class CandidateController extends Controller
             if(isset($candiateZipCode)){
                 $candidate->zipcode = $candiateZipCode;
             }
-             
 
             $validator = \Validator::make(Input::all(),$candidate::$rules);
 
@@ -915,9 +911,9 @@ class CandidateController extends Controller
                 if(isset($candiateSkype_id)){
                     $candidateOtherInfo->skype_id = $candiateSkype_id;
                 }
-                if(isset($candiateStatus) && $candiateStatus!=''){
+                /*if(isset($candiateStatus) && $candiateStatus!=''){
                     $candidateOtherInfo->status_id = $candiateStatus;
-                }
+                }*/
                 if(isset($candidateSource)){
                     $candidateOtherInfo->source_id = $candidateSource;
                 }
@@ -970,6 +966,7 @@ class CandidateController extends Controller
                     }
                 }
                 $job_id = $request->input('jobopen');
+
                 JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->delete();
                 if(isset($job_id) && $job_id>0){
                     $job_id = $request->input('jobopen');
@@ -1030,7 +1027,7 @@ class CandidateController extends Controller
         $candidateModel = new CandidateBasicInfo();
         $candidate_upload_type = $candidateModel->candidate_upload_type;
 
-        if(isset($candidates) && sizeof($candidates) > 0){
+        if(isset($candidates) && $candidates != ''){
 
             $candidateDetails['id'] = $candidates->id;
             $candidateDetails['fname'] = $candidates->fname;
