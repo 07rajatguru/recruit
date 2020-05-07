@@ -70,7 +70,7 @@
                         @include('adminlte::partials.deleteModalUser', ['data' => $user, 'name' => 'users','display_name'=>'User'])
                     @endif
                     
-                    @if($isSuperAdmin || $isAccountant)
+                    @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                         <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
                     @endif
                 </td>

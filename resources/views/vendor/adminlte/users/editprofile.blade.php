@@ -34,7 +34,7 @@
             <h2>Edit User Profile</h2>  
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+            <a class="btn btn-primary" href="{{url()->previous()}}">Back</a>
         </div>
     </div>
 </div>
@@ -54,41 +54,30 @@
 
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                                 <strong>Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('name',$user['name'], array('id'=>'name','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '1')) !!}
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
+                                {!! Form::text('name',isset($user['name']) ? $user['name'] : null,array('id'=>'name','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '1')) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Official Email: <span class = "required_fields">*</span> </strong>
-                                @if($isSuperAdmin || $isAccountant)
-                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '1')) !!}
+                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                    {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '1')) !!}
                                 @else
-                                    {!! Form::text('email',$user['email'], array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','disabled','tabindex' => '1')) !!}
-                                @endif
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
+                                    {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','disabled','tabindex' => '1')) !!}
                                 @endif
                             </div>
 
                             <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
-                                <strong>Official Gmail: </strong>
-                                {!! Form::text('semail',$user['s_email'], array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control', 'tabindex' => '2' )) !!}
-                                @if ($errors->has('semail'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('semail') }}</strong>
-                                </span>
+                                <strong>Official Gmail: <span class = "required_fields">*</span> </strong>
+                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                    {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null, array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control', 'tabindex' => '2' )) !!}
+                                @else
+                                    {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null,array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control','disabled','tabindex' => '2' )) !!}
                                 @endif
                             </div>
 
                             <div class="form-group">
                                 <strong>Personal Email:  </strong>
-                                {!! Form::text('personal_email',$user['personal_email'], array('id'=>'personal_email','placeholder' => 'Personal Email','class' => 'form-control','tabindex' => '3')) !!}
+                                {!! Form::text('personal_email',isset($user['personal_email']) ? $user['personal_email'] : null, array('id'=>'personal_email','placeholder' => 'Personal Email','class' => 'form-control','tabindex' => '3')) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('date_of_birth') ? 'has-error' : '' }}">
@@ -97,18 +86,13 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                {!! Form::text('date_of_birth', isset($user['birth_date']) ? $user['birth_date'] : null, array('id'=>'date_of_birth','placeholder' => 'Birth Date','class' => 'form-control','tabindex' => '4')) !!}
+                                {!! Form::text('date_of_birth',isset($user['birth_date']) ? $user['birth_date'] : null, array('id'=>'date_of_birth','placeholder' => 'Birth Date','class' => 'form-control','tabindex' => '4')) !!}
                                 </div>
                             </div>
 
-                            <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
-                                <strong>Joining Date: </strong>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                {!! Form::text('date_of_joining', isset($user['join_date']) ? $user['join_date'] : null, array('id'=>'date_of_joining','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '5')) !!}
-                                </div>
+                            <div class="form-group {{ $errors->has('blood_group') ? 'has-error' : '' }}">
+                                <strong>Blood Group: <span class = "required_fields">*</span></strong>
+                                {!! Form::text('blood_group',isset($user['blood_group']) ? $user['blood_group'] : null, array('id'=>'blood_group','placeholder' => 'Blood Group','class' => 'form-control', 'tabindex' => '13' )) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('contact') ? 'has-error' : '' }}">
@@ -128,7 +112,17 @@
 
                             <div class="form-group">
                                 <strong>Current Address: </strong>
-                                {!! Form::textarea('current_address', $user['current_address'], array('id'=>'current_address' ,'placeholder' => 'Current Address','class' => 'form-control','tabindex' => '9','rows' => '4')) !!}
+                                {!! Form::textarea('current_address',isset($user['current_address']) ? $user['current_address'] : null, array('id'=>'current_address' ,'placeholder' => 'Current Address','class' => 'form-control','tabindex' => '9','rows' => '5')) !!}
+                            </div>
+
+                            <div class="form-group">
+                                <strong>Permanent Address: </strong>
+                                {!! Form::textarea('permanent_address',isset($user['permanent_address']) ? $user['permanent_address'] : null, array('id'=>'permanent_address' ,'placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '13','rows' => '5')) !!}
+                            </div>
+
+                            <div class="form-group">
+                                <strong>UAN No. : </strong>
+                                {!! Form::text('uan_no',isset($user['uan_no']) ? $user['uan_no'] : null,array('id'=>'uan_no','placeholder' => 'UAN No.','class' => 'form-control','tabindex' => '13','rows' => '5')) !!}
                             </div>
                         </div>
                     </div>
@@ -144,7 +138,7 @@
                                 @endif
                             </div>
 
-                            @if($user['edit_photo'] == '1')
+                            @if($user['edit_photo'] == '1' || $isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                 <div class="form-group" id="image_div">
                                 
                                     <div class="form-group file_input_redesign upload_img1">
@@ -167,7 +161,7 @@
                        
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
                                 <strong>Designation: </strong>
-                                @if($isSuperAdmin || $isAccountant)
+                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                     {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '10')) !!}
                                 @else
                                     {!! Form::text('designation',$user['designation'], array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','disabled','tabindex' => '10')) !!}
@@ -179,7 +173,27 @@
                                 @endif
                             </div>
 
-                             <div class="form-group {{ $errors->has('date_of_anni') ? 'has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
+                                <strong>Joining Date: </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                {!! Form::text('date_of_joining', isset($user['join_date']) ? $user['join_date'] : null, array('id'=>'date_of_joining','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '5')) !!}
+                                </div>
+                            </div>
+
+                            <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
+                                <strong>Confimation Date: </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                {!! Form::text('date_of_joining', isset($user['join_date']) ? $user['join_date'] : null, array('id'=>'date_of_joining','placeholder' => 'Confimation Date','class' => 'form-control','tabindex' => '5')) !!}
+                                </div>
+                            </div>
+
+                            <div class="form-group {{ $errors->has('date_of_anni') ? 'has-error' : '' }}">
                                 <strong>Anniversary Date: </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
@@ -189,7 +203,7 @@
                                 </div>
                             </div>
 
-                            <?php if($isSuperAdmin || $isAccountant) { ?>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                             <div class="form-group {{ $errors->has('date_of_exit') ? 'has-error' : '' }}">
                                 <strong>Exit Date: </strong>
                                 <div class="input-group date">
@@ -199,21 +213,31 @@
                                 {!! Form::text('date_of_exit',isset($user['exit_date']) ? $user['exit_date'] : null, array('id'=>'date_of_exit','placeholder' => 'Exit Date','class' => 'form-control','tabindex' => '12')) !!}
                                 </div>
                             </div> 
-                            <?php }?>
+                            @endif
 
-                            <div class="form-group {{ $errors->has('blood_group') ? 'has-error' : '' }}">
-                                <strong>Blood Group: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('blood_group',$user['blood_group'], array('id'=>'blood_group','placeholder' => 'Blood Group','class' => 'form-control', 'tabindex' => '13' )) !!}
-                                @if ($errors->has('blood_group'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('blood_group') }}</strong>
-                                    </span>
-                                @endif
+                            <div class="form-group">
+                                <strong>Marital Status:  </strong>
+                                {!! Form::select('maritalStatus', $maritalStatus,null, array('id'=>'maritalStatus','class' => 'form-control', 'tabindex' => '4' )) !!}
+                            </div>
+
+                             <div class="form-group ">
+                                <strong>Select Gender:</strong>
+                                {!! Form::select('gender', $gender,null, array('id'=>'gender','class' => 'form-control', 'tabindex' => '6' )) !!}
                             </div>
 
                             <div class="form-group">
-                                <strong>Permanent Address: </strong>
-                                {!! Form::textarea('permanent_address',$user['permanent_address'], array('id'=>'permanent_address','placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '13','rows' => '4')) !!}
+                                <strong>Hobbies: </strong>
+                                {!! Form::number('hobbies',isset($user['hobbies']) ? $user['hobbies'] : null, array('id'=>'hobbies','placeholder' => 'Hobbies','class' => 'form-control','tabindex' => '8')) !!}
+                            </div>
+
+                            <div class="form-group">
+                                <strong>Interests: </strong>
+                                {!! Form::number('interests',isset($user['interests']) ? $user['interests'] : null, array('id'=>'interests','placeholder' => 'Interests','class' => 'form-control','tabindex' => '8')) !!}
+                            </div>
+
+                            <div class="form-group">
+                                <strong>ESIC No. : </strong>
+                                {!! Form::text('esic_no',isset($user['esic_no']) ? $user['esic_no'] : null,array('id'=>'esic_no','placeholder' => 'ESIC No.','class' => 'form-control','tabindex' => '13','rows' => '5')) !!}
                             </div>
                         </div>
                     </div>
@@ -504,65 +528,69 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                        <div class="form-group {{ $errors->has('bank_name') ? 'has-error' : '' }}">
+                        <div class="form-group">
                             <strong>Bank Name: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('bank_name',$user['bank_name'],array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control', 'tabindex' => '35' )) !!}
-                            @if ($errors->has('bank_name'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('bank_name') }}</strong>
-                                </span>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                {!! Form::text('bank_name',$user['bank_name'],array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control', 'tabindex' => '35' )) !!}
+                            @else
+                                {!! Form::text('bank_name',$user['bank_name'],array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control','tabindex' => '35','disabled')) !!}
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('account_no') ? 'has-error' : '' }}">
+                        <div class="form-group">
                             <strong>Account Number: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('account_no',$user['acc_no'], array('id'=>'account_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '36'  )) !!}
-                            @if ($errors->has('account_no'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('account_no') }}</strong>
-                            </span>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                {!! Form::text('account_no',$user['acc_no'], array('id'=>'account_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '36')) !!}
+                            @else
+                                {!! Form::text('account_no',$user['acc_no'], array('id'=>'account_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '36','disabled')) !!}
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('user_full_name') ? 'has-error' : '' }}">
+                        <div class="form-group">
                             <strong>Full Name: </strong>
-                            {!! Form::text('user_full_name',$user['user_full_name'], array('id'=>'user_full_name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '37'  )) !!}
-                            @if ($errors->has('user_full_name'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('user_full_name') }}</strong>
-                            </span>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                {!! Form::text('user_full_name',$user['user_full_name'], array('id'=>'user_full_name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '37')) !!}
+                            @else
+                                {!! Form::text('user_full_name',$user['user_full_name'], array('id'=>'user_full_name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '37','disabled')) !!}
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                            <div class="form-group {{ $errors->has('branch_name') ? 'has-error' : '' }}">
-                               <strong>Branch Name: </strong>
-                                {!! Form::text('branch_name',$user['branch_name'], array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '38'  )) !!}
-                                @if ($errors->has('branch_name'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('branch_name') }}</strong>
-                                </span>
-                                @endif
-                            </div>
+                        <div class="form-group">
+                            <strong>Branch Name: </strong>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                {!! Form::text('branch_name',$user['branch_name'], array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '38')) !!}
+                            @else
+                                {!! Form::text('branch_name',$user['branch_name'], array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '38','disabled')) !!}
+                            @endif
+                        </div>
 
-                            <div class="form-group {{ $errors->has('ifsc') ? 'has-error' : '' }}">
-                                <strong>IFSC Code: </strong>
-                                {!! Form::text('ifsc',$user['ifsc_code'], array('id'=>'ifsc','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '39' )) !!}
-                                @if ($errors->has('ifsc'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('ifsc') }}</strong>
-                                </span>
-                                @endif
-                            </div>
+                        <div class="form-group">
+                            <strong>IFSC Code: </strong>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                {!! Form::text('ifsc',$user['ifsc_code'], array('id'=>'ifsc','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '39')) !!}
+                            @else
+                                {!! Form::text('ifsc',$user['ifsc_code'], array('id'=>'ifsc','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '39','disabled')) !!}
+                            @endif
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Payment Mode: <span class = "required_fields">*</span> </strong>
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                {!! Form::text('payment_mode',null, array('id'=>'payment_mode','placeholder' => 'Payment Mode','class' => 'form-control', 'tabindex' => '40')) !!}
+                            @else
+                                {!! Form::text('payment_mode',null, array('id'=>'payment_mode','placeholder' => 'Payment Mode','class' => 'form-control', 'tabindex' => '40','disabled')) !!}
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-@if($isSuperAdmin || $isAccountant)
+    @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
@@ -573,7 +601,7 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Fixed Salary : (Monthly)</strong>
-                            {!! Form::number('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '40','onfocusout' => 'countTotalSalary();')) !!}
+                            {!! Form::number('fixed_salary',$user['salary'],array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '41','onfocusout' => 'countTotalSalary();')) !!}
                         </div>
                     </div>
                 </div>
@@ -581,7 +609,7 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Performance Bonus : </strong>
-                            {!! Form::number('performance_bonus',$user['performance_bonus'],array('id'=>'performance_bonus','placeholder' => 'Performance Bonus','class' => 'form-control', 'tabindex' => '41','onfocusout' => 'countTotalSalary();')) !!}
+                            {!! Form::number('performance_bonus',$user['performance_bonus'],array('id'=>'performance_bonus','placeholder' => 'Performance Bonus','class' => 'form-control', 'tabindex' => '42','onfocusout' => 'countTotalSalary();')) !!}
                         </div>
                     </div>
                 </div>
@@ -589,14 +617,14 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Total Salary : </strong>
-                            {!! Form::number('total_salary',$user['total_salary'],array('id'=>'total_salary','placeholder' => 'Total Salary','class' => 'form-control', 'tabindex' => '42')) !!}
+                            {!! Form::number('total_salary',$user['total_salary'],array('id'=>'total_salary','placeholder' => 'Total Salary','class' => 'form-control', 'tabindex' => '43')) !!}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endif
+    @endif
 
     <!-- <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
@@ -619,7 +647,6 @@
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Attachment Information</h3>
             </div>
-
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
@@ -696,6 +723,9 @@
                     "email": {
                         required: true,
                     },
+                    "semail": {
+                        required: true,
+                    },
                     "contact": {
                         required: true,
                     },
@@ -703,6 +733,9 @@
                         required: true,
                     },
                     "account_no": {
+                        required: true,
+                    },
+                    "payment_mode": {
                         required: true,
                     },
                     "blood_group": {
@@ -735,46 +768,52 @@
                 },
                 messages: {
                     "name": {
-                        required: "Name is required."
+                        required: "Name is Required."
                     },
                     "email": {
-                        required: "Official email is required.",
+                        required: "Official email is Required.",
+                    },
+                    "semail": {
+                        required: "Official Gmail is Required.",
                     },
                     "contact": {
-                        required: "Personal Contact Number is required.",
+                        required: "Personal Contact Number is Required.",
                     },
                     "bank_name": {
-                        required: "Bank Name is required.",
+                        required: "Bank Name is Required.",
                     },
                     "account_no": {
-                        required: "Account Number is required.",
+                        required: "Account Number is Required.",
+                    },
+                    "payment_mode": {
+                        required: "Payment Mode is Required.",
                     },
                     "blood_group": {
-                        required: "Blood Group is required.",
+                        required: "Blood Group is Required.",
                     },
                     "name_1": {
-                        required: "Name is required.",
+                        required: "Name is Required.",
                     },
                     "relationship_1": {
-                        required: "Relationship is required.",
+                        required: "Relationship is Required.",
                     },
                     "occupation_1": {
-                        required: "Occupation is required.",
+                        required: "Occupation is Required.",
                     },
                     "contact_no_1": {
-                        required: "Contact Number is required.",
+                        required: "Contact Number is Required.",
                     },
                     "name_2": {
-                        required: "Name is required.",
+                        required: "Name is Required.",
                     },
                     "relationship_2": {
-                        required: "Relationship is required.",
+                        required: "Relationship is Required.",
                     },
                     "occupation_2": {
-                        required: "Occupation is required.",
+                        required: "Occupation is Required.",
                     },
                     "contact_no_2": {
-                        required: "Contact Number is required.",
+                        required: "Contact Number is Required.",
                     },
                 }
             });

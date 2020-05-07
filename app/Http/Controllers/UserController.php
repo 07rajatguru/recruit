@@ -26,6 +26,7 @@ use App\JobOpen;
 use App\JobVisibleUsers;
 use App\RoleUser;
 use App\ModuleVisibleUser;
+use App\CandidateBasicInfo;
 
 class UserController extends Controller
 {
@@ -43,13 +44,12 @@ class UserController extends Controller
         $role_id = key($userRole);
 
         $user_obj = new User();
-        $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
 
         $data = User::orderBy('status','ASC')->get();
-        return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant'))
+        return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant','isOfficeAdmin'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
 
     }
@@ -598,8 +598,9 @@ class UserController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
 
-        if ($isSuperAdmin || $isAccountant || $loggedin_user_id == $user_id) {
+        if ($isSuperAdmin || $isAccountant || $isOfficeAdmin || $loggedin_user_id == $user_id) {
             $dateClass = new Date();
             $user = array();
 
@@ -636,7 +637,7 @@ class UserController extends Controller
                 $user['user_id'] = $user_id;
                 $user['name'] = $value->name;
                 $user['email'] = $value->email;
-                $user['s_email'] = $value->secondary_email;
+                $user['semail'] = $value->secondary_email;
                 $user['designation'] = $value->designation;
                 $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
                 $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
@@ -703,7 +704,10 @@ class UserController extends Controller
 
             $users_upload_type['Others'] = 'Others';
 
-            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','users_upload_type'));
+            $gender = CandidateBasicInfo::getTypeArray();
+            $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
+
+            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus'));
         }
         else {
             return view('errors.403');
