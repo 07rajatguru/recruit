@@ -804,61 +804,24 @@ class ReportController extends Controller
             $year = date('Y');
         }
 
-        /*get monday of current month
+        $short_month = date("M", mktime(null, null, null, $month));
 
-        //echo date("j, d-M-Y", strtotime("first monday 2020-05"));exit;
+        $firstmonday = strtotime('first Monday', strtotime( "$short_month $year"));
+        $first_date = date('Y-m-d', $firstmonday);
 
-        //$firstday = date('l', strtotime("this month"));
+        $secondmonday = strtotime('second Monday', strtotime( "$short_month $year"));
+        $second_date = date('Y-m-d', $secondmonday);
 
-        //echo $firstday;exit;
+        $thirdmonday = strtotime('third Monday', strtotime( "$short_month $year"));
+        $third_date = date('Y-m-d', $thirdmonday);
 
-        // First day of this month
-        //$d = date("l", strtotime("first day of this month"));
+        $fourthmonday = strtotime('fourth Monday', strtotime( "$short_month $year"));
+        $fourth_date = date('Y-m-d', $fourthmonday);
 
-        //echo $d;exit;
+        $fifthmonday = strtotime('fifth Monday', strtotime( "$short_month $year"));
+        $fifth_date = date('Y-m-d', $fifthmonday);
 
-        $month = date('m');
-        $year = date('Y');
-
-        $num_of_days = date("t", mktime(0,0,0,$month,4,$year)); 
-        $lastday = date("t", mktime(0, 0, 0,$month, 4, $year));
-
-        $no_of_weeks = 0; 
-        $count_weeks = 0;
-
-        while($no_of_weeks < $lastday){ 
-            $no_of_weeks += 7; 
-            $count_weeks++; 
-        } 
-
-        //echo  $count_weeks;exit;
-    
-        $month = date('m');
-        $year = date('Y');
-        $day = date("j", strtotime("first Monday 2020-05"));
-
-        $firstday = date("w", mktime(0, 0, 0, $month, $day, $year)); 
-        $lastday = date("t", mktime(0, 0, 0, $month, $day, $year));
-        $count_weeks = 1 + ceil(($lastday-8+$firstday)/7);
-        echo $count_weeks;exit;
-
-        $year = date('Y');
-        $month = date('m');
-        $day = date("j", strtotime("first monday $year-$month"));
-
-        $start = mktime(0, 0, 0, $month, $day, $year);
-        $end = mktime(0, 0, 0, $month, date('t', $start), $year);
-
-        $start_week = date('W', $start);
-        $end_week = date('W', $end);
-
-        if ($end_week < $start_week) { // Month wraps
-            echo ((52 + $end_week) - $start_week) + 1;
-        }
-
-        echo ($end_week - $start_week) + 1;
-
-        exit;*/
+        echo $fifth_date;exit;
 
         $user_id = \Auth::user()->id;
 
@@ -897,15 +860,15 @@ class ReportController extends Controller
 
         // Get no of cv's associated in this week
 
-        $ass_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),0,$month,$year);
+        $ass_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,$first_date,0,$month,$year);
 
-        $ass_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),0,$month,$year);
+        $ass_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,$second_date,0,$month,$year);
 
-        $ass_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),0,$month,$year);
+        $ass_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,$third_date,0,$month,$year);
 
-        $ass_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),0,$month,$year);
+        $ass_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fourth_date,0,$month,$year);
 
-        $ass_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),0,$month,$year);
+        $ass_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fifth_date,0,$month,$year);
 
         // Get no of weeks in month
 
@@ -920,27 +883,27 @@ class ReportController extends Controller
 
         // Get no of shortlisted candidate count in this week
 
-        $shortlist_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('first Monday this week')),1,$month,$year);
+        $shortlist_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,$first_date,1,$month,$year);
 
-        $shortlist_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('second Monday this week')),1,$month,$year);
+        $shortlist_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,$second_date,1,$month,$year);
 
-        $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('third Monday this week')),1,$month,$year);
+        $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,$third_date,1,$month,$year);
 
-        $shortlist_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),1,$month,$year);
+        $shortlist_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fourth_date,1,$month,$year);
 
-        $shortlist_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),1,$month,$year);
+        $shortlist_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fifth_date,1,$month,$year);
 
         // Get no of interview of candidates count in this week
 
-        $interview_cnt_first_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('first Monday this week')),$month,$year);
+        $interview_cnt_first_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$first_date,$month,$year);
 
-        $interview_cnt_second_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('second Monday this week')),$month,$year);
+        $interview_cnt_second_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$second_date,$month,$year);
 
-        $interview_cnt_third_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('third Monday this week')),$month,$year);
+        $interview_cnt_third_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$third_date,$month,$year);
 
-        $interview_cnt_fourth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fourth Monday this week')),$month,$year);
+        $interview_cnt_fourth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$fourth_date,$month,$year);
 
-        $interview_cnt_fifth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,date('Y-m-d',strtotime('fifth Monday this week')),$month,$year);
+        $interview_cnt_fifth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$fifth_date,$month,$year);
 
         return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','ass_cnt_first_week','ass_cnt_second_week','ass_cnt_third_week','ass_cnt_fourth_week','ass_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cnt_fourth_week','shortlist_cnt_fifth_week','interview_cnt_first_week','interview_cnt_second_week','interview_cnt_third_week','interview_cnt_fourth_week','interview_cnt_fifth_week'));
     }
