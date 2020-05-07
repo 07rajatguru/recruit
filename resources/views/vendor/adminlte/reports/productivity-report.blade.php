@@ -132,19 +132,49 @@
                             <p align="center" style="text-align: center;"><span class="no_of_resumes_weekly"></span></p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_first_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($ass_cnt_first_week) && $ass_cnt_first_week > 0)
+                                    <span>{{ $ass_cnt_first_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_second_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($ass_cnt_second_week) && $ass_cnt_second_week > 0)
+                                    <span>{{ $ass_cnt_second_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_third_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($ass_cnt_third_week) && $ass_cnt_third_week > 0)
+                                    <span>{{ $ass_cnt_third_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_fourth_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($ass_cnt_fourth_week) && $ass_cnt_fourth_week > 0)
+                                    <span>{{ $ass_cnt_fourth_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $ass_cnt_fifth_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($ass_cnt_fifth_week) && $ass_cnt_fifth_week > 0)
+                                    <span>{{ $ass_cnt_fifth_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="no_of_resumes_monthly_achievement"></span></p>
@@ -160,8 +190,7 @@
                             <p align="center" style="text-align: center;"><span>Shortlist Ratio</span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['shortlist_ratio'] }}% (of Total CVs)
-                            </span></p>
+                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['shortlist_ratio'] }}% (of Total CVs)</span></p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="shortlist_ratio_monthly"></span></p>
@@ -170,19 +199,49 @@
                             <p align="center" style="text-align: center;"><span class="shortlist_ratio_weekly"></span></p>
                         </td>
                         <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_first_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($shortlist_cnt_first_week) && $shortlist_cnt_first_week > 0)
+                                    <span>{{ $shortlist_cnt_first_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_second_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($shortlist_cnt_second_week) && $shortlist_cnt_second_week > 0)
+                                    <span>{{ $shortlist_cnt_second_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_third_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($shortlist_cnt_third_week) && $shortlist_cnt_third_week > 0)
+                                    <span>{{ $shortlist_cnt_third_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_fourth_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($shortlist_cnt_fourth_week) && $shortlist_cnt_fourth_week > 0)
+                                    <span>{{ $shortlist_cnt_fourth_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $shortlist_cnt_fifth_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($shortlist_cnt_fifth_week) && $shortlist_cnt_fifth_week > 0)
+                                    <span>{{ $shortlist_cnt_fifth_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="shortlist_ratio_monthly_achievement"></span></p>
@@ -207,19 +266,49 @@
                             <p align="center" style="text-align: center;"><span class="interview_ratio_weekly"></span></p>
                         </td>
                         <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_first_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($interview_cnt_first_week) && $interview_cnt_first_week > 0)
+                                    <span>{{ $interview_cnt_first_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_second_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($interview_cnt_second_week) && $interview_cnt_second_week > 0)
+                                    <span>{{ $interview_cnt_second_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_third_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($interview_cnt_third_week) && $interview_cnt_third_week > 0)
+                                    <span>{{ $interview_cnt_third_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_fourth_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($interview_cnt_fourth_week) && $interview_cnt_fourth_week > 0)
+                                    <span>{{ $interview_cnt_fourth_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span>{{ $interview_cnt_fifth_week }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                @if(isset($interview_cnt_fifth_week) && $interview_cnt_fifth_week > 0)
+                                    <span>{{ $interview_cnt_fifth_week }}</span>
+                                @else
+                                    <span>NA</span>
+                                @endif
+                            </p>
                         </td>
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="interview_ratio_monthly_achievement"></span></p>
@@ -454,10 +543,13 @@
             $(".no_of_resumes_weekly").text(no_of_resumes_weekly.toFixed());
 
             $('.no_of_resumes_weeks').each(function() {
-                no_of_resumes_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    no_of_resumes_weeks += parseInt($(this).text());
+                }
             });
 
-            if(no_of_resumes_weeks >= 0) {
+            if(no_of_resumes_weeks > 0) {
                 $(".no_of_resumes_monthly_achievement").text(no_of_resumes_weeks);
             }
 
@@ -479,10 +571,13 @@
             $(".shortlist_ratio_weekly").text(shortlist_ratio_weekly.toFixed());
 
             $('.shortlist_ratio_weeks').each(function() {
-                shortlist_ratio_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    shortlist_ratio_weeks += parseInt($(this).text());
+                }
             });
 
-            if(shortlist_ratio_weeks >= 0) {
+            if(shortlist_ratio_weeks > 0) {
                 $(".shortlist_ratio_monthly_achievement").text(shortlist_ratio_weeks);
             }
 
@@ -504,10 +599,13 @@
             $(".interview_ratio_weekly").text(interview_ratio_weekly.toFixed());
 
             $('.interview_ratio_weeks').each(function() {
-                interview_ratio_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    interview_ratio_weeks += parseInt($(this).text());
+                }
             });
 
-            if(interview_ratio_weeks >= 0) {
+            if(interview_ratio_weeks > 0) {
                 $(".interview_ratio_monthly_achievement").text(interview_ratio_weeks);
             }
 
@@ -529,10 +627,13 @@
             $(".selection_ratio_weekly").text(selection_ratio_weekly.toFixed());
 
             $('.selection_ratio_weeks').each(function() {
-                selection_ratio_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    selection_ratio_weeks += parseInt($(this).text());
+                }
             });
 
-            if(selection_ratio_weeks >= 0) {
+            if(selection_ratio_weeks > 0) {
                 $(".selection_ratio_monthly_achievement").text(selection_ratio_weeks);
             }
 
@@ -554,10 +655,13 @@
             $(".offer_acceptance_ratio_weekly").text(offer_acceptance_ratio_weekly.toFixed());
 
             $('.offer_acceptance_ratio_weeks').each(function() {
-                offer_acceptance_ratio_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    offer_acceptance_ratio_weeks += parseInt($(this).text());
+                }
             });
 
-            if(offer_acceptance_ratio_weeks >= 0) {
+            if(offer_acceptance_ratio_weeks > 0) {
                 $(".offer_acceptance_ratio_monthly_achievement").text(offer_acceptance_ratio_weeks);
             }
 
@@ -579,10 +683,13 @@
             $(".joining_ratio_weekly").text(joining_ratio_weekly.toFixed());
 
             $('.joining_ratio_weeks').each(function() {
-                joining_ratio_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    joining_ratio_weeks += parseInt($(this).text());
+                }
             });
 
-            if(joining_ratio_weeks >= 0) {
+            if(joining_ratio_weeks > 0) {
                 $(".joining_ratio_monthly_achievement").text(joining_ratio_weeks);
             }
 
@@ -604,10 +711,13 @@
             $(".after_joining_success_ratio_weekly").text(after_joining_success_ratio_weekly.toFixed());
 
             $('.after_joining_success_ratio_weeks').each(function() {
-                after_joining_success_ratio_weeks += parseInt($(this).text());
+
+                if($(this).text() > 0) {
+                    after_joining_success_ratio_weeks += parseInt($(this).text());
+                }
             });
 
-            if(after_joining_success_ratio_weeks >= 0) {
+            if(after_joining_success_ratio_weeks > 0) {
                 $(".after_joining_success_ratio_monthly_achievement").text(after_joining_success_ratio_weeks);
             }
         }
