@@ -38,7 +38,8 @@ class ExistCandidateAutoScript extends Command
      */
     public function handle()
     {
-        $candidate_res = CandidateBasicInfo::getCandidateDetails(25,0,'','');
+        //$candidate_res = CandidateBasicInfo::getCandidateDetails(25,0,'','');
+        $candidate_res = CandidateBasicInfo::getCandidateDetails(2,0,'','');
 
         //print_r($candidate_res);exit;
 
@@ -61,8 +62,10 @@ class ExistCandidateAutoScript extends Command
             foreach ($candidate_res as $key => $value) {
 
                 $input['candidate_name'] = $value['full_name'];
-                $input['to'] = $value['email'];
-                $input['cc'] = 'dhara@trajinfotech.com';
+                /*$input['to'] = $value['email'];
+                $input['cc'] = 'dhara@trajinfotech.com';*/
+                $input['to'] = 'tarikapanjwani@gmail.com';
+                $input['cc'] = 'saloni@trajinfotech.com';
                 $candidate_id = $value['id'];
 
                 //print_r($input);exit;

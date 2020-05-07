@@ -6,23 +6,27 @@
     @yield('style')
 </head>
 
-<body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
-
 <body>
-<table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;margin-left:-170px;">
     <tr>
-        <td width="600" >
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+        <td width="100%">
+            <table  cellpadding="0" cellspacing="0" style = "border:0; background-color: #ffffff; color:black; width:620px;">
                 <tr style="background-color:white;">
-                    <td colspan="2"></td>
                     <td align="center">
-                        <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
+                        <div class="site-branding col-md-2 col-sm-6 col-xs-12">
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img width="600" class="site-logo" src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
+                                <img width="100.0%;" class="site-logo" src="{{$app_url}}/images/Adler-Logo-2-01.png" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
                             </a>
                         </div>
                     </td>
-                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td><br/></td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <p style="display: block;border-top: solid 5.0px #c024e4!important;margin: 0.0px auto;width: 100.0%;"><br/></p>
+                    </td>
                 </tr>
             </table>
         </td>
@@ -42,19 +46,19 @@
 
                             <ul style="list-style-type:none;">
                                 <li>1. Follow us on LinkedIn: <br/>
-                                    <a href="https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/">https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/</a>
+                                    <a href="https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/" target="_blank">https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/</a>
                                 </li>
 
                                 <br/>
 
                                 <li>2. Like us on Facebook: <br/>
-                                    <a href="https://www.facebook.com/adlertalentsolutions/">https://www.facebook.com/adlertalentsolutions/</a>
+                                    <a href="https://www.facebook.com/adlertalentsolutions/" target="_blank">https://www.facebook.com/adlertalentsolutions/</a>
                                 </li>
 
                                 <br/>
 
                                 <li>3. Share Google Reviews: <br/>
-
+                                    <a href="bit.ly/2W8Qcbf" target="_blank">bit.ly/2W8Qcbf</a>
                                 </li>
                             </ul>
 
