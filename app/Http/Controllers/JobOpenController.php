@@ -2556,6 +2556,8 @@ class JobOpenController extends Controller
         $candidate_id = $_POST['candidate_id'];
         $status_id = $_POST['status_id'];
 
+        $today_date = date('Y-m-d');
+
         $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->first();
 
         if($status_id == '1') {
@@ -2580,9 +2582,20 @@ class JobOpenController extends Controller
         else if ($status_id == '3') {
 
             DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
+
+            // Update selected date
+
+            DB::statement("UPDATE job_associate_candidates SET selected_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
         }
         
         DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
+
+        // Update shortlisted date
+
+        DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
+
+        
+
         //DB::statement("UPDATE  candidate_otherinfo SET status_id =$status_id where candidate_id = $candidate_id");
 
         /*$jobDetail = JobOpen::find($job_id);
@@ -2624,6 +2637,8 @@ class JobOpenController extends Controller
     public function scheduleInterview(Request $request){
 
         $user_id = \Auth::user()->id;
+
+        $today_date = date('Y-m-d');
         
         $job_id = $request->get('job_id');
 
@@ -2677,8 +2692,10 @@ class JobOpenController extends Controller
             }
               
             DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            
+            // Update shortlisted date
 
-            // End
+            DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
         }
 
         // For single candidate End
@@ -2721,8 +2738,10 @@ class JobOpenController extends Controller
                 }
                   
                 DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($value) and job_id = $job_id");
+            
+                // Update shortlisted date
 
-                // End
+                DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
             }
         }
         // For multiple candidate End
@@ -2778,6 +2797,10 @@ class JobOpenController extends Controller
         //print_r($candidate_id);exit;
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted = $undoshortlist where candidate_id = $candidate_id and job_id = $job_id");
+
+        DB::statement("UPDATE job_associate_candidates SET status_id = $undoshortlist where candidate_id = $candidate_id and job_id = $job_id");
+
+        DB::statement("UPDATE job_associate_candidates SET shortlisted_date = NULL, selected_date = NULL where candidate_id = $candidate_id and job_id = $job_id");
 
          return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Undo shortlisted Candidate successfully');
            
@@ -3481,6 +3504,8 @@ class JobOpenController extends Controller
         $all_can_ids = $_POST['all_can_ids'];
         $ids = explode(",", $all_can_ids);
 
+        $today_date = date('Y-m-d');
+
         foreach ($ids as $key => $value)
         {
             $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
@@ -3507,9 +3532,17 @@ class JobOpenController extends Controller
             else if ($update_status_id == '3') {
 
                 DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
+
+                // Update selected date
+            
+                DB::statement("UPDATE job_associate_candidates SET selected_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
             }
 
             DB::statement("UPDATE job_associate_candidates SET status_id = $update_status_id where candidate_id in ($value) and job_id = $job_id");
+
+            // Update shortlisted date
+
+            DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
         }
 
         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Status Updated Successfully.');

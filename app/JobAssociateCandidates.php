@@ -315,23 +315,13 @@ class JobAssociateCandidates extends Model
         return $job_cvs_res;
     }*/
 
-    public static function getProductivityReportCount($user_id,$date,$shortlisted=0,$month,$year){
-
+    public static function getProductivityReportCVCount($user_id,$from_date=NULL,$to_date=NULL){
+        
         $query = JobAssociateCandidates::query();
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
         $query = $query->where('job_associate_candidates.associate_by',$user_id);
-        $query = $query->where('job_associate_candidates.created_at','>=',$date);
-        $query = $query->where('job_associate_candidates.created_at','<=',date('Y-m-d',strtotime("$date +6days")));
-
-        if (isset($shortlisted) && $shortlisted > 0) {
-
-            $query = $query->where('job_associate_candidates.shortlisted','>=','1');
-        }
-
-        if ($month != '' && $year != '') {
-            $query = $query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
-            $query = $query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
-        }
+        $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
+        $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
        
         $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
         $query_response = $query->get();
@@ -344,19 +334,34 @@ class JobAssociateCandidates extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportInterviewCount($user_id,$date,$month,$year){
+    public static function getProductivityReportShortlistedCount($user_id,$from_date=NULL,$to_date=NULL){
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
+        $query = $query->where('job_associate_candidates.associate_by',$user_id);
+        $query = $query->where('job_associate_candidates.updated_at','>=',$from_date);
+        $query = $query->where('job_associate_candidates.updated_at','<=',$to_date);
+        $query = $query->where('job_associate_candidates.shortlisted','>=','1');
+       
+        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.updated_at)'));
+        $query_response = $query->get();
+
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+
+            $cnt += $value->count;
+        }
+        return $cnt;  
+    }
+
+    public static function getProductivityReportInterviewCount($user_id,$from_date=NULL,$to_date=NULL){
 
         $query = Interview::query();
         $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"));
         $query = $query->where('interview.interview_owner_id',$user_id);
-        $query = $query->where('interview.interview_date','>=',$date);
-        $query = $query->where('interview.interview_date','<=',date('Y-m-d',strtotime("$date +6days")));
+        $query = $query->where('interview.interview_date','>=',$from_date);
+        $query = $query->where('interview.interview_date','<=',$to_date);
         $query = $query->where('interview.status','=','Attended');
-
-        if ($month != '' && $year != '') {
-            $query = $query->where(\DB::raw('month(interview.interview_date)'),'=',$month);
-            $query = $query->where(\DB::raw('year(interview.interview_date)'),'=',$year);
-        }
      
         $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
         $query_response = $query->get();
@@ -367,5 +372,27 @@ class JobAssociateCandidates extends Model
             $cnt += $value->count;
         }
         return $cnt;
+    }
+
+    public static function getProductivitySelectedReportCount($user_id,$from_date=NULL,$to_date=NULL){
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
+        $query = $query->where('job_associate_candidates.associate_by',$user_id);
+        $query = $query->where('job_associate_candidates.updated_at','>=',$from_date);
+        $query = $query->where('job_associate_candidates.updated_at','<=',$to_date);
+
+        $query = $query->where('job_associate_candidates.shortlisted','>=','1');
+        $query = $query->where('job_associate_candidates.status_id','=','3');
+       
+        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.updated_at)'));
+        $query_response = $query->get();
+
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+
+            $cnt += $value->count;
+        }
+        return $cnt;  
     }
 }

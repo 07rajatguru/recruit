@@ -12,6 +12,8 @@ use App\ClientBasicinfo;
 use Excel;
 use App\UserBenchMark;
 use App\Role;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 class ReportController extends Controller
 {
@@ -775,54 +777,6 @@ class ReportController extends Controller
 
     public function productivityReport() {
 
-        // Month data
-        $month_array = array();
-        for ($i=1; $i <=12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Year Data
-        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
-        $ending_year = date('Y',strtotime('+5 year'));
-
-        $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
-        if (isset($_POST['month']) && $_POST['month']!=0) {
-            $month = $_POST['month'];
-        }
-        else{
-            $month = date('m');
-        }
-
-        if (isset($_POST['year']) && $_POST['year']!=0) {
-            $year = $_POST['year'];
-        }
-        else{
-            $year = date('Y');
-        }
-
-        $short_month = date("M", mktime(null, null, null, $month));
-
-        $firstmonday = strtotime('first Monday', strtotime( "$short_month $year"));
-        $first_date = date('Y-m-d', $firstmonday);
-
-        $secondmonday = strtotime('second Monday', strtotime( "$short_month $year"));
-        $second_date = date('Y-m-d', $secondmonday);
-
-        $thirdmonday = strtotime('third Monday', strtotime( "$short_month $year"));
-        $third_date = date('Y-m-d', $thirdmonday);
-
-        $fourthmonday = strtotime('fourth Monday', strtotime( "$short_month $year"));
-        $fourth_date = date('Y-m-d', $fourthmonday);
-
-        $fifthmonday = strtotime('fifth Monday', strtotime( "$short_month $year"));
-        $fifth_date = date('Y-m-d', $fifthmonday);
-
-        echo $fifth_date;exit;
-
         $user_id = \Auth::user()->id;
 
         // get role of logged in user
@@ -858,53 +812,80 @@ class ReportController extends Controller
         // Get user Bench Mark from master
         $user_bench_mark = UserBenchMark::getBenchMarkByUserID($user_id);
 
-        // Get no of cv's associated in this week
 
-        $ass_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,$first_date,0,$month,$year);
+        // Get Selected Month
+        $month_array = array();
+        for ($i=1; $i <=12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
 
-        $ass_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,$second_date,0,$month,$year);
+        // Get Selected Year
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+5 year'));
 
-        $ass_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,$third_date,0,$month,$year);
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
 
-        $ass_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fourth_date,0,$month,$year);
-
-        $ass_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fifth_date,0,$month,$year);
-
-        // Get no of weeks in month
-
-        if(isset($ass_cvs_cnt_fifth_week) && $ass_cvs_cnt_fifth_week > 0) {
-
-            $no_of_weeks = '5';
+        if (isset($_POST['month']) && $_POST['month']!=0) {
+            $month = $_POST['month'];
         }
         else{
-
-            $no_of_weeks = '4';
+            $month = date('m');
         }
 
-        // Get no of shortlisted candidate count in this week
+        if (isset($_POST['year']) && $_POST['year']!=0) {
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date('Y');
+        }
 
-        $shortlist_cnt_first_week = JobAssociateCandidates::getProductivityReportCount($user_id,$first_date,1,$month,$year);
+        $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+        $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
 
-        $shortlist_cnt_second_week = JobAssociateCandidates::getProductivityReportCount($user_id,$second_date,1,$month,$year);
+        $mondays  = new \DatePeriod(
+            Carbon::parse("first monday of $selected_month $year"),
+            CarbonInterval::week(),
+            Carbon::parse("first monday of $next_month $year")
+        );
 
-        $shortlist_cnt_third_week = JobAssociateCandidates::getProductivityReportCount($user_id,$third_date,1,$month,$year);
+        // Get no of weeks in month & get from date & to date
+        $i=1;
+        $frm_to_date_array = array();
 
-        $shortlist_cnt_fourth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fourth_date,1,$month,$year);
+        if(isset($mondays) && $mondays != '') {
 
-        $shortlist_cnt_fifth_week = JobAssociateCandidates::getProductivityReportCount($user_id,$fifth_date,1,$month,$year);
+            foreach ($mondays as $monday) {
 
-        // Get no of interview of candidates count in this week
+                $no_of_weeks = $i;
 
-        $interview_cnt_first_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$first_date,$month,$year);
+                $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
+                $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
 
-        $interview_cnt_second_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$second_date,$month,$year);
+                // Get no of cv's associated in this week
 
-        $interview_cnt_third_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$third_date,$month,$year);
+                $frm_to_date_array[$i]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
-        $interview_cnt_fourth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$fourth_date,$month,$year);
+                // Get no of shortlisted candidate count in this week
 
-        $interview_cnt_fifth_week = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$fifth_date,$month,$year);
+                $frm_to_date_array[$i]['shortlisted_cnt'] = JobAssociateCandidates::getProductivityReportShortlistedCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
-        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','ass_cnt_first_week','ass_cnt_second_week','ass_cnt_third_week','ass_cnt_fourth_week','ass_cnt_fifth_week','no_of_weeks','shortlist_cnt_first_week','shortlist_cnt_second_week','shortlist_cnt_third_week','shortlist_cnt_fourth_week','shortlist_cnt_fifth_week','interview_cnt_first_week','interview_cnt_second_week','interview_cnt_third_week','interview_cnt_fourth_week','interview_cnt_fifth_week'));
+                // Get no of interview of candidates count in this week
+
+                $frm_to_date_array[$i]['interview_cnt'] = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of selected candidate count in this week
+
+                $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivitySelectedReportCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                $i++;
+            }
+        }
+
+        //print_r($frm_to_date_array);exit;
+
+        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }
 }
