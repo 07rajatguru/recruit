@@ -17,6 +17,7 @@ use Excel;
 use App\Utils;
 use App\Events\NotificationMail;
 use App\BillsLeadEfforts;
+use App\BillDate;
 
 class BillsController extends Controller
 {
@@ -935,6 +936,15 @@ class BillsController extends Controller
         $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
 
+        // Add forecasting date in table
+
+        $bill_id = $bill->id;
+
+        $bill_date = new BillDate();
+        $bill_date->bills_id = $bill_id;
+        $bill_date->forecasting_date = date('Y-m-d');
+        $bill_date->save();
+
         // For forcasting mail [email_notification table entry every minute check]
         $user_email = \Auth::user()->email;
         $superadminuserid = getenv('SUPERADMINUSERID');
@@ -1123,6 +1133,12 @@ class BillsController extends Controller
         $status=0;
         if($generateBM==1){
             $status = 1;
+
+            // Add Recovery Date
+
+            $current_dt = date('Y-m-d');
+
+            \DB::statement("UPDATE bills_date SET recovery_date = '$current_dt' where bills_id = $id");
         }
 
         if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
@@ -1364,6 +1380,7 @@ class BillsController extends Controller
         BillsDoc::where('bill_id',$id)->delete();
         BillsEffort::where('bill_id',$id)->delete();
         BillsLeadEfforts::where('bill_id',$id)->delete();
+        BillDate::where('bills_id',$id)->delete();
         Bills::where('id',$id)->delete();
 
         return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully.');
@@ -1379,11 +1396,17 @@ class BillsController extends Controller
         $bills['candidate_id'] = $bill->candidate_id;
         $bill->cancel_bill = $cancel_bill;
         $bill_cancel = $bill->save();
+        
 
         //print_r($bill_cancel);exit;
         $candidate_join_delete = JobCandidateJoiningdate::where('job_id',$bills['job_id'])->where('candidate_id',$bills['candidate_id'])->delete();
 
         if ($bills['status'] == 1) {
+
+            // Set Bill Forecating date to NULL
+
+            \DB::statement("UPDATE bills_date SET recovery_date = NULL where bills_id = $id");
+
             // For Cancel Recovery mail [email_notification table entry]
             $user_id = \Auth::user()->id;
             $user_email = \Auth::user()->email;
@@ -1411,6 +1434,12 @@ class BillsController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
         else if ($bills['status'] == 0) {
+
+            // Set Bill Forecating date to NULL
+
+            \DB::statement("UPDATE bills_date SET forecasting_date = NULL where bills_id = $id");
+
+
             // For Cancel Forecasting mail [email_notification table entry]
             $user_id = \Auth::user()->id;
             $user_email = \Auth::user()->email;
@@ -1469,6 +1498,13 @@ class BillsController extends Controller
         $candidatejoindate->save();
 
         if ($bills['status'] == 1) {
+
+            // Set Bill Recovery date to current date
+
+            $current_dt = date('Y-m-d');
+
+            \DB::statement("UPDATE bills_date SET recovery_date = '$current_dt' where bills_id = $id");
+
             // For Relive Recovery mail [email_notification table entry]
             $user_id = \Auth::user()->id;
             $user_email = \Auth::user()->email;
@@ -1496,6 +1532,13 @@ class BillsController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
         else if ($bills['status'] == 0) {
+
+            // Set Bill Forecasting date to current date
+
+            $current_dt = date('Y-m-d');
+
+            \DB::statement("UPDATE bills_date SET forecasting_date = '$current_dt' where bills_id = $id");
+
             // For Relive Forecasting mail [email_notification table entry]
             $user_id = \Auth::user()->id;
             $user_email = \Auth::user()->email;
@@ -1845,6 +1888,12 @@ class BillsController extends Controller
     public function getPaymentReceived($id){
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '4' where id=$id");
+
+        // Set Bill joining success date to current date
+
+        $current_dt = date('Y-m-d');
+
+        \DB::statement("UPDATE bills_date SET joining_success_date = '$current_dt' where bills_id = $id");
 
         return redirect('/recovery')->with('success','Payment Received Successfully');
     }

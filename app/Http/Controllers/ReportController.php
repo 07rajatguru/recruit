@@ -864,7 +864,7 @@ class ReportController extends Controller
                 $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
                 $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
 
-                // Get no of cv's associated in this week
+                // Get no of cv's associated count in this week
 
                 $frm_to_date_array[$i]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
@@ -878,13 +878,25 @@ class ReportController extends Controller
 
                 // Get no of selected candidate count in this week
 
-                $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivitySelectedReportCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+                $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of offer acceptance count in this week
+
+                $frm_to_date_array[$i]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of joining count in this week
+
+                $frm_to_date_array[$i]['joining_ratio'] = Bills::getProductivityReportJoiningRatio($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of after joining success count in this week
+
+                $frm_to_date_array[$i]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                 $i++;
             }
         }
 
-        //print_r($frm_to_date_array);exit;
+        // print_r($frm_to_date_array);exit;
 
         return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }

@@ -2406,7 +2406,7 @@ class JobOpenController extends Controller
 
             // Candidate Vacancy Details email
 
-            $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
+            //$candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
         }
 
         $jobDetail = JobOpen::find($job_id);
@@ -2701,47 +2701,49 @@ class JobOpenController extends Controller
         // For single candidate End
 
         // For multiple candidate
+        else {
+        
+            $all_can_ids_interview = $_POST['all_can_ids_interview'];
+            $ids = explode(",", $all_can_ids_interview);
 
-        $all_can_ids_interview = $_POST['all_can_ids_interview'];
-        $ids = explode(",", $all_can_ids_interview);
+            if(isset($ids) && sizeof($ids) > 0) {
 
-        if(isset($ids) && sizeof($ids) > 0) {
+                foreach ($ids as $key => $value) {
+                    
+                    $data['candidate_id'] = $value;
+                    $interview = Interview::createInterview($data);
+                    $interview->save();
 
-            foreach ($ids as $key => $value) {
+                    $interview_id = $interview->id;
+                    $job_id = $request->get('job_id');
+
+                    $candidate_mail = Interview::getCandidateEmail($user_id,$value,$job_id,$interview_id);
+
+                    $scheduled_mail = Interview::getScheduleEmail($value,$job_id,$interview_id);
+
+                    // Update single candidate status
+
+                    $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
+
+                    if($response->shortlisted == '0') {
+
+                        DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($value) and job_id = $job_id");
+                    }
+                    else if($response->shortlisted == '1') {
+
+                        DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($value) and job_id = $job_id");
+                    }
+                    else if($response->shortlisted == '2') {
+
+                        DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
+                    }
+                      
+                    DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($value) and job_id = $job_id");
                 
-                $data['candidate_id'] = $value;
-                $interview = Interview::createInterview($data);
-                $interview->save();
+                    // Update shortlisted date
 
-                $interview_id = $interview->id;
-                $job_id = $request->get('job_id');
-
-                $candidate_mail = Interview::getCandidateEmail($user_id,$value,$job_id,$interview_id);
-
-                $scheduled_mail = Interview::getScheduleEmail($value,$job_id,$interview_id);
-
-                // Update single candidate status
-
-                $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
-
-                if($response->shortlisted == '0') {
-
-                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($value) and job_id = $job_id");
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
                 }
-                else if($response->shortlisted == '1') {
-
-                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($value) and job_id = $job_id");
-                }
-                else if($response->shortlisted == '2') {
-
-                    DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
-                }
-                  
-                DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($value) and job_id = $job_id");
-            
-                // Update shortlisted date
-
-                DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
             }
         }
         // For multiple candidate End

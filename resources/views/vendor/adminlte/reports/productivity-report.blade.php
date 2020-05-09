@@ -312,21 +312,29 @@
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_weekly"></span></p>
                         </td>
-                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
+
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            @foreach($frm_to_date_array as $key => $value)
+                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                                    <p align="center" style="text-align: center;">
+                                        @if($value['offer_acceptance_ratio'] > 0)
+                                            <span>{{ $value['offer_acceptance_ratio'] }}</span>
+                                        @else
+                                            <span>NA</span>
+                                        @endif
+                                    </p>
+                                </td>
+                            @endforeach
+                        @endif
+
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) == '4')
+                             <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                                <p align="center" style="text-align: center;">
+                                    <span>NA</span>
+                                </p>
+                            </td>
+                        @endif
+
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_monthly_achievement"></span></p>
                         </td>
@@ -349,21 +357,29 @@
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p  align="center" style="text-align: center;"><span class="joining_ratio_weekly"></span></p>
                         </td>
-                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
+                        
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            @foreach($frm_to_date_array as $key => $value)
+                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                                    <p align="center" style="text-align: center;">
+                                        @if($value['joining_ratio'] > 0)
+                                            <span>{{ $value['joining_ratio'] }}</span>
+                                        @else
+                                            <span>NA</span>
+                                        @endif
+                                    </p>
+                                </td>
+                            @endforeach
+                        @endif
+
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) == '4')
+                             <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                                <p align="center" style="text-align: center;">
+                                    <span>NA</span>
+                                </p>
+                            </td>
+                        @endif
+
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="joining_ratio_monthly_achievement"></span></p>
                         </td>
@@ -386,21 +402,29 @@
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_weekly"></span></p>
                         </td>
-                        <td width="74" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;" class="after_joining_success_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
-                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: white;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
-                            <p align="center" style="text-align: center;"><span></span></p>
-                        </td>
+
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            @foreach($frm_to_date_array as $key => $value)
+                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                                    <p align="center" style="text-align: center;">
+                                        @if($value['joining_success_ratio'] > 0)
+                                            <span>{{ $value['joining_success_ratio'] }}</span>
+                                        @else
+                                            <span>NA</span>
+                                        @endif
+                                    </p>
+                                </td>
+                            @endforeach
+                        @endif
+
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) == '4')
+                             <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                                <p align="center" style="text-align: center;">
+                                    <span>NA</span>
+                                </p>
+                            </td>
+                        @endif
+
                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_monthly_achievement"></span></p>
                         </td>
