@@ -874,7 +874,7 @@ class ReportController extends Controller
 
                 // Get no of interview of candidates count in this week
 
-                $frm_to_date_array[$i]['interview_cnt'] = JobAssociateCandidates::getProductivityReportInterviewCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+                $frm_to_date_array[$i]['interview_cnt'] = Interview::getProductivityReportInterviewCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                 // Get no of selected candidate count in this week
 
@@ -896,7 +896,33 @@ class ReportController extends Controller
             }
         }
 
-        // print_r($frm_to_date_array);exit;
+        //print_r($user_bench_mark);exit;
+
+        if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
+            
+            $user_bench_mark['no_of_resumes_monthly'] = $user_bench_mark['no_of_resumes'];
+            $user_bench_mark['no_of_resumes_weekly'] = number_format($user_bench_mark['no_of_resumes'] / $no_of_weeks);
+
+            $user_bench_mark['shortlist_ratio_monthly'] = number_format($user_bench_mark['no_of_resumes'] * $user_bench_mark['shortlist_ratio']/100);
+            $user_bench_mark['shortlist_ratio_weekly'] = number_format($user_bench_mark['shortlist_ratio_monthly'] / $no_of_weeks);
+
+            $user_bench_mark['interview_ratio_monthly'] = number_format($user_bench_mark['shortlist_ratio_monthly'] * $user_bench_mark['interview_ratio'] / 100);
+            $user_bench_mark['interview_ratio_weekly'] = number_format($user_bench_mark['interview_ratio_monthly'] / $no_of_weeks);
+
+            $user_bench_mark['selection_ratio_monthly'] = number_format($user_bench_mark['interview_ratio_monthly'] * $user_bench_mark['selection_ratio'] / 100);
+            $user_bench_mark['selection_ratio_weekly'] = number_format($user_bench_mark['selection_ratio_monthly'] / $no_of_weeks);
+
+            $user_bench_mark['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark['selection_ratio_monthly'] * $user_bench_mark['offer_acceptance_ratio'] / 100);
+            $user_bench_mark['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark['offer_acceptance_ratio_monthly'] / $no_of_weeks);
+
+            $user_bench_mark['joining_ratio_monthly'] = number_format($user_bench_mark['offer_acceptance_ratio_monthly'] * $user_bench_mark['joining_ratio'] / 100);
+            $user_bench_mark['joining_ratio_weekly'] = number_format($user_bench_mark['joining_ratio_monthly'] / $no_of_weeks);
+
+            $user_bench_mark['after_joining_success_ratio_monthly'] = number_format($user_bench_mark['joining_ratio_monthly'] * $user_bench_mark['after_joining_success_ratio'] / 100);
+            $user_bench_mark['after_joining_success_ratio_weekly'] = number_format($user_bench_mark['after_joining_success_ratio_monthly'] / $no_of_weeks);
+        }
+
+        // print_r($ratio_array);exit;
 
         return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }

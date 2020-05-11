@@ -126,23 +126,35 @@
                             <p align="center" style="text-align: center;"><span>NA</span></p>
                         </td>
                         <td width="122" valign="bottom" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_monthly">
-                            <p align="center" style="text-align: center;"><span style="color: black;" >{{ $user_bench_mark['no_of_resumes'] }}</span></p>
+                            <p align="center" style="text-align: center;">
+                                <span style="color: black;">
+                                    {{ $user_bench_mark['no_of_resumes_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="no_of_resumes_weekly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="no_of_resumes_weekly">
+                                    {{ $user_bench_mark['no_of_resumes_weekly'] }}
+                                </span>
+                            </p>
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['ass_cnt'] > 0)
+                                @if($value['ass_cnt'] >= $user_bench_mark['no_of_resumes_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="no_of_resumes_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['ass_cnt'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="no_of_resumes_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['ass_cnt'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -168,26 +180,42 @@
                             <p align="center" style="text-align: center;"><span>Shortlist Ratio</span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['shortlist_ratio'] }}% (of Total CVs)</span></p>
+                            <p align="center" style="text-align: center;">
+                                <span>
+                                    {{ $user_bench_mark ['shortlist_ratio'] }}% (of Total CVs)
+                                </span>
+                            </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="shortlist_ratio_monthly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="shortlist_ratio_monthly">
+                                    {{ $user_bench_mark['shortlist_ratio_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="shortlist_ratio_weekly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="shortlist_ratio_weekly">
+                                    {{ $user_bench_mark['shortlist_ratio_weekly'] }}
+                                </span>
+                            </p>
                         </td>
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['shortlisted_cnt'] > 0)
+                                @if($value['shortlisted_cnt'] >= $user_bench_mark['shortlist_ratio_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="shortlist_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['shortlisted_cnt'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="shortlist_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['shortlisted_cnt'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -213,26 +241,42 @@
                             <p align="center" style="text-align: center;"><span>Interview Ratio</span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['interview_ratio'] }}% (Shortlist Ratio)</span></p>
+                            <p align="center" style="text-align: center;">
+                                <span>
+                                    {{ $user_bench_mark ['interview_ratio'] }}% (Shortlist Ratio)
+                                </span>
+                            </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="interview_ratio_monthly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="interview_ratio_monthly">
+                                    {{ $user_bench_mark['interview_ratio_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="interview_ratio_weekly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="interview_ratio_weekly">
+                                    {{ $user_bench_mark['interview_ratio_weekly'] }}
+                                </span>
+                            </p>
                         </td>
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['interview_cnt'] > 0)
+                                @if($value['interview_cnt'] >= $user_bench_mark['interview_ratio_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="interview_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['interview_cnt'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="interview_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['interview_cnt'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -258,26 +302,42 @@
                             <p align="center" style="text-align: center;"><span>Selection Ratio</span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['selection_ratio'] }}% (of Interview Ratio)</span></p>
+                            <p align="center" style="text-align: center;">
+                                <span>
+                                    {{ $user_bench_mark ['selection_ratio'] }}% (of Interview Ratio)
+                                </span>
+                            </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="selection_ratio_monthly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="selection_ratio_monthly">
+                                    {{ $user_bench_mark['selection_ratio_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height:15px;">
-                            <p align="center" style="text-align: center;"><span class="selection_ratio_weekly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="selection_ratio_weekly">
+                                    {{ $user_bench_mark['selection_ratio_weekly'] }}
+                                </span>
+                            </p>
                         </td>
                        
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['selected_cnt'] > 0)
+                                @if($value['selected_cnt'] >= $user_bench_mark['selection_ratio_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="selection_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['selected_cnt'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="selection_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['selected_cnt'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -304,26 +364,42 @@
                             </span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['offer_acceptance_ratio'] }}% (of Selection Ratio)</span></p>
+                            <p align="center" style="text-align: center;">
+                                <span>
+                                    {{ $user_bench_mark ['offer_acceptance_ratio'] }}% (of Selection Ratio)
+                                </span>
+                            </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_monthly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="offer_acceptance_ratio_monthly">
+                                    {{ $user_bench_mark['offer_acceptance_ratio_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="offer_acceptance_ratio_weekly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="offer_acceptance_ratio_weekly">
+                                    {{ $user_bench_mark['offer_acceptance_ratio_weekly'] }}
+                                </span>
+                            </p>
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['offer_acceptance_ratio'] > 0)
+                                @if($value['offer_acceptance_ratio'] >= $user_bench_mark['offer_acceptance_ratio_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="offer_acceptance_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['offer_acceptance_ratio'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="offer_acceptance_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['offer_acceptance_ratio'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -349,26 +425,42 @@
                             <p align="center" style="text-align: center;"><span>Joining Ratio</span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['joining_ratio'] }}% (of offer acceptance)</span></p>
+                            <p align="center" style="text-align: center;">
+                                <span>
+                                    {{ $user_bench_mark ['joining_ratio'] }}% (of offer acceptance)
+                                </span>
+                            </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="joining_ratio_monthly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="joining_ratio_monthly">
+                                    {{ $user_bench_mark['joining_ratio_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p  align="center" style="text-align: center;"><span class="joining_ratio_weekly"></span></p>
+                            <p  align="center" style="text-align: center;">
+                                <span class="joining_ratio_weekly">
+                                    {{ $user_bench_mark['joining_ratio_weekly'] }}
+                                </span>
+                            </p>
                         </td>
-                        
+
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['joining_ratio'] > 0)
+                                @if($value['joining_ratio'] >= $user_bench_mark['joining_ratio_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="joining_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['joining_ratio'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="joining_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['joining_ratio'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -393,27 +485,42 @@
                             <p align="center" style="text-align: center;"><span>After Joining Success Ratio</span></p>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio">
-                            <p align="center" style="text-align: center;"><span>{{ $user_bench_mark ['after_joining_success_ratio'] }}% (Joining Ratio)
-                            </span></p>
+                            <p align="center" style="text-align: center;">
+                                <span>
+                                    {{ $user_bench_mark ['after_joining_success_ratio'] }}% (Joining Ratio)
+                                </span>
+                            </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_monthly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="after_joining_success_ratio_monthly">
+                                    {{ $user_bench_mark['after_joining_success_ratio_monthly'] }}
+                                </span>
+                            </p>
                         </td>
                         <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
-                            <p align="center" style="text-align: center;"><span class="after_joining_success_ratio_weekly"></span></p>
+                            <p align="center" style="text-align: center;">
+                                <span class="after_joining_success_ratio_weekly">
+                                    {{ $user_bench_mark['after_joining_success_ratio_weekly'] }}
+                                </span>
+                            </p>
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
-                                    <p align="center" style="text-align: center;">
-                                        @if($value['joining_success_ratio'] > 0)
+                                @if($value['joining_success_ratio'] >= $user_bench_mark['after_joining_success_ratio_weekly'])
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: lime;" class="after_joining_success_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
                                             <span>{{ $value['joining_success_ratio'] }}</span>
-                                        @else
-                                            <span>NA</span>
-                                        @endif
-                                    </p>
-                                </td>
+                                        </p>
+                                    </td>
+                                @else
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="after_joining_success_ratio_weeks">
+                                        <p align="center" style="text-align: center;">
+                                            <span>{{ $value['joining_success_ratio'] }}</span>
+                                        </p>
+                                    </td>
+                                @endif
                             @endforeach
                         @endif
 
@@ -683,22 +790,11 @@
 
         function calCulation() {
 
-            var no_of_weeks = $("#no_of_weeks").val();
-
             // Variables for Display Dynamic data in cell 
 
             // For No of Resumes
 
-            var no_of_resumes_monthly = 0;
-            var no_of_resumes_weekly = 0;
             var no_of_resumes_weeks = 0;
-
-            $('.no_of_resumes_monthly').each(function() {
-                no_of_resumes_monthly += parseInt($(this).text());
-            });
-
-            no_of_resumes_weekly = (no_of_resumes_monthly / no_of_weeks);
-            $(".no_of_resumes_weekly").text(no_of_resumes_weekly.toFixed());
 
             $('.no_of_resumes_weeks').each(function() {
 
@@ -713,20 +809,7 @@
 
             // For Shortlist Ratio
 
-            var shortlist_ratio = 0;
-            var shortlist_ratio_monthly = 0;
-            var shortlist_ratio_weekly = 0;
             var shortlist_ratio_weeks = 0;
-
-            $('.shortlist_ratio').each(function() {
-                shortlist_ratio += parseInt($(this).text());
-            });
-
-            shortlist_ratio_monthly = no_of_resumes_monthly * shortlist_ratio/100;
-            $(".shortlist_ratio_monthly").text(shortlist_ratio_monthly.toFixed());
-
-            shortlist_ratio_weekly = (shortlist_ratio_monthly / no_of_weeks);
-            $(".shortlist_ratio_weekly").text(shortlist_ratio_weekly.toFixed());
 
             $('.shortlist_ratio_weeks').each(function() {
 
@@ -741,20 +824,7 @@
 
             // For Interview Ratio
 
-            var interview_ratio = 0;
-            var interview_ratio_monthly = 0;
-            var interview_ratio_weekly = 0;
             var interview_ratio_weeks = 0 ;
-
-            $('.interview_ratio').each(function() {
-                interview_ratio += parseInt($(this).text());
-            });
-
-            interview_ratio_monthly = shortlist_ratio_monthly * interview_ratio/100;
-            $(".interview_ratio_monthly").text(interview_ratio_monthly.toFixed());
-
-            interview_ratio_weekly = (interview_ratio_monthly / no_of_weeks);
-            $(".interview_ratio_weekly").text(interview_ratio_weekly.toFixed());
 
             $('.interview_ratio_weeks').each(function() {
 
@@ -769,20 +839,7 @@
 
             // For Selection Ratio
 
-            var selection_ratio = 0;
-            var selection_ratio_monthly = 0;
-            var selection_ratio_weekly = 0;
             var selection_ratio_weeks = 0;
-
-            $('.selection_ratio').each(function() {
-                selection_ratio += parseInt($(this).text());
-            });
-
-            selection_ratio_monthly = interview_ratio_monthly * selection_ratio/100;
-            $(".selection_ratio_monthly").text(selection_ratio_monthly.toFixed());
-
-            selection_ratio_weekly = (selection_ratio_monthly / no_of_weeks);
-            $(".selection_ratio_weekly").text(selection_ratio_weekly.toFixed());
 
             $('.selection_ratio_weeks').each(function() {
 
@@ -797,20 +854,7 @@
 
             // For Offer Acceptance Ratio
 
-            var offer_acceptance_ratio = 0;
-            var offer_acceptance_ratio_monthly = 0;
-            var offer_acceptance_ratio_weekly = 0;
             var offer_acceptance_ratio_weeks = 0;
-
-            $('.offer_acceptance_ratio').each(function() {
-                offer_acceptance_ratio += parseInt($(this).text());
-            });
-
-            offer_acceptance_ratio_monthly = selection_ratio_monthly * offer_acceptance_ratio/100;
-            $(".offer_acceptance_ratio_monthly").text(offer_acceptance_ratio_monthly.toFixed());
-
-            offer_acceptance_ratio_weekly = (offer_acceptance_ratio_monthly / no_of_weeks);
-            $(".offer_acceptance_ratio_weekly").text(offer_acceptance_ratio_weekly.toFixed());
 
             $('.offer_acceptance_ratio_weeks').each(function() {
 
@@ -825,20 +869,7 @@
 
             // For Joining Ratio
 
-            var joining_ratio = 0;
-            var joining_ratio_monthly = 0;
-            var joining_ratio_weekly = 0;
             var joining_ratio_weeks = 0;
-
-            $('.joining_ratio').each(function() {
-                joining_ratio += parseInt($(this).text());
-            });
-
-            joining_ratio_monthly = offer_acceptance_ratio_monthly * joining_ratio/100;
-            $(".joining_ratio_monthly").text(joining_ratio_monthly.toFixed());
-
-            joining_ratio_weekly = (joining_ratio_monthly / no_of_weeks);
-            $(".joining_ratio_weekly").text(joining_ratio_weekly.toFixed());
 
             $('.joining_ratio_weeks').each(function() {
 
@@ -853,20 +884,7 @@
 
             // For After Joining Success Ratio
 
-            var after_joining_success_ratio = 0;
-            var after_joining_success_ratio_monthly = 0;
-            var after_joining_success_ratio_weekly = 0;
             var after_joining_success_ratio_weeks = 0;
-
-            $('.after_joining_success_ratio').each(function() {
-                after_joining_success_ratio += parseInt($(this).text());
-            });
-
-            after_joining_success_ratio_monthly = joining_ratio_monthly * after_joining_success_ratio/100;
-            $(".after_joining_success_ratio_monthly").text(after_joining_success_ratio_monthly.toFixed());
-
-            after_joining_success_ratio_weekly = (after_joining_success_ratio_monthly / no_of_weeks);
-            $(".after_joining_success_ratio_weekly").text(after_joining_success_ratio_weekly.toFixed());
 
             $('.after_joining_success_ratio_weeks').each(function() {
 
