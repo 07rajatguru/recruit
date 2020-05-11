@@ -646,7 +646,7 @@ class User extends Authenticatable
         $query = $query->select('users.name','users.email','users.secondary_email','roles.display_name as designation','users_otherinfo.*','users_doc.id as doc_id','users_doc.file','users_doc.type');
         $query = $query->where('users.id' ,'=',$user_id);
        
-        $response = $query->get();
+        $response = $query->first();
 
         return $response;
     }

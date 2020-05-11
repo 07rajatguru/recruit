@@ -62,7 +62,7 @@
                             </tr>
                             <tr>
                                 <th>Official Gmail</th>
-                                <td>{{ $user['s_email'] }}</td>
+                                <td>{{ $user['semail'] }}</td>
                             </tr>
                             <tr>
                                 <th>Personal Email</th>
@@ -70,7 +70,7 @@
                             </tr>
                             <tr>
                                 <th>Birth Date</th>
-                                <td>{{ $user['birth_date'] }}</td>
+                                <td>{{ $user['date_of_birth'] }}</td>
                             </tr>
                             <tr>
                                 <th>Blood Group</th>
@@ -78,16 +78,16 @@
                             </tr>
                             <tr>
                                 <th>Joining Date</th>
-                                <td>{{ $user['join_date'] }}</td>
+                                <td>{{ $user['date_of_joining'] }}</td>
                             </tr>
                             <tr>
                                 <th>Anniversary Date</th>
-                                <td>{{ $user['anni_date'] }}</td>
+                                <td>{{ $user['date_of_anniversary'] }}</td>
                             </tr>
                             @if($isSuperAdmin || $isAccountant) 
                                 <tr>
                                     <th>Exit Date</th>
-                                    <td>{{ $user['exit_date'] }}</td>
+                                    <td>{{ $user['date_of_exit'] }}</td>
                                 </tr>
                             @endif
                         </table>
@@ -191,7 +191,7 @@
                     <table class="table table-bordered">
                         <tr>
                             <th>Fixed Salary</th>
-                            <td>{{ $user['salary'] }}</td>
+                            <td>{{ $user['fixed_salary'] }}</td>
                             <th>Performance Bonus</th>
                             <td>{{ $user['performance_bonus'] }}</td>
                             <th>Total Salary</th>

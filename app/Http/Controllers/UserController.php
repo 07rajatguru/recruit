@@ -525,31 +525,50 @@ class UserController extends Controller
             }
 
             $user_info = User::getProfileInfo($user_id);
-            foreach($user_info as $key=>$value){
+
+            if(isset($user_info) && $user_info != '') {
+
+                // Official email & gmail
                 $user['id'] = $user_id;
-                $user['name'] = $value->name;
-                $user['email'] = $value->email;
-                $user['s_email'] = $value->secondary_email;
-                $user['designation'] = $value->designation;
-                $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
-                $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
-                $user['salary'] = $value->fixed_salary;
-                $user['performance_bonus'] = $value->performance_bonus;
-                $user['total_salary'] = $value->total_salary;
-                $user['acc_no'] = $value->acc_no;
-                $user['bank_name'] = $value->bank_name;
-                $user['branch_name'] = $value->branch_name;
-                $user['ifsc_code'] = $value->ifsc_code;
-                $user['user_full_name'] = $value->bank_full_name;
-                $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
-                $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
-                $user['contact_number'] = $value->contact_number;
-                $user['current_address'] = $value->current_address;
-                $user['permanent_address'] = $value->permanent_address;
-                $user['signature'] = $value->signature;
-                $user['personal_email'] = $value->personal_email;
-                $user['contact_no_official'] = $value->contact_no_official;
-                $user['blood_group'] = $value->blood_group;
+                $user['name'] = $user_info->name;
+                $user['email'] = $user_info->email;
+                $user['semail'] = $user_info->secondary_email;
+                $user['designation'] = $user_info->designation;
+
+                // User Otherinfo
+                $user['personal_email'] = $user_info->personal_email;
+                $user['date_of_birth'] = $dateClass->changeYMDtoDMY($user_info->date_of_birth);
+                $user['date_of_joining'] = $dateClass->changeYMDtoDMY($user_info->date_of_joining);
+                $user['blood_group'] = $user_info->blood_group;
+                $user['date_of_confirmation'] = $dateClass->changeYMDtoDMY($user_info->date_of_confirmation);
+                $user['contact_number'] = $user_info->contact_number;
+                $user['date_of_anniversary'] = $dateClass->changeYMDtoDMY($user_info->date_of_anniversary);
+                $user['date_of_exit'] = $dateClass->changeYMDtoDMY($user_info->date_of_exit);
+                $user['contact_no_official'] = $user_info->contact_no_official;
+                $user['current_address'] = $user_info->current_address;
+                $user['permanent_address'] = $user_info->permanent_address;
+                $user['marital_status'] = $user_info->marital_status;
+                $user['gender'] = $user_info->gender;
+                $user['hobbies'] = $user_info->hobbies;
+                $user['interests'] = $user_info->interests;
+                $user['uan_no'] = $user_info->uan_no;
+                $user['esic_no'] = $user_info->esic_no;
+
+                // Get Signature
+                $user['signature'] = $user_info->signature;
+
+                // Get Bank Details
+                $user['bank_name'] = $user_info->bank_name;
+                $user['branch_name'] = $user_info->branch_name;
+                $user['acc_no'] = $user_info->acc_no;
+                $user['ifsc_code'] = $user_info->ifsc_code;
+                $user['user_full_name'] = $user_info->user_full_name;
+                $user['payment_mode'] = $user_info->payment_mode;
+
+                // Salary Information
+                $user['fixed_salary'] = $user_info->fixed_salary;
+                $user['performance_bonus'] = $user_info->performance_bonus;
+                $user['total_salary'] = $user_info->total_salary;
             }
 
             // User Family Details show
@@ -589,7 +608,6 @@ class UserController extends Controller
     }
     public function editProfile($user_id)
     {
-         //superadmin
         $users =  \Auth::user();
         $loggedin_user_id = \Auth::user()->id;
         $userRole = $users->roles->pluck('id','id')->toArray();
@@ -631,35 +649,51 @@ class UserController extends Controller
 
             $user_info = User::getProfileInfo($user_id);
 
-            //print_r($user_info);exit;
+            if(isset($user_info) && $user_info != ''){
 
-            foreach($user_info as $key=>$value){
+                // Official email & gmail
                 $user['user_id'] = $user_id;
-                $user['name'] = $value->name;
-                $user['email'] = $value->email;
-                $user['semail'] = $value->secondary_email;
-                $user['designation'] = $value->designation;
-                $user['birth_date'] = $dateClass->changeYMDtoDMY($value->date_of_birth);
-                $user['join_date'] = $dateClass->changeYMDtoDMY($value->date_of_joining);
-                $user['salary'] = $value->fixed_salary;
-                $user['performance_bonus'] = $value->performance_bonus;
-                $user['total_salary'] = $value->total_salary;
-                $user['acc_no'] = $value->acc_no;
-                $user['bank_name'] = $value->bank_name;
-                $user['branch_name'] = $value->branch_name;
-                $user['ifsc_code'] = $value->ifsc_code;
-                $user['user_full_name'] = $value->bank_full_name;
-                $user['anni_date'] = $dateClass->changeYMDtoDMY($value->date_of_anniversary);
-                $user['exit_date'] = $dateClass->changeYMDtoDMY($value->date_of_exit);
-                $user['contact_number'] = $value->contact_number;
-                $user['current_address'] = $value->current_address;
-                $user['permanent_address'] = $value->permanent_address;
-                $user['signature'] = $value->signature;
-                //$user['official_gmail'] = $value->official_gmail;
-                $user['personal_email'] = $value->personal_email;
-                $user['contact_no_official'] = $value->contact_no_official;
-                $user['blood_group'] = $value->blood_group;
-                
+                $user['name'] = $user_info->name;
+                $user['email'] = $user_info->email;
+                $user['semail'] = $user_info->secondary_email;
+                $user['designation'] = $user_info->designation;
+
+                // User Otherinfo
+                $user['personal_email'] = $user_info->personal_email;
+                $user['date_of_birth'] = $dateClass->changeYMDtoDMY($user_info->date_of_birth);
+                $user['date_of_joining'] = $dateClass->changeYMDtoDMY($user_info->date_of_joining);
+                $user['blood_group'] = $user_info->blood_group;
+                $user['date_of_confirmation'] = $dateClass->changeYMDtoDMY($user_info->date_of_confirmation);
+                $user['contact_number'] = $user_info->contact_number;
+                $user['date_of_anniversary'] = $dateClass->changeYMDtoDMY($user_info->date_of_anniversary);
+                $user['date_of_exit'] = $dateClass->changeYMDtoDMY($user_info->date_of_exit);
+                $user['contact_no_official'] = $user_info->contact_no_official;
+                $user['current_address'] = $user_info->current_address;
+                $user['permanent_address'] = $user_info->permanent_address;
+                $user['marital_status'] = $user_info->marital_status;
+                $user['gender'] = $user_info->gender;
+                $user['hobbies'] = $user_info->hobbies;
+                $user['interests'] = $user_info->interests;
+                $user['uan_no'] = $user_info->uan_no;
+                $user['esic_no'] = $user_info->esic_no;
+
+                // Get Signature
+                $user['signature'] = $user_info->signature;
+
+                // Get Bank Details
+                $user['bank_name'] = $user_info->bank_name;
+                $user['branch_name'] = $user_info->branch_name;
+                $user['acc_no'] = $user_info->acc_no;
+                $user['ifsc_code'] = $user_info->ifsc_code;
+                $user['user_full_name'] = $user_info->user_full_name;
+                $user['payment_mode'] = $user_info->payment_mode;
+
+                // Salary Information
+                $user['fixed_salary'] = $user_info->fixed_salary;
+                $user['performance_bonus'] = $user_info->performance_bonus;
+                $user['total_salary'] = $user_info->total_salary;
+
+                // Family Details                
                 for ($i=1; $i <= 5 ; $i++) {
                     $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
                     if (isset($users_family) && $users_family != '') {
@@ -718,114 +752,117 @@ class UserController extends Controller
     {
         $dateClass = new Date();
 
-        $upload_profile_photo = $request->file('image');
-        //$user_id = \Auth::user()->id;
-        $upload_documents = $request->file('upload_documents');
+        //  Update in main table
+        $user_basic_info = User::find($user_id);
+
+        // Official email & gmail
+        $user_basic_info->email = Input::get('email');
+        $user_basic_info->secondary_email = Input::get('semail');
+        $user_basic_info->save();
+
+        // User Otherinfo
+        $personal_email = Input::get('personal_email');
+        $date_of_birth = Input::get('date_of_birth');
+        $date_of_joining = Input::get('date_of_joining');
+        $blood_group = Input::get('blood_group');
+        $date_of_confirmation = Input::get('date_of_confirmation');
+        $contact_number = Input::get('contact_number');
+        $date_of_anniversary = Input::get('date_of_anniversary');
+        $contact_no_official = Input::get('contact_no_official');
+        $date_of_exit = Input::get('date_of_exit');
+        $current_address = Input::get('current_address');
+        $permanent_address = Input::get('permanent_address');
+        $marital_status = Input::get('marital_status');
+        $gender = Input::get('gender');
+        $hobbies = Input::get('hobbies');
+        $interests = Input::get('interests');
+        $uan_no = Input::get('uan_no');
+        $esic_no = Input::get('esic_no');
+
+        // Get Signature
+        $signature = Input::get('signature');
+            
+        // Get Bank Details
+        $bank_name = Input::get('bank_name');
+        $branch_name = Input::get('branch_name');
+        $acc_no = Input::get('acc_no');
+        $ifsc_code = Input::get('ifsc_code');
+        $user_full_name = Input::get('user_full_name');
+        $payment_mode = Input::get('payment_mode');
+
+        // Salary Information
+        $fixed_salary = Input::get('fixed_salary');
+        $performance_bonus = Input::get('performance_bonus');
+        $total_salary = Input::get('total_salary');
 
         $user_other_info = UserOthersInfo::getUserOtherInfo($user_id);
 
-        if(isset($user_other_info) && $user_other_info->user_id == $user_id){
+        $users_otherinfo_update = UserOthersInfo::find($user_other_info->id);
+       
+        $users_otherinfo_update->personal_email = $personal_email;
+        $users_otherinfo_update->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
+        $users_otherinfo_update->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
+        $users_otherinfo_update->blood_group = $blood_group;
+        $users_otherinfo_update->date_of_confirmation = $dateClass->changeDMYtoYMD($date_of_confirmation);
+        $users_otherinfo_update->contact_number = $contact_number;
+        $users_otherinfo_update->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
+        $users_otherinfo_update->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
+        $users_otherinfo_update->contact_no_official = $contact_no_official;
+        $users_otherinfo_update->current_address = $current_address;
+        $users_otherinfo_update->permanent_address = $permanent_address;
+        $users_otherinfo_update->marital_status = $marital_status;
+        $users_otherinfo_update->gender = $gender;
+        $users_otherinfo_update->hobbies = $hobbies;
+        $users_otherinfo_update->interests = $interests;
+        $users_otherinfo_update->uan_no = $uan_no;
+        $users_otherinfo_update->esic_no = $esic_no;
 
-            $user_basic_info = User::find($user_id);
-            $user_basic_info->name = Input::get('name');
-            //$user_basic_info->email = Input::get('email');
+        // Signature
+        $users_otherinfo_update->signature = $signature;
 
-            // Official gmail
-            $user_basic_info->secondary_email = Input::get('semail');
-            $user_basic_info->save();
+        // Bank Details
+        $users_otherinfo_update->bank_name = $bank_name;
+        $users_otherinfo_update->branch_name = $branch_name;
+        $users_otherinfo_update->acc_no = $acc_no;
+        $users_otherinfo_update->ifsc_code = $ifsc_code;
+        $users_otherinfo_update->user_full_name = $user_full_name;
+        $users_otherinfo_update->payment_mode = $payment_mode;
 
-            // User Otherinfo update
-            $date_of_joining = Input::get('date_of_joining');
-            $date_of_birth = Input::get('date_of_birth');
-            $date_of_anniversary = Input::get('date_of_anni');
-            $date_of_exit = Input::get('date_of_exit');
-            $acc_no = Input::get('account_no');
-            $ifsc_code = Input::get('ifsc');
-            $contact_number = Input::get('contact');
-            $current_address = Input::get('current_address');
-            $permanent_address = Input::get('permanent_address');
-            $signature = Input::get('signature');
-            $personal_email = Input::get('personal_email');
-            $contact_no_official = Input::get('contact_no_official');
-            $blood_group = Input::get('blood_group');
+        // Salary Information
+        $users_otherinfo_update->fixed_salary = $fixed_salary;
+        $users_otherinfo_update->performance_bonus = $performance_bonus;
+        $users_otherinfo_update->total_salary = $total_salary;
 
-            $users_otherinfo = UserOthersInfo::find($user_other_info->id);
-            if (isset($date_of_joining) && $date_of_joining != '') {
-                $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
-            }
-            else {
-                $users_otherinfo->date_of_joining = NULL;
-            }
-            if (isset($date_of_birth) && $date_of_birth != '') {
-                $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
-            }
-            else {
-                $users_otherinfo->date_of_birth = NULL;
-            }
-            if(isset($acc_no) && $acc_no!=''){
-                $users_otherinfo->acc_no = $acc_no;
-            }
-            else{
-                $users_otherinfo->acc_no = '';
-            }
-            if(isset($ifsc_code) && $ifsc_code!=''){
-                $users_otherinfo->ifsc_code = $ifsc_code;
-            }
-            else{
-                $users_otherinfo->ifsc_code = '';
-            }
-            $users_otherinfo->bank_name = Input::get('bank_name');
-            $users_otherinfo->branch_name = Input::get('branch_name');
-            $users_otherinfo->bank_full_name = Input::get('user_full_name');
-            if (isset($date_of_anniversary) && $date_of_anniversary != '') {
-                $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
-            }
-            else {
-                $users_otherinfo->date_of_anniversary = NULL;
-            }
-            if (isset($date_of_exit) && $date_of_exit != '') {
-                $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
-            }
-            else {
-                $users_otherinfo->date_of_exit = NULL;
-            }
-            $users_otherinfo->fixed_salary = Input::get('fixed_salary');
-            $users_otherinfo->performance_bonus = Input::get('performance_bonus');
-            $users_otherinfo->total_salary = Input::get('total_salary');
-            $users_otherinfo->contact_number = $contact_number;
-            $users_otherinfo->current_address = $current_address;
-            $users_otherinfo->permanent_address = $permanent_address;
-            $users_otherinfo->signature = $signature;
-            $users_otherinfo->personal_email = $personal_email;
-            $users_otherinfo->contact_no_official = $contact_no_official;
-            $users_otherinfo->blood_group = $blood_group;
-            $users_otherinfo->save();
+        // Save Data
+        $users_otherinfo_update->save();
 
-            // User Family Details update
-            // delete previous data
-            $user_family_delete = UsersFamily::where('user_id',$user_id)->delete();
+        // User Family Details update
+        // delete previous data
 
-            // data store
-            for ($i=1; $i <=5 ; $i++) {
-                $name = Input::get('name_'.$i);
-                $relationship = Input::get('relationship_'.$i);
-                $occupation = Input::get('occupation_'.$i);
-                $contact_no = Input::get('contact_no_'.$i);
+        $user_family_delete = UsersFamily::where('user_id',$user_id)->delete();
 
-                if (isset($name) && $name != '') {
-                    $users_family = new UsersFamily();
-                    $users_family->user_id = $user_id;
-                    $users_family->name = $name;
-                    $users_family->relationship = $relationship;
-                    $users_family->occupation = $occupation;
-                    $users_family->contact_no = $contact_no;
-                    $users_family->family_id = $i;
-                    $users_family->save();
-                }
+        for ($i=1; $i <=5 ; $i++) {
+            $name = Input::get('name_'.$i);
+            $relationship = Input::get('relationship_'.$i);
+            $occupation = Input::get('occupation_'.$i);
+            $contact_no = Input::get('contact_no_'.$i);
+
+            if (isset($name) && $name != '') {
+                $users_family = new UsersFamily();
+                $users_family->user_id = $user_id;
+                $users_family->name = $name;
+                $users_family->relationship = $relationship;
+                $users_family->occupation = $occupation;
+                $users_family->contact_no = $contact_no;
+                $users_family->family_id = $i;
+                $users_family->save();
             }
+        }
 
-            // stored photo
-            $user_photo_info = UsersDoc::getUserPhotoInfo($user_id);
+        // Stored photo
+        $user_photo_info = UsersDoc::getUserPhotoInfo($user_id);
+        $upload_profile_photo = $request->file('image');
+
             if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
             
                 $file_name = $upload_profile_photo->getClientOriginalName();
@@ -872,8 +909,9 @@ class UserController extends Controller
                 }
             }
 
-            //stored others documents
-            if (isset($upload_documents) && sizeof($upload_documents) > 0){
+        //Stored others documents
+        $upload_documents = $request->file('upload_documents');
+            if (isset($upload_documents) && sizeof($upload_documents) > 0) {
 
                 $users_upload_type = Input::get('users_upload_type');
 
@@ -900,172 +938,11 @@ class UserController extends Controller
                         $users_doc->file = $file_path;
                         $users_doc->name = $file_name;
                         $users_doc->size = $file_size;
-                        //$users_doc->type = "Others";
                         $users_doc->type = $users_upload_type;
                         $users_doc->save();
                     }
                 }
             }
-        }
-        else{
-
-            $user_basic_info = User::find($user_id);
-            $user_basic_info->name = Input::get('name');
-            //$user_basic_info->email = Input::get('email');
-
-            // Official gmail
-            $user_basic_info->secondary_email = Input::get('semail');
-            $user_basic_info->save();
-
-            // User Otherinfo store
-            $date_of_joining = Input::get('date_of_joining');
-            $date_of_birth = Input::get('date_of_birth');
-            $date_of_anniversary = Input::get('date_of_anni');
-            $date_of_exit = Input::get('date_of_exit');
-            $acc_no = Input::get('account_no');
-            $ifsc_code = Input::get('ifsc');
-            $contact_number = Input::get('contact');
-            $current_address = Input::get('current_address');
-            $permanent_address = Input::get('permanent_address');
-            $signature = Input::get('signature');
-            $personal_email = Input::get('personal_email');
-            $contact_no_official = Input::get('contact_no_official');
-            $blood_group = Input::get('blood_group');
-
-            $users_otherinfo= new UserOthersInfo;
-            $users_otherinfo->user_id = $user_id;
-            if (isset($date_of_joining) && $date_of_joining != '') {
-                $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
-            }
-            else {
-                $users_otherinfo->date_of_joining = NULL;
-            }
-            if (isset($date_of_birth) && $date_of_birth != '') {
-                $users_otherinfo->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
-            }
-            else {
-                $users_otherinfo->date_of_birth = NULL;
-            }
-            if(isset($acc_no) && $acc_no!=''){
-                $users_otherinfo->acc_no = $acc_no;
-            }
-            else{
-                $users_otherinfo->acc_no = '';
-            }
-            if(isset($ifsc_code) && $ifsc_code!=''){
-                $users_otherinfo->ifsc_code = $ifsc_code;
-            }
-            else{
-                $users_otherinfo->ifsc_code = '';
-            }
-            $users_otherinfo->bank_name = Input::get('bank_name');
-            $users_otherinfo->branch_name = Input::get('branch_name');
-            $users_otherinfo->bank_full_name = Input::get('user_full_name');
-            if (isset($date_of_anniversary) && $date_of_anniversary != '') {
-                $users_otherinfo->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
-            }
-            else {
-                $users_otherinfo->date_of_anniversary = NULL;
-            }
-            if (isset($date_of_exit) && $date_of_exit != '') {
-                $users_otherinfo->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
-            }
-            else {
-                $users_otherinfo->date_of_exit = NULL;
-            }
-            $users_otherinfo->fixed_salary = Input::get('fixed_salary');
-            $users_otherinfo->contact_number = $contact_number;
-            $users_otherinfo->current_address = $current_address;
-            $users_otherinfo->permanent_address = $permanent_address;
-            $users_otherinfo->signature = $signature;
-            $users_otherinfo->personal_email = $personal_email;
-            $users_otherinfo->contact_no_official = $contact_no_official;
-            $users_otherinfo->blood_group = $blood_group;
-            $users_otherinfo->save();
-
-            // Users Family data store
-            for ($i=1; $i <=5 ; $i++) {
-
-                $name = Input::get('name_'.$i);
-                $relationship = Input::get('relationship_'.$i);
-                $occupation = Input::get('occupation_'.$i);
-                $contact_no = Input::get('contact_no_'.$i);
-
-                if (isset($name) && $name != '') {
-                    $users_family = new UsersFamily();
-                    $users_family->user_id = $user_id;
-                    $users_family->name = $name;
-                    $users_family->relationship = $relationship;
-                    $users_family->occupation = $occupation;
-                    $users_family->contact_no = $contact_no;
-                    $users_family->family_id = $i;
-                    $users_family->save();
-                }
-            }
-
-            // stored photo
-            if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
-                $file_name = $upload_profile_photo->getClientOriginalName();
-                $file_extension = $upload_profile_photo->getClientOriginalExtension();
-                $file_realpath = $upload_profile_photo->getRealPath();
-                $file_size = $upload_profile_photo->getSize();
-
-                $dir = 'uploads/users/' . $user_id . '/photo/';
-
-                if (!file_exists($dir) && !is_dir($dir)) {
-                    mkdir($dir, 0777, true);
-                    chmod($dir, 0777);
-                }
-                $upload_profile_photo->move($dir, $file_name);
-
-                $file_path = $dir . $file_name;
-
-                $users_doc = new UsersDoc();
-                $users_doc->user_id = $user_id;
-                $users_doc->file = $file_path;
-                $users_doc->name = $file_name;
-                $users_doc->size = $file_size;
-                $users_doc->type = "Photo";
-                $users_doc->save();
-            }
-            //stores attachmensts
-            if (isset($upload_documents) && sizeof($upload_documents) > 0){
-
-                $users_upload_type = Input::get('users_upload_type');
-
-                foreach ($upload_documents as $k => $v) {
-                    if (isset($v) && $v->isValid()) {
-                        // echo "here";
-                        $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
-                        $file_size = $v->getSize();
-
-                        $dir = 'uploads/users/' . $user_id . '/';
-
-                        if (!file_exists($dir) && !is_dir($dir)) {
-                            mkdir($dir, 0777, true);
-                            chmod($dir, 0777);
-                        }
-                        $v->move($dir, $file_name);
-
-                        $file_path = $dir . $file_name;
-
-                        $users_doc = new UsersDoc();
-                        $users_doc->user_id = $user_id;
-                        $users_doc->file = $file_path;
-                        $users_doc->name = $file_name;
-                        $users_doc->size = $file_size;
-                        //$users_doc->type = "Others";
-                        $users_doc->type = $users_upload_type;
-                        $users_doc->save();
-                    }
-                }
-            }
-        }
-
-        //return redirect()->route('users.index')->with('success','Profile Updated Successfully.'); 
-
         return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
     }
 
