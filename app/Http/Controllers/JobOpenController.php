@@ -2742,7 +2742,7 @@ class JobOpenController extends Controller
                 
                     // Update shortlisted date
 
-                    DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
+                    DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
                 }
             }
         }
