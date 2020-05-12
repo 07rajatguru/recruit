@@ -574,6 +574,7 @@ class UserController extends Controller
             // User Family Details show
             $user_family = UsersFamily::getAllFamilyDetailsofUser($user_id);
 
+            $type_array = array('Photo');
             $userModel = new User();
             $users_upload_type = $userModel->users_upload_type;
             $j=0;
@@ -581,7 +582,7 @@ class UserController extends Controller
             $users_docs = \DB::table('users_doc')
                           ->select('users_doc.*')
                           ->where('user_id','=',$user_id)
-                          /*->where('type','=','Others')*/
+                          ->whereNotIn('type',$type_array)
                           ->get();
 
             $utils = new Utils();
@@ -598,7 +599,7 @@ class UserController extends Controller
                 $j++;
             }
 
-            $users_upload_type['Others'] = 'Others';
+            //$users_upload_type['Others'] = 'Others';
 
             return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family','users_upload_type'));
         }
@@ -652,6 +653,7 @@ class UserController extends Controller
             if(isset($user_info) && $user_info != ''){
 
                 // Official email & gmail
+                $user['id'] = $user_id;
                 $user['user_id'] = $user_id;
                 $user['name'] = $user_info->name;
                 $user['email'] = $user_info->email;
@@ -711,32 +713,36 @@ class UserController extends Controller
                 }
             }
 
+            $type_array = array('Photo');
             $userModel = new User();
             $users_upload_type = $userModel->users_upload_type;
 
             $j=0;
             $user['doc'] = array();
             $users_docs = \DB::table('users_doc')
-                          ->select('users_doc.*')
-                          ->where('user_id','=',$user_id)
-                          /*->where('type','=','Others')*/
-                          ->get();
+                ->select('users_doc.*')
+                ->where('user_id','=',$user_id)
+                ->whereNotIn('type',$type_array)
+                ->get();
 
             $utils = new Utils();
-            foreach($users_docs as $key=>$value){
-                $user['doc'][$j]['name'] = $value->name;
-                $user['doc'][$j]['id'] = $value->id;
-                $user['doc'][$j]['url'] = "../".$value->file;
-                $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
-                $user['doc'][$j]['type'] = $value->type;
 
-                if (array_search($value->type, $users_upload_type)) {
-                    unset($users_upload_type[array_search($value->type, $users_upload_type)]);
+            if(isset($users_docs) && sizeof($users_docs) > 0) {
+                foreach($users_docs as $key=>$value){
+                    $user['doc'][$j]['name'] = $value->name;
+                    $user['doc'][$j]['id'] = $value->id;
+                    $user['doc'][$j]['url'] = "../".$value->file;
+                    $user['doc'][$j]['size'] = $utils->formatSizeUnits($value->size);
+                    $user['doc'][$j]['type'] = $value->type;
+
+                    if (array_search($value->type, $users_upload_type)) {
+                        unset($users_upload_type[array_search($value->type, $users_upload_type)]);
+                    }
+                    $j++;
                 }
-                $j++;
             }
 
-            $users_upload_type['Others'] = 'Others';
+            //$users_upload_type['Others'] = 'Others';
 
             $gender = CandidateBasicInfo::getTypeArray();
             $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
@@ -835,12 +841,11 @@ class UserController extends Controller
 
         // Save Data
         $users_otherinfo_update->save();
-
-        // User Family Details update
-        // delete previous data
-
+        
+        // Delete previous data
         $user_family_delete = UsersFamily::where('user_id',$user_id)->delete();
 
+        // User Family Details Update
         for ($i=1; $i <=5 ; $i++) {
             $name = Input::get('name_'.$i);
             $relationship = Input::get('relationship_'.$i);
@@ -863,86 +868,630 @@ class UserController extends Controller
         $user_photo_info = UsersDoc::getUserPhotoInfo($user_id);
         $upload_profile_photo = $request->file('image');
 
-            if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
+        if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
             
-                $file_name = $upload_profile_photo->getClientOriginalName();
-                $file_extension = $upload_profile_photo->getClientOriginalExtension();
-                $file_realpath = $upload_profile_photo->getRealPath();
-                $file_size = $upload_profile_photo->getSize();
+            $file_name = $upload_profile_photo->getClientOriginalName();
+            $file_extension = $upload_profile_photo->getClientOriginalExtension();
+            $file_realpath = $upload_profile_photo->getRealPath();
+            $file_size = $upload_profile_photo->getSize();
 
-                $path = "uploads/users/" . $user_id . '/photo';
+            $path = "uploads/users/" . $user_id . '/photo';
 
-                $files = glob($path . "/*");
-                foreach($files as $file){
-                    if(is_file($file)){
-                        unlink($file);
+            $files = glob($path . "/*");
+            foreach($files as $file){
+                if(is_file($file)){
+                    unlink($file);
+                }
+            }
+
+            $dir = 'uploads/users/' . $user_id . '/photo/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $upload_profile_photo->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            if(isset($user_photo_info)){
+                $users_doc = UsersDoc::find($user_photo_info->id);
+            }
+            else{
+                $users_doc = new UsersDoc();
+            }
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Photo";
+            $users_doc->save();
+        }
+
+        /*//Stored others documents
+        $upload_documents = $request->file('upload_documents');
+        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
+            $users_upload_type = Input::get('users_upload_type');
+
+            foreach ($upload_documents as $k => $v) {
+                if (isset($v) && $v->isValid()) {
+
+                    $file_name = $v->getClientOriginalName();
+                    $file_extension = $v->getClientOriginalExtension();
+                    $file_realpath = $v->getRealPath();
+                    $file_size = $v->getSize();
+
+                    $dir = 'uploads/users/' . $user_id . '/';
+
+                    if (!file_exists($dir) && !is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                        chmod($dir, 0777);
                     }
-                }
+                    $v->move($dir, $file_name);
 
-                $dir = 'uploads/users/' . $user_id . '/photo/';
-                if (!file_exists($dir) && !is_dir($dir)) {
-                    mkdir($dir, 0777, true);
-                    chmod($dir, 0777);
-                }
+                    $file_path = $dir . $file_name;
 
-                $upload_profile_photo->move($dir, $file_name);
-
-                $file_path = $dir . $file_name;
-
-                if(isset($user_photo_info)){
-                    $users_doc = UsersDoc::find($user_photo_info->id);
-                    $users_doc->user_id = $user_id;
-                    $users_doc->file = $file_path;
-                    $users_doc->name = $file_name;
-                    $users_doc->size = $file_size;
-                    $users_doc->type = "Photo";
-                    $users_doc->save();
-                }
-                else{
                     $users_doc = new UsersDoc();
                     $users_doc->user_id = $user_id;
                     $users_doc->file = $file_path;
                     $users_doc->name = $file_name;
                     $users_doc->size = $file_size;
-                    $users_doc->type = "Photo";
+                    $users_doc->type = $users_upload_type;
                     $users_doc->save();
                 }
             }
+        }*/
 
-        //Stored others documents
-        $upload_documents = $request->file('upload_documents');
-            if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+        //Educational Credentials Start
+        // Stored SSC Marksheet
+        $ssc_marksheet = $request->file('ssc_marksheet');
 
-                $users_upload_type = Input::get('users_upload_type');
+        if (isset($ssc_marksheet) && $ssc_marksheet->isValid()){
+            
+            $file_name = $ssc_marksheet->getClientOriginalName();
+            $file_size = $ssc_marksheet->getSize();
 
-                foreach ($upload_documents as $k => $v) {
-                    if (isset($v) && $v->isValid()) {
-                        // echo "here";
-                        $file_name = $v->getClientOriginalName();
-                        $file_extension = $v->getClientOriginalExtension();
-                        $file_realpath = $v->getRealPath();
-                        $file_size = $v->getSize();
-
-                        $dir = 'uploads/users/' . $user_id . '/';
-
-                        if (!file_exists($dir) && !is_dir($dir)) {
-                            mkdir($dir, 0777, true);
-                            chmod($dir, 0777);
-                        }
-                        $v->move($dir, $file_name);
-
-                        $file_path = $dir . $file_name;
-
-                        $users_doc = new UsersDoc();
-                        $users_doc->user_id = $user_id;
-                        $users_doc->file = $file_path;
-                        $users_doc->name = $file_name;
-                        $users_doc->size = $file_size;
-                        $users_doc->type = $users_upload_type;
-                        $users_doc->save();
-                    }
-                }
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
             }
+
+            $ssc_marksheet->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "SSC Marksheet";
+            $users_doc->save();
+        }
+
+        // Stored HSC Marksheet
+        $hsc_marksheet = $request->file('hsc_marksheet');
+
+        if (isset($hsc_marksheet) && $hsc_marksheet->isValid()){
+            
+            $file_name = $hsc_marksheet->getClientOriginalName();
+            $file_size = $hsc_marksheet->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $hsc_marksheet->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "HSC Marksheet";
+            $users_doc->save();
+        }
+
+        // Stored University Certificate
+        $university_certificate = $request->file('university_certificate');
+
+        if (isset($university_certificate) && $university_certificate->isValid()){
+            
+            $file_name = $university_certificate->getClientOriginalName();
+            $file_size = $university_certificate->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $university_certificate->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "University Certificate";
+            $users_doc->save();
+        }
+        //Educational Credentials End
+
+        //Company Credentials Start
+        // Stored Offer Letter
+        $offer_letter = $request->file('offer_letter');
+
+        if (isset($offer_letter) && $offer_letter->isValid()){
+            
+            $file_name = $offer_letter->getClientOriginalName();
+            $file_size = $offer_letter->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $offer_letter->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Offer Letter";
+            $users_doc->save();
+        }
+
+        // Stored Appraisal Letter
+        $appraisal_letter = $request->file('appraisal_letter');
+
+        if (isset($appraisal_letter) && $appraisal_letter->isValid()){
+            
+            $file_name = $appraisal_letter->getClientOriginalName();
+            $file_size = $appraisal_letter->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $appraisal_letter->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Appraisal Letter";
+            $users_doc->save();
+        }
+
+        // Stored Relieving Letter
+        $relieving_letter = $request->file('relieving_letter');
+
+        if (isset($relieving_letter) && $relieving_letter->isValid()){
+            
+            $file_name = $relieving_letter->getClientOriginalName();
+            $file_size = $relieving_letter->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $relieving_letter->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Relieving Letter";
+            $users_doc->save();
+        }
+
+        // Stored Resignation Letter
+        $resignation_letter = $request->file('resignation_letter');
+
+        if (isset($resignation_letter) && $resignation_letter->isValid()){
+            
+            $file_name = $resignation_letter->getClientOriginalName();
+            $file_size = $resignation_letter->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $resignation_letter->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Resignation Letter";
+            $users_doc->save();
+        }
+
+        // Stored Appointment Letter
+        $appointment_letter = $request->file('appointment_letter');
+
+        if (isset($appointment_letter) && $appointment_letter->isValid()){
+            
+            $file_name = $appointment_letter->getClientOriginalName();
+            $file_size = $appointment_letter->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $appointment_letter->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Appointment Letter";
+            $users_doc->save();
+        }
+
+        // Stored Experience Letter
+        $experience_letter = $request->file('experience_letter');
+
+        if (isset($experience_letter) && $experience_letter->isValid()){
+            
+            $file_name = $experience_letter->getClientOriginalName();
+            $file_size = $experience_letter->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $experience_letter->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Experience Letter";
+            $users_doc->save();
+        }
+
+        // Stored Pay Slips
+        $pay_slips = $request->file('pay_slips');
+
+        if (isset($pay_slips) && $pay_slips->isValid()){
+            
+            $file_name = $pay_slips->getClientOriginalName();
+            $file_size = $pay_slips->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $pay_slips->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Pay Slips";
+            $users_doc->save();
+        }
+
+        // Stored Form - 26
+        $form_26 = $request->file('form_26');
+
+        if (isset($form_26) && $form_26->isValid()){
+            
+            $file_name = $form_26->getClientOriginalName();
+            $file_size = $form_26->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $form_26->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Form - 26";
+            $users_doc->save();
+        }
+        //Company Credentials Start
+
+        //Personal Credentials Start
+        // Stored ID Proof
+        $id_proof = $request->file('id_proof');
+
+        if (isset($id_proof) && $id_proof->isValid()){
+            
+            $file_name = $id_proof->getClientOriginalName();
+            $file_size = $id_proof->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $id_proof->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "ID Proof";
+            $users_doc->save();
+        }
+
+        // Stored Passport
+        $passport = $request->file('passport');
+
+        if (isset($passport) && $passport->isValid()){
+            
+            $file_name = $passport->getClientOriginalName();
+            $file_size = $passport->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $passport->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Passport";
+            $users_doc->save();
+        }
+
+        // Stored PAN Card
+        $pan_card = $request->file('pan_card');
+
+        if (isset($pan_card) && $pan_card->isValid()){
+            
+            $file_name = $pan_card->getClientOriginalName();
+            $file_size = $pan_card->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $pan_card->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "PAN Card";
+            $users_doc->save();
+        }
+
+        // Stored Cancelled Cheque
+        $cancelled_cheque = $request->file('cancelled_cheque');
+
+        if (isset($cancelled_cheque) && $cancelled_cheque->isValid()){
+            
+            $file_name = $cancelled_cheque->getClientOriginalName();
+            $file_size = $cancelled_cheque->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $cancelled_cheque->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Cancelled Cheque";
+            $users_doc->save();
+        }
+
+        // Stored Address Proof
+        $address_proof = $request->file('address_proof');
+
+        if (isset($address_proof) && $address_proof->isValid()){
+            
+            $file_name = $address_proof->getClientOriginalName();
+            $file_size = $address_proof->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $address_proof->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Address Proof";
+            $users_doc->save();
+        }
+
+        // Stored Aadhar Card
+        $aadhar_card = $request->file('aadhar_card');
+
+        if (isset($aadhar_card) && $aadhar_card->isValid()){
+            
+            $file_name = $aadhar_card->getClientOriginalName();
+            $file_size = $aadhar_card->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $aadhar_card->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Aadhar Card";
+            $users_doc->save();
+        }
+
+        // Stored Resume
+        $resume = $request->file('resume');
+
+        if (isset($resume) && $resume->isValid()){
+            
+            $file_name = $resume->getClientOriginalName();
+            $file_size = $resume->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $resume->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Resume";
+            $users_doc->save();
+        }
+
+        // Stored Passport Photo
+        $passport_photo = $request->file('passport_photo');
+
+        if (isset($passport_photo) && $passport_photo->isValid()){
+            
+            $file_name = $passport_photo->getClientOriginalName();
+            $file_size = $passport_photo->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $passport_photo->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = "Passport Photo";
+            $users_doc->save();
+        }
+        //Personal Credentials End
+
+        // If Single Attchment Upload
+
+        $file = $request->file('file');
+        $users_upload_type = Input::get('users_upload_type');
+
+        if (isset($file) && $file->isValid()){
+            
+            $file_name = $file->getClientOriginalName();
+            $file_size = $file->getSize();
+
+            $dir = 'uploads/users/' . $user_id . '/';
+            if (!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+            }
+
+            $file->move($dir, $file_name);
+
+            $file_path = $dir . $file_name;
+
+            $users_doc = new UsersDoc();
+            $users_doc->user_id = $user_id;
+            $users_doc->file = $file_path;
+            $users_doc->name = $file_name;
+            $users_doc->size = $file_size;
+            $users_doc->type = $users_upload_type;
+            $users_doc->save();
+        }
+
+
         return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
     }
 
@@ -977,7 +1526,6 @@ class UserController extends Controller
                 $users_doc->file = $others_doc_key;
                 $users_doc->name = $doc_name;
                 $users_doc->size = $doc_filesize;
-                //$users_doc->type = "Others";
                 $users_doc->type = $users_upload_type;
                 $users_doc->save();
             }
@@ -985,28 +1533,34 @@ class UserController extends Controller
 
         return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully.'); 
     }
-    public function attachmentsDestroy($docid)
+    public function attachmentsDestroy($docid,Request $request)
     {
         $user_id = \Auth::user()->id;
+        $type = $request->input('type');
 
         $doc_attach = \DB::table('users_doc')
         ->select('users_doc.*')
         ->where('id','=',$docid)
-        // ->where('type','=','Others')
         ->first();
 
-        if(isset($doc_attach))
-        {
-            $path="uploads/users/" . $doc_attach->user_id . "/" . $doc_attach->name;
+        if(isset($doc_attach)) {
+            
+            $path = "uploads/users/" . $doc_attach->user_id . "/" . $doc_attach->name;
             unlink($path);
 
             $id = $doc_attach->user_id;
-
             $doc = UsersDoc::where('id','=',$docid)->delete();
-
         }
 
-        return redirect()->route('users.myprofile',$user_id)->with('success','Attachment Deleted Successfully.'); 
+        if($type == 'EditProfile') {
+
+            return redirect()->route('users.editprofile',$user_id)->with('success','Attachment Deleted Successfully.'); 
+        }
+
+        if($type == 'MyProfile') {
+
+            return redirect()->route('users.myprofile',$user_id)->with('success','Attachment Deleted Successfully.'); 
+        }
     }
 
     /*public function userLeaveAdd()

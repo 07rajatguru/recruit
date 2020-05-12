@@ -81,7 +81,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('date_of_birth') ? 'has-error' : '' }}">
-                                <strong>Birth Date: </strong>
+                                <strong>Birth Date: <span class = "required_fields">*</span></strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -117,7 +117,7 @@
 
                             @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                 <div class="form-group">
-                                    <strong>UAN No. : </strong>
+                                    <strong>UAN No. : <span class = "required_fields">*</span></strong>
                                     {!! Form::text('uan_no',isset($user['uan_no']) ? $user['uan_no'] : null,array('id'=>'uan_no','placeholder' => 'UAN No.','class' => 'form-control','tabindex' => '19','rows' => '5')) !!}
                                 </div>
                             @endif
@@ -158,12 +158,13 @@
 
                             @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                 <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
-                                    <strong>Designation: </strong>
+                                    <strong>Designation: <span class = "required_fields">*</span> </strong>
                                     {!! Form::text('designation',isset($user['designation']) ? $user['designation'] : null, array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '6','disabled')) !!}
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
-                                    <strong>Joining Date: </strong>
+                                    <strong>Joining Date: <span class = "required_fields">*</span> 
+                                    </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -173,7 +174,8 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_confirmation') ? 'has-error' : '' }}">
-                                    <strong>Confimation Date: </strong>
+                                    <strong>Confimation Date: <span class = "required_fields">*</span>
+                                    </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -183,7 +185,8 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_anniversary') ? 'has-error' : '' }}">
-                                    <strong>Anniversary Date: </strong>
+                                    <strong>Anniversary Date: <span class = "required_fields">*</span> 
+                                    </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -203,12 +206,14 @@
                                 </div>
                             @else
                                 <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
-                                    <strong>Designation: </strong>
+                                    <strong>Designation: <span class = "required_fields">*</span>
+                                    </strong>
                                     {!! Form::text('designation',isset($user['designation']) ? $user['designation'] : null, array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '6','disabled')) !!}
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
-                                    <strong>Joining Date: </strong>
+                                    <strong>Joining Date: <span class = "required_fields">*</span>
+                                    </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -218,7 +223,8 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_confirmation') ? 'has-error' : '' }}">
-                                    <strong>Confimation Date: </strong>
+                                    <strong>Confimation Date: <span class = "required_fields">*</span>
+                                    </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -228,7 +234,8 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_anniversary') ? 'has-error' : '' }}">
-                                    <strong>Anniversary Date: </strong>
+                                    <strong>Anniversary Date: <span class = "required_fields">*</span>
+                                    </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -240,12 +247,12 @@
 
                             <div class="form-group">
                                 <strong>Marital Status:  </strong>
-                                {!! Form::select('marital_status', $maritalStatus,$user['marital_status'], array('id'=>'marital_status','class' => 'form-control', 'tabindex' => '16' )) !!}
+                                {!! Form::select('marital_status', $maritalStatus,isset($user['marital_status']) ? $user['marital_status'] : null,array('id'=>'marital_status','class' => 'form-control', 'tabindex' => '16' )) !!}
                             </div>
 
                              <div class="form-group ">
                                 <strong>Select Gender:</strong>
-                                {!! Form::select('gender', $gender,$user['gender'], array('id'=>'gender','class' => 'form-control', 'tabindex' => '16' )) !!}
+                                {!! Form::select('gender', $gender,isset($user['gender']) ? $user['gender'] : null,array('id'=>'gender','class' => 'form-control', 'tabindex' => '16' )) !!}
                             </div>
 
                             <div class="form-group">
@@ -260,7 +267,7 @@
 
                             @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                 <div class="form-group">
-                                    <strong>ESIC No. : </strong>
+                                    <strong>ESIC No. : <span class = "required_fields">*</span></strong>
                                     {!! Form::text('esic_no',isset($user['esic_no']) ? $user['esic_no'] : null,array('id'=>'esic_no','placeholder' => 'ESIC No.','class' => 'form-control','tabindex' => '20','rows' => '5')) !!}
                                 </div>
                             @endif
@@ -596,22 +603,6 @@
             <div class="box-header with-border col-md-6 ">
                 <h3 class="box-title">Attachment Information</h3>
             </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Upload Documents:</strong>
-                    <input type="file" name="upload_documents[]" multiple class="form-control" />
-                </div>
-            </div>
-        </div>
-    </div> -->
-
- 
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Attachment Information</h3>
-            </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group">
@@ -635,7 +626,174 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div> -->
+    @if(isset($user['doc']) && sizeof($user['doc'])>0)
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Attachments</h3>
+                    &nbsp;&nbsp;
+                    @include('adminlte::users.upload', ['data' => $user, 'name' => 'usersattachments'])  
+                </div>
+
+                <div class="box-header  col-md-8 ">
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th></th>
+                            <th>File Name</th>
+                            <th>Size</th>
+                            <th>Type</th>
+                        </tr>
+                        @foreach($user['doc'] as $key=>$value)
+                            <tr>
+                                <td>
+                                    <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                        &nbsp;
+                                    @include('adminlte::partials.confirm', ['data' => $value,'id'=> $value['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments','type' => 'EditProfile'])
+                                </td>
+                                <td>
+                                    <a target="_blank" href="../{{ $value['url'] }}">{{ $value['name'] }}</a>
+                                </td>
+                                <td>{{ $value['size'] }}</td>
+                                <td>{{ $value['type'] }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+        </div>
+    @else
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Attachment Information</h3>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12" style="border: 1px dotted black;">
+                    <h4>Educational Credentials : </h4><br/>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <strong>Xth (SSC) : </strong>
+                            <input type="file" id="ssc_marksheet" name="ssc_marksheet" class="form-control" tabindex="51" />
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <strong>XIIth (HSC) : </strong>
+                            <input type="file" id="hsc_marksheet" name="hsc_marksheet" class="form-control" tabindex="52"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <strong>University Marks Sheets and Convocation certificate : 
+                            <span class = "required_fields">*</span></strong>
+                            <input type="file" id="university_certificate" name="university_certificate" class="form-control" tabindex="53"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12" style="border: 1px dotted black;margin-top: 15px;">
+                    <h4>Company Credentials of Previous Employment : </h4><br/>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <strong>Offer Letter : </strong>
+                            <input type="file" id="offer_letter" name="offer_letter" class="form-control" tabindex="54"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Appraisal Letter (If Any) : </strong>
+                            <input type="file" id="appraisal_letter" name="appraisal_letter" class="form-control" tabindex="56"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Relieving Letter : </strong>
+                            <input type="file" id="relieving_letter" name="relieving_letter" class="form-control" tabindex="58"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Resignation Letter (Email with Acceptance) : </strong>
+                            <input type="file" id="resignation_letter" name="resignation_letter" class="form-control" tabindex="60"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <strong>Appointment Letter : </strong>
+                            <input type="file" id="appointment_letter" name="appointment_letter" class="form-control" tabindex="55"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Experience Letter : </strong>
+                            <input type="file" id="experience_letter" name="experience_letter" class="form-control" tabindex="57"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Pay Slips - Current Financial Year : </strong>
+                            <input type="file" id="pay_slips" name="pay_slips" class="form-control" tabindex="59"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Form - 26 AS (From Current Company) : </strong>
+                            <input type="file" id="form_26" name="form_26" class="form-control" tabindex="61"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12" style="border: 1px dotted black;margin-top: 15px;">
+                    <h4>Personal Credentials : </h4><br/>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <strong>ID Proof : </strong>
+                            <input type="file" id="id_proof" name="id_proof" class="form-control" tabindex="62"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Passport : </strong>
+                            <input type="file" id="passport" name="passport" class="form-control" tabindex="64"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>PAN Card : <span class = "required_fields">*</span> </strong>
+                            <input type="file" id="pan_card" name="pan_card" class="form-control" tabindex="66"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Cancelled Cheque : <span class = "required_fields">*</span> </strong>
+                            <input type="file" id="cancelled_cheque" name="cancelled_cheque" class="form-control" tabindex="68"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <strong>Address Proof : </strong>
+                            <input type="file" id="address_proof" name="address_proof" class="form-control" tabindex="63"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Aadhar Card : <span class = "required_fields">*</span> </strong>
+                            <input type="file" id="aadhar_card" name="aadhar_card" class="form-control" tabindex="65"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Resume : </strong>
+                            <input type="file" id="resume" name="resume" class="form-control" tabindex="67"/>
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Passport Size Photo : <span class = "required_fields">*</span> </strong>
+                            <input type="file" id="passport_photo" name="passport_photo" class="form-control" tabindex="69"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -652,9 +810,7 @@
 
         jQuery(document).ready(function () {
 
-            //$("#signature").wysihtml5();
-
-            displayDoc();
+            //displayDoc();
 
             $("#users_upload_type").select2();
 
@@ -691,13 +847,16 @@
                     "semail": {
                         required: true,
                     },
-                    "contact": {
+                    "contact_number": {
+                        required: true,
+                    },
+                    "date_of_birth": {
                         required: true,
                     },
                     "bank_name": {
                         required: true,
                     },
-                    "account_no": {
+                    "acc_no": {
                         required: true,
                     },
                     "payment_mode": {
@@ -730,6 +889,36 @@
                     "contact_no_2": {
                         required: true,
                     },
+                    "date_of_joining": {
+                        required: true,
+                    },
+                    "date_of_confirmation": {
+                        required: true,
+                    },
+                    "date_of_anniversary": {
+                        required: true,
+                    },
+                    "uan_no": {
+                        required: true,
+                    },
+                    "esic_no": {
+                        required: true,
+                    },
+                    "university_certificate": {
+                        required: true,
+                    },
+                    "pan_card": {
+                        required: true,
+                    },
+                    "cancelled_cheque": {
+                        required: true,
+                    },
+                    "aadhar_card": {
+                        required: true,
+                    },
+                    "passport_photo": {
+                        required: true,
+                    },
                 },
                 messages: {
                     "name": {
@@ -741,13 +930,16 @@
                     "semail": {
                         required: "Official Gmail is Required.",
                     },
-                    "contact": {
+                    "contact_number": {
                         required: "Personal Contact Number is Required.",
+                    },
+                    "date_of_birth": {
+                        required: "Please Select Birth Date.",
                     },
                     "bank_name": {
                         required: "Bank Name is Required.",
                     },
-                    "account_no": {
+                    "acc_no": {
                         required: "Account Number is Required.",
                     },
                     "payment_mode": {
@@ -780,6 +972,36 @@
                     "contact_no_2": {
                         required: "Contact Number is Required.",
                     },
+                    "date_of_joining": {
+                        required: "Please Select Joining Date.",
+                    },
+                    "date_of_confirmation": {
+                        required: "Please Select Confirmation Date.",
+                    },
+                    "date_of_anniversary": {
+                        required: "Please Select Anniversary Date.",
+                    },
+                    "uan_no": {
+                        required: "UAN Number is Required.",
+                    },
+                    "esic_no": {
+                        required: "ESIC Number is Required.",
+                    },
+                    "university_certificate": {
+                        required: "University Certificate is Required.",
+                    },
+                    "pan_card": {
+                        required: "PAN Card is Required.",
+                    },
+                    "cancelled_cheque": {
+                        required: "Cancelled Cheque is Required.",
+                    },
+                    "aadhar_card": {
+                        required: "Aadhar Card is Required.",
+                    },
+                    "passport_photo": {
+                        required: "Passport Photo is Required.",
+                    },
                 }
             });
 
@@ -798,7 +1020,7 @@
                 autoclose: true,
             });
 
-            $("#date_of_anni").datepicker({
+            $("#date_of_anniversary").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
             });
@@ -823,7 +1045,7 @@
             });
         });
     
-    function displayDoc() {
+    /*function displayDoc() {
 
         var doc_type = $("#users_upload_type").val();
 
@@ -837,7 +1059,7 @@
             $(".multidoc").hide();
             $(".singledoc").show();
         }
-    }
+    }*/
 
     function countTotalSalary() {
 

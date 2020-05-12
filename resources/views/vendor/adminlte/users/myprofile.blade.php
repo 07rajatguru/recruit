@@ -228,7 +228,7 @@
                                     <td>
                                         <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $value['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments'])
+                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $value['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments','type' => 'MyProfile'])
                                     </td>
                                     <td>
                                     <a target="_blank" href="../{{ $value['url'] }}">{{ $value['name'] }}
@@ -245,3 +245,13 @@
         </div>
     </div>
 @endsection
+
+@section('customscripts')
+    <script type="text/javascript">
+
+        jQuery(document).ready(function () {
+
+            $("#users_upload_type").select2();
+        });
+    </script>
+@stop

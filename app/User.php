@@ -29,10 +29,28 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public $users_upload_type = array('Aadhar Card'=>'Aadhar Card',
-        'Pan Card'=>'Pan Card',
-        'Cancel Cheque' => 'Cancel Cheque',
-        'Others' => 'Others');
+    public $users_upload_type = array(
+
+        'SSC Marksheet'=>'SSC Marksheet',
+        'HSC Marksheet'=>'HSC Marksheet',
+        'University Certificate'=>'University Certificate',
+        'Offer Letter'=>'Offer Letter',
+        'Appraisal Letter'=>'Appraisal Letter',
+        'Relieving Letter'=>'Relieving Letter',
+        'Resignation Letter'=>'Resignation Letter',
+        'Appointment Letter'=>'Appointment Letter',
+        'Experience Letter'=>'Experience Letter',
+        'Pay Slips'=>'Pay Slips',
+        'Form - 26'=>'Form - 26',
+        'ID Proof'=>'ID Proof',
+        'Passport'=>'Passport',
+        'PAN Card'=>'PAN Card',
+        'Cancelled Cheque'=>'Cancelled Cheque',
+        'Address Proof'=>'Address Proof',
+        'Aadhar Card'=>'Aadhar Card',
+        'Resume'=>'Resume',
+        'Passport Photo'=>'Passport Photo'
+    );
 
     public static function getUserArray($user_id){
         $users = User::select('*')
