@@ -45,22 +45,22 @@
                         <p style="text-align: justify;">
 
                             <ul style="list-style-type:none;">
-                                <li>Follow us on LinkedIn: <br/>
+                                <li>Follow us on LinkedIn: <br>
                                     <a href="https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/" target="_blank">https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/</a>
-                                </li><br/>
+                                </li><br>
 
-                                <li>Like us on Facebook: <br/>
+                                <li>Like us on Facebook: <br>
                                     <a href="https://www.facebook.com/adlertalentsolutions/" target="_blank">https://www.facebook.com/adlertalentsolutions/</a>
-                                </li><br/>
+                                </li><br>
 
-                                <li>Share Google Reviews: <br/>
+                                <li>Share Google Reviews: <br>
                                     <a href="bit.ly/2W8Qcbf" target="_blank">bit.ly/2W8Qcbf</a>
-                                </li><br/>
+                                </li><br>
                             </ul>
 
-                            <br/>We would appreciate your ratings and reviews on Google based on your experience with our team of professionals which will help us improve.
+                            <br>We would appreciate your ratings and reviews on Google based on your experience with our team of professionals which will help us improve.
 
-                            <br/><br/>For any concern/queries/grievances, feel free to email us on <a href="mailto:info@adlertalent.com">info@adlertalent.com</a>
+                            <br><br>For any concern/queries/grievances, feel free to email us on <a href="mailto:info@adlertalent.com">info@adlertalent.com</a>
                         </p>
                         <p><b>Thanks.</b></p>
                     </td>
