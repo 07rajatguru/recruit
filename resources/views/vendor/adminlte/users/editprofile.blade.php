@@ -52,6 +52,11 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
 
+                            <div class="form-group">
+                                <strong>Employee ID: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('employee_id',isset($user['employee_id']) ? $user['employee_id'] : null,array('id'=>'employee_id','placeholder' => 'Employee ID','class' => 'form-control', 'tabindex' => '1','readonly' => 'true')) !!}
+                            </div>
+
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                                 <strong>Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('name',isset($user['name']) ? $user['name'] : null,array('id'=>'name','placeholder' => 'Name','class' => 'form-control', 'tabindex' => '1','disabled')) !!}
@@ -794,6 +799,9 @@
             </div>
         </div>
     @endif
+
+    <input type="hidden" name="employee_id_increment" id="employee_id_increment" value="{!! $employee_id_increment !!}">
+
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary">Submit</button>

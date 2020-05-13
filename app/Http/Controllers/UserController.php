@@ -655,6 +655,7 @@ class UserController extends Controller
                 // Official email & gmail
                 $user['id'] = $user_id;
                 $user['user_id'] = $user_id;
+                $user['employee_id'] = $user_info->employee_id;
                 $user['name'] = $user_info->name;
                 $user['email'] = $user_info->email;
                 $user['semail'] = $user_info->secondary_email;
@@ -747,7 +748,35 @@ class UserController extends Controller
             $gender = CandidateBasicInfo::getTypeArray();
             $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
 
-            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus'));
+            // Generate Emp ID Incrment Number
+
+            $max_id = UserOthersInfo::find(\DB::table('users_otherinfo')
+                ->max('id'));
+
+            if(isset($max_id->employee_id_increment) && $max_id->employee_id_increment != '') {
+
+                $number = $max_id->employee_id_increment;
+            }
+            else {
+
+                $number = 0;
+            }
+
+            $employee_id_increment = $number + 1;
+
+            if($employee_id_increment < 10) {
+
+                $employee_id_increment = '0' . $employee_id_increment;
+
+            }
+            else {
+
+                $employee_id_increment = $employee_id_increment;
+            }
+
+            //echo $employee_id_increment;exit;
+
+            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus','employee_id_increment'));
         }
         else {
             return view('errors.403');
@@ -801,18 +830,69 @@ class UserController extends Controller
         $performance_bonus = Input::get('performance_bonus');
         $total_salary = Input::get('total_salary');
 
+        // Get Emp ID Increment Number
+
+        $employee_id_increment = Input::get('employee_id_increment');
+
         $user_other_info = UserOthersInfo::getUserOtherInfo($user_id);
 
-        $users_otherinfo_update = UserOthersInfo::find($user_other_info->id);
+        if(isset($user_other_info) && $user_other_info != '') {
+
+            $users_otherinfo_update = UserOthersInfo::find($user_other_info->id);   
+        }
+        else {
+
+            $users_otherinfo_update = new UserOthersInfo();
+            $users_otherinfo_update->user_id = $user_id;
+            $users_otherinfo_update->employee_id_increment = $employee_id_increment;
+
+            // Generate Emp ID
+
+            $join_year = date('y',strtotime($date_of_joining));
+            $next_year =  $join_year + 1;
+            $employee_id = 'ATS' . $join_year . $next_year . $employee_id_increment;
+            $users_otherinfo_update->employee_id = $employee_id;
+        }
+        
        
         $users_otherinfo_update->personal_email = $personal_email;
-        $users_otherinfo_update->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
-        $users_otherinfo_update->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
+
+        if(isset($date_of_birth) && $date_of_birth != '') {
+            $users_otherinfo_update->date_of_birth = $dateClass->changeDMYtoYMD($date_of_birth);
+        }
+        else {
+            $users_otherinfo_update->date_of_birth = NULL;
+        }
+
+        if(isset($date_of_joining) && $date_of_joining != '') {
+            $users_otherinfo_update->date_of_joining = $dateClass->changeDMYtoYMD($date_of_joining);
+        }
+        else {
+            $users_otherinfo_update->date_of_joining = NULL;
+        }
+
+        if(isset($date_of_confirmation) && $date_of_confirmation != '') {
+            $users_otherinfo_update->date_of_confirmation = $dateClass->changeDMYtoYMD($date_of_confirmation);
+        }
+        else {
+            $users_otherinfo_update->date_of_confirmation = NULL;
+        }
+
+        if(isset($date_of_anniversary) && $date_of_anniversary != '') {
+            $users_otherinfo_update->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
+        }
+        else {
+            $users_otherinfo_update->date_of_anniversary = NULL;
+        }
+
+        if(isset($date_of_exit) && $date_of_exit != '') {
+            $users_otherinfo_update->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
+        }
+        else {
+            $users_otherinfo_update->date_of_exit = NULL;
+        }
+
         $users_otherinfo_update->blood_group = $blood_group;
-        $users_otherinfo_update->date_of_confirmation = $dateClass->changeDMYtoYMD($date_of_confirmation);
-        $users_otherinfo_update->contact_number = $contact_number;
-        $users_otherinfo_update->date_of_anniversary = $dateClass->changeDMYtoYMD($date_of_anniversary);
-        $users_otherinfo_update->date_of_exit = $dateClass->changeDMYtoYMD($date_of_exit);
         $users_otherinfo_update->contact_no_official = $contact_no_official;
         $users_otherinfo_update->current_address = $current_address;
         $users_otherinfo_update->permanent_address = $permanent_address;
@@ -1490,8 +1570,6 @@ class UserController extends Controller
             $users_doc->type = $users_upload_type;
             $users_doc->save();
         }
-
-
         return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
     }
 
