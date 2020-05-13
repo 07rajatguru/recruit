@@ -845,11 +845,26 @@ class ReportController extends Controller
         $selected_month = date('F', mktime(0, 0, 0, $month, 10));
         $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
 
-        $mondays  = new \DatePeriod(
-            Carbon::parse("first monday of $selected_month $year"),
-            CarbonInterval::week(),
-            Carbon::parse("first monday of $next_month $year")
-        );
+        if($selected_month == 'December') {
+
+            $next_year = $year + 1;
+
+            $mondays  = new \DatePeriod(
+                Carbon::parse("first monday of $selected_month $year"),
+                CarbonInterval::week(),
+                Carbon::parse("first monday of $next_month $next_year")
+            );
+        }
+        else {
+
+            $mondays  = new \DatePeriod(
+                Carbon::parse("first monday of $selected_month $year"),
+                CarbonInterval::week(),
+                Carbon::parse("first monday of $next_month $year")
+            );
+        }
+
+        //print_r($mondays);exit;
 
         // Get no of weeks in month & get from date & to date
         $i=1;
@@ -922,7 +937,7 @@ class ReportController extends Controller
             $user_bench_mark['after_joining_success_ratio_weekly'] = number_format($user_bench_mark['after_joining_success_ratio_monthly'] / $no_of_weeks);
         }
 
-        // print_r($ratio_array);exit;
+        //print_r($user_bench_mark);exit;
 
         return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }
