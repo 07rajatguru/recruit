@@ -47,15 +47,15 @@
                             <ul style="list-style-type:none;">
                                 <li>Follow us on LinkedIn: <br>
                                     <a href="https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/" target="_blank">https://www.linkedin.com/company/adler-talent-solutions-pvt-ltd/</a>
-                                </li><br>
+                                </li>
 
                                 <li>Like us on Facebook: <br>
                                     <a href="https://www.facebook.com/adlertalentsolutions/" target="_blank">https://www.facebook.com/adlertalentsolutions/</a>
-                                </li><br>
+                                </li>
 
                                 <li>Share Google Reviews: <br>
                                     <a href="bit.ly/2W8Qcbf" target="_blank">bit.ly/2W8Qcbf</a>
-                                </li><br>
+                                </li>
                             </ul>
 
                             <br>We would appreciate your ratings and reviews on Google based on your experience with our team of professionals which will help us improve.
