@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\PassiveClientListRemider',
         'App\Console\Commands\CandidateAutoScript',
         'App\Console\Commands\ExistCandidateAutoScript',
+        'App\Console\Commands\GenerateEmployeeID',
     ];
 
     /**

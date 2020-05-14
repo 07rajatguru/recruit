@@ -780,4 +780,42 @@ class User extends Authenticatable
         }
         return $userArr;
     }
+
+    public static function getAllUsersByJoiningDate(){
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $super_array = array($superadmin);
+
+        $it_type = array('it');
+        $client_type = array('client');
+
+        $user_query = User::query();
+        $user_query = $user_query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+
+        $user_query = $user_query->whereNotIn('users.type',$it_type);
+        $user_query = $user_query->whereNotIn('users.type',$client_type);
+
+        $user_query = $user_query->whereNotIn('users.id',$super_array);
+        
+        $user_query = $user_query->orderBy('users_otherinfo.date_of_joining','ASC');
+
+        $user_query = $user_query->select('users.id as id', 'users.name as name','users_otherinfo.date_of_joining as date_of_joining');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+        $i=0;
+
+        if(isset($users) && sizeof($users)){
+
+            foreach ($users as $user) {
+
+                $userArr[$i]['id'] = $user->id;
+                $userArr[$i]['name'] = $user->name;
+                $userArr[$i]['date_of_joining'] = $user->date_of_joining;
+                $i++;
+            }
+        }
+        return $userArr;
+    }
 }

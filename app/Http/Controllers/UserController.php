@@ -848,13 +848,15 @@ class UserController extends Controller
 
             // Generate Emp ID
 
-            $join_year = date('y',strtotime($date_of_joining));
-            $next_year =  $join_year + 1;
-            $employee_id = 'ATS' . $join_year . $next_year . $employee_id_increment;
-            $users_otherinfo_update->employee_id = $employee_id;
+            if(isset($date_of_joining) && $date_of_joining != '') {
+
+                $join_year = date('y',strtotime($date_of_joining));
+                $next_year =  $join_year + 1;
+                $employee_id = 'ATS' . $join_year . $next_year . $employee_id_increment;
+                $users_otherinfo_update->employee_id = $employee_id;
+            }
         }
         
-       
         $users_otherinfo_update->personal_email = $personal_email;
 
         if(isset($date_of_birth) && $date_of_birth != '') {
