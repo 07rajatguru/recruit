@@ -67,8 +67,11 @@
 
                             <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                                 <strong>Mobile Number: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '3' )) !!}
-                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','placeholder' => 'Mobile Number','class' => 'form-control' )) !!}
+
+                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '3','maxLength' => '10')) !!}
+
+                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id', 'placeholder' => 'Mobile Number','class' => 'form-control')) !!}
+                                
                                 @if ($errors->has('mobile'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('mobile') }}</strong>
@@ -78,7 +81,7 @@
 
                             <div class="form-group">
                                 <strong>Other Number:</strong>
-                                {!! Form::text('phone', null, array('id'=>'phone','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '5'  )) !!}
+                                {!! Form::text('phone', null, array('id'=>'phone','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '5','maxLength' => '10')) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
@@ -109,7 +112,7 @@
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', '', 'tabindex' => '2' )) !!}
+                                {!! Form::email('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', '', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>

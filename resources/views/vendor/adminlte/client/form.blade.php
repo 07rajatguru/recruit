@@ -73,8 +73,8 @@
 
                         <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Contact Number','class' => 'form-control', 'tabindex' => '6'  )) !!}
-                            {!! Form::hidden('client_id', null, array('id'=>'client_id','placeholder' => 'Contact Number','class' => 'form-control' )) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Contact Number','class' => 'form-control', 'tabindex' => '6','maxLength' => '10')) !!}
+                            {!! Form::hidden('client_id', null, array('id'=>'client_id','placeholder' => 'Contact Number','class' => 'form-control')) !!}
                             @if ($errors->has('mobile'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('mobile') }}</strong>
@@ -84,7 +84,7 @@
 
                         <div class="form-group {{ $errors->has('other_number') ? 'has-error' : '' }}">
                             <strong>Other Number:</strong>
-                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8'  )) !!}
+                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8','maxLength' => '10')) !!}
                             @if ($errors->has('other_number'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('other_number') }}</strong>
@@ -276,7 +276,7 @@
                     
                             <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7' )) !!}
                                 @if ($errors->has('mail'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('mail') }}</strong>
@@ -286,7 +286,7 @@
 
                             <div class="form-group {{ $errors->has('s_mail') ? 'has-error' : '' }}">
                                 <strong>Secondary Email: </strong>
-                                {!! Form::text('s_email', null, array('id'=>'s_email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '9' )) !!}
+                                {!! Form::email('s_email', null, array('id'=>'s_email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '9' )) !!}
                                 @if ($errors->has('s_email'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('s_email') }}</strong>

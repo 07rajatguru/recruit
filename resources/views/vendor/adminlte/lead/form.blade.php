@@ -76,12 +76,12 @@
                 
                             <div class="form-group">
                                 <strong>Email: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
+                                {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
                             </div>
                        
                             <div class="form-group">
                                 <strong>Mobile: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5')) !!}
+                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10')) !!}
                            </div>
                      
                             <div class="form-group">
@@ -108,12 +108,12 @@
                     
                             <div class="form-group">
                                 <strong>Secondary Email:</strong>
-                                {!! Form::text('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4')) !!}
+                                {!! Form::email('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4')) !!}
                             </div>
                         
                             <div class="form-group">
                                 <strong>Other number:</strong>
-                                {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6')) !!}
+                                {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10')) !!}
                             </div>
                         
 
