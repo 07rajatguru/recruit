@@ -67,7 +67,7 @@
                                 @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                     {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '2')) !!}
                                 @else
-                                    {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','disabled','tabindex' => '2')) !!}
+                                    {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '2','readonly' => 'true')) !!}
                                 @endif
                             </div>
 
@@ -76,7 +76,7 @@
                                 @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
                                     {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null, array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @else
-                                    {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null,array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control','disabled','tabindex' => '3' )) !!}
+                                    {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null,array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control','tabindex' => '3','readonly' => 'true')) !!}
                                 @endif
                             </div>
 

@@ -46,7 +46,7 @@ class GenerateEmployeeID extends Command
 
             foreach ($users as $key => $value) {
                 
-                if($value['date_of_joining']!= '') {
+                if($value['date_of_joining'] != '') {
 
                     $user_id = $value['id'];
                     $join_year = date('y',strtotime($value['date_of_joining']));
@@ -63,12 +63,12 @@ class GenerateEmployeeID extends Command
                     \DB::statement("UPDATE users_otherinfo SET `employee_id`='$employee_id' where `user_id` = '$user_id'");
 
                     \DB::statement("UPDATE users_otherinfo SET `employee_id_increment`='$employee_id_increment' where `user_id` = '$user_id'");
-                }
 
-                $employee_id_increment = $employee_id_increment + 1;
+                    $employee_id_increment = $employee_id_increment + 1;
+
+                    echo $user_id . " - " . $employee_id . "\n";
+                }
             }
         }
-
-        echo "complte";exit;
     }
 }

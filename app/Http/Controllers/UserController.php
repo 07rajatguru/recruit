@@ -652,7 +652,7 @@ class UserController extends Controller
 
             if(isset($user_info) && $user_info != ''){
 
-                // Official email & gmail
+                // Official email & gmail & designation
                 $user['id'] = $user_id;
                 $user['user_id'] = $user_id;
                 $user['employee_id'] = $user_info->employee_id;
