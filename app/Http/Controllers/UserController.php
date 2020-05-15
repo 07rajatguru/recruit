@@ -787,6 +787,14 @@ class UserController extends Controller
     {
         $dateClass = new Date();
 
+        $users =  \Auth::user();
+        $loggedin_user_id = $users->id;
+        $userRole = $users->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
         //  Update in main table
         $user_basic_info = User::find($user_id);
 
@@ -844,16 +852,21 @@ class UserController extends Controller
 
             $users_otherinfo_update = new UserOthersInfo();
             $users_otherinfo_update->user_id = $user_id;
-            $users_otherinfo_update->employee_id_increment = $employee_id_increment;
 
-            // Generate Emp ID
+            if($isSuperAdmin){
 
-            if(isset($date_of_joining) && $date_of_joining != '') {
+            }
+            else {
+                // Generate Emp ID
 
-                $join_year = date('y',strtotime($date_of_joining));
-                $next_year =  $join_year + 1;
-                $employee_id = 'ATS' . $join_year . $next_year . $employee_id_increment;
-                $users_otherinfo_update->employee_id = $employee_id;
+                if(isset($date_of_joining) && $date_of_joining != '') {
+
+                    $users_otherinfo_update->employee_id_increment = $employee_id_increment;
+                    $join_year = date('y',strtotime($date_of_joining));
+                    $next_year =  $join_year + 1;
+                    $employee_id = 'ATS' . $join_year . $next_year . $employee_id_increment;
+                    $users_otherinfo_update->employee_id = $employee_id;
+                }
             }
         }
         
