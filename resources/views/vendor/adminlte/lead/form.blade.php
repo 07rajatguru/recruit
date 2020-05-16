@@ -194,7 +194,7 @@
      </div>
 
     <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        {!! Form::submit(isset($lead) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
     </div>
 </div>
     {!! Form::close() !!}

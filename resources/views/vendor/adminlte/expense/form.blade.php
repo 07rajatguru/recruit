@@ -308,7 +308,7 @@
     <div class="form-group">
         <div class="col-sm-2">&nbsp;</div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            {!! Form::submit(isset($expense) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+            {!! Form::submit(isset($expense) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
         </div>
     </div>
 

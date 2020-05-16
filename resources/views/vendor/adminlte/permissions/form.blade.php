@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -10,12 +18,9 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('permission.index') }}"> Back</a>
         </div>
-
     </div>
-
 </div>
 
-@if(isset($action))
     @if($action == 'edit')
         {!! Form::model($permission,['method' => 'PUT', 'files' => true, 'route' => ['permission.update', $permission['id']],'class'=>'form-horizontal','id'=>'permissionForm']) !!}
         {!! Form::hidden('permission_id', $permission['id'], array('id'=>'permission_id')) !!}
@@ -65,27 +70,15 @@
 
                     </div>
                 </div>
-
                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    {!! Form::submit(isset($permission) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
                 </div>
             </div>
-
         </div>
     </div>
 
     {!! Form::close() !!}
-@else
 
-    <div class="error-page">
-        <h2 class="headline text-info"> 403</h2>
-        <div class="error-content">
-            <h3><i class="fa fa-warning text-yellow"></i> Whoops, looks like something went wrong.</h3>
-
-        </div><!-- /.error-content -->
-    </div>
-
-@endif
 
 @section('customscripts')
     <script>

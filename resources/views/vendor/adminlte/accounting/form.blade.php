@@ -10,9 +10,7 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('accounting.index') }}"> Back</a>
         </div>
-
     </div>
-
 </div>
 
 @if( $action == 'edit')
@@ -29,7 +27,6 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="">
-
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         <strong>Accounting Name: <span class = "required_fields">*</span></strong>
                         {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Accounting Name','tabindex' => '1','class' => 'form-control','required' )) !!}
@@ -41,24 +38,20 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
-                                <strong>Description:<span class = "required_fields">*</span></strong>
-                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '2','required' )) !!}
-                                @if ($errors->has('description'))
-                                    <span class="help-block">
+                        <strong>Description:<span class = "required_fields">*</span></strong>
+                        {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '2','required' )) !!}
+                        @if ($errors->has('description'))
+                            <span class="help-block">
                                 <strong>{{ $errors->first('description') }}</strong>
-                                </span>
-                                @endif
+                            </span>
+                        @endif
                     </div>
-
-                   
                 </div>
             </div>
-                        
-                      <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                {!! Form::submit(isset($accounting) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
             </div>
         </div>
-
     </div>
 </div>
 

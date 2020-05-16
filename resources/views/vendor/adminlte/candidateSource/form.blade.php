@@ -15,7 +15,7 @@
 
 
 @if($action == 'edit')
-    {!! Form::model($candidateSource,['method' => 'PUT', 'files' => true, 'route' => ['candidateSource.update', $candidateSource['id']],'class'=>'form-horizontal','id'=>'candidate_source_form', 'novalidate'=>'novalidate']) !!}
+    {!! Form::model($candidateSource,['method' => 'PATCH', 'files' => true, 'route' => ['candidateSource.update', $candidateSource['id']],'class'=>'form-horizontal','id'=>'candidate_source_form', 'novalidate'=>'novalidate']) !!}
     {!! Form::hidden('candidateSourceId', $candidateSource['id'], array('id'=>'candidateSourceId')) !!}
 @else
     {!! Form::open(['files' => true, 'route' => 'candidateSource.store','class'=>'form-horizontal','id'=>'candidate_source_form', 'novalidate'=>'novalidate']) !!}
@@ -45,10 +45,9 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    {!! Form::submit(isset($candidateSource) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
                 </div>
             </div>
-
         </div>
     </div>
 

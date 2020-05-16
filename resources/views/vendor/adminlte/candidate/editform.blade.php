@@ -419,7 +419,7 @@
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-bottom: 20px;">
-                {!! Form::submit(isset($candidate) ? 'Update' : 'SUBMIT', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate','style="font-size:18px;"' ]) !!}
+                {!! Form::submit(isset($candidate) ? 'Update' : 'SUBMIT', ['class' => 'btn btn-primary','style="font-size:18px;"' ]) !!}
             </div>
         </div>
     </div>

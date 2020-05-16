@@ -357,7 +357,7 @@
             </div>
             @endif
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                {!! Form::submit(isset($bnm) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
             </div>
         </div>
     </div>

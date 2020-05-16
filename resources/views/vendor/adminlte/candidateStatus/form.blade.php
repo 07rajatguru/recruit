@@ -25,7 +25,7 @@
 
 @if(isset($action))
     @if($action == 'edit')
-        {!! Form::model($candidateStatus,['method' => 'PUT', 'files' => true, 'route' => ['candidateStatus.update', $candidateStatus['id']],'class'=>'form-horizontal','id'=>'candidate_status_form', 'novalidate'=>'novalidate']) !!}
+        {!! Form::model($candidateStatus,['method' => 'PATCH', 'files' => true, 'route' => ['candidateStatus.update', $candidateStatus['id']],'class'=>'form-horizontal','id'=>'candidate_status_form', 'novalidate'=>'novalidate']) !!}
         {!! Form::hidden('candidateStatusId', $candidateStatus['id'], array('id'=>'candidateStatusId')) !!}
     @else
         {!! Form::open(['files' => true, 'route' => 'candidateStatus.store','class'=>'form-horizontal','id'=>'candidate_status_form', 'novalidate'=>'novalidate']) !!}
@@ -59,7 +59,7 @@
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                {!! Form::submit(isset($candidateStatus) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+                {!! Form::submit(isset($candidateStatus) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
             </div>
         </div>
 
