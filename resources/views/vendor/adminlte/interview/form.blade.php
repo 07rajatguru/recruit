@@ -295,7 +295,7 @@
                 }
             });
 
-           // $("#about").wysihtml5();
+            $("#about").wysihtml5();
             $("#from").datetimepicker({
                 format:'DD-MM-YYYY h:mm A'
             });
