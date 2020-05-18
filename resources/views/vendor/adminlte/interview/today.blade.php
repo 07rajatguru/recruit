@@ -55,15 +55,14 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th width="80px">Action</th>
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
-               {{-- <th>Client</th>--}}
                 <th>Interview Date</th>
                 <th>Location</th>
                 <th>Status</th>
                 <th>Candidate Owner</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -82,20 +81,24 @@
          ?>
             <tr>
                 <td>{{ ++$i }}</td>
+
+                <td>
+                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
+                    
+                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($interView['id'],'index')) }}"></a>
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteInterview', ['data' => $interView, 'name' => 'interview','display_name'=>'Interview'])
+                    @endif
+                </td>
+
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView['client_name'] }} - {{ $interView['posting_title'] }} , {{$interView['city']}}</td>
                 <td>{{ $interView['candidate_fname'] }}</td>
                 <td>{{ $interView['contact'] }}</td>
-             {{--   <td>{{ $interView['client_name'] or ''}}</td>--}}
                 <td data-th="Lastrun" data-order="{{$interView['interview_date_ts']}}">{{ date('d-m-Y h:i A',strtotime($interView['interview_date'])) }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView['location'] or ''}}</td>
                 <td>{{ $interView['status'] or '' }}</td>
                 <td>{{ $interView['candidate_owner'] }}</td>
-                <td>
-                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
-                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($interView['id'],'index')) }}"></a>
-                    @include('adminlte::partials.deleteInterview', ['data' => $interView, 'name' => 'interview','display_name'=>'Interview'])
-                </td>
-
             </tr>
         @endforeach
         </tbody>

@@ -45,17 +45,17 @@
 
     @endif
 
-     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="tt_interview_table">
+     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="attended_interview_table">
         <thead>
             <tr>
                 <th>No</th>
+                <th width="80px">Action</th>
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
                 <th>Interview Date</th>
                 <th>Location</th>
                 <th>Status</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -76,18 +76,22 @@
 
         <tr>
                 <td>{{ ++$i }}</td>
+
+                <td>
+                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$attendedinterview['id']) }}"></a>
+                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($attendedinterview['id'],'ai')) }}"></a>
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteInterview', ['data' => $attendedinterview, 'name' => 'interview','display_name'=>'Interview'])
+                    @endif
+                </td>
+
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , {{$attendedinterview['city']}}</td>
                 <td>{{ $attendedinterview['candidate_fname'] }}</td>
                 <td>{{ $attendedinterview['contact'] }}</td>
                 <td>{{ date('d-m-Y h:i A',strtotime($attendedinterview['interview_date'])) }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $attendedinterview['location'] or ''}}</td>
                 <td>{{ $attendedinterview['status'] }}</td>
-                <td>
-                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$attendedinterview['id']) }}"></a>
-                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($attendedinterview['id'],'ai')) }}"></a>
-                    @include('adminlte::partials.deleteInterview', ['data' => $attendedinterview, 'name' => 'interview','display_name'=>'Interview'])
-                </td>
-
             </tr>
         @endforeach
         </tbody>
@@ -102,11 +106,11 @@
                 autoclose: true
             });
 
-            var table = jQuery('#tt_interview_table').DataTable( {
+            var table = jQuery('#attended_interview_table').DataTable( {
                 responsive: true,
-                 "pageLength": 50,
-
-            } );
+                "pageLength": 50,
+            });
+            
             new jQuery.fn.dataTable.FixedHeader( table );
         });
     </script>

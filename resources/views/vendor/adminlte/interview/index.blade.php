@@ -53,11 +53,9 @@
                 <th>No</th>
                 <th>{{ Form::checkbox('interview[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
-                {{--<th>Interview Name</th>--}}
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
-               {{-- <th>Client</th>--}}
                 <th>Interview Date</th>
                 <th>Location</th>
                 <th>Status</th>
@@ -65,6 +63,7 @@
             </tr>
         </thead>
         <?php $i=0; ?>
+
         {{--<tbody>
         @foreach ($interViews as $interView)
         
@@ -85,7 +84,7 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView['client_name'] }} - {{ $interView['posting_title'] }} , {{$interView['city']}}</td>
                 <td>{{ $interView['candidate_fname'] }}</td>
                 <td>{{ $interView['contact'] }}</td>
-             {{--   <td>{{ $interView['client_name'] or ''}}</td>
+                <td>{{ $interView['client_name'] or ''}}</td>
                 <td data-th="Lastrun" data-order="{{$interView['interview_date_ts']}}">{{ date('d-m-Y h:i A',strtotime($interView['interview_date'])) }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView['location'] or ''}}</td>
                 <td>{{ $interView['status'] or '' }}</td>
@@ -114,7 +113,7 @@
             </div>
             <input type="hidden" name="inter_ids" id="inter_ids" value="">
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="submit" class="btn btn-primary" id="yes-btn">Send</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
             {!! Form::close() !!}
@@ -131,14 +130,6 @@
                 format: "dd-mm-yyyy",
                 autoclose: true
             });
-
-            /*var table = jQuery('#interview_table').DataTable( {
-                responsive: true,
-                stateSave : true,
-                "pageLength": 50,
-
-            } );
-            new jQuery.fn.dataTable.FixedHeader( table );*/
 
             $("#interview_table").dataTable({
                 'bProcessing' : true,
@@ -204,25 +195,14 @@
                     $(".interview-mail").show();
                     if (msg.success == 'success') {
                         $(".check-id").append(msg.mail);
+                        document.getElementById("yes-btn").disabled = false;
                     }
                     else{
                         $(".check-id").append(msg.err);
+                        document.getElementById("yes-btn").disabled = true;
                     }
                 }
             });
         }
-
-        /*function multipleMail(){
-            var token = $('input[name="csrf_token"]').val();
-            var interview_ids = new Array();
-
-            $("input:checkbox[name=interview_ids]:checked").each(function(){
-                interview_ids.push($(this).val());
-            });
-            //alert(interview_ids);
-
-            $(".interview-mail").show();
-            $("#inter_ids").val(interview_ids);
-        }*/
     </script>
 @endsection

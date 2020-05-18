@@ -18,7 +18,6 @@ use App\Notifications;
 
 class InterviewController extends Controller
 {
-    //
     public function index(){
 
         $user = \Auth::user();
@@ -28,21 +27,21 @@ class InterviewController extends Controller
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
+
         if(in_array($user_role_id,$access_roles_id)){
-            $interViews = Interview::getAllInterviews(1,$user->id);
+            $count = Interview::getAllInterviewsCountByAjax(1,$user->id,'');
         }
         else{
-            $interViews = Interview::getAllInterviews(0,$user->id);
+            $count = Interview::getAllInterviewsCountByAjax(0,$user->id,'');
         }
-
-        $count = sizeof($interViews);
 
         $source = 'index';
 
-        return view('adminlte::interview.index', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.index', compact('count','source'));
     }
 
     public static function getInterviewOrderColumnName($order){
+
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
             if ($order == 0) {
@@ -86,8 +85,12 @@ class InterviewController extends Controller
         $order_column_name = self::getInterviewOrderColumnName($order);
 
         $source = 'index';
+
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -101,7 +104,7 @@ class InterviewController extends Controller
             $interViews = Interview::getAllInterviewsByAjax(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
             $count = Interview::getAllInterviewsCountByAjax(0,$user->id,$search);
         }
-        //print_r($interViews);exit;
+        
         $interview = array();
         $i = 0;$j = 0;
         foreach ($interViews as $key => $value) {
@@ -125,9 +128,11 @@ class InterviewController extends Controller
             $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
 
-            $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
-            $delete = $delete_view->render();
-            $action .= $delete;
+            if ($isSuperAdmin) {
+                $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
 
             $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$color);
             $interview[$i] = $data;
@@ -151,22 +156,25 @@ class InterviewController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
         }
         else{
-            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
         }
 
         $count = sizeof($interViews);
 
         $source = 'Todays';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source','isSuperAdmin'));
     }
 
     // Tomorrow Interview Page
@@ -176,22 +184,25 @@ class InterviewController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
         }
         else{
-            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
         }
 
         $count = sizeof($interViews);
 
         $source = 'Tomorrows';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source','isSuperAdmin'));
     }
 
     // This Week Interview Page
@@ -201,22 +212,25 @@ class InterviewController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
         }
         else{
-            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
         }
 
         $count = sizeof($interViews);
 
         $source = 'This Week';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source','isSuperAdmin'));
     }
 
     // Upcoming/Previous Interview Page
@@ -226,28 +240,34 @@ class InterviewController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $interViews = Interview::getInterviewsByTime(1,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
         }
         else{
-            $interViews = Interview::getInterviewsByTime(0,$user->id,$time);
+            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
         }
 
         $count = sizeof($interViews);
 
         $source = 'Upcoming & Previous';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source','isSuperAdmin'));
     }
 
     public function todaytomorrow(){
 
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -264,13 +284,16 @@ class InterviewController extends Controller
 
         $source = 'tti';
 
-        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source'));
+        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source','isSuperAdmin'));
     }
 
     public function attendedinterview($month,$year){
 
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -287,7 +310,7 @@ class InterviewController extends Controller
 
         $source = 'ai';
 
-        return view('adminlte::interview.attendedinterview',compact('count','attended_interview','source'));
+        return view('adminlte::interview.attendedinterview',compact('count','attended_interview','source','isSuperAdmin'));
     }
 
     public function create(){
@@ -305,24 +328,6 @@ class InterviewController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-       /* $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
-            // get all clients
-            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
-        }
-        else{
-            // get logged in user clients
-            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
-        }
-
-        $client = array();
-
-        if (sizeof($client_res) > 0) {
-            foreach ($client_res as $r) {
-                $client[$r->id] = $r->name." - ".$r->coordinator_name;
-            }
-        }*/
-
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllJobs(1,$user_id);
@@ -337,14 +342,10 @@ class InterviewController extends Controller
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
         }
 
-
         $viewVariable = array();
-        //$viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
         $viewVariable['interviewer_id'] = $user_id;
         $viewVariable['hidden_candidate_id'] = 0;
-     //   $viewVariable['client'] = $client;
         $viewVariable['postingArray'] = $jobopen;
-        //$viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
@@ -363,10 +364,9 @@ class InterviewController extends Controller
         $dateClass = new Date();
 
         $data = array();
-       // $data['interview_name'] = $request->get('interview_name');
+       
         $data['candidate_id'] = $request->get('candidate_id');
         $data['interviewer_id'] = $request->get('interviewer_id');
-       // $data['client'] = $request->get('client_id');
         $data['interview_date'] = $dateClass->changeDMYHMStoYMDHMS($request->get('interview_date'));
         $data['location'] = $request->get('location');
         $data['comments'] = $request->get('comments');
@@ -421,7 +421,6 @@ class InterviewController extends Controller
         $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
 
         return redirect()->route('interview.index')->with('success','Interview Created Successfully');
-
     }
 
     public function edit($id,$source){
@@ -462,7 +461,6 @@ class InterviewController extends Controller
         $viewVariable['interviewer_id'] = $interview->interviewer_id;
         $viewVariable['hidden_candidate_id'] = $interview->candidate_id;
         $viewVariable['candidate'] = CandidateBasicInfo::getCandidateArray();
-      //  $viewVariable['client'] = $client;
         $viewVariable['postingArray'] = $jobopen;
         $viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
@@ -476,10 +474,10 @@ class InterviewController extends Controller
         $viewVariable['interview_round'] = $interview_round;
 
         return view('adminlte::interview.edit', $viewVariable,compact('user_id','source'));
-
     }
 
     public function update(Request $request, $id, $source){
+
         $user = \Auth::user();
 
         $user_id = $user->id;
@@ -487,12 +485,9 @@ class InterviewController extends Controller
 
         $dateClass = new Date();
 
-        //$interview_name = $request->get('interview_name');
         $candidate_id = $request->get('candidate_id');
         $interviewer = $request->get('interviewer_id');
-      //  $client = $request->get('client_id');
         $interview_date = $dateClass->changeDMYHMStoYMDHMS($request->get('interview_date'));
-        //$to = $dateClass->changeYMDHMStoDMYHMS($request->get('to'));
         $location = $request->get('location');
         $comments = $request->get('comments');
         $posting_title = $request->get('posting_title');
@@ -509,8 +504,7 @@ class InterviewController extends Controller
 
         $interview = Interview::find($id);
         $pre_round = $interview->select_round;
-       // if(isset($interview_name))
-        //    $interview->interview_name = $interview_name;
+      
         if(isset($candidate_id))
             $interview->candidate_id = $candidate_id;
         if(isset($posting_title))
@@ -558,16 +552,12 @@ class InterviewController extends Controller
             $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
         }
 
-        if ($source == 'index') {
-            return redirect()->route('interview.index')->with('success','Interview Updated Successfully');
-        }
-        else if ($source == 'tti') {
-            return redirect()->route('interview.todaytomorrow')->with('success','Interview Updated Successfully');
+        if ($source == 'tti') {
+            return redirect()->route('interview.todaytomorrow')->with('success','Interview Updated Successfully.');
         }
         else {
-            return redirect()->route('interview.attendedinterview')->with('success','Interview Updated Successfully');
+            return redirect()->route('interview.index')->with('success','Interview Updated Successfully.');
         }
-
     }
 
     public function show($id){
@@ -594,10 +584,8 @@ class InterviewController extends Controller
         
         $interview = array();
         $interview['id'] = $id;
-       // $interview['interview_name'] = $interviewDetails->interview_name;
         $interview['candidate'] = $interviewDetails->candidate_name;
         $interview['contact'] = $interviewDetails->contact;
-      //  $interview['client'] = $interviewDetails->client_name;
         $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.",".$interviewDetails->city;
         $interview['interviewer'] = $interviewDetails->interviewer_name;
         $interview['type'] = $interviewDetails->type;
@@ -638,13 +626,30 @@ class InterviewController extends Controller
         $interviewDelete = Interview::where('id',$id)->delete();
 
         if ($source == 'index') {
-            return redirect()->route('interview.index')->with('success','Interview Deleted Successfully');
+            return redirect()->route('interview.index')->with('success','Interview Deleted Successfully.');
         }
         else if ($source == 'tti') {
-            return redirect()->route('interview.todaytomorrow')->with('success','Interview Deleted Successfully');
+            return redirect()->route('interview.todaytomorrow')->with('success','Interview Deleted Successfully.');
+        }
+        else if($source == 'Upcoming & Previous') {
+
+            return redirect()->route('interview.upcomingprevious')->with('success','Interview Deleted Successfully.');
+        }
+        else if($source == 'This Week') {
+
+            return redirect()->route('interview.thisweek')->with('success','Interview Deleted Successfully.');
+        }
+        else if($source == 'Tomorrows') {
+
+            return redirect()->route('interview.tomorrow')->with('success','Interview Deleted Successfully.');
+        }
+        else if($source == 'Todays') {
+
+            return redirect()->route('interview.today')->with('success','Interview Deleted Successfully.');
         }
         else {
-            return redirect()->route('interview.attendedinterview')->with('success','Interview Deleted Successfully');
+
+            return redirect()->route('interview.index')->with('success','Interview Deleted Successfully.');
         }
     }
 
@@ -656,7 +661,6 @@ class InterviewController extends Controller
         $client = ClientBasicinfo::getClientAboutByJobId($job_id);
 
         echo json_encode($client);exit;
-
     }
 
     // For check wherther interview selected for multiple mail or not
@@ -675,7 +679,7 @@ class InterviewController extends Controller
             $msg['mail'] = $html;
         }
         else{
-            $msg['err'] = '<b>Please select interview</b>';
+            $msg['err'] = '<b>Please Select Interview</b>';
             $msg['msg'] = "fail";
         }
 
@@ -720,8 +724,6 @@ class InterviewController extends Controller
         $input['app_url'] = $app_url;
         $input['interview_details'] = $interview;
         $input['subject'] = $subject;
-        // $input['company_name'] = $job_details['company_name'];
-        // $input['city'] = $job_details['city'];
 
         \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
@@ -730,5 +732,4 @@ class InterviewController extends Controller
 
         return redirect('/interview');
     }
-
 }

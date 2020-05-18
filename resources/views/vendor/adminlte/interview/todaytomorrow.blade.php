@@ -41,13 +41,13 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th width="80px">Action</th>
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
                 <th>Interview Date</th>
                 <th>Location</th>
                 <th>Status</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -63,17 +63,22 @@
 
         	<tr>
                 <td>{{ ++$i }}</td>
+
+                <td>
+                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$todaytomorrows['id']) }}"></a>
+                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($todaytomorrows['id'],'tti')) }}"></a>
+
+                    @if($isSuperAdmin)
+                        @include('adminlte::partials.deleteInterview', ['data' => $todaytomorrows, 'name' => 'interview','display_name'=>'Interview'])
+                    @endif
+                </td>
+
                 <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $todaytomorrows['client_name'] }} - {{ $todaytomorrows['posting_title'] }} , {{$todaytomorrows['city']}}</td>
                 <td>{{ $todaytomorrows['candidate_fname'] }}</td>
                 <td>{{ $todaytomorrows['contact'] }}</td>
                 <td>{{ date('d-m-Y h:i A',strtotime($todaytomorrows['interview_date'])) }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $todaytomorrows['location'] or ''}}</td>
                 <td>{{ $todaytomorrows['status'] }}</td>
-                <td>
-                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$todaytomorrows['id']) }}"></a>
-                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($todaytomorrows['id'],'tti')) }}"></a>
-                    @include('adminlte::partials.deleteInterview', ['data' => $todaytomorrows, 'name' => 'interview','display_name'=>'Interview'])
-                </td>
 
             </tr>
         @endforeach

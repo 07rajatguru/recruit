@@ -1239,7 +1239,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:interview-list']
     ]);
 
-
     Route::get('interview/create', [
         'as' => 'interview.create',
         'uses' => 'InterviewController@create',
