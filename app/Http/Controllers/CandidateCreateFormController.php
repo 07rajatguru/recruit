@@ -22,8 +22,6 @@ class CandidateCreateFormController extends Controller
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
-        //$candidateSource = CandidateBasicInfo::getCandidateSourceArray();
-        //$candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
         $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
         $educationqualification = EducationQualification::getAllEducationQualifications();
         $specializations = EducationSpecialization::getAllSpecializations();
@@ -31,8 +29,6 @@ class CandidateCreateFormController extends Controller
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
-        //$viewVariable['candidateSource'] = $candidateSource;
-        //$viewVariable['candidateStatus'] = $candidateStatus;
         $viewVariable['emailDisabled'] = '';
         $viewVariable['action'] = 'add';
         $viewVariable['functionalRoles'] = $functionalRoles;
@@ -44,16 +40,13 @@ class CandidateCreateFormController extends Controller
 
     public function storef(Request $request){
 
-        //$super_admin_user_id = getenv('SUPERADMINUSERID');
         $owner_id = getenv('RECRUITMENTCONSULTANTUSERID');
 
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
         $candiateFname = $request->input('fname');
-       // $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
-     //   $candiateFAX = $request->input('fax');
         $candiateStreet1 = $request->input('street1');
         $candiateStreet2 = $request->input('street2');
         $candiateCity = $request->input('city');
@@ -71,8 +64,6 @@ class CandidateCreateFormController extends Controller
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        //$candiateStatus = $request->input('candidateStatus');
-        //$candidateSource = $request->input('candidateSource');
 
         $functional_roles_id = $request->input('functional_roles_id');
         $educational_qualification_id = $request->input('educational_qualification_id');
@@ -90,9 +81,6 @@ class CandidateCreateFormController extends Controller
         if(isset($candiateFname)){
             $candidate->full_name = $candiateFname;
         }
-       /* if(isset($candiateLname)){
-            $candidate->lname = $candiateLname;
-        }*/
         if(isset($candidateEmail)){
             $candidate->email = $candidateEmail;
         }
@@ -102,9 +90,6 @@ class CandidateCreateFormController extends Controller
         if(isset($candiatePhone)){
             $candidate->phone = $candiatePhone;
         }
-        /*if(isset($candiateFAX)){
-            $candidate->fax = $candiateFAX;
-        }*/
         if(isset($candiateStreet1)){
             $candidate->street1 = $candiateStreet1;
         }
@@ -167,30 +152,20 @@ class CandidateCreateFormController extends Controller
             if(isset($candiateSkype_id) && $candiateSkype_id != ''){
                 $candidateOtherInfo->skype_id = $candiateSkype_id;
             }
-           /* if(isset($candiateStatus) && $candiateStatus != ''){
-                $candidateOtherInfo->status_id = $candiateStatus;
-            }
-            if(isset($candidateSource) && $candidateSource != ''){
-                $candidateOtherInfo->source_id = $candidateSource;
-            }*/
             if(isset($owner_id) && $owner_id != ''){
                 $candidateOtherInfo->owner_id = $owner_id;
             }
-
             if(isset($functional_roles_id) && $functional_roles_id != ''){
                 $candidateOtherInfo->functional_roles_id = $functional_roles_id;
             }
-
             if(isset($specialization) && $specialization != ''){
                 $candidateOtherInfo->specialization = $specialization;
             }
-
             if(isset($educational_qualification_id) && $educational_qualification_id != ''){
                 $candidateOtherInfo->educational_qualification_id = $educational_qualification_id;
             }
 
             $candidateOtherInfo->login_candidate = '1';
-            
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 
             if($candidateOtherInfoStored){
@@ -356,7 +331,7 @@ class CandidateCreateFormController extends Controller
             //$to = 'careers@adlertalent.com';
             $to = 'info@adlertalent.com';
             $subject = "New Applicant Candidate - " . $candiateFname;
-            $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate </td></tr>";
+            $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate.</td></tr>";
             $module_id = $candidate_id;
             $cc = '';
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

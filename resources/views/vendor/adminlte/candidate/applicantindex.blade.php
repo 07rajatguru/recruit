@@ -39,8 +39,8 @@
                 <th>Candidate Name</th>
                 <th>Candidate Email</th>
                 <th width="10%">Mobile<br/>Number</th>
-                <th>Current Employer</th>
-                <th>Current Job Title</th>
+                <th>Last Employer</th>
+                <th>Last Job Title</th>
                 <th width="7%">Current<br/>Salary</th>
                 <th width="7%">Expected<br/>Salary</th>
                 <th>Functional Roles</th>

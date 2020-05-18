@@ -113,9 +113,9 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                         <tr>
-                            <th>Current Employer</th>
+                            <th>Last Employer</th>
                             <td>{{ $candidateDetails['current_employer'] }}</td>
-                            <th>Current Job Title</th>
+                            <th>Last Job Title</th>
                             <td>{{ $candidateDetails['current_job_title'] }}</td>
                         </tr>
 
