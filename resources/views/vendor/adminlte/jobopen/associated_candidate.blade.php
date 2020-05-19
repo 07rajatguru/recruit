@@ -1,15 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'Job Openings')
+@section('title', 'Associated Candidates')
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
     <div class="row">
-
         <div class="col-xs-12 col-sm-12 col-md-12" style="display:none;">
             <div class="col-xs-2 col-sm-2 col-md-2">
                 <div style="width:120px;height:35px;background-color:#40E0D0;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Jan.</div>
@@ -71,10 +69,11 @@
                 <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(3)">Selected</button>
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>
                 <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
+             </div>
 
-               {{-- <ul class="nav navbar-nav">
-                    <li class="dropdown messages-menu">
-                        <a class="btn bg-red" class="dropdown-toggle" style="line-height: 3px " data-toggle="dropdown" aria-expanded="false">More Option</a>
+            {{-- <ul class="nav navbar-nav">
+                <li class="dropdown messages-menu">
+                    <a class="btn bg-red" class="dropdown-toggle" style="line-height: 3px " data-toggle="dropdown" aria-expanded="false">More Option</a>
                         @foreach ($candidates as $candidate)
                             <ul class="dropdown-menu">
                                 <li>
@@ -82,7 +81,7 @@
                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
                                         <ul class="menu" style="overflow: hidden; width: 100%;">
                                             <li>
-                                                <a class="schedule-interview" data-toggle="modal" href="#modal-schedule-interview" >Schedule Interview</a>
+                                                <a class="schedule-interview" data-toggle="modal" href="#modal-schedule-interview">Schedule Interview</a>
                                             </li>
                                             <li>
                                                 <a class="update-status-modal" data-toggle="modal" href="#modal-update-status">
@@ -106,10 +105,9 @@
                                 </li>
                             </ul>
                         @endforeach
-                    </li>
-                    </ul>
-                --}}
-            </div>
+                </li>
+            </ul>--}}
+           
 
             <!-- Schedule interview popup starts -->
             <div id="modal-schedule-interview"  class="modal text-left fade">
@@ -117,13 +115,24 @@
                     <div class="modal-content">
                         {!! Form::open(['method' => 'POST','files' => true, 'route' => ["jobopen.scheduleinterview" ]])!!}
                         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                            <h3 class="box-title">Schedule Interview</h3>
+
+                            @if($message = Session::get('success'))
+                                @if($message == 'Candidates Shortlisted & Scheduled Interview.')
+                                    <h4 class="box-title">Candidate Shortlisted Successfully now Scheduled Interview.</h4>
+                                @endif
+                            @else
+                                <h3 class="box-title">Scheduled Interview</h3>
+                            @endif
+
                             <div class="col-md-6 ">
 
-                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1')) !!}
+
                                 {!! Form::hidden('client_id', $client_id, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '1' )) !!}
-                                {!! Form::hidden('posting_title',  $job_id , array('id'=>'posting_title','class' => 'form-control', 'tabindex' => '1' )) !!}
-                                {!! Form::hidden('job_id',  $job_id , array('id'=>'job_id','class' => 'form-control', 'tabindex' => '1' )) !!}
+
+                                {!! Form::hidden('posting_title', $job_id , array('id'=>'posting_title','class' => 'form-control', 'tabindex' => '1' )) !!}
+
+                                {!! Form::hidden('job_id', $job_id , array('id'=>'job_id','class' => 'form-control', 'tabindex' => '1' )) !!}
 
                                 <input type="hidden" name="all_can_ids_interview" id="all_can_ids_interview" value="">
 
@@ -137,8 +146,8 @@
                                     </div>
                                     @if ($errors->has('interview_date'))
                                         <span class="help-block">
-                                    <strong>{{ $errors->first('interview_date') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('interview_date') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
 
@@ -147,8 +156,8 @@
                                     {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '10' )) !!}
                                     @if ($errors->has('status'))
                                         <span class="help-block">
-                                <strong>{{ $errors->first('status') }}</strong>
-                                </span>
+                                            <strong>{{ $errors->first('status') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
 
@@ -157,8 +166,8 @@
                                     {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '8' , 'rows' => '3')) !!}
                                     @if ($errors->has('location'))
                                         <span class="help-block">
-                                <strong>{{ $errors->first('location') }}</strong>
-                                </span>
+                                            <strong>{{ $errors->first('location') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
 
@@ -167,8 +176,8 @@
                                     {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '10' , 'rows' => '3')) !!}
                                     @if ($errors->has('interview_location'))
                                         <span class="help-block">
-                                    <strong>{{ $errors->first('interview_location') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('interview_location') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
                             </div>
@@ -179,8 +188,8 @@
                                     {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '6', 'onchange' => 'skype()' )) !!}
                                     @if ($errors->has('type'))
                                         <span class="help-block">
-                                <strong>{{ $errors->first('type') }}</strong>
-                                </span>
+                                            <strong>{{ $errors->first('type') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
 
@@ -189,8 +198,8 @@
                                     {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4','placeholder' => 'Video Id')) !!}
                                     @if ($errors->has('skype_id'))
                                         <span class="help-block">
-                                    <strong>{{ $errors->first('skype_id') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('skype_id') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
 
@@ -199,8 +208,8 @@
                                     {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5' )) !!}
                                     @if ($errors->has('interviewer_id'))
                                         <span class="help-block">
-                                <strong>{{ $errors->first('interviewer_id') }}</strong>
-                                </span>
+                                            <strong>{{ $errors->first('interviewer_id') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
 
@@ -218,7 +227,7 @@
                             <div class="form-group">
                                 <div class="col-sm-2">&nbsp;</div>
                                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                    {!! Form::submit( 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
+                                    {!! Form::submit( 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate']) !!}
                                 </div>
                             </div>
                         </div>
@@ -253,9 +262,7 @@
                                     <button type="button"  onclick="addJoiningDate({{$job_id}})" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -270,9 +277,9 @@
                             <div class="box-header with-border col-md-6 ">
                                 <h3 class="box-title">Select Status</h3>
                             </div>
-                            {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1' )) !!}
+                            {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1')) !!}
                             <div class="form-group {{ $errors->has('candiate_status_id') ? 'has-error' : '' }}">
-                                {!! Form::select('candiate_status_id', $candidatestatus,null, array('id'=>'candiate_status_id','class' => 'form-control','onchange' => 'showInterview();')) !!}
+                                {!! Form::select('candiate_status_id', $candidatestatus,null, array('id'=>'candiate_status_id','class' => 'form-control')) !!}
                                 @if ($errors->has('candiate_status_id'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('candiate_status_id') }}</strong>
@@ -281,9 +288,8 @@
                             </div>
 
                             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                <button type="button"  onclick="update_candidate_status({{$job_id}})" class="btn btn-primary">Submit</button>
+                                <button type="button" onclick="update_candidate_status({{$job_id}})" class="btn btn-primary">Submit</button>
                             </div>
-
                         </div>
                         {!! Form::close() !!}
                     </div>
@@ -345,10 +351,15 @@
             <!-- End Undo Shortlisted Candidate popup -->
         </div>
     </div>
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
+
+    @if($message = Session::get('success'))
+        @if($message == 'Candidates Shortlisted & Scheduled Interview.')
+            <input type="hidden" name="message" id="message" value="{{ $message }}">
+        @else
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
     @endif
 
     <table class="table table-bordered">
@@ -359,16 +370,13 @@
             <th>Candidate Owner</th>
             <th width="13%">Candidate Mobile No.</th>
             <th>Candidate Email</th>
-            <!-- <th>Candidate Status</th> -->
             <th>Round Cleared</th>
             <th>Associated Date/Time</th>
 
         </tr>
         <?php $i = 0; ?>
         @foreach ($candidates as $candidate)
-            <?php
-            $color='';
-                 ?>
+            <?php $color=''; ?>
             <tr style="background-color: {{$color}}">
                 <td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td> 
                 <td>
@@ -491,6 +499,7 @@
         @endforeach
 
     </table>
+
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
 
 <div id="modal-mail" class="modal text-left fade candidate-mail" style="display: none;">
@@ -574,11 +583,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-   
 @stop
-
-
 
 @section('customscripts')
     <script type="text/javascript">
@@ -632,6 +637,12 @@
                 $('#job_undo_candidate_id').val($(this).data('id'));
             });
 
+            var message = $("#message").val();
+
+            if(message == 'Candidates Shortlisted & Scheduled Interview.') {
+
+                $("#modal-schedule-interview").modal('show');
+            }
         });
 
         function deassociate_candidate(jobid,candidate_id) {
@@ -848,17 +859,9 @@
                         $(".shortlist-candidate").show();
                         if (msg.success == 'success') {
 
-                            if(update_status_id == '2') {
-
-                                $("#modal-shortlist").modal('hide');
-                                $("#modal-schedule-interview").modal('show');
-                            }
-                            else {
-
-                                $(".shortlist-round").show();
-                                $("#update_status_id").val(update_status_id);
-                                document.getElementById("shortlist-btn").disabled = false;
-                            }
+                            $(".shortlist-round").show();
+                            $("#update_status_id").val(update_status_id);
+                            document.getElementById("shortlist-btn").disabled = false;
                         }
                         else{
 
@@ -868,18 +871,6 @@
                         }
                     }
                 });
-            }
-        }
-
-        function showInterview() {
-
-            var candiate_status_id = $("#candiate_status_id").val();
-
-            if(candiate_status_id == '2') {
-
-                $("#modal-update-status").modal('hide');
-                $("#modal-schedule-interview").modal('show');
-                
             }
         }
     </script>

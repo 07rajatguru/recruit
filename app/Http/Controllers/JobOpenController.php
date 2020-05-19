@@ -2406,15 +2406,15 @@ class JobOpenController extends Controller
 
             // Candidate Vacancy Details email
 
-            //$candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
+            $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
         }
 
-        $jobDetail = JobOpen::find($job_id);
+        /*$jobDetail = JobOpen::find($job_id);
 
         $hiring_manager_id = $jobDetail->hiring_manager_id;
         $job_show = $jobDetail->job_show;
 
-        /*$authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
+        $authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
 
         if($job_show == 0){
             $user_details = TeamMates::select('user_id')
@@ -2631,7 +2631,15 @@ class JobOpenController extends Controller
 
         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
-        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success', 'Candidate status update successfully');
+        if ($status_id == '2') {
+
+            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted & Scheduled Interview.');
+
+        }
+        else {
+
+            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success', 'Candidate Status Update Successfully.');
+        }
     }
 
     public function scheduleInterview(Request $request){
@@ -3474,7 +3482,7 @@ class JobOpenController extends Controller
             $msg['success'] = 'success';
         }
         else{
-            $msg['err'] = '<b>Select candidate to Update Status</b>';
+            $msg['err'] = '<b>Please Select Candidate.</b>';
             $msg['msg'] = "fail";
         }
 
@@ -3547,7 +3555,13 @@ class JobOpenController extends Controller
             DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
         }
 
-        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Status Updated Successfully.');
+        if ($update_status_id == '2') {
+
+            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted & Scheduled Interview.');
+        }
+        else {
+            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Status Updated Successfully.');
+        }
     }
 
     public function getAllPositionsJobs()
