@@ -2633,8 +2633,9 @@ class JobOpenController extends Controller
 
         if ($status_id == '2') {
 
-            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted & Scheduled Interview.');
-
+            return redirect()->route('jobopen.associated_candidates_get', [$job_id])
+            ->with('success','Candidates Shortlisted & Scheduled Interview.')
+            ->with('candidate_id',$candidate_id);
         }
         else {
 
@@ -2671,6 +2672,43 @@ class JobOpenController extends Controller
         if($request->get('candidate_id') != '') {
 
             $candidate_id = $request->get('candidate_id');
+            $data['candidate_id'] = $candidate_id;
+            $interview = Interview::createInterview($data);
+            $interview->save();
+
+            $interview_id = $interview->id;
+            $posting_title = $request->get('job_id');
+
+            $candidate_mail = Interview::getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id);
+
+            $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
+
+            // Update single candidate status
+
+            $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->first();
+
+            if($response->shortlisted == '0') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '1' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+            else if($response->shortlisted == '1') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+            else if($response->shortlisted == '2') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
+            }
+              
+            DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            
+            // Update shortlisted date
+
+            DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
+        }
+        else if($request->get('hid_can') != '') {
+
+            $candidate_id = $request->get('hid_can');
             $data['candidate_id'] = $candidate_id;
             $interview = Interview::createInterview($data);
             $interview->save();
@@ -3557,7 +3595,9 @@ class JobOpenController extends Controller
 
         if ($update_status_id == '2') {
 
-            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Shortlisted & Scheduled Interview.');
+            return redirect()->route('jobopen.associated_candidates_get', [$job_id])
+            ->with('success','Candidates Shortlisted & Scheduled Interview.')
+            ->with('candidate_id',$value);
         }
         else {
             return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Status Updated Successfully.');

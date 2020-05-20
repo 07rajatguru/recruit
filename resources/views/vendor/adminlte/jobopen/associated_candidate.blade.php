@@ -64,7 +64,7 @@
 
             <div class="pull-right">
                 <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(1)">Shortlist</button>
-                <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(2)">Shortlisted & Schedule Interview
+                <button type="button" class="btn bg-blue" onclick="shortlistcandidate(2)">Shortlisted & Schedule Interview
                 </button>
                 <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(3)">Selected</button>
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>
@@ -113,7 +113,7 @@
             <div id="modal-schedule-interview"  class="modal text-left fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        {!! Form::open(['method' => 'POST','files' => true, 'route' => ["jobopen.scheduleinterview" ]])!!}
+                        {!! Form::open(['method' => 'POST','id' => 'int_frm','files' => true, 'route' => ["jobopen.scheduleinterview"]])!!}
                         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
 
                             @if($message = Session::get('success'))
@@ -126,13 +126,17 @@
 
                             <div class="col-md-6 ">
 
-                                {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '1')) !!}
+                                @if($hid_can = Session::get('candidate_id'))
+                                    {!! Form::hidden('hid_can',$hid_can, array('id'=>'hid_can','class' => 'form-control')) !!}
+                                @else
+                                    {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id','class' => 'form-control')) !!}
+                                @endif
 
-                                {!! Form::hidden('client_id', $client_id, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::hidden('client_id', $client_id, array('id'=>'client_id','class' => 'form-control')) !!}
 
-                                {!! Form::hidden('posting_title', $job_id , array('id'=>'posting_title','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::hidden('posting_title', $job_id , array('id'=>'posting_title','class' => 'form-control')) !!}
 
-                                {!! Form::hidden('job_id', $job_id , array('id'=>'job_id','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::hidden('job_id', $job_id , array('id'=>'job_id','class' => 'form-control')) !!}
 
                                 <input type="hidden" name="all_can_ids_interview" id="all_can_ids_interview" value="">
 
@@ -142,7 +146,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'interview_date','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '7' )) !!}
+                                        {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'interview_date','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '1' )) !!}
                                     </div>
                                     @if ($errors->has('interview_date'))
                                         <span class="help-block">
@@ -153,7 +157,7 @@
 
                                 <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                                     <strong>Status:</strong>
-                                    {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '10' )) !!}
+                                    {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '3' )) !!}
                                     @if ($errors->has('status'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('status') }}</strong>
@@ -163,7 +167,7 @@
 
                                 <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
                                     <strong>Interview Venue:</strong>
-                                    {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '8' , 'rows' => '3')) !!}
+                                    {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '5' , 'rows' => '3')) !!}
                                     @if ($errors->has('location'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('location') }}</strong>
@@ -173,7 +177,7 @@
 
                                 <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
                                     <strong>Interview Location:</strong>
-                                    {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '10' , 'rows' => '3')) !!}
+                                    {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '7' , 'rows' => '3')) !!}
                                     @if ($errors->has('interview_location'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('interview_location') }}</strong>
@@ -185,7 +189,7 @@
                             <div class="col-md-6 ">
                                 <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                     <strong>Type:</strong>
-                                    {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '6', 'onchange' => 'skype()' )) !!}
+                                    {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '2', 'onchange' => 'skype()' )) !!}
                                     @if ($errors->has('type'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('type') }}</strong>
@@ -205,7 +209,7 @@
 
                                 <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
                                     <strong>Interviewer:</strong>
-                                    {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '5' )) !!}
+                                    {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '4' )) !!}
                                     @if ($errors->has('interviewer_id'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('interviewer_id') }}</strong>
@@ -215,7 +219,7 @@
 
                                 <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
                                     <strong>Candidate Location:</strong>
-                                    {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
+                                    {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '6' , 'rows' => '3')) !!}
                                     @if ($errors->has('candidate_location'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('candidate_location') }}</strong>
@@ -227,7 +231,7 @@
                             <div class="form-group">
                                 <div class="col-sm-2">&nbsp;</div>
                                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                    {!! Form::submit( 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate']) !!}
+                                    {!! Form::submit( 'Submit', ['class' => 'btn btn-primary']) !!}
                                 </div>
                             </div>
                         </div>
@@ -351,6 +355,88 @@
             <!-- End Undo Shortlisted Candidate popup -->
         </div>
     </div>
+
+    <div id="modal-mail" class="modal text-left fade candidate-mail" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Associated Candidate Mail</h1>
+                </div>
+                
+                <div class="modal-body check-id">
+                    
+                </div>
+                <input type="hidden" name="candi_ids" id="candi_ids" value="">
+                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="modal-mail" class="modal text-left fade candidate-mail-user" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Select User for send mail</h2>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
+                <div class="modal-body mail_users">
+                    
+                </div>
+                <input type="hidden" name="can_ids" id="can_ids" value="">
+                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="modal-shortlist" class="modal text-left fade shortlist-candidate" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Update Candidate Status</h2>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
+
+                <div class="modal-body">
+                    <div class="check-all-candidate-ids" style="display:none;">
+                    
+                    </div>
+
+                    <div class="shortlist-round" style="display:none;">
+                        <!-- <p>
+                        {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
+                        </p> -->
+                        Are You sure want to update Candidate Status?
+
+                        <input type="hidden" name="update_status_id" id="update_status_id" value="">
+                    </div>
+
+                    <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
+                    <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                    <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="shortlist-btn">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     @if($message = Session::get('success'))
         @if($message == 'Candidates Shortlisted & Scheduled Interview.')
@@ -502,92 +588,25 @@
 
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
 
-<div id="modal-mail" class="modal text-left fade candidate-mail" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Associated Candidate Mail</h1>
-            </div>
-            
-            <div class="modal-body check-id">
-                
-            </div>
-            <input type="hidden" name="candi_ids" id="candi_ids" value="">
-            <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
-            <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="submit">Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-            </div>
-            
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div id="modal-mail" class="modal text-left fade candidate-mail-user" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2 class="modal-title">Select User for send mail</h2>
-            </div>
-            {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
-            <div class="modal-body mail_users">
-                
-            </div>
-            <input type="hidden" name="can_ids" id="can_ids" value="">
-            <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
-            <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Send</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-            {!! Form::close() !!}
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div id="modal-shortlist" class="modal text-left fade shortlist-candidate" style="display:none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2 class="modal-title">Update Candidate Status</h2>
-            </div>
-            {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
-
-            <div class="modal-body">
-                <div class="check-all-candidate-ids" style="display:none;">
-                
-                </div>
-
-                <div class="shortlist-round" style="display:none;">
-                    <!-- <p>
-                    {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
-                    </p> -->
-                    Are You sure want to update Candidate Status?
-
-                    <input type="hidden" name="update_status_id" id="update_status_id" value="">
-                </div>
-
-                <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
-                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
-                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="shortlist-btn">Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-            </div>
-            {!! Form::close() !!}
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $("#int_frm").validate({
+                rules: {
+                    "interview_date": {
+                        required: true
+                    },
+                },
+                messages: {
+                    "interview_date": {
+                        required: "Interview Date is Required Field."
+                    },
+                },
+            });
+
             $('#allcb').change(function () {
                 if ($(this).prop('checked')) {
                     $('tbody tr td input[type="checkbox"]').each(function () {
@@ -679,10 +698,12 @@
         }
 
         function update_candidate_status(jobid){
+
             var status_id = jQuery("#candiate_status_id > option:selected").val();
             var token = $("#token").val();
             var candidate_id = $("#candidate_id").val();
             var app_url = "{!! env('APP_URL'); !!}";
+
            /* $("input:checkbox[name=candidate]:checked").each(function () {
                 candidate_ids.push($(this).val());
             });*/
@@ -841,10 +862,11 @@
 
             if(update_status_id == '2' && candidate_ids.length > 1) {
                 alert('Please Select any one Candidate for Scheduled Interview.');
-                $("#modal-shortlist").modal('hide');
                 window.location.reload();
             }
             else {
+
+                $("#modal-shortlist").modal('show');
                 $("#all_can_ids").val(candidate_ids);
                 $("#all_can_ids_interview").val(candidate_ids);
                 $(".check-all-candidate-ids").empty();
