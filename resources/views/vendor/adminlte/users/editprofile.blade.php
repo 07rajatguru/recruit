@@ -190,13 +190,13 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_anniversary') ? 'has-error' : '' }}">
-                                    <strong>Anniversary Date: <span class = "required_fields">*</span> 
+                                    <strong>Marriage Anniversary Date: <span class = "required_fields">*</span> 
                                     </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        {!! Form::text('date_of_anniversary',isset($user['date_of_anniversary']) ? $user['date_of_anniversary'] : null, array('id'=> 'date_of_anniversary','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '12')) !!}
+                                        {!! Form::text('date_of_anniversary',isset($user['date_of_anniversary']) ? $user['date_of_anniversary'] : null, array('id'=> 'date_of_anniversary','placeholder' => 'Marriage Anniversary Date','class' => 'form-control','tabindex' => '12')) !!}
                                     </div>
                                 </div>
 
@@ -239,13 +239,13 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('date_of_anniversary') ? 'has-error' : '' }}">
-                                    <strong>Anniversary Date: <span class = "required_fields">*</span>
+                                    <strong>Marriage Anniversary Date: <span class = "required_fields">*</span>
                                     </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        {!! Form::text('date_of_anniversary',isset($user['date_of_anniversary']) ? $user['date_of_anniversary'] : null, array('id'=> 'date_of_anniversary','placeholder' => 'Anniversary Date','class' => 'form-control','tabindex' => '12','disabled')) !!}
+                                        {!! Form::text('date_of_anniversary',isset($user['date_of_anniversary']) ? $user['date_of_anniversary'] : null, array('id'=> 'date_of_anniversary','placeholder' => 'Marriage Anniversary Date','class' => 'form-control','tabindex' => '12','disabled')) !!}
                                     </div>
                                 </div>
                             @endif
@@ -603,74 +603,25 @@
     </div>
     @endif
 
-    <!-- <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Attachment Information</h3>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="col-xs-6 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <strong>Select type</strong>
-                        {!! Form::select('users_upload_type', $users_upload_type,null, array('id'=>'users_upload_type','class' => 'form-control','onchange' => "displayDoc();")) !!}
-                    </div>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-6 singledoc" style="display:none;">
-                    <div class="form-group">
-                        <strong>Upload :</strong>
-                        <input type="file" name="upload_documents[]" class="form-control" />
-                    </div>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-6 multidoc" style="display:none;">
-                    <div class="form-group">
-                        <strong>Upload Documents:</strong>
-                        <input type="file" name="upload_documents[]" multiple class="form-control" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
     @if(isset($user['doc']) && sizeof($user['doc'])>0)
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Attachments</h3>
-                    &nbsp;&nbsp;
-                    @include('adminlte::users.upload', ['data' => $user, 'name' => 'usersattachments'])  
-                </div>
+        @foreach($user['doc'] as $key=>$value)
+            <?php
 
-                <div class="box-header  col-md-8 ">
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th></th>
-                            <th>File Name</th>
-                            <th>Size</th>
-                            <th>Type</th>
-                        </tr>
-                        @foreach($user['doc'] as $key=>$value)
-                            <tr>
-                                <td>
-                                    <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
-                                        &nbsp;
-                                    @include('adminlte::partials.confirm', ['data' => $value,'id'=> $value['id'], 'name' => 'usersattachments' ,'display_name'=> 'Attachments','type' => 'EditProfile'])
-                                </td>
-                                <td>
-                                    <a target="_blank" href="../{{ $value['url'] }}">{{ $value['name'] }}</a>
-                                </td>
-                                <td>{{ $value['size'] }}</td>
-                                <td>{{ $value['type'] }}</td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </div>
-            </div>
-        </div>
-    @else
+                if($value['type'] == 'SSC Marksheet') {
+                    $s_m['url'] = $value['url'];
+                    $s_m['name'] = $value['name'];
+                }
+                else if($value['type'] == 'HSC Marksheet') {
+                    $h_m['url'] = $value['url'];
+                    $h_m['name'] = $value['name'];
+                }
+                else if($value['type'] == 'University Certificate') {
+                    $u_c['url'] = $value['url'];
+                    $u_c['name'] = $value['name'];
+                }
+            ?>
+        @endforeach
+    @endif
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
@@ -683,14 +634,44 @@
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>Xth (SSC) : </strong>
-                            <input type="file" id="ssc_marksheet" name="ssc_marksheet" class="form-control" tabindex="51" />
+                            @if(isset($s_m['url']) && $s_m['url'] != '')
+                                <a target="_blank" href="../{{ $s_m['url'] }}">{{ $s_m['name'] }}</a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" name="ssc_marksheet" id="ssc_marksheet" tabindex="51" />
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="ssc_marksheet" name="ssc_marksheet" class="form-control" tabindex="51" />
+                            @endif
                         </div>
                     </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>XIIth (HSC) : </strong>
-                            <input type="file" id="hsc_marksheet" name="hsc_marksheet" class="form-control" tabindex="52"/>
+                            @if(isset($h_m['url']) && $h_m['url'] != '')
+                                <a target="_blank" href="../{{ $h_m['url'] }}">{{ $h_m['name'] }}</a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="hsc_marksheet" name="hsc_marksheet" class="form-control" tabindex="52"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="hsc_marksheet" name="hsc_marksheet" class="form-control" tabindex="52"/>
+                            @endif
                         </div>
                     </div>
 
@@ -698,7 +679,22 @@
                         <div class="form-group">
                             <strong>University Marks Sheets and Convocation certificate : 
                             <span class = "required_fields">*</span></strong>
-                            <input type="file" id="university_certificate" name="university_certificate" class="form-control" tabindex="53"/>
+                            @if(isset($u_c['url']) && $u_c['url'] != '')
+                                <a target="_blank" href="../{{ $u_c['url'] }}">{{ $u_c['name'] }}</a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" name="university_certificate" id="university_certificate" tabindex="53" />
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="university_certificate" name="university_certificate" class="form-control" tabindex="53"/>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -798,7 +794,6 @@
                 </div>
             </div>
         </div>
-    @endif
 
     <input type="hidden" name="employee_id_increment" id="employee_id_increment" value="{!! $employee_id_increment !!}">
 
@@ -813,14 +808,10 @@
 @endsection
 
 @section('customscripts')
-  <script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+<script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
 
         jQuery(document).ready(function () {
-
-            //displayDoc();
-
-            $("#users_upload_type").select2();
 
             CKEDITOR.replace( 'signature', 
             {
@@ -987,7 +978,7 @@
                         required: "Please Select Confirmation Date.",
                     },
                     "date_of_anniversary": {
-                        required: "Please Select Anniversary Date.",
+                        required: "Please Select Marriage Anniversary Date.",
                     },
                     "uan_no": {
                         required: "UAN Number is Required.",
@@ -1052,22 +1043,6 @@
                 }
             });
         });
-    
-    /*function displayDoc() {
-
-        var doc_type = $("#users_upload_type").val();
-
-        if(doc_type == 'Others')
-        {
-            $(".multidoc").show();
-            $(".singledoc").hide();
-        }
-        else
-        {
-            $(".multidoc").hide();
-            $(".singledoc").show();
-        }
-    }*/
 
     function countTotalSalary() {
 

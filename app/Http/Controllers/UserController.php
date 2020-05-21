@@ -1043,6 +1043,8 @@ class UserController extends Controller
         $ssc_marksheet = $request->file('ssc_marksheet');
 
         if (isset($ssc_marksheet) && $ssc_marksheet->isValid()){
+
+            UsersDoc::where('type','=','SSC Marksheet')->delete();
             
             $file_name = $ssc_marksheet->getClientOriginalName();
             $file_size = $ssc_marksheet->getSize();
@@ -1070,6 +1072,8 @@ class UserController extends Controller
         $hsc_marksheet = $request->file('hsc_marksheet');
 
         if (isset($hsc_marksheet) && $hsc_marksheet->isValid()){
+
+            UsersDoc::where('type','=','HSC Marksheet')->delete();
             
             $file_name = $hsc_marksheet->getClientOriginalName();
             $file_size = $hsc_marksheet->getSize();
@@ -1098,6 +1102,8 @@ class UserController extends Controller
 
         if (isset($university_certificate) && $university_certificate->isValid()){
             
+            UsersDoc::where('type','=','University Certificate')->delete();
+
             $file_name = $university_certificate->getClientOriginalName();
             $file_size = $university_certificate->getSize();
 
@@ -1126,6 +1132,8 @@ class UserController extends Controller
         $offer_letter = $request->file('offer_letter');
 
         if (isset($offer_letter) && $offer_letter->isValid()){
+
+            UsersDoc::where('type','=','Offer Letter')->delete();
             
             $file_name = $offer_letter->getClientOriginalName();
             $file_size = $offer_letter->getSize();
@@ -1153,6 +1161,8 @@ class UserController extends Controller
         $appraisal_letter = $request->file('appraisal_letter');
 
         if (isset($appraisal_letter) && $appraisal_letter->isValid()){
+
+            UsersDoc::where('type','=','Appraisal Letter')->delete();
             
             $file_name = $appraisal_letter->getClientOriginalName();
             $file_size = $appraisal_letter->getSize();
@@ -1180,6 +1190,8 @@ class UserController extends Controller
         $relieving_letter = $request->file('relieving_letter');
 
         if (isset($relieving_letter) && $relieving_letter->isValid()){
+
+            UsersDoc::where('type','=','Relieving Letter')->delete();
             
             $file_name = $relieving_letter->getClientOriginalName();
             $file_size = $relieving_letter->getSize();
@@ -1207,6 +1219,8 @@ class UserController extends Controller
         $resignation_letter = $request->file('resignation_letter');
 
         if (isset($resignation_letter) && $resignation_letter->isValid()){
+
+            UsersDoc::where('type','=','Resignation Letter')->delete();
             
             $file_name = $resignation_letter->getClientOriginalName();
             $file_size = $resignation_letter->getSize();
@@ -1234,6 +1248,8 @@ class UserController extends Controller
         $appointment_letter = $request->file('appointment_letter');
 
         if (isset($appointment_letter) && $appointment_letter->isValid()){
+
+            UsersDoc::where('type','=','Appointment Letter')->delete();
             
             $file_name = $appointment_letter->getClientOriginalName();
             $file_size = $appointment_letter->getSize();
@@ -1261,6 +1277,8 @@ class UserController extends Controller
         $experience_letter = $request->file('experience_letter');
 
         if (isset($experience_letter) && $experience_letter->isValid()){
+
+            UsersDoc::where('type','=','Experience Letter')->delete();
             
             $file_name = $experience_letter->getClientOriginalName();
             $file_size = $experience_letter->getSize();
@@ -1288,6 +1306,8 @@ class UserController extends Controller
         $pay_slips = $request->file('pay_slips');
 
         if (isset($pay_slips) && $pay_slips->isValid()){
+
+            UsersDoc::where('type','=','Pay Slips')->delete();
             
             $file_name = $pay_slips->getClientOriginalName();
             $file_size = $pay_slips->getSize();
@@ -1315,6 +1335,8 @@ class UserController extends Controller
         $form_26 = $request->file('form_26');
 
         if (isset($form_26) && $form_26->isValid()){
+
+            UsersDoc::where('type','=','Form - 26')->delete();
             
             $file_name = $form_26->getClientOriginalName();
             $file_size = $form_26->getSize();
@@ -1344,6 +1366,8 @@ class UserController extends Controller
         $id_proof = $request->file('id_proof');
 
         if (isset($id_proof) && $id_proof->isValid()){
+
+            UsersDoc::where('type','=','ID Proof')->delete();
             
             $file_name = $id_proof->getClientOriginalName();
             $file_size = $id_proof->getSize();
@@ -1371,6 +1395,8 @@ class UserController extends Controller
         $passport = $request->file('passport');
 
         if (isset($passport) && $passport->isValid()){
+
+            UsersDoc::where('type','=','Passport')->delete();
             
             $file_name = $passport->getClientOriginalName();
             $file_size = $passport->getSize();
@@ -1399,6 +1425,8 @@ class UserController extends Controller
 
         if (isset($pan_card) && $pan_card->isValid()){
             
+            UsersDoc::where('type','=','PAN Card')->delete();
+
             $file_name = $pan_card->getClientOriginalName();
             $file_size = $pan_card->getSize();
 
@@ -1425,6 +1453,8 @@ class UserController extends Controller
         $cancelled_cheque = $request->file('cancelled_cheque');
 
         if (isset($cancelled_cheque) && $cancelled_cheque->isValid()){
+
+            UsersDoc::where('type','=','Cancelled Cheque')->delete();
             
             $file_name = $cancelled_cheque->getClientOriginalName();
             $file_size = $cancelled_cheque->getSize();
@@ -1452,6 +1482,8 @@ class UserController extends Controller
         $address_proof = $request->file('address_proof');
 
         if (isset($address_proof) && $address_proof->isValid()){
+
+            UsersDoc::where('type','=','Address Proof')->delete();
             
             $file_name = $address_proof->getClientOriginalName();
             $file_size = $address_proof->getSize();
@@ -1480,6 +1512,8 @@ class UserController extends Controller
 
         if (isset($aadhar_card) && $aadhar_card->isValid()){
             
+            UsersDoc::where('type','=','Aadhar Card')->delete();
+
             $file_name = $aadhar_card->getClientOriginalName();
             $file_size = $aadhar_card->getSize();
 
@@ -1506,6 +1540,8 @@ class UserController extends Controller
         $resume = $request->file('resume');
 
         if (isset($resume) && $resume->isValid()){
+
+            UsersDoc::where('type','=','Resume')->delete();
             
             $file_name = $resume->getClientOriginalName();
             $file_size = $resume->getSize();
@@ -1533,6 +1569,8 @@ class UserController extends Controller
         $passport_photo = $request->file('passport_photo');
 
         if (isset($passport_photo) && $passport_photo->isValid()){
+
+            UsersDoc::where('type','=','Passport Photo')->delete();
             
             $file_name = $passport_photo->getClientOriginalName();
             $file_size = $passport_photo->getSize();
@@ -1557,34 +1595,6 @@ class UserController extends Controller
         }
         //Personal Credentials End
 
-        // If Single Attchment Upload
-
-        $file = $request->file('file');
-        $users_upload_type = Input::get('users_upload_type');
-
-        if (isset($file) && $file->isValid()){
-            
-            $file_name = $file->getClientOriginalName();
-            $file_size = $file->getSize();
-
-            $dir = 'uploads/users/' . $user_id . '/';
-            if (!file_exists($dir) && !is_dir($dir)) {
-                mkdir($dir, 0777, true);
-                chmod($dir, 0777);
-            }
-
-            $file->move($dir, $file_name);
-
-            $file_path = $dir . $file_name;
-
-            $users_doc = new UsersDoc();
-            $users_doc->user_id = $user_id;
-            $users_doc->file = $file_path;
-            $users_doc->name = $file_name;
-            $users_doc->size = $file_size;
-            $users_doc->type = $users_upload_type;
-            $users_doc->save();
-        }
         return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
     }
 
