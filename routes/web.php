@@ -2007,7 +2007,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('productivity-report',[
         'as' => 'productivity.report',
         'uses' => 'ReportController@productivityReport',
-        'middleware' => ['permission:weekly-report']
+        'middleware' => ['permission:productivity-report']
     ]);
 
     // Report End
@@ -2556,32 +2556,38 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user-bench-mark',[
         'as' => 'userbenchmark.index',
-        'uses' => 'UserBenchMarkController@index'
+        'uses' => 'UserBenchMarkController@index',
+        'middleware' => ['permission:userbenchmark-list|userbenchmark-add|userbenchmark-edit|userbenchmark-delete']
     ]);
 
     Route::get('user-bench-mark/add',[
         'as' => 'userbenchmark.create',
-        'uses' => 'UserBenchMarkController@create'
+        'uses' => 'UserBenchMarkController@create',
+        'middleware' => ['permission:userbenchmark-add']
     ]);
 
     Route::post('user-bench-mark/add',[
         'as' => 'userbenchmark.store',
-        'uses' => 'UserBenchMarkController@store'
+        'uses' => 'UserBenchMarkController@store',
+        'middleware' => ['permission:userbenchmark-add']
     ]);
 
     Route::get('user-bench-mark/edit/{id}',[
         'as' => 'userbenchmark.edit',
-        'uses' => 'UserBenchMarkController@edit'
+        'uses' => 'UserBenchMarkController@edit',
+        'middleware' => ['permission:userbenchmark-edit']
     ]);
 
     Route::patch('user-bench-mark/edit/{id}',[
         'as' => 'userbenchmark.update',
-        'uses' => 'UserBenchMarkController@update'
+        'uses' => 'UserBenchMarkController@update',
+        'middleware' => ['permission:userbenchmark-edit']
     ]);
 
     Route::delete('user-bench-mark/{id}',[
         'as' => 'userbenchmark.destroy',
-        'uses' => 'UserBenchMarkController@destroy'
+        'uses' => 'UserBenchMarkController@destroy',
+        'middleware' => ['permission:userbenchmark-delete']
     ]);
 
     // User Bench Mark Routes End

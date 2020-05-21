@@ -42,5 +42,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EducationSpecializationSeeder::class);
         $this->call(ClientHeirarchyListSeeder::class);
         $this->call(AttendanceSheetSeeder::class);
+        $this->call(UserBenchMarkPermissionSeeder::class);
     }
 }

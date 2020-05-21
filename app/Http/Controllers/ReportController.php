@@ -775,7 +775,7 @@ class ReportController extends Controller
         })->export('xls');
     }
 
-    public function productivityReport() {
+    public function productivityReport(Request $request) {
 
         $user_id = \Auth::user()->id;
 
@@ -784,29 +784,30 @@ class ReportController extends Controller
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $manager_role_id = env('MANAGER');
-        
-        $access_roles_id = array($superadmin_role_id,$manager_role_id);
+        $superAdminUserID = env('SUPERADMINUSERID');
+        $managerUserID = env('MANAGERUSERID');
 
-        if(in_array($role_id,$access_roles_id)) {
+        $access_users_id = array($superAdminUserID,$managerUserID);
 
+        if(in_array($user_id,$access_users_id)){
             $users = User::getAllUsers('recruiter');
         }
         else{
-
             $users = User::getAssignedUsers($user_id,'recruiter');
         }
 
-        if (isset($_POST['users_id']) && $_POST['users_id'] != 0) {
+        if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
 
             $user_id = $_POST['users_id'];
             $select_user_role_id = User::getRoleIdByUserId($user_id);
             $role_name = Role::getUserRoleNameById($select_user_role_id['role_id']);
+            $user_name = User::getUserNameById($user_id);
         }
         else{
+            
             $user_id = $user_id;
             $role_name = '';
+            $user_name = '';
         }
 
         // Get user Bench Mark from master
@@ -939,6 +940,6 @@ class ReportController extends Controller
 
         //print_r($user_bench_mark);exit;
 
-        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
+        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name'));
     }
 }
