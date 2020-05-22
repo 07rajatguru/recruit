@@ -12,10 +12,10 @@
         <td width="100%">
             <table  cellpadding="0" cellspacing="0" style = "border:0; background-color: #ffffff; color:black; width:620px;">
                 <tr style="background-color:white;">
-                    <td align="center">
+                    <td align="center" width="600">
                         <div class="site-branding col-md-2 col-sm-6 col-xs-12">
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img class="site-logo" src="{{$app_url}}/images/Adler-Logo-2-01.png" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;width:350px;padding-top: 16px; vertical-align: middle;">
+                                <img class="site-logo" src="{{$app_url}}/images/adler-logo-2.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;width:350px;;padding-top: 16px; vertical-align: middle;">
                             </a>
                         </div>
                     </td>
