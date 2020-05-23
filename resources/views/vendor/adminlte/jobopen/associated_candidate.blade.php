@@ -356,88 +356,6 @@
         </div>
     </div>
 
-    <div id="modal-mail" class="modal text-left fade candidate-mail" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title">Associated Candidate Mail</h1>
-                </div>
-                
-                <div class="modal-body check-id">
-                    
-                </div>
-                <input type="hidden" name="candi_ids" id="candi_ids" value="">
-                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
-                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="submit">Yes</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                </div>
-                
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div id="modal-mail" class="modal text-left fade candidate-mail-user" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h2 class="modal-title">Select User for send mail</h2>
-                </div>
-                {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
-                <div class="modal-body mail_users">
-                    
-                </div>
-                <input type="hidden" name="can_ids" id="can_ids" value="">
-                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
-                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Send</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-                {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div id="modal-shortlist" class="modal text-left fade shortlist-candidate" style="display:none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h2 class="modal-title">Update Candidate Status</h2>
-                </div>
-                {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
-
-                <div class="modal-body">
-                    <div class="check-all-candidate-ids" style="display:none;">
-                    
-                    </div>
-
-                    <div class="shortlist-round" style="display:none;">
-                        <!-- <p>
-                        {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
-                        </p> -->
-                        Are You sure want to update Candidate Status?
-
-                        <input type="hidden" name="update_status_id" id="update_status_id" value="">
-                    </div>
-
-                    <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
-                    <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
-                    <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="shortlist-btn">Yes</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                </div>
-                {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
     @if($message = Session::get('success'))
         @if($message == 'Candidates Shortlisted & Scheduled Interview.')
             <input type="hidden" name="message" id="message" value="{{ $message }}">
@@ -588,6 +506,87 @@
 
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
 
+    <div id="modal-mail" class="modal text-left fade candidate-mail" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Associated Candidate Mail</h1>
+                </div>
+                
+                <div class="modal-body check-id">
+                    
+                </div>
+                <input type="hidden" name="candi_ids" id="candi_ids" value="">
+                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="modal-mail" class="modal text-left fade candidate-mail-user" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Select User for send mail</h2>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
+                <div class="modal-body mail_users">
+                    
+                </div>
+                <input type="hidden" name="can_ids" id="can_ids" value="">
+                <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="modal-shortlist" class="modal text-left fade shortlist-candidate" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Update Candidate Status</h2>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
+
+                <div class="modal-body">
+                    <div class="check-all-candidate-ids" style="display:none;">
+                    
+                    </div>
+
+                    <div class="shortlist-round" style="display:none;">
+                        <!-- <p>
+                        {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
+                        </p> -->
+                        Are You sure want to update Candidate Status?
+
+                        <input type="hidden" name="update_status_id" id="update_status_id" value="">
+                    </div>
+
+                    <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
+                    <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
+                    <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="shortlist-btn">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @stop
 
 @section('customscripts')
@@ -864,36 +863,38 @@
                 alert('Please Select any one Candidate for Scheduled Interview.');
                 window.location.reload();
             }
-            else {
+            else if(update_status_id == '2') {
 
                 $("#modal-shortlist").modal('show');
-                $("#all_can_ids").val(candidate_ids);
-                $("#all_can_ids_interview").val(candidate_ids);
-                $(".check-all-candidate-ids").empty();
-
-                $.ajax(
-                {
-                    type: 'POST',
-                    url: app_url+'/jobs/checkcandidateids',
-                    data: { can_ids:candidate_ids, '_token':token },
-                    success: function(msg)
-                    { 
-                        $(".shortlist-candidate").show();
-                        if (msg.success == 'success') {
-
-                            $(".shortlist-round").show();
-                            $("#update_status_id").val(update_status_id);
-                            document.getElementById("shortlist-btn").disabled = false;
-                        }
-                        else{
-
-                            $(".check-all-candidate-ids").show();
-                            $(".check-all-candidate-ids").append(msg.err);
-                            document.getElementById("shortlist-btn").disabled = true;
-                        }
-                    }
-                });
             }
+
+            $("#all_can_ids").val(candidate_ids);
+            $("#all_can_ids_interview").val(candidate_ids);
+            $(".check-all-candidate-ids").empty();
+
+            $.ajax({
+
+                type: 'POST',
+                url: app_url+'/jobs/checkcandidateids',
+                data: { can_ids:candidate_ids, '_token':token },
+                
+                success: function(msg) { 
+
+                    $(".shortlist-candidate").show();
+                    if (msg.success == 'success') {
+
+                        $(".shortlist-round").show();
+                        $("#update_status_id").val(update_status_id);
+                        document.getElementById("shortlist-btn").disabled = false;
+                    }
+                    else{
+
+                        $(".check-all-candidate-ids").show();
+                        $(".check-all-candidate-ids").append(msg.err);
+                        document.getElementById("shortlist-btn").disabled = true;
+                    }
+                }
+            });
         }
     </script>
 @endsection
