@@ -603,21 +603,87 @@
     </div>
     @endif
 
+    <input type="hidden" name="doc_size" id="doc_size" value="{{ sizeof($user['doc']) }}">
+
     @if(isset($user['doc']) && sizeof($user['doc'])>0)
         @foreach($user['doc'] as $key=>$value)
             <?php
 
                 if($value['type'] == 'SSC Marksheet') {
-                    $s_m['url'] = $value['url'];
-                    $s_m['name'] = $value['name'];
+                    $ssc_m['url'] = $value['url'];
+                    $ssc_m['name'] = $value['name'];
                 }
                 else if($value['type'] == 'HSC Marksheet') {
-                    $h_m['url'] = $value['url'];
-                    $h_m['name'] = $value['name'];
+                    $hsc_m['url'] = $value['url'];
+                    $hsc_m['name'] = $value['name'];
                 }
                 else if($value['type'] == 'University Certificate') {
-                    $u_c['url'] = $value['url'];
-                    $u_c['name'] = $value['name'];
+                    $uni_c['url'] = $value['url'];
+                    $uni_c['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Offer Letter') {
+                    $off_l['url'] = $value['url'];
+                    $off_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Appraisal Letter') {
+                    $a_l['url'] = $value['url'];
+                    $a_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Relieving Letter') {
+                    $rel_l['url'] = $value['url'];
+                    $rel_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Resignation Letter') {
+                    $reg_l['url'] = $value['url'];
+                    $reg_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Appointment Letter') {
+                    $app_l['url'] = $value['url'];
+                    $app_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Experience Letter') {
+                    $exp_l['url'] = $value['url'];
+                    $exp_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Pay Slips') {
+                    $pay_l['url'] = $value['url'];
+                    $pay_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Form - 26') {
+                    $form_l['url'] = $value['url'];
+                    $form_l['name'] = $value['name'];
+                }
+                else if($value['type'] == 'ID Proof') {
+                    $id_p['url'] = $value['url'];
+                    $id_p['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Passport') {
+                    $pass_port['url'] = $value['url'];
+                    $pass_port['name'] = $value['name'];
+                }
+                else if($value['type'] == 'PAN Card') {
+                    $pan_c['url'] = $value['url'];
+                    $pan_c['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Cancelled Cheque') {
+                    $can_ch['url'] = $value['url'];
+                    $can_ch['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Address Proof') {
+                    $add_p['url'] = $value['url'];
+                    $add_p['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Aadhar Card') {
+                    $adr_c['url'] = $value['url'];
+                    $adr_c['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Resume') {
+                    $resume['url'] = $value['url'];
+                    $resume['name'] = $value['name'];
+                }
+                else if($value['type'] == 'Passport Photo') {
+                    $pass_photo['url'] = $value['url'];
+                    $pass_photo['name'] = $value['name'];
                 }
             ?>
         @endforeach
@@ -634,8 +700,9 @@
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>Xth (SSC) : </strong>
-                            @if(isset($s_m['url']) && $s_m['url'] != '')
-                                <a target="_blank" href="../{{ $s_m['url'] }}">{{ $s_m['name'] }}</a>
+                            @if(isset($ssc_m['url']) && $ssc_m['url'] != '')
+                                <a target="_blank" href="../{{ $ssc_m['url'] }}">{{ $ssc_m['name'] }}
+                                </a>
 
                                 <div class="form-group file_input_redesign">
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -656,8 +723,9 @@
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>XIIth (HSC) : </strong>
-                            @if(isset($h_m['url']) && $h_m['url'] != '')
-                                <a target="_blank" href="../{{ $h_m['url'] }}">{{ $h_m['name'] }}</a>
+                            @if(isset($hsc_m['url']) && $hsc_m['url'] != '')
+                                <a target="_blank" href="../{{ $hsc_m['url'] }}">{{ $hsc_m['name'] }}
+                                </a>
 
                                 <div class="form-group file_input_redesign">
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -679,8 +747,9 @@
                         <div class="form-group">
                             <strong>University Marks Sheets and Convocation certificate : 
                             <span class = "required_fields">*</span></strong>
-                            @if(isset($u_c['url']) && $u_c['url'] != '')
-                                <a target="_blank" href="../{{ $u_c['url'] }}">{{ $u_c['name'] }}</a>
+                            @if(isset($uni_c['url']) && $uni_c['url'] != '')
+                                <a target="_blank" href="../{{ $uni_c['url'] }}">{{ $uni_c['name'] }}
+                                </a>
 
                                 <div class="form-group file_input_redesign">
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -704,44 +773,171 @@
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>Offer Letter : </strong>
-                            <input type="file" id="offer_letter" name="offer_letter" class="form-control" tabindex="54"/>
+                            @if(isset($off_l['url']) && $off_l['url'] != '')
+                                <a target="_blank" href="../{{ $off_l['url'] }}">{{ $off_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="offer_letter" name="offer_letter" class="form-control" tabindex="54"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="offer_letter" name="offer_letter" class="form-control" tabindex="54"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Appraisal Letter (If Any) : </strong>
-                            <input type="file" id="appraisal_letter" name="appraisal_letter" class="form-control" tabindex="56"/>
+                            @if(isset($a_l['url']) && $a_l['url'] != '')
+                                <a target="_blank" href="../{{ $a_l['url'] }}">{{ $a_l['name'] }}</a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="appraisal_letter" name="appraisal_letter" class="form-control" tabindex="56"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="appraisal_letter" name="appraisal_letter" class="form-control" tabindex="56"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Relieving Letter : </strong>
-                            <input type="file" id="relieving_letter" name="relieving_letter" class="form-control" tabindex="58"/>
+                            @if(isset($rel_l['url']) && $rel_l['url'] != '')
+                                <a target="_blank" href="../{{ $rel_l['url'] }}">{{ $rel_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="relieving_letter" name="relieving_letter" class="form-control" tabindex="58"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="relieving_letter" name="relieving_letter" class="form-control" tabindex="58"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Resignation Letter (Email with Acceptance) : </strong>
-                            <input type="file" id="resignation_letter" name="resignation_letter" class="form-control" tabindex="60"/>
+                            @if(isset($reg_l['url']) && $reg_l['url'] != '')
+                                <a target="_blank" href="../{{ $reg_l['url'] }}">{{ $reg_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="resignation_letter" name="resignation_letter" class="form-control" tabindex="60"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="resignation_letter" name="resignation_letter" class="form-control" tabindex="60"/>
+                            @endif
                         </div>
                     </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>Appointment Letter : </strong>
-                            <input type="file" id="appointment_letter" name="appointment_letter" class="form-control" tabindex="55"/>
+                            @if(isset($app_l['url']) && $app_l['url'] != '')
+                                <a target="_blank" href="../{{ $app_l['url'] }}">{{ $app_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="appointment_letter" name="appointment_letter" class="form-control" tabindex="55"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="appointment_letter" name="appointment_letter" class="form-control" tabindex="55"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Experience Letter : </strong>
-                            <input type="file" id="experience_letter" name="experience_letter" class="form-control" tabindex="57"/>
+                            @if(isset($exp_l['url']) && $exp_l['url'] != '')
+                                <a target="_blank" href="../{{ $exp_l['url'] }}">{{ $exp_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="experience_letter" name="experience_letter" class="form-control" tabindex="57"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="experience_letter" name="experience_letter" class="form-control" tabindex="57"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Pay Slips - Current Financial Year : </strong>
-                            <input type="file" id="pay_slips" name="pay_slips" class="form-control" tabindex="59"/>
+                            @if(isset($pay_l['url']) && $pay_l['url'] != '')
+                                <a target="_blank" href="../{{ $pay_l['url'] }}">{{ $pay_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="pay_slips" name="pay_slips" class="form-control" tabindex="59"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="pay_slips" name="pay_slips" class="form-control" tabindex="59"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Form - 26 AS (From Current Company) : </strong>
-                            <input type="file" id="form_26" name="form_26" class="form-control" tabindex="61"/>
+                            @if(isset($form_l['url']) && $form_l['url'] != '')
+                                <a target="_blank" href="../{{ $form_l['url'] }}">{{ $form_l['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="form_26" name="form_26" class="form-control" tabindex="61"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="form_26" name="form_26" class="form-control" tabindex="61"/>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -751,44 +947,173 @@
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>ID Proof : </strong>
-                            <input type="file" id="id_proof" name="id_proof" class="form-control" tabindex="62"/>
+                            @if(isset($id_p['url']) && $id_p['url'] != '')
+                                <a target="_blank" href="../{{ $id_p['url'] }}">{{ $id_p['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="id_proof" name="id_proof" class="form-control" tabindex="62"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="id_proof" name="id_proof" class="form-control" tabindex="62"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Passport : </strong>
-                            <input type="file" id="passport" name="passport" class="form-control" tabindex="64"/>
+                            @if(isset($pass_port['url']) && $pass_port['url'] != '')
+                                <a target="_blank" href="../{{ $pass_port['url'] }}">{{ $pass_port['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="passport" name="passport" class="form-control" tabindex="64"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="passport" name="passport" class="form-control" tabindex="64"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>PAN Card : <span class = "required_fields">*</span> </strong>
-                            <input type="file" id="pan_card" name="pan_card" class="form-control" tabindex="66"/>
+                            @if(isset($pan_c['url']) && $pan_c['url'] != '')
+                                <a target="_blank" href="../{{ $pan_c['url'] }}">{{ $pan_c['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="pan_card" name="pan_card" class="form-control" tabindex="66"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="pan_card" name="pan_card" class="form-control" tabindex="66"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Cancelled Cheque : <span class = "required_fields">*</span> </strong>
-                            <input type="file" id="cancelled_cheque" name="cancelled_cheque" class="form-control" tabindex="68"/>
+                            @if(isset($can_ch['url']) && $can_ch['url'] != '')
+                                <a target="_blank" href="../{{ $can_ch['url'] }}">{{ $can_ch['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="cancelled_cheque" name="cancelled_cheque" class="form-control" tabindex="68"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="cancelled_cheque" name="cancelled_cheque" class="form-control" tabindex="68"/>
+                            @endif
                         </div>
                     </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>Address Proof : </strong>
-                            <input type="file" id="address_proof" name="address_proof" class="form-control" tabindex="63"/>
+                            @if(isset($add_p['url']) && $add_p['url'] != '')
+                                <a target="_blank" href="../{{ $add_p['url'] }}">{{ $add_p['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="address_proof" name="address_proof" class="form-control" tabindex="63"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="address_proof" name="address_proof" class="form-control" tabindex="63"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Aadhar Card : <span class = "required_fields">*</span> </strong>
-                            <input type="file" id="aadhar_card" name="aadhar_card" class="form-control" tabindex="65"/>
+                            @if(isset($adr_c['url']) && $adr_c['url'] != '')
+                                <a target="_blank" href="../{{ $adr_c['url'] }}">{{ $adr_c['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="aadhar_card" name="aadhar_card" class="form-control" tabindex="65"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="aadhar_card" name="aadhar_card" class="form-control" tabindex="65"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>Resume : </strong>
-                            <input type="file" id="resume" name="resume" class="form-control" tabindex="67"/>
+                            @if(isset($resume['url']) && $resume['url'] != '')
+                                <a target="_blank" href="../{{ $resume['url'] }}">{{ $resume['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="resume" name="resume" class="form-control" tabindex="67"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="resume" name="resume" class="form-control" tabindex="67"/>
+                            @endif
                         </div>
 
                         <div class="form-group">
-                            <strong>Passport Size Photo : <span class = "required_fields">*</span> </strong>
-                            <input type="file" id="passport_photo" name="passport_photo" class="form-control" tabindex="69"/>
+                            <strong>Passport Size Photo : <span class = "required_fields">*</span> 
+                            </strong>
+                            @if(isset($pass_photo['url']) && $pass_photo['url'] != '')
+                                <a target="_blank" href="../{{ $pass_photo['url'] }}">{{ $pass_photo['name'] }}
+                                </a>
+
+                                <div class="form-group file_input_redesign">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div>
+                                            <span class="btn btn-default btn-file">
+                                                <span class="fileinput-new">Change Document</span>
+                                                <input type="file" id="passport_photo" name="passport_photo" class="form-control" tabindex="69"/>
+                                            </span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            @else
+                                <input type="file" id="passport_photo" name="passport_photo" class="form-control" tabindex="69"/>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -835,174 +1160,319 @@
                }
             });
 
-            $("#editprofile").validate({
-                rules: {
-                    "name": {
-                        required: true
+            var doc_size = $("#doc_size").val();
+
+            if(doc_size > 0) {
+
+                $("#editprofile").validate({
+                    rules: {
+                        "name": {
+                            required: true
+                        },
+                        "email": {
+                            required: true,
+                        },
+                        "semail": {
+                            required: true,
+                        },
+                        "contact_number": {
+                            required: true,
+                        },
+                        "date_of_birth": {
+                            required: true,
+                        },
+                        "bank_name": {
+                            required: true,
+                        },
+                        "acc_no": {
+                            required: true,
+                        },
+                        "payment_mode": {
+                            required: true,
+                        },
+                        "blood_group": {
+                            required: true,
+                        },
+                        "name_1": {
+                            required: true,
+                        },
+                        "relationship_1": {
+                            required: true,
+                        },
+                        "occupation_1": {
+                            required: true,
+                        },
+                        "contact_no_1": {
+                            required: true,
+                        },
+                        "name_2": {
+                            required: true,
+                        },
+                        "relationship_2": {
+                            required: true,
+                        },
+                        "occupation_2": {
+                            required: true,
+                        },
+                        "contact_no_2": {
+                            required: true,
+                        },
+                        "date_of_joining": {
+                            required: true,
+                        },
+                        "date_of_confirmation": {
+                            required: true,
+                        },
+                        "date_of_anniversary": {
+                            required: true,
+                        },
+                        "uan_no": {
+                            required: true,
+                        },
+                        "esic_no": {
+                            required: true,
+                        }
                     },
-                    "email": {
-                        required: true,
+                    messages: {
+                        "name": {
+                            required: "Name is Required."
+                        },
+                        "email": {
+                            required: "Official email is Required.",
+                        },
+                        "semail": {
+                            required: "Official Gmail is Required.",
+                        },
+                        "contact_number": {
+                            required: "Personal Contact Number is Required.",
+                        },
+                        "date_of_birth": {
+                            required: "Please Select Birth Date.",
+                        },
+                        "bank_name": {
+                            required: "Bank Name is Required.",
+                        },
+                        "acc_no": {
+                            required: "Account Number is Required.",
+                        },
+                        "payment_mode": {
+                            required: "Payment Mode is Required.",
+                        },
+                        "blood_group": {
+                            required: "Blood Group is Required.",
+                        },
+                        "name_1": {
+                            required: "Name is Required.",
+                        },
+                        "relationship_1": {
+                            required: "Relationship is Required.",
+                        },
+                        "occupation_1": {
+                            required: "Occupation is Required.",
+                        },
+                        "contact_no_1": {
+                            required: "Contact Number is Required.",
+                        },
+                        "name_2": {
+                            required: "Name is Required.",
+                        },
+                        "relationship_2": {
+                            required: "Relationship is Required.",
+                        },
+                        "occupation_2": {
+                            required: "Occupation is Required.",
+                        },
+                        "contact_no_2": {
+                            required: "Contact Number is Required.",
+                        },
+                        "date_of_joining": {
+                            required: "Please Select Joining Date.",
+                        },
+                        "date_of_confirmation": {
+                            required: "Please Select Confirmation Date.",
+                        },
+                        "date_of_anniversary": {
+                            required: "Please Select Marriage Anniversary Date.",
+                        },
+                        "uan_no": {
+                            required: "UAN Number is Required.",
+                        },
+                        "esic_no": {
+                            required: "ESIC Number is Required.",
+                        }
+                    }
+                });
+            }
+            else {
+                $("#editprofile").validate({
+                    rules: {
+                        "name": {
+                            required: true
+                        },
+                        "email": {
+                            required: true,
+                        },
+                        "semail": {
+                            required: true,
+                        },
+                        "contact_number": {
+                            required: true,
+                        },
+                        "date_of_birth": {
+                            required: true,
+                        },
+                        "bank_name": {
+                            required: true,
+                        },
+                        "acc_no": {
+                            required: true,
+                        },
+                        "payment_mode": {
+                            required: true,
+                        },
+                        "blood_group": {
+                            required: true,
+                        },
+                        "name_1": {
+                            required: true,
+                        },
+                        "relationship_1": {
+                            required: true,
+                        },
+                        "occupation_1": {
+                            required: true,
+                        },
+                        "contact_no_1": {
+                            required: true,
+                        },
+                        "name_2": {
+                            required: true,
+                        },
+                        "relationship_2": {
+                            required: true,
+                        },
+                        "occupation_2": {
+                            required: true,
+                        },
+                        "contact_no_2": {
+                            required: true,
+                        },
+                        "date_of_joining": {
+                            required: true,
+                        },
+                        "date_of_confirmation": {
+                            required: true,
+                        },
+                        "date_of_anniversary": {
+                            required: true,
+                        },
+                        "uan_no": {
+                            required: true,
+                        },
+                        "esic_no": {
+                            required: true,
+                        },
+                        "university_certificate": {
+                            required: true,
+                        },
+                        "pan_card": {
+                            required: true,
+                        },
+                        "cancelled_cheque": {
+                            required: true,
+                        },
+                        "aadhar_card": {
+                            required: true,
+                        },
+                        "passport_photo": {
+                            required: true,
+                        },
                     },
-                    "semail": {
-                        required: true,
-                    },
-                    "contact_number": {
-                        required: true,
-                    },
-                    "date_of_birth": {
-                        required: true,
-                    },
-                    "bank_name": {
-                        required: true,
-                    },
-                    "acc_no": {
-                        required: true,
-                    },
-                    "payment_mode": {
-                        required: true,
-                    },
-                    "blood_group": {
-                        required: true,
-                    },
-                    "name_1": {
-                        required: true,
-                    },
-                    "relationship_1": {
-                        required: true,
-                    },
-                    "occupation_1": {
-                        required: true,
-                    },
-                    "contact_no_1": {
-                        required: true,
-                    },
-                    "name_2": {
-                        required: true,
-                    },
-                    "relationship_2": {
-                        required: true,
-                    },
-                    "occupation_2": {
-                        required: true,
-                    },
-                    "contact_no_2": {
-                        required: true,
-                    },
-                    "date_of_joining": {
-                        required: true,
-                    },
-                    "date_of_confirmation": {
-                        required: true,
-                    },
-                    "date_of_anniversary": {
-                        required: true,
-                    },
-                    "uan_no": {
-                        required: true,
-                    },
-                    "esic_no": {
-                        required: true,
-                    },
-                    "university_certificate": {
-                        required: true,
-                    },
-                    "pan_card": {
-                        required: true,
-                    },
-                    "cancelled_cheque": {
-                        required: true,
-                    },
-                    "aadhar_card": {
-                        required: true,
-                    },
-                    "passport_photo": {
-                        required: true,
-                    },
-                },
-                messages: {
-                    "name": {
-                        required: "Name is Required."
-                    },
-                    "email": {
-                        required: "Official email is Required.",
-                    },
-                    "semail": {
-                        required: "Official Gmail is Required.",
-                    },
-                    "contact_number": {
-                        required: "Personal Contact Number is Required.",
-                    },
-                    "date_of_birth": {
-                        required: "Please Select Birth Date.",
-                    },
-                    "bank_name": {
-                        required: "Bank Name is Required.",
-                    },
-                    "acc_no": {
-                        required: "Account Number is Required.",
-                    },
-                    "payment_mode": {
-                        required: "Payment Mode is Required.",
-                    },
-                    "blood_group": {
-                        required: "Blood Group is Required.",
-                    },
-                    "name_1": {
-                        required: "Name is Required.",
-                    },
-                    "relationship_1": {
-                        required: "Relationship is Required.",
-                    },
-                    "occupation_1": {
-                        required: "Occupation is Required.",
-                    },
-                    "contact_no_1": {
-                        required: "Contact Number is Required.",
-                    },
-                    "name_2": {
-                        required: "Name is Required.",
-                    },
-                    "relationship_2": {
-                        required: "Relationship is Required.",
-                    },
-                    "occupation_2": {
-                        required: "Occupation is Required.",
-                    },
-                    "contact_no_2": {
-                        required: "Contact Number is Required.",
-                    },
-                    "date_of_joining": {
-                        required: "Please Select Joining Date.",
-                    },
-                    "date_of_confirmation": {
-                        required: "Please Select Confirmation Date.",
-                    },
-                    "date_of_anniversary": {
-                        required: "Please Select Marriage Anniversary Date.",
-                    },
-                    "uan_no": {
-                        required: "UAN Number is Required.",
-                    },
-                    "esic_no": {
-                        required: "ESIC Number is Required.",
-                    },
-                    "university_certificate": {
-                        required: "University Certificate is Required.",
-                    },
-                    "pan_card": {
-                        required: "PAN Card is Required.",
-                    },
-                    "cancelled_cheque": {
-                        required: "Cancelled Cheque is Required.",
-                    },
-                    "aadhar_card": {
-                        required: "Aadhar Card is Required.",
-                    },
-                    "passport_photo": {
-                        required: "Passport Photo is Required.",
-                    },
-                }
-            });
+                    messages: {
+                        "name": {
+                            required: "Name is Required."
+                        },
+                        "email": {
+                            required: "Official email is Required.",
+                        },
+                        "semail": {
+                            required: "Official Gmail is Required.",
+                        },
+                        "contact_number": {
+                            required: "Personal Contact Number is Required.",
+                        },
+                        "date_of_birth": {
+                            required: "Please Select Birth Date.",
+                        },
+                        "bank_name": {
+                            required: "Bank Name is Required.",
+                        },
+                        "acc_no": {
+                            required: "Account Number is Required.",
+                        },
+                        "payment_mode": {
+                            required: "Payment Mode is Required.",
+                        },
+                        "blood_group": {
+                            required: "Blood Group is Required.",
+                        },
+                        "name_1": {
+                            required: "Name is Required.",
+                        },
+                        "relationship_1": {
+                            required: "Relationship is Required.",
+                        },
+                        "occupation_1": {
+                            required: "Occupation is Required.",
+                        },
+                        "contact_no_1": {
+                            required: "Contact Number is Required.",
+                        },
+                        "name_2": {
+                            required: "Name is Required.",
+                        },
+                        "relationship_2": {
+                            required: "Relationship is Required.",
+                        },
+                        "occupation_2": {
+                            required: "Occupation is Required.",
+                        },
+                        "contact_no_2": {
+                            required: "Contact Number is Required.",
+                        },
+                        "date_of_joining": {
+                            required: "Please Select Joining Date.",
+                        },
+                        "date_of_confirmation": {
+                            required: "Please Select Confirmation Date.",
+                        },
+                        "date_of_anniversary": {
+                            required: "Please Select Marriage Anniversary Date.",
+                        },
+                        "uan_no": {
+                            required: "UAN Number is Required.",
+                        },
+                        "esic_no": {
+                            required: "ESIC Number is Required.",
+                        },
+                        "university_certificate": {
+                            required: "University Certificate is Required.",
+                        },
+                        "pan_card": {
+                            required: "PAN Card is Required.",
+                        },
+                        "cancelled_cheque": {
+                            required: "Cancelled Cheque is Required.",
+                        },
+                        "aadhar_card": {
+                            required: "Aadhar Card is Required.",
+                        },
+                        "passport_photo": {
+                            required: "Passport Photo is Required.",
+                        },
+                    }
+                });
+            }
 
             $("#date_of_birth").datepicker({
                 format: "dd-mm-yyyy",
