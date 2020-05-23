@@ -182,7 +182,7 @@ class JobOpenController extends Controller
         }
     }
 
-    public function index(Request $request){
+    public function index(Request $request) {
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
         // Rest other users can only see the jobs assigned to them
@@ -218,7 +218,7 @@ class JobOpenController extends Controller
         }*/
 
         // Year Data
-        $starting_year = '2017';
+        /*$starting_year = '2017';
         $ending_year = date('Y',strtotime('+1 year'));
         $year_array = array();
         $year_array[0] = "Select Year";
@@ -246,7 +246,37 @@ class JobOpenController extends Controller
             $year = NULL;
             $current_year = NULL;
             $next_year = NULL;
+        }*/
+
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
         }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else{
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else{
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+        $year1 = $year_data[0]; // [result : 2019-4]
+        $year2 = $year_data[1]; // [result : 2020-3]
+        $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
 
         // Get Client Heirarchy
 
@@ -283,43 +313,33 @@ class JobOpenController extends Controller
         $priority_7 = 0;
         $priority_8 = 0;
 
-        foreach ($job_priority_data as $job_priority) 
-        {
-           if($job_priority['priority'] == 0) 
-           {
-                $priority_0++;
-           }
-           else if($job_priority['priority'] == 1) 
-           {
-                $priority_1++;
-           }
-            else if($job_priority['priority'] == 2) 
-           {
-                $priority_2++;
-           }
-            else if($job_priority['priority'] == 3) 
-           {
-                $priority_3++;
-           }
-            else if($job_priority['priority'] == 5) 
-           {
-                $priority_5++;
-           }
-            else if($job_priority['priority'] == 6) 
-           {
-                $priority_6++;
-           }
-            else if($job_priority['priority'] == 7) 
-           {
-                $priority_7++;
-           }
-            else if($job_priority['priority'] == 8) 
-           {
-                $priority_8++;
-           }
-        }
+        foreach ($job_priority_data as $job_priority) {
 
-        //$count = sizeof($job_response);
+           if($job_priority['priority'] == 0) {
+                $priority_0++;
+            }
+            else if($job_priority['priority'] == 1) {
+                $priority_1++;
+            }
+            else if($job_priority['priority'] == 2) {
+                $priority_2++;
+            }
+            else if($job_priority['priority'] == 3) {
+                $priority_3++;
+            }
+            else if($job_priority['priority'] == 5) {
+                $priority_5++;
+            }
+            else if($job_priority['priority'] == 6) {
+                $priority_6++;
+            }
+            else if($job_priority['priority'] == 7) {
+                $priority_7++;
+            }
+            else if($job_priority['priority'] == 8) {
+                $priority_8++;
+            }
+        }
 
         // Get Client Heirarchy
 

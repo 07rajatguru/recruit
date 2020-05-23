@@ -94,7 +94,7 @@
                             @endif
 
                             @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
-                                @if(isset($v['lead_count']) && sizeof($v['lead_count']) > 0)
+                                @if(isset($v['lead_count']) && $v['lead_count'] != '')
                                     <td>{!! $v['lead_count'] !!}</td>
                                 @else
                                     <td></td>
