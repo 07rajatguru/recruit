@@ -292,7 +292,7 @@ class JobOpenController extends Controller
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
             $count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,NULL,NULL,$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
         }
         else if ($isClient) {
             $job_response = JobOpen::getAllJobsByCLient($client_id,0,0,0,NULL,'',$client_heirarchy);
@@ -301,7 +301,7 @@ class JobOpenController extends Controller
         }
         else{
             $count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,NULL,NULL,$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
         }
 
         $priority_0 = 0;
