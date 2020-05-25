@@ -61,28 +61,31 @@ class ExistCandidateAutoScript extends Command
 
             foreach ($candidate_res as $key => $value) {
 
-                $input['candidate_name'] = $value['full_name'];
-                /*$input['to'] = $value['email'];
-                $input['cc'] = 'dhara@trajinfotech.com';*/
-                /*$input['to'] = 'tarikapanjwani@gmail.com';
-                $input['cc'] = 'saloni@trajinfotech.com';*/
-                /*$input['to'] = 'saloni@trajinfotech.com';
-                $input['cc'] = 'trajinfotech15@gmail.com';*/
+                if(isset($value['email']) && $value['email'] != '') {
 
-                $input['to'] = $value['email'];
-                $candidate_id = $value['id'];
+                    $input['candidate_name'] = $value['full_name'];
+                    /*$input['to'] = $value['email'];
+                    $input['cc'] = 'dhara@trajinfotech.com';*/
+                    /*$input['to'] = 'tarikapanjwani@gmail.com';
+                    $input['cc'] = 'saloni@trajinfotech.com';*/
+                    /*$input['to'] = 'saloni@trajinfotech.com';
+                    $input['cc'] = 'trajinfotech15@gmail.com';*/
 
-                //print_r($input);exit;
+                    $input['to'] = $value['email'];
+                    $candidate_id = $value['id'];
 
-                \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input)
-                {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->subject($input['subject']);
-                });
+                    //print_r($input);exit;
 
-                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
+                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input)
+                    {
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->subject($input['subject']);
+                    });
 
-                echo $value['id']." - 1". "\n";
+                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
+
+                    echo $value['id']." - 1". "\n";
+                }
             }
         }
     }
