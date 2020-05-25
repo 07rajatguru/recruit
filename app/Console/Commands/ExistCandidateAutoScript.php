@@ -39,7 +39,7 @@ class ExistCandidateAutoScript extends Command
     public function handle()
     {
         //$candidate_res = CandidateBasicInfo::getCandidateDetails(25,0,'','');
-        $candidate_res = CandidateBasicInfo::getCandidateDetails(2,0,'','');
+        $candidate_res = CandidateBasicInfo::getCandidateDetails(10,0,'','');
 
         //print_r($candidate_res);exit;
 
@@ -66,9 +66,10 @@ class ExistCandidateAutoScript extends Command
                 $input['cc'] = 'dhara@trajinfotech.com';*/
                 /*$input['to'] = 'tarikapanjwani@gmail.com';
                 $input['cc'] = 'saloni@trajinfotech.com';*/
+                /*$input['to'] = 'saloni@trajinfotech.com';
+                $input['cc'] = 'trajinfotech15@gmail.com';*/
 
-                $input['to'] = 'saloni@trajinfotech.com';
-                $input['cc'] = 'trajinfotech15@gmail.com';
+                $input['to'] = $value['email'];
                 $candidate_id = $value['id'];
 
                 //print_r($input);exit;
@@ -76,7 +77,7 @@ class ExistCandidateAutoScript extends Command
                 \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input)
                 {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                    $message->to($input['to'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
