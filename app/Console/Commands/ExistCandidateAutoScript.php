@@ -81,11 +81,19 @@ class ExistCandidateAutoScript extends Command
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->subject($input['subject']);
                     });
-                }
-                
-                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
 
-                echo $value['id']." - 1". "\n";
+                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
+
+                    echo $value['id']." - 1". "\n";
+                }
+                else {
+
+                    $candidate_id = $value['id'];
+                    
+                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
+
+                    echo $value['id']." - 1". "\n";
+                }
             }
         }
     }
