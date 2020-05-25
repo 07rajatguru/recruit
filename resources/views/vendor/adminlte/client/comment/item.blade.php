@@ -8,7 +8,7 @@
 <div class="singal-row-wrapper">
     <div class="post__author author-date">
         <?php
-            $data = App\UsersDoc::getUserPhotoInfo($comment->creator_id);    
+            $data = App\UsersDoc::getUserDocInfoByIDType($comment->creator_id,'Photo'); 
         ?>
 
         @if(isset($data['file']) && $data['file'] != '')

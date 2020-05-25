@@ -711,6 +711,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" name="ssc_marksheet" id="ssc_marksheet" tabindex="51" />
                                             </span>
+                                            <div class="ssc_marksheet_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -734,6 +735,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="hsc_marksheet" name="hsc_marksheet" class="form-control" tabindex="52"/>
                                             </span>
+                                            <div class="hsc_marksheet_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -758,6 +760,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" name="university_certificate" id="university_certificate" tabindex="53" />
                                             </span>
+                                            <div class="university_certificate_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -784,6 +787,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="offer_letter" name="offer_letter" class="form-control" tabindex="54"/>
                                             </span>
+                                            <div class="offer_letter_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -804,6 +808,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="appraisal_letter" name="appraisal_letter" class="form-control" tabindex="56"/>
                                             </span>
+                                            <div class="appraisal_letter_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -825,6 +830,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="relieving_letter" name="relieving_letter" class="form-control" tabindex="58"/>
                                             </span>
+                                            <div class="relieving_letter_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -846,6 +852,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="resignation_letter" name="resignation_letter" class="form-control" tabindex="60"/>
                                             </span>
+                                            <div class="resignation_letter_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -869,6 +876,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="appointment_letter" name="appointment_letter" class="form-control" tabindex="55"/>
                                             </span>
+                                            <div class="appointment_letter_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -890,6 +898,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="experience_letter" name="experience_letter" class="form-control" tabindex="57"/>
                                             </span>
+                                            <div class="experience_letter_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -911,6 +920,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="pay_slips" name="pay_slips" class="form-control" tabindex="59"/>
                                             </span>
+                                            <div class="pay_slips_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -932,6 +942,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="form_26" name="form_26" class="form-control" tabindex="61"/>
                                             </span>
+                                            <div class="form_26_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -958,6 +969,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="id_proof" name="id_proof" class="form-control" tabindex="62"/>
                                             </span>
+                                            <div class="id_proof_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -979,6 +991,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="passport" name="passport" class="form-control" tabindex="64"/>
                                             </span>
+                                            <div class="passport_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1000,6 +1013,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="pan_card" name="pan_card" class="form-control" tabindex="66"/>
                                             </span>
+                                            <div class="pan_card_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1021,6 +1035,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="cancelled_cheque" name="cancelled_cheque" class="form-control" tabindex="68"/>
                                             </span>
+                                            <div class="cancelled_cheque_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1044,6 +1059,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="address_proof" name="address_proof" class="form-control" tabindex="63"/>
                                             </span>
+                                            <div class="address_proof_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1065,6 +1081,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="aadhar_card" name="aadhar_card" class="form-control" tabindex="65"/>
                                             </span>
+                                            <div class="aadhar_card_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1086,6 +1103,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="resume" name="resume" class="form-control" tabindex="67"/>
                                             </span>
+                                            <div class="resume_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1108,6 +1126,7 @@
                                                 <span class="fileinput-new">Change Document</span>
                                                 <input type="file" id="passport_photo" name="passport_photo" class="form-control" tabindex="69"/>
                                             </span>
+                                            <div class="passport_photo_div"></div>
                                         </div>
                                     </div>  
                                 </div>
@@ -1137,6 +1156,101 @@
     <script type="text/javascript">
 
         jQuery(document).ready(function () {
+
+            $('#ssc_marksheet').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".ssc_marksheet_div").html(fileName);
+            });
+
+            $('#hsc_marksheet').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".hsc_marksheet_div").html(fileName);
+            });
+
+            $('#university_certificate').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".university_certificate_div").html(fileName);
+            });
+
+            $('#offer_letter').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".offer_letter_div").html(fileName);
+            });
+
+            $('#appraisal_letter').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".appraisal_letter_div").html(fileName);
+            });
+
+            $('#relieving_letter').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".relieving_letter_div").html(fileName);
+            });
+
+            $('#resignation_letter').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".resignation_letter_div").html(fileName);
+            });
+
+            $('#appointment_letter').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".appointment_letter_div").html(fileName);
+            });
+
+            $('#experience_letter').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".experience_letter_div").html(fileName);
+            });
+
+            $('#pay_slips').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".pay_slips_div").html(fileName);
+            });
+
+            $('#form_26').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".form_26_div").html(fileName);
+            });
+
+            $('#id_proof').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".id_proof_div").html(fileName);
+            });
+
+            $('#passport').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".passport_div").html(fileName);
+            });
+
+            $('#pan_card').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".pan_card_div").html(fileName);
+            });
+
+            $('#cancelled_cheque').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".cancelled_cheque_div").html(fileName);
+            });
+
+            $('#address_proof').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".address_proof_div").html(fileName);
+            });
+
+            $('#aadhar_card').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".aadhar_card_div").html(fileName);
+            });
+
+            $('#resume').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".resume_div").html(fileName);
+            });
+
+            $('#passport_photo').change(function(e){
+                var fileName = e.target.files[0].name;
+                $(".passport_photo_div").html(fileName);
+            });
 
             CKEDITOR.replace( 'signature', 
             {

@@ -1,7 +1,7 @@
 <div class="singal-row-wrapper">
     <div class="post__author author-date">
         <?php
-            $data = App\UsersDoc::getUserPhotoInfo($per_post->user_id);    
+            $data = App\UsersDoc::getUserDocInfoByIDType($per_post->user_id,'Photo');
         ?>
 
         @if(isset($data['file']) && $data['file'] != '')

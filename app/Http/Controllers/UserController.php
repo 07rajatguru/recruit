@@ -514,7 +514,7 @@ class UserController extends Controller
             $user = array();
 
             // profile photo
-            $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,'Photo');
             if(isset($user_doc_info)){
                 $user['photo'] = $user_doc_info->file;
                 $user['type'] = $user_doc_info->type;
@@ -624,7 +624,7 @@ class UserController extends Controller
             $user = array();
 
             // profile photo
-            $user_doc_info = UsersDoc::getUserPhotoInfo($user_id);
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,'Photo');
             if(isset($user_doc_info)){
                 $user['photo'] = $user_doc_info->file;
                 $user['type'] = $user_doc_info->type;
@@ -908,6 +908,7 @@ class UserController extends Controller
         }
 
         $users_otherinfo_update->blood_group = $blood_group;
+        $users_otherinfo_update->contact_number = $contact_number;
         $users_otherinfo_update->contact_no_official = $contact_no_official;
         $users_otherinfo_update->current_address = $current_address;
         $users_otherinfo_update->permanent_address = $permanent_address;
@@ -960,7 +961,7 @@ class UserController extends Controller
         }
 
         // Stored photo
-        $user_photo_info = UsersDoc::getUserPhotoInfo($user_id);
+        $user_photo_info = UsersDoc::getUserDocInfoByIDType($user_id,'Photo');
         $upload_profile_photo = $request->file('image');
 
         if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
@@ -1044,7 +1045,19 @@ class UserController extends Controller
 
         if (isset($ssc_marksheet) && $ssc_marksheet->isValid()){
 
-            UsersDoc::where('type','=','SSC Marksheet')->delete();
+            $type = 'SSC Marksheet';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $ssc_marksheet->getClientOriginalName();
             $file_size = $ssc_marksheet->getSize();
@@ -1064,7 +1077,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "SSC Marksheet";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1073,7 +1086,19 @@ class UserController extends Controller
 
         if (isset($hsc_marksheet) && $hsc_marksheet->isValid()){
 
-            UsersDoc::where('type','=','HSC Marksheet')->delete();
+            $type = 'HSC Marksheet';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $hsc_marksheet->getClientOriginalName();
             $file_size = $hsc_marksheet->getSize();
@@ -1093,7 +1118,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "HSC Marksheet";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1101,8 +1126,20 @@ class UserController extends Controller
         $university_certificate = $request->file('university_certificate');
 
         if (isset($university_certificate) && $university_certificate->isValid()){
+
+            $type = 'University Certificate';
             
-            UsersDoc::where('type','=','University Certificate')->delete();
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
 
             $file_name = $university_certificate->getClientOriginalName();
             $file_size = $university_certificate->getSize();
@@ -1122,7 +1159,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "University Certificate";
+            $users_doc->type = $type;
             $users_doc->save();
         }
         //Educational Credentials End
@@ -1133,7 +1170,19 @@ class UserController extends Controller
 
         if (isset($offer_letter) && $offer_letter->isValid()){
 
-            UsersDoc::where('type','=','Offer Letter')->delete();
+            $type = 'Offer Letter';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $offer_letter->getClientOriginalName();
             $file_size = $offer_letter->getSize();
@@ -1153,7 +1202,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Offer Letter";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1162,7 +1211,19 @@ class UserController extends Controller
 
         if (isset($appraisal_letter) && $appraisal_letter->isValid()){
 
-            UsersDoc::where('type','=','Appraisal Letter')->delete();
+            $type = 'Appraisal Letter';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $appraisal_letter->getClientOriginalName();
             $file_size = $appraisal_letter->getSize();
@@ -1182,7 +1243,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Appraisal Letter";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1191,7 +1252,19 @@ class UserController extends Controller
 
         if (isset($relieving_letter) && $relieving_letter->isValid()){
 
-            UsersDoc::where('type','=','Relieving Letter')->delete();
+            $type = 'Relieving Letter';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $relieving_letter->getClientOriginalName();
             $file_size = $relieving_letter->getSize();
@@ -1211,7 +1284,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Relieving Letter";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1220,7 +1293,19 @@ class UserController extends Controller
 
         if (isset($resignation_letter) && $resignation_letter->isValid()){
 
-            UsersDoc::where('type','=','Resignation Letter')->delete();
+            $type = 'Resignation Letter';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $resignation_letter->getClientOriginalName();
             $file_size = $resignation_letter->getSize();
@@ -1240,7 +1325,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Resignation Letter";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1249,7 +1334,19 @@ class UserController extends Controller
 
         if (isset($appointment_letter) && $appointment_letter->isValid()){
 
-            UsersDoc::where('type','=','Appointment Letter')->delete();
+            $type = 'Appointment Letter';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $appointment_letter->getClientOriginalName();
             $file_size = $appointment_letter->getSize();
@@ -1269,7 +1366,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Appointment Letter";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1278,7 +1375,19 @@ class UserController extends Controller
 
         if (isset($experience_letter) && $experience_letter->isValid()){
 
-            UsersDoc::where('type','=','Experience Letter')->delete();
+            $type = 'Experience Letter';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $experience_letter->getClientOriginalName();
             $file_size = $experience_letter->getSize();
@@ -1298,7 +1407,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Experience Letter";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1307,7 +1416,19 @@ class UserController extends Controller
 
         if (isset($pay_slips) && $pay_slips->isValid()){
 
-            UsersDoc::where('type','=','Pay Slips')->delete();
+            $type = 'Pay Slips';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $pay_slips->getClientOriginalName();
             $file_size = $pay_slips->getSize();
@@ -1327,7 +1448,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Pay Slips";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1336,7 +1457,19 @@ class UserController extends Controller
 
         if (isset($form_26) && $form_26->isValid()){
 
-            UsersDoc::where('type','=','Form - 26')->delete();
+            $type = 'Form - 26';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $form_26->getClientOriginalName();
             $file_size = $form_26->getSize();
@@ -1356,7 +1489,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Form - 26";
+            $users_doc->type = $type;
             $users_doc->save();
         }
         //Company Credentials Start
@@ -1367,7 +1500,19 @@ class UserController extends Controller
 
         if (isset($id_proof) && $id_proof->isValid()){
 
-            UsersDoc::where('type','=','ID Proof')->delete();
+            $type = 'ID Proof';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $id_proof->getClientOriginalName();
             $file_size = $id_proof->getSize();
@@ -1387,7 +1532,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "ID Proof";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1396,7 +1541,19 @@ class UserController extends Controller
 
         if (isset($passport) && $passport->isValid()){
 
-            UsersDoc::where('type','=','Passport')->delete();
+            $type = 'Passport';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $passport->getClientOriginalName();
             $file_size = $passport->getSize();
@@ -1416,7 +1573,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Passport";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1424,8 +1581,20 @@ class UserController extends Controller
         $pan_card = $request->file('pan_card');
 
         if (isset($pan_card) && $pan_card->isValid()){
+
+            $type = 'PAN Card';
             
-            UsersDoc::where('type','=','PAN Card')->delete();
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
 
             $file_name = $pan_card->getClientOriginalName();
             $file_size = $pan_card->getSize();
@@ -1445,7 +1614,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "PAN Card";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1454,7 +1623,19 @@ class UserController extends Controller
 
         if (isset($cancelled_cheque) && $cancelled_cheque->isValid()){
 
-            UsersDoc::where('type','=','Cancelled Cheque')->delete();
+            $type = 'Cancelled Cheque';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $cancelled_cheque->getClientOriginalName();
             $file_size = $cancelled_cheque->getSize();
@@ -1474,7 +1655,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Cancelled Cheque";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1483,7 +1664,19 @@ class UserController extends Controller
 
         if (isset($address_proof) && $address_proof->isValid()){
 
-            UsersDoc::where('type','=','Address Proof')->delete();
+            $type = 'Address Proof';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $address_proof->getClientOriginalName();
             $file_size = $address_proof->getSize();
@@ -1503,7 +1696,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Address Proof";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1512,7 +1705,19 @@ class UserController extends Controller
 
         if (isset($aadhar_card) && $aadhar_card->isValid()){
             
-            UsersDoc::where('type','=','Aadhar Card')->delete();
+            $type = 'Aadhar Card';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
 
             $file_name = $aadhar_card->getClientOriginalName();
             $file_size = $aadhar_card->getSize();
@@ -1532,7 +1737,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Aadhar Card";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1541,7 +1746,19 @@ class UserController extends Controller
 
         if (isset($resume) && $resume->isValid()){
 
-            UsersDoc::where('type','=','Resume')->delete();
+            $type = 'Resume';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $resume->getClientOriginalName();
             $file_size = $resume->getSize();
@@ -1561,7 +1778,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Resume";
+            $users_doc->type = $type;
             $users_doc->save();
         }
 
@@ -1570,7 +1787,19 @@ class UserController extends Controller
 
         if (isset($passport_photo) && $passport_photo->isValid()){
 
-            UsersDoc::where('type','=','Passport Photo')->delete();
+            $type = 'Passport Photo';
+
+            $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,$type);
+
+            // Remove Old Document & It's entry from table
+
+            if(isset($user_doc_info) && $user_doc_info != '') {
+
+                $path = "uploads/users/" . $user_doc_info->user_id . "/" . $user_doc_info->name;
+                unlink($path);
+
+                UsersDoc::where('type','=',$type)->delete();
+            }
             
             $file_name = $passport_photo->getClientOriginalName();
             $file_size = $passport_photo->getSize();
@@ -1590,7 +1819,7 @@ class UserController extends Controller
             $users_doc->file = $file_path;
             $users_doc->name = $file_name;
             $users_doc->size = $file_size;
-            $users_doc->type = "Passport Photo";
+            $users_doc->type = $type;
             $users_doc->save();
         }
         //Personal Credentials End
