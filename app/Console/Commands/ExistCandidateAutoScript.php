@@ -71,7 +71,7 @@ class ExistCandidateAutoScript extends Command
                     /*$input['to'] = 'saloni@trajinfotech.com';
                     $input['cc'] = 'trajinfotech15@gmail.com';*/
 
-                    $input['to'] = $value['email'];
+                    $input['to'] = trim($value['email']);
                     $candidate_id = $value['id'];
 
                     //print_r($input);exit;
