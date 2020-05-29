@@ -266,11 +266,7 @@ class BillsController extends Controller
                     }
                     if($isSuperAdmin || $isAccountant){
 
-                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
-                            //$action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
-                            $action .= '<a href="'.route('recovery.generateinvoice',$value['id']).'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
-                        }
-                        else if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
+                        if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
                             $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
                             $job_con = $job_confirmation->render();
                             $action .= $job_con;
@@ -289,6 +285,9 @@ class BillsController extends Controller
                             $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?']);
                             $payment = $payment_received->render();
                             $action .= $payment;
+                        }
+                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
+                            $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
                         }
                     }
                 }
@@ -766,7 +765,8 @@ class BillsController extends Controller
         }
         else{
             //$percentage_charged = '';
-            return redirect('forecasting/create')->with('error','Please Contact to Adminstrator to set Percentage Charged of Client.');
+            //return redirect('forecasting/create')->with('error','Please Contact to Adminstrator to set Percentage Charged of Client.');
+            $percentage_charged = '8.33';
         }
         $employee_name = array();
         $employee_final = array();
@@ -1923,7 +1923,7 @@ class BillsController extends Controller
 
 
     // Test Generate Invoice 
-    public function getGenerateInvoice($id){
+    /*public function getGenerateInvoice($id){
 
         // Generate excel sheet and save at bill id location
         Excel::create($id.'_invoice', function($excel) use ($id){
@@ -1934,13 +1934,13 @@ class BillsController extends Controller
                 $invoice_data = Bills::getJoinConfirmationMail($bill_id);
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
-                ->getStyle('A8','F8')
+                ->getStyle('A8')
                 ->getAlignment()
                 ->setWrapText(true);
 
             });
         })->export('xls');
-    }
+    }*/
 
     // Payment received or not
     public function getPaymentReceived($id){
