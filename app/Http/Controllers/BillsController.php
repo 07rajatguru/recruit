@@ -1871,7 +1871,11 @@ class BillsController extends Controller
                 $bill_id = $_POST['id'];
                 $invoice_data = Bills::getJoinConfirmationMail($bill_id);
 
-                $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data);
+                $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
+                ->getStyle('A8','F8')
+                ->getAlignment()
+                ->setWrapText(true);
+
             });
         })->store('xls', public_path('uploads/bills/'.$id));
         

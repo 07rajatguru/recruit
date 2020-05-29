@@ -26,20 +26,27 @@
 			<tr>
 				<td colspan="5" style="border: 5px solid #000000;">Name: {{ $invoice_data['company_name'] }}</td>
 				<td colspan="4" style="border: 5px solid #000000;">Name: {{ $invoice_data['company_name'] }}</td>
-				<td rowspan="2" style="border: 5px solid #000000;"><b> Invoice No. :<br/> ATS/18-19/___</b></td>
+				<td rowspan="3" style="border: 5px solid #000000;" width="20"><center><b> Invoice No. :</center><br/> <center>ATS/18-19/___</center>
+				</b></td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td colspan="5" rowspan="2" style="border: 5px solid #000000;">Address: {{ $invoice_data['billing_address'] }}</td>
 				<td colspan="4" rowspan="2" style="border: 5px solid #000000;">Address: {{ $invoice_data['shipping_address'] }}</td>
+			</tr> -->
+			<tr>
+				<td colspan="5" rowspan="2" style="border: 5px solid #000000;" height="50" width="15">Address: {{ $invoice_data['billing_address'] }}
+				</td>
+				<td colspan="4" rowspan="2" style="border: 5px solid #000000;" height="50" width="20">Address: {{ $invoice_data['shipping_address'] }}
+				</td>
 			</tr>
 			<tr>
 				<td colspan="5" style="border: 5px solid #000000;"></td>
 				<td colspan="4" style="border: 5px solid #000000;"></td>
-				<td rowspan="2" style="border: 5px solid #000000;"><b>Dt- _________</b></td>
 			</tr>
 			<tr>
 				<td colspan="5" style="border: 5px solid #000000;">GST Number- {{ $invoice_data['gst_no'] }}</td>
 				<td colspan="4" style="border: 5px solid #000000;">GST Number- {{ $invoice_data['gst_no'] }}</td>
+				<td style="border: 5px solid #000000;"><b>Dt- _________</b></td>
 			</tr>
 			<tr>
 				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
