@@ -33,13 +33,6 @@
 
 </div>
 
-@if ($message = Session::get('success'))
-    <div class="alert alert-success">
-        <p>{{ $message }}</p>
-    </div>
-
-@endif
-
 @if ($message = Session::get('error'))
     <div class="alert alert-error">
         <p>{{ $message }}</p>
@@ -193,7 +186,19 @@
                         </div>
                         @if($isSuperAdmin || $isAccountant)
                         <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
-                            <strong>Percentage Charged: </strong>
+                            <strong>Percentage Charged: <span class = "required_fields">*</span> 
+                            </strong>
+                            {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
+                            @if ($errors->has('percentage_charged'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('percentage_charged') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        @else
+                        <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}" style="display: none;">
+                            <strong>Percentage Charged: <span class = "required_fields">*</span> 
+                            </strong>
                             {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
                             @if ($errors->has('percentage_charged'))
                                 <span class="help-block">
@@ -444,6 +449,9 @@
                     "unedited_resume": {
                         required: true
                     },
+                    "percentage_charged": {
+                        required: true
+                    },
                 },
                 messages: {
                     "company_name": {
@@ -490,6 +498,9 @@
                     },
                     "unedited_resume": {
                         required: "Please Select file."
+                    },
+                    "percentage_charged": {
+                        required: "Percentage Charged is required field."
                     },
                 }
             });

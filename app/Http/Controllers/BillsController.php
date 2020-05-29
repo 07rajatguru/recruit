@@ -759,11 +759,13 @@ class BillsController extends Controller
         $client_email_id = $input['client_email_id'];
         $address_of_communication = $input['address_of_communication'];
 
-        if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
+        if(isset($input['percentage_charged']) && $input['percentage_charged']!='') {
             $percentage_charged = $input['percentage_charged'];
-        else
-            $percentage_charged = '';
-
+        }
+        else{
+            //$percentage_charged = '';
+            return redirect('forecasting/create')->with('error','Please Contact to Adminstrator to set Percentage Charged of Client.');
+        }
         $employee_name = array();
         $employee_final = array();
         $employee_percentage = array();
