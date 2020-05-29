@@ -147,4 +147,15 @@ class UsersLog extends Model
         return $user_attendance;
     }
 
+    public static function getUserLogsByIdDate($user_id,$date){
+
+        $query = UsersLog::query();
+        $query = $query->select('users_log.*');
+        $query = $query->where('user_id',$user_id);
+        $query = $query->where('date','=',$date);
+        $count = $query->count();
+
+        return $count;
+    }
+
 }
