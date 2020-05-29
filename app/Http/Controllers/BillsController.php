@@ -266,7 +266,12 @@ class BillsController extends Controller
                     }
                     if($isSuperAdmin || $isAccountant){
 
-                        if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
+                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
+                            //$action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
+                            $action .= '<a href="'.route('recovery.generateinvoice',$value['id']).'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
+                        }
+
+                        else if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
                             $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
                             $job_con = $job_confirmation->render();
                             $action .= $job_con;
@@ -285,9 +290,6 @@ class BillsController extends Controller
                             $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?']);
                             $payment = $payment_received->render();
                             $action .= $payment;
-                        }
-                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
-                            $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
                         }
                     }
                 }
@@ -1923,7 +1925,7 @@ class BillsController extends Controller
 
 
     // Test Generate Invoice 
-    /*public function getGenerateInvoice($id){
+    public function getGenerateInvoice($id){
 
         // Generate excel sheet and save at bill id location
         Excel::create($id.'_invoice', function($excel) use ($id){
@@ -1940,7 +1942,7 @@ class BillsController extends Controller
 
             });
         })->export('xls');
-    }*/
+    }
 
     // Payment received or not
     public function getPaymentReceived($id){
