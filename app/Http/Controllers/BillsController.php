@@ -1936,7 +1936,7 @@ class BillsController extends Controller
                 $invoice_data = Bills::getJoinConfirmationMail($bill_id);
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
-                ->getStyle('A8')
+                ->getStyle('A7')
                 ->getAlignment()
                 ->setWrapText(true);
 
