@@ -57,6 +57,12 @@
         </div>
     @endif
 
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
     @if($title == "Recovery")
       <div class="col-xs-12 col-sm-12 col-md-12">
           <div class="box-body col-xs-12 col-sm-6 col-md-3">

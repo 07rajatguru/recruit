@@ -1425,10 +1425,10 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // test for recovery invoice genereate route
-    Route::get('recovery/generateinvoice/{id}',[
+    /*Route::get('recovery/generateinvoice/{id}',[
         'as' => 'recovery.generateinvoice',
         'uses' => 'BillsController@getGenerateInvoice'
-    ]);
+    ]);*/
 
     // Admin > Teams
     Route::get('team', [
