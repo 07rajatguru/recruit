@@ -1894,11 +1894,11 @@ class BillsController extends Controller
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('C12')
+                $sheet->getStyle('B12')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('C24')
+                $sheet->getStyle('B24')
                 ->getAlignment()
                 ->setWrapText(true);
 
