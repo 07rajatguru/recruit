@@ -1874,7 +1874,7 @@ class BillsController extends Controller
 
         if(isset($invoice_data['gst_no']) &&  $invoice_data['gst_no'] == '') {
 
-            return redirect('/recovery')->with('error','Please add GST No. of Client for Download the invoice.');
+            return redirect('/recovery')->with('error','Please add GST No. of Client for Generate the invoice.');
         }
 
         // Generate excel sheet and save at bill id location
@@ -1882,23 +1882,23 @@ class BillsController extends Controller
             $excel->sheet('Sheet 1', function($sheet) use ($invoice_data){
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
-                ->getStyle('A7')
+                ->getStyle('B7')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('F7')
+                $sheet->getStyle('G7')
                 ->getAlignment()
                 ->setWrapText(true);
                
-                $sheet->getStyle('J6')
+                $sheet->getStyle('K6')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('B12')
+                $sheet->getStyle('C12')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('B24')
+                $sheet->getStyle('C24')
                 ->getAlignment()
                 ->setWrapText(true);
 
