@@ -225,12 +225,31 @@ class Bills extends Model
             }
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
-            $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+
+           /* $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
             if (!file_exists($url) && !is_dir($url)) {
                 $bills[$i]['invoice_url'] = NULL;
             }
             else{
                 $bills[$i]['invoice_url'] = $url;
+            }*/
+
+            // Generate Excel Invoice URL
+            $excel_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+            if (!file_exists($excel_url) && !is_dir($excel_url)) {
+                $bills[$i]['excel_invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['excel_invoice_url'] = $excel_url;
+            }
+
+            // Generate PDF Invoice URL
+            $pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
+            if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
+                $bills[$i]['pdf_invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['pdf_invoice_url'] = $pdf_url;
             }
 
             // get lead employee efforts
@@ -438,12 +457,31 @@ class Bills extends Model
             }
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
-            $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+
+            /*$url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
             if (!file_exists($url) && !is_dir($url)) {
                 $bills[$i]['invoice_url'] = NULL;
             }
             else{
                 $bills[$i]['invoice_url'] = $url;
+            }*/
+
+            // Generate Excel Invoice URL
+            $excel_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+            if (!file_exists($excel_url) && !is_dir($excel_url)) {
+                $bills[$i]['excel_invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['excel_invoice_url'] = $excel_url;
+            }
+
+            // Generate PDF Invoice URL
+            $pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
+            if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
+                $bills[$i]['pdf_invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['pdf_invoice_url'] = $pdf_url;
             }
 
             // get lead employee efforts

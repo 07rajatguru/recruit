@@ -18,6 +18,7 @@ use App\Utils;
 use App\Events\NotificationMail;
 use App\BillsLeadEfforts;
 use App\BillDate;
+use PDF;
 
 class BillsController extends Controller
 {
@@ -286,9 +287,16 @@ class BillsController extends Controller
                             $payment = $payment_received->render();
                             $action .= $payment;
                         }
-                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
+                        /*if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
                             $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
-                            //$action .= '<a href="'.route('recovery.generateinvoice',$value['id']).'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
+                        }*/
+                        if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
+
+                            $action .= '<a title="Download Excel" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i  class="fa fa-file-excel-o"></i></a>';
+                        }
+                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+
+                           $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i  class="fa fa-file-pdf-o"></i></a>';
                         }
                     }
                 }
@@ -496,14 +504,22 @@ class BillsController extends Controller
                             $payment = $payment_received->render();
                             $action .= $payment;
                         }
-                        if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
+                        /*if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
                             $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
+                        }*/
+                        if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
+
+                            $action .= '<a title="Download Excel" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-excel-o"></i></a>';
+                        }
+                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+
+                           $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
                         }
                     }
                 }
                 if($isSuperAdmin || $isAccountant) {
                     if($value['cancel_bill']==1){
-                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery']);
                         $relive = $relive_view->render();
                         $action .= $relive;
                     }
@@ -1904,7 +1920,14 @@ class BillsController extends Controller
 
             });
         })->store('xls', public_path('uploads/bills/'.$id));
+
+        // Generate PDF and save at bill id location
         
+        $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
+        //$customPaper = array(0,0,800,750);
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->save(public_path('uploads/bills/'.$id.'/'.$id.'_Invoice.pdf'));
+
         $user_id = \Auth::user()->id;
         //Logged in User Email Id
         $user_email = User::getUserEmailById($user_id);
@@ -1943,27 +1966,6 @@ class BillsController extends Controller
         return redirect('/recovery')->with('success','Invoice Generated and Mailed Successfully');
     }
 
-
-    // Test Generate Invoice 
-    /*public function getGenerateInvoice($id){
-
-        // Generate excel sheet and save at bill id location
-        Excel::create($id.'_invoice', function($excel) use ($id){
-            $excel->sheet('Sheet 1', function($sheet) use ($id){
-
-                $bill_id = $id;
-
-                $invoice_data = Bills::getJoinConfirmationMail($bill_id);
-
-                $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
-                ->getStyle('A7')
-                ->getAlignment()
-                ->setWrapText(true);
-
-            });
-        })->export('xls');
-    }*/
-
     // Payment received or not
     public function getPaymentReceived($id){
 
@@ -1982,5 +1984,47 @@ class BillsController extends Controller
 
         $invoice_data = Bills::getJoinConfirmationMail(24);
         return view('adminlte::bills.sheet',compact('invoice_data'));
+    }
+
+    public function DownloadInvoicePDF($id){
+
+        $invoice_data = Bills::getJoinConfirmationMail($id);
+        $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
+        //$customPaper = array(0,0,800,750);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->download($id.'_Invoice'.'.pdf');
+    }
+
+    public function DownloadInvoiceExcel($id){
+
+        $invoice_data = Bills::getJoinConfirmationMail($id);
+
+        // Generate excel sheet and save at bill id location
+        Excel::create($id.'_invoice', function($excel) use ($invoice_data){
+            $excel->sheet('Sheet 1', function($sheet) use ($invoice_data){
+
+                $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
+                ->getStyle('B7')
+                ->getAlignment()
+                ->setWrapText(true);
+
+                $sheet->getStyle('G7')
+                ->getAlignment()
+                ->setWrapText(true);
+               
+                $sheet->getStyle('K6')
+                ->getAlignment()
+                ->setWrapText(true);
+
+                $sheet->getStyle('C12')
+                ->getAlignment()
+                ->setWrapText(true);
+
+                $sheet->getStyle('C24')
+                ->getAlignment()
+                ->setWrapText(true);
+
+            });
+        })->download('xls');
     }
 }

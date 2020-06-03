@@ -1424,11 +1424,15 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'BillsController@reliveBill'
     ]);
 
-    // test for recovery invoice genereate route
-    /*Route::get('recovery/generateinvoice/{id}',[
-        'as' => 'recovery.generateinvoice',
-        'uses' => 'BillsController@getGenerateInvoice'
-    ]);*/
+    Route::get('invoice/exceldownload/{id}',[
+        'as' => 'invoice.excel',
+        'uses' => 'BillsController@DownloadInvoiceExcel',
+    ]);
+
+    Route::get('invoice/pdfdownload/{id}',[
+        'as' => 'invoice.pdf',
+        'uses' => 'BillsController@DownloadInvoicePDF',
+    ]);
 
     // Admin > Teams
     Route::get('team', [
