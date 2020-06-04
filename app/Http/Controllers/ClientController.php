@@ -401,7 +401,7 @@ class ClientController extends Controller
             //if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility'] || $isAccountant){
                 $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
             //}
-            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner']){
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner'] || $isAllClientVisibleUser){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if($isSuperAdmin){
@@ -687,7 +687,7 @@ class ClientController extends Controller
             
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
            
-            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner']){
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner'] || $isAllClientVisibleUser){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if($isSuperAdmin){
@@ -1022,12 +1022,14 @@ class ClientController extends Controller
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
+        $user_id = $user->id;
 
         $user_obj = new User();
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isManager = $user_obj::isManager($role_id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
         $user_id = $user->id;
 
         // For account manager
@@ -1055,7 +1057,7 @@ class ClientController extends Controller
         $percentage_charged_above = '8.33';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status'));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
     }
 
 
@@ -1094,6 +1096,8 @@ class ClientController extends Controller
 
         $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy);
 
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
+
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -1112,7 +1116,7 @@ class ClientController extends Controller
             ->get();
     foreach ($client_basicinfo as $key=>$value)
     {
-        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id))
+        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || $isAllClientVisibleUser)
         {
             $client['name'] = $value->name;
             $client['display_name']=$value->display_name;
@@ -1186,7 +1190,7 @@ class ClientController extends Controller
         $yet_to_assign_users[0] = '--Select User--';
 
         $action = "edit" ;
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
     }
 
     public function store(Request $request){
@@ -1935,7 +1939,7 @@ class ClientController extends Controller
             // Add Entry in Client Timeline.
             $check_entry_exist = ClientTimeline::checkTimelineEntry($input->account_manager,$id);
 
-            if(isset($check_entry_exist) && sizeof($check_entry_exist) > 0){
+            if(isset($check_entry_exist) && $check_entry_exist != ''){
             }
 
             else

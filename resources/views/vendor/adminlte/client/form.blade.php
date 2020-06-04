@@ -212,7 +212,7 @@
                                     ?>
                                 @endif
 
-                                @if($isSuperAdmin || $isManager || $isStrategy)
+                                @if($isSuperAdmin || $isManager || $isStrategy || $isAllClientVisibleUser)
                                     {!! Form::select('status', $client_all_status_key, $client_all_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
                                 @else
                                     {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}

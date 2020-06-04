@@ -720,16 +720,16 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'client.show',
         'uses' => 'ClientController@show'
     ]);
+    
     Route::get('client/{id}/edit', [
         'as' => 'client.edit',
         'uses' => 'ClientController@edit',
-        //'middleware' => ['permission:industry-edit']
+        'middleware' => ['permission:client-edit']
     ]);
 
     Route::get('client/{id}/remarks', [
         'as' => 'client.remarks',
         'uses' => 'ClientController@remarks',
-        //'middleware' => ['permission:industry-edit']
     ]);
 
     Route::post('client/{client_id}/post',['as'=>'client.post.write','uses'=>'ClientController@writePost']);
@@ -742,30 +742,33 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('client/comment/update',['as'=>'client.commentupdate','uses'=>'ClientController@updateComment']);
 
+
     Route::delete('client/{id}', [
         'as' => 'client.destroy',
         'uses' => 'ClientController@destroy',
-        //    'middleware' => ['permission:industry-delete']
+        'middleware' => ['permission:client-delete']
     ]);
+
     Route::patch('client/{id}', [
         'as' => 'client.update',
         'uses' => 'ClientController@update',
-        //'middleware' => ['permission:industry-edit']
+        'middleware' => ['permission:client-edit']
     ]);
+
     Route::delete('client/destroy/{id}', [
         'as' => 'clientattachments.destroy',
-        'uses' => 'ClientController@attachmentsDestroy',
-        //    'middleware' => ['permission:industry-delete']
+        'uses' => 'ClientController@attachmentsDestroy'
     ]);
+
     Route::post('clientattachments/upload/{id}', [
         'as' => 'clientattachments.upload',
-        'uses' => 'ClientController@upload',
-        //    'middleware' => ['permission:industry-delete']
+        'uses' => 'ClientController@upload'
     ]);
+
     Route::delete('client/{id}', [
         'as' => 'client.destroy',
         'uses' => 'ClientController@delete',
-        //    'middleware' => ['permission:industry-delete']
+        'middleware' => ['permission:client-delete']
     ]);
     
     Route::post('client/account_manager',[
