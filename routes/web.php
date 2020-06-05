@@ -947,7 +947,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:job-create']
     ]);
 
-    Route::get('jobs/clone/{id}', [
+    Route::get('jobs/clone/{id}/{year}', [
         'as' => 'jobopen.clone',
         'uses' => 'JobOpenController@jobClone',
         'middleware' => ['permission:job-create']
@@ -1008,7 +1008,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@show',
         'middleware' => ['permission:job-show']
     ]);
-    Route::get('jobs/{id}/edit', [
+    Route::get('jobs/{id}/{year}/edit', [
         'as' => 'jobopen.edit',
         'uses' => 'JobOpenController@edit',
         'middleware' => ['permission:job-edit']
