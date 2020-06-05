@@ -18,6 +18,15 @@
                     Are you sure want to delete this {!! $display_name !!}?
                 </p>
             </div>
+
+            @if(isset($year) && $year != '')
+                <input type="hidden" name="year" id="year" value="{{ $year }}"/>
+            @endif
+
+            @if(isset($title) && $title != '')
+                <input type="hidden" name="title" id="title" value="{{ $title }}"/>
+            @endif
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>

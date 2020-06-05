@@ -41,7 +41,10 @@
     {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm','autocomplete' => 'off', 'route' => ['jobopen.clonestore']] ) !!}
 @else
     {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm','autocomplete' => 'off')) !!}
+@endif
 
+@if(isset($year) && $year != '')
+    <input type="hidden" name="year" id="year" value="{{ $year }}">
 @endif
 
 

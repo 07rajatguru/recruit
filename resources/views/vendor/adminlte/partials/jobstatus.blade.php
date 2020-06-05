@@ -16,7 +16,10 @@
                 {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
             </div>
 
-
+            @if(isset($year) && $year != '')
+                <input type="hidden" name="year" id="year" value="{{ $year }}"/>
+            @endif
+            
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -100,7 +100,13 @@
         <div class="box-body col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
                 <strong>Select Financial Year:</strong>
-                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+
+                @if($selected_year = Session::get('selected_year'))
+                    {{Form::select('year',$year_array, $selected_year, array('id'=>'year','class'=> 'form-control'))}}
+                @else
+                    {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+                @endif
+
             </div>
         </div>
 
@@ -530,8 +536,8 @@
                 $("#client_heirarchy").val('0');
                 $("#client_heirarchy")[0].selectedIndex = 0;
 
-                $("#year").val('0');
-                $("#year")[0].selectedIndex = 0
+                //$("#year").val('0');
+                //$("#year")[0].selectedIndex = 0
 
                 getJobsByPosition();
             });
