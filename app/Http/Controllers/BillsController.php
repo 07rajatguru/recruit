@@ -52,7 +52,6 @@ class BillsController extends Controller
             $access = false;
         }
 
-
         $title = "Forecasting";
         return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
     }
@@ -126,15 +125,6 @@ class BillsController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
         $title = $_GET['title'];
-
-        if(isset($_GET['year']) && $_GET['year'] != '')
-        {
-            $year = $_GET['year'];
-        }
-        else
-        {
-            $year = NULL;
-        }
 
         $cancel_bill = 0;
 
@@ -256,12 +246,12 @@ class BillsController extends Controller
                 if($access || ($user_id==$value['uploaded_by'])) {
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
                     if($isSuperAdmin) {
-                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
                         $delete = $delete_view->render();
                         $action .= $delete;
                     }
                     if($value['cancel_bill']==0) {
-                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
                         $cancel = $cancel_view->render();
                         $action .= $cancel;
                     }
@@ -302,7 +292,7 @@ class BillsController extends Controller
                 }
                 if($isSuperAdmin || $isAccountant) {
                     if($value['cancel_bill']==1){
-                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery']);
                         $relive = $relive_view->render();
                         $action .= $relive;
                     }
@@ -745,6 +735,7 @@ class BillsController extends Controller
 
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
+
         return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
     }
 
@@ -841,7 +832,7 @@ class BillsController extends Controller
         if(isset($percentage_charged) && $percentage_charged!='')
             $bill->percentage_charged = $percentage_charged;
         else
-            $bill->percentage_charged = 0;
+            $bill->percentage_charged = '8.33';
 
         $bill->client_name = $client_name;
         $bill->client_email_id = $client_email_id;
@@ -1020,7 +1011,7 @@ class BillsController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('forecasting.index')->with('success', 'Bills Created Successfully');
+        return redirect()->route('forecasting.index')->with('success', 'Bills Created Successfully.');
     }
 
     public function show($id){
@@ -1194,7 +1185,7 @@ class BillsController extends Controller
         if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
             $percentage_charged = $input['percentage_charged'];
         else
-            $percentage_charged = '';
+            $percentage_charged = '8.33';
 
         $employee_name = array();
         $employee_final = array();
@@ -1267,7 +1258,7 @@ class BillsController extends Controller
         if(isset($percentage_charged) && $percentage_charged!='')
             $bill->percentage_charged = $percentage_charged;
         else
-            $bill->percentage_charged = 0;
+            $bill->percentage_charged = '8.33';
 
         // for set again job confirmation icon if deatils are changed
         if($prev_percentage_charged != $bill->percentage_charged) {
@@ -1395,14 +1386,18 @@ class BillsController extends Controller
         }
 
         if($status == 1){
-            return redirect()->route('bills.recovery')->with('success', 'Recovery Updated Successfully');
+
+            return redirect()->route('bills.recovery')
+            ->with('success', 'Recovery Updated Successfully.');
         }
         else{
-            return redirect()->route('forecasting.index')->with('success', 'Forecasting Updated Successfully');
+            return redirect()->route('forecasting.index')->with('success', 'Forecasting Updated Successfully.');
         }
     }
 
-    public function delete($id){
+    public function delete(Request $request,$id){
+
+        $year = $request->input('year');
 
         // Destroy Attchments
 
@@ -1433,10 +1428,25 @@ class BillsController extends Controller
         BillDate::where('bills_id',$id)->delete();
         Bills::where('id',$id)->delete();
 
-        return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully.');
+        if(isset($year) && $year != '') {
+
+            return redirect()->route('bills.recovery')
+            ->with('success', 'Recovery Deleted Successfully.')
+            ->with('selected_year',$year);
+        }
+        else {
+
+            return redirect()->route('forecasting.index')->with('success','Bill Deleted Successfully.');
+        }
     }
 
     public function cancel($id){
+
+        // Get Selected Year
+
+        if(isset($_GET['year']) && $_GET['year'] != ''){    
+            $year = $_GET['year'];
+        }
         
         $cancel_bill =1;
         $bills = array();
@@ -1518,12 +1528,13 @@ class BillsController extends Controller
         }
 
         if($bills['status'] == 1){
-            return redirect()->route('bills.recovery')->with('success', 'Recovery Canceled Successfully');
+            return redirect()->route('bills.recovery')
+            ->with('success', 'Recovery Canceled Successfully.')
+            ->with('selected_year',$year);
         }
         else{
-            return redirect()->route('forecasting.index')->with('success', 'Forecasting Canceled Successfully');
+            return redirect()->route('forecasting.index')->with('success', 'Forecasting Canceled Successfully.');
         }
-
     }
 
     public function reliveBill($id){
@@ -1617,10 +1628,10 @@ class BillsController extends Controller
         }
 
         if($bills['status'] == 1){
-            return redirect()->route('bills.recovery')->with('success', 'Recovery Relived Successfully');
+            return redirect()->route('bills.recovery')->with('success', 'Recovery Relived Successfully.');
         }
         else{
-            return redirect()->route('forecasting.index')->with('success', 'Forecasting Relived Successfully');
+            return redirect()->route('forecasting.index')->with('success', 'Forecasting Relived Successfully.');
         }
     }
 
@@ -1709,6 +1720,8 @@ class BillsController extends Controller
         $dateClass = new Date();
         $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
 
+        $percentage_charged = $bnm->percentage_charged;
+
         $action = 'edit';
 
         $employee_name = array();
@@ -1777,7 +1790,7 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type','percentage_charged'));
     }
 
     public function downloadExcel(){

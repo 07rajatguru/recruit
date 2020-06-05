@@ -17,8 +17,9 @@
                 </p>
             <input type="hidden" name="id" id="id" value="{{ $data['id'] }}"/>
 
-
-            <input type="hidden" name="year" id="year" value="{{ $year }}"/>
+            @if(isset($year) && $year != '')
+                <input type="hidden" name="year" id="year" value="{{ $year }}"/>
+            @endif
 
             </div>
             <div class="modal-footer">

@@ -41,6 +41,10 @@
 
 @if( $action == 'edit')
     {!! Form::model($bnm,['method' => 'PATCH','files' => true, 'id' => 'bills_form','autocomplete' => 'off', 'route' => ['forecasting.update', $bnm->id]] ) !!}
+
+    @if(isset($year) && $year != '')
+        <input type="hidden" name="year" id="year" value="{{ $year }}">
+    @endif
 @else
     {!! Form::open(array('route' => 'forecasting.store','files' => true,'method'=>'POST','id' => 'bills_form','autocomplete' => 'off')) !!}
 @endif
