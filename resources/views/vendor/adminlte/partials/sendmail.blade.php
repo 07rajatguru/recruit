@@ -16,6 +16,10 @@
                     Are you sure {!! $model_body !!}
                 </p>
             <input type="hidden" name="id" id="id" value="{{ $data['id'] }}"/>
+
+
+            <input type="hidden" name="year" id="year" value="{{ $year }}"/>
+
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>

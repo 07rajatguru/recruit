@@ -268,22 +268,22 @@ class BillsController extends Controller
                     if($isSuperAdmin || $isAccountant){
 
                         if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
-                            $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
+                            $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?','year' => $year]);
                             $job_con = $job_confirmation->render();
                             $action .= $job_con;
                         }
                         else if($value['job_confirmation'] == 1 && $value['cancel_bill']==0){
-                            $got_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?']);
+                            $got_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?','year' => $year]);
                             $got_con = $got_confirmation->render();
                             $action .= $got_con;
                         }
                         else if($value['job_confirmation'] == 2 && $value['cancel_bill']==0){
-                            $invoice_generate = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?']);
+                            $invoice_generate = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?','year' => $year]);
                             $invoice = $invoice_generate->render();
                             $action .= $invoice;
                         }
                         else if($value['job_confirmation'] == 3 && $value['cancel_bill']==0){
-                            $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?']);
+                            $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?','year' => $year]);
                             $payment = $payment_received->render();
                             $action .= $payment;
                         }
@@ -1871,7 +1871,12 @@ class BillsController extends Controller
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '1' where id=$id");
 
-        return redirect('/recovery')->with('success','Joining Confirmation Mail Send Successfully');
+        // Get Selected Year
+        $year = $_POST['year'];
+
+        return redirect('/recovery')
+        ->with('success','Joining Confirmation Mail Send Successfully.')
+        ->with('selected_year',$year);
     }
 
     // Got Confirmation Check
@@ -1879,18 +1884,28 @@ class BillsController extends Controller
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '2' where id=$id");
 
-        return redirect('/recovery')->with('success','Got Confirmation Successfully');
+        // Get Selected Year
+        $year = $_POST['year'];
+
+        return redirect('/recovery')
+        ->with('success','Got Confirmation Successfully.')
+        ->with('selected_year',$year);
     }
 
     // Generate Invoice and send mail to SA & Acc
     public function getInvoiceGenerate($id){
 
+        // Get Selected Year
+        $year = $_POST['year'];
+
         $bill_id = $_POST['id'];
         $invoice_data = Bills::getJoinConfirmationMail($bill_id);
+        
+        if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
 
-        if(isset($invoice_data['gst_no']) &&  $invoice_data['gst_no'] == '') {
-
-            return redirect('/recovery')->with('error','Please add GST No. of Client for Generate the invoice.');
+            return redirect('/recovery')
+            ->with('error','Please add GST No. of Client for Generate the Invoice.')
+            ->with('selected_year',$year);
         }
 
         // Generate excel sheet and save at bill id location
@@ -1963,7 +1978,9 @@ class BillsController extends Controller
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '3' where id=$id");
 
-        return redirect('/recovery')->with('success','Invoice Generated and Mailed Successfully');
+        return redirect('/recovery')
+        ->with('success','Invoice Generated and Mailed Successfully.')
+        ->with('selected_year',$year);
     }
 
     // Payment received or not
@@ -1977,13 +1994,12 @@ class BillsController extends Controller
 
         \DB::statement("UPDATE bills_date SET joining_success_date = '$current_dt' where bills_id = $id");
 
-        return redirect('/recovery')->with('success','Payment Received Successfully');
-    }
+        // Get Selected Year
+        $year = $_POST['year'];
 
-    public function getExportSheet(){
-
-        $invoice_data = Bills::getJoinConfirmationMail(24);
-        return view('adminlte::bills.sheet',compact('invoice_data'));
+        return redirect('/recovery')
+        ->with('success','Payment Received Successfully.')
+        ->with('selected_year',$year);
     }
 
     public function DownloadInvoicePDF($id){

@@ -548,12 +548,14 @@ class EveryMinute extends Command
 
                 $input['join_mail'] = $join_mail;
 
-                $input['attachment'] = public_path() . '/uploads/bills/'.$module_id.'/'.$module_id.'_invoice.xls';
+                $input['xls_attachment'] = public_path() . '/uploads/bills/'.$module_id.'/'.$module_id.'_invoice.xls';
+                $input['pdf_attachment'] = public_path() . '/uploads/bills/'.$module_id.'/'.$module_id.'_invoice.pdf';
                 
                 \Mail::send('adminlte::emails.invoicegenerate', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
-                    $message->attach($input['attachment']);
+                    $message->attach($input['xls_attachment']);
+                    $message->attach($input['pdf_attachment']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");

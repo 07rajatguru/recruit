@@ -51,13 +51,13 @@
       @endif--}}
     @endif
 
-    @if ($message = Session::get('success'))
+    @if($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
 
-    @if ($message = Session::get('error'))
+    @if($message = Session::get('error'))
         <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
@@ -68,7 +68,12 @@
           <div class="box-body col-xs-12 col-sm-6 col-md-3">
               <div class="form-group">
                   <strong>Select Financial Year:</strong>
-                  {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+
+                  @if($selected_year = Session::get('selected_year'))
+                    {{Form::select('year',$year_array, $selected_year, array('id'=>'year','class'=> 'form-control'))}}
+                  @else
+                    {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+                  @endif
               </div>
           </div>
 
