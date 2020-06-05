@@ -244,13 +244,13 @@ class Bills extends Model
             }
 
             // Generate PDF Invoice URL
-            $pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
+            /*$pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
             if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
                 $bills[$i]['pdf_invoice_url'] = NULL;
             }
             else{
                 $bills[$i]['pdf_invoice_url'] = $pdf_url;
-            }
+            }*/
 
             // get lead employee efforts
             $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);
@@ -476,13 +476,13 @@ class Bills extends Model
             }
 
             // Generate PDF Invoice URL
-            $pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
+            /*$pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
             if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
                 $bills[$i]['pdf_invoice_url'] = NULL;
             }
             else{
                 $bills[$i]['pdf_invoice_url'] = $pdf_url;
-            }
+            }*/
 
             // get lead employee efforts
             $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);

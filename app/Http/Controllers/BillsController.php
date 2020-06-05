@@ -18,7 +18,7 @@ use App\Utils;
 use App\Events\NotificationMail;
 use App\BillsLeadEfforts;
 use App\BillDate;
-use PDF;
+//use PDF;
 
 class BillsController extends Controller
 {
@@ -282,12 +282,12 @@ class BillsController extends Controller
                         }*/
                         if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
 
-                            $action .= '<a title="Download Excel" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i  class="fa fa-file-excel-o"></i></a>';
+                            $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i  class="fa fa-download"></i></a>';
                         }
-                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+                        /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
 
                            $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i  class="fa fa-file-pdf-o"></i></a>';
-                        }
+                        }*/
                     }
                 }
                 if($isSuperAdmin || $isAccountant) {
@@ -499,12 +499,12 @@ class BillsController extends Controller
                         }*/
                         if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
 
-                            $action .= '<a title="Download Excel" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-excel-o"></i></a>';
+                            $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i class="fa fa-download"></i></a>';
                         }
-                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+                        /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
 
                            $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
-                        }
+                        }*/
                     }
                 }
                 if($isSuperAdmin || $isAccountant) {
@@ -1917,7 +1917,7 @@ class BillsController extends Controller
         if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
 
             return redirect('/recovery')
-            ->with('error','Please add GST No. of Client for Generate the Invoice.')
+            ->with('error','Please add GST No. of Client to Generate the Invoice.')
             ->with('selected_year',$year);
         }
 
@@ -1951,10 +1951,10 @@ class BillsController extends Controller
 
         // Generate PDF and save at bill id location
         
-        $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
+        /*$pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
         //$customPaper = array(0,0,800,750);
         $pdf->setPaper('A4', 'portrait');
-        $pdf->save(public_path('uploads/bills/'.$id.'/'.$id.'_Invoice.pdf'));
+        $pdf->save(public_path('uploads/bills/'.$id.'/'.$id.'_Invoice.pdf'));*/
 
         $user_id = \Auth::user()->id;
         //Logged in User Email Id
@@ -2015,14 +2015,14 @@ class BillsController extends Controller
         ->with('selected_year',$year);
     }
 
-    public function DownloadInvoicePDF($id){
+    /*public function DownloadInvoicePDF($id){
 
         $invoice_data = Bills::getJoinConfirmationMail($id);
         $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
         //$customPaper = array(0,0,800,750);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->download($id.'_Invoice'.'.pdf');
-    }
+    }*/
 
     public function DownloadInvoiceExcel($id){
 
