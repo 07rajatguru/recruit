@@ -675,7 +675,7 @@
 
             });
 
-            if(action=="add")
+            if(action=="add" || action=="clone")
             {
                 $('#date_opened').datepicker().datepicker('setDate', 'today');
                 var date2 = $('#date_opened').datepicker('getDate');
