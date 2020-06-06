@@ -669,7 +669,7 @@ class JobOpenController extends Controller
                 $action .= $delete;
             }
             if(isset($value['access']) && $value['access']==1){
-                $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',['id' => $value['id'],'year' => $year]).'"></a>';
+                $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
                 $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
             }
 
@@ -1882,7 +1882,7 @@ class JobOpenController extends Controller
         ->with('selected_year',$year);
     }
 
-    public function jobClone($id,$year){
+    public function jobClone($id){
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -2010,7 +2010,7 @@ class JobOpenController extends Controller
 
         $action = "clone";
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','year'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type'));
     }
 
     public function clonestore(Request $request){
@@ -2022,9 +2022,6 @@ class JobOpenController extends Controller
         $user_email = \Auth::user()->email;
         $input = $request->all();
 
-        if(isset($input['year']) && $input['year'] != '') {
-            $year = $input['year'];
-        }
 
         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
         if (isset($max_id->id) && $max_id->id != '')
@@ -2258,9 +2255,7 @@ class JobOpenController extends Controller
             }
         }
 
-        return redirect()->route('jobopen.index')
-        ->with('success', 'Job Opening Created Successfully.')
-        ->with('selected_year',$year);
+        return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully.');
     }
 
     public function destroy(Request $request, $id)
@@ -3202,7 +3197,7 @@ class JobOpenController extends Controller
                 $action .= $delete;
             }
             if(isset($value['access']) && $value['access']==1){
-                $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',['id' => $value['id'],'year' => $year]).'"></a>';
+                $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
                 /*$checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';*/
             }
 

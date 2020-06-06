@@ -947,7 +947,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:job-create']
     ]);
 
-    Route::get('jobs/clone/{id}/{year}', [
+    Route::get('jobs/clone/{id}', [
         'as' => 'jobopen.clone',
         'uses' => 'JobOpenController@jobClone',
         'middleware' => ['permission:job-create']
