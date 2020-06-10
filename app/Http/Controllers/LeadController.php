@@ -557,6 +557,8 @@ class LeadController extends Controller
 
         $user_id = $user->id;
 
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
+
         // For account manager
          $users = User::getAllUsers('recruiter','Yes');
          $users[0] = 'Yet to Assign';
@@ -595,7 +597,7 @@ class LeadController extends Controller
         $percentage_charged_above = '8.33';
         $referredby = $lead->referredby;
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status'));
+         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
 
      }
 
