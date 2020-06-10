@@ -245,7 +245,14 @@ class CandidateBasicInfo extends Model
     public static function getCandidateArray(){
         $candidateArray = array('' => 'Select Candidate');
         
-        $candidateDetails = JobAssociateCandidates::all();
+        //$candidateDetails = JobAssociateCandidates::all();
+
+        $candidateDetails = JobAssociateCandidates::join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id')
+        ->select('job_associate_candidates.id as id','job_associate_candidates.candidate_id as candidate_id')
+        ->get();
+
+        //print_r($candidateDetails);exit;
+
         if(isset($candidateDetails) && sizeof($candidateDetails) > 0){
             foreach ($candidateDetails as $candidateDetail) {
                 $candidateArray[$candidateDetail->id] = $candidateDetail->candidate_id;
