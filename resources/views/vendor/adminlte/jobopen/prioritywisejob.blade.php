@@ -286,16 +286,17 @@
                     <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
 
                     @if(isset($value['access']) && $value['access']==1)
-                        <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
+                        <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',['id' => $value['id'],'year' => $year]) }}"></a>
                     @endif
 
                     @if(isset($value['access']) && $value['access']==1)
-                    @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'More Information'])
+                    @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job Open'])
                     @endif
 
                     @if($isSuperAdmin)
-                    @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
+                    @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job Open','title' => 'Job Open'])
                     @endif
+                    
                     @if(isset($value['access']) && $value['access']==1)
                         <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
                     @endif

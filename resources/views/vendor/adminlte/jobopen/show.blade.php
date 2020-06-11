@@ -39,8 +39,9 @@
                         <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
 
                         @if(isset($jobopen['access']) && $jobopen['access']=='1')
-                            <a class="btn btn-primary" href="{{ route('jobopen.edit',$jobopen['id']) }}">Edit</a>
+                            <a class="btn btn-primary" href="{{ route('jobopen.edit',['id' => $jobopen['id'],'year' => $year]) }}">Edit</a>
                         @endif
+                        
                         @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
                     @endif
                 @endif

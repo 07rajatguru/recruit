@@ -522,6 +522,7 @@ class JobOpenController extends Controller
         // $viewVariable['priority_10'] = $priority_10;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
@@ -1548,8 +1549,15 @@ class JobOpenController extends Controller
         $job_search = JobOpen::getJobSearchOptions();
         $job_status = JobOpen::getJobStatus();
 
+        $get_current_year =  date('Y',strtotime($job_open['date_opened']));
+        $get_next_year = $get_current_year + 1;
+
+        //echo $get_current_year;exit;
+
+        $year = $get_current_year."-4, ".$get_next_year."-3";
+
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
-                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id, 'isClient' => $isClient));   
+                    'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id, 'isClient' => $isClient,'year' => $year));   
     }
 
     public function edit($id,$year)
