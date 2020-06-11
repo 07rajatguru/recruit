@@ -1366,76 +1366,61 @@ class JobOpenController extends Controller
 
             $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$strategy_role_id);
 
-            /*if(in_array($user_role_id,$access_roles_id))
-            {
+            /*if(in_array($user_role_id,$access_roles_id)) {
                 $job_open['access'] = '1';
             }
-            else
-            {
-                if($value->hiring_manager_id==$user_id)
-                {
+            else {
+                if($value->hiring_manager_id==$user_id) {
                     $job_open['access'] = '1';
                 }
-                else
-                {
+                else {
                     $cnt = 0;
 
-                    foreach($check_visible_users as $key => $value)
-                    {
+                    foreach($check_visible_users as $key => $value) {
                         $job_open['users_ids'][$cnt] = $value->id;
 
-                        if($job_open['users_ids'][$cnt]==$user_id)
-                        {
+                        if($job_open['users_ids'][$cnt]==$user_id) {
                             $job_open['access'] = '1';
-
                         }
-                        else
-                        {
+                        else {
                             $job_open['access'] = '0';
                             return view('adminlte::jobopen.403');
                         }
                         $cnt++;
-                    }    
+                    } 
                 }
             }*/
 
             $cnt = 0;
 
-            foreach($check_visible_users as $key => $val)
-            {
+            foreach($check_visible_users as $key => $val) {
                 $job_open['users_ids'][$cnt] = $val->id;
                 $cnt++;
             }
 
             $users_array=$job_open['users_ids'];
 
-            if(in_array($user_role_id,$access_roles_id))
-            {
+            if(in_array($user_role_id,$access_roles_id)) {
                 $job_open['access'] = '1';
             }
-            else if($value->hiring_manager_id==$user_id)
-            {
+            else if($value->hiring_manager_id==$user_id) {
                 $job_open['access'] = '1';
             }
-            else if(in_array($user_id,$users_array))
-            {
+            else if(in_array($user_id,$users_array)) {
                 $job_open['access'] = '0';
             }
             else if ($isClient && $value->client_id == $client_id) {
                 $job_open['access'] = '1';
             }
-            else
-            {
+            else {
                 $job_open['access'] = '0';
                 return view('errors.403');
             }
 
-            if ($value->lacs_from >= '100') 
-            {
+            if ($value->lacs_from >= '100') {
                 $min_ctc = '100+';
             }
-            else
-            {
+            else {
                 $lacs_from = $value->lacs_from*100000;
                 $thousand_from = $value->thousand_from*1000;
                 $mictc = $lacs_from+$thousand_from;
@@ -1443,12 +1428,10 @@ class JobOpenController extends Controller
                 $min_ctc = number_format($minctc,2);
             }
 
-            if ($value->lacs_to >= '100') 
-            {
+            if ($value->lacs_to >= '100') {
                 $max_ctc = '100+';
             }
-            else
-            {
+            else {
                 $lacs_to = $value->lacs_to*100000;
                 $thousand_to = $value->thousand_to*1000;
                 $mactc = $lacs_to+$thousand_to;
@@ -1493,28 +1476,23 @@ class JobOpenController extends Controller
             $mo_posting = '';
             $mo_mass_mail='';
             $mo_job_search = '';
-            if(isset($value->posting) && $value->posting!='')
-            {
+            if(isset($value->posting) && $value->posting!='') {
                 $mo_posting = $value->posting;
                 $selected_posting = explode(",",$mo_posting);
             }
-            if(isset($value->mass_mail) && $value->mass_mail!='')
-            {
+            if(isset($value->mass_mail) && $value->mass_mail!='') {
                 $mo_mass_mail = $value->mass_mail;
                 $selected_mass_mail = explode(",",$mo_mass_mail);
             }
-            if(isset($value->job_search) && $value->job_search!='')
-            {
+            if(isset($value->job_search) && $value->job_search!='') {
                 $mo_job_search = $value->job_search;
                 $selected_job_search = explode(",",$mo_job_search);
             }
-
         }
 
         $count = 0;
 
-        foreach ($check_visible_users as $key => $value) 
-        {
+        foreach ($check_visible_users as $key => $value) {
             $job_open['users'][$count] = $value->name;
             $count++;
         }
@@ -1549,12 +1527,22 @@ class JobOpenController extends Controller
         $job_search = JobOpen::getJobSearchOptions();
         $job_status = JobOpen::getJobStatus();
 
-        $get_current_year =  date('Y',strtotime($job_open['date_opened']));
-        $get_next_year = $get_current_year + 1;
+        $get_month =  date('m',strtotime($job_open['date_opened']));
 
-        //echo $get_current_year;exit;
+        if($get_month == '01' || $get_month == '02' || $get_month == '03') {
+
+            $get_next_year =  date('Y',strtotime($job_open['date_opened']));
+            $get_current_year = $get_next_year - 1;
+        }
+        else {
+
+            $get_current_year =  date('Y',strtotime($job_open['date_opened']));
+            $get_next_year = $get_current_year + 1;
+        }
 
         $year = $get_current_year."-4, ".$get_next_year."-3";
+
+        //echo $year;exit;
 
         return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,
                     'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id, 'isClient' => $isClient,'year' => $year));   
