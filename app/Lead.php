@@ -9,11 +9,9 @@ class Lead extends Model
 
 	public $table = "lead_management";
 
-
-
 	public static $rules = array(
         'name' => 'required',
-        'coordinator_name' => 'required',
+        'contact_point' => 'required',
         'mail' => 'required',
         'mobile' => 'required',
     );
@@ -22,10 +20,9 @@ class Lead extends Model
     {
         return [
             'name.required' => 'Company Name is required field',
-            'coordinator_name.required' => 'Contact Point is required field',
+            'contact_point.required' => 'Contact Point is required field',
             'mail.required' => 'Email is required field',
             'mobile.required' => 'Mobile Number is required field',
-
         ];
     }
 

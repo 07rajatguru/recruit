@@ -5,6 +5,7 @@
         }
     </style>
 @endsection
+
 @section('content')
 
     <div class="row">
@@ -51,48 +52,62 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                            <strong>Company Name: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1','minLength' => '5')) !!}
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                
+                        <div class="form-group">
+                            <strong>Email: <span class = "required_fields">*</span></strong>
+                            {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
+                        </div>
                        
-                            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                                <strong>Company Name: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1','minLength' => '5')) !!}
-                                @if ($errors->has('name'))
+                        <div class="form-group">
+                            <strong>Mobile: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10')) !!}
+                        </div>
+                     
+                        <div class="form-group">
+                            <strong>Display Name:</strong>
+                            {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '7','minLength' => '3','maxLength' => '7')) !!}
+                         </div>
+                
+                        <div class="form-group">
+                            <strong>Status:</strong>
+                            {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
+                        </div>
+                                                
+                        <div class="form-group">
+                            <strong>Remarks:</strong>
+                            {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control','tabindex' => '11')) !!}
+                        </div>
+                    </div>
+
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <strong>Contact Point: <span class = "required_fields">*</span></strong>
+                        <div class="">
+                           <div class="col-md-4 form-group" style="margin-left: -15px;">
+                                {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
+                                @if ($errors->has('co_category'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                    <strong>{{ $errors->first('co_category') }}</strong>
                                     </span>
                                 @endif
                             </div>
-                
-                            <div class="form-group">
-                                <strong>Email: <span class = "required_fields">*</span></strong>
-                                {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
-                            </div>
-                       
-                            <div class="form-group">
-                                <strong>Mobile: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10')) !!}
-                           </div>
-                     
-                            <div class="form-group">
-                                <strong>Display Name:</strong>
-                                {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '7')) !!}
-                            </div>
-                
-                            <div class="form-group">
-                                <strong>Status:</strong>
-                                {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
-                            </div>
-                                                
-                            <div class="form-group">
-                                <strong>Remarks:</strong>
-                                {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control','tabindex' => '11')) !!}
-                            </div>
-                       </div>
 
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Contact Point: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('coordinator_name', null, array('id'=>'hr_name','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2')) !!}
-                           </div>
+                            <div class="col-md-8 form-group {{ $errors->has('contact_point') ? 'has-error' : '' }}" style="margin-left: -15px;">
+                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2','minLength' => '3')) !!}
+                                @if ($errors->has('contact_point'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('contact_point') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                     
                             <div class="form-group">
                                 <strong>Secondary Email:</strong>
@@ -102,17 +117,7 @@
                             <div class="form-group">
                                 <strong>Other number:</strong>
                                 {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10')) !!}
-                            </div>
-                        
-
-                        
- @section('customs_css')
-    <style>
-        .error{
-            color:#f56954 !important;
-        }
-    </style>
- @endsection  
+                            </div> 
 
                             <div class="form-group">
                                 <strong>Select Leads:</strong>
@@ -144,10 +149,10 @@
                                 <strong>Referred By:</strong>
                                     {!! Form::select('referredby_id',$users, $referredby, array('id'=>'referredby_id','class' => 'form-control','tabindex' => '14')) !!}
                             </div>
-                        
+                        </div>
                     </div>
 
-                        <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Address:</strong>
                                     {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()",'tabindex' => '15')) !!}
@@ -171,7 +176,7 @@
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>Country:</strong>
-                                    {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control','tabindex' => '18')) !!}
+                                {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control','tabindex' => '18')) !!}
                             </div>
                         </div>
 
@@ -204,7 +209,7 @@
         });
 
         $('#mobile').keypress(function (e) {
-            
+
             var length = jQuery(this).val().length;
 
             if(length > 9) {
@@ -216,13 +221,33 @@
             }
         })
 
+        $('#display_name').keypress(function (e) {
+
+            var length = jQuery(this).val().length;
+
+            if(length > 7) {
+                return false;
+            } else if(e.which != 8 && e.which != 0) {
+                return false;
+            } else if((length == 0) && (e.which == 48)) {
+                return false;
+            }
+        })
+
+        $('#contact_point').keypress(function (e) {
+
+            if((length == 0) && (e.which == 48)) {
+                return false;
+            }
+        })
+
 
        $("#lead_form").validate({
             rules: {
                 "name": {
                     required: true
                 },
-                "coordinator_name": {
+                "contact_point": {
                     required: true
                 },
                 "mail": {
@@ -237,19 +262,19 @@
             },
             messages: {
                 "name": {
-                        required: "Company Name is required."
-                    },
-                "coordinator_name": {
-                        required: "Contact Point is required."
-                    },
+                    required: "Company Name is Required Field."
+                },
+                "contact_point": {
+                    required: "Contact Point is Required Field."
+                },
                 "mail": {
-                    required: "Mail is required."
+                    required: "Email is Required Field."
                 },
                 "mobile": {
-                    required: "Mobile Number is required."
+                    required: "Mobile Number is Required Field."
                 },
                 "city": {
-                    required: "City is required."
+                    required: "City is Required Field."
                 }
             }
         });

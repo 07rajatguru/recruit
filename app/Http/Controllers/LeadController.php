@@ -309,7 +309,10 @@ class LeadController extends Controller
         $lead_status ='';
         $referredby = $user_id;
 
-        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead','lead_status'));
+        $co_prefix=ClientBasicinfo::getcoprefix();
+        $co_category='';
+
+        return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
     }
 
     public function store(Request $request){
@@ -317,8 +320,9 @@ class LeadController extends Controller
         $user = \Auth::user();
  	    $input = $request->all();
 
-        $company_name = $input['name'];
-        $coordinator_name = $input['coordinator_name'];
+        $company_name = trim($input['name']);
+        $co_category = $input['co_category'];
+        $coordinator_name = trim($input['contact_point']);
         $email=$input['mail'];
         $s_email=$input['s_email'];
         $mobile=$input['mobile'];
@@ -337,6 +341,7 @@ class LeadController extends Controller
 
         $lead=new Lead();
         $lead->name=$company_name;
+        $lead->coordinator_prefix=$co_category;
         $lead->coordinator_name=$coordinator_name;
         $lead->mail=$email;
         $lead->s_email=$s_email;
@@ -435,8 +440,11 @@ class LeadController extends Controller
             return view('errors.403');
         }
 
+        $co_prefix = ClientBasicinfo::getcoprefix();
+        $co_category = $lead->coordinator_prefix;
+        $lead['contact_point'] = $lead->coordinator_name;
         	        
-	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status'));
+	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
 
 	 }
 	 public function update(Request $request, $id){
@@ -446,7 +454,7 @@ class LeadController extends Controller
         $input = $request->all();
 
 	 	$name = $request->get('name');
-        $coordinator_name = $request->get('coordinator_name');
+        $coordinator_name = $request->get('contact_point');
         $email = $request->get('mail');
         $s_email = $request->get('s_email');
         $mobile = $request->get('mobile');
