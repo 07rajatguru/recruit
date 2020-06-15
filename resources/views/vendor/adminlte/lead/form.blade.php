@@ -38,21 +38,9 @@
     @endif
      {!! Form::hidden('action', $action, array('id'=>'action')) !!}
 
-
-    @if (count($errors) > 0)
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     {!! Form::open(array('route' => 'lead.store','method'=>'POST')) !!}
 
-<input type="hidden" id="generatelead" name="generatelead" value="{{$generate_lead}}">
+    <input type="hidden" id="generatelead" name="generatelead" value="{{$generate_lead}}">
 
     <div class="row">
          <div class="col-xs-12 col-sm-12 col-md-12">
@@ -66,7 +54,7 @@
                        
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                                 <strong>Company Name: <span class = "required_fields">*</span></strong>
-                                {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1')) !!}
+                                {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1','minLength' => '5')) !!}
                                 @if ($errors->has('name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -208,51 +196,53 @@
      $(document).ready(function() {
 
         $('#lead_form').on('keyup keypress', function(e) {
-                var keyCode = e.keyCode || e.which;
-                if (keyCode === 13) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
 
        $("#lead_form").validate({
-                rules: {
-                    "name": {
-                        required: true
-                    },
-                    "coordinator_name": {
-                        required: true
-                    },
-                    "mail": {
-                        required: true
-                    },
-                    "mobile": {
-                        required: true
-                    },
-                    "city": {
-                        required: true
-                    }
+            rules: {
+                "name": {
+                    required: true
                 },
-                messages: {
-                    "name": {
+                "coordinator_name": {
+                    required: true
+                },
+                "mail": {
+                    required: true
+                },
+                "mobile": {
+                    required: true
+                },
+                "city": {
+                    required: true
+                }
+            },
+            messages: {
+                "name": {
                         required: "Company Name is required."
                     },
-                    "coordinator_name": {
+                "coordinator_name": {
                         required: "Contact Point is required."
                     },
-                    "mail": {
-                        required: "Mail is required."
-                    },
-                    "mobile": {
-                        required: "Mobile Number is required."
-                    },
-                    "city": {
-                        required: "City is required."
-                    }
+                "mail": {
+                    required: "Mail is required."
+                },
+                "mobile": {
+                    required: "Mobile Number is required."
+                },
+                "city": {
+                    required: "City is required."
                 }
-            });
-            $("#referredby_id").select2();
-            });
+            }
+        });
+
+        $("#referredby_id").select2();
+        
+        });
 
 
         var placeSearch, autocomplete;

@@ -355,13 +355,14 @@ class LeadController extends Controller
         $lead->designation=$designation;
         $lead->referredby=$referredby_id;
         $lead->lead_status=$lead_status;
-        $lead->save();
-
+        
         $validator = \Validator::make(Input::all(),$lead::$rules);
 
         if($validator->fails()){
             return redirect('lead/create')->withInput(Input::all())->withErrors($validator->errors());
         }
+
+        $lead->save();
 
         // For Lead Emails [data entry in email_notification table]
         $lead_id = $lead->id;
@@ -440,7 +441,7 @@ class LeadController extends Controller
 	 }
 	 public function update(Request $request, $id){
 
-	     $user  = \Auth::user()->id;
+	   $user  = \Auth::user()->id;
 
         $input = $request->all();
 
@@ -469,10 +470,8 @@ class LeadController extends Controller
         else{
             $cancel_lead =0;
         }
-
          
         $lead_basic = Lead::find($id);
-
 
         if(isset($name))
             $lead_basic->name = $name;
@@ -513,14 +512,14 @@ class LeadController extends Controller
 
          //$lead_basic->account_manager_id = $user;
 
-        $leadUpdated = $lead_basic->save();
-
         $validator = \Validator::make(Input::all(),$lead_basic::$rules);
 
         if($validator->fails()){
             //print_r($validator->errors());exit;
             return redirect('lead/'.$lead_basic->id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
+
+        $leadUpdated = $lead_basic->save();
 
         return redirect()->route('lead.index')->with('success','Lead Updated Successfully');
 
