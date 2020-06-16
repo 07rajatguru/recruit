@@ -30,12 +30,19 @@
     </div>
 @if(isset($action))
     @if($action == 'edit')
-        {!! Form::model($lead,['method' => 'PUT', 'files' => true, 'route' => ['lead.update', $lead['id']],'id'=>'lead_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
+
+        {!! Form::model($lead,['method' => 'PUT', 'files' => true, 'route' => ['lead.update', $lead['id']],'id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+
         {!! Form::hidden('leadId', $lead['id'], array('id'=>'leadId')) !!}
+
     @elseif($action == 'copy')
-        {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form','autocomplete' => 'off']) !!}
+
+        {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+
     @else
-        {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form','autocomplete' => 'off', 'novalidate'=>'novalidate']) !!}
+
+        {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+
     @endif
      {!! Form::hidden('action', $action, array('id'=>'action')) !!}
 
@@ -69,13 +76,18 @@
                        
                         <div class="form-group">
                             <strong>Mobile: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10')) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10','minLength' => '10')) !!}
                         </div>
-                     
-                        <div class="form-group">
-                            <strong>Display Name:</strong>
-                            {!! Form::text('display_name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '7','minLength' => '3','maxLength' => '7')) !!}
-                         </div>
+
+                        <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
+                            <strong>Display Name: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control','tabindex' => '7','minLength' => '3','maxLength' => '7')) !!}
+                            @if ($errors->has('display_name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('display_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                 
                         <div class="form-group">
                             <strong>Status:</strong>
@@ -111,12 +123,12 @@
                     
                             <div class="form-group">
                                 <strong>Secondary Email:</strong>
-                                {!! Form::email('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4')) !!}
+                                {!! Form::email('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4','id' => 's_email')) !!}
                             </div>
                         
                             <div class="form-group">
                                 <strong>Other number:</strong>
-                                {!! Form::text('other_number', null, array('placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10')) !!}
+                                {!! Form::text('other_number', null, array('id' => 'other_number','placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10','minLength' => '10')) !!}
                             </div> 
 
                             <div class="form-group">
@@ -221,13 +233,31 @@
             }
         })
 
+        $('#other_number').keypress(function (e) {
+
+            var length = jQuery(this).val().length;
+
+            if(length > 9) {
+                return false;
+            } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            } else if((length == 0) && (e.which == 48)) {
+                return false;
+            }
+        })
+
+        $('#name').keypress(function (e) {
+
+            if((length == 0) && (e.which == 48)) {
+                return false;
+            }
+        })
+
         $('#display_name').keypress(function (e) {
 
             var length = jQuery(this).val().length;
 
             if(length > 7) {
-                return false;
-            } else if(e.which != 8 && e.which != 0) {
                 return false;
             } else if((length == 0) && (e.which == 48)) {
                 return false;
@@ -258,6 +288,9 @@
                 },
                 "city": {
                     required: true
+                },
+                "display_name": {
+                    required: true
                 }
             },
             messages: {
@@ -275,6 +308,9 @@
                 },
                 "city": {
                     required: "City is Required Field."
+                },
+                "display_name": {
+                    required: "Display Name is Required Field."
                 }
             }
         });
@@ -290,6 +326,52 @@
             state: 'long_name',
             country: 'long_name'
         };
+
+        function emailValidation() {
+
+            var email_value = $("#mail").val();
+            var s_email_value = $("#s_email").val();
+            var website = $("#website").val();
+
+            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+            var website_regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+            if(email_value != '') {
+                if (reg.test(email_value) == false) {
+                    alert('Please Enter Valid Email Address');
+                    return false;
+                }
+            }
+
+            if(s_email_value != '') {
+                if (reg.test(s_email_value) == false) {
+                    alert('Please Enter Valid Secondary Email Address');
+                    return false;
+                }
+            }
+
+            if(website != '') {
+                if (website_regexp.test(website) == false) {
+                    alert('Please Enter Valid Website URL');
+                    document.getElementById("website").focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function is_url(str) {
+
+            regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+            if (regexp.test(str)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
         function initAutocomplete() {
             // Create the autocomplete object, restricting the search to geographical

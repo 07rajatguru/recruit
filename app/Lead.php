@@ -14,15 +14,17 @@ class Lead extends Model
         'contact_point' => 'required',
         'mail' => 'required',
         'mobile' => 'required',
+        'display_name' => 'required',
     );
 
     public function messages()
     {
         return [
-            'name.required' => 'Company Name is required field',
-            'contact_point.required' => 'Contact Point is required field',
-            'mail.required' => 'Email is required field',
-            'mobile.required' => 'Mobile Number is required field',
+            'name.required' => 'Company Name is Required Field.',
+            'contact_point.required' => 'Contact Point is Required Field.',
+            'mail.required' => 'Email is Required Field.',
+            'mobile.required' => 'Mobile Number is Required Field.',
+            'display_name.required' => 'Display Name is Required Field.',
         ];
     }
 

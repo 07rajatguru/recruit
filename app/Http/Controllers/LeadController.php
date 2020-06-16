@@ -327,7 +327,7 @@ class LeadController extends Controller
         $s_email=$input['s_email'];
         $mobile=$input['mobile'];
         $other_number=$input['other_number'];
-        $display_name=$input['display_name'];
+        $display_name=trim($input['display_name']);
         $leads=$input['leads'];
         $remark=$input['remarks'];
         $city=$input['city'];
