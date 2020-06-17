@@ -137,7 +137,7 @@ return [
                        'icon' => 'list',
                    ],
                    [
-                       'text' => 'Cancel Lead',
+                       'text' => 'Cancelled Leads',
                        'url'  => 'lead/cancel',
                        'icon' => 'list',
                    ]

@@ -7,7 +7,6 @@
 @endsection
 
 @section('content')
-
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
@@ -28,6 +27,7 @@
             </div>
         </div>
     </div>
+
 @if(isset($action))
     @if($action == 'edit')
 
@@ -52,7 +52,7 @@
 
     <div class="row">
          <div class="col-xs-12 col-sm-12 col-md-12">
-             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Basic Information</h3>
                 </div>
@@ -60,7 +60,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                            <strong>Company Name: <span class = "required_fields">*</span></strong>
+                            <strong>Company Name : <span class = "required_fields">*</span></strong>
                             {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1','minLength' => '5')) !!}
                             @if ($errors->has('name'))
                                 <span class="help-block">
@@ -70,17 +70,17 @@
                         </div>
                 
                         <div class="form-group">
-                            <strong>Email: <span class = "required_fields">*</span></strong>
+                            <strong>Email : <span class = "required_fields">*</span></strong>
                             {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'E-mail','class' => 'form-control','tabindex' => '3')) !!}
                         </div>
                        
                         <div class="form-group">
-                            <strong>Mobile: <span class = "required_fields">*</span></strong>
+                            <strong>Mobile : <span class = "required_fields">*</span></strong>
                             {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10','minLength' => '10')) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
-                            <strong>Display Name: <span class = "required_fields">*</span></strong>
+                            <strong>Display Name : <span class = "required_fields">*</span></strong>
                             {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control','tabindex' => '7','minLength' => '3','maxLength' => '7')) !!}
                             @if ($errors->has('display_name'))
                                 <span class="help-block">
@@ -90,24 +90,29 @@
                         </div>
                 
                         <div class="form-group">
-                            <strong>Status:</strong>
+                            <strong>Status :</strong>
                             {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
                         </div>
-                                                
-                        <div class="form-group">
-                            <strong>Remarks:</strong>
-                            {!! Form::textarea('remarks', null, array('placeholder' => 'Remark','class' => 'form-control','tabindex' => '11')) !!}
+
+                        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
+                            <strong>Remarks : <span class = "required_fields">*</span></strong>
+                            {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control','tabindex' => '11','rows' => '8')) !!}
+                            @if ($errors->has('remarks'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('remarks') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                        <strong>Contact Point: <span class = "required_fields">*</span></strong>
+                        <strong>Contact Point : <span class = "required_fields">*</span></strong>
                         <div class="">
                            <div class="col-md-4 form-group" style="margin-left: -15px;">
                                 {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('co_category'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('co_category') }}</strong>
+                                        <strong>{{ $errors->first('co_category') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -116,84 +121,82 @@
                                 {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2','minLength' => '3')) !!}
                                 @if ($errors->has('contact_point'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('contact_point') }}</strong>
+                                        <strong>{{ $errors->first('contact_point') }}</strong>
                                     </span>
                                 @endif
                             </div>
                     
                             <div class="form-group">
-                                <strong>Secondary Email:</strong>
+                                <strong>Secondary Email :</strong>
                                 {!! Form::email('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4','id' => 's_email')) !!}
                             </div>
                         
                             <div class="form-group">
-                                <strong>Other number:</strong>
+                                <strong>Other number :</strong>
                                 {!! Form::text('other_number', null, array('id' => 'other_number','placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10','minLength' => '10')) !!}
                             </div> 
 
                             <div class="form-group">
-                                <strong>Select Leads:</strong>
-                                    {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control','tabindex' => '8')) !!}
-                                    @if ($errors->has('leads'))
+                                <strong>Select Leads :</strong>
+                                {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control','tabindex' => '8')) !!}
+                                @if ($errors->has('leads'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('job_opening_status') }}</strong>
                                     </span>
-                                    @endif
+                                @endif
                             </div>
                        
                             <div class="form-group">
-                                <strong>Website:</strong>
-                                    {!! Form::text('website', null, array('id'=>'website', 'placeholder' => 'Website','class' => 'form-control','tabindex' => '10')) !!}
+                                <strong>Website :</strong>
+                                {!! Form::text('website', null, array('id'=>'website', 'placeholder' => 'Website','class' => 'form-control','tabindex' => '10')) !!}
                             </div>
                        
                             <div class="form-group">
-                                <strong>Source:</strong>
-                                    {!! Form::text('source', null, array('placeholder' => 'Source','class' => 'form-control','tabindex' => '12')) !!}
+                                <strong>Source :</strong>
+                                {!! Form::text('source', null, array('placeholder' => 'Source','class' => 'form-control','tabindex' => '12')) !!}
                             </div>
-                       
-                       
-                            <div class="form-group">
-                                <strong>Designation:</strong>
-                                    {!! Form::text('designation', null, array('placeholder' => 'Designation','class' => 'form-control','tabindex' => '13')) !!}
+
+                            <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
+                                <strong>Designation : <!-- <span class = "required_fields">*</span> --></strong>
+                                {!! Form::text('designation', null, array('id'=>'designation', 'placeholder' => 'Designation','class' => 'form-control','tabindex' => '13')) !!}
+                                @if ($errors->has('designation'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('designation') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         
                             <div class="form-group">
-                                <strong>Referred By:</strong>
-                                    {!! Form::select('referredby_id',$users, $referredby, array('id'=>'referredby_id','class' => 'form-control','tabindex' => '14')) !!}
+                                <strong>Referred By :</strong>
+                                {!! Form::select('referredby_id',$users, $referredby, array('id'=>'referredby_id','class' => 'form-control','tabindex' => '14')) !!}
                             </div>
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <strong>Address:</strong>
-                                    {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()",'tabindex' => '15')) !!}
-                            </div>
+                        <div class="form-group">
+                            <strong>Address :</strong>
+                            {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()",'tabindex' => '15')) !!}
                         </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <strong>City : <span class = "required_fields">*</span></strong>
+                                {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '16')) !!}
+                            </div>
 
-                        <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>City: <span class = "required_fields">*</span></strong>
-                                    {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '16')) !!}
+                                <strong>State :</strong>
+                                {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control','tabindex' => '17')) !!}
                             </div>
                         </div>
-                        
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>State:</strong>
-                                    {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control','tabindex' => '17')) !!}
-                            </div>
-                        </div>
-                        
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <strong>Country:</strong>
+                                <strong>Country :</strong>
                                 {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control','tabindex' => '18')) !!}
                             </div>
                         </div>
-
-                 </div>
-                        
+                    </div>
+                </div>
              </div>
          </div>
      </div>
@@ -291,6 +294,9 @@
                 },
                 "display_name": {
                     required: true
+                },
+                "remarks" : {
+                    required: true
                 }
             },
             messages: {
@@ -311,6 +317,9 @@
                 },
                 "display_name": {
                     required: "Display Name is Required Field."
+                },
+                "remarks" : {
+                    required: "Remarks is Required Field."
                 }
             }
         });

@@ -30,7 +30,8 @@ class Lead extends Model
 
     public static function getLeadService(){
 
-        $typeArray = array('' => 'Select Lead Service');
+        //$typeArray = array('' => 'Select Lead Service');
+        $typeArray = array('' => '-NONE-');
         $typeArray['Recruitment'] = 'Recruitment';
         //$typeArray['Temp'] = 'Temp';
         $typeArray['Contract Staffing'] = 'Contract Staffing';
@@ -79,6 +80,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -94,6 +96,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -112,7 +115,16 @@ class Lead extends Model
         foreach ($response as $key=>$value){
             $response[$i]['id'] = $value->id;
             $response[$i]['name'] = $value->name;
-            $response[$i]['coordinator_name'] = $value->coordinator_name;
+
+            if(isset($value->coordinator_prefix) && $value->coordinator_prefix != '') {
+
+                $response[$i]['coordinator_name'] = $value->coordinator_prefix . " " .$value->coordinator_name;
+            }
+            else {
+
+                $response[$i]['coordinator_name'] = $value->coordinator_name;
+            }
+            
             $response[$i]['mail'] = $value->mail;
             $response[$i]['mobile'] = $value->mobile;
             $response[$i]['s_email'] = $value->s_email;
@@ -161,6 +173,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -176,6 +189,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -209,6 +223,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -224,6 +239,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -252,7 +268,16 @@ class Lead extends Model
         foreach ($response as $key=>$value){
             $response[$i]['id'] = $value->id;
             $response[$i]['name'] = $value->name;
-            $response[$i]['coordinator_name'] = $value->coordinator_name;
+
+            if(isset($value->coordinator_prefix) && $value->coordinator_prefix != '') {
+
+                $response[$i]['coordinator_name'] = $value->coordinator_prefix . " " .$value->coordinator_name;
+            }
+            else {
+
+                $response[$i]['coordinator_name'] = $value->coordinator_name;
+            }
+
             $response[$i]['mail'] = $value->mail;
             $response[$i]['mobile'] = $value->mobile;
             $response[$i]['s_email'] = $value->s_email;
@@ -300,6 +325,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");
@@ -315,6 +341,7 @@ class Lead extends Model
             if (isset($search) && $search != '') {
                 $query = $query->where(function($query) use ($search){
                     $query = $query->where('lead_management.name','like',"%$search%");
+                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
                     $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('lead_management.mail','like',"%$search%");
                     $query = $query->orwhere('lead_management.mobile','like',"%$search%");

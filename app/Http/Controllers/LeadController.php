@@ -108,13 +108,13 @@ class LeadController extends Controller
 
         $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
 
-        if(in_array($user_role_id,$access_roles_id))
-        {   
+        if(in_array($user_role_id,$access_roles_id)) {
+
             $count = Lead::getAllLeadsCount(1,$user->id,$search);
             $leads_res = Lead::getAllLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
         }
-        else
-        {   
+        else{
+
             $count = Lead::getAllLeadsCount(0,$user->id,$search);
             $leads_res = Lead::getAllLeads(0,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
         }
@@ -147,7 +147,7 @@ class LeadController extends Controller
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
 
-            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['source'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['lead_status'],$value['convert_client']);
+            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
             $lead[$i] = $data;
             $i++;
         }
@@ -306,7 +306,7 @@ class LeadController extends Controller
         $users=User::getAllUsers();
         $status = Lead::getLeadStatus();
         $service ='';
-        $lead_status ='';
+        $lead_status ='Active';
         $referredby = $user_id;
 
         $co_prefix=ClientBasicinfo::getcoprefix();
@@ -395,7 +395,7 @@ class LeadController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('lead.index')->with('success','Leads created successfully');
+        return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
 
 	}
 	 public function edit($id){
@@ -454,6 +454,7 @@ class LeadController extends Controller
         $input = $request->all();
 
 	 	$name = $request->get('name');
+        $co_category = $request->get('co_category');
         $coordinator_name = $request->get('contact_point');
         $email = $request->get('mail');
         $s_email = $request->get('s_email');
@@ -483,6 +484,8 @@ class LeadController extends Controller
 
         if(isset($name))
             $lead_basic->name = $name;
+        if(isset($co_category))
+            $lead_basic->coordinator_prefix = $co_category;
         if(isset($coordinator_name))
             $lead_basic->coordinator_name = $coordinator_name;
         if(isset($email))
@@ -529,15 +532,12 @@ class LeadController extends Controller
 
         $leadUpdated = $lead_basic->save();
 
-        return redirect()->route('lead.index')->with('success','Lead Updated Successfully');
+        return redirect()->route('lead.index')->with('success','Lead Updated Successfully.');
 
 	 }
 
      public function leadClone($id)
      {
-        $co_prefix=ClientBasicinfo::getcoprefix();
-        $co_category='';
-
         $client_cat=ClientBasicinfo::getCategory();
         $client_category='';
 
@@ -592,19 +592,19 @@ class LeadController extends Controller
                 $lead->convert_client = 1;
             }
             $lead->save();
-        //print_r($billing_state);exit;
 
         $industry_id = '';
 
         $action = "copy" ;
 
-        $co_prefix=ClientBasicinfo::getcoprefix();
-        $co_category='';
+        $co_prefix = ClientBasicinfo::getcoprefix();
+        $co_category = $lead->coordinator_prefix;
+
         $percentage_charged_below = '8.33';
         $percentage_charged_above = '8.33';
         $referredby = $lead->referredby;
 
-         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
+        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
 
      }
 
@@ -625,13 +625,12 @@ class LeadController extends Controller
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
         $client_basic_info->website = $input['website'];
-        //$client_basic_info->fax = $input['fax'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
-        //$client_basic_info->source = $input['source'];
         $generatelead = $input['generatelead'];
+
         $convert_client = 0;
-        if($generatelead==1){
+        if($generatelead == 1){
             $client_basic_info->convert_client = 1;
             $client_basic_info->lead_id = $id;
         }
@@ -810,7 +809,6 @@ class LeadController extends Controller
                     $client_doc->updated_at = time();
                     $client_doc->save();
                 }
-
             }
 
             if (isset($others_doc) && $others_doc->isValid()) {
@@ -842,7 +840,7 @@ class LeadController extends Controller
                 }
             }
 
-            // TODO:: Notifications : On adding new client notify Super Admin via notification
+            // Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
             $message = $user_name . " added new Client";
@@ -855,6 +853,7 @@ class LeadController extends Controller
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
             $referredby_id = $input['referredby'];
+
             // Email Notification : data store in datebase
             $strategyuserid = getenv('STRATEGYUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
@@ -874,7 +873,7 @@ class LeadController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-            return redirect()->route('client.index')->with('success','Client Created Successfully');
+            return redirect()->route('client.index')->with('success','Client Created Successfully.');
         }
         else{
             return redirect('client/create')->withInput(Input::all())->withErrors($client_basic_info->errors());
@@ -882,9 +881,9 @@ class LeadController extends Controller
      }
 
 	public function destroy($id){
+
         $lead = Lead::where('id',$id)->delete();
 
-        return redirect()->route('lead.index')->with('success','Leads Deleted Successfully');
+        return redirect()->route('lead.index')->with('success','Leads Deleted Successfully.');
     }
-
 }

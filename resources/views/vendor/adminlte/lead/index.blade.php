@@ -45,7 +45,7 @@
                 <th>City</th>
                 <th>Referred By</th>
                 <th>Website</th>
-                <th>Source</th>
+                <th>Lead Status</th>
                 <th>Designation</th>
                 <th>Secondary email</th>
                 <th>Other number</th>
@@ -54,7 +54,7 @@
                 <th>State</th>
                 <th>Country</th>
                 <th>Remarks</th>
-                <th>Lead Status</th>
+                <th>Source</th>
                 <th>Convert Client</th>
             </tr>
         </thead>
