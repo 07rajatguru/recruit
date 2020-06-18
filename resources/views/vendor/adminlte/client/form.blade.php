@@ -28,12 +28,17 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off', 'route' => ['client.update', $client->id]] ) !!}
+
+    {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off','onsubmit' => "return emailValidation()",'route' => ['client.update', $client->id]] ) !!}
+
 @elseif( $action == 'copy')
-    {!! Form::model($lead,['method' => 'POST','files' => true, 'id' => 'clientForm','autocomplete' => 'off', 'route' => ['lead.clonestore', $lead->id]] ) !!}
+
+    {!! Form::model($lead,['method' => 'POST','files' => true, 'id' => 'clientForm','autocomplete' => 'off','onsubmit' => "return emailValidation()", 'route' => ['lead.clonestore', $lead->id]] ) !!}
+
     <input type="hidden" id="referredby" name="referredby" value="{{ $referredby }}"/>
 @else
-    {!! Form::open(array('route' => 'client.store','files' => true,'method'=>'POST', 'id' => 'clientForm','autocomplete' => 'off')) !!}
+
+    {!! Form::open(array('route' => 'client.store','files' => true,'method'=>'POST', 'id' => 'clientForm','autocomplete' => 'off','onsubmit' => "return emailValidation()")) !!}
 @endif
 
 <input type="hidden" id="generatelead" name="generatelead" value="1">
@@ -51,7 +56,7 @@
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                             <strong>Company Name: <span class = "required_fields">*</span> </strong>
                             
-                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1','minLength' => '5')) !!}
                            
                             @if ($errors->has('name'))
                                 <span class="help-block">
@@ -70,11 +75,9 @@
                             @endif
                         </div>
 
-
                         <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Contact Number','class' => 'form-control', 'tabindex' => '6','maxLength' => '10')) !!}
-                            {!! Form::hidden('client_id', null, array('id'=>'client_id','placeholder' => 'Contact Number','class' => 'form-control')) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '6','maxLength' => '10','minLength' => '10')) !!}
                             @if ($errors->has('mobile'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('mobile') }}</strong>
@@ -82,14 +85,11 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('other_number') ? 'has-error' : '' }}">
+                        {!! Form::hidden('client_id', null, array('id'=>'client_id','class' => 'form-control')) !!}
+
+                        <div class="form-group">
                             <strong>Other Number:</strong>
-                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8','maxLength' => '10')) !!}
-                            @if ($errors->has('other_number'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('other_number') }}</strong>
-                                </span>
-                            @endif
+                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8','maxLength' => '10','minLength' => '10')) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
@@ -163,15 +163,15 @@
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
-                            <strong>Charged Below AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charged Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
+                            <strong>Charges Below AM Position(%) </strong>
+                            {!! Form::number('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charges Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
                         </div>
                         @endif
 
                         @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
-                            <strong>Charged Above AM Position(%) </strong>
-                            {!! Form::text('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charged Above AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
+                            <strong>Charges Above AM Position(%) </strong>
+                            {!! Form::number('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charges Above AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
                         </div>
                         @endif
 
@@ -241,11 +241,11 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-8 form-group {{ $errors->has('coordinator_name') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                                {!! Form::text('coordinator_name', null, array('id'=>'coordinator_name','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3' )) !!}
-                                @if ($errors->has('coordinator_name'))
+                            <div class="col-md-8 form-group {{ $errors->has('contact_point') ? 'has-error' : '' }}" style="margin-left: -15px;">
+                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3','minLength' => '3')) !!}
+                                @if ($errors->has('contact_point'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('coordinator_name') }}</strong>
+                                    <strong>{{ $errors->first('contact_point') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -276,7 +276,7 @@
                     
                             <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
                                 <strong>Email: <span class = "required_fields">*</span></strong>
-                                {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7' )) !!}
+                                {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7')) !!}
                                 @if ($errors->has('mail'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('mail') }}</strong>
@@ -424,36 +424,32 @@
     <div class="col-xs-12 col-sm-12 col-md-12">
     @if($isSuperAdmin || $isAdmin)
         @if($action == 'add' || $action == 'copy')
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Attachment Information</h3>
-            </div>
-
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Client Contract:</strong>
-                    {!! Form::file('client_contract', null, array('id'=>'client_contract','class' => 'form-control')) !!}
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Attachment Information</h3>
                 </div>
 
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Client Logo:</strong>
-                    {!! Form::file('client_logo', null, array('id'=>'client_logo','class' => 'form-control')) !!}
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Client Contract:</strong>
+                        <input type="file" name="client_contract"  id="client_contract" class="form-control">
+                    </div>
                 </div>
 
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Others:</strong>
-                    {!! Form::file('others_doc', null, array('id'=>'others_doc','class' => 'form-control')) !!}
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Client Logo:</strong>
+                        <input type="file" name="client_logo"  id="client_logo" class="form-control">
+                    </div>
                 </div>
 
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Others:</strong>
+                        <input type="file" name="others_doc"  id="others_doc" class="form-control">
+                    </div>
+                </div>
             </div>
-    </div>
         @endif
     @endif
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -512,7 +508,7 @@
                         "status" : {
                             required: true
                         },
-                        "coordinator_name" : {
+                        "contact_point" : {
                             required: true
                         },
                         "client_category" : {
@@ -524,31 +520,31 @@
                     },
                     messages: {
                         "name": {
-                            required: "Name is required."
+                            required: "Company Name is Required."
                         },
                         "display_name": {
-                            required: "Display Name is required."
+                            required: "Display Name is Required."
                         },
                         "mail": {
-                            required: "Email is required."
+                            required: "Email is Required."
                         },
                         "mobile": {
-                            required: "Mobile is required."
+                            required: "Mobile Number is Required."
                         },
                         "industry_id": {
-                            required: "Industry is required."
+                            required: "Industry is Required."
                         },
                         "status": {
-                            required: "Status is required."
+                            required: "Status is Required."
                         },
-                        "coordinator_name" :{
-                            required: "Contact Point is required."
+                        "contact_point" :{
+                            required: "Contact Point is Required."
                         },
                         "client_category" : {
-                            required: "Client Category is required.",
+                            required: "Client Category is Required.",
                         },
                         "billing_city" : {
-                            required: "City is required.",
+                            required: "City is Required.",
                         },
                     }
                 });
@@ -603,7 +599,115 @@
                     }
                 });
             }*/
+
+            $('#name').keypress(function (e) {
+
+                if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $('#contact_point').keypress(function (e) {
+
+                if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $('#mobile').keypress(function (e) {
+
+                var length = jQuery(this).val().length;
+
+                if(length > 9) {
+                    return false;
+                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $('#other_number').keypress(function (e) {
+
+                var length = jQuery(this).val().length;
+
+                if(length > 9) {
+                    return false;
+                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $("#client_logo").bind('change', function() {
+
+                var ext = $('#client_logo').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
+                {
+                    alert('Please Select Image for Logo.');
+                    this.value = null;
+                }
+            });
+
+            $("#client_contract").bind('change', function() {
+
+                var ext = $('#client_contract').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','pdf','txt']) == -1)
+                {
+                    alert('Please Select Document for Contract.');
+                    this.value = null;
+                }
+            });
         });
+
+        function emailValidation() {
+
+            var email_value = $("#mail").val();
+            var s_email_value = $("#s_email").val();
+            var website = $("#website").val();
+
+            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+            var website_regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+            if(email_value != '') {
+                if (reg.test(email_value) == false) {
+                    alert('Please Enter Valid Email Address.');
+                    return false;
+                }
+            }
+
+            if(s_email_value != '') {
+                if (reg.test(s_email_value) == false) {
+                    alert('Please Enter Valid Secondary Email Address.');
+                    return false;
+                }
+            }
+
+            if(website != '') {
+                if (website_regexp.test(website) == false) {
+                    alert('Please Enter Valid Website URL.');
+                    document.getElementById("website").focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function is_url(str) {
+
+            regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+            if (regexp.test(str)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
         // This example displays an address form, using the autocomplete feature
         // of the Google Places API to help users fill in the information.

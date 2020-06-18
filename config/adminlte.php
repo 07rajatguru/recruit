@@ -158,8 +158,8 @@ return [
                        'url'  => 'client',
                        'icon' => 'list',
                    ],
-                                      [
-                       'text' => 'Forbid Clients',
+                   [
+                       'text' => 'Forbidden Clients',
                        'url'  => 'client-list/Forbid',
                        'icon' => 'list',
                    ]/*,

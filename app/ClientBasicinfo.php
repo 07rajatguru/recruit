@@ -25,20 +25,18 @@ class ClientBasicinfo extends Ardent
             'name' => 'required',
             'mail' => 'unique:client_basicinfo,mail,{id}',
             'mobile'  => 'required',
-           // 'industry_id' => 'required',
-            'coordinator_name' => 'required'
+            //contact_point' => 'required'
         );
 
 
     public function messages()
     {
         return [
-            'name.required' => 'Name is required field',
-            //'name.unique' => 'Name is unique field',
-            'mail.required' => 'Mail is required field',
-            'mail.unique' => 'Mail is unique field',
-            'mobile'  => 'Mobile is required field',
-            //'industry_id' => 'Industry is required field',
+            'name.required' => 'Company Name is Required Field.',
+            'mail.required' => 'Eail is Required Field.',
+            'mail.unique' => 'Mail is unique Field.',
+            'mobile.required'  => 'Mobile is Required Field.',
+            //'contact_point.required' => 'Contact Point is Required Field.',
         ];
     }
 

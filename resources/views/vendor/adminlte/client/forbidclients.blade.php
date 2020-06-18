@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Forbid Clients')
+@section('title', 'Forbidden Clients')
 
 @section('content_header')
     <h1></h1>
@@ -15,7 +15,7 @@
                 
             </div>
             <div  class="pull-left">
-                <h2> Forbid Clients ({{ $count }}) </h2>
+                <h2>Forbidden Clients ({{ $count }}) </h2>
             </div>
         </div>
     </div>

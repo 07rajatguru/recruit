@@ -1132,7 +1132,7 @@ class ClientController extends Controller
             $client['description'] = $value->description;
             $client['gst_no'] = $value->gst_no;
             /*$client['tds'] = $value->tds;*/
-            $client['coordinator_name'] = $value->coordinator_name;
+            $client['contact_point'] = $value->coordinator_name;
             $co_category=$value->coordinator_prefix;
             $client['tan'] = $value->tan;
             $client['percentage_charged_below']=$value->percentage_charged_below;
@@ -1203,8 +1203,8 @@ class ClientController extends Controller
         /*$co_prefix=$input['co_category'];*/
 
         $client_basic_info = new ClientBasicinfo();
-        $client_basic_info->name = $input['name'];
-        $client_basic_info->display_name = $input['display_name'];
+        $client_basic_info->name = trim($input['name']);
+        $client_basic_info->display_name = trim($input['display_name']);
         $client_basic_info->mail = $input['mail'];
         $client_basic_info->s_email = $input['s_email'];
         $client_basic_info->description = $input['description'];
@@ -1261,7 +1261,7 @@ class ClientController extends Controller
         else
             $client_basic_info->tan = '';
 
-        $client_basic_info->coordinator_name = $input['coordinator_name'];
+        $client_basic_info->coordinator_name = trim($input['contact_point']);
 
         $client_basic_info->coordinator_prefix= $input['co_category'];
 
@@ -1752,8 +1752,8 @@ class ClientController extends Controller
         //print_r($input);exit;
         $client_basicinfo = ClientBasicinfo::find($id);
 
-        $client_basicinfo->name = $input->name;
-        $client_basicinfo->display_name = $input->display_name;
+        $client_basicinfo->name = trim($input->name);
+        $client_basicinfo->display_name = trim($input->display_name);
         $client_basicinfo->mobile = $input->mobile;
         $client_basicinfo->other_number = $input->other_number;
         $client_basicinfo->mail = $input->mail;
@@ -1807,7 +1807,7 @@ class ClientController extends Controller
 
         //$client_basicinfo->gst_no = $input->gst_no;
         //$client_basicinfo->tds = $input->tds;
-        $client_basicinfo->coordinator_name = $input->coordinator_name;
+        $client_basicinfo->coordinator_name = trim($input->contact_point);
 
         $client_basicinfo->coordinator_prefix=$input->co_category;
         $client_basicinfo->account_manager_id = $input->account_manager;
@@ -2404,7 +2404,7 @@ class ClientController extends Controller
             if ($user_id == $super_admin_userid || $user_id == $manager_user_id) {
                 // Check remark found or not
                 $client_remark_check = ClientRemarks::checkClientRemark($content);
-                if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+                if (isset($client_remark_check) && $client_remark_check != '' ) {
 
                 }
                 else {

@@ -23,7 +23,7 @@
 
             </div>
             <div  class="pull-left">
-                <h2>Client List ({{ $count }}) </h2>
+                <h2>Clients List ({{ $count }}) </h2>
             </div>
         </div>
     </div>
