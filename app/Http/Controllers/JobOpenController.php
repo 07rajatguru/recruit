@@ -66,8 +66,8 @@ class JobOpenController extends Controller
 
         // lacs dropdown
         $lacs = array();
-        $lacs[0] = 'lacs';
-        for($i=1;$i<=50;$i++){
+        $lacs[''] = 'lacs';
+        for($i=0;$i<=50;$i++){
             $lacs[$i] = $i;
         }
         for($i=55;$i<100;$i+=5){
@@ -902,7 +902,7 @@ class JobOpenController extends Controller
         // lacs dropdown
         $lacs = array('' => 'lacs');
         // $lacs[] = 'lacs';
-        for($i=1;$i<=50;$i++){
+        for($i=0;$i<=50;$i++){
             $lacs[$i] = $i;
         }
         for($i=55;$i<100;$i+=5){
@@ -917,14 +917,14 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array('0'=>'Work Experience From');
-        for($i=1;$i<=30;$i++){
+        $work_from = array(''=>'Work Experience From');
+        for($i=0;$i<=30;$i++){
             $work_from[$i] = $i;
         }
 
-        //Work experience from dropdown
-        $work_to = array('0'=>'Work Experience To');
-        for($i=1;$i<=30;$i++){
+        //Work experience to dropdown
+        $work_to = array(''=>'Work Experience To');
+        for($i=0;$i<=30;$i++){
             $work_to[$i] = $i;
         }
 
@@ -1564,8 +1564,8 @@ class JobOpenController extends Controller
         }
 
         $lacs = array();
-        $lacs[0] = 'lacs';
-        for($i=1;$i<=50;$i++){
+        $lacs[''] = 'lacs';
+        for($i=0;$i<=50;$i++){
             $lacs[$i] = $i;
         }
         for($i=55;$i<100;$i+=5){
@@ -1580,14 +1580,14 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array('0'=>'Work Experience From');
-        for($i=1;$i<=30;$i++){
+        $work_from = array(''=>'Work Experience From');
+        for($i=0;$i<=30;$i++){
             $work_from[$i] = $i;
         }
 
         //Work experience to dropdown
-        $work_to = array('0'=>'Work Experience From');
-        for($i=1;$i<=30;$i++){
+        $work_to = array(''=>'Work Experience To');
+        for($i=0;$i<=30;$i++){
             $work_to[$i] = $i;
         }
 
@@ -1895,8 +1895,8 @@ class JobOpenController extends Controller
 
         // lacs dropdown
         $lacs = array();
-        $lacs[0] = 'lacs';
-        for($i=1;$i<=50;$i++){
+        $lacs[''] = 'lacs';
+        for($i=0;$i<=50;$i++){
             $lacs[$i] = $i;
         }
         for($i=55;$i<100;$i+=5){
@@ -1911,14 +1911,14 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array('0'=>'Work Experience From');
-        for($i=1;$i<=30;$i++){
+        $work_from = array(''=>'Work Experience From');
+        for($i=0;$i<=30;$i++){
             $work_from[$i] = $i;
         }
 
-        //Work experience from dropdown
-        $work_to = array('0'=>'Work Experience From');
-        for($i=1;$i<=30;$i++){
+        //Work experience to dropdown
+        $work_to = array(''=>'Work Experience To');
+        for($i=0;$i<=30;$i++){
             $work_to[$i] = $i;
         }
 
