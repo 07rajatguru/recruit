@@ -99,18 +99,18 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
-                            <strong>Target Date:</strong>
+                        <div class="form-group {{ $errors->has('date_opened') ? 'has-error' : '' }}">
+                            <strong>Date Opened: <span class = "required_fields">*</span> </strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
-                                </div>
-                                {!! Form::text('target_date', isset($target_date) ? $target_date : null, array('id'=>'target_date','placeholder' => 'Target Date','class' => 'form-control', 'tabindex' => '5')) !!}
+                                </div>  
+                                {!! Form::text('date_opened', isset($date_opened) ? $date_opened : null, array('id'=>'date_opened','placeholder' => 'Date Opened','class' => 'form-control', 'tabindex' => '5')) !!}
                             </div>
-                            @if ($errors->has('target_date'))
+                            @if ($errors->has('date_opened'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('target_date') }}</strong>
-                                </span>
+                                    <strong>{{ $errors->first('date_opened') }}</strong>
+                                    </span>
                             @endif
                         </div>
 
@@ -125,7 +125,7 @@
                         </div>--}}
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
-                            <strong>Select Industry:  <span class = "required_fields">*</span>  </strong>
+                            <strong>Industry Type:  <span class = "required_fields">*</span>  </strong>
                             {!! Form::select('industry_id', $industry,null, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '7')) !!}
                             @if ($errors->has('industry_id'))
                                 <span class="help-block">
@@ -184,18 +184,18 @@
                             @endif
                         </div>
 
-                        <div class="form-group {{ $errors->has('date_opened') ? 'has-error' : '' }}">
-                            <strong>Date Opened: <span class = "required_fields">*</span> </strong>
+                        <div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
+                            <strong>Target Date:</strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
-                                </div>  
-                                {!! Form::text('date_opened', isset($date_opened) ? $date_opened : null, array('id'=>'date_opened','placeholder' => 'Date Opened','class' => 'form-control', 'tabindex' => '6')) !!}
+                                </div>
+                                {!! Form::text('target_date', isset($target_date) ? $target_date : null, array('id'=>'target_date','placeholder' => 'Target Date','class' => 'form-control', 'tabindex' => '6')) !!}
                             </div>
-                            @if ($errors->has('date_opened'))
+                            @if ($errors->has('target_date'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('date_opened') }}</strong>
-                                    </span>
+                                    <strong>{{ $errors->first('target_date') }}</strong>
+                                </span>
                             @endif
                         </div>
 
