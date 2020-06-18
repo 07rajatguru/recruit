@@ -1060,9 +1060,8 @@ class ClientController extends Controller
         return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
     }
 
+    public function postClientNames() {
 
-    public function postClientNames()
-    {
         $client_ids = $_GET['client_ids'];
 
         $client_ids_array=explode(",",$client_ids);
@@ -1072,8 +1071,9 @@ class ClientController extends Controller
         echo json_encode($client);exit;
 
     }
-    public function edit($id)
-    {
+
+    public function edit($id) {
+
         $generate_lead = '1';
 
         $co_prefix=ClientBasicinfo::getcoprefix();
@@ -1114,49 +1114,46 @@ class ClientController extends Controller
             ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','industry.name as ind_name')
             ->where('client_basicinfo.id','=',$id)
             ->get();
-    foreach ($client_basicinfo as $key=>$value)
-    {
-        if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || $isAllClientVisibleUser)
-        {
-            $client['name'] = $value->name;
-            $client['display_name']=$value->display_name;
-            $client['source'] = $value->source;
-            //$client['fax'] = $value->fax;
-            $client['mobile'] = $value->mobile;
-            $client['other_number'] = $value->other_number;
-            $client['am_name'] = $value->am_name;
-            $client['mail'] = $value->mail;
-            $client['s_email'] = $value->s_email;
-            $client['ind_name'] = $value->ind_name;
-            $client['website'] = $value->website;
-            $client['description'] = $value->description;
-            $client['gst_no'] = $value->gst_no;
-            /*$client['tds'] = $value->tds;*/
-            $client['contact_point'] = $value->coordinator_name;
-            $co_category=$value->coordinator_prefix;
-            $client['tan'] = $value->tan;
-            $client['percentage_charged_below']=$value->percentage_charged_below;
 
-            $client['percentage_charged_above']=$value->percentage_charged_above;
+        foreach ($client_basicinfo as $key=>$value) {
 
-            $client_status=$value->status;
+            if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || $isAllClientVisibleUser) {
 
-            $client_all_status=$value->status;
+                $client['name'] = $value->name;
+                $client['display_name']=$value->display_name;
+                $client['source'] = $value->source;
+                $client['mobile'] = $value->mobile;
+                $client['other_number'] = $value->other_number;
+                $client['am_name'] = $value->am_name;
+                $client['mail'] = $value->mail;
+                $client['s_email'] = $value->s_email;
+                $client['ind_name'] = $value->ind_name;
+                $client['website'] = $value->website;
+                $client['description'] = $value->description;
+                $client['gst_no'] = $value->gst_no;
+                $client['contact_point'] = $value->coordinator_name;
+                $co_category=$value->coordinator_prefix;
+                $client['tan'] = $value->tan;
+                $client['percentage_charged_below']=$value->percentage_charged_below;
 
-            $client_category=$value->category;
-            /*echo $client_status;
-            exit;*/
-            $user_id = $value->account_manager_id;
-            $industry_id = $value->industry_id;
-            //$yet_to_assign_users_id = $value->yet_to_assign_user;
-            $percentage_charged_below = $value->percentage_charged_below;
-            $percentage_charged_above = $value->percentage_charged_above;
+                $client['percentage_charged_above']=$value->percentage_charged_above;
+
+                $client_status=$value->status;
+
+                $client_all_status=$value->status;
+
+                $client_category=$value->category;
+
+                $user_id = $value->account_manager_id;
+                $industry_id = $value->industry_id;
+                $percentage_charged_below = $value->percentage_charged_below;
+                $percentage_charged_above = $value->percentage_charged_above;
+            }
+            else {
+
+                return view('errors.403');
+            }
         }
-        else
-        {
-            return view('errors.403');
-        }
-    }
         
         $client['id'] = $id;
 
@@ -1164,8 +1161,8 @@ class ClientController extends Controller
             ->where('client_id','=',$id)
             ->get();
 
-        foreach ($client_address as $key=>$value)
-        {
+        foreach ($client_address as $key=>$value) {
+
             $client['billing_country'] = $value->billing_country;
             $client['billing_state'] = $value->billing_state;
             $client['billing_street1'] = $value->billing_street1;
@@ -1181,16 +1178,48 @@ class ClientController extends Controller
             $client['client_address_id'] = $value->id;
         }
 
-         $client = (object)$client;
+        //$client = (object)$client;
         // For account manager 
-         $users = User::getAllUsers('recruiter','Yes');
-         $users[0] = 'Yet to Assign';
+        $users = User::getAllUsers('recruiter','Yes');
+        $users[0] = 'Yet to Assign';
 
         $yet_to_assign_users = User::getAllUsers('recruiter','Yes');
         $yet_to_assign_users[0] = '--Select User--';
 
-        $action = "edit" ;
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
+        $action = "edit";
+
+        $client_basicinfo_model = new ClientBasicinfo();
+        $client_upload_type = $client_basicinfo_model->client_upload_type;
+
+        $i = 0;
+        $client['doc'] = array();
+        $client_doc = \DB::table('client_doc')
+        ->join('users', 'users.id', '=', 'client_doc.uploaded_by')
+        ->select('client_doc.*', 'users.name as upload_name')
+        ->where('client_id','=',$id)
+        ->get();
+
+        $utils = new Utils();
+        foreach ($client_doc as $key=>$value) {
+
+            $client['doc'][$i]['name'] = $value->name;
+            $client['doc'][$i]['id'] = $value->id;
+            $client['doc'][$i]['url'] = "../".$value->file;
+            $client['doc'][$i]['category'] = $value->category;
+            $client['doc'][$i]['uploaded_by'] = $value->upload_name;
+            $client['doc'][$i]['size'] = $utils->formatSizeUnits($value->size);
+            $i++;
+
+            if(array_search($value->category, $client_upload_type)) {
+
+                unset($client_upload_type[array_search($value->category, $client_upload_type)]);
+            }
+        }
+
+        $client_upload_type['Others'] = 'Others';
+
+
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser','client_upload_type'));
     }
 
     public function store(Request $request){
@@ -1626,7 +1655,9 @@ class ClientController extends Controller
         return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy','isManager','user_id','marketing_intern_user_id','isAllClientVisibleUser','isAsstManagerMarketing'));
     }
 
-    public function attachmentsDestroy($docid){
+    public function attachmentsDestroy(Request $request,$docid){
+
+        $type = $request->type;
 
         $client_attach=\DB::table('client_doc')
         ->select('client_doc.*')
@@ -1643,14 +1674,21 @@ class ClientController extends Controller
             $client_doc=ClientDoc::where('id','=',$docid)->delete();
         }
 
-        return redirect()->route('client.show',[$clientid])->with('success','Attachment deleted Successfully');
+        if($type == 'edit') {
+
+            return redirect()->route('client.edit',[$clientid])->with('success','Attachment Deleted Successfully.');
+        }
+
+        return redirect()->route('client.show',[$clientid])->with('success','Attachment Deleted Successfully.');
     }
 
     public function upload(Request $request){
+
         $client_upload_type = $request->client_upload_type;
         $file = $request->file('file');
         $client_id = $request->id;
         $user_id = \Auth::user()->id;
+        $type = $request->type;
 
         if (isset($file) && $file->isValid()) {
             $doc_name = $file->getClientOriginalName();
@@ -1682,7 +1720,12 @@ class ClientController extends Controller
 
         }
 
-        return redirect()->route('client.show',[$client_id])->with('success','Attachment uploaded successfully');
+        if($type == 'show') {
+            return redirect()->route('client.show',[$client_id])->with('success','Attachment Uploaded Successfully.');
+        }
+        else {
+            return redirect()->route('client.edit',[$client_id])->with('success','Attachment Uploaded Successfully.');
+        }
     }
 
     public function delete($id){
@@ -1989,7 +2032,45 @@ class ClientController extends Controller
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
 
-            return redirect()->route('client.index')->with('success','Client Updated Successfully.');
+            // Upload attchments
+
+            $client_upload_type = $request->client_upload_type;
+            $file = $request->file('file');
+
+            if (isset($file) && $file->isValid()) {
+
+                $doc_name = $file->getClientOriginalName();
+                $doc_filesize = filesize($file);
+
+                $dir_name = "uploads/clients/" . $id . "/";
+                $doc_key = "uploads/clients/" . $id . "/" . $doc_name;
+
+                if (!file_exists($dir_name)) {
+                    mkdir("uploads/clients/$id", 0777, true);
+                }
+
+                if (!$file->move($dir_name, $doc_name)) {
+
+                    return false;
+
+                } else {
+
+                    $client_doc = new ClientDoc;
+                    $client_doc->client_id = $id;
+                    $client_doc->category = $client_upload_type;
+                    $client_doc->name = $doc_name;
+                    $client_doc->file = $doc_key;
+                    $client_doc->uploaded_by = $user_id;
+                    $client_doc->size = $doc_filesize;
+                    $client_doc->created_at = time();
+                    $client_doc->updated_at = time();
+                    $client_doc->save();
+                }
+
+                return redirect('client/'.$id.'/edit')->with('success','Attachment Uploaded Successfully.');
+            }
+
+            return redirect()->route('client.index')->with('success','Client Details Updated Successfully.');
         }else{
             return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ( $client_basicinfo->errors() );
         }

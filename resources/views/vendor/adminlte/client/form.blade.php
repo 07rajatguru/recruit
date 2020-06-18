@@ -27,9 +27,21 @@
     </div>
 </div>
 
+@if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
+@if ($message = Session::get('error'))
+    <div class="alert alert-error">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
 @if( $action == 'edit')
 
-    {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off','onsubmit' => "return emailValidation()",'route' => ['client.update', $client->id]] ) !!}
+    {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off','onsubmit' => "return emailValidation()",'route' => ['client.update', $client['id']]] ) !!}
 
 @elseif( $action == 'copy')
 
@@ -447,6 +459,43 @@
                     <div class="form-group">
                         <strong>Others:</strong>
                         <input type="file" name="others_doc"  id="others_doc" class="form-control">
+                    </div>
+                </div>
+            </div>
+        @elseif($action == 'edit')
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header  col-md-6 ">
+                        <h3 class="box-title">Attachments</h3>
+                        &nbsp;&nbsp;
+                        @include('adminlte::client.upload', ['data' => $client, 'name' => 'clientattachments','type' => 'edit'])
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>File Name</th>
+                                <th>Uploaded by</th>
+                                <th>Size</th>
+                                <th>Category</th>
+                            </tr>
+                            @if(sizeof($client['doc'])>0)
+                                @foreach($client['doc'] as $key=>$value)
+                                    <tr>
+                                        <td>
+                                            <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                            &nbsp;
+                                            @include('adminlte::partials.confirm', ['data' => $value,'clientid'=> $client['id'], 'name' => 'clientattachments' ,'display_name'=> 'Attachments','type' => 'edit'])
+                                        </td>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                        <td>{{ $value['uploaded_by'] }}</td>
+                                        <td>{{ $value['size'] }}</td>
+                                        <td>{{ $value['category'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </table>
                     </div>
                 </div>
             </div>

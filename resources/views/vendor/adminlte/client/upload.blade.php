@@ -25,6 +25,10 @@
                     </div>
                 </div>
 
+                @if(isset($type) && $type != '')
+                    <input type="hidden" name="type" id="type" value="{{ $type }}">
+                @endif
+
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         {!! Form::file('file', null, array('id'=>'file','class' => 'form-control')) !!}

@@ -193,7 +193,7 @@
                 <div class="box-header  col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @include('adminlte::client.upload', ['data' => $client, 'name' => 'clientattachments'])
+                    @include('adminlte::client.upload', ['data' => $client, 'name' => 'clientattachments','type' => 'show'])
                 </div>
 
                 <div class="box-header  col-md-8 ">
@@ -215,7 +215,7 @@
                                     <td>
                                         <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
                                         &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'clientid'=> $client['id'], 'name' => 'clientattachments' ,'display_name'=> 'Attachments'])
+                                        @include('adminlte::partials.confirm', ['data' => $value,'clientid'=> $client['id'], 'name' => 'clientattachments' ,'display_name'=> 'Attachments', 'type' => 'show'])
                                     </td>
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
                                     <td>{{ $value['uploaded_by'] }}</td>
@@ -226,7 +226,6 @@
                         @endif
                     </table>
                 </div>
-
             </div>
         </div>
     @endif
