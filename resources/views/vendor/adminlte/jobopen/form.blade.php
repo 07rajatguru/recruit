@@ -21,8 +21,10 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            @if( $action == 'edit')
+            @if($action == 'edit')
                 <h2>Edit Job Openings</h2>
+            @elseif( $action == 'clone')
+                <h2>Clone Job</h2>
             @else
                 <h2>Create Job Openings</h2>
             @endif
@@ -453,29 +455,25 @@
                     <h3 class="box-title">Attachment Information</h3>
                 </div>
 
-
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Candidate Tracker: <span class = "required_fields"> *</span></strong>
-                        {!! Form::file('candidate_tracker', null, array('id'=>'candidate_tracker','class' => 'form-control')) !!}
+                        <input type="file" name="candidate_tracker"  id="candidate_tracker" class="form-control">
                     </div>
-
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Job Description:</strong>
-                        {!! Form::file('job_summary', null, array('id'=>'job_summary','class' => 'form-control')) !!}
+                        <input type="file" name="job_summary"  id="job_summary" class="form-control">
                     </div>
-
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Others:</strong>
-                        {!! Form::file('others_doc', null, array('id'=>'others_doc','class' => 'form-control')) !!}
+                        <input type="file" name="others_doc"  id="others_doc" class="form-control">
                     </div>
-
                 </div>
             </div>
         @elseif($action == 'edit')
@@ -689,6 +687,28 @@
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
             $("#level_id").select2();
+
+            $("#candidate_tracker").bind('change', function() {
+
+                var ext = $('#candidate_tracker').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','pdf','txt']) == -1)
+                {
+                    alert('Please Select Document for Candidate Tracker.');
+                    this.value = null;
+                }
+            });
+
+            $("#job_summary").bind('change', function() {
+
+                var ext = $('#job_summary').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','pdf','txt']) == -1)
+                {
+                    alert('Please Select Document for Job Description.');
+                    this.value = null;
+                }
+            });
         });
 
         var placeSearch, autocomplete;

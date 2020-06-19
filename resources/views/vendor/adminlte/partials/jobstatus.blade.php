@@ -1,6 +1,4 @@
-
-
-<a data-toggle="modal" href="#modal-status-{!! $data['id'] !!}" class="fa fa-sun-o" title="Status"></a>
+<a data-toggle="modal" href="#modal-status-{!! $data['id'] !!}" class="fa fa-sun-o" title="Change Priority"></a>
 <div id="modal-status-{!! $data['id'] !!}" class="modal text-left fade">
     <div class="modal-dialog">
         <div class="modal-content">

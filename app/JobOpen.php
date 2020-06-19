@@ -123,8 +123,8 @@ class JobOpen extends Model
         //$job_priorities['6'] = 'Constant Deliveries needed for very old positions where many deliveries are done but no result yet';
         $job_priorities['7'] = 'No Deliveries Needed';
         $job_priorities['8'] = 'Identified candidates';
-        $job_priorities['9'] = 'Closed By Us';
-        $job_priorities['10'] = 'Closed By Client';
+        //$job_priorities['9'] = 'Closed By Us';
+        //$job_priorities['10'] = 'Closed By Client';
 
         return $job_priorities;
     }
