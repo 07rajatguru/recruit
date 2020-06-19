@@ -208,6 +208,7 @@ class CandidateBasicInfo extends Model
 
         $candidateSource = CandidateSource::all();
         if(isset($candidateSource) && sizeof($candidateSource) > 0){
+            $candidateSourceArray['0'] = 'Select Candidate Source';
             foreach ($candidateSource as $item) {
                 $candidateSourceArray[$item->id] = ucwords($item->name);
             }

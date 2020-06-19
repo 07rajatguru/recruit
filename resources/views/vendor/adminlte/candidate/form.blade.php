@@ -36,10 +36,15 @@
 
 @if(isset($action))
     @if($action == 'edit')
-        {!! Form::model($candidate,['method' => 'PUT', 'files' => true, 'route' => ['candidate.update', $candidate['id']],'id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
+
+        {!! Form::model($candidate,['method' => 'PUT', 'files' => true, 'route' => ['candidate.update', $candidate['id']],'id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+
         {!! Form::hidden('candidateId', $candidate['id'], array('id'=>'candidateId')) !!}
+
     @else
-        {!! Form::open(['files' => true, 'route' => 'candidate.store','id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off']) !!}
+
+        {!! Form::open(['files' => true, 'route' => 'candidate.store','id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+
     @endif
 
     {!! Form::hidden('action', $action, array('id'=>'action')) !!}
@@ -69,7 +74,7 @@
                             <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                                 <strong>Mobile Number: <span class = "required_fields">*</span> </strong>
 
-                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '3','maxLength' => '10')) !!}
+                                {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '3','maxLength' => '10','minLength' => '10')) !!}
 
                                 {!! Form::hidden('candidate_id', null, array('id'=>'candidate_id', 'placeholder' => 'Mobile Number','class' => 'form-control')) !!}
                                 
@@ -82,11 +87,11 @@
 
                             <div class="form-group">
                                 <strong>Other Number:</strong>
-                                {!! Form::text('phone', null, array('id'=>'phone','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '5','maxLength' => '10')) !!}
+                                {!! Form::text('phone', null, array('id'=>'phone','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '5','maxLength' => '10','minLength' => '10')) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
-                             <strong>Associated Job Opening:</strong>
+                             <strong>Associated to Company:</strong>
                                   {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '7' )) !!}
                                  @if ($errors->has('job'))
                                 <span class="help-block">
@@ -386,7 +391,7 @@
     @if( $action == 'add')
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Attachment Information</h3>
+                <h3 class="box-title">Attachments</h3>
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -534,7 +539,49 @@
                 }
             });
 
+            $('#mobile').keypress(function (e) {
+
+                var length = jQuery(this).val().length;
+
+                if(length > 9) {
+                    return false;
+                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $('#phone').keypress(function (e) {
+
+                var length = jQuery(this).val().length;
+
+                if(length > 9) {
+                    return false;
+                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
         });
+
+        function emailValidation() {
+
+            var email_value = $("#email").val();
+
+            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+       
+            if(email_value != '') {
+                if (reg.test(email_value) == false) {
+                    alert('Please Enter Valid Email Address.');
+                    return false;
+                }
+            }
+            return true;
+        }
+
 
         // This example displays an address form, using the autocomplete feature
         // of the Google Places API to help users fill in the information.
