@@ -395,51 +395,25 @@
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group {{ $errors->has('resume') ? 'has-error' : '' }}">
+                <div class="form-group">
                     <strong>Resume:</strong>
-                    {!! Form::file('resume', null, array('id'=>'resume','class' => 'form-control')) !!}
-                    @if ($errors->has('resume'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('resume') }}</strong>
-                        </span>
-                    @endif
+                    <input type="file" name="resume" id="resume" class="form-control">
                 </div>
 
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group {{ $errors->has('formatted_resume') ? 'has-error' : '' }}">
+                <div class="form-group">
                     <strong>Formatted Resume:</strong>
-                    {!! Form::file('formatted_resume', null, array('id'=>'formatted_resume','class' => 'form-control')) !!}
-                    @if ($errors->has('formatted_resume'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('formatted_resume') }}</strong>
-                        </span>
-                    @endif
+                    <input type="file" name="formatted_resume" id="formatted_resume" class="form-control">
                 </div>
-            </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group {{ $errors->has('cover_latter') ? 'has-error' : '' }}">
+                <div class="form-group">
                     <strong>Cover Letter:</strong>
-                    {!! Form::file('cover_latter', null, array('id'=>'cover_latter','class' => 'form-control')) !!}
-                    @if ($errors->has('cover_latter'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('cover_latter') }}</strong>
-                        </span>
-                    @endif
+                    <input type="file" name="cover_letter" id="cover_letter" class="form-control">
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group {{ $errors->has('others') ? 'has-error' : '' }}">
-                <strong>Others:</strong>
-                {!! Form::file('others', null, array('id'=>'others','class' => 'form-control')) !!}
-                @if ($errors->has('others'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('others') }}</strong>
-                    </span>
-                @endif
-            </div>
+
+                <div class="form-group">
+                    <strong>Others:</strong>
+                    <input type="file" name="others[]" id="others" class="form-control" multiple>
+                </div>
             </div>
         </div>
     @elseif($action == 'edit')
@@ -564,6 +538,40 @@
                     return false;
                 }
             });
+
+            $("#resume").bind('change', function() {
+
+                var ext = $('#resume').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','pdf']) == -1) {
+
+                    alert('Please Select Document File.');
+                    this.value = null;
+                }
+            });
+
+             $("#formatted_resume").bind('change', function() {
+
+                var ext = $('#formatted_resume').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','pdf']) == -1) {
+
+                    alert('Please Select Document File.');
+                    this.value = null;
+                }
+            });
+
+             $("#cover_letter").bind('change', function() {
+
+                var ext = $('#cover_letter').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','pdf']) == -1) {
+
+                    alert('Please Select Document File.');
+                    this.value = null;
+                }
+            });
+
         });
 
         function emailValidation() {

@@ -1429,33 +1429,40 @@ class ClientController extends Controller
 
             }
 
-            if (isset($others_doc) && $others_doc->isValid()) {
-                $others_doc_name = $others_doc->getClientOriginalName();
-                $others_filesize = filesize($others_doc);
+            if (isset($others_doc) && $others_doc != '') {
 
-                $dir_name = "uploads/clients/".$client_id."/";
-                $others_doc_key = "uploads/clients/".$client_id."/".$others_doc_name;
+                foreach ($others_doc as $k => $v) {
 
-                if (!file_exists($dir_name)) {
-                    mkdir("uploads/clients/$client_id", 0777,true);
-                }
+                    if (isset($v) && $v->isValid()) {
 
-                if(!$others_doc->move($dir_name, $others_doc_name)){
-                    return false;
-                }
-                else{
-                    $client_doc = new ClientDoc;
+                        $others_doc_name = $v->getClientOriginalName();
+                        $others_filesize = filesize($v);
 
-                    $client_doc->client_id = $client_id;
-                    $client_doc->category = 'Others';
-                    $client_doc->name = $others_doc_name;
-                    $client_doc->file = $others_doc_key;
-                    $client_doc->uploaded_by = $user_id;
-                    $client_doc->size = $others_filesize;
-                    $client_doc->created_at = time();
-                    $client_doc->updated_at = time();
-                    $client_doc->save();
-                }
+                        $dir_name = "uploads/clients/".$client_id."/";
+                        $others_doc_key = "uploads/clients/".$client_id."/".$others_doc_name;
+
+                        if (!file_exists($dir_name)) {
+                            mkdir("uploads/clients/$client_id", 0777,true);
+                        }
+
+                        if(!$v->move($dir_name, $others_doc_name)){
+                            return false;
+                        }
+                        else{
+
+                            $client_doc = new ClientDoc;
+                            $client_doc->client_id = $client_id;
+                            $client_doc->category = 'Others';
+                            $client_doc->name = $others_doc_name;
+                            $client_doc->file = $others_doc_key;
+                            $client_doc->uploaded_by = $user_id;
+                            $client_doc->size = $others_filesize;
+                            $client_doc->created_at = time();
+                            $client_doc->updated_at = time();
+                            $client_doc->save();
+                        }
+                    }   
+                } 
             }
 
             // TODO:: Notifications : On adding new client notify Super Admin via notification

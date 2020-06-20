@@ -458,7 +458,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Others:</strong>
-                        <input type="file" name="others_doc"  id="others_doc" class="form-control">
+                        <input type="file" name="others_doc[]"  id="others_doc" class="form-control" multiple>
                     </div>
                 </div>
             </div>

@@ -38,11 +38,11 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm','autocomplete' => 'off', 'route' => ['jobopen.update', $job_open->id]] ) !!}
+    {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm','autocomplete' => 'off','onsubmit' => "return salaryValidation()",'route' => ['jobopen.update', $job_open->id]] ) !!}
 @elseif( $action == 'clone')
-    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm','autocomplete' => 'off', 'route' => ['jobopen.clonestore']] ) !!}
+    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm','autocomplete' => 'off','onsubmit' => "return salaryValidation()",'route' => ['jobopen.clonestore']] ) !!}
 @else
-    {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm','autocomplete' => 'off')) !!}
+    {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm','autocomplete' => 'off','onsubmit' => "return salaryValidation()")) !!}
 @endif
 
 @if(isset($year) && $year != '')
@@ -472,7 +472,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Others:</strong>
-                        <input type="file" name="others_doc"  id="others_doc" class="form-control">
+                        <input type="file" name="others_doc[]"  id="others_doc" class="form-control" multiple>
                     </div>
                 </div>
             </div>
@@ -710,6 +710,19 @@
                 }
             });
         });
+
+        function salaryValidation() {
+
+            var lacs_from = $("#lacs_from").val();
+            var lacs_to = $("#lacs_to").val();
+
+            if(lacs_from > lacs_to) {
+
+                alert('Salary from should be less then or equal to Salary to.');
+                return false;
+            }
+            return true;
+        }
 
         var placeSearch, autocomplete;
         var componentForm = {

@@ -1203,32 +1203,40 @@ class JobOpenController extends Controller
                 }
             }
 
-            if (isset($others_doc) && $others_doc->isValid()) {
-                $others_doc_name = $others_doc->getClientOriginalName();
-                $others_filesize = filesize($others_doc);
+            if (isset($others_doc) && $others_doc != '') {
 
-                $dir_name = "uploads/jobs/" . $job_id . "/";
-                $others_doc_key = "uploads/jobs/" . $job_id . "/" . $others_doc_name;
+                foreach ($others_doc as $k => $v) {
 
-                if (!file_exists($dir_name)) {
-                    mkdir("uploads/jobs/$job_id", 0777, true);
-                }
+                    if (isset($v) && $v->isValid()) {
 
-                if (!$others_doc->move($dir_name, $others_doc_name)) {
-                    return false;
-                } else {
-                    $job_open_doc = new JobOpenDoc;
+                        $others_doc_name = $v->getClientOriginalName();
+                        $others_filesize = filesize($v);
 
-                    $job_open_doc->job_id = $job_id;
-                    $job_open_doc->category = 'Others';
-                    $job_open_doc->name = $others_doc_name;
-                    $job_open_doc->file = $others_doc_key;
-                    $job_open_doc->uploaded_by = $user_id;
-                    $job_open_doc->size = $others_filesize;
-                    $job_open_doc->created_at = time();
-                    $job_open_doc->updated_at = time();
-                    $job_open_doc->save();
-                }
+                        $dir_name = "uploads/jobs/".$job_id."/";
+                        $others_doc_key = "uploads/jobs/".$job_id."/".$others_doc_name;
+
+                        if (!file_exists($dir_name)) {
+                            mkdir("uploads/jobs/$job_id", 0777,true);
+                        }
+
+                        if(!$v->move($dir_name, $others_doc_name)){
+                            return false;
+                        }
+                        else{
+
+                            $job_open_doc = new JobOpenDoc;
+                            $job_open_doc->job_id = $job_id;
+                            $job_open_doc->category = 'Others';
+                            $job_open_doc->name = $others_doc_name;
+                            $job_open_doc->file = $others_doc_key;
+                            $job_open_doc->uploaded_by = $user_id;
+                            $job_open_doc->size = $others_filesize;
+                            $job_open_doc->created_at = time();
+                            $job_open_doc->updated_at = time();
+                            $job_open_doc->save();
+                        }
+                    }   
+                } 
             }
 
             // For candidate tracker
@@ -2323,8 +2331,11 @@ class JobOpenController extends Controller
         return redirect()->route('jobopen.show', [$job_id])->with('success', 'Attachment uploaded successfully');
     }
 
-    public function attachmentsDestroy($docid)
-    {
+    public function attachmentsDestroy(Request $request,$docid) {
+
+        $year = $request->input('year');
+        echo $year;exit;
+
         $file_name = JobOpenDoc::where('id', $docid)->first();
         $delete_file_name = $file_name->file;
 

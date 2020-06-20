@@ -506,7 +506,7 @@ class CandidateController extends Controller
 
                 $fileResume = $request->file('resume');
                 $fileFormattedResume = $request->file('formatted_resume');
-                $fileCoverLatter = $request->file('cover_latter');
+                $fileCoverLatter = $request->file('cover_letter');
                 $fileOthers = $request->file('others');
 
                 if(isset($fileResume) && $fileResume->isValid()){
@@ -620,42 +620,44 @@ class CandidateController extends Controller
 
                 }
 
-                if(isset($fileOthers) && $fileOthers->isValid()){
+                if(isset($fileOthers) && $fileOthers != ''){
 
-                    $fileOthersName = $fileOthers->getClientOriginalName();
-                    $fileOthersExtention = $fileOthers->getClientOriginalExtension();
-                    $fileOthersRealPath = $fileOthers->getRealPath();
-                    $fileOthersSize = $fileOthers->getSize();
-                    $fileOthersMimeType = $fileOthers->getMimeType();
+                    foreach ($fileOthers as $k => $v) {
 
-                    $extention = File::extension($fileOthersName);
+                        $fileOthersName = $v->getClientOriginalName();
+                        $fileOthersExtention = $v->getClientOriginalExtension();
+                        $fileOthersRealPath = $v->getRealPath();
+                        $fileOthersSize = $v->getSize();
+                        $fileOthersMimeType = $v->getMimeType();
 
-                    $fileOthersNameArray = explode('.',$fileOthersName);
+                        $extention = File::extension($fileOthersName);
 
-                    $dir = 'uploads/candidate/'.$candidate_id.'/';
+                        $fileOthersNameArray = explode('.',$fileOthersName);
 
-                    if (!file_exists($dir) && !is_dir($dir)) {
+                        $dir = 'uploads/candidate/'.$candidate_id.'/';
 
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
+                        if (!file_exists($dir) && !is_dir($dir)) {
+
+                            mkdir($dir, 0777, true);
+                            chmod($dir, 0777);
+                        }
+                        $temp_file_name = trim($fileOthersNameArray[0]);
+                        $fileOthersNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                        $v->move($dir,$fileOthersNewName);
+
+                        $fileOthersNewPath = $dir.$fileOthersNewName;
+
+                        $candidateOthersUpload = new CandidateUploadedResume();
+                        $candidateOthersUpload->candidate_id = $candidate_id;
+                        $candidateOthersUpload->uploaded_by = $user_id;
+                        $candidateOthersUpload->file_name = $fileOthersNewName;
+                        $candidateOthersUpload->file_type = 'Others';
+                        $candidateOthersUpload->file = $fileOthersNewPath;
+                        $candidateOthersUpload->mime = $fileOthersMimeType;
+                        $candidateOthersUpload->size = $fileOthersSize;
+                        $candidateOthersUpload->uploaded_date = date('Y-m-d');
+                        $candidateOthersUploadStored = $candidateOthersUpload->save();   
                     }
-                    $temp_file_name = trim($fileOthersNameArray[0]);
-                    $fileOthersNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-                    $fileOthers->move($dir,$fileOthersNewName);
-
-                    $fileOthersNewPath = $dir.$fileOthersNewName;
-
-                    $candidateOthersUpload = new CandidateUploadedResume();
-                    $candidateOthersUpload->candidate_id = $candidate_id;
-                    $candidateOthersUpload->uploaded_by = $user_id;
-                    $candidateOthersUpload->file_name = $fileOthersNewName;
-                    $candidateOthersUpload->file_type = 'Others';
-                    $candidateOthersUpload->file = $fileOthersNewPath;
-                    $candidateOthersUpload->mime = $fileOthersMimeType;
-                    $candidateOthersUpload->size = $fileOthersSize;
-                    $candidateOthersUpload->uploaded_date = date('Y-m-d');
-                    $candidateOthersUploadStored = $candidateOthersUpload->save();
-
                 }
 
                 if(isset($job_id) && $job_id>0){
