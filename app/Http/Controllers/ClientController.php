@@ -698,7 +698,7 @@ class ClientController extends Controller
                     $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
                 }
             }
-            if($isSuperAdmin || $isStrategy){
+            if($isSuperAdmin || $isStrategy || $isAllClientVisibleUser){
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
                 $account = $account_manager_view->render();
                 $action .= $account;
@@ -2194,7 +2194,7 @@ class ClientController extends Controller
 
             $to_date = date('Y-m-d');
 
-            if(isset($get_latest_record) && sizeof($get_latest_record) > 0)
+            if(isset($get_latest_record) && $get_latest_record != '')
             {
                 /*$to = \Carbon\Carbon::parse($to_date);
                 $from = \Carbon\Carbon::parse($get_latest_record->created_at);
@@ -2316,7 +2316,7 @@ class ClientController extends Controller
 
         $to_date = date('Y-m-d');
 
-        if(isset($get_latest_record) && sizeof($get_latest_record) > 0){
+        if(isset($get_latest_record) && $get_latest_record != ''){
 
             $to = strtotime($to_date);
             $from = strtotime($get_latest_record->created_at);
