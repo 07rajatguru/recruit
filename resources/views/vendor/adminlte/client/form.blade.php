@@ -106,7 +106,7 @@
 
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager:</strong>
-                            @if($isSuperAdmin || $isStrategy)
+                            @if($isSuperAdmin || $isStrategy || $isAllClientVisibleUser)
                                 {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10' )) !!}
                             @elseif($action == 'copy')
                                 {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10' )) !!}
