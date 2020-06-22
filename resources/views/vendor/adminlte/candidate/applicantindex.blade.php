@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Candidate List <span id="candidate_count">({{ $count or 0 }})</span></h2>
+                <h2>Applicant Candidates List <span id="candidate_count">({{ $count or 0 }})</span></h2>
             </div>
 
             <div class="pull-right">

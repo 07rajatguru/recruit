@@ -206,7 +206,7 @@
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
 
                 <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Jobs associated with candidate</h3>
+                    <h3 class="box-title">Jobs associated to candidate</h3>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">

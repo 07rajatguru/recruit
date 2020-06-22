@@ -208,7 +208,7 @@ return [
                         'icon' => 'list',
                     ],
                     [
-                        'text' => 'Candidate Applicant Data',
+                        'text' => 'Applicant | Candidates',
                         'url'  => 'applicant-candidate',
                         'icon' => 'list',
                     ],

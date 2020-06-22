@@ -58,7 +58,7 @@
         </div>
         <div class="col-lg-12 margin-tb" style="margin-top:15px;">
             <div class="pull-left">
-                <h3>Associated Candidates to Job Opening : {{ $posting_title }}</h3>
+                <h3>Candidates associated to Job Opening : {{ $posting_title }}</h3>
                 <span> </span>
             </div>
 
