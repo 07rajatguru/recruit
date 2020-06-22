@@ -21,31 +21,29 @@ class LeadController extends Controller
 
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
+        $user_obj = new User();
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id =  env('STRATEGY');
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
+        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
 
-        // Display Lead & Client to one user
-        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
-
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
-        if(in_array($user_role_id,$access_roles_id))
-        {
+        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+        
             $count = Lead::getAllLeadsCount(1,$user->id);
             $convert_client = Lead::getConvertedClient(1,$user->id);
         }
-        else
-        {
+        else {
+
             $count = Lead::getAllLeadsCount(0,$user->id);
             $convert_client = Lead::getConvertedClient(0,$user->id);
         }
 
         $convert_client_count = sizeof($convert_client);
-        //print_r($convert_client_count);exit;
-        return view('adminlte::lead.index',compact(/*'leads','lead_count',*/'count','convert_client_count'));
+        return view('adminlte::lead.index',compact('count','convert_client_count'));
     }
 
-     public static function getLeadOrderColumnName($order){
+    public static function getLeadOrderColumnName($order){
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
             if ($order == 0) {
@@ -99,16 +97,11 @@ class LeadController extends Controller
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($role_id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id =  env('STRATEGY');
-
-        // Display Lead & Client to one user
-        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
-
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
-
-        if(in_array($user_role_id,$access_roles_id)) {
+        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
 
             $count = Lead::getAllLeadsCount(1,$user->id,$search);
             $leads_res = Lead::getAllLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
@@ -124,22 +117,21 @@ class LeadController extends Controller
         foreach ($leads_res as $key => $value) {
             $action = '';
 
-            if($value['access'] || $user_role_id == $asst_manager_marketing_id){
+            if($value['access'] || $isAsstManagerMarketing || $isAllClientVisibleUser){
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-
             if ($isSuperAdmin) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
                 $delete = $delete_view->render();
                 $action .= $delete;
-
+            }
+            if ($isSuperAdmin || $isAllClientVisibleUser) {
                 $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
                 $cancel = $cancel_view->render();
                 $action .= $cancel;
             }
-
             if ($value['convert_client'] == 0){
-                if($value['access'] || $user_role_id == $asst_manager_marketing_id){
+                if($value['access'] || $isAsstManagerMarketing || $isAllClientVisibleUser){
                     $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
                 }
             }
@@ -167,26 +159,23 @@ class LeadController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id =  env('STRATEGY');
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
+        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
 
-        // Display Lead & Client to one user
-        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
+        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
-
-        if(in_array($user_role_id,$access_roles_id)){
             $leads = Lead::getCancelLeads(1,$user->id,$user_role_id);
         }
         else{
             $leads = Lead::getCancelLeads(0,$user->id,$user_role_id);
         }
-       // print_r($leads);exit;
 
         $lead_count = 0;
-
         $count = sizeof($leads);
-        //$lead = Lead::orderBy('id','DESC')->paginate(50);
+
         return view('adminlte::lead.cancel',compact('leads','lead_count','count'));        
     }
 
@@ -205,16 +194,12 @@ class LeadController extends Controller
      
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
+        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id =  env('STRATEGY');
+        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
 
-        // Display Lead & Client to one user
-        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
-
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
-
-        if(in_array($user_role_id,$access_roles_id)){
             $leads_res = Lead::getCancelLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Lead::getCancelLeadsCount(1,$user->id,$search);
         }
@@ -228,7 +213,7 @@ class LeadController extends Controller
         foreach ($leads_res as $key => $value) {
             $action = '';
 
-            if($value['access']){
+            if($value['access'] || $isAsstManagerMarketing || $isAllClientVisibleUser){
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($isSuperAdmin) {

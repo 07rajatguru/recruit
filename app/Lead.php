@@ -159,9 +159,6 @@ class Lead extends Model
 
     public static function getAllLeadsCount($all=0,$user_id,$search=NULL){
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id = env('STRATEGY');
-
         $cancel_lead = 0;
         $query = Lead::query();
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
