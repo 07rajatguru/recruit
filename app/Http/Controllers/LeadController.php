@@ -395,15 +395,15 @@ class LeadController extends Controller
         $user_role_id = User::getLoggedinUserRole($user);
         $user_id=$user->id;
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id =  env('STRATEGY');
-        // Display Lead & Client to one user
-        $asst_manager_marketing_id = env('ASSTMANAGERMARKETING');
+        $user_obj = new User();
 
-        $access_roles_id = array($superadmin_role_id,$strategy_role_id,$asst_manager_marketing_id);
+        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
+        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
+        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
+        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
 
-        if(in_array($user_role_id,$access_roles_id) || ($lead->referredby==$user_id))
-        {
+       if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+
             $cancel_lead = $lead->cancel_lead;
             $convert_client = $lead->convert_client;
             if($convert_client == 1){
@@ -420,8 +420,8 @@ class LeadController extends Controller
             $leads_info = \DB::table('lead_management')
             ->get();
         }
-        else
-        {
+        else{
+            
             return view('errors.403');
         }
 
