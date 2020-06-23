@@ -818,4 +818,12 @@ class User extends Authenticatable
         }
         return $userArr;
     }
+    public static function isOperationsExecutive($user_role_id)
+    {
+        $admin_role_id = env('OPERATIONSEXECUTIVE');
+        if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        return false;
+    }
 }

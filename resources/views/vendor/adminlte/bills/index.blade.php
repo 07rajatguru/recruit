@@ -31,7 +31,7 @@
     </div>
 
     @if($title == "Recovery")
-      {{--@if($isSuperAdmin || $isAccountant)
+      {{--@if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-2 col-sm-4">
@@ -106,14 +106,14 @@
             <th>Efforts</th>
             <th>Candidate Contact Number</th>
             <th>Job Location</th>
-            @if($isSuperAdmin || $isAccountant)
+            @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
               <th>Percentage Charged</th>
             @endif
             <th>Source</th>
             <th>Client Name</th>
             <th>Client Contact Number</th>
             <th>Client Email Id</th>
-            @if($isSuperAdmin || $isAccountant)
+            @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
               <th>Lead Efforts</th>
             @endif
         </tr>
@@ -163,7 +163,7 @@
                             @endif
 
                         @endif
-                        @if($isSuperAdmin || $isAccountant)
+                        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                           @if($value['cancel_bill']==1)
                             @include('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting'])
                           @endif
@@ -179,7 +179,7 @@
                                 @if($value['cancel_bill']==0)
                                   @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                                 @endif
-                                @if($isSuperAdmin || $isAccountant)
+                                @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                                   @if($value['job_confirmation'] == 0 && $value['cancel_bill']==0)
                                     @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?'])
                                   @elseif($value['job_confirmation'] == 1 && $value['cancel_bill']==0)
@@ -194,7 +194,7 @@
                                   @endif
                                 @endif
                         @endif
-                        @if($isSuperAdmin || $isAccountant)
+                        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                           @if($value['cancel_bill']==1)
                             @include('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery'])
                           @endif
@@ -213,14 +213,14 @@
                    <td>{{ $value['efforts'] }}</td>
                    <td>{{ $value['candidate_contact_number'] }}</td>
                    <td>{{ $value['job_location'] }}</td>
-                   @if($isSuperAdmin || $isAccountant)
+                   @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                       <td>{{ $value['percentage_charged'] }}</td>
                    @endif
                    <td>{{ $value['source'] }}</td>
                    <td>{{ $value['client_name'] }}</td>
                    <td>{{ $value['client_contact_number'] }}</td>
                    <td>{{ $value['client_email_id'] }}</td>
-                   @if($isSuperAdmin || $isAccountant)
+                   @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                       <td>{{ $value['lead_efforts'] }}</td>
                    @endif
                </tr>

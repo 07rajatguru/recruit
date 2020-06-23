@@ -29,12 +29,12 @@ class ReportController extends Controller
 
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
-
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
         $superAdminUserID = getenv('SUPERADMINUSERID');
         $managerUserID = getenv('MANAGERUSERID');
         $hrUserID = getenv('HRUSERID');
 
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$isOperationsExecutive,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsers('recruiter');
         }
@@ -93,8 +93,9 @@ class ReportController extends Controller
 
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$isOperationsExecutive,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsers('recruiter');
         }
@@ -198,8 +199,9 @@ class ReportController extends Controller
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$hrUserID);
+        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$isOperationsExecutive,$hrUserID);
         if(in_array($user_id,$access_roles_id)){
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
@@ -429,9 +431,10 @@ class ReportController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
         $isHr = $user_obj::isHr($role_id);
 
-        if ($isSuperAdmin || $isAccountant ) {
+        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
             // Year Data
             $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
             $ending_year = date('Y',strtotime('+1 year'));
@@ -522,7 +525,9 @@ class ReportController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
-        if ($isSuperAdmin || $isAccountant) {
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+
+        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
 
             // Year Data
             $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
@@ -683,7 +688,9 @@ class ReportController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
-        if ($isSuperAdmin || $isAccountant) {
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+
+        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
             // Year Data
             $starting_year = '2017';
             $ending_year = date('Y',strtotime('+1 year'));

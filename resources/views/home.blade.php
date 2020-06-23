@@ -30,13 +30,13 @@
            <!--  <div class="attendance_submit col-md-2 col-sm-6 col-xs-12">
                 <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" />
             </div>
-            <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
+            <?php if($isSuperAdmin || $isAccountant || $isAdmin || $isOperationsExecutive) {?>
             <div class="filter-ex-btn pull-right col-md-2 col-sm-6 col-xs-12">
                 <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
             </div>
             <?php   }?> -->
 
-            <?php if($isSuperAdmin || $isAccountant || $isAdmin) {?>
+            <?php if($isSuperAdmin || $isAccountant || $isAdmin || $isOperationsExecutive) {?>
 
                 <div class="attendance_submit col-md-1 col-sm-4">
                     <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;" />
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="attendance_submit col-md-1 col-sm-4">
-                   @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin,'isAccountant' => $isAccountant])
+                   @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin,'isAccountant' => $isAccountant,'isOperationsExecutive' => $isOperationsExecutive])
                 </div>
             <?php   
             }

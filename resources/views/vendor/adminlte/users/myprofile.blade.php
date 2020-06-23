@@ -84,7 +84,7 @@
                                 <th>Anniversary Date</th>
                                 <td>{{ $user['date_of_anniversary'] }}</td>
                             </tr>
-                            @if($isSuperAdmin || $isAccountant) 
+                            @if($isSuperAdmin || $isAccountant || $isOperationsExecutive) 
                                 <tr>
                                     <th>Exit Date</th>
                                     <td>{{ $user['date_of_exit'] }}</td>
@@ -180,7 +180,7 @@
             </div>
         </div>
 
-        @if($isSuperAdmin || $isAccountant)
+        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">

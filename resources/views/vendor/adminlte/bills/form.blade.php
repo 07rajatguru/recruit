@@ -188,7 +188,7 @@
                                 </span>
                             @endif
                         </div>
-                        @if($isSuperAdmin || $isAccountant)
+                        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                         <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
                             <strong>Percentage Charged:</strong>
                             {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
@@ -257,7 +257,7 @@
 
             </div>
         </div>
-        @if($isSuperAdmin || $isAccountant)
+        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">

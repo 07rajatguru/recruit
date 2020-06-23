@@ -20,7 +20,9 @@ class EligibilityReportController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
-        if ($isSuperAdmin || $isAccountant) {
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+
+        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
         	// Year Data
             $starting_year = '2017';
             $ending_year = date('Y',strtotime('+2 year'));
@@ -281,7 +283,9 @@ class EligibilityReportController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
-        if ($isSuperAdmin || $isAccountant) {
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+
+        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
             // Month data
             $month_array = array();
             for ($i=1; $i <=12 ; $i++) { 

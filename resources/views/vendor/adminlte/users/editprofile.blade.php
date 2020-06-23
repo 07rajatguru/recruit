@@ -64,7 +64,7 @@
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                 <strong>Official Email: <span class = "required_fields">*</span> </strong>
-                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                     {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '2')) !!}
                                 @else
                                     {!! Form::text('email',isset($user['email']) ? $user['email'] : null, array('id'=>'email','placeholder' => 'Official Email','class' => 'form-control','tabindex' => '2','readonly' => 'true')) !!}
@@ -73,7 +73,7 @@
 
                             <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
                                 <strong>Official Gmail: <span class = "required_fields">*</span> </strong>
-                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                                @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                     {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null, array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control', 'tabindex' => '3' )) !!}
                                 @else
                                     {!! Form::text('semail',isset($user['semail']) ? $user['semail'] : null,array('id'=>'semail','placeholder' => 'Official Gmail','class' => 'form-control','tabindex' => '3','readonly' => 'true')) !!}
@@ -120,7 +120,7 @@
                                 {!! Form::textarea('permanent_address',isset($user['permanent_address']) ? $user['permanent_address'] : null, array('id'=>'permanent_address' ,'placeholder' => 'Permanent Address','class' => 'form-control','tabindex' => '17','rows' => '5')) !!}
                             </div>
 
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 <div class="form-group">
                                     <strong>UAN No. : <span class = "required_fields">*</span></strong>
                                     {!! Form::text('uan_no',isset($user['uan_no']) ? $user['uan_no'] : null,array('id'=>'uan_no','placeholder' => 'UAN No.','class' => 'form-control','tabindex' => '19','rows' => '5')) !!}
@@ -140,7 +140,7 @@
                                 @endif
                             </div>
 
-                            @if($user['edit_photo'] == '1' || $isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($user['edit_photo'] == '1' || $isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 <div class="form-group" id="image_div">
                                 
                                     <div class="form-group file_input_redesign upload_img1">
@@ -161,7 +161,7 @@
                                 </div>
                             @endif
 
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
                                     <strong>Designation: <span class = "required_fields">*</span> </strong>
                                     {!! Form::text('designation',isset($user['designation']) ? $user['designation'] : null, array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control','tabindex' => '6','disabled')) !!}
@@ -270,7 +270,7 @@
                                 {!! Form::text('interests',isset($user['interests']) ? $user['interests'] : null, array('id'=>'interests','placeholder' => 'Interests','class' => 'form-control','tabindex' => '18')) !!}
                             </div>
 
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 <div class="form-group">
                                     <strong>ESIC No. : <span class = "required_fields">*</span></strong>
                                     {!! Form::text('esic_no',isset($user['esic_no']) ? $user['esic_no'] : null,array('id'=>'esic_no','placeholder' => 'ESIC No.','class' => 'form-control','tabindex' => '20','rows' => '5')) !!}
@@ -507,7 +507,7 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Bank Name: <span class = "required_fields">*</span> </strong>
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 {!! Form::text('bank_name',isset($user['bank_name']) ? $user['bank_name'] : null,array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control', 'tabindex' => '42' )) !!}
                             @else
                                 {!! Form::text('bank_name',isset($user['bank_name']) ? $user['bank_name'] : null,array('id'=>'bank_name','placeholder' => 'Bank Name','class' => 'form-control','tabindex' => '42','disabled')) !!}
@@ -516,7 +516,7 @@
 
                         <div class="form-group">
                             <strong>Account Number: <span class = "required_fields">*</span> </strong>
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 {!! Form::text('acc_no',isset($user['acc_no']) ? $user['acc_no'] : null, array('id'=>'acc_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '44')) !!}
                             @else
                                 {!! Form::text('acc_no',isset($user['acc_no']) ? $user['acc_no'] : null, array('id'=>'acc_no','placeholder' => 'Account Number','class' => 'form-control', 'tabindex' => '44','disabled')) !!}
@@ -525,7 +525,7 @@
 
                         <div class="form-group">
                             <strong>Full Name: </strong>
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 {!! Form::text('user_full_name',isset($user['user_full_name']) ? $user['user_full_name'] : null,array('id'=>'user_full_name' ,'placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '46')) !!}
                             @else
                                 {!! Form::text('user_full_name',isset($user['user_full_name']) ? $user['user_full_name'] : null, array('id'=>'user_full_name' ,'placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '46','disabled')) !!}
@@ -537,7 +537,7 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Branch Name: </strong>
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 {!! Form::text('branch_name',isset($user['branch_name']) ? $user['branch_name'] : null,array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '43')) !!}
                             @else
                                 {!! Form::text('branch_name',isset($user['branch_name']) ? $user['branch_name'] : null,array('id'=>'branch_name','placeholder' => 'Bank Address','class' => 'form-control', 'tabindex' => '43','disabled')) !!}
@@ -546,7 +546,7 @@
 
                         <div class="form-group">
                             <strong>IFSC Code: </strong>
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 {!! Form::text('ifsc_code',isset($user['ifsc_code']) ? $user['ifsc_code'] : null,array('id'=>'ifsc_code','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '45')) !!}
                             @else
                                 {!! Form::text('ifsc_code',isset($user['ifsc_code']) ? $user['ifsc_code'] : null,array('id'=>'ifsc_code','placeholder' => 'IFSC Code','class' => 'form-control', 'tabindex' => '45','disabled')) !!}
@@ -555,7 +555,7 @@
 
                         <div class="form-group">
                             <strong>Payment Mode: <span class = "required_fields">*</span> </strong>
-                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+                            @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
                                 {!! Form::text('payment_mode',isset($user['payment_mode']) ? $user['payment_mode'] : null,array('id'=>'payment_mode','placeholder' => 'Payment Mode','class' => 'form-control', 'tabindex' => '47')) !!}
                             @else
                                 {!! Form::text('payment_mode',isset($user['payment_mode']) ? $user['payment_mode'] : null,array('id'=>'payment_mode','placeholder' => 'Payment Mode','class' => 'form-control', 'tabindex' => '47','disabled')) !!}
@@ -567,7 +567,7 @@
         </div>
     </div>
 
-    @if($isSuperAdmin || $isAccountant || $isOfficeAdmin)
+    @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">

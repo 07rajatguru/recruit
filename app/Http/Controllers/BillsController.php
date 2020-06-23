@@ -35,14 +35,16 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $accountant_role_id = env('ACCOUNTANT');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllBillsCount(0,1,$user_id);
             $access = true;
@@ -53,7 +55,7 @@ class BillsController extends Controller
         }
 
         $title = "Forecasting";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','isOperationsExecutive'));
     }
 
     public function getForecastingOrderColumnName($order,$admin){
@@ -137,6 +139,7 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $accountant_role_id = env('ACCOUNTANT');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -144,6 +147,7 @@ class BillsController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
         $isManager = $user_obj::isManager($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         // Year Data
         $starting_year = '2017';
@@ -178,7 +182,7 @@ class BillsController extends Controller
         }
 
         if ($title == 'Forecasting') {
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getAllBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -193,7 +197,7 @@ class BillsController extends Controller
             }
         }
         else if($title == 'Recovery'){
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
@@ -234,7 +238,7 @@ class BillsController extends Controller
                         }
                     }
                 }
-                if($isSuperAdmin || $isAccountant) {
+                if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
                     if($value['cancel_bill']==1){
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
                         $relive = $relive_view->render();
@@ -255,7 +259,7 @@ class BillsController extends Controller
                         $cancel = $cancel_view->render();
                         $action .= $cancel;
                     }
-                    if($isSuperAdmin || $isAccountant){
+                    if($isSuperAdmin || $isAccountant || $isOperationsExecutive){
 
                         if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
                             $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?','year' => $year]);
@@ -290,7 +294,7 @@ class BillsController extends Controller
                         }*/
                     }
                 }
-                if($isSuperAdmin || $isAccountant) {
+                if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
                     if($value['cancel_bill']==1){
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery']);
                         $relive = $relive_view->render();
@@ -309,7 +313,7 @@ class BillsController extends Controller
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
-            if($isSuperAdmin || $isAccountant/* || $isManager*/) {
+            if($isSuperAdmin || $isAccountant/* || $isManager*/ || $isOperationsExecutive) {
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
                 $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
 
@@ -346,14 +350,16 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $accountant_role_id = env('ACCOUNTANT');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllCancelBillsCount(0,1,$user_id);
             $access = true;
@@ -364,7 +370,7 @@ class BillsController extends Controller
         }
 
         $title = "Cancel Forecasting";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','isOperationsExecutive'));
     }
     // for cancel bills get using ajax
     public function getAllCancelBillsDetails(){
@@ -388,15 +394,17 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $accountant_role_id = env('ACCOUNTANT');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         if ($title == 'Cancel Forecasting') {
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getCancelBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -411,7 +419,7 @@ class BillsController extends Controller
             }
         }
         else if($title == 'Cancel Recovery'){
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
             if(in_array($user_role_id,$access_roles_id)){
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
@@ -452,7 +460,7 @@ class BillsController extends Controller
                         }
                     }
                 }
-                if($isSuperAdmin || $isAccountant) {
+                if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
                     if($value['cancel_bill']==1){
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
                         $relive = $relive_view->render();
@@ -473,7 +481,7 @@ class BillsController extends Controller
                         $cancel = $cancel_view->render();
                         $action .= $cancel;
                     }
-                    if($isSuperAdmin || $isAccountant){
+                    if($isSuperAdmin || $isAccountant || $isOperationsExecutive){
                         if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
                             $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
                             $job_con = $job_confirmation->render();
@@ -507,7 +515,7 @@ class BillsController extends Controller
                         }*/
                     }
                 }
-                if($isSuperAdmin || $isAccountant) {
+                if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
                     if($value['cancel_bill']==1){
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery']);
                         $relive = $relive_view->render();
@@ -525,7 +533,7 @@ class BillsController extends Controller
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
-            if($isSuperAdmin || $isAccountant) {
+            if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
                 $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
 
@@ -561,12 +569,14 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $accountant_role_id = env('ACCOUNTANT');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         // Year Data
         /*$starting_year = '2017';
@@ -629,7 +639,7 @@ class BillsController extends Controller
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
         $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllBillsCount(1,1,$user_id,$current_year,$next_year);
             $access = true;
@@ -640,7 +650,7 @@ class BillsController extends Controller
         }
 
         $title = "Recovery";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','year_array','year'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','year_array','year','isOperationsExecutive'));
 
     }
 
@@ -658,14 +668,16 @@ class BillsController extends Controller
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
         $accountant_role_id = env('ACCOUNTANT');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $count = Bills::getAllCancelBillsCount(1,1,$user_id);
             $access = true;
@@ -676,7 +688,7 @@ class BillsController extends Controller
         }
 
         $title = "Cancel Recovery";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn'));
+        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn','isOperationsExecutive'));
 
     }
 
@@ -695,13 +707,14 @@ class BillsController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant,$isOperationsExecutive);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
@@ -736,7 +749,7 @@ class BillsController extends Controller
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant','lead_name','lead_percentage'));
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','isOperationsExecutive'));
     }
 
     public function store(Request $request)
@@ -990,11 +1003,13 @@ class BillsController extends Controller
         $user_email = \Auth::user()->email;
         $superadminuserid = getenv('SUPERADMINUSERID');
         $accountantuserid = getenv('ACCOUNTANTUSERID');
+        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $accountantemail = User::getUserEmailById($accountantuserid);
+        $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-        $cc_users_array = array($superadminemail,$accountantemail);
+        $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
 
         $c_name = CandidateBasicInfo::getCandidateNameById($candidate_name);
 
@@ -1025,10 +1040,11 @@ class BillsController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $viewVariable = Bills::getShowBill($id);
 
-       return view('adminlte::bills.show', $viewVariable,compact('isSuperAdmin','isAccountant'));
+       return view('adminlte::bills.show', $viewVariable,compact('isSuperAdmin','isAccountant','isOperationsExecutive'));
     }
 
     public function edit($id)
@@ -1044,13 +1060,14 @@ class BillsController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $manager_role_id = env('MANAGER');
         $superadmin_role_id = env('SUPERADMIN');
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant);
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant,$isOperationsExecutive);
         if(in_array($user_role_id,$access_roles_id)){
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
@@ -1146,7 +1163,7 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','upload_type'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','upload_type','isOperationsExecutive'));
     }
 
     public function update(Request $request, $id)
@@ -1363,11 +1380,13 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
+            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
 
@@ -1472,11 +1491,13 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
+            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
@@ -1505,11 +1526,13 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
+            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
@@ -1571,11 +1594,13 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
+            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
@@ -1605,11 +1630,13 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
+            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
@@ -1698,6 +1725,7 @@ class BillsController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
         if(in_array($user_role_id,$access_roles_id)){
@@ -1790,7 +1818,7 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type','percentage_charged'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type','percentage_charged','isOperationsExecutive'));
     }
 
     public function downloadExcel(){
@@ -1853,6 +1881,8 @@ class BillsController extends Controller
 
         $superadmin_userid = getenv('SUPERADMINUSERID');
         $account_userid = getenv('ACCOUNTANTUSERID');
+        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+
         if ($user_id == $superadmin_userid) {
             $accountantemail = User::getUserEmailById($account_userid);
             $cc_users_array[] = $accountantemail;
@@ -1860,6 +1890,11 @@ class BillsController extends Controller
         else if ($user_id == $account_userid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
             $cc_users_array[] = $superadminemail;
+        }
+        else if ($user_id == $operationsexecutiveuserid) {
+            $superadminemail = User::getUserEmailById($superadmin_userid);
+            $accountantemail = User::getUserEmailById($account_userid);
+            $cc_users_array[] = array($superadminemail,$accountantemail);
         }
         else {
             $superadminemail = User::getUserEmailById($superadmin_userid);
@@ -1962,6 +1997,8 @@ class BillsController extends Controller
 
         $superadmin_userid = getenv('SUPERADMINUSERID');
         $account_userid = getenv('ACCOUNTANTUSERID');
+        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+
         if ($user_id == $superadmin_userid) {
             $accountantemail = User::getUserEmailById($account_userid);
             $cc_users_array[] = $accountantemail;
@@ -1969,6 +2006,11 @@ class BillsController extends Controller
         else if ($user_id == $account_userid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
             $cc_users_array[] = $superadminemail;
+        }
+        else if ($user_id == $operationsexecutiveuserid) {
+            $superadminemail = User::getUserEmailById($superadmin_userid);
+            $accountantemail = User::getUserEmailById($account_userid);
+            $cc_users_array[] = array($superadminemail,$accountantemail);
         }
         else {
             $superadminemail = User::getUserEmailById($superadmin_userid);

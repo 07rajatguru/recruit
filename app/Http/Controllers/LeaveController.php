@@ -27,12 +27,13 @@ class LeaveController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         if(!$isSuperAdmin){
             $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
         }
 
-        if($isSuperAdmin || $isAdmin || $isAccountant){
+        if($isSuperAdmin || $isAdmin || $isAccountant || $isOperationsExecutive){
             $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
         }
         else {

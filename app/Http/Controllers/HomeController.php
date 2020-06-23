@@ -301,12 +301,14 @@ class HomeController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
         $superadmin_role_id =  env('SUPERADMIN');
         $acct_role_id = env('ACCOUNTANT');
         $developer_role_id = env('DEVELOPER');
+        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
 
         $loggedin_userid = \Auth::user()->id;
 
@@ -341,7 +343,7 @@ class HomeController extends Controller
             $year_array[$y] = $y;
         }
 
-        $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id,$developer_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$acct_role_id,$superadmin_role_id,$developer_role_id,$operations_excutive_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $users = User::getOtherUsers();
         }
@@ -469,7 +471,7 @@ class HomeController extends Controller
 
         //print_r($list1);exit;
 
-        return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('isSuperAdmin','isAdmin','isAccountant','isDirector','users_name'));
+        return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('isSuperAdmin','isAdmin','isAccountant','isDirector','users_name','isOperationsExecutive'));
 
         //return view('home');
         $from = date('Y-m-d 00:00:00');
@@ -512,6 +514,7 @@ class HomeController extends Controller
         $user_obj = new User();
         $isAccountant = $user_obj::isAccountant($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         if(isset($_POST['selected_user_id']) && $_POST['selected_user_id'] != '')
         {
@@ -595,7 +598,7 @@ class HomeController extends Controller
 
         $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
         
-        return view('userattendance', compact('calendar','isSuperAdmin','isAccountant','users_name'));
+        return view('userattendance', compact('calendar','isSuperAdmin','isAccountant','users_name','isOperationsExecutive'));
     }
 
     // Save User remarks in calendar

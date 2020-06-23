@@ -47,9 +47,10 @@ class UserController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $data = User::orderBy('status','ASC')->get();
-        return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant','isOfficeAdmin'))
+        return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant','isOfficeAdmin','isOperationsExecutive'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
 
     }
@@ -508,8 +509,9 @@ class UserController extends Controller
         $user_obj = new User();
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        if ($isSuperAdmin || $isAccountant || $loggedin_user_id == $user_id) {        
+        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive || $loggedin_user_id == $user_id) {        
             $dateClass = new Date();
             $user = array();
 
@@ -601,7 +603,7 @@ class UserController extends Controller
 
             //$users_upload_type['Others'] = 'Others';
 
-            return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family','users_upload_type'));
+            return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family','users_upload_type','isOperationsExecutive'));
         }
         else {
             return view('errors.403');
@@ -618,8 +620,9 @@ class UserController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
         $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
-        if ($isSuperAdmin || $isAccountant || $isOfficeAdmin || $loggedin_user_id == $user_id) {
+        if ($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive || $loggedin_user_id == $user_id) {
             $dateClass = new Date();
             $user = array();
 
@@ -776,7 +779,7 @@ class UserController extends Controller
 
             //echo $employee_id_increment;exit;
 
-            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus','employee_id_increment'));
+            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus','employee_id_increment','isOperationsExecutive'));
         }
         else {
             return view('errors.403');

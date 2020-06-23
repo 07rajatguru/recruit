@@ -14,7 +14,7 @@
                     <input type="hidden" name="name" id="name" value="{{ $name }}">
                 @endif
 
-                @if($isSuperAdmin || $isAccountant)
+                @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                     <strong>Select User :</strong><br/>
                     {!! Form::select('user_id', $users,null, array('id'=>'user_id','class' => 'form-control')) !!}
                     <br/><br/>
