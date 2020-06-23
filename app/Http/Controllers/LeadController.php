@@ -121,7 +121,7 @@ class LeadController extends Controller
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($isSuperAdmin) {
-                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Index']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
@@ -217,7 +217,7 @@ class LeadController extends Controller
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($isSuperAdmin) {
-                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Cancel']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
@@ -225,7 +225,7 @@ class LeadController extends Controller
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
 
-            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['source'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['lead_status'],$value['convert_client']);
+            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
             $lead[$i] = $data;
             $i++;
         }
@@ -438,14 +438,14 @@ class LeadController extends Controller
 
         $input = $request->all();
 
-	 	$name = $request->get('name');
+	 	$name = trim($request->get('name'));
         $co_category = $request->get('co_category');
-        $coordinator_name = $request->get('contact_point');
+        $coordinator_name = trim($request->get('contact_point'));
         $email = $request->get('mail');
         $s_email = $request->get('s_email');
         $mobile = $request->get('mobile');
         $other_number = $request->get('other_number');
-        $display_name = $request->get('display_name');
+        $display_name = trim($request->get('display_name'));
         $leads = $request->get('leads');
         $remarks = $request->get('remarks');
         $city=$request->get('city');
@@ -602,8 +602,8 @@ class LeadController extends Controller
         $input = $request->all();
 
         $client_basic_info = new ClientBasicinfo();
-        $client_basic_info->name = $input['name'];
-        $client_basic_info->display_name = $input['display_name'];
+        $client_basic_info->name = trim($input['name']);
+        $client_basic_info->display_name = trim($input['display_name']);
         $client_basic_info->mail = $input['mail'];
         $client_basic_info->s_email = $input['s_email'];
         $client_basic_info->description = $input['description'];
@@ -637,7 +637,7 @@ class LeadController extends Controller
             $client_basic_info->tan = $input['tan'];
         else
             $client_basic_info->tan = '';
-        $client_basic_info->coordinator_name = $input['coordinator_name'];
+        $client_basic_info->coordinator_name = trim($input['coordinator_name']);
         $client_basic_info->coordinator_prefix= $input['co_category'];
 
         $status = $input['status'];
@@ -865,10 +865,17 @@ class LeadController extends Controller
         }
      }
 
-	public function destroy($id){
+	public function destroy(Request $request,$id){
+
+        $Lead_Type = $request->input('Lead_Type');
 
         $lead = Lead::where('id',$id)->delete();
 
-        return redirect()->route('lead.index')->with('success','Leads Deleted Successfully.');
+        if($Lead_Type == 'Index') {
+            return redirect()->route('lead.index')->with('success','Leads Deleted Successfully.');
+        }
+        else {
+            return redirect()->route('lead.leadcancel')->with('success','Leads Deleted Successfully.');
+        }
     }
 }

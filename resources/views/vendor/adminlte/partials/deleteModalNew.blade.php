@@ -22,6 +22,10 @@
             @if(isset($year) && $year != '')
                 <input type="hidden" name="year" id="year" value="{{ $year }}"/>
             @endif
+
+            @if(isset($Lead_Type) && $Lead_Type != '')
+                <input type="hidden" name="Lead_Type" id="Lead_Type" value="{{ $Lead_Type }}"/>
+            @endif
             
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>

@@ -94,14 +94,9 @@
                             {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
                         </div>
 
-                        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
-                            <strong>Remarks : <span class = "required_fields">*</span></strong>
+                        <div class="form-group}">
+                            <strong>Remarks : </strong>
                             {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control','tabindex' => '11','rows' => '8')) !!}
-                            @if ($errors->has('remarks'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('remarks') }}</strong>
-                                </span>
-                            @endif
                         </div>
                     </div>
 
@@ -294,9 +289,6 @@
                 },
                 "display_name": {
                     required: true
-                },
-                "remarks" : {
-                    required: true
                 }
             },
             messages: {
@@ -317,9 +309,6 @@
                 },
                 "display_name": {
                     required: "Display Name is Required Field."
-                },
-                "remarks" : {
-                    required: "Remarks is Required Field."
                 }
             }
         });
