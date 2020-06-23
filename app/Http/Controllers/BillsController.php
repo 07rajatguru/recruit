@@ -1894,7 +1894,7 @@ class BillsController extends Controller
         else if ($user_id == $operationsexecutiveuserid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
             $accountantemail = User::getUserEmailById($account_userid);
-            $cc_users_array[] = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
         }
         else {
             $superadminemail = User::getUserEmailById($superadmin_userid);
@@ -2010,7 +2010,7 @@ class BillsController extends Controller
         else if ($user_id == $operationsexecutiveuserid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
             $accountantemail = User::getUserEmailById($account_userid);
-            $cc_users_array[] = array($superadminemail,$accountantemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
         }
         else {
             $superadminemail = User::getUserEmailById($superadmin_userid);
