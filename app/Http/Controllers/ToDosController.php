@@ -487,7 +487,14 @@ class ToDosController extends Controller
         $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
         $todo_ids = array_unique($todo_ids);
 
-        $count = ToDos::getAllTodosCount($todo_ids,'');
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+
+            $count = ToDos::getAllTodosCount($todo_ids,'');
+        }
+        else {
+
+            $count = 0;
+        }
 
         return view('adminlte::toDo.index', compact('todo_status','user_id','isSuperAdmin','status','count','isStrategyCoordination'));
 
@@ -1113,8 +1120,14 @@ class ToDosController extends Controller
         $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
         $todo_ids = array_unique($todo_ids);
 
-        $count = ToDos::getCompleteTodosCount($todo_ids,'');
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
 
+            $count = ToDos::getCompleteTodosCount($todo_ids,'');
+        }
+        else {
+
+            $count = 0;
+        }
         return view('adminlte::toDo.complete',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
 
     }
@@ -1202,7 +1215,14 @@ class ToDosController extends Controller
         $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids,$cc_todo_ids);
         $todo_ids = array_unique($todo_ids);
 
-        $count = ToDos::getMyTodosCount($todo_ids,'');
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+
+            $count = ToDos::getMyTodosCount($todo_ids,'');
+        }
+        else {
+
+            $count = 0;
+        }
 
         return view('adminlte::toDo.mytask',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
     }
