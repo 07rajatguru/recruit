@@ -22,7 +22,7 @@
 		<table border="1" cellpadding="0" cellspacing="0" width="100%" style="text-align: center;">
 			<tr style="color: yellow; background-color: #7598d9;">
 				<td><b>Company Name</b></td>
-				<td><b>{{ $join_mail['company_name'] }}</b></td>
+				<td><b>{{ $join_mail['client_company_name'] }}</b></td>
 			</tr>
 			<tr style="background-color: #B8DBE6;">
 				<td><b>Candidate Name</b></td>

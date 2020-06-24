@@ -235,7 +235,10 @@ class Bills extends Model
             }*/
 
             // Generate Excel Invoice URL
-            $excel_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+
+            $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
+            $excel_url = $bill_invoice['file'];
+
             if (!file_exists($excel_url) && !is_dir($excel_url)) {
                 $bills[$i]['excel_invoice_url'] = NULL;
             }
@@ -467,7 +470,9 @@ class Bills extends Model
             }*/
 
             // Generate Excel Invoice URL
-            $excel_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
+            $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
+            $excel_url = $bill_invoice['file'];
+            
             if (!file_exists($excel_url) && !is_dir($excel_url)) {
                 $bills[$i]['excel_invoice_url'] = NULL;
             }
@@ -1115,13 +1120,13 @@ class Bills extends Model
         $join_mail = $join_mail->join('job_openings','job_openings.id','=','bills.job_id');
         $join_mail = $join_mail->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $join_mail = $join_mail->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix','client_basicinfo.gst_no as gst_no','client_address.*');
+        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix','client_basicinfo.gst_no as gst_no','client_address.*','client_basicinfo.name as client_company_name');
         $join_mail = $join_mail->where('bills.id',$id);
         $join_mail_res = $join_mail->first();
 
         $join_confirmation_mail = array();
         if (isset($join_mail_res) && $join_mail_res != '') {
-            $salary = $join_mail_res->fixed_salary;
+            $salary = str_replace(",", "", $join_mail_res->fixed_salary);
             $pc = $join_mail_res->percentage_charged;
 
             $fees = ($salary * $pc)/100;
@@ -1149,6 +1154,7 @@ class Bills extends Model
             $join_confirmation_mail['amount_in_words'] = Utils::number_in_words(round($billing_amount));
             $join_confirmation_mail['gst_no'] = $join_mail_res->gst_no;
             $join_confirmation_mail['gst_check'] = substr($join_mail_res->gst_no,0,2);
+            $join_confirmation_mail['client_company_name'] = $join_mail_res->client_company_name;
 
             $billing_address ='';
             if($join_mail_res->billing_street1!=''){

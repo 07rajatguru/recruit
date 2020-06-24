@@ -11,17 +11,12 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td style="width: 6;"></td> <td style="width: 6;"></td> <td style="width: 2;"></td> <td style="width: 3;"></td> <td style="width: 3;"></td> <td></td> <td style="width: 5;"></td> <td></td> <td></td> <td></td> <td></td>
-			</tr>
-			<tr>
-				<td></td>
 				<th colspan="10" style="text-align: center;background: #A9A9A9;color: #000000;border: 5px solid #000000;">Invoice</th>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
-				<td></td>
+				<td style="width: 6;"></td> <td style="width: 6;"></td> <td style="width: 2;"></td> <td style="width: 3;"></td> <td style="width: 3;"></td> <td></td> <td style="width: 5;"></td> <td></td> <td></td> <td></td> <td></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -32,10 +27,15 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan="5" style="border: 5px solid #000000;">Name: {{ $invoice_data['company_name'] }}</td>
-				<td colspan="4" style="border: 5px solid #000000;">Name: {{ $invoice_data['company_name'] }}</td>
-				<td rowspan="2" style="border: 5px solid #000000;width:17;vertical-align:middle;"><center><b> Invoice No. :</center><br/> <center>ATS/18-19/___</center>
-				</b></td>
+				<td colspan="5" style="border: 5px solid #000000;">Name: {{ $invoice_data['client_company_name'] }}</td>
+				<td colspan="4" style="border: 5px solid #000000;">Name: {{ $invoice_data['client_company_name'] }}</td>
+				<td rowspan="2" style="border: 5px solid #000000;width:17;vertical-align:middle;">
+					<?php
+						$full_year =  date('Y');
+                        $cur_yr = substr($full_year, -2);
+                        $nxt_yr = $cur_yr + 1;
+					?>
+					<center><b> Invoice No. :</center><br/> <center>ATS/{{ $cur_yr }}-{{ $nxt_yr }}/___</center></b></td>
 				<td></td>
 			</tr>
 			<tr>

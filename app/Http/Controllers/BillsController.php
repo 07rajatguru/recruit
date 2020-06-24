@@ -785,10 +785,9 @@ class BillsController extends Controller
             $percentage_charged = $input['percentage_charged'];
         }
         else{
-            //$percentage_charged = '';
-            //return redirect('forecasting/create')->with('error','Please Contact to Adminstrator to set Percentage Charged of Client.');
             $percentage_charged = '8.33';
         }
+
         $employee_name = array();
         $employee_final = array();
         $employee_percentage = array();
@@ -812,9 +811,9 @@ class BillsController extends Controller
             }
         }
 
-       if($total>100){
+        if($total>100){
            return redirect('forecasting/create')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
-       }
+        }
 
         if(isset($input['lead_name']) && $input['lead_name']!=''){
             $lead_name = $input['lead_name'];
@@ -829,7 +828,6 @@ class BillsController extends Controller
             $lead_percentage = '';
         }
 
-        //echo $dateClass->changeDMYtoYMD($date_of_joining);exit;
         $bill = new Bills();
 
         $bill->receipt_no = 'xyz';
@@ -1083,19 +1081,16 @@ class BillsController extends Controller
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title']." ,".$v['location'];
         }
         
-        $bnm = Bills::find($id);
-        //print_r($bnm);exit;
-
-        $dateClass = new Date();
-        $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
-        $job_id = $bnm->
         $action = 'edit';
+        $dateClass = new Date();
+
+        $bnm = Bills::find($id);
+        $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
         $status = $bnm->status;
 
         if($status == 1){
             $generate_bm = '1';
         }
-
 
         $employee_name = array();
         $employee_percentage = array();
@@ -1183,12 +1178,13 @@ class BillsController extends Controller
         $candidate_id = $input['candidate_name'];
         $designation_offered = $input['designation_offered'];
         $job_location = $input['job_location'];
-        //$percentage_charged = $input['percentage_charged'];
         $client_name = $input['client_name'];
         $client_email_id = $input['client_email_id'];
         $address_of_communication = $input['address_of_communication'];
         $generateBM = $input['generateBM'];
+
         $status=0;
+
         if($generateBM==1){
             $status = 1;
 
@@ -1262,7 +1258,6 @@ class BillsController extends Controller
         $bill->candidate_name = $candidate_id;
         $bill->designation_offered = $designation_offered;
         $bill->job_location = $job_location;
-        //$bill->percentage_charged = $percentage_charged;
         $bill->client_name = $client_name;
         $bill->client_email_id = $client_email_id;
         $bill->address_of_communication = $address_of_communication;
@@ -1885,11 +1880,13 @@ class BillsController extends Controller
 
         if ($user_id == $superadmin_userid) {
             $accountantemail = User::getUserEmailById($account_userid);
-            $cc_users_array[] = $accountantemail;
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            $cc_users_array = array($accountantemail,$operationsexecutivemail);
         }
         else if ($user_id == $account_userid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
-            $cc_users_array[] = $superadminemail;
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            $cc_users_array = array($superadminemail,$operationsexecutivemail);
         }
         else if ($user_id == $operationsexecutiveuserid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
@@ -1948,6 +1945,10 @@ class BillsController extends Controller
 
         $bill_id = $_POST['id'];
         $invoice_data = Bills::getJoinConfirmationMail($bill_id);
+
+        // Set invoice name
+        $date = date('dmY');
+        $invoice_name = $invoice_data['client_company_name'] . " - " . $invoice_data['candidate_name'] . " - " . $date;
         
         if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
 
@@ -1957,32 +1958,43 @@ class BillsController extends Controller
         }
 
         // Generate excel sheet and save at bill id location
-        Excel::create($id.'_invoice', function($excel) use ($invoice_data){
+        Excel::create($invoice_name, function($excel) use ($invoice_data){
             $excel->sheet('Sheet 1', function($sheet) use ($invoice_data){
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
-                ->getStyle('B7')
+                ->getStyle('B6')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('G7')
+                $sheet->getStyle('G6')
                 ->getAlignment()
                 ->setWrapText(true);
                
-                $sheet->getStyle('K6')
+                $sheet->getStyle('K5')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('C12')
+                $sheet->getStyle('C11')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('C24')
+                $sheet->getStyle('C23')
                 ->getAlignment()
                 ->setWrapText(true);
 
             });
         })->store('xls', public_path('uploads/bills/'.$id));
+
+
+        $file_path = 'uploads/bills/'.$id.'/'.$invoice_name.'.xls';
+
+        $bills_doc = new BillsDoc();
+        $bills_doc->bill_id = $id;
+        $bills_doc->category = "Invoice";
+        $bills_doc->file = $file_path;
+        $bills_doc->name = $invoice_name.'.xls';
+        $bills_doc->size = '';
+        $bills_doc->save();
 
         // Generate PDF and save at bill id location
         
@@ -2001,11 +2013,13 @@ class BillsController extends Controller
 
         if ($user_id == $superadmin_userid) {
             $accountantemail = User::getUserEmailById($account_userid);
-            $cc_users_array[] = $accountantemail;
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            $cc_users_array = array($accountantemail,$operationsexecutivemail);
         }
         else if ($user_id == $account_userid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
-            $cc_users_array[] = $superadminemail;
+            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            $cc_users_array = array($superadminemail,$operationsexecutivemail);
         }
         else if ($user_id == $operationsexecutiveuserid) {
             $superadminemail = User::getUserEmailById($superadmin_userid);
@@ -2070,28 +2084,32 @@ class BillsController extends Controller
 
         $invoice_data = Bills::getJoinConfirmationMail($id);
 
+        // Get invoice name
+        $bill_invoice = BillsDoc::getBillInvoice($id,'Invoice');
+        $invoice_name = $bill_invoice['name'];
+
         // Generate excel sheet and save at bill id location
-        Excel::create($id.'_invoice', function($excel) use ($invoice_data){
+        Excel::create($invoice_name, function($excel) use ($invoice_data){
             $excel->sheet('Sheet 1', function($sheet) use ($invoice_data){
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
-                ->getStyle('B7')
+                ->getStyle('B6')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('G7')
+                $sheet->getStyle('G6')
                 ->getAlignment()
                 ->setWrapText(true);
                
-                $sheet->getStyle('K6')
+                $sheet->getStyle('K5')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('C12')
+                $sheet->getStyle('C11')
                 ->getAlignment()
                 ->setWrapText(true);
 
-                $sheet->getStyle('C24')
+                $sheet->getStyle('C23')
                 ->getAlignment()
                 ->setWrapText(true);
 
