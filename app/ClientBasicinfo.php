@@ -25,7 +25,7 @@ class ClientBasicinfo extends Ardent
             'name' => 'required',
             'mail' => 'unique:client_basicinfo,mail,{id}',
             'mobile'  => 'required',
-            //contact_point' => 'required'
+            'contact_point' => 'required'
         );
 
 
@@ -36,7 +36,7 @@ class ClientBasicinfo extends Ardent
             'mail.required' => 'Eail is Required Field.',
             'mail.unique' => 'Mail is unique Field.',
             'mobile.required'  => 'Mobile is Required Field.',
-            //'contact_point.required' => 'Contact Point is Required Field.',
+            'contact_point.required' => 'Contact Point is Required Field.',
         ];
     }
 
