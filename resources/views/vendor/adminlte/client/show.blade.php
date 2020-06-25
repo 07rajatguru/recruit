@@ -86,7 +86,7 @@
                         </tr>
 
                         <tr>
-                            @if($isSuperAdmin || $isAdmin)
+                            @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
                                 <th>Industry</th>
                                 <td>{{ $client['ind_name'] }}</td>
                             @else
@@ -107,7 +107,7 @@
 
                         <tr>
                             <th>About</th>
-                            <td>{!! $client['description'] !!}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{!! $client['description'] !!}</td>
                             <th> Client Status</th>
                             <td>{{ $client['status'] }}</td>
                         </tr>
