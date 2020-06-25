@@ -1036,6 +1036,7 @@ class ClientController extends Controller
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isManager = $user_obj::isManager($role_id);
         $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
         $user_id = $user->id;
 
         // For account manager
@@ -1063,7 +1064,7 @@ class ClientController extends Controller
         $percentage_charged_above = '8.33';
 
         $action = "add" ;
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','isSuperAdmin','user_id','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','isStrategy','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser','isOperationsExecutive'));
     }
 
     public function postClientNames() {
@@ -1227,7 +1228,7 @@ class ClientController extends Controller
         $client_upload_type['Others'] = 'Others';
 
 
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser','client_upload_type'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','isSuperAdmin','isStrategy','isAdmin','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above'/*,'yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser','client_upload_type','isOperationsExecutive'));
     }
 
     public function store(Request $request){
@@ -1669,7 +1670,7 @@ class ClientController extends Controller
         $client_upload_type['Others'] = 'Others';
     
         //print_r($client);exit;
-        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy','isManager','user_id','marketing_intern_user_id','isAllClientVisibleUser','isAsstManagerMarketing'));
+        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy','isManager','user_id','marketing_intern_user_id','isAllClientVisibleUser','isAsstManagerMarketing','isOperationsExecutive'));
     }
 
     public function attachmentsDestroy(Request $request,$docid){

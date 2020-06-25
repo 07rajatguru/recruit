@@ -160,7 +160,7 @@
                             {!! Form::text('fax', null, array('id'=>'fax','placeholder' => 'Fax','class' => 'form-control')) !!}
                         </div>--}}
 
-                        @if($isSuperAdmin || $isAdmin)
+                        @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
                         <div class="form-group">
                             <strong>GST Number</strong>
                             {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control','tabindex' => '16')) !!}
@@ -173,14 +173,14 @@
                         </div>
                         @endif -->
 
-                        @if($isSuperAdmin || $isAdmin)
+                        @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
                         <div class="form-group">
                             <strong>Charges Below AM Position(%) </strong>
                             {!! Form::number('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charges Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
                         </div>
                         @endif
 
-                        @if($isSuperAdmin || $isAdmin)
+                        @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
                         <div class="form-group">
                             <strong>Charges Above AM Position(%) </strong>
                             {!! Form::number('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charges Above AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
@@ -241,7 +241,7 @@
 
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <strong><!-- HR/Coordinator Name -->Contact Point: <span class = "required_fields">*</span></strong>
+                    <strong>Contact Point: <span class = "required_fields">*</span></strong>
                         <div class="">
                             <div class="col-md-4 form-group {{ $errors->has('co_category') ? 'has-error' : '' }}" style="margin-left: -15px;">
                                 {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}

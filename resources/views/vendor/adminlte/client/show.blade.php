@@ -46,10 +46,10 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                          <tr>
-                            <th scope="row"  >Contact Point</th>
+                            <th scope="row">Contact Point</th>
                             <td>{{ $client['coordinator_name'] }}</td>
 
-                            @if($isSuperAdmin || $isAdmin || $isStrategy || $isManager || $isAllClientVisibleUser || $isAsstManagerMarketing)
+                            @if($isSuperAdmin || $isAdmin || $isStrategy || $isManager || $isAllClientVisibleUser || $isAsstManagerMarketing || $isOperationsExecutive)
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
                             @elseif($client['client_owner'] || $user_id == $marketing_intern_user_id)
@@ -62,7 +62,7 @@
                         </tr>
 
                         <tr>
-                            @if($isSuperAdmin || $isAdmin || $isManager  || $isAllClientVisibleUser || $isAsstManagerMarketing)
+                            @if($isSuperAdmin || $isAdmin || $isManager  || $isAllClientVisibleUser || $isAsstManagerMarketing || $isOperationsExecutive)
                                 <th>Email</th>
                                 <td>{{ $client['mail'] }}</td>
                             @elseif($client['client_owner'] || $user_id == $marketing_intern_user_id)
@@ -93,7 +93,7 @@
                                 <th>Industry</th>
                                 <td colspan="3">{{ $client['ind_name'] }}</td>
                             @endif
-                            @if($isSuperAdmin || $isAdmin)
+                            @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
                                 <th>GST Number</th>
                                 <td>{{ $client['gst_no'] }}</td>
                             @endif
@@ -111,7 +111,7 @@
                             <th> Client Status</th>
                             <td>{{ $client['status'] }}</td>
                         </tr>
-                         @if($isSuperAdmin || $isAdmin)
+                         @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
                         <tr>
                             <th>Percentage Charged Below AM Position</th>
                             <td>{{ $client['percentage_charged_below'] }}</td>
