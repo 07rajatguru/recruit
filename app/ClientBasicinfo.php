@@ -23,9 +23,10 @@ class ClientBasicinfo extends Ardent
     public static $rules
         = array(
             'name' => 'required',
+            //'contact_point' => 'required',
             'mail' => 'unique:client_basicinfo,mail,{id}',
             'mobile'  => 'required',
-            //'contact_point' => 'required'
+            'display_name' => 'required'
         );
 
 
@@ -33,10 +34,11 @@ class ClientBasicinfo extends Ardent
     {
         return [
             'name.required' => 'Company Name is Required Field.',
+            //'contact_point.required' => 'Contact Point is Required Field.',
             'mail.required' => 'Eail is Required Field.',
             'mail.unique' => 'Mail is unique Field.',
             'mobile.required'  => 'Mobile is Required Field.',
-            //'contact_point.required' => 'Contact Point is Required Field.',
+            'display_name.required' => 'Display Name is Required Field.',
         ];
     }
 
@@ -57,8 +59,8 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
-        $query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
-        $query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
+        //$query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
+        //$query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
 
         // Not display Forbid clients
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
@@ -76,8 +78,8 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('post.content','like',"%$search%");
-                    $query = $query->orwhere('comments.body','like',"%$search%");
+                    //$query = $query->orwhere('post.content','like',"%$search%");
+                    //$query = $query->orwhere('comments.body','like',"%$search%");
 
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
@@ -133,8 +135,8 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('post.content','like',"%$search%");
-                    $query = $query->orwhere('comments.body','like',"%$search%");
+                    //$query = $query->orwhere('post.content','like',"%$search%");
+                    //$query = $query->orwhere('comments.body','like',"%$search%");
 
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
@@ -187,7 +189,7 @@ class ClientBasicinfo extends Ardent
         $i = 0;
         foreach ($res as $key => $value) {
             $client_array[$i]['id'] = $value->id;
-            $client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
+            //$client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
 
 
             //echo $client_array[$i]['latest_remarks'];exit;
@@ -283,8 +285,8 @@ class ClientBasicinfo extends Ardent
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
 
-        $query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
-        $query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
+        //$query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
+        //$query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
 
         if ($all == 1) {
             $query = $query->leftJoin('client_doc',function($join){
@@ -324,8 +326,8 @@ class ClientBasicinfo extends Ardent
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                $query = $query->orwhere('post.content','like',"%$search%");
-                $query = $query->orwhere('comments.body','like',"%$search%");
+                //$query = $query->orwhere('post.content','like',"%$search%");
+                //$query = $query->orwhere('comments.body','like',"%$search%");
 
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
@@ -873,8 +875,8 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
-        $query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
-        $query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
+        //$query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
+        //$query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
 
         if ($all == 1) {
             $query = $query->leftJoin('client_doc',function($join){
@@ -891,8 +893,8 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('post.content','like',"%$search%");
-                    $query = $query->orwhere('comments.body','like',"%$search%");
+                    //$query = $query->orwhere('post.content','like',"%$search%");
+                    //$query = $query->orwhere('comments.body','like',"%$search%");
 
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
@@ -951,8 +953,8 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('post.content','like',"%$search%");
-                    $query = $query->orwhere('comments.body','like',"%$search%");
+                    //$query = $query->orwhere('post.content','like',"%$search%");
+                    //$query = $query->orwhere('comments.body','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
@@ -1073,7 +1075,7 @@ class ClientBasicinfo extends Ardent
                 $client_array[$i]['url'] = '';
             }
 
-            $client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
+            //$client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
             $i++;
         }
 
@@ -1085,8 +1087,8 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
-        $query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
-        $query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
+        //$query = $query->leftJoin('post','post.client_id','=','client_basicinfo.id');
+        //$query = $query->leftJoin('comments','comments.commentable_id','=','post.id');
 
         if ($all == 1) {
             $query = $query->leftJoin('client_doc',function($join){
@@ -1103,8 +1105,8 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('post.content','like',"%$search%");
-                    $query = $query->orwhere('comments.body','like',"%$search%");
+                    //$query = $query->orwhere('post.content','like',"%$search%");
+                    //$query = $query->orwhere('comments.body','like',"%$search%");
 
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
@@ -1163,8 +1165,8 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('post.content','like',"%$search%");
-                    $query = $query->orwhere('comments.body','like',"%$search%");
+                    //$query = $query->orwhere('post.content','like',"%$search%");
+                    //$query = $query->orwhere('comments.body','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 

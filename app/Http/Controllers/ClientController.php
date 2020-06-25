@@ -326,9 +326,9 @@ class ClientController extends Controller
             else if ($order == 7){
                 $order_column_name = "client_address.billing_street2";
             }
-            else if ($order == 8){
+            /*else if ($order == 8){
                 $order_column_name = "post.content";
-            }
+            }*/
         }
         return $order_column_name;
     }
@@ -434,7 +434,7 @@ class ClientController extends Controller
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
-            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+            //$latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
            /* if($isSuperAdmin || $isStrategy || $isAccountManager ){
                 $client_category = $value['category'];
@@ -454,10 +454,10 @@ class ClientController extends Controller
             //$data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
 
             if($isSuperAdmin || $isStrategy || $isAccountManager){
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address']/*,$latest_remarks*/);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address']/*,$latest_remarks*/);
             }
 
             $clients[$i] = $data;
@@ -723,7 +723,7 @@ class ClientController extends Controller
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
-            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+            //$latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
             if($value['status']=='Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
@@ -739,10 +739,10 @@ class ClientController extends Controller
             $client_category = $value['category'];
 
             if($isSuperAdmin || $isStrategy || $isAccountManager){
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address']/*,$latest_remarks*/);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address']/*,$latest_remarks*/);
             }
 
             //$data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
