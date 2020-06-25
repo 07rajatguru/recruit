@@ -81,6 +81,8 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('post.content','like',"%$search%");
                     //$query = $query->orwhere('comments.body','like',"%$search%");
 
+                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -138,6 +140,8 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('post.content','like',"%$search%");
                     //$query = $query->orwhere('comments.body','like',"%$search%");
 
+                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -191,8 +195,7 @@ class ClientBasicinfo extends Ardent
             $client_array[$i]['id'] = $value->id;
             //$client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
 
-
-            //echo $client_array[$i]['latest_remarks'];exit;
+            $client_array[$i]['latest_remarks'] = $value->latest_remarks;
 
             $client_array[$i]['name'] = $value->name;
             if ($value->account_manager_id == 0) {
@@ -328,6 +331,7 @@ class ClientBasicinfo extends Ardent
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                 //$query = $query->orwhere('post.content','like',"%$search%");
                 //$query = $query->orwhere('comments.body','like',"%$search%");
+                $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
@@ -896,6 +900,8 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('post.content','like',"%$search%");
                     //$query = $query->orwhere('comments.body','like',"%$search%");
 
+                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
                     
@@ -955,6 +961,7 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                     //$query = $query->orwhere('post.content','like',"%$search%");
                     //$query = $query->orwhere('comments.body','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
@@ -1076,6 +1083,8 @@ class ClientBasicinfo extends Ardent
             }
 
             //$client_array[$i]['latest_remarks'] = self::getLatestRemarks($value->id);
+
+            $client_array[$i]['latest_remarks'] = $value->latest_remarks;
             $i++;
         }
 
@@ -1107,6 +1116,7 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                     //$query = $query->orwhere('post.content','like',"%$search%");
                     //$query = $query->orwhere('comments.body','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
@@ -1167,6 +1177,7 @@ class ClientBasicinfo extends Ardent
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
                     //$query = $query->orwhere('post.content','like',"%$search%");
                     //$query = $query->orwhere('comments.body','like',"%$search%");
+                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 

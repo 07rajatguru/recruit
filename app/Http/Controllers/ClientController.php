@@ -326,9 +326,9 @@ class ClientController extends Controller
             else if ($order == 7){
                 $order_column_name = "client_address.billing_street2";
             }
-            /*else if ($order == 8){
-                $order_column_name = "post.content";
-            }*/
+            else if ($order == 8){
+                $order_column_name = "client_basicinfo.latest_remarks";
+            }
         }
         return $order_column_name;
     }
@@ -434,7 +434,7 @@ class ClientController extends Controller
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
-            //$latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
            /* if($isSuperAdmin || $isStrategy || $isAccountManager ){
                 $client_category = $value['category'];
@@ -454,10 +454,10 @@ class ClientController extends Controller
             //$data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
 
             if($isSuperAdmin || $isStrategy || $isAccountManager){
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address']/*,$latest_remarks*/);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address']/*,$latest_remarks*/);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
             }
 
             $clients[$i] = $data;
@@ -723,7 +723,7 @@ class ClientController extends Controller
             $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
-            //$latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
             if($value['status']=='Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
@@ -739,10 +739,10 @@ class ClientController extends Controller
             $client_category = $value['category'];
 
             if($isSuperAdmin || $isStrategy || $isAccountManager){
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address']/*,$latest_remarks*/);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else{
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address']/*,$latest_remarks*/);
+                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
             }
 
             //$data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
@@ -2522,6 +2522,13 @@ class ClientController extends Controller
             $post->created_at = time();
             $post->updated_at = time();
             $post->save();
+
+            // Update in Client Basicinfo Table
+            $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
+
+            $client_info = ClientBasicinfo::find($client_id);
+            $client_info->latest_remarks = $get_latest_remarks;
+            $client_info->save();
         }
 
         return redirect()->route('client.remarks',[$client_id]);
@@ -2529,6 +2536,7 @@ class ClientController extends Controller
 
 
     public function writeComment(Request $request,$post_id){
+
         $input = $request->all();
 
         $client_id = $input['client_id'];
@@ -2540,7 +2548,7 @@ class ClientController extends Controller
         if ($user_id == $super_admin_userid) {
             // Check remark found or not
             $client_remark_check = ClientRemarks::checkClientRemark($input["content"]);
-            if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+            if (isset($client_remark_check) && $client_remark_check != '') {
 
             }
             else {
@@ -2562,6 +2570,13 @@ class ClientController extends Controller
         $returnValue["message"] = "Commment recorded";
         $returnValue["id"] = $comment->id;
 
+        // Update in Client Basicinfo Table
+        $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
+
+        $client_info = ClientBasicinfo::find($client_id);
+        $client_info->latest_remarks = $get_latest_remarks;
+        $client_info->save();
+
         return redirect()->route('client.remarks',[$client_id]);
     }
 
@@ -2577,7 +2592,7 @@ class ClientController extends Controller
         if ($user_id == $super_admin_userid) {
             // Check remark found or not
             $client_remark_check = ClientRemarks::checkClientRemark($input["content"]);
-            if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+            if (isset($client_remark_check) && $client_remark_check != '') {
 
             }
             else {
@@ -2592,12 +2607,20 @@ class ClientController extends Controller
         $returnValue["message"] = "Remarks Updated";
         $returnValue["id"] = $post_id;
 
+        // Update in Client Basicinfo Table
+        $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
+
+        $client_info = ClientBasicinfo::find($client_id);
+        $client_info->latest_remarks = $get_latest_remarks;
+        $client_info->save();
+
        return redirect()->route('client.remarks',[$client_id]);
 
     }
 
     public function updateComment(){
 
+        $client_id = $_POST['client_id'];
         $id = $_POST['id'];
         $content = $_POST['content'];
         $super_admin_userid = $_POST['super_admin_userid'];
@@ -2607,7 +2630,7 @@ class ClientController extends Controller
         if ($user_id == $super_admin_userid) {
             // Check remark found or not
             $client_remark_check = ClientRemarks::checkClientRemark($content);
-            if (isset($client_remark_check) && sizeof($client_remark_check) > 0) {
+            if (isset($client_remark_check) && $client_remark_check != '') {
 
             }
             else {
@@ -2620,14 +2643,23 @@ class ClientController extends Controller
         $response['returnvalue'] = 'invalid';
 
         $res = Comments::updateComment($id,$content);
-//exit;
+
         if($res){
             $response['returnvalue'] = 'valid';
         }
+
+        // Update in Client Basicinfo Table
+        $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
+
+        $client_info = ClientBasicinfo::find($client_id);
+        $client_info->latest_remarks = $get_latest_remarks;
+        $client_info->save();
+
         return json_encode($response);exit;
     }
 
     public function commentDestroy($id){
+
         $response['returnvalue'] = 'invalid';
         $res = Comments::deleteComment($id);
         if($res){
@@ -2635,6 +2667,15 @@ class ClientController extends Controller
             //Comments::where('parent_id', '=', $id)->delete();
             $response['returnvalue'] = 'valid';
         }
+
+        $client_id = $_POST['client_id'];
+
+        // Update in Client Basicinfo Table
+        $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
+
+        $client_info = ClientBasicinfo::find($client_id);
+        $client_info->latest_remarks = $get_latest_remarks;
+        $client_info->save();
 
         return json_encode($response);exit;
     }
@@ -2648,8 +2689,15 @@ class ClientController extends Controller
             $response['returnvalue'] = 'valid';
         }
 
+        $client_id = $_POST['client_id'];
+
+        // Update in Client Basicinfo Table
+        $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
+
+        $client_info = ClientBasicinfo::find($client_id);
+        $client_info->latest_remarks = $get_latest_remarks;
+        $client_info->save();
+
         return json_encode($response);exit;
-
     }
-
 }

@@ -46,7 +46,7 @@
                 <?php }?>
                 <th>Status</th>
                 <th>City</th>
-                <!-- <th>Remarks</th> -->
+                <th>Remarks</th>
             </tr>
         </thead>
     </table>

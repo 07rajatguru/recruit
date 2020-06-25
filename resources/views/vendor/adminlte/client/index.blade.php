@@ -103,7 +103,7 @@
                 <th>Status</th>
                 <!-- <th>Client Address</th> -->
                 <th>City</th>
-                <!-- <th>Remarks</th> -->
+                <th>Remarks</th>
             </tr>
         </thead>
         {{--<tbody>

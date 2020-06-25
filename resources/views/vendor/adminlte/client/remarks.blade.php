@@ -18,11 +18,11 @@
 </div>
 <div class="col-md-7"> 
     <div>
-     	@include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id,'super_admin_userid' => $super_admin_userid,'client_remarks'=>$client_remarks))    	 
+        @include('adminlte::client.remarksnew',array('client_id' => $client_id,'user_id'=>$user_id,'super_admin_userid' => $super_admin_userid,'client_remarks'=>$client_remarks))       
     </div>
 
     <div>
-    	@include('adminlte::client.remarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid, 'client_remarks'=>$client_remarks, 'client_remarks_edit' => $client_remarks_edit))
+        @include('adminlte::client.remarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid, 'client_remarks'=>$client_remarks, 'client_remarks_edit' => $client_remarks_edit))
     </div>
 </div>
 
@@ -102,6 +102,8 @@
 </div>
 
 <input type="hidden" name="super_admin_userid" id="super_admin_userid" value="{{ $super_admin_userid }}">
+
+<input type="hidden" name="hidden_clientid" id="hidden_clientid" value="{{ $client_id }}">
 
 @stop
 
@@ -242,7 +244,7 @@
         };
     }
 
-	function showcommentbox(post_id) {
+    function showcommentbox(post_id) {
         $("#comment_"+post_id).select2({'placeholder' : 'Select Remark','width':'100%'});
         if($(".comment-"+post_id).is(':hidden')){
             $(".comment-"+post_id).show();
@@ -252,15 +254,19 @@
         }
     }
 
-	function deletePost(id) {
+    function deletePost(id) {
 
         msg = "Are you sure ?";
         var confirmvalue = confirm(msg);
-
+        var csrf_token = $("#csrf_token").val();
+        var hidden_clientid = $("#hidden_clientid").val();
+        
         if(confirmvalue){
             jQuery.ajax({
                 url:'/client/post/delete/'+id,
+                type:"POST",
                 dataType:'json',
+                data : {client_id:hidden_clientid,_token:csrf_token},
                 success: function(response){
                     if (response.returnvalue == 'valid') {
                         alert("Remarks Deleted Succesfully.");
@@ -278,6 +284,7 @@
 
         var csrf_token = $("#csrf_token").val();
         var super_admin_userid = $("#super_admin_userid").val();
+        var hidden_clientid = $("#hidden_clientid").val();
         if(id>0){
             var content = $("#update-comment-textarea-"+id).val();
             jQuery.ajax({
@@ -285,7 +292,7 @@
                 type:"POST",
                 dataType:'json',
                 // data : "content="+content+"&id="+id+"&_token="+csrf_token+"&super_admin_userid="+super_admin_userid,
-                data : {content:content,id:id,_token:csrf_token,super_admin_userid:super_admin_userid},
+                data : {content:content,id:id,_token:csrf_token,super_admin_userid:super_admin_userid,client_id:hidden_clientid},
                 success: function(response){
                     if (response.returnvalue == 'valid') {
                         alert("Data updated Succesfully.");
@@ -303,11 +310,15 @@
 
         msg = "Are you sure ?";
         var confirmvalue = confirm(msg);
+        var csrf_token = $("#csrf_token").val();
+        var hidden_clientid = $("#hidden_clientid").val();
 
         if(confirmvalue){
             jQuery.ajax({
                 url:'/client/comment/delete/'+id,
+                type:"POST",
                 dataType:'json',
+                data : {client_id:hidden_clientid,_token:csrf_token},
                 success: function(response){
                     if (response.returnvalue == 'valid') {
                         alert("Comment deleted Succesfully.");
