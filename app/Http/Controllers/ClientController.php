@@ -33,9 +33,6 @@ class ClientController extends Controller
         $utils = new Utils();
         $user =  \Auth::user();
 
-        // get logged in user company id
-        $company_id = $user->company_id;
-
         // get role of logged in user
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -404,7 +401,7 @@ class ClientController extends Controller
             //if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_visibility'] || $isAccountant){
                 $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
             //}
-            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner'] || $isAllClientVisibleUser){
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner'] || $isAllClientVisibleUser || $isOperationsExecutive){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if($isSuperAdmin){
@@ -694,7 +691,7 @@ class ClientController extends Controller
             
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
            
-            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner'] || $isAllClientVisibleUser){
+            if($isSuperAdmin || $isAdmin || $isStrategy || $value['client_owner'] || $isAllClientVisibleUser || $isOperationsExecutive){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if($isSuperAdmin){
@@ -1107,6 +1104,8 @@ class ClientController extends Controller
 
         $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
 
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
@@ -1126,7 +1125,7 @@ class ClientController extends Controller
 
         foreach ($client_basicinfo as $key=>$value) {
 
-            if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || $isAllClientVisibleUser) {
+            if(in_array($role_id,$access_roles_id) || ($value->am_id==$user_id) || $isAllClientVisibleUser || $isOperationsExecutive) {
 
                 $client['name'] = $value->name;
                 $client['display_name']=$value->display_name;
