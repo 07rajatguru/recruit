@@ -68,7 +68,7 @@
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                             <strong>Company Name: <span class = "required_fields">*</span> </strong>
                             
-                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1','minLength' => '5')) !!}
+                            {!! Form::text('name', null,array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1','minLength' => '5','onchange' => 'validCompanyNameText();')) !!}
                            
                             @if ($errors->has('name'))
                                 <span class="help-block">
@@ -79,7 +79,7 @@
 
                         <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
                             <strong>Display Name: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','maxlength' => 7 )) !!}
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','minLength' => '3','maxlength' => '7','onchange' => 'validDisplayNameText();')) !!}
                             @if ($errors->has('display_name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('display_name') }}</strong>
@@ -254,7 +254,7 @@
                             </div>
 
                             <div class="col-md-8 form-group {{ $errors->has('contact_point') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3','minLength' => '3')) !!}
+                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3','minLength' => '3','onchange' => 'validContactPointText();')) !!}
                                 @if ($errors->has('contact_point'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('contact_point') }}</strong>
@@ -510,9 +510,8 @@
 
 @section('customscripts')
     <script>
+        $(document).ready(function() {
 
-        $(document).ready(function()
-        {
             $('#account_manager_id').on('change', function (e) {
                 $("#account_manager").val(this.value);
             });
@@ -526,19 +525,13 @@
             });
 
             $("#account_manager_id").select2();
-            $("#yet_to_assign_id").select2();
+            //$("#yet_to_assign_id").select2();
             $("#industry_id").select2();
 
-            var superadmin_userid = "{!! env('SUPERADMINUSERID') !!}";
-            var strategy_userid = "{!! env('STRATEGYUSERID') !!}";
-            var loggedin_userid = <?php echo Auth::user()->id ?>;
-            //alert(superadmin_userid);alert(strategy_userid);alert(loggedin_userid);
-
-            /*if (loggedin_userid == superadmin_userid || loggedin_userid == strategy_userid){*/
-
-                $("#clientForm").validate(
-                {
-                    rules: {
+            $("#description").wysihtml5();
+            
+            $("#clientForm").validate({
+                rules: {
                         "name": {
                             required: true
                         },
@@ -566,8 +559,8 @@
                         "billing_city" : {
                             required: true,
                         },
-                    },
-                    messages: {
+                },
+                messages: {
                         "name": {
                             required: "Company Name is Required."
                         },
@@ -595,71 +588,6 @@
                         "billing_city" : {
                             required: "City is Required.",
                         },
-                    }
-                });
-          /*  }
-            else {
-                $("#clientForm").validate({
-                    rules: {
-                        "name": {
-                            required: true
-                        },
-                        "display_name": {
-                            required: true
-                        },
-                        "mail": {
-                            required: true
-                        },
-                        "mobile": {
-                            required: true
-                        },
-                        "industry_id": {
-                            required: true
-                        },
-                        "status" : {
-                            required: true
-                        },
-                        "coordinator_name" : {
-                            required: true
-                        }
-                    },
-                    messages: {
-                        "name": {
-                            required: "Name is required."
-                        },
-                        "display_name": {
-                            required: "Display Name is required."
-                        },
-                        "mail": {
-                            required: "Email is required."
-                        },
-                        "mobile": {
-                            required: "Mobile is required."
-                        },
-                        "industry_id": {
-                            required: "Industry is required."
-                        },
-                        "status": {
-                            required: "Status is required."
-                        },
-                        "coordinator_name" :{
-                            required: "Contact Point is required."
-                        }
-                    }
-                });
-            }*/
-
-            $('#name').keypress(function (e) {
-
-                if((length == 0) && (e.which == 48)) {
-                    return false;
-                }
-            });
-
-            $('#contact_point').keypress(function (e) {
-
-                if((length == 0) && (e.which == 48)) {
-                    return false;
                 }
             });
 
@@ -689,6 +617,25 @@
                 }
             });
 
+            $("#gst_no").change(function () {
+
+                var inputvalues = $(this).val();
+                let regTest = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/.test(inputvalues);
+
+                if(regTest){
+                    let a=65,b=55,c=36;
+                        return Array['from'](g).reduce((i,j,k,g)=>{ 
+                    p=(p=(j.charCodeAt(0)<a?parseInt(j):j.charCodeAt(0)-b)*(k%2+1))>c?1+(p-c):p;
+                        return k<14?i+p:j==((c=(c-(i%c)))<10?c:String.fromCharCode(c+b));
+                    },0); 
+                }
+                else {
+                    alert('Please Enter Valid GSTIN Number');    
+                    document.getElementById("gst_no").value = '';
+                    document.getElementById("gst_no").focus();  
+                }    
+            });          
+
             $("#client_logo").bind('change', function() {
 
                 var ext = $('#client_logo').val().split('.').pop().toLowerCase();
@@ -711,6 +658,45 @@
                 }
             });
         });
+
+        function validCompanyNameText() {
+
+            var txt = document.getElementById("name").value ;
+            var CompanyNameLength = txt.trim().length;
+
+            if(CompanyNameLength < 1) {
+
+                alert("Blank Entry Not Allowed.")
+                document.getElementById("name").value = '';
+                document.getElementById("name").focus();
+            }
+        }
+
+        function validContactPointText() {
+
+            var txt = document.getElementById("contact_point").value ;
+            var ContactPointLength = txt.trim().length;
+
+            if(ContactPointLength < 1) {
+
+                alert("Blank Entry Not Allowed.")
+                document.getElementById("contact_point").value = '';
+                document.getElementById("contact_point").focus();
+            }
+        }
+
+        function validDisplayNameText() {
+
+            var txt = document.getElementById("display_name").value ;
+            var DisplayNameLength = txt.trim().length;
+
+            if(DisplayNameLength < 1) {
+
+                alert("Blank Entry Not Allowed.")
+                document.getElementById("display_name").value = '';
+                document.getElementById("display_name").focus();
+            }
+        }
 
         function emailValidation() {
 
@@ -780,7 +766,8 @@
             shipping_country: 'long_name',
             shipping_code: 'short_name'
         };
-        $("#description").wysihtml5();
+
+
         function initAutocomplete() {
             // Create the autocomplete object, restricting the search to geographical
             // location types.

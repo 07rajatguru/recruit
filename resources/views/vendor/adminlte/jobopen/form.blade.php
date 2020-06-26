@@ -73,7 +73,7 @@
                         </div>
                         <div class="col-md-8" style="width: 72%;margin: 20px 0 0 -20px;">
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
-                                {!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1','style' => 'width:402px')) !!}
+                                {!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1','style' => 'width:402px','onchange' => 'validPostingTitleText();')) !!}
                                 @if ($errors->has('posting_title'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('posting_title') }}</strong>
@@ -567,7 +567,6 @@
         var action={!! json_encode($action) !!};
         $(document).ready(function() {
 
-            
             $('#jobsForm').on('keyup keypress', function(e) {
                 var keyCode = e.keyCode || e.which;
                 if (keyCode === 13) {
@@ -589,19 +588,11 @@
 
             $("#jobsForm").validate({
                 rules: {
-                    "level_id": {
-                        required: true
-                    },
+                   
                     "posting_title": {
                         required: true
                     },
-                    "client_id": {
-                        required: true
-                    },
                     "date_opened": {
-                        required: true
-                    },
-                    "industry_id": {
                         required: true
                     },
                     "lacs_from":{
@@ -624,45 +615,37 @@
                     }
                 },
                 messages: {
-                    "level_id": {
-                        required: "Select Posting Title."
-                    },
+                    
                     "posting_title": {
-                        required: "Posting Title is required field."
-                    },
-                    "client_id": {
-                        required: "Client is required field."
+                        required: "Posting Title is Required Field."
                     },
                     "date_opened": {
-                        required: "Date Open is required field."
-                    },
-                    "industry_id": {
-                        required: "Industry is required field."
+                        required: "Date Open is Required Field."
                     },
                     "lacs_from": {
-                        required: "Select Numeric value"
+                        required: "Please Select Value"
                     },
                     "lacs_to": {
-                        required: "Select Numeric value."
+                        required: "Please Select Value"
                     },
                     "thousand_from": {
-                        required: "Select Numeric value"
+                        required: "Please Select Value"
                     },
                     "thousand_to": {
-                        required: "Select Numeric value."
+                        required: "Please Select Value"
                     },
                     "user_ids[]": {
-                        required : "User is required field.",
+                        required : "User is Required Field.",
                     },
                     "candidate_tracker": {
-                        required : "Please Select file.",
+                        required : "Please Select Candidate Tracker",
                     }
                 }
             });
-
         });
 
         $(function () {
+
             $("#target_date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -710,6 +693,19 @@
                 }
             });
         });
+
+        function validPostingTitleText() {
+
+            var txt = document.getElementById("posting_title").value ;
+            var PostingTitleLength = txt.trim().length;
+
+            if(PostingTitleLength < 1) {
+
+                alert("Blank Entry Not Allowed.")
+                document.getElementById("posting_title").value = '';
+                document.getElementById("posting_title").focus();
+            }
+        }
 
         function salaryValidation() {
 
@@ -793,10 +789,7 @@
                 });
             }
         }
-
-
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete"
-            async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>
 @endsection

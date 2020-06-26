@@ -63,7 +63,7 @@
 
                             <div class="form-group {{ $errors->has('fname') ? 'has-error' : '' }}">
                                 <strong>Full Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('fname', null, array('id'=>'fname','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '1' )) !!}
+                                {!! Form::text('fname', null, array('id'=>'fname','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '1','onchange' => 'validFullNameText();')) !!}
                                 @if ($errors->has('fname'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('fname') }}</strong>
@@ -573,6 +573,19 @@
             });
 
         });
+
+        function validFullNameText() {
+
+            var txt = document.getElementById("fname").value ;
+            var FullNameLength = txt.trim().length;
+
+            if(FullNameLength < 1) {
+
+                alert("Blank Entry Not Allowed.")
+                document.getElementById("fname").value = '';
+                document.getElementById("fname").focus();
+            }
+        }
 
         function emailValidation() {
 

@@ -61,7 +61,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                             <strong>Company Name : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1','minLength' => '5')) !!}
+                            {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Company Name','class' => 'form-control','tabindex' => '1','minLength' => '5','onchange' => 'validCompanyNameText();')) !!}
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name') }}</strong>
@@ -81,7 +81,7 @@
 
                         <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
                             <strong>Display Name : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control','tabindex' => '7','minLength' => '3','maxLength' => '7')) !!}
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control','tabindex' => '7','minLength' => '3','maxLength' => '7','onchange' => 'validDisplayNameText();')) !!}
                             @if ($errors->has('display_name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('display_name') }}</strong>
@@ -113,7 +113,7 @@
                             </div>
 
                             <div class="col-md-8 form-group {{ $errors->has('contact_point') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2','minLength' => '3')) !!}
+                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control','tabindex' => '2','minLength' => '3','onchange' => 'validContactPointText();')) !!}
                                 @if ($errors->has('contact_point'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('contact_point') }}</strong>
@@ -206,9 +206,9 @@
 @endsection
 
 @section('customscripts')
-    <script type="text/javascript">
+<script type="text/javascript">
 
-     $(document).ready(function() {
+    $(document).ready(function() {
 
         $('#lead_form').on('keyup keypress', function(e) {
             var keyCode = e.keyCode || e.which;
@@ -229,7 +229,7 @@
             } else if((length == 0) && (e.which == 48)) {
                 return false;
             }
-        })
+        });
 
         $('#other_number').keypress(function (e) {
 
@@ -242,35 +242,10 @@
             } else if((length == 0) && (e.which == 48)) {
                 return false;
             }
-        })
-
-        $('#name').keypress(function (e) {
-
-            if((length == 0) && (e.which == 48)) {
-                return false;
-            }
-        })
-
-        $('#display_name').keypress(function (e) {
-
-            var length = jQuery(this).val().length;
-
-            if(length > 7) {
-                return false;
-            } else if((length == 0) && (e.which == 48)) {
-                return false;
-            }
-        })
-
-        $('#contact_point').keypress(function (e) {
-
-            if((length == 0) && (e.which == 48)) {
-                return false;
-            }
-        })
+        });
 
 
-       $("#lead_form").validate({
+        $("#lead_form").validate({
             rules: {
                 "name": {
                     required: true
@@ -315,128 +290,165 @@
 
         $("#referredby_id").select2();
 
-        });
+    });
 
+    function validCompanyNameText() {
 
-        var placeSearch, autocomplete;
-        var componentForm = {
-            city: 'long_name',
-            state: 'long_name',
-            country: 'long_name'
-        };
+        var txt = document.getElementById("name").value ;
+        var CompanyNameLength = txt.trim().length;
 
-        function emailValidation() {
+        if(CompanyNameLength < 1) {
 
-            var email_value = $("#mail").val();
-            var s_email_value = $("#s_email").val();
-            var website = $("#website").val();
-
-            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-
-            var website_regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-
-            if(email_value != '') {
-                if (reg.test(email_value) == false) {
-                    alert('Please Enter Valid Email Address');
-                    return false;
-                }
-            }
-
-            if(s_email_value != '') {
-                if (reg.test(s_email_value) == false) {
-                    alert('Please Enter Valid Secondary Email Address');
-                    return false;
-                }
-            }
-
-            if(website != '') {
-                if (website_regexp.test(website) == false) {
-                    alert('Please Enter Valid Website URL');
-                    document.getElementById("website").focus();
-                    return false;
-                }
-            }
-            return true;
+            alert("Blank Entry Not Allowed.")
+            document.getElementById("name").value = '';
+            document.getElementById("name").focus();
         }
+    }
 
-        function is_url(str) {
+    function validContactPointText() {
 
-            regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+        var txt = document.getElementById("contact_point").value ;
+        var ContactPointLength = txt.trim().length;
 
-            if (regexp.test(str)) {
-                return true;
-            }
-            else {
+        if(ContactPointLength < 1) {
+
+            alert("Blank Entry Not Allowed.")
+            document.getElementById("contact_point").value = '';
+            document.getElementById("contact_point").focus();
+        }
+    }
+
+    function validDisplayNameText() {
+
+        var txt = document.getElementById("display_name").value ;
+        var DisplayNameLength = txt.trim().length;
+
+        if(DisplayNameLength < 1) {
+
+            alert("Blank Entry Not Allowed.")
+            document.getElementById("display_name").value = '';
+            document.getElementById("display_name").focus();
+        }
+    }
+
+    function emailValidation() {
+
+        var email_value = $("#mail").val();
+        var s_email_value = $("#s_email").val();
+        var website = $("#website").val();
+
+        var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+        var website_regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+        if(email_value != '') {
+            if (reg.test(email_value) == false) {
+                alert('Please Enter Valid Email Address');
                 return false;
             }
         }
 
-        function initAutocomplete() {
-            // Create the autocomplete object, restricting the search to geographical
-            // location types.
-            autocomplete = new google.maps.places.Autocomplete(
-                    /** @type {!HTMLInputElement} */
-                    (document.getElementById('address')),
-                    {types: ['geocode']});
-
-            // When the user selects an address from the dropdown, populate the address
-            // fields in the form.
-            autocomplete.addListener('place_changed', fillInAddress);
-
+        if(s_email_value != '') {
+                if (reg.test(s_email_value) == false) {
+                    alert('Please Enter Valid Secondary Email Address');
+                    return false;
+                }
         }
 
-        function fillInAddress() {
-            // Get the place details from the autocomplete object.
-            var place = autocomplete.getPlace();
-            for (var component in componentForm) {
-                document.getElementById(component).value = '';
-                document.getElementById(component).disabled = false;
+        if(website != '') {
+            if (website_regexp.test(website) == false) {
+                alert('Please Enter Valid Website URL');
+                document.getElementById("website").focus();
+                return false;
             }
+        }
+        return true;
+    }
 
-            // Get each component of the address from the place details
-            // and fill the corresponding field on the form in billing.
-            try {
-                for (var i = 0; i < place.address_components.length; i++) {
-                    var addressType = place.address_components[i].types[0];
-                    if (addressType == 'locality') {
+    function is_url(str) {
+
+        regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+        if (regexp.test(str)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    var placeSearch, autocomplete;
+    var componentForm = {
+        city: 'long_name',
+        state: 'long_name',
+        country: 'long_name'
+    };
+
+    function initAutocomplete() {
+        // Create the autocomplete object, restricting the search to geographical
+        // location types.
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */
+            (document.getElementById('address')),
+            {types: ['geocode']});
+
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    function fillInAddress() {
+
+        // Get the place details from the autocomplete object.
+        var place = autocomplete.getPlace();
+        for (var component in componentForm) {
+            document.getElementById(component).value = '';
+            document.getElementById(component).disabled = false;
+        }
+
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form in billing.
+        try {
+
+            for (var i = 0; i < place.address_components.length; i++) {
+                var addressType = place.address_components[i].types[0];
+                if (addressType == 'locality') {
                         document.getElementById('city').value = place.address_components[i]['long_name'];
-                    }
-                    if (addressType == 'country') {
+                }
+                if (addressType == 'country') {
                         document.getElementById('country').value = place.address_components[i]['long_name'];
-                    }
-                    if (addressType == 'administrative_area_level_1') {
+                }
+                if (addressType == 'administrative_area_level_1') {
                         document.getElementById('state').value = place.address_components[i]['long_name'];
-                    }
                 }
             }
-            catch (exception) {
-
-            }
-
         }
+        catch (exception) {
+        }
+    }
 
-        // Bias the autocomplete object to the user's geographical location,
-        // as supplied by the browser's 'navigator.geolocation' object.
+    // Bias the autocomplete object to the user's geographical location,
+    // as supplied by the browser's 'navigator.geolocation' object.
 
-        function geolocate() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var geolocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    var circle = new google.maps.Circle({
-                        center: geolocation,
-                        radius: position.coords.accuracy
-                    });
-                    autocomplete.setBounds(circle.getBounds());
+    function geolocate() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var circle = new google.maps.Circle({
+                    center: geolocation,
+                    radius: position.coords.accuracy
                 });
-            }
+                autocomplete.setBounds(circle.getBounds());
+            });
         }
+    }
+</script>
 
-
-    </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete"
-            async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer>
+</script>
 @endsection
