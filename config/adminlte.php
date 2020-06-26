@@ -132,12 +132,12 @@ return [
                        'icon' => 'plus',
                    ],
                    [
-                       'text' => 'List Lead',
+                       'text' => 'List Leads',
                        'url'  => 'lead',
                        'icon' => 'list',
                    ],
                    [
-                       'text' => 'Cancelled Leads',
+                       'text' => 'Cancel Lead',
                        'url'  => 'lead/cancel',
                        'icon' => 'list',
                    ]
@@ -203,8 +203,8 @@ return [
                         'icon' => 'plus',
                     ],
                     [
-                        'text' => 'Associated | Candidates',
-                        'url'  => 'candidate',
+                        'text' => 'List Candidates',
+                        'url'  => 'candidate'
                         'icon' => 'list',
                     ],
                     [
