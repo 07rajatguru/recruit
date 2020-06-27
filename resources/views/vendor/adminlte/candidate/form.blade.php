@@ -537,6 +537,28 @@
                 }
             });
 
+            $('#current_salary').keypress(function (e) {
+                if(e.which == 44 || e.which == 46 || e.which == 188 || e.which == 190) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if(e.which == 48) {
+                    return false;
+                }
+            });
+
+            $('#expected_salary').keypress(function (e) {
+                if(e.which == 44 || e.which == 46 || e.which == 188 || e.which == 190) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if(e.which == 48) {
+                    return false;
+                }
+            });
+
             $("#resume").bind('change', function() {
 
                 var ext = $('#resume').val().split('.').pop().toLowerCase();
