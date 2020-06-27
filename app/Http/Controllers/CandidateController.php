@@ -309,7 +309,7 @@ class CandidateController extends Controller
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
-
+        $highest_qualification = EducationQualification::getAllEducationQualifications();
         //$jobopen = JobOpen::getJobOpen();
 
         $user = \Auth::user();
@@ -337,6 +337,7 @@ class CandidateController extends Controller
 
 
         $job_id = 0;
+        $highest_qualification_id = '';
         $viewVariable = array();
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
@@ -346,6 +347,8 @@ class CandidateController extends Controller
         $viewVariable['jobopen'] = $jobopen;
         $viewVariable['job_id'] = $job_id;
         $viewVariable['action'] = 'add';
+        $viewVariable['highest_qualification'] = $highest_qualification;
+        $viewVariable['highest_qualification_id'] = $highest_qualification_id;
 
         return view('adminlte::candidate.create',$viewVariable);
     }
@@ -689,6 +692,7 @@ class CandidateController extends Controller
     }
 
     public function edit($id){
+
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
@@ -713,6 +717,8 @@ class CandidateController extends Controller
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
+        $highest_qualification = EducationQualification::getAllEducationQualifications();
+        $highest_qualification_id = $candidates->highest_qualification;
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -780,6 +786,8 @@ class CandidateController extends Controller
         $viewVariable['job_id'] = $job_id;
         $viewVariable['candidateDetails'] = $candidateDetails;
         $viewVariable['candidate_upload_type'] = $candidate_upload_type;
+        $viewVariable['highest_qualification'] = $highest_qualification;
+        $viewVariable['highest_qualification_id'] = $highest_qualification_id;
 
         //print_r($viewVariable);exit;
         return view('adminlte::candidate.edit',$viewVariable);
@@ -1004,21 +1012,21 @@ class CandidateController extends Controller
             ->leftjoin('candidate_source','candidate_source.id','=','candidate_otherinfo.source_id')
             ->leftjoin('candidate_status','candidate_status.id','=','candidate_otherinfo.status_id')
             ->leftjoin('users','users.id','=','candidate_uploaded_resume.uploaded_by')
+            ->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.highest_qualification')
             ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
                 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
                 'candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone',
                 'candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email',
                 'candidate_basicinfo.country as country', 'candidate_basicinfo.state as state',
                 'candidate_basicinfo.city as city', 'candidate_basicinfo.street1 as street1',
-                'candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode',
-                'candidate_otherinfo.highest_qualification as highest_qualification', 'candidate_otherinfo.experience_years as experience_years',
+                'candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode', 'candidate_otherinfo.experience_years as experience_years',
                 'candidate_otherinfo.experience_months as experience_months', 'candidate_otherinfo.current_job_title as current_job_title',
                 'candidate_otherinfo.current_employer as current_employer', 'candidate_otherinfo.expected_salary as expected_salary',
                 'candidate_otherinfo.current_salary as current_salary', 'candidate_otherinfo.skill as skill',
                 'candidate_otherinfo.skype_id as skype_id', 'candidate_otherinfo.status_id as candidateStatus',
                 'candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume',
                 'candidate_uploaded_resume.file as file', 'users.name as uploaded_by',
-                'candidate_status.name as candidate_status_name', 'candidate_source.name as candidate_source_name')
+                'candidate_status.name as candidate_status_name', 'candidate_source.name as candidate_source_name','eduction_qualification.name as eduction_qualification_value')
             ->where('candidate_basicinfo.id',$id)
             ->where('candidate_otherinfo.deleted_at',null)
             ->where('candidate_uploaded_resume.deleted_at',null)
@@ -1048,6 +1056,7 @@ class CandidateController extends Controller
             $candidateDetails['street2'] = $candidates->street2;
             $candidateDetails['zipcode'] = $candidates->zipcode;
             $candidateDetails['highest_qualification'] = $candidates->highest_qualification;
+            $candidateDetails['eduction_qualification_value'] = $candidates->eduction_qualification_value;
             $candidateDetails['experience_years'] = $candidates->experience_years;
             $candidateDetails['experience_months'] = $candidates->experience_months;
             $candidateDetails['current_job_title'] = $candidates->current_job_title;

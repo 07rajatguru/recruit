@@ -21,7 +21,6 @@
     @endif
 
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
@@ -32,7 +31,6 @@
                 <a class="btn btn-primary" href="{{ route('candidate.index') }}">Back</a>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -70,10 +68,8 @@
                             <th>CandidateSource</th>
                             <td colspan="3">{{ $candidateDetails['candidate_source'] }}</td>
                         </tr>
-
                     </table>
                 </div>
-
             </div>
         </div>
 
@@ -108,7 +104,6 @@
                         </tr>
                     </table>
                 </div>
-
             </div>
         </div>
 
@@ -122,8 +117,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                         <tr>
-                            <th scope="row">Highest Qualification</th>
-                            <td>{{ $candidateDetails['highest_qualification'] }}</td>
+                            <th scope="row">Education Qualification</th>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidateDetails['eduction_qualification_value'] }}</td>
                             <th>Experience years</th>
                             <td>{{ $candidateDetails['experience_years'] }}</td>
                         </tr>

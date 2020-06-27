@@ -249,14 +249,9 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
-                            <div class="form-group {{ $errors->has('highest_qualification') ? 'has-error' : '' }}">
-                                <strong>Highest Qualification:</strong>
-                                {!! Form::text('highest_qualification', null, array('id'=>'highest_qualification','placeholder' => 'Highest Qualification','class' => 'form-control', 'tabindex' => '16' )) !!}
-                                @if ($errors->has('highest_qualification'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('highest_qualification') }}</strong>
-                                        </span>
-                                @endif
+                            <div class="form-group">
+                                <strong>Education Qualification:</strong>
+                                {!! Form::select('highest_qualification', $highest_qualification,$highest_qualification_id, array ('id'=> 'highest_qualification','class' => 'form-control', 'tabindex' => '16')) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('experience_months') ? 'has-error' : '' }}">
@@ -487,6 +482,9 @@
                 }
             });
 
+            $("#jobopen").select2();
+             $("#highest_qualification").select2();
+
             $("#candidate_form").validate({
                 rules: {
                     "fname": {
@@ -692,11 +690,8 @@
                 });
             }
         }
-             $("#jobopen").select2();
 
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete"
-            async defer></script>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>
 @endsection
