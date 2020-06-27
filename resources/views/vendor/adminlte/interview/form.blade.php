@@ -50,11 +50,10 @@
 
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
-
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             {{--<div class="form-group {{ $errors->has('interview_name') ? 'has-error' : '' }}">
-                                <strong>Interview Name: <span class = "required_fields">*</span> </strong>
+                                <strong>Interview Name : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('interview_name', null, array('id'=>'interview_name','placeholder' => 'Interview Name','class' => 'form-control')) !!}
                                 @if ($errors->has('interview_name'))
                                     <span class="help-block">
@@ -64,7 +63,7 @@
                             </div>--}}
 
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
-                                <strong>Posting Name: <span class = "required_fields">*</span></strong>
+                                <strong>Posting Name : <span class = "required_fields">*</span></strong>
                                 {!! Form::select('posting_title', $postingArray , null, array('id'=>'posting_title', 'class' => 'form-control', 'tabindex' => '1' , 'onchange' => 'getCandidate()' )) !!}
                                 {{--{!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '2' )) !!}--}}
                                 @if ($errors->has('posting_title'))
@@ -77,7 +76,7 @@
                             <input type="hidden" id="hidden_candidate_id" value="{{$hidden_candidate_id}}" name="hidden_candidate_id" />
 
                             <div class="form-group {{ $errors->has('from') ? 'has-error' : '' }}">
-                                <strong>Interview Date: <span class = "required_fields">*</span> </strong>
+                                <strong>Interview Date : <span class = "required_fields">*</span> </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -92,7 +91,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                                <strong>Status:</strong>
+                                <strong>Status :</strong>
                                 {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '5' )) !!}
                                 {{--  {!! Form::text('status', null, array('id'=>'status','placeholder' => 'Status','class' => 'form-control')) !!}--}}
                                 @if ($errors->has('status'))
@@ -103,7 +102,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('round') ? 'has-error' : '' }}">
-                                <strong>Select Round:</strong>
+                                <strong>Select Round :</strong>
                                 {!! Form::select('round', $round, $interview_round, array('id'=>'round','class' => 'form-control' )) !!}
                                 @if ($errors->has('round'))
                                     <span class="help-block">
@@ -113,7 +112,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
-                                <strong>About Client:</strong>
+                                <strong>About Client :</strong>
                                 {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '7', 'rows' => '5' )) !!}
                                 @if ($errors->has('about'))
                                     <span class="help-block">
@@ -123,7 +122,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
-                                <strong>Comments:</strong>
+                                <strong>Comments :</strong>
                                 {!! Form::textarea('comments', null, array('id'=>'comments','placeholder' => 'Comments','class' => 'form-control', 'tabindex' => '10', 'rows' => '5' )) !!}
                                 @if ($errors->has('comments'))
                                     <span class="help-block">
@@ -138,7 +137,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
 
                             <div class="form-group {{ $errors->has('candidate_id') ? 'has-error' : '' }}">
-                                <strong>Candidate: <span class = "required_fields">*</span> </strong>
+                                <strong>Candidate : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('candidate_id', array(''=>'Select Type List'),null, array('id'=>'candidate_id','class' => 'form-control', 'tabindex' => '2' )) !!}
                                 @if ($errors->has('candidate_id'))
                                     <span class="help-block">
@@ -149,7 +148,7 @@
                             
 
                            {{-- <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
-                                <strong>Client:</strong>
+                                <strong>Client :</strong>
                                 {!! Form::select('client_id', $client,null, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 @if ($errors->has('client_id'))
                                     <span class="help-block">
@@ -159,8 +158,8 @@
                             </div>--}}
 
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <strong>Type:</strong>
-                                {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'skype()' )) !!}
+                                <strong>Interview Type :</strong>
+                                {!! Form::select('type', $type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '4', 'onchange' => 'showHideDiv()' )) !!}
                                 @if ($errors->has('type'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('type') }}</strong>
@@ -169,7 +168,7 @@
                             </div>
 
                             <div class="form-group skype {{ $errors->has('skype_id') ? 'has-error' : '' }}" style="display: none;">
-                                <strong>Video Id:</strong>
+                                <strong>Video Id :</strong>
                                 {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4','placeholder' => 'Video Id')) !!}
                                 @if ($errors->has('skype_id'))
                                     <span class="help-block">
@@ -179,7 +178,7 @@
                             </div>
 
                             {{--<div class="form-group {{ $errors->has('interview_owner_id') ? 'has-error' : '' }}">
-                                <strong>Interview Owner:</strong>
+                                <strong>Interview Owner :</strong>
                                 {!! Form::select('interview_owner_id', $users,\Auth::user()->id, array('id'=>'interview_owner_id','class' => 'form-control', 'tabindex' => '8','disabeled' )) !!}
                                 @if ($errors->has('interview_owner_id'))
                                     <span class="help-block">
@@ -189,7 +188,7 @@
                             </div>--}}
 
                             <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
-                                <strong>Interview Cordination:</strong>
+                                <strong>Interview Cordinator :</strong>
                                 {!! Form::select('interviewer_id', $users, $interviewer_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '6')) !!}
                                 @if ($errors->has('interviewer_id'))
                                     <span class="help-block">
@@ -198,8 +197,8 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
-                                <strong>Interview Venue:</strong>
+                            <div class="form-group venue {{ $errors->has('location') ? 'has-error' : '' }}" style="display: none;">
+                                <strong>Interview Venue :</strong>
                                 {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
                                 @if ($errors->has('location'))
                                     <span class="help-block">
@@ -209,7 +208,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
-                                <strong>Interview Location:</strong>
+                                <strong>Interview Location :</strong>
                                 {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
                                 @if ($errors->has('interview_location'))
                                     <span class="help-block">
@@ -219,7 +218,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
-                                <strong>Candidate Location:</strong>
+                                <strong>Candidate Location :</strong>
                                 {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Candidate Location','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
                                 @if ($errors->has('candidate_location'))
                                     <span class="help-block">
@@ -227,14 +226,11 @@
                                 </span>
                                 @endif
                             </div>
-
                         </div>
-
-                    </div>
-
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
@@ -244,17 +240,13 @@
         </div>
     </div>
 
-
-
-
     {!! Form::close() !!}
 @else
 
     <div class="error-page">
-        <h2 class="headline text-info"> 403</h2>
+        <h2 class="headline text-info">403</h2>
         <div class="error-content">
             <h3><i class="fa fa-warning text-yellow"></i> Whoops, looks like something went wrong.</h3>
-
         </div><!-- /.error-content -->
     </div>
 
@@ -307,19 +299,25 @@
              $("#posting_title").select2();
              $("#interviewer_id").select2();
 
-             getCandidate();
-             skype();
+            getCandidate();
+            showHideDiv();
         });
 
-        function skype() {
+        function showHideDiv() {
             var type = $("#type").val();
             
-            //if (type == 'General Interview') {
             if (type == 'Video Interview') {
                 $(".skype").show();
             }
             else{
                 $(".skype").hide();
+            }
+
+            if (type == 'Personal Interview') {
+                $(".venue").show();
+            }
+            else{
+                $(".venue").hide();
             }
         }
 

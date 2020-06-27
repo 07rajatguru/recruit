@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Interview Details</h2>
+                <h2>{{ isset($posting_title)? $posting_title : null }}</h2>
             </div>
 
             <div class="pull-right">
@@ -22,42 +22,34 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
+                <div class="box-header col-md-6 ">
+     
+                </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                         <tr>
-                            {{--<th scope="row">Interview Name:</th>
-                            <td>{{ isset($interview_name)? $interview_name : null }}</td>--}}
-                            <th>Posting Name</th>
-                            <td>{{ isset($posting_title)? $posting_title : null }}</td>
-                            <th>Candidate:</th>
+                            <th>Candidate Name :</th>
                             <td>{{ isset($candidate)? $candidate : null }}</td>
-                        </tr>
-                        <tr>
-                            <th>Candidate Contact No.:</th>
+                            <th>Candidate Contact No. :</th>
                             <td>{{ isset($contact)? $contact : null }}</td>
-                            <th>Type :</th>
-                            <td>{{ isset($type)? $type : null }}</td>
-                            {{--<th>Client:</th>
-                            <td>{{ isset($client)? $client : null }}</td>--}}
                         </tr>
                         <tr>
-                            <th>Interview Date:</th>
+                            <th>Interview Date :</th>
                             <td>{{ date('d-m-Y h:i A',strtotime($interview_date)) }}</td>
+                            <th>Interview Type :</th>
+                            <td>{{ isset($type)? $type : null }}</td>
+                        </tr>
+                        <tr>       
                             <th>Status :</th>
                             <td>{{ isset($status)? $status : null }}</td>
-                        </tr>
-                        <tr>
-                            <th>Location :</th>
-                            <td>{{ isset($location)? $location : null }}</td>
-                            <th>Interview Cordination:</th>
+                            <th>Interview Cordinator :</th>
                             <td>{{ isset($interviewOwner)? $interviewOwner : null }}</td>
                         </tr>
                         <tr>
+                            <th>About Client :</th>
+                            <td width="500px">{!! isset($about)? $about : null !!}</td>
                             <th>Comments :</th>
                             <td>{{ isset($comments)? $comments : null }}</td>
-                            <th>About :</th>
-                            <td width="500px">{!! isset($about)? $about : null !!}</td>
                         </tr>
                         <tr>
                             @if(isset($skype_id) && $skype_id != '')
@@ -71,11 +63,17 @@
                             @endif
                         </tr>
                         <tr>
-                            <th>Candidate Location:</th>
+                            <th>Candidate Location :</th>
                             <td>{{ isset($candidate_location)? $candidate_location : null }}</td>
-                            <th>Interview Location:</th>
+                            <th>Interview Location :</th>
                             <td>{{ isset($interview_location)? $interview_location : null }}</td>
                         </tr>
+                        @if(isset($location) && $location != '')
+                        <tr>
+                            <th>Interview Venue :</th>
+                            <td colspan="3">{{ isset($location)? $location : null }}</td>
+                        </tr>
+                        @endif
                     </table>
                 </div>
             </div>

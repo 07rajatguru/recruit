@@ -37,7 +37,7 @@
             </div>
             &nbsp;
             <div class="col-md-2">
-                <a href="{{ route('interview.upcomingprevious') }}" style="text-decoration: none;color: black;"><div style="width:165px;height:40px;background-color:#ffffff;padding:9px 17px;font-weight: 600;border-radius: 22px;">Upcoming/Previous</div></a>
+                <a href="{{ route('interview.upcomingprevious') }}" style="text-decoration: none;color: black;"><div style="width:165px;height:40px;background-color:#F08080;padding:9px 17px;font-weight: 600;border-radius: 22px;">Upcoming/Previous</div></a>
             </div>
 
         </div>
@@ -75,7 +75,7 @@
             elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView['interview_date'])))
                 $color = '#feb80a';
             elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($interView['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($interView['interview_date'])))
-                $color = '';
+                $color = '#F08080';
             else
                 $color = '#C4D79B';
          ?>

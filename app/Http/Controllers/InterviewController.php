@@ -115,7 +115,7 @@ class InterviewController extends Controller
             elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date'])))
                 $color = '#feb80a';
             elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date'])))
-                $color = '';
+                $color = '#F08080';
             else
                 $color = '#C4D79B';
 
@@ -347,7 +347,7 @@ class InterviewController extends Controller
         $viewVariable['hidden_candidate_id'] = 0;
         $viewVariable['postingArray'] = $jobopen;
         $viewVariable['type'] = Interview::getTypeArray();
-        $viewVariable['status'] = Interview::getInterviewStatus();
+        $viewVariable['status'] = Interview::getCreateInterviewStatus();
         $viewVariable['users'] = User::getAllUsers();
         $viewVariable['round'] = Interview::getSelectRound();
         $viewVariable['interview_round'] = '';
@@ -464,7 +464,7 @@ class InterviewController extends Controller
         $viewVariable['postingArray'] = $jobopen;
         $viewVariable['interviewer'] = User::getInterviewerArray();
         $viewVariable['type'] = Interview::getTypeArray();
-        $viewVariable['status'] = Interview::getInterviewStatus();
+        $viewVariable['status'] = Interview::getEditInterviewStatus();
         $viewVariable['round'] = Interview::getSelectRound();
         $viewVariable['users'] = User::getAllUsers();
         $viewVariable['about'] = $interview->about;
