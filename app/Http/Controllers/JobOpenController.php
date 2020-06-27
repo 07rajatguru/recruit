@@ -2543,7 +2543,7 @@ class JobOpenController extends Controller
         $shortlist_type = JobOpen::getShortlistType();
 
         $type = Interview::getTypeArray();
-        $status = Interview::getInterviewStatus();
+        $status = Interview::getCreateInterviewStatus();
         $users = User::getAllUsers();
         return view('adminlte::jobopen.associated_candidate', array('job_id' => $id, 'posting_title' => $posting_title,
             'message' => '','candidates'=>$candidateDetails ,'candidatestatus'=>$candidateStatus,'type'=>$type,

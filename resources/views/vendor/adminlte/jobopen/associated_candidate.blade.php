@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Associated Candidates')
@@ -141,7 +149,7 @@
                                 <input type="hidden" name="all_can_ids_interview" id="all_can_ids_interview" value="">
 
                                 <div class="form-group {{ $errors->has('interview_date') ? 'has-error' : '' }}">
-                                    <strong>Interview Date: <span class = "required_fields">*</span> </strong>
+                                    <strong>Interview Date : <span class = "required_fields">*</span> </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -156,7 +164,7 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                                    <strong>Status:</strong>
+                                    <strong>Status : </strong>
                                     {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '3' )) !!}
                                     @if ($errors->has('status'))
                                         <span class="help-block">
@@ -165,8 +173,8 @@
                                     @endif
                                 </div>
 
-                                <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
-                                    <strong>Interview Venue:</strong>
+                                <div class="form-group venue {{ $errors->has('location') ? 'has-error' : '' }}" style="display: none;">
+                                    <strong>Interview Venue : </strong>
                                     {!! Form::textarea('location', null, array('id'=>'location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '5' , 'rows' => '3')) !!}
                                     @if ($errors->has('location'))
                                         <span class="help-block">
@@ -176,7 +184,7 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
-                                    <strong>Interview Location:</strong>
+                                    <strong>Interview Location : </strong>
                                     {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '7' , 'rows' => '3')) !!}
                                     @if ($errors->has('interview_location'))
                                         <span class="help-block">
@@ -188,8 +196,8 @@
 
                             <div class="col-md-6 ">
                                 <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                    <strong>Type:</strong>
-                                    {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '2', 'onchange' => 'skype()' )) !!}
+                                    <strong>Interview Type : </strong>
+                                    {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '2', 'onchange' => 'showHideDiv()' )) !!}
                                     @if ($errors->has('type'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('type') }}</strong>
@@ -198,7 +206,7 @@
                                 </div>
 
                                 <div class="form-group skype {{ $errors->has('skype_id') ? 'has-error' : '' }}" style="display: none;">
-                                    <strong>Video Id:</strong>
+                                    <strong>Video Id : </strong>
                                     {!! Form::text('skype_id', null, array('id'=>'skype_id','class' => 'form-control', 'tabindex' => '4','placeholder' => 'Video Id')) !!}
                                     @if ($errors->has('skype_id'))
                                         <span class="help-block">
@@ -208,7 +216,7 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
-                                    <strong>Interviewer:</strong>
+                                    <strong>Interviewe Cordinator : </strong>
                                     {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '4' )) !!}
                                     @if ($errors->has('interviewer_id'))
                                         <span class="help-block">
@@ -218,7 +226,7 @@
                                 </div>
 
                                 <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
-                                    <strong>Candidate Location:</strong>
+                                    <strong>Candidate Location : </strong>
                                     {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '6' , 'rows' => '3')) !!}
                                     @if ($errors->has('candidate_location'))
                                     <span class="help-block">
@@ -753,18 +761,24 @@
             }
         }
 
-        function skype() {
+        function showHideDiv() {
+
             var type = $("#type").val();
             
-            //if (type == 'General Interview') {
             if (type == 'Video Interview') {
                 $(".skype").show();
             }
             else{
                 $(".skype").hide();
             }
-        }
 
+            if (type == 'Personal Interview') {
+                $(".venue").show();
+            }
+            else{
+                $(".venue").hide();
+            }
+        }
        /* function associated_candidates_get(jobid){
             var candidate_ids = new Array();
             var token = $("#token").val();
