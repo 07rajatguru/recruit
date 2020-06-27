@@ -37,13 +37,13 @@
 @if(isset($action))
     @if($action == 'edit')
 
-        {!! Form::model($candidate,['method' => 'PUT', 'files' => true, 'route' => ['candidate.update', $candidate['id']],'id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+        {!! Form::model($candidate,['method' => 'PUT', 'files' => true, 'route' => ['candidate.update', $candidate['id']],'id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off','onsubmit' => "return formValidation()"]) !!}
 
         {!! Form::hidden('candidateId', $candidate['id'], array('id'=>'candidateId')) !!}
 
     @else
 
-        {!! Form::open(['files' => true, 'route' => 'candidate.store','id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+        {!! Form::open(['files' => true, 'route' => 'candidate.store','id'=>'candidate_form', 'novalidate'=>'novalidate','autocomplete' => 'off','onsubmit' => "return formValidation()"]) !!}
 
     @endif
 
@@ -541,7 +541,7 @@
 
                 var ext = $('#resume').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','pdf']) == -1) {
+                if($.inArray(ext, ['doc','docx','pdf']) == -1) {
 
                     alert('Please Select Document File.');
                     this.value = null;
@@ -552,7 +552,7 @@
 
                 var ext = $('#formatted_resume').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','pdf']) == -1) {
+                if($.inArray(ext, ['doc','docx','pdf']) == -1) {
 
                     alert('Please Select Document File.');
                     this.value = null;
@@ -563,7 +563,7 @@
 
                 var ext = $('#cover_letter').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','pdf']) == -1) {
+                if($.inArray(ext, ['doc','docx','pdf','txt']) == -1) {
 
                     alert('Please Select Document File.');
                     this.value = null;
@@ -585,18 +585,29 @@
             }
         }
 
-        function emailValidation() {
+        function formValidation() {
 
             var email_value = $("#email").val();
 
             var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-
        
             if(email_value != '') {
                 if (reg.test(email_value) == false) {
                     alert('Please Enter Valid Email Address.');
+                    document.getElementById("email").value = '';
+                    document.getElementById("email").focus(); 
                     return false;
                 }
+            }
+
+            var experience_months = $("#experience_months").val();
+
+            if(experience_months > 11) {
+
+                alert('Please Enter Month upto 1 to 11.');
+                document.getElementById("experience_months").value = '';
+                document.getElementById("experience_months").focus(); 
+                return false;
             }
             return true;
         }

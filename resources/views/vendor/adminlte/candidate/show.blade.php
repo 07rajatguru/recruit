@@ -146,7 +146,7 @@
 
                         <tr>
                             <th>Skype Id</th>
-                            <td>{{ $candidateDetails['skype_id'] }}</td>
+                            <td colspan="3">{{ $candidateDetails['skype_id'] }}</td>
                         </tr>
                     </table>
                 </div>
