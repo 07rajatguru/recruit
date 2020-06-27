@@ -651,7 +651,7 @@
 
                 var ext = $('#client_contract').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','pdf','txt']) == -1)
+                if($.inArray(ext, ['doc','docx','pdf','txt']) == -1)
                 {
                     alert('Please Select Document for Contract.');
                     this.value = null;
