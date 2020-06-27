@@ -22,7 +22,7 @@
 </div>
 
 
-{!! Form::open(['route' => ['post.comments.write', $per_post->id], 'name' => 'write_a_review', 'id' => 'write_a_review']) !!}
+{!! Form::open(['route' => ['post.comments.write', $per_post->id], 'name' => 'write_a_review', 'id' => 'write_a_review','onsubmit' => "return emptyTextValidation('$per_post->id')"]) !!}
 {!! Form::hidden('post_id', $per_post->id) !!}
 {!! Form::hidden('client_id', $client_id) !!}
 {!! Form::hidden('super_admin_userid', $super_admin_userid) !!}

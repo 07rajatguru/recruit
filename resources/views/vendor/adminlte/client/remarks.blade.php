@@ -120,6 +120,19 @@
         // initSearchComment();
     });
 
+    function emptyTextValidation(id) {
+
+        var content = $("#comment_"+id).val();
+
+        if(content == '') {
+
+            alert("Please Select One Remark");
+            return false;
+        }
+
+        return true;
+    }
+
     function AddnewRemarkspopup(){
         var content = $("#content").val();
 
