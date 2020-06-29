@@ -116,7 +116,7 @@
 
                             <div class="form-group {{ $errors->has('fixed_salary') ? 'has-error' : '' }}">
                                 <strong>Fixed Salary: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('fixed_salary', null, array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '11')) !!}
+                                {!! Form::text('fixed_salary', null, array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '11','onfocusout' => 'setDecimal();')) !!}
                                 @if ($errors->has('fixed_salary'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('fixed_salary') }}</strong>
@@ -201,22 +201,18 @@
                         @endif
 
                         <div class="form-group {{ $errors->has('address_of_communication') ? 'has-error' : '' }}">
-                            <strong>Address of communication: <span class = "required_fields">*</span> </strong>
-                            {!! Form::textarea('address_of_communication', null, array('rows'=>'3','id'=>'address_of_communication','placeholder' => 'Address of communication','class' => 'form-control', 'tabindex' => '14' )) !!}
+                            <strong>Address of Communication: <span class = "required_fields">*</span> </strong>
+                            {!! Form::textarea('address_of_communication', null, array('rows'=>'3','id'=>'address_of_communication','placeholder' => 'Address of Communication','class' => 'form-control', 'tabindex' => '14' )) !!}
                             @if ($errors->has('address_of_communication'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('address_of_communication') }}</strong>
                             </span>
                             @endif
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
-
 
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -229,14 +225,13 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>Employee Name :  </strong>
-                                {!! Form::select('employee_name_1', $users,$employee_name[0], array('id'=>'employee_name_1','class' => 'form-control', 'tabindex' => '15' )) !!}
+                                {!! Form::select('employee_name_1', $users,$employee_name[0], array('id'=>'employee_name_1','class' => 'form-control', 'tabindex' => '15')) !!}
                                 {!! Form::select('employee_name_2', $users,$employee_name[1], array('id'=>'employee_name_2','class' => 'form-control', 'tabindex' => '17' )) !!}
                                 {!! Form::select('employee_name_3', $users,$employee_name[2], array('id'=>'employee_name_3','class' => 'form-control', 'tabindex' => '19' )) !!}
                                 {!! Form::select('employee_name_4', $users,$employee_name[3], array('id'=>'employee_name_4','class' => 'form-control', 'tabindex' => '21' )) !!}
                                 {!! Form::select('employee_name_5', $users,$employee_name[4], array('id'=>'employee_name_5','class' => 'form-control', 'tabindex' => '23' )) !!}
                             </div>
                         </div>
-
                     </div>
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
@@ -250,13 +245,11 @@
                                 {!! Form::number('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control employee_perce', 'tabindex' => '24','onfocusout' => 'checkPercentage();')) !!}
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
+
         @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -310,7 +303,6 @@
                             <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" tabindex="29" multiple>
                         </div>
                     </div>
-
                 </div>
             @elseif($action == 'edit')
              <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
@@ -373,6 +365,7 @@
             $("#employee_name_4").select2();
             $("#employee_name_5").select2();
             $("#lead_name").select2();
+            $("#address_of_communication").wysihtml5();
 
             prefilleddata();
             // on job select pre filled all data
@@ -398,7 +391,7 @@
             });
 
             $('#fixed_salary').keypress(function (e) {
-                if(e.which == 44 || e.which == 46 || e.which == 188 || e.which == 190) {
+                if(e.which == 46 || e.which == 190) {
                     return true;
                 }
                 else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
@@ -525,6 +518,13 @@
                 }
             });
         });
+
+        function setDecimal() {
+            
+            var fixed_salary = $("#fixed_salary").val();
+            var decimal_value = parseFloat(fixed_salary).toFixed(2);
+            $("#fixed_salary").val(decimal_value);
+        }
 
         function checkPercentage() {
 
