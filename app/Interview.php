@@ -63,7 +63,18 @@ class Interview extends Model
         return $typeArray;
     }
 
-    public static function getInterviewStatus() {
+    public static function getCreateInterviewStatus() {
+        /*$interviewStatus['Selected'] = 'Selected';
+        $interviewStatus['Rejected'] = 'Rejected';
+        $interviewStatus['OnHold'] = 'OnHold';*/
+
+        $interviewStatus['Yes'] = 'Yes';
+        $interviewStatus['Attended'] = 'Attended';
+
+        return $interviewStatus;
+    }
+
+    public static function getEditInterviewStatus() {
         /*$interviewStatus['Selected'] = 'Selected';
         $interviewStatus['Rejected'] = 'Rejected';
         $interviewStatus['OnHold'] = 'OnHold';*/
