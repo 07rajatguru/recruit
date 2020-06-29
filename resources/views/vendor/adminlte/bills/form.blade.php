@@ -243,11 +243,11 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>Employee Percentage: </strong>
-                                {!! Form::number('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' , 'tabindex' => '16')) !!}
-                                {!! Form::number('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce', 'tabindex' => '18' )) !!}
-                                {!! Form::number('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce', 'tabindex' => '20')) !!}
-                                {!! Form::number('employee_percentage_4', $employee_percentage[3], array('id'=>'employee_percentage_4','placeholder' => 'Employee 4 Percentage','class' => 'form-control employee_perce', 'tabindex' => '22' )) !!}
-                                {!! Form::number('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control employee_perce', 'tabindex' => '24')) !!}
+                                {!! Form::number('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' , 'tabindex' => '16','onfocusout' => 'checkPercentage();')) !!}
+                                {!! Form::number('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce', 'tabindex' => '18','onfocusout' => 'checkPercentage();' )) !!}
+                                {!! Form::number('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce', 'tabindex' => '20','onfocusout' => 'checkPercentage();')) !!}
+                                {!! Form::number('employee_percentage_4', $employee_percentage[3], array('id'=>'employee_percentage_4','placeholder' => 'Employee 4 Percentage','class' => 'form-control employee_perce', 'tabindex' => '22','onfocusout' => 'checkPercentage();' )) !!}
+                                {!! Form::number('employee_percentage_5', $employee_percentage[4], array('id'=>'employee_percentage_5','placeholder' => 'Employee 5 Percentage','class' => 'form-control employee_perce', 'tabindex' => '24','onfocusout' => 'checkPercentage();')) !!}
                             </div>
                         </div>
 
@@ -278,7 +278,7 @@
                             <div class="">
                                 <div class="form-group">
                                     <strong>Employee Percentage:  </strong>
-                                    {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26')) !!}
+                                    {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26','onfocusout' => 'checkLeadPercentage();')) !!}
                                 </div>
                             </div>
                         </div>
@@ -297,17 +297,17 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Candidate Unedited Resume : <span class = "required_fields">*</span></strong>
-                            {!! Form::file('unedited_resume',null, array('id'=>'unedited_resume','class' => 'form-control','tabindex' => '27')) !!}
+                            <input type="file" name="unedited_resume" id="unedited_resume" class="form-control" tabindex="27">
                         </div>
 
                         <div class="form-group">
                             <strong>Offer Letter : </strong>
-                            {!! Form::file('offer_letter',null, array('id'=>'offer_letter','class' => 'form-control','tabindex' => '28')) !!}
+                            <input type="file" name="offer_letter" id="offer_letter" class="form-control" tabindex="28">
                         </div>
 
                         <div class="form-group">
                             <strong>Other Documents:</strong>
-                            {{ Form::file('upload_documents[]', array('multiple'=>true,'tabindex' => '29')) }}
+                            <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" tabindex="29" multiple>
                         </div>
                     </div>
 
@@ -394,6 +394,37 @@
                 }
             });
 
+            $('#fixed_salary').keypress(function (e) {
+                if(e.which == 44 || e.which == 46 || e.which == 188 || e.which == 190) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $("#unedited_resume").bind('change', function() {
+
+                var ext = $('#unedited_resume').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','docx','pdf']) == -1) {
+
+                    alert('Please Select Document File.');
+                    this.value = null;
+                }
+            });
+
+            $("#offer_letter").bind('change', function() {
+
+                var ext = $('#offer_letter').val().split('.').pop().toLowerCase();
+
+                if($.inArray(ext, ['doc','docx','pdf']) == -1) {
+
+                    alert('Please Select Document File.');
+                    this.value = null;
+                }
+            });
+
             $("#bills_form").validate({
                 rules: {
                     "company_name": {
@@ -444,53 +475,90 @@
                 },
                 messages: {
                     "company_name": {
-                        required: "Company Name is required field."
+                        required: "Company Name is Required Field."
                     },
                     "candidate_name": {
-                        required: "Candidate Name is required field."
+                        required: "Candidate Name is Required Field."
                     },
                     "candidate_contact_number":{
-                        required: "Candidate Contact Number is required field."
+                        required: "Candidate Contact Number is Required Field."
                     },
                     "designation_offered": {
-                        required: "Designation Offered is required field."
+                        required: "Designation Offered is Required Field."
                     },
                     "date_of_joining": {
-                        required: "Date of joining is required field."
+                        required: "Date of joining is Required Field."
                     },
                     "job_location":{
-                        required: "Job Location is required field."
+                        required: "Job Location is Required Field."
                     },
                     "fixed_salary": {
-                        required: "Fixed Salary is required field."
+                        required: "Fixed Salary is Required Field."
                     },
                     "source": {
-                        required: "Source is required field."
+                        required: "Source is Required Field."
                     },
                     "client_name": {
-                        required: "Client Name is required field."
+                        required: "Client Name is Required Field."
                     },
                     "client_contact_number":{
-                        required: "Client Contact Number is required field."
+                        required: "Client Contact Number is Required Field."
                     },
                     "client_email_id": {
-                        required: "Client Email Id is required field."
+                        required: "Client Email Id is Required Field."
                     },
                     "address_of_communication":{
-                        required: "Address of Communication is required field."
+                        required: "Address of Communication is Required Field."
                     },
                     "lead_name":{
-                        required: "Lead Efforts is required field."
+                        required: "Lead Efforts is Required Field."
                     },
                     "lead_percentage": {
-                        required: "Lead Percentage is required field."
+                        required: "Lead Percentage is Required Field."
                     },
                     "unedited_resume": {
-                        required: "Please Select file."
+                        required: "Please Select File."
                     },
                 }
             });
         });
+
+        function checkPercentage() {
+
+            for (var i = 1; i <= 5; i++) {
+
+                var employee_percentage = $("#employee_percentage_"+i).val();
+
+                if(employee_percentage > 0 ) {
+
+                    if(employee_percentage > 100) {
+
+                        alert('Please Enter Percentge upto 100.');
+                        $("#employee_percentage_"+i).val('');
+                        $("#employee_percentage_"+i).focus();
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+
+        function checkLeadPercentage() {
+
+            var lead_percentage = $("#lead_percentage").val();
+
+            if(lead_percentage > 0 ) {
+
+                if(lead_percentage > 100) {
+
+                    alert('Please Enter Percentge upto 100.');
+                    $("#lead_percentage").val('0');
+                    $("#lead_percentage").focus();
+                    return false;
+                }
+                return true;
+            }
+        }
         
         function prefilleddata() {
 
@@ -501,7 +569,7 @@
             if(job_id>0){
                 // get client data from job id
                 $.ajax({
-                    url:app_url+'/bills/getclientinfo',
+                    url: app_url+'/bills/getclientinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
@@ -525,7 +593,7 @@
 
                 // get candidate data
                 $.ajax({
-                    url:app_url+'/bills/getcandidateinfo',
+                    url: app_url+'/bills/getcandidateinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){

@@ -219,24 +219,29 @@ class BillsController extends Controller
             $checkbox = '';
             if ($title == 'Forecasting') {
                 if($access || ($user_id==$value['uploaded_by'])) {
-                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    
                     $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
-                    if($isSuperAdmin) {
-                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                        $delete = $delete_view->render();
-                        $action .= $delete;
-                    }
-                    if($value['cancel_bill']==0) {
-                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                        $cancel = $cancel_view->render();
-                        $action .= $cancel;
-                    }
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+
                     if($value['status']==0 && $value['cancel_bill']!=1){
                         //BM will be generated after date of joining
                         if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
                             $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
                         }
                     }
+
+                    if($value['cancel_bill']==0) {
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $cancel = $cancel_view->render();
+                        $action .= $cancel;
+                    }
+
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+                    
                 }
                 if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
                     if($value['cancel_bill']==1){
@@ -248,17 +253,21 @@ class BillsController extends Controller
             }
             else if ($title == 'Recovery') {
                 if($access || ($user_id==$value['uploaded_by'])) {
+
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
-                    if($isSuperAdmin) {
-                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
-                        $delete = $delete_view->render();
-                        $action .= $delete;
-                    }
+
                     if($value['cancel_bill']==0) {
                         $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
                         $cancel = $cancel_view->render();
                         $action .= $cancel;
                     }
+
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+                    
                     if($isSuperAdmin || $isAccountant || $isOperationsExecutive){
 
                         if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
@@ -441,18 +450,22 @@ class BillsController extends Controller
             $checkbox = '';
             if ($title == 'Cancel Forecasting') {
                 if($access || ($user_id==$value['uploaded_by'])) {
-                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    
                     $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
-                    if($isSuperAdmin) {
-                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                        $delete = $delete_view->render();
-                        $action .= $delete;
-                    }
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+
                     if($value['cancel_bill']==0) {
                         $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
                         $cancel = $cancel_view->render();
                         $action .= $cancel;
                     }
+
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+
                     if($value['status']==0 && $value['cancel_bill']!=1){
                         //BM will be generated after date of joining
                         if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
@@ -469,18 +482,23 @@ class BillsController extends Controller
                 }
             }
             else if ($title == 'Cancel Recovery') {
+
                 if($access || ($user_id==$value['uploaded_by'])) {
+
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
-                    if($isSuperAdmin) {
-                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                        $delete = $delete_view->render();
-                        $action .= $delete;
-                    }
+
                     if($value['cancel_bill']==0) {
                         $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
                         $cancel = $cancel_view->render();
                         $action .= $cancel;
                     }
+
+                    if($isSuperAdmin) {
+                        $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                        $delete = $delete_view->render();
+                        $action .= $delete;
+                    }
+
                     if($isSuperAdmin || $isAccountant || $isOperationsExecutive){
                         if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
                             $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);

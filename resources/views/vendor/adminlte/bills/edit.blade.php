@@ -8,10 +8,7 @@
 @stop
 
 @section('content')
-
     <div>
         @include('adminlte::bills.form')
     </div>
-
 @stop
-
