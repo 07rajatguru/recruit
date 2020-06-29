@@ -25,7 +25,7 @@ class DailyReport extends Command
      *
      * @var string
      */
-    protected $description = 'command to sent daily report';
+    protected $description = 'Command to Sent Daily Report';
 
     /**
      * Create a new command instance.
@@ -84,7 +84,10 @@ class DailyReport extends Command
                     $cc_array[] = $report_email;
                     $cc_array[] = $floor_incharge_email;
                     $cc_array[] = 'rajlalwani@adlertalent.com';
-                    $cc_array[] = 'saloni@trajinfotech.com';
+                    //$cc_array[] = 'saloni@trajinfotech.com';
+
+                    $bcc_array = array();
+                    $bcc_array[] = 'saloni@trajinfotech.com';
 
                     /*$input = array();
                     $input['from_name'] = $from_name;
@@ -129,7 +132,11 @@ class DailyReport extends Command
                     $module_id = 0;
                     $sender_name = $key;
 
-                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                    // Add bcc user
+                    $bcc_array = array_filter($bcc_array);
+                    $bcc = implode(",",$bcc_array);
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc,$bcc));
                 }
             }
         }

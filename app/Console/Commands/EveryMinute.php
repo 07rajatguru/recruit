@@ -62,6 +62,7 @@ class EveryMinute extends Command
             $mail[$i]['module'] = $value->module;
             $mail[$i]['to'] = $value->to;
             $mail[$i]['cc'] = $value->cc;
+            $mail[$i]['bcc'] = $value->bcc;
             $mail[$i]['subject'] = $value->subject;
             $mail[$i]['message'] = $value->message;
             $mail[$i]['status'] = $value->status;
@@ -92,6 +93,7 @@ class EveryMinute extends Command
 
             $input['to'] = $value['to'];
             $input['cc'] = $value['cc'];
+            $input['bcc'] = $value['bcc'];
             $input['subject'] = $value['subject'];
             $input['message'] = $value['message'];
             $input['app_url'] = $app_url;
@@ -235,6 +237,7 @@ class EveryMinute extends Command
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
+                $bcc_array = explode(",",$input['bcc']);
 
                 $associate_response = JobAssociateCandidates::getDailyReportAssociate($sender_id,NULL);
                 $associate_daily = $associate_response['associate_data'];
@@ -261,10 +264,11 @@ class EveryMinute extends Command
                 $input['interview_daily'] = $interview_daily;
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
+                $input['bcc_array'] = array_unique($bcc_array);
 
                 \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['bcc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
@@ -273,6 +277,7 @@ class EveryMinute extends Command
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
+                $bcc_array = explode(",",$input['bcc']);
 
                 $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($sender_id,NULL,NULL);
 
@@ -303,10 +308,11 @@ class EveryMinute extends Command
                 $input['leads_count'] = $leads_count;
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
+                $input['bcc_array'] = array_unique($bcc_array);
 
                 \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Weekly Activity Report -'.$input['value']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['bcc_array'])->subject('Weekly Activity Report -'.$input['value']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");

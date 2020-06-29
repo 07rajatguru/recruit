@@ -35,6 +35,7 @@ class NotificationMailListener
         $sender_name = $event->sender_name;
         $to = $event->to;
         $cc = $event->cc;
+        $bcc = $event->bcc;
         $subject = $event->subject;
         $message = $event->message;
         $module_id = $event->module_id;
@@ -71,6 +72,7 @@ class NotificationMailListener
         $emailnotification->sender_name = $sender_name;
         $emailnotification->to = $to;
         $emailnotification->cc = $cc;
+        $emailnotification->bcc = $bcc;
         $emailnotification->subject = $subject;
         $emailnotification->message = $body;
         $emailnotification->module_id = $module_id;
