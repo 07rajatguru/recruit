@@ -98,7 +98,7 @@
                         <strong>Due Date: <span class = "required_fields">*</span></strong>
                         <div class="input-group date">
                             <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
+                                <i class="fa fa-calendar due_date_class"></i>
                             </div>
                             {!! Form::text('due_date',  isset($due_date) ? $due_date : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '4'  )) !!}
                         </div>
@@ -160,7 +160,9 @@
                             <div  class="form-group {{ $errors->has('start_date') ? 'has-error' : '' }}">
                                 <strong>Start Date: </strong>
                                 <div class="input-group date">
-                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar start_date_class"></i>
+                                    </div>
                                     {!! Form::text('start_date', isset($start_date) ? $start_date : null, array('id'=>'start_date','placeholder' => 'Start Date','class' => 'form-control', 'tabindex' => '8'  )) !!}
                                 </div>
                                 @if ($errors->has('start_date'))
@@ -290,6 +292,14 @@
 
             $("#start_date").datetimepicker({
                 format: "DD-MM-YYYY HH:mm:ss"
+            });
+
+            $('.due_date_class').click(function() {
+                $("#due_date").focus();
+            });
+
+            $('.start_date_class').click(function() {
+                $("#start_date").focus();
             });
 
             var action = $("#action").val();
