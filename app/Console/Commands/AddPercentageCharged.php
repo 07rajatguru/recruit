@@ -6,21 +6,21 @@ use Illuminate\Console\Command;
 use App\Bills;
 use App\ClientBasicinfo;
 
-class billspcaddnew extends Command
+class AddPercentageCharged extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'bills:pcaddnew';
+    protected $signature = 'add:percentagecharged';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Script for add previous Bills Percentage Charged';
+    protected $description = 'Script for add previous Bills Percentage Charged Value';
 
     /**
      * Create a new command instance.
