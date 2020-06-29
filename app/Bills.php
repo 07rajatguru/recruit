@@ -1296,7 +1296,7 @@ class Bills extends Model
             $total_billing = 0;
             foreach ($personwise_res as $key => $value) {
                 //$salary = $value->fixed_salary;
-                $salary = str_replace(",", "", $join_mail_res->fixed_salary);
+                $salary = str_replace(",", "", $value->fixed_salary);
                 $pc = $value->percentage_charged;
 
                 $fees = ($salary * $pc)/100;
