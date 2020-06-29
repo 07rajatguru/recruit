@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\Bills;
 use App\ClientBasicinfo;
 
-class BiilsPCADDNew extends Command
+class billspcaddnew extends Command
 {
     /**
      * The name and signature of the console command.
