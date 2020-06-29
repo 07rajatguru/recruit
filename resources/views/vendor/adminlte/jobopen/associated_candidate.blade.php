@@ -227,7 +227,7 @@
 
                                 <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
                                     <strong>Candidate Location : </strong>
-                                    {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Interview Venue','class' => 'form-control', 'tabindex' => '6' , 'rows' => '3')) !!}
+                                    {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Candidate Location','class' => 'form-control', 'tabindex' => '6' , 'rows' => '3')) !!}
                                     @if ($errors->has('candidate_location'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('candidate_location') }}</strong>
