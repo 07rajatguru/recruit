@@ -152,7 +152,7 @@
                                     <strong>Interview Date : <span class = "required_fields">*</span> </strong>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
+                                            <i class="fa fa-calendar interview_class"></i>
                                         </div>
                                         {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'interview_date','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '1' )) !!}
                                     </div>
@@ -263,7 +263,7 @@
                                 <strong>Joining Date: <span class = "required_fields">*</span> </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
+                                        <i class="fa fa-calendar joining_date_class"></i>
                                     </div>
                                     {!! Form::text('joining_date', null, array('id'=>'joining_date','placeholder' => 'Joining Date','class' => 'form-control' , 'tabindex' => '1' )) !!}
                                 </div>
@@ -640,8 +640,16 @@
                 format:'DD-MM-YYYY h:mm A'
             });
 
+            $('.interview_class').click(function() {
+                $("#interview_date").focus();
+            });
+
             $("#joining_date").datetimepicker({
                 format:'DD-MM-YYYY'
+            });
+
+            $('.joining_date_class').click(function() {
+                $("#joining_date").focus();
             });
 
             $(".schedule-interview").click(function() {
