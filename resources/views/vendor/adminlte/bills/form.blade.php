@@ -383,6 +383,9 @@
                     autoclose: true,
                 });
 
+                $('.fa-calendar').click(function() {
+                    $("#date_of_joining").focus();
+                });
             });
 
             // on click of enter dont submit the form

@@ -105,7 +105,7 @@
                             <strong>Date Opened: <span class = "required_fields">*</span> </strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
+                                    <i class="fa fa-calendar open_class"></i>
                                 </div>  
                                 {!! Form::text('date_opened', isset($date_opened) ? $date_opened : null, array('id'=>'date_opened','placeholder' => 'Date Opened','class' => 'form-control', 'tabindex' => '5')) !!}
                             </div>
@@ -190,7 +190,7 @@
                             <strong>Target Date:</strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
+                                    <i class="fa fa-calendar target_class"></i>
                                 </div>
                                 {!! Form::text('target_date', isset($target_date) ? $target_date : null, array('id'=>'target_date','placeholder' => 'Target Date','class' => 'form-control', 'tabindex' => '6')) !!}
                             </div>
@@ -663,6 +663,14 @@
                 date2.setMonth(date2.getMonth()+1);
                 $('#target_date').datepicker('setDate', date2);
             }
+
+            $('.target_class').click(function() {
+                $("#target_date").focus();
+            })
+
+            $('.open_class').click(function() {
+                $("#date_opened").focus();
+            })
 
 
             $("#hiring_manager_id").select2();

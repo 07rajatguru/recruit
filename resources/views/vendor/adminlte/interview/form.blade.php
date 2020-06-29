@@ -288,16 +288,18 @@
             });
 
             $("#about").wysihtml5();
+
             $("#from").datetimepicker({
                 format:'DD-MM-YYYY h:mm A'
             });
-            $("#to").datetimepicker({
-                format:'DD-MM-YYYY HH:mm:ss'
+           
+            $('.fa-calendar').click(function() {
+                $("#from").focus();
             });
 
-             $("#candidate_id").select2();
-             $("#posting_title").select2();
-             $("#interviewer_id").select2();
+            $("#candidate_id").select2();
+            $("#posting_title").select2();
+            $("#interviewer_id").select2();
 
             getCandidate();
             showHideDiv();
