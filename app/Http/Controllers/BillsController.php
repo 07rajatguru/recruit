@@ -2152,11 +2152,19 @@ class BillsController extends Controller
                 $bill_percentage_charged = $value['percentage_charged'];
 
                 $client_data = ClientBasicinfo::getClientDetailsById($client_id);
-                $percentage_charged = $client_data['percentage_charged'];
+
+                if(isset($client_data['percentage_charged']) && $client_data['percentage_charged'] > 0){
+
+                    $percentage_charged = $client_data['percentage_charged'];
+                }
+                else {
+
+                    $percentage_charged = '0.00';
+                }
 
                 if($bill_percentage_charged == '0.00' || $bill_percentage_charged == '' || $bill_percentage_charged == '0') {
 
-                    if (isset($percentage_charged) && $percentage_charged != '') {
+                    if (isset($percentage_charged) && $percentage_charged != '' && $percentage_charged != '0.00' && $percentage_charged != '0') {
 
                         \DB::statement("UPDATE bills SET percentage_charged = '$percentage_charged' where id=$bill_id");
                         \DB::statement("UPDATE bills SET per_chared_date = '$today_date' where id=$bill_id");
@@ -2167,6 +2175,8 @@ class BillsController extends Controller
                         \DB::statement("UPDATE bills SET percentage_charged = '8.33' where id=$bill_id");
                         
                         \DB::statement("UPDATE bills SET per_chared_date = '$today_date' where id=$bill_id");
+
+                        echo $bill_id . "-> Success";
                     }
                 }
             }
