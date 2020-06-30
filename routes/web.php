@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/addpercentagecharged',  [
+    'uses' => 'BillsController@addPercentageCharged'
+]);
+
 Route::get('/everyminute',  [
     'uses' => 'IndexController@everyminute'
 ]);

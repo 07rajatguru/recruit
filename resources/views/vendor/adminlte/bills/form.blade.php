@@ -351,6 +351,8 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" name="action" id="action" value="{{ $action }}">
 {!! Form::close() !!}
 
 @section('customscripts')
@@ -365,7 +367,7 @@
             $("#employee_name_4").select2();
             $("#employee_name_5").select2();
             $("#lead_name").select2();
-            $("#address_of_communication").wysihtml5();
+            //$("#address_of_communication").wysihtml5();
 
             prefilleddata();
             // on job select pre filled all data
@@ -568,11 +570,13 @@
             var job_id = $("#jobopen").val();
             var candidate_id = $("#candidate_id").val();
             var app_url = "{!! env('APP_URL'); !!}";
+            var action = $("#action").val();
 
             if(job_id>0){
                 // get client data from job id
                 $.ajax({
                     url: app_url+'/bills/getclientinfo',
+                    //url: 'http://127.0.0.1:8000/bills/getclientinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
@@ -583,20 +587,27 @@
                         var designation = data.designation;
                         var location = data.job_location;
                         var percentage_charged = data.percentage_charged;
-
+                        
                         $("#company_name").val(cname);
                         $("#client_name").val(coordinator_name);
                         $("#client_email_id").val(mail);
                         $("#client_contact_number").val(mobile);
                         $("#designation_offered").val(designation);
                         $("#job_location").val(location);
-                        $("#percentage_charged").val(percentage_charged);
+
+                        if(action == 'add'){
+                            $("#percentage_charged").val(percentage_charged);
+                        }
+                        else {
+                            
+                        }
                     }
                 });
 
                 // get candidate data
                 $.ajax({
                     url: app_url+'/bills/getcandidateinfo',
+                    //url: 'http://127.0.0.1:8000/bills/getcandidateinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data){
@@ -610,21 +621,16 @@
                                 $('#candidate_name').select2();
                                 $("#candidate_name").select2('val',candidate_id);
                             }
-
                         }
-
                     }
                 });
             }
-
         }
 
         function prefilledcandidatedata() {
             var candidate_id = $("#candidate_name").val();
-
             var mobile  = $("#candidate_name>option:selected").attr('data-content');
             $("#candidate_contact_number").val(mobile);
         }
-
     </script>
 @endsection
