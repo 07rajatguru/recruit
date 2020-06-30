@@ -1307,7 +1307,8 @@ class Bills extends Model
                 $person_data[$j]['candidate_name'] = $value->candidate_name;
                 $person_data[$j]['company_name'] = $value->company_name;
                 $person_data[$j]['position'] = $value->designation_offered;
-                $person_data[$j]['salary_offered'] = round($value->fixed_salary);
+                //$person_data[$j]['salary_offered'] = round($value->fixed_salary);
+                $person_data[$j]['salary_offered'] = round($salary);
                 $person_data[$j]['billing'] = $fees;
                 $person_data[$j]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
 
