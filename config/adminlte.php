@@ -204,7 +204,7 @@ return [
                     ],
                     [
                         'text' => 'List Candidates',
-                        'url'  => 'candidate'
+                        'url'  => 'candidate',
                         'icon' => 'list',
                     ],
                     [
