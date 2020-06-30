@@ -71,29 +71,32 @@ class SelectionReportController extends Controller
             $selection = array();
             $i = 0;
             foreach ($selection_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
+                //$fixed_salary = $value->fixed_salary;
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
+
+                $percentage_charged = $value->percentage_charged;
+
+                if($percentage_charged == 0) {
+
                     $billing = '0';
                     $gst = '0';
                     $invoice = '0';
                     $payment = '0';
                 }
-                else
-                {
+                else {
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
                 }
 
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                 $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                 $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                 $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));
@@ -126,29 +129,32 @@ class SelectionReportController extends Controller
             $selection = array();
             $i = 0;
             foreach ($selection_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
+                //$fixed_salary = $value->fixed_salary;
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
+
+                $percentage_charged = $value->percentage_charged;
+
+                if($percentage_charged == 0) {
+
                     $billing = '0';
                     $gst = '0';
                     $invoice = '0';
                     $payment = '0';
                 }
-                else
-                {
+                else {
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
                 }
 
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                 $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                 $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));
@@ -170,7 +176,6 @@ class SelectionReportController extends Controller
                 $year = '2018';
             }
 
-
             // Get Quater 1-4
 
             if ($quaterdata == 0) {
@@ -186,29 +191,33 @@ class SelectionReportController extends Controller
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
-                    $fixed_salary = (float)$value->fixed_salary;
-                    $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
-                    $billing = '0';
-                    $gst = '0';
-                    $invoice = '0';
-                    $payment = '0';
-                }
-                else
-                {
+                    //$fixed_salary = $value->fixed_salary;
+                    
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
-                }
+                    $percentage_charged = $value->percentage_charged;
+
+                    if($percentage_charged == 0) {
+
+                        $billing = '0';
+                        $gst = '0';
+                        $invoice = '0';
+                        $payment = '0';
+                    }
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                        $gst = ($billing * 18 ) / 100;
+                        $invoice = $billing+$gst;
+                        $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+                    }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                     $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                     $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                     $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));
@@ -232,34 +241,32 @@ class SelectionReportController extends Controller
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
-                    $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
-                    $billing = '0';
-                    $gst = '0';
-                    $invoice = '0';
-                    $payment = '0';
-                }
-                else
-                {
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
-                }
+                    $percentage_charged = $value->percentage_charged;
 
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                    $gst = ((float)$billing * 18 ) / 100;
-                    $invoice = (float)$billing+(float)$gst;
-                    $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                    if($percentage_charged == 0) {
+
+                        $billing = '0';
+                        $gst = '0';
+                        $invoice = '0';
+                        $payment = '0';
+                    }
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                        $gst = ($billing * 18 ) / 100;
+                        $invoice = $billing+$gst;
+                        $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+                    }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                     $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                     $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                     $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));
@@ -283,29 +290,32 @@ class SelectionReportController extends Controller
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
-                    $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
-                    $billing = '0';
-                    $gst = '0';
-                    $invoice = '0';
-                    $payment = '0';
-                }
-                else
-                {
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
-                }
+                    $percentage_charged = $value->percentage_charged;
+
+                    if($percentage_charged == 0) {
+
+                        $billing = '0';
+                        $gst = '0';
+                        $invoice = '0';
+                        $payment = '0';
+                    }
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                        $gst = ($billing * 18 ) / 100;
+                        $invoice = $billing+$gst;
+                        $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+                    }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                     $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                     $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                     $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));
@@ -329,29 +339,32 @@ class SelectionReportController extends Controller
                 $selection = array();
                 $i = 0;
                 foreach ($selection_report as $key => $value) {
-                    $fixed_salary = $value->fixed_salary;
-                    $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
-                    $billing = '0';
-                    $gst = '0';
-                    $invoice = '0';
-                    $payment = '0';
-                }
-                else
-                {
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
-                }
+                    $percentage_charged = $value->percentage_charged;
+
+                    if($percentage_charged == 0) {
+
+                        $billing = '0';
+                        $gst = '0';
+                        $invoice = '0';
+                        $payment = '0';
+                    }
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                        $gst = ($billing * 18 ) / 100;
+                        $invoice = $billing+$gst;
+                        $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+                    }
 
                     $selection[$i]['candidate_name'] = $value->fname;
                     $selection[$i]['company_name'] = $value->company_name;
                     $selection[$i]['position'] = $value->position;
-                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                     $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                     $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                     $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));
@@ -362,12 +375,11 @@ class SelectionReportController extends Controller
                     $i++;
                 }
             }
-
-            
         }
 
         // Year wise
         else if ($selectdata == 3) {
+
             if(isset($_POST['year']) && $_POST['year']!=''){
                 $year = $_POST['year'];
             }
@@ -380,30 +392,34 @@ class SelectionReportController extends Controller
             $selection_report = Bills::getSelectionReport('','','',$year);
             $selection = array();
             $i = 0;
-            foreach ($selection_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged==0)
-                {
+            foreach ($selection_report as $key => $value) {
+
+                //$fixed_salary = $value->fixed_salary;
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
+
+                $percentage_charged = $value->percentage_charged;
+
+                if($percentage_charged == 0) {
+
                     $billing = '0';
                     $gst = '0';
                     $invoice = '0';
                     $payment = '0';
                 }
-                else
-                {
+                else {
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
                 }
 
                 $selection[$i]['candidate_name'] = $value->fname;
                 $selection[$i]['company_name'] = $value->company_name;
                 $selection[$i]['position'] = $value->position;
-                $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                 $selection[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $selection[$i]['gst'] = Utils::IND_money_format(round($gst));
                 $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice));

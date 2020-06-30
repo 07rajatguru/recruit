@@ -75,22 +75,26 @@ class UserwiseReportController extends Controller
             $i = 0;
             $total = 0;
             foreach ($userwise_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged<=0)
-                {
+                //$fixed_salary = $value->fixed_salary;
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
+
+                $percentage_charged = $value->percentage_charged;
+
+                if($percentage_charged <= 0) {
+
                     $billing='0';
                 }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                else {
+
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
                 }
     
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                 $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
@@ -99,9 +103,8 @@ class UserwiseReportController extends Controller
             	foreach ($efforts as $key => $value) {
                     if($user_name == $key)
                     {
-                        $t = ((float)$billing * (float)$value) / 100;
-                        $total += round($t);
-                        
+                        $t = ($billing * $value) / 100;
+                        $total += round($t);   
                     }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
@@ -111,9 +114,6 @@ class UserwiseReportController extends Controller
                 	}
             	}
             	$userwise[$i]['efforts'] = $efforts_str;
-
-
-            	//$userwise[$i]['remark'] = $value->remarks;
                 $i++;
             }
         }
@@ -140,22 +140,26 @@ class UserwiseReportController extends Controller
             $i = 0;
             $total = 0;
             foreach ($userwise_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged<=0)
-                {
+                //$fixed_salary = $value->fixed_salary;
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
+
+                $percentage_charged = $value->percentage_charged;
+
+                if($percentage_charged <= 0) {
+
                     $billing='0';
                 }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                else {
+
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
                 }
                  
                 $userwise[$i]['candidate_name'] = $value->fname;
                 $userwise[$i]['company_name'] = $value->company_name;
                 $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
                 $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
 
@@ -164,9 +168,8 @@ class UserwiseReportController extends Controller
             	foreach ($efforts as $key => $value) {
                     if($user_name == $key)
                     {
-                        $t = ((float)$billing * (float)$value) / 100;
-                        $total += round($t);
-                        
+                        $t = ($billing * $value) / 100;
+                        $total += round($t);  
                     }
                 	if($efforts_str == ''){
                     	$efforts_str = $key . '(' . (int)$value . '%)';
@@ -176,7 +179,6 @@ class UserwiseReportController extends Controller
                 	}
             	}
             	$userwise[$i]['efforts'] = $efforts_str;
-            	//$userwise[$i]['remarks'] = $value->remarks;
                 $i++;
             }
         }
@@ -193,219 +195,228 @@ class UserwiseReportController extends Controller
             // Get Quater 1-4
             if ($quaterdata == 0) {
 
-            $m1 = date('m-d',strtotime("first day of april"));
-            $m2 = date('m-d',strtotime("last day of june"));
+                $m1 = date('m-d',strtotime("first day of april"));
+                $m2 = date('m-d',strtotime("last day of june"));
 
-            $date_class = new Date();
+                $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
-            $userwise = array();
-            $i = 0;
-            $total = 0;
-            foreach ($userwise_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
+                $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
+                $userwise = array();
+                $i = 0;
+                $total = 0;
 
-                if($percentage_charged<=0)
-                {
-                    $billing='0';
-                }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                }
-                              
-                $userwise[$i]['candidate_name'] = $value->fname;
-                $userwise[$i]['company_name'] = $value->company_name;
-                $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
-                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
-                $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                foreach ($userwise_report as $key => $value) {
 
-                $efforts = Bills::getEmployeeEffortsNameById($value->id);
-            	$efforts_str = '';
-            	foreach ($efforts as $key => $value) {
-                    if($user_name == $key)
-                    {
-                        $t = ((float)$billing * (float)$value) / 100;
-                        $total += round($t);
-                        
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
+
+                    $percentage_charged = $value->percentage_charged;
+
+                    if($percentage_charged <= 0) {
+ 
+                        $billing = '0';
                     }
-                	if($efforts_str == ''){
-                    	$efforts_str = $key . '(' . (int)$value . '%)';
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                    }
+                              
+                    $userwise[$i]['candidate_name'] = $value->fname;
+                    $userwise[$i]['company_name'] = $value->company_name;
+                    $userwise[$i]['position'] = $value->position;
+                    $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
+                    $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
+                    $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+
+                    $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                	$efforts_str = '';
+                	foreach ($efforts as $key => $value) {
+                        if($user_name == $key)
+                        {
+                            $t = ($billing * $value) / 100;
+                            $total += round($t);
+                        }
+                    	if($efforts_str == ''){
+                        	$efforts_str = $key . '(' . (int)$value . '%)';
+                    	}
+                    	else{
+                        	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
+                    	}
                 	}
-                	else{
-                    	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
-                	}
-            	}
-            	$userwise[$i]['efforts'] = $efforts_str;
-            	//$userwise[$i]['remark'] = $value->remarks;
-                $i++;
+                	$userwise[$i]['efforts'] = $efforts_str;
+                    $i++;
+                }
             }
-        	}
 
         	if ($quaterdata == 1) {
 
-            $m1 = date('m-d',strtotime("first day of july"));
-            $m2 = date('m-d',strtotime("last day of september"));
+                $m1 = date('m-d',strtotime("first day of july"));
+                $m2 = date('m-d',strtotime("last day of september"));
 
-            $date_class = new Date();
+                $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
-            $userwise = array();
-            $i = 0;
-            $total = 0;
-            foreach ($userwise_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
+                $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
+                $userwise = array();
+                $i = 0;
+                $total = 0;
 
-                if($percentage_charged<=0)
-                {
-                    $billing='0';
-                }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                }
-              
-                $userwise[$i]['candidate_name'] = $value->fname;
-                $userwise[$i]['company_name'] = $value->company_name;
-                $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
-                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
-                $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                foreach ($userwise_report as $key => $value) {
 
-                $efforts = Bills::getEmployeeEffortsNameById($value->id);
-            	$efforts_str = '';
-            	foreach ($efforts as $key => $value) {
-                    if($user_name == $key)
-                    {
-                        $t = ((float)$billing * (float)$value) / 100;
-                        $total += round($t);
-                        
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
+
+                    $percentage_charged = $value->percentage_charged;
+
+                    if($percentage_charged <=0 ) {
+
+                        $billing='0';
                     }
-                	if($efforts_str == ''){
-                    	$efforts_str = $key . '(' . (int)$value . '%)';
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                    }
+              
+                    $userwise[$i]['candidate_name'] = $value->fname;
+                    $userwise[$i]['company_name'] = $value->company_name;
+                    $userwise[$i]['position'] = $value->position;
+                    $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
+                    $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
+                    $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+
+                    $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                	$efforts_str = '';
+                	foreach ($efforts as $key => $value) {
+                        if($user_name == $key)
+                        {
+                            $t = ($billing * $value) / 100;
+                            $total += round($t);
+                        }
+                    	if($efforts_str == ''){
+                        	$efforts_str = $key . '(' . (int)$value . '%)';
+                    	}
+                    	else{
+                        	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
+                    	}
                 	}
-                	else{
-                    	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
-                	}
-            	}
-            	$userwise[$i]['efforts'] = $efforts_str;
-            	//$userwise[$i]['remark'] = $value->remarks;
-                $i++;
-            }
+                	$userwise[$i]['efforts'] = $efforts_str;
+                    $i++;
+                }
         	}
 
         	if ($quaterdata == 2) {
 
-            $m1 = date('m-d',strtotime("first day of october"));
-            $m2 = date('m-d',strtotime("last day of December"));
+                $m1 = date('m-d',strtotime("first day of october"));
+                $m2 = date('m-d',strtotime("last day of December"));
 
-            $date_class = new Date();
+                $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
-            $userwise = array();
-            $i = 0;
-            $total = 0;
-            foreach ($userwise_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
-                
-                if($percentage_charged<=0)
-                {
-                    $billing='0';
-                }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                }
+                $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
+                $userwise = array();
+                $i = 0;
+                $total = 0;
+                foreach ($userwise_report as $key => $value) {
 
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-              
-                $userwise[$i]['candidate_name'] = $value->fname;
-                $userwise[$i]['company_name'] = $value->company_name;
-                $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
-                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
-                $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
 
-                $efforts = Bills::getEmployeeEffortsNameById($value->id);
-            	$efforts_str = '';
-            	foreach ($efforts as $key => $value) {
-                    if($user_name == $key)
-                    {
-                        $t = ((float)$billing * (float)$value) / 100;
-                        $total += round($t);
-                        
+                    $percentage_charged = $value->percentage_charged;
+                    
+                    if($percentage_charged <=0 ) {
+
+                        $billing='0';
                     }
-                	if($efforts_str == ''){
-                    	$efforts_str = $key . '(' . (int)$value . '%)';
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                    }
+              
+                    $userwise[$i]['candidate_name'] = $value->fname;
+                    $userwise[$i]['company_name'] = $value->company_name;
+                    $userwise[$i]['position'] = $value->position;
+                    $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
+                    $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
+                    $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+
+                    $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                	$efforts_str = '';
+                	foreach ($efforts as $key => $value) {
+                        if($user_name == $key)
+                        {
+                            $t = ($billing * $value) / 100;
+                            $total += round($t);
+                            
+                        }
+                    	if($efforts_str == ''){
+                        	$efforts_str = $key . '(' . (int)$value . '%)';
+                    	}
+                    	else{
+                        	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
+                    	}
                 	}
-                	else{
-                    	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
-                	}
-            	}
-            	$userwise[$i]['efforts'] = $efforts_str;
-            	//$userwise[$i]['remark'] = $value->remarks;
-                $i++;
-            }
+                	$userwise[$i]['efforts'] = $efforts_str;
+                    $i++;
+                }
         	}
 
         	if ($quaterdata == 3) {
 
-            $m1 = date('m-d',strtotime("first day of january"));
-            $m2 = date('m-d',strtotime("last day of march"));
+                $m1 = date('m-d',strtotime("first day of january"));
+                $m2 = date('m-d',strtotime("last day of march"));
 
-            $date_class = new Date();
+                $date_class = new Date();
 
-            $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
-            $userwise = array();
-            $i = 0;
-            $total = 0;
-            foreach ($userwise_report as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
-                $percentage_charged = (float)$value->percentage_charged;
-                
-                if($percentage_charged<=0)
-                {
-                    $billing='0';
-                }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                }
-              
-                $userwise[$i]['candidate_name'] = $value->fname;
-                $userwise[$i]['company_name'] = $value->company_name;
-                $userwise[$i]['position'] = $value->position;
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary));
-                $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
-                $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+                $userwise_report = Bills::getUserwiseReport($userdata,$m1,$m2,'',$year);
+                $userwise = array();
+                $i = 0;
+                $total = 0;
 
-                $efforts = Bills::getEmployeeEffortsNameById($value->id);
-            	$efforts_str = '';
-            	foreach ($efforts as $key => $value) {
-                    if($user_name == $key)
-                    {
-                        $t = ((float)$billing * (float)$value) / 100;
-                        $total += round($t);
-                        
+                foreach ($userwise_report as $key => $value) {
+
+                    //$fixed_salary = $value->fixed_salary;
+                    $salary = str_replace(",", "", $value->fixed_salary);
+                    $fixed_salary = round($salary);
+
+                    $percentage_charged = $value->percentage_charged;
+                    
+                    if($percentage_charged <= 0) {
+
+                        $billing='0';
                     }
-                	if($efforts_str == ''){
-                    	$efforts_str = $key . '(' . (int)$value . '%)';
+                    else {
+
+                        $billing = ($fixed_salary * $percentage_charged) / 100;
+                    }
+              
+                    $userwise[$i]['candidate_name'] = $value->fname;
+                    $userwise[$i]['company_name'] = $value->company_name;
+                    $userwise[$i]['position'] = $value->position;
+                    $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary));
+                    $userwise[$i]['billing'] = Utils::IND_money_format(round($billing));
+                    $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+
+                    $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                	$efforts_str = '';
+                	foreach ($efforts as $key => $value) {
+                        if($user_name == $key)
+                        {
+                            $t = ($billing * $value) / 100;
+                            $total += round($t);
+                        }
+                    	if($efforts_str == ''){
+                        	$efforts_str = $key . '(' . (int)$value . '%)';
+                    	}
+                    	else{
+                        	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
+                    	}
                 	}
-                	else{
-                    	$efforts_str .= ',' . $key . '(' . (int)$value . '%)';
-                	}
-            	}
-            	$userwise[$i]['efforts'] = $efforts_str;
-            	//$userwise[$i]['remark'] = $value->remarks;
-                $i++;
-            }
+                	$userwise[$i]['efforts'] = $efforts_str;
+                    $i++;
+                }
         	}
         }
-            //print_r($userwise);exit;
 
     	return view("adminlte::reports.userwise",compact('users','select','month_array','quater','year_array','default','userwise_report','userwise','user_name','total'));
     }

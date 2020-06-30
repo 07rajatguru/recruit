@@ -794,7 +794,6 @@ class BillsController extends Controller
         $candidate_name = $input['candidate_name'];
         $designation_offered = $input['designation_offered'];
         $job_location = $input['job_location'];
-        //$percentage_charged = $input['percentage_charged'];
         $client_name = $input['client_name'];
         $client_email_id = $input['client_email_id'];
         $address_of_communication = $input['address_of_communication'];
@@ -902,8 +901,8 @@ class BillsController extends Controller
 
             // Save unedited resume
 
-            if (isset($unedited_resume) && $unedited_resume->isValid()) 
-            {
+            if (isset($unedited_resume) && $unedited_resume->isValid()) {
+
                 $file_name = $unedited_resume->getClientOriginalName();
                 $file_size = fileSize($unedited_resume);
 
@@ -934,8 +933,8 @@ class BillsController extends Controller
 
             // Save offer letter
 
-            if (isset($offer_letter) && $offer_letter->isValid()) 
-            {
+            if (isset($offer_letter) && $offer_letter->isValid()) {
+
                 $file_name = $offer_letter->getClientOriginalName();
                 $file_size = fileSize($offer_letter);
 
@@ -967,7 +966,9 @@ class BillsController extends Controller
             // Save other documents
 
             if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
                 foreach ($upload_documents as $k => $v) {
+
                     if (isset($v) && $v->isValid()) {
                         
                         $file_name = $v->getClientOriginalName();
@@ -1179,8 +1180,8 @@ class BillsController extends Controller
         return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','upload_type','isOperationsExecutive'));
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
+        
         $dateClass = new Date();
         $user_id = \Auth::user()->id;
 

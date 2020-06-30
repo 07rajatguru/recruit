@@ -116,7 +116,7 @@
 
                             <div class="form-group {{ $errors->has('fixed_salary') ? 'has-error' : '' }}">
                                 <strong>Fixed Salary: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('fixed_salary', null, array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '11','onfocusout' => 'setDecimal();')) !!}
+                                {!! Form::number('fixed_salary', null, array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '11')) !!}
                                 @if ($errors->has('fixed_salary'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('fixed_salary') }}</strong>
@@ -393,10 +393,7 @@
             });
 
             $('#fixed_salary').keypress(function (e) {
-                if(e.which == 46 || e.which == 190) {
-                    return true;
-                }
-                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                     return false;
                 }
             });
@@ -520,13 +517,6 @@
                 }
             });
         });
-
-        function setDecimal() {
-            
-            var fixed_salary = $("#fixed_salary").val();
-            var decimal_value = parseFloat(fixed_salary).toFixed(2);
-            $("#fixed_salary").val(decimal_value);
-        }
 
         function checkPercentage() {
 

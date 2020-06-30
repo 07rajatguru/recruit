@@ -21,7 +21,6 @@ class Bills extends Model
             'date_of_joining'=>'required',
             'job_location'=>'required',
             'fixed_salary'=>'required',
-           // 'percentage_charged'=>'required',
             'source'=>'required',
             'client_name'=>'required',
             'client_contact_number'=>'required',
@@ -37,7 +36,6 @@ class Bills extends Model
         'date_of_joining.required' => 'Date of Joining is required field',
         'job_location.required' => 'Job Location is required field',
         'fixed_salary.required' => 'Fixed Salary is required field',
-        //'percentage_charged.required' => 'Percentage Charged is required field',
         'source.required' => 'Source is required field',
         'client_name.required' => 'Client Name is required field',
         'client_contact_number.required' => 'Client Contact Number is required field',
@@ -72,7 +70,10 @@ class Bills extends Model
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = /*Utils::IND_money_format(*/$value->fixed_salary/*)*/;
+
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $bills[$i]['fixed_salary'] = Utils::IND_money_format(round($salary));
+
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
@@ -196,7 +197,10 @@ class Bills extends Model
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = /*Utils::IND_money_format(round(*/$value->fixed_salary/*))*/;
+
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $bills[$i]['fixed_salary'] = round($salary);
+
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
@@ -431,7 +435,10 @@ class Bills extends Model
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
             $bills[$i]['job_location'] = $value->job_location;
-            $bills[$i]['fixed_salary'] = /*Utils::IND_money_format(round(*/$value->fixed_salary/*))*/;
+
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $bills[$i]['fixed_salary'] = round($salary);
+
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
             $bills[$i]['source'] = $value->source;
             $bills[$i]['client_name'] = $value->client_name;
@@ -576,12 +583,11 @@ class Bills extends Model
     public static function getShowBill($id){
         
         $bills = Bills::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id')
-                    ->leftjoin('bills_efforts', 'bills_efforts.bill_id', '=', 'bills.id')
-                    ->leftjoin('bills_doc', 'bills_doc.bill_id', '=', 'bills.id')
-                    //->join('users','users.id','=','bills_efforts.employee_name')
-                    ->select('bills.id as id', 'bills.company_name as company_name', 'bills.candidate_contact_number as number', 'bills.designation_offered as offered', 'bills.date_of_joining as date', 'bills.job_location as location', 'bills.fixed_salary as salary', 'bills.percentage_charged as percentage', 'bills.remarks as remarks', 'bills.source as source', 'bills.client_name as client_name', 'bills.client_contact_number as contact_number', 'bills.client_email_id as email_id', 'bills.address_of_communication as address', 'candidate_basicinfo.full_name as candidate_name', 'bills_efforts.employee_percentage as employee_percentage', 'bills_doc.file as file')
-                    ->where('bills.id', $id)
-                    ->first();
+        ->leftjoin('bills_efforts', 'bills_efforts.bill_id', '=', 'bills.id')
+        ->leftjoin('bills_doc', 'bills_doc.bill_id', '=', 'bills.id')
+        ->select('bills.id as id', 'bills.company_name as company_name', 'bills.candidate_contact_number as number', 'bills.designation_offered as offered', 'bills.date_of_joining as date', 'bills.job_location as location', 'bills.fixed_salary as salary', 'bills.percentage_charged as percentage', 'bills.remarks as remarks', 'bills.source as source', 'bills.client_name as client_name', 'bills.client_contact_number as contact_number', 'bills.client_email_id as email_id', 'bills.address_of_communication as address', 'candidate_basicinfo.full_name as candidate_name', 'bills_efforts.employee_percentage as employee_percentage', 'bills_doc.file as file')
+        ->where('bills.id', $id)
+        ->first();
 
 
         $billsdetails = array();
@@ -596,7 +602,10 @@ class Bills extends Model
             $billsdetails['designation_offered'] = $bills->offered;
             $billsdetails['date_of_joining'] = $bills->date;
             $billsdetails['job_location'] = $bills->location;
-            $billsdetails['fixed_salary'] = /*Utils::IND_money_format(round(*/$bills->salary/*))*/;
+
+            $salary = str_replace(",", "", $bills->salary);
+            $billsdetails['fixed_salary'] = round($salary);
+
             $billsdetails['percentage_charged'] = $bills->percentage;
             $billsdetails['description'] = $bills->remarks;
             $billsdetails['source'] = $bills->source;
@@ -605,8 +614,6 @@ class Bills extends Model
             $billsdetails['client_email_id'] = $bills->email_id;
             $billsdetails['address_of_communication'] = $bills->address;
             $billsdetails['fileurl'] = $bills->file;
-            //$billsdetails['employee_name'] = $bills->ename;
-            //$billsdetails['employee_percentage'] = $bills->employee_percentage;
 
             $efforts = Bills::getEmployeeEffortsNameById($id);
 
@@ -619,13 +626,12 @@ class Bills extends Model
                     $i++;
                 }
             }
-            else
-            {
+            else {
+
                 $employee_name = '';
                 $employee_percentage = '';
             }
         }
-          
 
         $billModel = new Bills();
         $upload_type = $billModel->upload_type;
@@ -675,7 +681,6 @@ class Bills extends Model
         $viewVariable['lead_name'] = $lead_name;
         $viewVariable['lead_percentage'] = $lead_percentage;
         $viewVariable['upload_type'] = $upload_type;
-        //print_r($viewVariable);exit;
 
         return $viewVariable;
     }
@@ -698,30 +703,31 @@ class Bills extends Model
         $recovery = array();
         $i = 0;
         foreach ($recovery_res as $key => $value) {
-            $fixed_salary = $value->fixed_salary;
-            $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged==0)
-            {
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $fixed_salary = round($salary);
+
+            $percentage_charged = $value->percentage_charged;
+
+            if($percentage_charged == 0) {
+
                 $billing = '0';
                 $expected_payment = '0';
             }
-            else
-            {
-            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+            else {
 
-            $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $expected_payment = (($billing * 90) / 100) + (($billing * 18) / 100);
             }
 
 
-            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-
-            $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+            $billing = ($fixed_salary * $percentage_charged) / 100;
+            $expected_payment = (($billing * 90) / 100) + (($billing * 18) / 100);
 
             $recovery[$i]['candidate_name'] = $value->fname;
             $recovery[$i]['company_name'] = $value->company_name;
             $recovery[$i]['position'] = $value->designation_offered;
-            $recovery[$i]['salary_offered'] = Utils::IND_money_format(round($value->fixed_salary));
+            $recovery[$i]['salary_offered'] = Utils::IND_money_format(round($fixed_salary));
             $recovery[$i]['billing'] = Utils::IND_money_format(round($billing));
             $recovery[$i]['expected_payment'] = Utils::IND_money_format(round($expected_payment));
             $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
@@ -745,7 +751,8 @@ class Bills extends Model
         return $recovery;
     }
 
-    public static function getSelectionReport($m1,$m2,$month,$year){
+    public static function getSelectionReport($m1,$m2,$month,$year) {
+
         $date_class = new Date();
 
         $cancel = 1;
@@ -814,7 +821,6 @@ class Bills extends Model
             $selection[$i]['location'] = $value->job_location;
             $i++;
         }*/
-
         return $selection_res;
     }
 
@@ -852,8 +858,6 @@ class Bills extends Model
         }
         $userwise_res = $userwise_query->get();
 
-        //print_r($userwise_res);exit;
-
         return $userwise_res;
     }
 
@@ -870,9 +874,7 @@ class Bills extends Model
             $employees[$value->id] = $value->employee_percentage;
             $i++;
         }
-
         return $employees;
-
     }
 
     public static function getEmployeeEffortsNameById($id){
@@ -888,9 +890,7 @@ class Bills extends Model
             $employees[$value->name] = $value->employee_percentage;
             $i++;
         }
-
         return $employees;
-
     }
 
     public static function getRecoveryReportdata(){
@@ -911,19 +911,21 @@ class Bills extends Model
         $recovery = array();
         $i = 0;
         foreach ($recovery_res as $key => $value) {
-            $fixed_salary = $value->fixed_salary;
+
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $fixed_salary = round($salary);
+
             $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged==0)
-            {
+            if($percentage_charged==0) {
+
                 $billing = '0';
                 $expected_payment = '0';
             }
-            else
-            {
-            $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+            else {
 
-            $expected_payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $expected_payment = (($billing * 90) / 100) + (($billing * 18) / 100);
             }
 
             $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -941,7 +943,7 @@ class Bills extends Model
             $recovery[$i]['candidate_name'] = $value->fname,
             $recovery[$i]['company_name'] = $value->company_name,
             $recovery[$i]['position'] = $value->designation_offered,
-            $recovery[$i]['salary_offered'] = Utils::IND_money_format(round($value->fixed_salary)),
+            $recovery[$i]['salary_offered'] = Utils::IND_money_format(round($fixed_salary)),
             $recovery[$i]['billing'] = Utils::IND_money_format(round($billing)),
             $recovery[$i]['expected_payment'] = Utils::IND_money_format(round($expected_payment)),
             $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
@@ -999,29 +1001,31 @@ class Bills extends Model
         if(sizeof($selection_res)>0){
         foreach ($selection_res as $key => $value) {
 
-            $fixed_salary = $value->fixed_salary;
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $fixed_salary = round($salary);
+
             $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged==0)
-            {
+            if($percentage_charged == 0) {
+
                 $billing = '0';
                 $gst = '0';
                 $invoice = '0';
                 $payment = '0';
             }
-            else
-            {
-                $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
-                $gst = ((float)$billing * 18 ) / 100;
-                $invoice = (float)$billing+(float)$gst;
-                $payment = (((float)$billing * 90) / 100) + (((float)$billing * 18) / 100);
+            else {
+
+                $billing = ($fixed_salary * $percentage_charged) / 100;
+                $gst = ($billing * 18 ) / 100;
+                $invoice = $billing+$gst;
+                $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
             }
 
             $data[] = array(
             $selection[$i]['candidate_name'] = $value->fname,
             $selection[$i]['company_name'] = $value->company_name,
             $selection[$i]['position'] = $value->position,
-            $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary)),
+            $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary)),
             $selection[$i]['billing'] = Utils::IND_money_format(round($billing)),
             $selection[$i]['gst'] = Utils::IND_money_format(round($gst)),
             $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice)),
@@ -1074,16 +1078,19 @@ class Bills extends Model
         $userwise = array();
             $i = 0;
             foreach ($userwise_res as $key => $value) {
-                $fixed_salary = $value->fixed_salary;
+
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
+
                 $percentage_charged = (float)$value->percentage_charged;
 
-                if($percentage_charged<=0)
-                {
+                if($percentage_charged<=0) {
+
                     $billing='0';
                 }
-                else
-                {
-                    $billing = ((float)$fixed_salary * (float)$percentage_charged) / 100;
+                else {
+
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
                 }
                 
                 $efforts = Bills::getEmployeeEffortsNameById($value->id);
@@ -1100,7 +1107,7 @@ class Bills extends Model
                 $userwise[$i]['candidate_name'] = $value->fname,
                 $userwise[$i]['company_name'] = $value->company_name,
                 $userwise[$i]['position'] = $value->position,
-                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($value->fixed_salary)),
+                $userwise[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary)),
                 $userwise[$i]['billing'] = Utils::IND_money_format(round($billing)),
                 $userwise[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
                 $userwise[$i]['efforts'] = $efforts_str,
@@ -1125,16 +1132,18 @@ class Bills extends Model
         $join_mail_res = $join_mail->first();
 
         $join_confirmation_mail = array();
+
         if (isset($join_mail_res) && $join_mail_res != '') {
+
             $salary = str_replace(",", "", $join_mail_res->fixed_salary);
             $pc = $join_mail_res->percentage_charged;
 
-            $fees = ($salary * $pc)/100;
-            $gst = ($fees * 18)/100;
-            $billing_amount = $fees + $gst;
+            $fees = round(($salary * $pc)/100);
+            $gst = round(($fees * 18)/100);
+            $billing_amount = round($fees + $gst);
 
-            $sgst = ($fees * 9)/100;
-            $cgst = ($fees * 9)/100;
+            $sgst = round(($fees * 9)/100);
+            $cgst = round(($fees * 9)/100);
 
             $join_confirmation_mail['client_name'] = $join_mail_res->coordinator_prefix. " " .$join_mail_res->client_name;
             $join_confirmation_mail['company_name'] = $join_mail_res->company_name;
@@ -1142,7 +1151,7 @@ class Bills extends Model
             $join_confirmation_mail['designation_offered'] = $join_mail_res->designation_offered;
             $join_confirmation_mail['joining_date'] = $join_mail_res->date_of_joining;
             $join_confirmation_mail['job_location'] = $join_mail_res->job_location;
-            $join_confirmation_mail['fixed_salary'] = $join_mail_res->fixed_salary;
+            $join_confirmation_mail['fixed_salary'] = Utils::IND_money_format(round($salary));
             $join_confirmation_mail['percentage_charged'] = $join_mail_res->percentage_charged;
             $join_confirmation_mail['fees'] = Utils::IND_money_format(round($fees));
             $join_confirmation_mail['gst'] = Utils::IND_money_format(round($gst));
@@ -1295,21 +1304,21 @@ class Bills extends Model
             $total_salary_offered = 0;
             $total_billing = 0;
             foreach ($personwise_res as $key => $value) {
+
                 //$salary = $value->fixed_salary;
                 $salary = str_replace(",", "", $value->fixed_salary);
                 $pc = $value->percentage_charged;
 
-                $fees = ($salary * $pc)/100;
-                $gst = ($fees * 18)/100;
-                $billing_amount = $fees + $gst;
-                $payment = (($fees * 90)/100)+ (($fees * 18)/100);
+                $fees = round(($salary * $pc)/100);
+                $gst = round(($fees * 18)/100);
+                $billing_amount = round($fees + $gst);
+                $payment = round((($fees * 90)/100)+ (($fees * 18)/100));
 
                 $person_data[$j]['candidate_name'] = $value->candidate_name;
                 $person_data[$j]['company_name'] = $value->company_name;
                 $person_data[$j]['position'] = $value->designation_offered;
-                //$person_data[$j]['salary_offered'] = round($value->fixed_salary);
-                $person_data[$j]['salary_offered'] = round($salary);
-                $person_data[$j]['billing'] = $fees;
+                $person_data[$j]['salary_offered'] = Utils::IND_money_format(round($salary));
+                $person_data[$j]['billing'] = Utils::IND_money_format(round($fees));
                 $person_data[$j]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
 
                 // get employee efforts
@@ -1332,7 +1341,7 @@ class Bills extends Model
                     }
                 }
                 if (isset($person_billing) && $person_billing != '') {
-                    $person_data[$j]['person_billing'] = round($person_billing);
+                    $person_data[$j]['person_billing'] = Utils::IND_money_format(round($person_billing));
                 }
                 else {
                     $person_data[$j]['person_billing'] = 0;   
@@ -1340,15 +1349,15 @@ class Bills extends Model
                 $person_data[$j]['efforts'] = $efforts_str;
                 $person_data[$j]['client_name'] = $value->coordinator_prefix. " " .$value->client_name;
                 $person_data[$j]['location'] = $value->job_location;
-                $person_data[$j]['gst'] = $gst;
-                $person_data[$j]['invoice_raised'] = $billing_amount;
-                $person_data[$j]['payment'] = $payment;
+                $person_data[$j]['gst'] = Utils::IND_money_format(round($gst));
+                $person_data[$j]['invoice_raised'] = Utils::IND_money_format(round($billing_amount));
+                $person_data[$j]['payment'] = Utils::IND_money_format(round($payment));
 
-                $total_salary_offered = $total_salary_offered + $value->fixed_salary;
+                $total_salary_offered = $total_salary_offered + $salary;
                 $total_billing = $total_billing + $person_billing;
 
-                $person_data[$j]['total_salary_offered'] = round($total_salary_offered);
-                $person_data[$j]['total_billing'] = round($total_billing);
+                $person_data[$j]['total_salary_offered'] = Utils::IND_money_format(round($total_salary_offered));
+                $person_data[$j]['total_billing'] = Utils::IND_money_format(round($total_billing));
                 $j++;
             }
         }
@@ -1374,19 +1383,20 @@ class Bills extends Model
         $client_data = array();
         $i = 0;
         foreach ($clientwise_res as $key => $value) {
-            $salary = $value->fixed_salary;
+
+            $salary = str_replace(",", "", $value->fixed_salary);
             $pc = $value->percentage_charged;
-            $fees = ($salary * $pc)/100;
-            $gst = ($fees * 18)/100;
-            $billing_amount = $fees + $gst;
+            $fees = round(($salary * $pc)/100);
+            $gst = round(($fees * 18)/100);
+            $billing_amount = round($fees + $gst);
 
             $client_data[$i]['candidate_name'] = $value->candidate_name;
             $client_data[$i]['owner_name'] = $value->owner_name;
             $client_data[$i]['position'] = $value->designation_offered;
-            $client_data[$i]['salary_offered'] = $value->fixed_salary;
-            $client_data[$i]['billing'] = $fees;
-            $client_data[$i]['gst'] = $gst;
-            $client_data[$i]['invoice'] = $billing_amount;
+            $client_data[$i]['salary_offered'] = Utils::IND_money_format(round($salary));
+            $client_data[$i]['billing'] = Utils::IND_money_format(round($fees));
+            $client_data[$i]['gst'] = Utils::IND_money_format(round($gst));
+            $client_data[$i]['invoice'] = Utils::IND_money_format(round($billing_amount));
             $client_data[$i]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
 
             // get employee efforts
