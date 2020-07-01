@@ -1622,8 +1622,8 @@ class BillsController extends Controller
             $sender_name = $user_id;
 
             $cc_users_array = array_filter($cc_users_array);
-            $to = implode(",",$cc_users_array);
-            $cc = $superadminemail;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
             
             $subject = "Relive Recovery - ". $c_name;
             $message = "Relive Recovery - ". $c_name;
@@ -1658,8 +1658,8 @@ class BillsController extends Controller
             $sender_name = $user_id;
 
             $cc_users_array = array_filter($cc_users_array);
-            $to = implode(",",$cc_users_array);
-            $cc = $superadminemail;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
             
             $subject = "Relive Forecasting - ". $c_name;
             $message = "Relive Forecasting - ". $c_name;
@@ -1889,7 +1889,7 @@ class BillsController extends Controller
     // Joining Confirmation Mail to SA & Acc
     public function getSendConfirmationMail($id){
         
-        $user_id = \Auth::user()->id;
+/*        $user_id = \Auth::user()->id;
         //Logged in User Email Id
         $user_email = User::getUserEmailById($user_id);
 
@@ -1926,6 +1926,43 @@ class BillsController extends Controller
         $module = "Joining Confirmation";
         $sender_name = $user_id;
         $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        $subject = "Joining Confirmation of - ". $candidate_name;
+        $message = "Joining Confirmation of - ". $candidate_name;
+        $module_id = $id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        \DB::statement("UPDATE bills SET joining_confirmation_mail = '1' where id=$id");
+
+        // Get Selected Year
+        $year = $_POST['year'];
+
+        return redirect('/recovery')
+        ->with('success','Joining Confirmation Mail Send Successfully.')
+        ->with('selected_year',$year);*/
+
+        $user_id = \Auth::user()->id;
+
+        $account_userid = getenv('ACCOUNTANTUSERID');
+        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+
+        $accountantemail = User::getUserEmailById($account_userid);
+        $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+        $superadminemail = User::getUserEmailById($superadmin_userid);
+        
+        $cc_users_array = array($operationsexecutivemail,$superadminemail);
+
+        $join_mail = Bills::getJoinConfirmationMail($id);
+        $candidate_name = $join_mail['candidate_name'];
+        $candidate_id = $join_mail['candidate_id'];
+
+        $cc_users_array = array_filter($cc_users_array);
+
+        $module = "Joining Confirmation";
+        $sender_name = $user_id;
+        $to = $accountantemail;
         $cc = implode(",",$cc_users_array);
         $subject = "Joining Confirmation of - ". $candidate_name;
         $message = "Joining Confirmation of - ". $candidate_name;
@@ -2022,7 +2059,7 @@ class BillsController extends Controller
         $pdf->setPaper('A4', 'portrait');
         $pdf->save(public_path('uploads/bills/'.$id.'/'.$id.'_Invoice.pdf'));*/
 
-        $user_id = \Auth::user()->id;
+        /*$user_id = \Auth::user()->id;
         //Logged in User Email Id
         $user_email = User::getUserEmailById($user_id);
 
@@ -2057,6 +2094,38 @@ class BillsController extends Controller
         $module = "Invoice Generate";
         $sender_name = $user_id;
         $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        $subject = "Generated Invoice of - ". $candidate_name;
+        $message = "Generated Invoice of - ". $candidate_name;
+        $module_id = $id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        \DB::statement("UPDATE bills SET joining_confirmation_mail = '3' where id=$id");
+
+        return redirect('/recovery')
+        ->with('success','Invoice Generated and Mailed Successfully.')
+        ->with('selected_year',$year);*/
+
+        $user_id = \Auth::user()->id;
+
+        $account_userid = getenv('ACCOUNTANTUSERID');
+        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+        
+        $accountantemail = User::getUserEmailById($account_userid);
+        $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+        $superadminemail = User::getUserEmailById($superadmin_userid);
+        
+        $cc_users_array = array($operationsexecutivemail,$superadminemail);
+        
+        $join_mail = Bills::getJoinConfirmationMail($id);
+        $candidate_name = $join_mail['candidate_name'];
+        $cc_users_array = array_filter($cc_users_array);
+
+        $module = "Invoice Generate";
+        $sender_name = $user_id;
+        $to = $accountantemail;
         $cc = implode(",",$cc_users_array);
         $subject = "Generated Invoice of - ". $candidate_name;
         $message = "Generated Invoice of - ". $candidate_name;
