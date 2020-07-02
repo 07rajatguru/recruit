@@ -86,8 +86,8 @@ class DailyReport extends Command
                     $cc_array[] = 'rajlalwani@adlertalent.com';
                     //$cc_array[] = 'saloni@trajinfotech.com';
 
-                    $bcc_array = array();
-                    $bcc_array[] = 'saloni@trajinfotech.com';
+                    //$bcc_array = array();
+                    //$bcc_array[] = 'saloni@trajinfotech.com';
 
                     /*$input = array();
                     $input['from_name'] = $from_name;
@@ -133,10 +133,10 @@ class DailyReport extends Command
                     $sender_name = $key;
 
                     // Add bcc user
-                    $bcc_array = array_filter($bcc_array);
-                    $bcc = implode(",",$bcc_array);
+                    //$bcc_array = array_filter($bcc_array);
+                    //$bcc = implode(",",$bcc_array);
 
-                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc,$bcc));
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                 }
             }
         }
