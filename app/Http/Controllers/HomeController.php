@@ -86,13 +86,39 @@ class HomeController extends Controller
             $toDos = ToDos::getAllTodosdash($todo_ids,7);
         }
 
+        // Set Current Year Job Count
+
+        $get_month =  date('m');
+
+        if($get_month == '01' || $get_month == '02' || $get_month == '03') {
+            $get_next_year =  date('Y');
+            $get_current_year = $get_next_year - 1;
+        }
+        else {
+            $get_current_year =  date('Y');
+            $get_next_year = $get_current_year + 1;
+        }
+
+        $year = $get_current_year."-4, ".$get_next_year."-3";
+
+        if (isset($year) && $year != 0) {
+            $year_data = explode(", ", $year);
+            $year1 = $year_data[0];
+            $year2 = $year_data[1];
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        }
+        else {
+            $current_year = NULL;
+            $next_year = NULL;    
+        }
         //get Job List
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user->id);
+            $job_response = JobOpen::getAllJobs(1,$user->id,0,0,'','','',$current_year,$next_year,'');
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user->id);
+            $job_response = JobOpen::getAllJobs(0,$user->id,0,0,'','','',$current_year,$next_year,'');
         }
 
         $job = sizeof($job_response);
