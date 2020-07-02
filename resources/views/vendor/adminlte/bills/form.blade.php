@@ -63,7 +63,7 @@
                         <div class="">
 
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
-                                <strong>Select Job Opening: <span class = "required_fields">*</span></strong>
+                                <strong>Select Job Opening : <span class = "required_fields">*</span></strong>
                                 {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '1','onchange'=>'prefilleddata()' )) !!}
                                 @if ($errors->has('job'))
                                     <span class="help-block">
@@ -73,7 +73,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('client_name') ? 'has-error' : '' }}">
-                                <strong>Client Name: <span class = "required_fields">*</span> </strong>
+                                <strong>Client Name : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('client_name', null, array('id'=>'client_name','placeholder' => 'Client Name','tabindex' => '3','class' => 'form-control' )) !!}
                                 @if ($errors->has('client_name'))
                                     <span class="help-block">
@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('client_contact_number') ? 'has-error' : '' }}">
-                                <strong>Client Contact Number: <span class = "required_fields">*</span> </strong>
+                                <strong>Client Contact Number : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('client_contact_number', null, array('id'=>'client_contact_number','placeholder' => 'Client Contact Number','class' => 'form-control', 'tabindex' => '5')) !!}
                                 @if ($errors->has('client_contact_number'))
                                     <span class="help-block">
@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('candidate_name') ? 'has-error' : '' }}">
-                                <strong>Candidate Name: <span class = "required_fields">*</span> </strong>
+                                <strong>Candidate Name : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('candidate_name', array(''=>'Select Candidate'),null, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '7', 'onchange'=> 'prefilledcandidatedata()' )) !!}
                                 @if ($errors->has('candidate_name'))
                                     <span class="help-block">
@@ -105,7 +105,7 @@
                             <input type="hidden" id="candidate_id" name="candidate_id" value="{{$candidate_id}}">
 
                             <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
-                                <strong>Joining Date: <span class = "required_fields">*</span> </strong>
+                                <strong>Joining Date : <span class = "required_fields">*</span> </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -115,7 +115,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('fixed_salary') ? 'has-error' : '' }}">
-                                <strong>Fixed Salary: <span class = "required_fields">*</span> </strong>
+                                <strong>Fixed Salary : <span class = "required_fields">*</span> </strong>
                                 {!! Form::number('fixed_salary', null, array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '11')) !!}
                                 @if ($errors->has('fixed_salary'))
                                     <span class="help-block">
@@ -125,7 +125,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
-                                <strong>Candidate Source:</strong>
+                                <strong>Candidate Source :</strong>
                                 {!! Form::select('source', $candidateSource,null, array('id'=>'source','class' => 'form-control', 'tabindex' => '13')) !!}
                                 @if ($errors->has('source'))
                                     <span class="help-block">
@@ -133,14 +133,13 @@
                                 </span>
                                 @endif
                             </div>
-
                         </div>
                     </div>
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
 
                         <div class="form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
-                            <strong>Company Name: <span class = "required_fields">*</span> </strong>
+                            <strong>Company Name : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('company_name', null, array('id'=>'company_name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '2')) !!}
                             @if ($errors->has('company_name'))
                                 <span class="help-block">
@@ -150,7 +149,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('client_email_id') ? 'has-error' : '' }}">
-                            <strong>Client Email ID: <span class = "required_fields">*</span> </strong>
+                            <strong>Client Email ID : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('client_email_id', null, array('id'=>'client_email_id','placeholder' => 'Client Email ID','class' => 'form-control', 'tabindex' => '4' )) !!}
                             @if ($errors->has('client_email_id'))
                                 <span class="help-block">
@@ -160,7 +159,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('designation_offered') ? 'has-error' : '' }}">
-                            <strong>Designation offered: <span class = "required_fields">*</span> </strong>
+                            <strong>Designation offered : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('designation_offered', null, array('id'=>'designation_offered','placeholder' => 'Designation offered','class' => 'form-control', 'tabindex' => '6' )) !!}
                             @if ($errors->has('designation_offered'))
                                 <span class="help-block">
@@ -170,7 +169,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('candidate_contact_number') ? 'has-error' : '' }}">
-                            <strong>Candidate Contact Number: <span class = "required_fields">*</span> </strong>
+                            <strong>Candidate Contact Number : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('candidate_contact_number', null, array('id'=>'candidate_contact_number','placeholder' => 'Candidate Mobile','class' => 'form-control', 'tabindex' => '8' )) !!}
                             @if ($errors->has('candidate_contact_number'))
                                 <span class="help-block">
@@ -180,7 +179,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('job_location') ? 'has-error' : '' }}">
-                            <strong>Job Location: <span class = "required_fields">*</span> </strong>
+                            <strong>Job Location : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('job_location', null, array('id'=>'job_location','placeholder' => 'Job Location','class' => 'form-control', 'tabindex' => '10' )) !!}
                             @if ($errors->has('job_location'))
                                 <span class="help-block">
@@ -190,7 +189,7 @@
                         </div>
                         @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                         <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
-                            <strong>Percentage Charged:</strong>
+                            <strong>Percentage Charged :</strong>
                             {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
                             @if ($errors->has('percentage_charged'))
                                 <span class="help-block">
@@ -201,7 +200,7 @@
                         @endif
 
                         <div class="form-group {{ $errors->has('address_of_communication') ? 'has-error' : '' }}">
-                            <strong>Address of Communication: <span class = "required_fields">*</span> </strong>
+                            <strong>Address of Communication : <span class = "required_fields">*</span> </strong>
                             {!! Form::textarea('address_of_communication', null, array('rows'=>'3','id'=>'address_of_communication','placeholder' => 'Address of Communication','class' => 'form-control', 'tabindex' => '14' )) !!}
                             @if ($errors->has('address_of_communication'))
                                 <span class="help-block">
@@ -237,7 +236,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
                             <div class="form-group">
-                                <strong>Employee Percentage: </strong>
+                                <strong>Employee Percentage : </strong>
                                 {!! Form::number('employee_percentage_1', $employee_percentage[0], array('id'=>'employee_percentage_1','placeholder' => 'Employee 1 Percentage','class' => 'form-control employee_perce' , 'tabindex' => '16','onfocusout' => 'checkPercentage();')) !!}
                                 {!! Form::number('employee_percentage_2', $employee_percentage[1], array('id'=>'employee_percentage_2','placeholder' => 'Employee 2 Percentage','class' => 'form-control employee_perce', 'tabindex' => '18','onfocusout' => 'checkPercentage();' )) !!}
                                 {!! Form::number('employee_percentage_3', $employee_percentage[2], array('id'=>'employee_percentage_3','placeholder' => 'Employee 3 Percentage','class' => 'form-control employee_perce', 'tabindex' => '20','onfocusout' => 'checkPercentage();')) !!}
@@ -261,7 +260,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             <div class="">
                                 <div class="form-group">
-                                    <strong>Employee Name :  </strong>
+                                    <strong>Employee Name : </strong>
                                     {!! Form::select('lead_name', $users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25' )) !!}
                                 </div>
                             </div>
@@ -270,7 +269,7 @@
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">
                             <div class="">
                                 <div class="form-group">
-                                    <strong>Employee Percentage:  </strong>
+                                    <strong>Employee Percentage : </strong>
                                     {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26','onfocusout' => 'checkLeadPercentage();')) !!}
                                 </div>
                             </div>
@@ -289,17 +288,17 @@
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
-                            <strong>Candidate Unedited Resume : <span class = "required_fields">*</span></strong>
+                            <strong>Candidate Unedited Resume : <span class = "required_fields">*</span> [Allow only .doc, .docx, .pdf extension files.]</strong>
                             <input type="file" name="unedited_resume" id="unedited_resume" class="form-control" tabindex="27">
                         </div>
 
                         <div class="form-group">
-                            <strong>Offer Letter : </strong>
+                            <strong>Offer Letter : [Allow only .doc, .docx, .pdf extension files.]</strong>
                             <input type="file" name="offer_letter" id="offer_letter" class="form-control" tabindex="28">
                         </div>
 
                         <div class="form-group">
-                            <strong>Other Documents:</strong>
+                            <strong>Other Documents :</strong>
                             <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" tabindex="29" multiple>
                         </div>
                     </div>

@@ -62,11 +62,11 @@
                     <div class="">
                         <div class="col-md-4" style="margin-left: -15px;">
                             <div class="form-group {{ $errors->has('level_id') ? 'has-error' : '' }}">
-                                <strong>Posting Title: <span class = "required_fields">*</span> </strong>
+                                <strong>Posting Title : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('level_id', $client_hierarchy_name, null, array('id'=>'level_id','class' => 'form-control', 'tabindex' => '1')) !!}
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('level_id') }}</strong>
+                                        <strong>{{ $errors->first('level_id') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -76,7 +76,7 @@
                                 {!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1','style' => 'width:402px','onchange' => 'validPostingTitleText();')) !!}
                                 @if ($errors->has('posting_title'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('posting_title') }}</strong>
+                                        <strong>{{ $errors->first('posting_title') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -92,17 +92,17 @@
                         </div>
  -->
                         <div class="form-group {{ $errors->has('hiring_manager_id') ? 'has-error' : '' }}">
-                            <strong>Select Hiring Manager:</strong>
+                            <strong>Select Hiring Manager :</strong>
                                 {!! Form::select('hiring_manager_id', $users,$user_id, array('id'=>'hiring_manager_id','class' => 'form-control', 'tabindex' => '3')) !!}
                               @if ($errors->has('hiring_manager_id'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('hiring_manager_id') }}</strong>
+                                    <strong>{{ $errors->first('hiring_manager_id') }}</strong>
                                 </span>
                             @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('date_opened') ? 'has-error' : '' }}">
-                            <strong>Date Opened: <span class = "required_fields">*</span> </strong>
+                            <strong>Date Opened : <span class = "required_fields">*</span> </strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar open_class"></i>
@@ -112,7 +112,7 @@
                             @if ($errors->has('date_opened'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('date_opened') }}</strong>
-                                    </span>
+                                </span>
                             @endif
                         </div>
 
@@ -127,35 +127,34 @@
                         </div>--}}
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
-                            <strong>Industry Type:  <span class = "required_fields">*</span>  </strong>
+                            <strong>Industry Type :  <span class = "required_fields">*</span>  </strong>
                             {!! Form::select('industry_id', $industry,null, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '7')) !!}
                             @if ($errors->has('industry_id'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('industry_id') }}</strong>
+                                    <strong>{{ $errors->first('industry_id') }}</strong>
                                 </span>
                             @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('job_priority') ? 'has-error' : '' }}">
-                            <strong>Select Job Priority :</strong>
+                            <strong>Select Job Priority : </strong>
                             {!! Form::select('job_priority', $job_priorities,(isset($job_open->priority) ? $job_open->priority : null), array('id'=>'job_priority','class' => 'form-control', 'tabindex' => '8')) !!}
                             @if ($errors->has('job_priority'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('job_priority') }}</strong>
+                                    <strong>{{ $errors->first('job_priority') }}</strong>
                                 </span>
                             @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('job_type') ? 'has-error' : '' }}">
-                            <strong>Select Job Type :</strong>
+                            <strong>Select Job Type : </strong>
                             {!! Form::select('job_type', $job_type,null, array('id'=>'job_type','class' => 'form-control', 'tabindex' => '9')) !!}
                             @if ($errors->has('job_type'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('job_type') }}</strong>
+                                    <strong>{{ $errors->first('job_type') }}</strong>
                                 </span>
                             @endif
                         </div>
-
                     </div>
                 </div>
 
@@ -163,31 +162,31 @@
                     <div class="">
 
                         <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
-                            <strong>Select Client: <span class = "required_fields">*</span></strong>
+                            <strong>Select Client : <span class = "required_fields">*</span></strong>
                             {!! Form::select('client_id', $client,null, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '2')) !!}
                             @if ($errors->has('client_id'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('client_id') }}</strong>
+                                    <strong>{{ $errors->first('client_id') }}</strong>
                                 </span>
                             @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('no_of_positions') ? 'has-error' : '' }}">
-                            <strong>Number of Positions:</strong>
+                            <strong>Number of Positions :</strong>
                             @if($action == 'edit')
-                                {!! Form::text('no_of_positions',null, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control' , 'tabindex' => '4')) !!}
+                                {!! Form::text('no_of_positions',null, array('id'=>'no_of_positions','placeholder' => 'Number of Positions','class' => 'form-control' , 'tabindex' => '4')) !!}
                             @else
-                                {!! Form::text('no_of_positions', $no_of_positions, array('id'=>'no_of_positions','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '4')) !!}
+                                {!! Form::text('no_of_positions', $no_of_positions, array('id'=>'no_of_positions','placeholder' => 'Number of Positions','class' => 'form-control', 'tabindex' => '4')) !!}
                             @endif
                             @if ($errors->has('no_of_positions'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('no_of_positions') }}</strong>
+                                    <strong>{{ $errors->first('no_of_positions') }}</strong>
                                 </span>
                             @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('target_date') ? 'has-error' : '' }}">
-                            <strong>Target Date:</strong>
+                            <strong>Target Date :</strong>
                             <div class="input-group date">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar target_class"></i>
@@ -210,35 +209,33 @@
                         </div>--}}
 
                         <div class="form-group {{ $errors->has('qualifications') ? 'has-error' : '' }}">
-                            <strong>Education Qualifications:</strong>
-                            {!! Form::textarea('qualifications', null, array('id'=>'qualifications','placeholder' => 'Education Qualifications','class' => 'form-control','tabindex' => '10')) !!}
+                            <strong>Education Qualifications :</strong>
+                            {!! Form::textarea('qualifications', null, array('id'=>'qualifications','placeholder' => 'Education Qualifications','class' => 'form-control','tabindex' => '10','rows' => '8')) !!}
                             @if ($errors->has('qualifications'))
                                 <span class="help-block">
-                                <strong>{{ $errors->first('qualifications') }}</strong>
+                                    <strong>{{ $errors->first('qualifications') }}</strong>
                                 </span>
                             @endif
                         </div>
-
                     </div>
                 </div>
-
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-12 col-sm-12 col-md-12">
 
                     <div class="form-group {{ $errors->has('qualifications') ? 'has-error' : '' }}">
-                        <strong>Desired Candidates:</strong>
+                        <strong>Desired Candidates :</strong>
                         {!! Form::textarea('desired_candidate', null, array('id'=>'desired_candidate','rows'=>'3','placeholder' => 'Desired Candidate','class' => 'form-control', 'tabindex' => '11')) !!}
                         @if ($errors->has('desired_candidate'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('desired_candidate') }}</strong>
-                                </span>
+                            </span>
                         @endif
                     </div>
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
-                        <strong>Select Users who can access the job: <span class = "required_fields">*</span></strong>
+                        <strong>Select Users who can access the job : <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
                         @foreach($select_all_users as $k=>$v)&nbsp;&nbsp; 
                         {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
@@ -254,7 +251,7 @@
 
                     <div class="">
                         <div class="form-group {{ $errors->has('job_description') ? 'has-error' : '' }}">
-                            <strong>Job Description:</strong>
+                            <strong>Job Description :</strong>
                             {!! Form::textarea('job_description', null, array('id'=>'job_description','placeholder' => 'Job description','class' => 'form-control', 'tabindex' => '12')) !!}
                             @if ($errors->has('no_of_positions'))
                                 <span class="help-block">
@@ -265,7 +262,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -306,12 +302,11 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
                         <div class="form-group {{ $errors->has('work_experience_to') ? 'has-error' : '' }}">
-                            
                             {!! Form::select('work_experience_to', $work_to, $work_exp_to, array('id'=>'work_experience_to','class' => 'form-control','tabindex' => '14')) !!}
                             @if ($errors->has('work_experience_to'))
                                 <span class="help-block">
-                                        <strong>{{ $errors->first('work_experience_to') }}</strong>
-                                        </span>
+                                    <strong>{{ $errors->first('work_experience_to') }}</strong>
+                                </span>
                             @endif
                         </div>
                     </div>
@@ -346,13 +341,11 @@
                     </div>
                 </div>--}}
             </div>
-
             
-
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                        <strong>Salary From :<span class = "required_fields"> *</span></strong>
+                        <strong>Salary From : <span class = "required_fields"> *</span></strong>
                         <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
                             <div class="box-body col-xs-6 col-sm-6 col-md-6">
                                 <div class="">
@@ -376,7 +369,7 @@
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                        <strong>Salary To :<span class = "required_fields"> *</span></strong>
+                        <strong>Salary To : <span class = "required_fields"> *</span></strong>
                         <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
                             <div class="box-body col-xs-6 col-sm-6 col-md-6">
                                 <div class="">
@@ -412,7 +405,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="">
                     <div class="form-group">
-                        <strong>Enter your location:</strong>
+                        <strong>Enter your location : </strong>
                         {!! Form::text('job_location', null, array('id'=>'job_location','placeholder' => 'Enter your location','class' => 'form-control' , 'onFocus'=>"geolocate()", 'tabindex' => '19')) !!}
                     </div>
                 </div>
@@ -422,7 +415,7 @@
                 <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
                         <div class="form-group">
-                            <strong>City:</strong>
+                            <strong>City : </strong>
                             {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '20')) !!}
                         </div>
                     </div>
@@ -430,7 +423,7 @@
                 <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
                         <div class="form-group">
-                            <strong>Country:</strong>
+                            <strong>Country : </strong>
                             {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '21')) !!}
                         </div>
                     </div>
@@ -439,7 +432,7 @@
                 <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
                         <div class="form-group">
-                            <strong>State:</strong>
+                            <strong>State : </strong>
                             {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '22')) !!}
                         </div>
                     </div>
@@ -457,21 +450,21 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Candidate Tracker: <span class = "required_fields"> *</span></strong>
+                        <strong>Candidate Tracker : <span class = "required_fields"> *</span> [Allow only .doc, .docx, .pdf extension files.]</strong>
                         <input type="file" name="candidate_tracker"  id="candidate_tracker" class="form-control">
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Job Description:</strong>
+                        <strong>Job Description : [Allow only .doc, .docx, .pdf, .txt extension files.]</strong>
                         <input type="file" name="job_summary"  id="job_summary" class="form-control">
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Others:</strong>
+                        <strong>Others : </strong>
                         <input type="file" name="others_doc[]"  id="others_doc" class="form-control" multiple>
                     </div>
                 </div>
@@ -511,7 +504,6 @@
                             @endif
                         </table>
                     </div>
-
                 </div>
             </div>
         @elseif($action == 'clone')
@@ -546,7 +538,6 @@
                             @endif
                         </table>
                     </div>
-
                 </div>
             </div>
         @endif
@@ -683,9 +674,9 @@
 
                 var ext = $('#candidate_tracker').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','docx','pdf','txt']) == -1)
+                if($.inArray(ext, ['doc','docx','pdf']) == -1)
                 {
-                    alert('Please Select Document for Candidate Tracker.');
+                    alert('Please Select Document File.');
                     this.value = null;
                 }
             });
@@ -696,7 +687,7 @@
 
                 if($.inArray(ext, ['doc','docx','pdf','txt']) == -1)
                 {
-                    alert('Please Select Document for Job Description.');
+                    alert('Please Select Document File.');
                     this.value = null;
                 }
             });

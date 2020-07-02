@@ -386,22 +386,22 @@
     @if( $action == 'add')
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Attachments</h3>
+                <h3 class="box-title">Attachment Information</h3>
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Resume : </strong>
+                    <strong>Resume : [Allow only .doc, .docx, .pdf extension files.]</strong>
                     <input type="file" name="resume" id="resume" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <strong>Formatted Resume : </strong>
+                    <strong>Formatted Resume : [Allow only .doc, .docx, .pdf extension files.]</strong>
                     <input type="file" name="formatted_resume" id="formatted_resume" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <strong>Cover Letter : </strong>
+                    <strong>Cover Letter : [Allow only .doc, .docx, .pdf extension files.]</strong>
                     <input type="file" name="cover_letter" id="cover_letter" class="form-control">
                 </div>
 
@@ -495,7 +495,7 @@
                     },
                     "email": {
                         required: true
-                    }
+                    },
                 },
                 
                 messages: {
@@ -507,7 +507,7 @@
                     },
                     "email": {
                         required: "Email is Required."
-                    }
+                    },
                 }
             });
 
@@ -581,7 +581,7 @@
 
                 var ext = $('#cover_letter').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','docx','pdf','txt']) == -1) {
+                if($.inArray(ext, ['doc','docx','pdf']) == -1) {
 
                     alert('Please Select Document File.');
                     this.value = null;
