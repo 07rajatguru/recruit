@@ -16,7 +16,7 @@ use App\Events\NotificationMail;
 
 class TrainingController extends Controller
 {
-    public function index(){
+    public function index() {
 
         $user = \Auth::user();
 
@@ -46,12 +46,8 @@ class TrainingController extends Controller
             $training = Training::getAlltraining(0,$user_id);
             $count = Training::getAlltrainingCount(0,$user_id);   
         }
-
-	   //$trainingFiles = TrainingDoc::select('training_doc.file')->get();
-	   //print_r($trainingFiles);die;
 	
-    return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id','count'));
-   
+        return view('adminlte::training.index',compact('training','trainingFiles','isSuperAdmin','user_id','count'));
     }
 
     public function getOrderTrainingColumnName($order){
@@ -65,7 +61,6 @@ class TrainingController extends Controller
                 $order_column_name = "training.title";
             }
         }
-
         return $order_column_name;
     }
 
@@ -95,12 +90,14 @@ class TrainingController extends Controller
         $superadmin_role_id = env('SUPERADMIN');
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if(in_array($user_role_id,$access_roles_id)) {
+
             $order_column_name = self::getOrderTrainingColumnName($order);
             $training = Training::getAlltraining(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Training::getAlltrainingCount(1,$user_id,$search);
         }
-        else{
+        else {
+
             $order_column_name = self::getOrderTrainingColumnName($order);
             $training = Training::getAlltraining(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Training::getAlltrainingCount(0,$user_id,$search);
@@ -111,9 +108,11 @@ class TrainingController extends Controller
         $training_data = array();
         $i = 0; $j = 0;
         foreach ($training as $key => $value) {
+
             $action = '';
+
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('training.show',$value['id']).'" style="margin:2px;"></a>';
-            if($value['owner_id'] == $user_id || $isSuperAdmin || $edit_perm){
+            if($value['owner_id'] == $user_id || $isSuperAdmin || $edit_perm) {
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             /*if ($isSuperAdmin || $value['owner_id'] == $user_id || $delete_perm) {*/
@@ -163,12 +162,9 @@ class TrainingController extends Controller
         $selected_users = array($user_id,$super_admin_user_id);
         
         return view('adminlte::training.create',compact('action','users','selected_users','user_id'));
-
     }
-    
 
     public function store(Request $request){
-
     	
 		$user_id = \Auth::user()->id;
         $title = $request->input('title');
@@ -231,7 +227,15 @@ class TrainingController extends Controller
         $users_id = User::getAllUsers('recruiter');
         $user_count = sizeof($users_id);
 
-        $training_users = sizeof($users);
+        if(isset($users)){
+
+            $training_users = sizeof($users);
+        }
+        else {
+
+            $training_users = 0;
+        }
+        
         if ($training_users == $user_count) {
             \DB::statement("UPDATE training SET select_all = '1' where id=$training_id");
         }
@@ -293,7 +297,6 @@ class TrainingController extends Controller
                     $trainingdetails['files'][$i]['size'] = $utils->formatSizeUnits($trainingfile->size);
 
                     $i++;
-
                 }
             }
 
@@ -319,7 +322,6 @@ class TrainingController extends Controller
         return view('adminlte::training.edit',compact('action','users','training','trainingdetails','selected_users'));
     }
 
-
     public function update(Request $request,$id){
 
      	$user_id = \Auth::user()->id;
@@ -335,7 +337,7 @@ class TrainingController extends Controller
 
         //save files 
         $training_id = $training->id;         
-        if (isset($file) && sizeof($file) > 0) {
+        if (isset($file) && $file != '') {
             //print_r($upload_documents);exit;
             if (isset($file) && $file->isValid()) {
                 // echo "here";
@@ -365,7 +367,7 @@ class TrainingController extends Controller
 			    $training_doc->save();
             }
 
-            return redirect('training/'. $id .'/edit');        
+            return redirect('training/'. $id .'/edit')->with('success','Attachment Uploaded Successfully.');      
         }
 
         $users = $request->input('user_ids');
@@ -391,8 +393,7 @@ class TrainingController extends Controller
             \DB::statement("UPDATE training SET select_all = '0' where id=$training_id");
         }
 
-        return redirect()->route('training.index')->with('success','Training Updated Successfully');
-         
+        return redirect()->route('training.index')->with('success','Training Updated Successfully.');
     }
 
     public function upload(Request $request){
@@ -406,11 +407,6 @@ class TrainingController extends Controller
         {
             $fileName = $file->getClientOriginalName();
             $fileSize = $file->getSize();
-            
-            /*$fileExtention = $file->getClientOriginalExtension();
-            $fileRealPath = $file->getRealPath();
-            $extention = File::extension($fileName);
-            $fileNameArray = explode('.',$fileName);*/
 
             $dir = 'uploads/training/'.$training_id.'/';
 
@@ -431,9 +427,8 @@ class TrainingController extends Controller
             $trainingFileUpload->save();
         }
 
-        return redirect()->route('training.show',[$training_id])->with('success','Attachment uploaded successfully');
+        return redirect()->route('training.show',[$training_id])->with('success','Attachment Uploaded Successfully.');
     }
-
     
 	public function show($id){
 
@@ -446,37 +441,48 @@ class TrainingController extends Controller
 
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 		
-		$training_id = Training::find($id);
+		$training_material = Training::find($id);
 			
-        	$trainingModel = new Training();
-            $trainingdetails['id'] = $trainingModel->id;           
+        $trainingModel = new Training();
+        $trainingdetails['id'] = $trainingModel->id;           
 
 		$i = 0;
         $trainingdetails['files'] = array();
         $trainingFiles = TrainingDoc::select('training_doc.*')
-                ->where('training_doc.training_id',$id)
-                ->get();
+        ->where('training_doc.training_id',$id)
+        ->get();
 
         $utils = new Utils();
-            if(isset($trainingFiles) && sizeof($trainingFiles) > 0){
-                foreach ($trainingFiles as $trainingfile) {
-                    $trainingdetails['files'][$i]['id'] = $trainingfile->id;
-                    $trainingdetails['files'][$i]['fileName'] = $trainingfile->file;
-                    $trainingdetails['files'][$i]['url'] = "../../".$trainingfile->file;
-                    $trainingdetails['files'][$i]['name'] = $trainingfile->name ;
-                    $trainingdetails['files'][$i]['size'] = $utils->formatSizeUnits($trainingfile->size);
+        if(isset($trainingFiles) && sizeof($trainingFiles) > 0){
+            foreach ($trainingFiles as $trainingfile) {
 
-                    $i++;
+                $trainingdetails['files'][$i]['id'] = $trainingfile->id;
+                $trainingdetails['files'][$i]['fileName'] = $trainingfile->file;
+                $trainingdetails['files'][$i]['url'] = "../../".$trainingfile->file;
+                $trainingdetails['files'][$i]['name'] = $trainingfile->name ;
+                $trainingdetails['files'][$i]['size'] = $utils->formatSizeUnits($trainingfile->size);
 
-                }
+                $i++;
             }
-       
-		// print_r($trainingdetails);die;
-        return view('adminlte::training.show',compact('trainingdetails','training_id','user_id','isSuperAdmin'));
+        }
 
+        $training_user_res = \DB::table('training_visible_users')
+        ->join('users','users.id','=','training_visible_users.user_id')
+        ->select('users.id', 'users.name as name')
+        ->where('training_visible_users.training_id',$id)
+        ->get();
+
+        $c = 0;
+        foreach ($training_user_res as $key => $value) {
+            $trainingdetails['name'][$c] = $value->name;
+            $c++;
+        }
+       
+        return view('adminlte::training.show',compact('trainingdetails','training_material','user_id','isSuperAdmin'));
     }
     
    public function trainingDestroy($id){
+
         TrainingDoc::where('training_id',$id)->delete();
         TrainingVisibleUser::where('training_id',$id)->delete();
         $training = Training::where('id',$id)->delete();
@@ -484,23 +490,29 @@ class TrainingController extends Controller
         return redirect()->route('training.index')->with('success','Training Deleted Successfully');
     }
 
-    public function attachmentsDestroy($docid){
+    public function attachmentsDestroy(Request $request,$docid){
+
+        $type = $request->input('type');
 
         $training_attch = \DB::table('training_doc')
         ->select('training_doc.*')
         ->where('id','=',$docid)->first();
 
-        if(isset($training_attch))
-        {
+        if(isset($training_attch)) {
             $path = "uploads/training/".$training_attch->training_id ."/". $training_attch->name;
             unlink($path);
-
-            $trainingDocDelete = TrainingDoc::where('id',$docid)->delete();
         }
 
         $id = $_POST['id'];
 
-        return redirect()->route('training.show',[$id])->with('success','Attachment deleted Successfully');
+        TrainingDoc::where('id',$docid)->delete();
+
+        if($type == 'Edit') {
+            return redirect()->route('training.edit',[$id])->with('success','Attachment Deleted Successfully.');
+        }
+        else {
+            return redirect()->route('training.show',[$id])->with('success','Attachment Deleted Successfully.');
+        }
     }
 
     public function UpdatePosition(){

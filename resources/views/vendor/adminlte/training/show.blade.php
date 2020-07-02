@@ -21,21 +21,40 @@
     @endif
 
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-left">
-                <h2>{{$training_id['title']}}</h2>
+                <h2>Training Material Details</h2>
             </div>
 
            <div class="pull-right">
-                @if($training_id['owner_id'] == $user_id || $isSuperAdmin)
-                    <a class="btn btn-primary" href="{{ route('training.edit',$training_id) }}">Edit</a>
+                @if($training_material['owner_id'] == $user_id || $isSuperAdmin)
+                    <a class="btn btn-primary" href="{{ route('training.edit',$training_material['id']) }}">Edit</a>
                 @endif
                 <a class="btn btn-primary" href="{{ route('training.index') }}">Back</a>
             </div>
         </div>
+    </div>
 
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title">Basic Information</h3>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th scope="row">Title</th>
+                            <td>{{ $training_material['title'] }}</td>
+                            <th>Who can see this Material</th>
+                            <td>{{ implode(", ",$trainingdetails['name']) }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">    
@@ -44,8 +63,8 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @if($training_id['owner_id'] == $user_id || $isSuperAdmin)
-                        @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_id])
+                    @if($training_material['owner_id'] == $user_id || $isSuperAdmin)
+                        @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_material])
                     @endif
                 </div>
 
@@ -64,8 +83,8 @@
                                     <td>
                                         {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
                                         &nbsp;
-                                        @if($training_id['owner_id'] == $user_id || $isSuperAdmin)
-                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_id['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments'])
+                                        @if($training_material['owner_id'] == $user_id || $isSuperAdmin)
+                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
                                         @endif
                                           </td>
 
@@ -76,9 +95,7 @@
                         @endif
                     </table>
                 </div>
-
             </div>
         </div>
-
     </div>
 @endsection

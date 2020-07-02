@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Create New Training Material')
+@section('title', 'Add New Training Material')
 
 @section('content_header')
     <h1></h1>
