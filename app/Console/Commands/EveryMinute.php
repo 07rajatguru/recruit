@@ -564,7 +564,7 @@ class EveryMinute extends Command
 
                 $bill_invoice = BillsDoc::getBillInvoice($module_id,'Invoice');
 
-                $input['xls_attachment'] = public_path() . $bill_invoice['file'];
+                $input['xls_attachment'] = public_path() . "/" . $bill_invoice['file'];
                 //$input['pdf_attachment'] = public_path() . '/uploads/bills/'.$module_id.'/'.$module_id.'_invoice.pdf';
                 
                 \Mail::send('adminlte::emails.invoicegenerate', $input, function ($message) use ($input) {
