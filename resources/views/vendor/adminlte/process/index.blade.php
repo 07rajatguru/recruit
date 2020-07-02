@@ -14,15 +14,15 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('process.create') }}"> Add New Process Manual</a>
+                <a class="btn btn-success" href="{{ route('process.create') }}">Add New Process Manual</a>
             </div>
         </div>
     </div>
 
     @if ($message = Session::get('success'))
-    <div class="alert alert-success">
-        <p>{{ $message }}</p>
-    </div>
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
     @endif
 
     @if ($message = Session::get('error'))
@@ -63,7 +63,6 @@
             @endforeach
         </tbody>
     </table>
-    
 @stop
 @section('customscripts')
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

@@ -21,9 +21,7 @@
     @endif
 
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-left">
                 <h2>Process Manual Details</h2>
             </div>
@@ -35,7 +33,6 @@
                 <a class="btn btn-primary" href="{{ route('process.index') }}">Back</a>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -77,7 +74,6 @@
                             <th></th>
                             <th>File Name</th>
                             <th>Size</th>
-                            
                         </tr>
 
                         @if(isset($processdetails['files']) && sizeof($processdetails['files']) > 0)
@@ -89,18 +85,18 @@
                                         @if(isset($process['access']) && $process['access']==1)
                                             @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
                                         @endif
-                                          </td>
+                                    </td>
 
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                    <td>
+                                        <a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a>
+                                    </td>
                                     <td>{{ $value['size'] }}</td>
-                                   </tr>
+                                </tr>
                             @endforeach
                         @endif
                     </table>
                 </div>
-
             </div>
         </div>
-
     </div>
 @endsection

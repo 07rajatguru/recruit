@@ -16,10 +16,7 @@ use App\Events\NotificationMail;
 
 class ProcessController extends Controller
 {
-    public function index(Request $request){
-
-     // logged in user with role 'Administrator,Director,Manager can see all the open jobs
-        // Rest other users can only see the jobs assigned to them
+    public function index() {
 
         $user = \Auth::user();
 
@@ -50,15 +47,11 @@ class ProcessController extends Controller
             $count = ProcessManual::getAllprocessCount(0,$user_id);
         }
 
-        //$count = sizeof($process_response);
-	    //$processFiles = ProcessDoc::select('process_doc.file')->get();
-
         $viewVariable = array();
         $viewVariable['processList'] = $process_response;
         $viewVariable['isSuperAdmin'] = $isSuperAdmin;
         //$viewVariable['processFiles'] = $processFiles;
-        $viewVariable['count'] = $count;   
-
+        $viewVariable['count'] = $count;
 
     	return view('adminlte::process.index ',$viewVariable);
     }
@@ -74,7 +67,6 @@ class ProcessController extends Controller
                 $order_column_name = "process_manual.title";
             }
         }
-
         return $order_column_name;
     }
 
@@ -118,7 +110,9 @@ class ProcessController extends Controller
         $process = array();
         $i = 0; $j = 0;
         foreach ($process_response as $key => $value) {
+
             $action = '';
+
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',$value['id']).'" style="margin:2px;"></a>';
             if(isset($value['access']) && $value['access']==1 || $edit_perm){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',$value['id']).'" style="margin:2px;"></a>';
@@ -128,6 +122,7 @@ class ProcessController extends Controller
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
+
             $doc_count = ProcessManual::getProcessManualsDocCount($value['id']);
 
             if($doc_count==1){
@@ -142,7 +137,6 @@ class ProcessController extends Controller
             $i++;
         }
 
-//print_r($process);exit;
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
@@ -151,7 +145,6 @@ class ProcessController extends Controller
         );
 
         echo json_encode($json_data);exit;
-
     }
 
     public function create(){
@@ -166,7 +159,6 @@ class ProcessController extends Controller
         $selected_users = array($user_id,$super_admin_user_id);
         
         return view('adminlte::process.create',compact('action','users','selected_users','user_id'));
-
     }
 
     public function store(Request $request){
@@ -193,7 +185,6 @@ class ProcessController extends Controller
                     $file_realpath = $v->getRealPath();
                     $file_size = $v->getSize();
 
-                   
                     $dir = 'uploads/process/' . $process_id . '/';
 
                     if (!file_exists($dir) && !is_dir($dir)) {
@@ -214,10 +205,9 @@ class ProcessController extends Controller
 				
                     $process_doc->save();
                 }
-
             }
         }
-    // insert in Process_Visible_Table
+        // insert in Process_Visible_Table
 
         $users = $request->input('user_ids');
         $process_id = $process->id;
@@ -234,7 +224,15 @@ class ProcessController extends Controller
         $users_id = User::getAllUsers();
         $user_count = sizeof($users_id);
 
-        $process_users = sizeof($users);
+        if(isset($users)){
+
+            $process_users = sizeof($users);
+        }
+        else {
+
+            $process_users = 0;
+        }
+
         if ($process_users == $user_count) {
             \DB::statement("UPDATE process_manual SET select_all = '1' where id=$process_id");
         }
@@ -262,10 +260,9 @@ class ProcessController extends Controller
         $message = "Process Manual - ". $title;
         $module_id = $process_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc,''));
 
-//echo '<pre>';print_r($process_visible_users);die;
-    	return redirect()->route('process.index')->with('success','Process Manual Created Successfully');
+    	return redirect()->route('process.index')->with('success','Process Manual Created Successfully.');
     }
 
     public function edit($id){
@@ -277,25 +274,28 @@ class ProcessController extends Controller
 
         $i = 0;
         $processdetails['files'] = array();
+
         $processFiles = ProcessDoc::select('process_doc.*')
-                ->where('process_doc.process_id',$id)
-                ->orderBy('process_doc.id','asc')
-                ->get();
+        ->where('process_doc.process_id',$id)
+        ->orderBy('process_doc.id','asc')
+        ->get();
 
         $utils = new Utils();
-            if(isset($processFiles) && sizeof($processFiles) > 0){
-                foreach ($processFiles as $processFile) {
+
+        if(isset($processFiles) && sizeof($processFiles) > 0) {
+            foreach ($processFiles as $processFile) {
+
                 $processdetails['files'][$i]['id'] = $processFile->id;
                 $processdetails['files'][$i]['fileName'] = $processFile->file;
                 $processdetails['files'][$i]['url'] = "../../".$processFile->file;
                 $processdetails['files'][$i]['name'] = $processFile->name ;
                 $processdetails['files'][$i]['size'] = $utils->formatSizeUnits($processFile->size);
 
-                    $i++;
-
-                }
+                $i++;
             }
-            // get all users
+        }
+
+        // get all users
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -304,7 +304,7 @@ class ProcessController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $user_id = $user->id;
         
-        $process_visible_users =ProcessVisibleUser::where('process_id',$id)->get();
+        $process_visible_users = ProcessVisibleUser::where('process_id',$id)->get();
        // echo'<pre>'; print_r($process_visible_users);die;
        
         $selected_users = array();
@@ -313,7 +313,7 @@ class ProcessController extends Controller
                 $selected_users[] = $row->user_id;
             }
         }
-		//print_r($selected_users);die;
+
         return view('adminlte::process.edit',compact('action','users','process','processdetails','selected_users'));
      }
 
@@ -358,7 +358,7 @@ class ProcessController extends Controller
                 $process_doc->updated_at = date('Y-m-d');
 			    $process_doc->save();
             }
-            return redirect()->route('process.edit',[$process_id]); 
+            return redirect()->route('process.edit',[$process_id])->with('success','Attachment Uploaded Successfully.'); 
         }
 
         // Update in process visible table
@@ -387,7 +387,7 @@ class ProcessController extends Controller
             \DB::statement("UPDATE process_manual SET select_all = '0' where id=$process_id");
         }
 
-        return redirect()->route('process.index')->with('success','Process Manual Updated Successfully');
+        return redirect()->route('process.index')->with('success','Process Manual Updated Successfully.');
     }
 
 
@@ -403,11 +403,6 @@ class ProcessController extends Controller
             $fileName = $file->getClientOriginalName();
             $fileSize = $file->getSize();
 
-           /* $fileExtention = $file->getClientOriginalExtension();
-            $fileRealPath = $file->getRealPath();
-            $extention = File::extension($fileName);
-            $fileNameArray = explode('.',$fileName);*/
-
             $dir = 'uploads/process/'.$process_id.'/';
 
             if (!file_exists($dir) && !is_dir($dir)) {
@@ -415,8 +410,6 @@ class ProcessController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
-            /*$temp_file_name = trim($fileNameArray[0]);
-            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;*/
 
             $file->move($dir,$fileName);
             $filePath = $dir . $fileName;
@@ -429,26 +422,22 @@ class ProcessController extends Controller
             $processFileUpload->save();
         }
 
-        return redirect()->route('process.show',[$process_id])->with('success','Attachment uploaded successfully');
+        return redirect()->route('process.show',[$process_id])->with('success','Attachment Uploaded Successfully.');
     }
 
     public function show($id){
 		
-		//$process_id = ProcessManual::find($id);
-
         $process_res = \DB::table('process_manual')
-                    //->join('process_visible_users','process_visible_users.process_id','=','process_manual.id')
-                    //->join('users','users.id','=','process_visible_users.user_id')
-                    ->select('process_manual.*')
-                    ->where('process_manual.id','=',$id)
-                    ->get();
+        ->select('process_manual.*')
+        ->where('process_manual.id','=',$id)
+        ->get();
 
         $process = array();
 
         foreach ($process_res as $key => $value) {
+
             $process['id'] = $value->id;
             $process['title'] = $value->title;
-            //$process['name'] = $value->name;
 
             $user = \Auth::user();
             $user_id = $user->id;
@@ -475,10 +464,11 @@ class ProcessController extends Controller
         }
 
         $process_user_res = \DB::table('process_visible_users')
-                            ->join('users','users.id','=','process_visible_users.user_id')
-                            ->select('users.id', 'users.name as name')
-                            ->where('process_visible_users.process_id',$id)
-                            ->get();
+        ->join('users','users.id','=','process_visible_users.user_id')
+        ->select('users.id', 'users.name as name')
+        ->where('process_visible_users.process_id',$id)
+        ->get();
+
         $c = 0;
         foreach ($process_user_res as $key => $value) {
             $process['name'][$c] = $value->name;
@@ -493,25 +483,25 @@ class ProcessController extends Controller
                 ->get();
 
         $utils = new Utils();
-            if(isset($processFiles) && sizeof($processFiles) > 0){
-                foreach ($processFiles as $processFile) {
+
+        if(isset($processFiles) && sizeof($processFiles) > 0) {
+
+            foreach ($processFiles as $processFile) {
+
                 $processdetails['files'][$i]['id'] = $processFile->id;
                 $processdetails['files'][$i]['fileName'] = $processFile->file;
                 $processdetails['files'][$i]['url'] = "../../".$processFile->file;
                 $processdetails['files'][$i]['name'] = $processFile->name ;
                 $processdetails['files'][$i]['size'] = $utils->formatSizeUnits($processFile->size);
 
-                    $i++;
-
-                }
+                $i++;
             }
-       
-		// print_r($processdetails);die;
-        return view('adminlte::process.show',compact('processdetails','process_id','process'));
+        }
+        return view('adminlte::process.show',compact('processdetails','process'));
     }
-
     
-    public function processDestroy($id){
+    public function processDestroy($id) {
+
         ProcessDoc::where('process_id',$id)->delete();
         ProcessVisibleUser::where('process_id',$id)->delete();
         $process = ProcessManual::where('id',$id)->delete();
@@ -520,23 +510,30 @@ class ProcessController extends Controller
     }
 
 
-    public function attachmentsDestroy($docid){
+    public function attachmentsDestroy(Request $request,$docid) {
+
+        $type = $request->input('type');
 
         $process_attch = \DB::table('process_doc')
         ->select('process_doc.*')
         ->where('id','=',$docid)->first();
 
-        if(isset($process_attch))
-        {
+        if(isset($process_attch)) {
+
             $path = "uploads/process/".$process_attch->process_id ."/". $process_attch->name;
             unlink($path);
-
-            $processDocDelete = ProcessDoc::where('id',$docid)->delete();
         }
 
         $id = $_POST['id'];
 
-        return redirect()->route('process.show',[$id])->with('success','Attachment deleted Successfully');
+        ProcessDoc::where('id',$docid)->delete();
+
+        if($type == 'Edit') {
+            return redirect()->route('process.edit',[$id])->with('success','Attachment Deleted Successfully.');
+        }
+        else {
+            return redirect()->route('process.show',[$id])->with('success','Attachment Deleted Successfully.');
+        }
     }
 
     public function UpdatePosition(){
