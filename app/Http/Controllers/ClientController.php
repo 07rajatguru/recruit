@@ -1989,7 +1989,7 @@ class ClientController extends Controller
             $super_admin_userid = getenv('SUPERADMINUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
 
-            $strategy_userid = getenv('STRATEGYUSERID');
+            $strategy_userid = getenv('ALLCLIENTVISIBLEUSERID');
             $strategy_email = User::getUserEmailById($strategy_userid);
 
             $to = $superadminemail;
@@ -2243,7 +2243,7 @@ class ClientController extends Controller
             $super_admin_userid = getenv('SUPERADMINUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
 
-            $strategy_userid = getenv('STRATEGYUSERID');
+            $strategy_userid = getenv('ALLCLIENTVISIBLEUSERID');
             $strategy_email = User::getUserEmailById($strategy_userid);
 
             $to = $superadminemail;
@@ -2358,7 +2358,7 @@ class ClientController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $strategy_userid = getenv('STRATEGYUSERID');
+        $strategy_userid = getenv('ALLCLIENTVISIBLEUSERID');
         $strategy_email = User::getUserEmailById($strategy_userid);
 
         $to = $superadminemail;
