@@ -30,9 +30,9 @@
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="company_table">
     <thead>
         <tr>
-            <th>No</th>
+            <th width="40px">No</th>
+            <th width="40px">Action</th>
             <th>Name</th>
-            <th width="280px">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -40,10 +40,9 @@
         @foreach ($companies as $key => $role)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $role->name }}</td>
                 <td>
                     @permission(('companies-edit'))
-                        <a class="btn btn-primary" href="{{ route('companies.edit',$role->id) }}">Edit</a>
+                        <a class="fa fa-edit" href="{{ route('companies.edit',$role->id) }}"></a>
                     @endpermission
 
                     {{--@permission(('industry-delete'))--}}
@@ -56,6 +55,7 @@
 
                     {{--@endpermission--}}
                 </td>
+                <td>{{ $role->name }}</td>
             </tr>
         @endforeach
     </tbody>

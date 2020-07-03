@@ -161,9 +161,9 @@
 
                             <div class="form-group">
                                 <strong> Floor Incharge : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('check_floor_incharge','Yes', true) !!}
+                                {!! Form::radio('check_floor_incharge','Yes', false) !!}
                                 {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('check_floor_incharge','No',false) !!}
+                                {!! Form::radio('check_floor_incharge','No',true) !!}
                                 {!! Form::label('No') !!}
                             </div>
 

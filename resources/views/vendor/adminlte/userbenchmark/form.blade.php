@@ -48,8 +48,8 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('no_of_resumes') ? 'has-error' : '' }}">
-                            <strong>No Of Resumes (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('no_of_resumes', null, array('placeholder' => 'No Of Resumes','class' => 'form-control', 'tabindex' => '2')) !!}
+                            <strong>No Of Resumes : <span class = "required_fields">*</span></strong>
+                            {!! Form::number('no_of_resumes', null, array('placeholder' => 'No Of Resumes','class' => 'form-control', 'tabindex' => '2','id' => 'no_of_resumes')) !!}
                             @if ($errors->has('no_of_resumes'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('no_of_resumes') }}</strong>
@@ -59,7 +59,7 @@
 
                         <div class="form-group {{ $errors->has('shortlist_ratio') ? 'has-error' : '' }}">
                             <strong>Shortlist Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('shortlist_ratio', null, array('placeholder' => 'Shortlist Ratio','class' => 'form-control', 'tabindex' => '3')) !!}
+                            {!! Form::number('shortlist_ratio', null, array('placeholder' => 'Shortlist Ratio','class' => 'form-control', 'tabindex' => '3','id' => 'shortlist_ratio','onfocusout' => 'checkShortlistRatio();')) !!}
                             @if ($errors->has('shortlist_ratio'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('shortlist_ratio') }}</strong>
@@ -69,7 +69,7 @@
 
                         <div class="form-group {{ $errors->has('interview_ratio') ? 'has-error' : '' }}">
                             <strong>Interview Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('interview_ratio', null, array('placeholder' => 'Interview Ratio','class' => 'form-control', 'tabindex' => '4')) !!}
+                            {!! Form::number('interview_ratio', null, array('placeholder' => 'Interview Ratio','class' => 'form-control', 'tabindex' => '4','id' => 'interview_ratio','onfocusout' => 'checkInterviewRatio();')) !!}
                             @if ($errors->has('interview_ratio'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('interview_ratio') }}</strong>
@@ -79,7 +79,7 @@
 
                         <div class="form-group {{ $errors->has('selection_ratio') ? 'has-error' : '' }}">
                             <strong>Selection Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('selection_ratio', null, array('placeholder' => 'Selection Ratio','class' => 'form-control', 'tabindex' => '5')) !!}
+                            {!! Form::number('selection_ratio', null, array('placeholder' => 'Selection Ratio','class' => 'form-control', 'tabindex' => '5','id' => 'selection_ratio','onfocusout' => 'checkSelectionRatio();')) !!}
                             @if ($errors->has('selection_ratio'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('selection_ratio') }}</strong>
@@ -89,7 +89,7 @@
 
                         <div class="form-group {{ $errors->has('offer_acceptance_ratio') ? 'has-error' : '' }}">
                             <strong>Offer Acceptance Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('offer_acceptance_ratio', null, array('placeholder' => 'Offer Acceptance Ratio','class' => 'form-control', 'tabindex' => '6')) !!}
+                            {!! Form::number('offer_acceptance_ratio', null, array('placeholder' => 'Offer Acceptance Ratio','class' => 'form-control', 'tabindex' => '6','id' => 'offer_acceptance_ratio','onfocusout' => 'checkOfferAcceptanceRatio();')) !!}
                             @if ($errors->has('offer_acceptance_ratio'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('offer_acceptance_ratio') }}</strong>
@@ -99,7 +99,7 @@
 
                         <div class="form-group {{ $errors->has('joining_ratio') ? 'has-error' : '' }}">
                             <strong>Joining Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('joining_ratio', null, array('placeholder' => 'Joining Ratio','class' => 'form-control', 'tabindex' => '7')) !!}
+                            {!! Form::number('joining_ratio', null, array('placeholder' => 'Joining Ratio','class' => 'form-control', 'tabindex' => '7','id' => 'joining_ratio','onfocusout' => 'checkJoiningRatio();')) !!}
                             @if ($errors->has('joining_ratio'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('joining_ratio') }}</strong>
@@ -109,7 +109,7 @@
 
                         <div class="form-group {{ $errors->has('after_joining_success_ratio') ? 'has-error' : '' }}">
                             <strong>After Joining Success Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('after_joining_success_ratio', null, array('placeholder' => 'After Joining Success Ratio','class' => 'form-control', 'tabindex' => '8')) !!}
+                            {!! Form::number('after_joining_success_ratio', null, array('placeholder' => 'After Joining Success Ratio','class' => 'form-control', 'tabindex' => '8','id' => 'after_joining_success_ratio','onfocusout' => 'checkAfterJoiningSuccessRatio();')) !!}
                             @if ($errors->has('after_joining_success_ratio'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('after_joining_success_ratio') }}</strong>
@@ -140,6 +140,69 @@
         $(document).ready(function() {
 
             $("#user_id").select2();
+
+            $('#no_of_resumes').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $('#shortlist_ratio').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $('#interview_ratio').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $('#selection_ratio').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $('#offer_acceptance_ratio').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $('#joining_ratio').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
+
+            $('#after_joining_success_ratio').keypress(function (e) {
+                if(e.which == 44 || e.which == 46) {
+                    return true;
+                }
+                else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                }
+            });
 
             $("#userbenchmarkForm").validate({
                 rules: {
@@ -190,5 +253,89 @@
                 }
             });
         });
+
+        function checkShortlistRatio() {
+
+            var shortlist_ratio = $("#shortlist_ratio").val();
+
+            if(shortlist_ratio > 100) {
+
+                alert('Please Enter Percentage Between 1 to 100.');
+                document.getElementById("shortlist_ratio").value = '';
+                document.getElementById("shortlist_ratio").focus(); 
+                return false;
+            }
+            return true;
+        }
+
+        function checkInterviewRatio() {
+
+            var interview_ratio = $("#interview_ratio").val();
+
+            if(interview_ratio > 100) {
+
+                alert('Please Enter Percentage Between 1 to 100.');
+                document.getElementById("interview_ratio").value = '';
+                document.getElementById("interview_ratio").focus(); 
+                return false;
+            }
+            return true;
+        }
+
+        function checkSelectionRatio() {
+
+            var selection_ratio = $("#selection_ratio").val();
+
+            if(selection_ratio > 100) {
+
+                alert('Please Enter Percentage Between 1 to 100.');
+                document.getElementById("selection_ratio").value = '';
+                document.getElementById("selection_ratio").focus(); 
+                return false;
+            }
+            return true;
+        }
+
+        function checkOfferAcceptanceRatio() {
+
+            var offer_acceptance_ratio = $("#offer_acceptance_ratio").val();
+
+            if(offer_acceptance_ratio > 100) {
+
+                alert('Please Enter Percentage Between 1 to 100.');
+                document.getElementById("offer_acceptance_ratio").value = '';
+                document.getElementById("offer_acceptance_ratio").focus(); 
+                return false;
+            }
+            return true;
+        }
+
+        function checkJoiningRatio() {
+
+            var joining_ratio = $("#joining_ratio").val();
+
+            if(joining_ratio > 100) {
+
+                alert('Please Enter Percentage Between 1 to 100.');
+                document.getElementById("joining_ratio").value = '';
+                document.getElementById("joining_ratio").focus(); 
+                return false;
+            }
+            return true;
+        }
+
+        function checkAfterJoiningSuccessRatio() {
+
+            var after_joining_success_ratio = $("#after_joining_success_ratio").val();
+
+            if(after_joining_success_ratio > 100) {
+
+                alert('Please Enter Percentage Between 1 to 100.');
+                document.getElementById("after_joining_success_ratio").value = '';
+                document.getElementById("after_joining_success_ratio").focus(); 
+                return false;
+            }
+            return true;
+        }
     </script>
 @endsection

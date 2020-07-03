@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -16,9 +24,9 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($companies,['method' => 'PATCH', 'route' => ['companies.update', $companies->id]] ) !!}
+    {!! Form::model($companies,['method' => 'PATCH','id' => 'company_form','route' => ['companies.update', $companies->id]] ) !!}
 @else
-    {!! Form::open(array('route' => 'companies.store','method'=>'POST')) !!}
+    {!! Form::open(array('route' => 'companies.store','method'=>'POST','id' => 'company_form')) !!}
 @endif
 
 <div class="row">
@@ -64,6 +72,19 @@
     $(document).ready(function()
     {
         $("#description").wysihtml5();
+
+        $("#company_form").validate({
+            rules: {
+                "name": {
+                    required: true
+                }, 
+            },
+            messages: {
+                "name": {
+                    required: "Name is Required Field."
+                }  
+            }
+        });
     });
 </script>
 @endsection

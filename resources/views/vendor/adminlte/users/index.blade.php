@@ -35,29 +35,18 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th width="80px">Action</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Roles</th>
                 <th>Type</th>
                 <th>Status</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         <tbody>
         @foreach ($data as $key => $user)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    @if(!empty($user->roles))
-                        @foreach($user->roles as $v)
-                            <label class="label label-success">{{ $v->display_name }}</label>
-                        @endforeach
-                    @endif
-                </td>
-                <td>{{ $user->type }}</td>
-                <td>{{ $user->status }}</td>
                 <td>
                     <a class="fa fa-eye" title="Show" href="{{ route('users.show',$user->id) }}"></a>
                     <a class="fa fa-edit" title="Edit" href="{{ route('users.edit',$user->id) }}"></a>
@@ -74,7 +63,17 @@
                         <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
                     @endif
                 </td>
-
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>
+                    @if(!empty($user->roles))
+                        @foreach($user->roles as $v)
+                            <label class="label label-success">{{ $v->display_name }}</label>
+                        @endforeach
+                    @endif
+                </td>
+                <td>{{ $user->type }}</td>
+                <td>{{ $user->status }}</td>
             </tr>
         @endforeach
         </tbody>

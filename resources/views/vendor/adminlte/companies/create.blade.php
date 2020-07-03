@@ -7,9 +7,7 @@
 @stop
 
 @section('content')
-
     <div>
         @include('adminlte::companies.form')
     </div>
-
 @stop
