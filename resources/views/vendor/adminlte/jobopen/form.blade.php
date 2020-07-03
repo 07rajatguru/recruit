@@ -450,7 +450,7 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Candidate Tracker : <span class = "required_fields"> *</span> [Allow only .doc, .docx, .pdf extension files.]</strong>
+                        <strong>Candidate Tracker : <span class = "required_fields"> *</span> [Allow only .doc, .docx, .pdf, .xlsx, .xls extension files.]</strong>
                         <input type="file" name="candidate_tracker"  id="candidate_tracker" class="form-control">
                     </div>
                 </div>
@@ -674,7 +674,7 @@
 
                 var ext = $('#candidate_tracker').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','docx','pdf']) == -1)
+                if($.inArray(ext, ['doc','docx','pdf','xlsx','xls']) == -1)
                 {
                     alert('Please Select Document File.');
                     this.value = null;
