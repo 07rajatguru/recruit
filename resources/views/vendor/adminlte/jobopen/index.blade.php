@@ -8,6 +8,7 @@
 @stop
 
 @section('customs_css')
+
 <style>
     .select2-selection__rendered[title="Urgent Positions"] {
       background-color: #FF0000;
@@ -75,6 +76,11 @@
         </div>
     @endif
 
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -96,7 +102,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    {{-- <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box-body col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
                 <strong>Select Financial Year:</strong>
@@ -115,8 +121,8 @@
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
-    </div>
-    <br/>
+    </div> <br/> --}}
+
 
     {{--<div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -353,64 +359,64 @@
     </table>--}}
     </div>
 
-<div id="modal-advanced-search" class="modal text-left fade">
-     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Select Job Position</h1>
-            </div>
-            
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="">
-                    <div class="form-group"><br>
-                        <strong>Select Job Position :</strong> <br><br>
-                        {!! Form::select('client_heirarchy', $client_heirarchy_name,null, array('id'=>'client_heirarchy','class' => 'form-control')) !!}
+    <div id="modal-advanced-search" class="modal text-left fade">
+         <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Select Job Position</h1>
+                </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="">
+                        <div class="form-group"><br>
+                            <strong>Select Job Position :</strong> <br><br>
+                            {!! Form::select('client_heirarchy', $client_heirarchy_name,null, array('id'=>'client_heirarchy','class' => 'form-control')) !!}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" onclick="getJobsByPosition()">Submit</button>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="getJobsByPosition()">Submit</button>
 
-                <button type="button" class="btn btn-primary" id="btnmodelreset" name="btnmodelreset">Reset
-                </button>
-                
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-            
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-<div id="modal-status" class="modal text-left fade priority" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Select Job Priority</h1>
-            </div>
-            {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
-            <div class="modal-body">
-                <div class="status">
-                    <strong>Select Job Priority :</strong> <br>
-                    {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                    <button type="button" class="btn btn-primary" id="btnmodelreset" name="btnmodelreset">Reset
+                    </button>
+                    
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
-                <div class="error"></div>
-            </div>
+                
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
-            <input type="hidden" name="job_ids" id="job_ids" value="">
+    <div id="modal-status" class="modal text-left fade priority" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Select Job Priority</h1>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
+                <div class="modal-body">
+                    <div class="status">
+                        <strong>Select Job Priority :</strong> <br>
+                        {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                    </div>
+                    <div class="error"></div>
+                </div>
 
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-            {!! Form::close() !!}
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="job_ids" id="job_ids" value="">
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
@@ -453,14 +459,23 @@
 
                     $("#count").html("(" + count + ")");
 
-                    $("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]+'/'+year);
+                    /*$("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]+'/'+year);
                     $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]+'/'+year);
                     $("#priority_2").attr("href", '/jobs/priority/'+job_priority[2]+'/'+year);
                     $("#priority_3").attr("href", '/jobs/priority/'+job_priority[3]+'/'+year);
                     $("#priority_5").attr("href", '/jobs/priority/'+job_priority[5]+'/'+year);
                     $("#priority_6").attr("href", '/jobs/priority/'+job_priority[6]+'/'+year);
                     $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]+'/'+year);
-                    $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);
+                    $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);*/
+
+                    $("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]);
+                    $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]);
+                    $("#priority_2").attr("href", '/jobs/priority/'+job_priority[2]);
+                    $("#priority_3").attr("href", '/jobs/priority/'+job_priority[3]);
+                    $("#priority_5").attr("href", '/jobs/priority/'+job_priority[5]);
+                    $("#priority_6").attr("href", '/jobs/priority/'+job_priority[6]);
+                    $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]);
+                    $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]);
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -531,19 +546,14 @@
 
             $("#priority").select2();
 
-            $("#btnmodelreset").bind("click", function () 
-            {
+            $("#btnmodelreset").bind("click", function () {
                 $("#client_heirarchy").val('0');
                 $("#client_heirarchy")[0].selectedIndex = 0;
-
-                //$("#year").val('0');
-                //$("#year")[0].selectedIndex = 0
-
                 getJobsByPosition();
             });
         });
 
-        function select_data(){
+        /*function select_data(){
 
             $("#jo_table").dataTable().fnDestroy();
 
@@ -660,7 +670,7 @@
                 },
                 stateSave : true,
             });
-        }
+        }*/
 
         function multipleJobId(){
             var token = $('input[name="csrf_token"]').val();
@@ -678,16 +688,19 @@
                 data : {job_ids : job_ids, '_token':token},
                 dataType : 'json',
                 success: function(msg){
+                    
                     $(".priority").show();
                     if (msg.success == 'success') {
                         $(".status").show();
                         $(".error").empty();
-                        $('#submit').removeAttr('disabled');
+                        $('#submit').show();
+                        //$('#submit').removeAttr('disabled');
                     }
                     else{
                         $(".status").hide();
                         $(".error").empty();
-                        $('#submit').attr('disabled','disabled');
+                        $('#submit').hide();
+                        //$('#submit').attr('disabled','disabled');
                         $(".error").append(msg.err);
                     }
                 }
@@ -708,18 +721,23 @@
             form.submit();
         }
 
-        function getJobsByPosition()
-        {
+        function getJobsByPosition() {
+
             var client_heirarchy=$("#client_heirarchy").val();
-            var year = $("#year").val();
+            //var year = $("#year").val();
             
             var url = '/jobs';
             if(client_heirarchy>=0)
             {
-                var form = $('<form action="' + url + '" method="post">' +
+                /*var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="text" name="client_heirarchy" value="'+client_heirarchy+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');*/
+
+                var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="client_heirarchy" value="'+client_heirarchy+'" />' +
                 '</form>');
 
                 $('body').append(form);

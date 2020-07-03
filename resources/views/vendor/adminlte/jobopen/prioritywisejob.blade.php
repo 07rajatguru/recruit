@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('customs_css')
@@ -286,7 +285,7 @@
                     <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
 
                     @if(isset($value['access']) && $value['access']==1)
-                        <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',['id' => $value['id'],'year' => $year]) }}"></a>
+                        <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
                     @endif
 
                     @if(isset($value['access']) && $value['access']==1)
@@ -318,41 +317,39 @@
                 <td>{!! $value['desired_candidate'] or ''!!}</td>
 
                 {{--<td>{{ $value['close_date'] or ''}}</td>--}}
-
-
             </tr>
         @endforeach
         </tbody>
     </table>
     </div>
 
-<div id="modal-status" class="modal text-left fade priority" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Select Job Priority</h1>
-            </div>
-            {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
-            <div class="modal-body">
-                <div class="status">
-                    <strong>Select Job Priority :</strong> <br>
-                    {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+    <div id="modal-status" class="modal text-left fade priority" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Select Job Priority</h1>
                 </div>
-                <div class="error"></div>
-            </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobopen.mutijobpriority']) !!}
+                <div class="modal-body">
+                    <div class="status">
+                        <strong>Select Job Priority :</strong> <br>
+                        {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                    </div>
+                    <div class="error"></div>
+                </div>
 
-            <input type="hidden" name="job_ids" id="job_ids" value="">
+                <input type="hidden" name="job_ids" id="job_ids" value="">
 
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-            {!! Form::close() !!}
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
@@ -428,9 +425,12 @@
                         //$(".checkid").append(msg.mail);
                         $(".status").show();
                         $(".error").empty();
+                        $('#submit').show();
                     }
                     else{
                         $(".status").hide();
+                        $(".error").empty();
+                        $('#submit').hide();
                         $(".error").append(msg.err);
                     }
                 }
@@ -450,6 +450,5 @@
             $('body').append(form);
             form.submit();
         }
-
     </script>
 @endsection

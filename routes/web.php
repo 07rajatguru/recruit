@@ -963,6 +963,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@getOpenJobs',
         // 'middleware' => ['permission:industry-create']
     ]);
+
     Route::get('jobs/importExport', 'JobOpenController@importExport');
     Route::post('jobs/importExcel', 'JobOpenController@importExcel');
     Route::get('jobs/salary', 'JobOpenController@salary');
@@ -974,11 +975,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@index',
         'middleware' => ['permission:job-list|job-create|job-edit|job-delete']
     ]);
+    
     Route::get('jobs/all', [
         'as' => 'jobopen.all',
         'uses' => 'JobOpenController@getAllJobsDetails',
         'middleware' => ['permission:job-list|job-create|job-edit|job-delete']
     ]);
+
     Route::post('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
@@ -990,9 +993,19 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@OpentoAll'
     ]);
 
-    Route::get('jobs/priority/{priority}/{year}',[
+    /*Route::get('jobs/priority/{priority}/{year}',[
         'as' => 'jobopen.priority',
         'uses' => 'JobOpenController@priorityWise'
+    ]);*/
+
+    Route::get('jobs/priority/{priority}',[
+        'as' => 'jobopen.priority',
+        'uses' => 'JobOpenController@priorityWise'
+    ]);
+
+    Route::get('jobs/priority/{priority}/{year}',[
+        'as' => 'jobclose.priority',
+        'uses' => 'JobOpenController@priorityWiseClosedJobs'
     ]);
 
     Route::post('jobs/create', [
@@ -1012,31 +1025,49 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@show',
         'middleware' => ['permission:job-show']
     ]);
-    Route::get('jobs/{id}/{year}/edit', [
+
+   /* Route::get('jobs/{id}/{year}/edit', [
+        'as' => 'jobopen.edit',
+        'uses' => 'JobOpenController@edit',
+        'middleware' => ['permission:job-edit']
+    ]);*/
+
+    Route::get('jobs/{id}/edit', [
         'as' => 'jobopen.edit',
         'uses' => 'JobOpenController@edit',
         'middleware' => ['permission:job-edit']
     ]);
+
+    Route::get('jobs/{id}/{year}/edit', [
+        'as' => 'jobclose.edit',
+        'uses' => 'JobOpenController@editClosedJob',
+        'middleware' => ['permission:job-edit']
+    ]);
+
     Route::delete('jobs/{id}', [
         'as' => 'jobopen.destroy',
         'uses' => 'JobOpenController@destroy',
         'middleware' => ['permission:job-delete']
     ]);
+
     Route::patch('jobs/{id}', [
         'as' => 'jobopen.update',
         'uses' => 'JobOpenController@update',
         'middleware' => ['permission:job-edit']
     ]);
+
     Route::post('jobs/upload/{id}', [
         'as' => 'jobopen.upload',
         'uses' => 'JobOpenController@upload',
         //    'middleware' => ['permission:industry-delete']
     ]);
+
     Route::delete('jobs/destroy/{id}', [
         'as' => 'jobopenattachments.destroy',
         'uses' => 'JobOpenController@attachmentsDestroy',
         //    'middleware' => ['permission:industry-delete']
     ]);
+
     Route::get('jobs/{id}/associate_candidate', [
         'as' => 'jobopen.associate_candidate_get',
         'uses' => 'JobOpenController@associateCandidate',
@@ -1054,16 +1085,19 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@postAssociateCandidates',
         'middleware' => ['permission:associate-candidate-list']
     ]);
+
     Route::post('jobs/associated_candidates_count', [
         'as' => 'jobopen.associated_candidates_count',
         'uses' => 'JobOpenController@associateCandidateCount',
         //'middleware' => ['permission:industry-edit']
     ]);
+
     Route::get('jobs/{id}/associated_candidates', [
         'as' => 'jobopen.associated_candidates_get',
         'uses' => 'JobOpenController@associatedCandidates',
         'middleware' => ['permission:associated-candidate-list']
     ]);
+
     Route::post('jobs/deassociate_candidate', [
         'as' => 'jobopen.deassociate_candidate',
         'uses' => 'JobOpenController@deAssociateCandidates',
@@ -1081,21 +1115,25 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@updateCandidateStatus',
         //'middleware' => ['permission:industry-edit']
     ]);
+
     Route::post('jobs/scheduleinterview', [
         'as' => 'jobopen.scheduleinterview',
         'uses' => 'JobOpenController@scheduleInterview',
         //'middleware' => ['permission:industry-create']
     ]);
+
     Route::post('jobs/addjoiningdate', [
         'as' => 'jobopen.addjoiningdate',
         'uses' => 'JobOpenController@addJoiningDate',
         //'middleware' => ['permission:industry-create']
     ]);
+
     Route::post('jobs/moreoptions', [
         'as' => 'jobopen.moreoptions',
         'uses' => 'JobOpenController@moreOptions',
         //'middleware' => ['permission:industry-create']
     ]);
+
     Route::post('jobs/status', [
         'as' => 'jobopen.status',
         'uses' => 'JobOpenController@status',

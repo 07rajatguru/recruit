@@ -39,7 +39,11 @@
                         <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
 
                         @if(isset($jobopen['access']) && $jobopen['access']=='1')
-                            <a class="btn btn-primary" href="{{ route('jobopen.edit',['id' => $jobopen['id'],'year' => $year]) }}">Edit</a>
+                            @if($jobopen['priority']=='4' || $jobopen['priority']=='9' || $jobopen['priority']=='10')
+                                <a class="btn btn-primary" href="{{ route('jobclose.edit',['id' => $jobopen['id'],'year' => $year]) }}">Edit</a>
+                            @else
+                                <a class="btn btn-primary" href="{{ route('jobopen.edit', $jobopen['id']) }}">Edit</a>
+                            @endif
                         @endif
                         
                         @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
@@ -47,13 +51,11 @@
                 @endif
             </div>
         </div>
-
     </div>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
                 <div class="box-header col-md-6 ">
                     <h3 class="box-title">Basic Information</h3>
                 </div>
@@ -66,11 +68,11 @@
                             <th scope="row">Client Name</th>
                             <td colspan="3">{{ $jobopen['client_name'] }}</td>
                         </tr>
-                       <!--  <tr>
+                       {{--<tr>
                             
-                           {{-- <th>Job Opening Status</th>
-                            <td>{{ $jobopen['job_opening_status'] }}</td> --}}
-                        </tr> -->
+                           <th>Job Opening Status</th>
+                            <td>{{ $jobopen['job_opening_status'] }}</td> 
+                        </tr>--}}
                         <tr>
                             <th scope="row">Hiring Manager</th>
                             <td>{{ $jobopen['hiring_manager_name'] }}</td>
@@ -103,9 +105,7 @@
                             <th scope="row" >Job Description</th>
                             <td colspan="3">{!! $jobopen['description'] !!}</td>
                         </tr>
- 
                      </table>
-
                 </div>
             </div>
         </div>
@@ -166,9 +166,7 @@
                     @include('adminlte::jobopen.upload', ['data' => $jobopen, 'name' => 'jobopen'])
                 </div>
 
-                <div class="box-header  col-md-8 ">
-
-                </div>
+                <div class="box-header col-md-8"></div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
@@ -196,7 +194,6 @@
                         @endif
                     </table>
                 </div>
-
             </div>
         </div>
         <input type="hidden" id="token" value="{{ csrf_token() }}">
@@ -225,7 +222,6 @@
                     document.getElementById("associated_candidates").text ="Associated Candidates ("+response.count+")";
                 }
             });
-
         }
     </script>
 @endsection

@@ -286,17 +286,23 @@ class JobOpenController extends Controller
 
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
         if(in_array($user_role_id,$access_roles_id)){
-            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+            //$count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
+            //$job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+
+            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,'','',$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','');
         }
         else if ($isClient) {
             $job_response = JobOpen::getAllJobsByCLient($client_id,0,0,0,NULL,'',$client_heirarchy);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
         }
         else{
-            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+            //$count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+            //$job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+
+            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','');
         }
 
         $priority_0 = 0;
@@ -397,7 +403,8 @@ class JobOpenController extends Controller
     }
 
     // Function for priority wise job page
-    public function priorityWise($priority,$year){
+    /*public function priorityWise($priority,$year){*/
+    public function priorityWise($priority){
         $user = \Auth::user();
 
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -520,6 +527,78 @@ class JobOpenController extends Controller
         // $viewVariable['priority_8'] = $priority_8;
         // $viewVariable['priority_9'] = $priority_9;
         // $viewVariable['priority_10'] = $priority_10;
+        $viewVariable['isClient'] = $isClient;
+        $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
+
+        return view('adminlte::jobopen.prioritywisejob', $viewVariable);
+    }
+
+    public function priorityWiseClosedJobs($priority,$year){
+
+        $user = \Auth::user();
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+
+        $user_id = $user->id;
+        $user_role_id = User::getLoggedinUserRole($user);
+
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+        $isStrategy = $user_obj::isStrategyCoordination($role_id);
+        $isClient = $user_obj::isClient($role_id);
+
+        if (isset($year) && $year != 0) {
+            $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+            $year1 = $year_data[0]; // [result : 2019-4]
+            $year2 = $year_data[1]; // [result : 2020-3]
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+
+            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+        }
+        else {
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+
+            $financial_year = '';
+        }
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isStrategy);
+        if(in_array($user_role_id,$access_roles_id)){
+            $job_response = JobOpen::getPriorityWiseJobs(1,$user_id,$priority,$current_year,$next_year);
+            $job_response_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
+        }
+        else if ($isClient) {
+            $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority);
+            $count = sizeof($job_response);
+            $job_response_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
+        }
+        else{
+            $job_response = JobOpen::getPriorityWiseJobs(0,$user_id,$priority,$current_year,$next_year);
+            $job_response_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
+        }
+
+        $count = sizeof($job_response);
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
+        $viewVariable['isSuperAdmin'] = $isSuperAdmin;
+        $viewVariable['count'] = $count;
+        $viewVariable['priority'] = $priority;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['financial_year'] = $financial_year;
         $viewVariable['year'] = $year;
@@ -657,15 +736,24 @@ class JobOpenController extends Controller
             $checkbox = '';
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+
             if(isset($value['access']) && $value['access']==1){
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
         
-                $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open', 'job_priority' => $job_priority,'year' => $year]);
+                /*$status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open', 'job_priority' => $job_priority,'year' => $year]);*/
+
+                $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open','job_priority' => $job_priority]);
+
                 $status = $status_view->render();
                 $action .= $status;
             }
             if ($isSuperAdmin) {
-                $delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job','year' => $year,'title' => 'Job Open']);
+                /*$delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job','year' => $year,'title' => 'Job Open']);
+                $delete = $delete_view->render();
+                $action .= $delete;*/
+
+                $delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job','title' => 'Job Open']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
@@ -768,7 +856,7 @@ class JobOpenController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            'year' => $year,
+            //'year' => $year,
             "data" => $jobs,
             "priority" => $priority,
             "job_priority" => $job_priority
@@ -1475,6 +1563,7 @@ class JobOpenController extends Controller
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
             $job_open['education_qualification'] = $value->qualifications;
+            $job_open['priority'] = $value->priority;
 
             // already added posting,massmail and job search options
             $selected_posting = array();
@@ -1556,7 +1645,8 @@ class JobOpenController extends Controller
                     'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'strategy_role_id' => $strategy_role_id, 'user_role_id' => $user_role_id, 'isClient' => $isClient,'year' => $year));   
     }
 
-    public function edit($id,$year)
+    /*public function edit($id,$year)*/
+    public function edit($id)
     {
         $dateClass = new Date();
 
@@ -1678,6 +1768,141 @@ class JobOpenController extends Controller
                 }
             }*/
 
+            $selected_users = array();
+            if(isset($job_visible_users) && sizeof($job_visible_users)>0){
+                foreach($job_visible_users as $row){
+                    $selected_users[] = $row->user_id;
+                }
+            }
+
+            $jobopen_model = new JobOpen();
+            $upload_type = $jobopen_model->upload_type;
+
+            $job_open['doc'] = JobOpenDoc::getJobDocByJobId($id);
+            foreach ($job_open['doc'] as $key => $value) {
+                if (array_search($value['category'], $upload_type)) {
+                    unset($upload_type[array_search($value['category'], $upload_type)]);
+                }
+            }
+            $upload_type['Others'] = 'Others';
+        }
+        else {
+            return view('errors.403');
+        }
+
+        $action = "edit";
+
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
+    }
+
+    public function editClosedJob($id,$year) {
+
+        $dateClass = new Date();
+
+        // get all industry
+        $industry_res = Industry::orderBy('name', 'ASC')->get();
+        $industry = array();
+
+        $industry[0] = '-None-';
+        if (sizeof($industry_res) > 0) {
+            foreach ($industry_res as $r) {
+                $industry[$r->id] = $r->name;
+            }
+        }
+
+        $lacs = array();
+        $lacs[''] = 'lacs';
+        for($i=0;$i<=50;$i++){
+            $lacs[$i] = $i;
+        }
+        for($i=55;$i<100;$i+=5){
+            $lacs[$i] = $i;
+        }
+        $lacs['100+'] = '100+';
+
+        // Thousand dropdown
+        $thousand = array(''=>'Thousand');
+        for($i=0;$i<100;$i+=5){
+            $thousand[$i] = $i;
+        }
+
+        //Work experience from dropdown
+        $work_from = array(''=>'Work Experience From');
+        for($i=0;$i<=30;$i++){
+            $work_from[$i] = $i;
+        }
+
+        //Work experience to dropdown
+        $work_to = array(''=>'Work Experience To');
+        for($i=0;$i<=30;$i++){
+            $work_to[$i] = $i;
+        }
+
+        $user = \Auth::user();
+        $admin_role_id = env('ADMIN');
+        $director_role_id = env('DIRECTOR');
+        $manager_role_id = env('MANAGER');
+        $superadmin_role_id = env('SUPERADMIN');
+
+        $user_role_id = User::getLoggedinUserRole($user);
+        $user_id = $user->id;
+        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
+
+        if(in_array($user_role_id,$access_roles_id)) {
+            // get all clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients(0);
+        }
+        else {
+            // get logged in user clients
+            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
+
+        $client = array();
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+            }
+        }
+
+        // get all users
+        $user = \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $user_id = $user->id;
+
+        // For account manager
+        $users = User::getAllUsers(NULL,'Yes');
+        $select_all_users = User::getAllUsers('recruiter');
+        
+        // job opening status
+        $job_open_status = JobOpen::getJobOpenStatus();
+
+        // job type
+        $job_type = JobOpen::getJobTypes();
+
+        // job priority
+        $job_priorities = JobOpen::getJobPriorities();
+        // get Client hierarchy names
+        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+
+        $job_open = JobOpen::find($id);
+
+        if(in_array($user_role_id,$access_roles_id) || ($job_open->hiring_manager_id==$user_id)) {
+
+            $user_id = $job_open->hiring_manager_id;
+            $lacs_from = $job_open->lacs_from;
+            $thousand_from = $job_open->thousand_from;
+            $lacs_to = $job_open->lacs_to;
+            $thousand_to = $job_open->thousand_to;
+            $work_exp_from = $job_open->work_exp_from;
+            $work_exp_to = $job_open->work_exp_to;
+            $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
+            $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
+            $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
+           
             $selected_users = array();
             if(isset($job_visible_users) && sizeof($job_visible_users)>0){
                 foreach($job_visible_users as $row){
@@ -1881,9 +2106,12 @@ class JobOpenController extends Controller
             return redirect('jobs/'.$id.'/edit');
         }
 
-        return redirect()->route('jobopen.index')
-        ->with('success', 'Job Opening Updated Successfully.')
-        ->with('selected_year',$year);
+        if(isset($year) && $year != '') {
+            return redirect()->route('jobopen.close')->with('success', 'Job Opening Updated Successfully.')->with('selected_year',$year);
+        }
+        else {
+            return redirect()->route('jobopen.index')->with('success', 'Job Opening Updated Successfully.');
+        }
     }
 
     public function jobClone($id){
@@ -2279,18 +2507,21 @@ class JobOpenController extends Controller
 
         $job_open_delete = JobOpen::where('id',$id)->delete();
 
-        if(isset($title) && $title == 'Job Open') {
+        if(isset($year) && $year != '') {
 
-            return redirect()->route('jobopen.index')
-            ->with('success', 'Job Opening Deleted Successfully.')
-            ->with('selected_year',$year);
+            if(isset($title) && $title == 'Job Close') {
+
+                return redirect()->route('jobopen.close')
+                ->with('success', 'Closed Job Deleted Successfully.')
+                ->with('selected_year',$year);
+            }
         }
+        else {
 
-        if(isset($title) && $title == 'Job Close') {
+            if(isset($title) && $title == 'Job Open') {
 
-            return redirect()->route('jobopen.close')
-            ->with('success', 'Closed Job Deleted Successfully.')
-            ->with('selected_year',$year);
+                return redirect()->route('jobopen.index')->with('success', 'Job Opening Deleted Successfully.');
+            }
         }
     }
 
@@ -2333,9 +2564,6 @@ class JobOpenController extends Controller
 
     public function attachmentsDestroy(Request $request,$docid) {
 
-        $year = $request->input('year');
-        echo $year;exit;
-
         $file_name = JobOpenDoc::where('id', $docid)->first();
         $delete_file_name = $file_name->file;
 
@@ -2347,11 +2575,12 @@ class JobOpenController extends Controller
 
         $id = $_POST['id'];
         $type = $_POST['type'];
+
         if ($type == 'show') {
-            return redirect()->route('jobopen.show', [$id])->with('success', 'Attachment deleted Successfully');
+            return redirect()->route('jobopen.show', [$id])->with('success', 'Attachment Deleted Successfully.');
         }
         else if($type == 'edit') {
-            return redirect()->route('jobopen.edit', [$id])->with('success', 'Attachment deleted Successfully');   
+            return redirect()->route('jobopen.edit', [$id])->with('success', 'Attachment Deleted Successfully.');   
         }
     }
 
@@ -2865,7 +3094,7 @@ class JobOpenController extends Controller
             $jobCandidateJoiningDate->save();
         }
 
-        return redirect('jobs/'.$_POST['jobid'].'/associated_candidates')->with('success','Joining date added successfully');
+        return redirect('jobs/'.$_POST['jobid'].'/associated_candidates')->with('success','Joining Date Added Successfully.');
     }
 
     public function shortlisted(Request $request,$job_id){
@@ -2879,25 +3108,24 @@ class JobOpenController extends Controller
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $candidate_id and job_id = $job_id");
 
-         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidate shortlisted successfully');
+         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidate Shortlisted Successfully.');
 
     }
 
     public function undoshortlisted(Request $request,$job_id){
+
         $input = $request->all();
 
         $undoshortlist = $input['undoshortlisted'];
         $candidate_id = $input['job_undo_candidate_id'];
-        //print_r($candidate_id);exit;
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted = $undoshortlist where candidate_id = $candidate_id and job_id = $job_id");
 
-        DB::statement("UPDATE job_associate_candidates SET status_id = $undoshortlist where candidate_id = $candidate_id and job_id = $job_id");
+        DB::statement("UPDATE job_associate_candidates SET status_id = '4' where candidate_id = $candidate_id and job_id = $job_id");
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted_date = NULL, selected_date = NULL where candidate_id = $candidate_id and job_id = $job_id");
 
-         return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Undo shortlisted Candidate successfully');
-           
+        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Undo Shortlisted Candidate Successfully.');
     }
 
     public function getOpenJobs(){
@@ -2958,17 +3186,17 @@ class JobOpenController extends Controller
             }
         }
 
-         $job_open->posting = $posting;
-         $job_open->mass_mail = $mm;
-         $job_open->job_search = $js;
+        $job_open->posting = $posting;
+        $job_open->mass_mail = $mm;
+        $job_open->job_search = $js;
 
         $response = $job_open->save();
 
         if($response){
-            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Job Opening additional information added successfully');
+            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Job Opening additional Information Added Successfully.');
         }
         else{
-            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Error while updating data');
+            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Error while updating data.');
         }
     }
 
@@ -2989,15 +3217,27 @@ class JobOpenController extends Controller
             $job_open->save();
         }
     
-        if ($display_name == 'Job Close') {
-            return redirect()->route('jobopen.close')
-            ->with('success', 'Job Priority Updated Successfully.')
-            ->with('selected_year',$year);
+        if(isset($year) && $year != '') {
+
+            if ($display_name == 'Job Close') {
+                return redirect()->route('jobopen.close')
+                ->with('success', 'Job Priority Updated Successfully.')
+                ->with('selected_year',$year);
+            }
+            else if ($display_name == 'Job Open') {
+                return redirect()->route('jobopen.index')
+                ->with('success', 'Job Priority Updated Successfully.')
+                ->with('selected_year',$year);
+            }
         }
-        else if ($display_name == 'Job Open') {
-            return redirect()->route('jobopen.index')
-            ->with('success', 'Job Priority Updated Successfully.')
-            ->with('selected_year',$year);
+        else {
+
+            if ($display_name == 'Job Close') {
+                return redirect()->route('jobopen.close')->with('success', 'Job Priority Updated Successfully.');
+            }
+            else if ($display_name == 'Job Open') {
+                return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated Successfully.');
+            }
         }
     }
 
@@ -3192,7 +3432,7 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
             if(isset($value['access']) && $value['access']==1){
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobclose.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
         
                 $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Close', 'job_priority' => $job_priority,'year' => $year]);
                 $status = $status_view->render();
@@ -3686,7 +3926,7 @@ class JobOpenController extends Controller
         return $order_column_name;
     }
 
-    public function getAllPositionsJobsByAJAX(){
+    public function getAllPositionsJobsByAJAX() {
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -3726,8 +3966,8 @@ class JobOpenController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function getAllJobsAssociatedCandidates($id)
-    {
+    public function getAllJobsAssociatedCandidates($id) {
+
         $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
         $count = sizeof($candidateDetails);
 
