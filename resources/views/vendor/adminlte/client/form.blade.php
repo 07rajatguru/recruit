@@ -79,7 +79,7 @@
 
                         <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
                             <strong>Display Name : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','minLength' => '3','maxlength' => '7','onchange' => 'validDisplayNameText();')) !!}
+                            {!! Form::text('display_name', null, array('id'=>'display_name','placeholder' => 'Display Name','class' => 'form-control', 'tabindex' => '4','minLength' => '3','maxlength' => '10','onchange' => 'validDisplayNameText();')) !!}
                             @if ($errors->has('display_name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('display_name') }}</strong>
