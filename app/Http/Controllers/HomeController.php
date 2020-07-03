@@ -88,7 +88,7 @@ class HomeController extends Controller
 
         // Set Current Year Job Count
 
-        $get_month =  date('m');
+        /*$get_month =  date('m');
 
         if($get_month == '01' || $get_month == '02' || $get_month == '03') {
             $get_next_year =  date('Y');
@@ -111,14 +111,16 @@ class HomeController extends Controller
         else {
             $current_year = NULL;
             $next_year = NULL;    
-        }
+        }*/
         //get Job List
         $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            $job_response = JobOpen::getAllJobs(1,$user->id,0,0,'','','',$current_year,$next_year,'');
+            //$job_response = JobOpen::getAllJobs(1,$user->id,0,0,'','','',$current_year,$next_year,'');
+            $job_response = JobOpen::getAllJobs(1,$user->id);
         }
         else{
-            $job_response = JobOpen::getAllJobs(0,$user->id,0,0,'','','',$current_year,$next_year,'');
+            //$job_response = JobOpen::getAllJobs(0,$user->id,0,0,'','','',$current_year,$next_year,'');
+            $job_response = JobOpen::getAllJobs(0,$user->id);
         }
 
         $job = sizeof($job_response);
