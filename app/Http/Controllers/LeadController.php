@@ -546,10 +546,12 @@ class LeadController extends Controller
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isStrategy = $user_obj::isStrategyCoordination($role_id);
         $isManager = $user_obj::isManager($role_id);
+        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         $user_id = $user->id;
 
         $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
+
 
         // For account manager
          $users = User::getAllUsers('recruiter','Yes');
@@ -591,7 +593,7 @@ class LeadController extends Controller
 
         $lead['contact_point'] = $lead->coordinator_name;
 
-        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
+        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser','isOperationsExecutive'));
 
      }
 
