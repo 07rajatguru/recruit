@@ -589,6 +589,8 @@ class LeadController extends Controller
         $percentage_charged_above = '8.33';
         $referredby = $lead->referredby;
 
+        $lead['contact_point'] = $lead->coordinator_name;
+
         return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby'/*,'yet_to_assign_users','yet_to_assign_users_id'*/,'isManager','client_all_status_key','client_all_status','isAllClientVisibleUser'));
 
      }
@@ -637,7 +639,7 @@ class LeadController extends Controller
             $client_basic_info->tan = $input['tan'];
         else
             $client_basic_info->tan = '';
-        $client_basic_info->coordinator_name = trim($input['coordinator_name']);
+        $client_basic_info->coordinator_name = trim($input['contact_point']);
         $client_basic_info->coordinator_prefix= $input['co_category'];
 
         $status = $input['status'];
