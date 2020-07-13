@@ -3,41 +3,32 @@
 @section('title', 'HRM')
 
 @section('content_header')
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
 
-    @endif
     <div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left">
                 <h2>Dashboard</h2>
-        </div>
+            </div>
 
-       <!--  <div class="pull-right">
-            @include('adminlte::partials.login', ['name' => 'dashboard'])
-            @include('adminlte::partials.logout', ['name' => 'dashboard'])
+            <!--<div class="pull-right">
+                @include('adminlte::partials.login', ['name' => 'dashboard'])
+                @include('adminlte::partials.logout', ['name' => 'dashboard'])
+            </div>-->
         </div>
- -->
     </div>
-
-</div>
-
 @stop
 
 @section('content')
-    
     <!-- popup -->
     @if($date == '2018-12-10')
-    <a class='inline' href="#inline_content"></a>
-    <div style='display:none'>
-        <div id="inline_content" style="background: white;">
-            <div class="bs-example bs-example-standalone" data-example-id="dismissible-alert-js">
-                <img class="img-popup" src="../images/adler.jpg" />
+        <a class='inline' href="#inline_content"></a>
+        <div style='display:none'>
+            <div id="inline_content" style="background: white;">
+                <div class="bs-example bs-example-standalone" data-example-id="dismissible-alert-js">
+                    <img class="img-popup" src="../images/adler.jpg" />
+                </div>
             </div>
         </div>
-    </div>
     @endif
     <!-- popup -->
 
@@ -111,7 +102,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h3> {{$candidatejoinCount}}</h3>
+                    <h3> {{$candidatejoinCount or 0}}</h3>
                     <p>Candidate Joining this month</p>
                 </div>
                 <div class="icon">
@@ -120,7 +111,6 @@
                 <a href="candidatejoin/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -196,7 +186,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(isset($interviews))
+                            @if(isset($interviews) && sizeof($interviews) > 0)
                                 @foreach($interviews as $interview)
                                     <tr>
                                         <!-- <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td> -->
@@ -496,7 +486,5 @@
                 }
             });
         }
-
     </script>
-
 @stop

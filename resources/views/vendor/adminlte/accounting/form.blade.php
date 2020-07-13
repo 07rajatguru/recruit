@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -14,7 +22,7 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($accounting,['method' => 'PATCH','files' => true, 'id' => 'team_form', 'route' => ['accounting.update', $accounting->id]] ) !!}
+    {!! Form::model($accounting,['method' => 'PATCH','files' => true, 'id' => 'accounting_form', 'route' => ['accounting.update', $accounting->id]] ) !!}
 @else
     {!! Form::open(array('route' => 'accounting.store','files' => true,'method'=>'POST', 'id' => 'accounting_form')) !!}
 @endif
@@ -33,7 +41,7 @@
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
-                                </span>
+                            </span>
                         @endif
                     </div>
 
@@ -55,32 +63,28 @@
     </div>
 </div>
 
-
 @section('customscripts')
     <script>
         $(document).ready(function(){
-            $( "#user_ids" ).select2();
 
-
-            $("#team_form").validate({
+            $("#accounting_form").validate({
                 rules: {
-                    "team_name": {
+                    "name": {
                         required: true
                     },
-                    "user_ids": {
+                    "description": {
                         required: true
                     }
                 },
                 messages: {
-                    "team_name": {
-                        required: "Team Name is required field."
+                    "name": {
+                        required: "Name is Required Field."
                     },
-                    "user_ids": {
-                        required: "Select Users is required field."
+                    "description": {
+                        required: "Description is Required Field."
                     }
                 }
             });
         });
     </script>
 @endsection
-

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Attendance')
 
 @section('content_header')
     <h1>Attendance</h1>
@@ -27,17 +27,7 @@
                 </select>
             </div>
 
-           <!--  <div class="attendance_submit col-md-2 col-sm-6 col-xs-12">
-                <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" />
-            </div>
-            <?php if($isSuperAdmin || $isAccountant || $isAdmin || $isOperationsExecutive) {?>
-            <div class="filter-ex-btn pull-right col-md-2 col-sm-6 col-xs-12">
-                <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
-            </div>
-            <?php   }?> -->
-
-            <?php if($isSuperAdmin || $isAccountant || $isAdmin || $isOperationsExecutive) {?>
-
+            @permission(('display-attendance-of-all-users'))
                 <div class="attendance_submit col-md-1 col-sm-4">
                     <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;" />
                 </div>
@@ -47,12 +37,9 @@
                 </div>
 
                 <div class="attendance_submit col-md-1 col-sm-4">
-                   @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name,'isSuperAdmin' => $isSuperAdmin,'isAccountant' => $isAccountant,'isOperationsExecutive' => $isOperationsExecutive])
+                    @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name])
                 </div>
-            <?php   
-            }
-            else{
-            ?>
+            @else
                 <div class="attendance_submit col-md-1 col-sm-4">
                     <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
                 </div>
@@ -60,14 +47,11 @@
                 <div class="col-md-1 col-sm-4">
                     @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name])
                 </div>
-            <?php
-            }
-            ?>
-          
+            @endpermission
         </div>
 
         <div class="col-sm-12" style="margin-top:2%;">
-            @section ('cotable_panel_body')
+            @section('cotable_panel_body')
                 <div style ="overflow-x:scroll;">
                     <table class="table table-bordered" id="attendance_table">
                         <thead>
@@ -155,7 +139,6 @@
     @endforeach
 @stop
 
-
 @section('customscripts')
     <script type="text/javascript">
 
@@ -228,7 +211,7 @@
                 }
             });*/
 
-        var table = $('#attendance_table').DataTable( {
+        var table = $('#attendance_table').DataTable({
             scrollY: true,
             scrollX: true,
             paging: false,
@@ -236,10 +219,10 @@
             info: false,
             sort: false,
             fixedColumns: {
-            leftColumns: 1
-        }
-        } );
-    } );
+                leftColumns: 1
+            }
+        });
+    });
         function filter_data(){
 
             var month = $("#month :selected").val();
@@ -265,8 +248,8 @@
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="month" value="'+month+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="month" value="'+month+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);

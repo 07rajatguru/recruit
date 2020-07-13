@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Permissions')
 
 @section('content_header')
     <h1></h1>
@@ -14,9 +14,7 @@
             </div>
 
             <div class="pull-right">
-                {{--@permission(('permision-create'))--}}
-                    <a class="btn btn-success" href="{{ route('permission.create') }}"> Create New Permission</a>
-                {{--@endpermission--}}
+                <a class="btn btn-success" href="{{ route('permission.create') }}"> Create New Permission</a>
             </div>
         </div>
     </div>
@@ -50,28 +48,9 @@
                 <td>{{ $permission->display_name }}</td>
                 <td>{{ $permission->description }}</td>
                 <td>
-
-                {{-- <a class="btn btn-info" href="{{ route('permission.show',$permission->id) }}">Show</a>--}}
-
-                {{--@permission(('permission-edit'))--}}
-
                     <a class="fa fa-edit" title="Edit" href="{{ route('permission.edit',$permission->id) }}"></a>
 
-                {{--@endpermission--}}
-
-                {{--@permission(('permision-delete'))--}}
-
-                    {{--  {!! Form::open(['method' => 'DELETE','route' => ['permission.destroy', $permission->id],'style'=>'display:inline']) !!}--}}
-
-                    {{--  {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}--}}
-
-                    {{--{!! Form::close() !!}--}}
-
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModal', ['data' => $permission, 'name' => 'permission','display_name'=>'Permission'])
-                    @endif
-
-                {{--@endpermission--}}
+                    @include('adminlte::partials.deleteModal', ['data' => $permission, 'name' => 'permission','display_name'=>'Permission'])
                 </td>
             </tr>
         @endforeach
@@ -82,11 +61,12 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-            var table = jQuery('#roles_table').DataTable( {
+        jQuery(document).ready(function() {
+
+            var table = jQuery('#roles_table').DataTable({
                 responsive: true,
                 stateSave : true,
-            } );
+            });
 
             new jQuery.fn.dataTable.FixedHeader( table );
         });

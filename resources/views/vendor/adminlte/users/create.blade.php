@@ -7,12 +7,13 @@
 @stop
 
 @section('content')
+
     @section('customs_css')
-    <style>
-        .error{
-            color:#f56954 !important;
-        }
-    </style>
+        <style>
+            .error{
+                color:#f56954 !important;
+            }
+        </style>
     @endsection
 
     <div class="row">
@@ -21,7 +22,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('users.index') }}">Back</a>
             </div>
         </div>
     </div>
@@ -31,9 +32,8 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6 ">
-
-                </div>
+                <div class="box-header col-md-6"></div>
+                
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="">
@@ -77,7 +77,6 @@
                                 </span>
                                 @endif
                             </div>
-
 
                             <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
                                 <strong>Secondary Gmail: </strong>
@@ -149,7 +148,7 @@
                                 @endif
                             </div>
 
-                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong> Type : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('type', $type,null, array('class' => 'form-control','tabindex' => '12' )) !!}
                                 @if ($errors->has('type'))

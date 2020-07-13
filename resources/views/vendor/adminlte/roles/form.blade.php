@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -10,15 +18,13 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
         </div>
-
     </div>
-
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
+    {!! Form::model($role, ['method' => 'PATCH','id' => 'role_form','route' => ['roles.update', $role->id]]) !!}
 @else
-    {!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
+    {!! Form::open(array('route' => 'roles.store','method'=>'POST','id' => 'role_form')) !!}
 @endif
 
 <div class="row">
@@ -94,24 +100,28 @@
 @section('customscripts')
     <script>
         $(document).ready(function(){
-            $( "#user_ids" ).select2();
 
-
-            $("#team_form").validate({
+            $("#role_form").validate({
                 rules: {
-                    "team_name": {
+                    "name": {
                         required: true
                     },
-                    "user_ids": {
+                    "display_name": {
+                        required: true
+                    },
+                    "permission[]": {
                         required: true
                     }
                 },
                 messages: {
-                    "team_name": {
-                        required: "Team Name is required field."
+                    "name": {
+                        required: "Name is Required."
                     },
-                    "user_ids": {
-                        required: "Select Users is required field."
+                    "display_name": {
+                        required: "Display Name is Required."
+                    },
+                    "permission[]": {
+                        required: "Please Select Permissions"
                     }
                 }
             });

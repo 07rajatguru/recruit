@@ -14,7 +14,7 @@
         </div>
 
         <div class="pull-right">
-            @permission(('industry-create'))
+            @permission(('companies-add'))
                 <a class="btn btn-success" href="{{ route('companies.create') }}"> Create New Company</a>
             @endpermission
         </div>
@@ -37,25 +37,15 @@
     </thead>
     <tbody>
     <?php $i = 0; ?>
-        @foreach ($companies as $key => $role)
+        @foreach ($companies as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
                     @permission(('companies-edit'))
-                        <a class="fa fa-edit" href="{{ route('companies.edit',$role->id) }}"></a>
+                        <a class="fa fa-edit" href="{{ route('companies.edit',$value->id) }}"></a>
                     @endpermission
-
-                    {{--@permission(('industry-delete'))--}}
-
-                    {{--{!! Form::open(['method' => 'DELETE','route' => ['industry.destroy', $role->id],'style'=>'display:inline']) !!}--}}
-
-                   {{-- {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}--}}
-
-                    {!! Form::close() !!}
-
-                    {{--@endpermission--}}
                 </td>
-                <td>{{ $role->name }}</td>
+                <td>{{ $value->name }}</td>
             </tr>
         @endforeach
     </tbody>
@@ -63,14 +53,14 @@
 
 @endsection
 
-
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-            var table = jQuery('#company_table').DataTable( {
+        jQuery(document).ready(function() {
+
+            var table = jQuery('#company_table').DataTable({
                 responsive: true,
                 stateSave : true
-            } );
+            });
 
             new jQuery.fn.dataTable.FixedHeader( table );
         });

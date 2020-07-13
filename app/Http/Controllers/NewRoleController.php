@@ -4,35 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\New_Role;
-use App\New_Permissions;
-use App\New_PermissionRole;
+use App\Role;
+use App\Permission;
+use App\PermissionRole;
 use App\User;
 use App\Module;
 use DB;
 
 class NewRoleController extends Controller
 {
-    public function index()
-    {
-    	$roles = New_Role::orderBy('id','ASC')->get();
+    public function index() {
+
+    	$roles = Role::orderBy('id','ASC')->get();
     	$count = sizeof($roles);
 
         return view('adminlte::new_role.index',compact('roles','count'));
     }
 
-    public function create()
-    {
-        $permissions = New_Permissions::getAllPermissionsDetails();
+    public function create() {
+
+        $permissions = Permission::getAllPermissionsDetails();
         $modules = Module::getModules();
         $module_ids_array = array();
        
         return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array'));
     }
 
-    public function store(Request $request)
-    {
-        $role = new New_Role();
+    public function store(Request $request) {
+
+        $role = new Role();
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
@@ -47,7 +47,7 @@ class NewRoleController extends Controller
             {
                 foreach ($permissions as $key => $value)
                 {
-                    $permissions_role = new New_PermissionRole();
+                    $permissions_role = new PermissionRole();
                     $permissions_role->permission_id = $value;
                     $permissions_role->role_id = $role_id;
                     $permissions_role->save(); 
@@ -57,22 +57,20 @@ class NewRoleController extends Controller
         return redirect()->route('userrole.index')->with('success','Role Created Successfully.');
     }
 
-    public function show($id)
-    {
-        $role = New_Role::find($id);
-        $rolePermissions = New_Permissions::join("new_permission_role","new_permission_role.permission_id","=","new_permissions.id")
-            ->where("new_permission_role.role_id",$id)
-            ->get();
+    public function show($id) {
+
+        $role = Role::find($id);
+        $rolePermissions = Permission::join("permission_role","permission_role.permission_id","=","permissions.id")->where("permission_role.role_id",$id)->get();
 
         return view('adminlte::new_role.show',compact('role','rolePermissions'));
     }
 
-    public function edit($id)
-    {
-        $role = New_Role::find($id);
+    public function edit($id) {
+
+        $role = Role::find($id);
         $modules = Module::getModules();
 
-        $rolePermissions = New_PermissionRole::getPermissionsByRoleID($id);
+        $rolePermissions = PermissionRole::getPermissionsByRoleID($id);
 
         $module_ids_array = array();
         $i=0;
@@ -86,9 +84,9 @@ class NewRoleController extends Controller
         return view('adminlte::new_role.edit',compact('role','modules','module_ids_array'));
     }
 
-    public function update(Request $request,$id)
-    {
-        $role = New_Role::find($id);
+    public function update(Request $request,$id) {
+
+        $role = Role::find($id);
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
@@ -101,44 +99,43 @@ class NewRoleController extends Controller
             $permissions = $request->input('permission');
             if(isset($permissions) && sizeof($permissions)>0)
             {
-                DB::table("new_permission_role")->where("new_permission_role.role_id",$id)->delete();
+                DB::table("permission_role")->where("permission_role.role_id",$id)->delete();
 
                 foreach ($permissions as $key => $value)
                 {
-                    $permissions_role = new New_PermissionRole();
+                    $permissions_role = new PermissionRole();
                     $permissions_role->permission_id = $value;
                     $permissions_role->role_id = $role_id;
                     $permissions_role->save(); 
                 }
             }
         }
-        return redirect()->route('userrole.index')->with('success','Role Created Successfully.');
+        return redirect()->route('userrole.index')->with('success','Role Updated Successfully.');
     }
 
-    public function destroy($id)
-    {
-        DB::table("new_permission_role")->where('role_id',$id)->delete();
-        DB::table("new_roles")->where('id',$id)->delete();
+    public function destroy($id) {
 
-        return redirect()->route('userrole.index')
-            ->with('success','Role Deleted Successfully.');
+        DB::table("permission_role")->where('role_id',$id)->delete();
+        DB::table("roles")->where('id',$id)->delete();
+
+        return redirect()->route('userrole.index')->with('success','Role Deleted Successfully.');
     }
 
-    public function getPermissions()
-    {
+    public function getPermissions() {
+
     	$module_id = $_GET['module_id'];
-    	$permissions = New_Permissions::getPermissionsByModuleID($module_id);
+    	$permissions = Permission::getPermissionsByModuleID($module_id);
 
     	return $permissions;
     }
 
-    public function getPermissionsByRoleID()
-    {
+    public function getPermissionsByRoleID() {
+
         $module_ids = $_GET['module_selected_items'];
         $role_id = $_GET['role_id'];
 
-        $permissions = New_Permissions::getPermissionsByModuleIDArray($module_ids);
-        $rolePermissions = New_PermissionRole::getPermissionsByRoleID($role_id);
+        $permissions = Permission::getPermissionsByModuleIDArray($module_ids);
+        $rolePermissions = PermissionRole::getPermissionsByRoleID($role_id);
 
         $selected_permissions = array();
         $i=0;
@@ -151,10 +148,10 @@ class NewRoleController extends Controller
         $data = array();
         $j=0;
 
-        foreach ($permissions as $key => $value)
-        {
-            if(in_array($value['id'], $selected_permissions))
-            {
+        foreach ($permissions as $key => $value) {
+
+            if(in_array($value['id'], $selected_permissions)) {
+
                 $data[$j]['id'] = $value['id'];
                 $data[$j]['module_id'] = $value['module_id'];
                 $data[$j]['module_name'] = $value['module_name'];
@@ -162,8 +159,8 @@ class NewRoleController extends Controller
                 $data[$j]['display_name'] = $value['display_name'];
                 $data[$j]['description'] = $value['description'];
             }
-            else
-            {
+            else {
+
                 $data[$j]['id'] = $value['id'];
                 $data[$j]['module_id'] = $value['module_id'];
                 $data[$j]['module_name'] = $value['module_name'];
@@ -173,7 +170,6 @@ class NewRoleController extends Controller
             }
             $j++;
         }
-      
         return $data;exit;
     }
 }
