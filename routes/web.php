@@ -292,7 +292,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('users/profilestore/{id}',[
         'as' => 'users.profilestore',
-        'uses' => 'UserController@profileStore'
+        'uses' => 'UserController@profileStore',
+        'middleware' => ['permission:edit-profile-of-loggedin-user']
     ]);
 
     Route::get('users/myprofile/{id}',[
@@ -388,7 +389,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('users/attendance',[
         'as' => 'users.attendancestore',
-        'uses' => 'UserController@UserAttendanceStore'
+        'uses' => 'UserController@UserAttendanceStore',
+        'middleware' => ['permission:display-attendance-of-all-users']
     ]);
     
     Route::get('users/create', [

@@ -23,18 +23,13 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <!-- <h2>My Profile</h2> -->
                 <h3>{{ $user['name'] }}</h3>
-                      
-                {{--@if($user['type'] == "Photo")
-                    <img src= "../../{!!$user['photo']!!}" height="100px" width="100px" />
-                @else
-                    <img src= "../../uploads/User_Default.jpg" height="100px" width="100px" />
-                @endif--}}
             </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('users.editprofile',$user_id) }}">Edit Profile</a>
-            </div>
+            @permission(('edit-profile-of-loggedin-user'))
+                <div class="pull-right">
+                    <a class="btn btn-primary" href="{{ route('users.editprofile',$user_id) }}">Edit Profile</a>
+                </div>
+            @endpermission
         </div>
     </div>
 
@@ -48,10 +43,6 @@
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <br/>
                         <table class="table table-bordered">
-                            {{--<tr>
-                                <th>Name</th>
-                                <td>{{ $user['name'] }}</td>
-                            </tr>--}}
                             <tr>
                                 <th>Designation</th>
                                 <td>{{ $user['designation'] }}</td>
@@ -84,12 +75,12 @@
                                 <th>Anniversary Date</th>
                                 <td>{{ $user['date_of_anniversary'] }}</td>
                             </tr>
-                            @if($isSuperAdmin || $isAccountant || $isOperationsExecutive) 
+                            @permission(('edit-user-profile'))
                                 <tr>
                                     <th>Exit Date</th>
                                     <td>{{ $user['date_of_exit'] }}</td>
                                 </tr>
-                            @endif
+                            @endpermission
                         </table>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6" style="padding-left: 200px;">
@@ -180,7 +171,7 @@
             </div>
         </div>
 
-        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+        @permission(('edit-user-profile'))
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
@@ -201,7 +192,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        @endpermission
  
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
