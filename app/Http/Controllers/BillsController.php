@@ -55,7 +55,7 @@ class BillsController extends Controller
         }
 
         $title = "Forecasting";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','isOperationsExecutive'));
+        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','isOperationsExecutive'));
     }
 
     public function getForecastingOrderColumnName($order,$admin){
@@ -379,7 +379,7 @@ class BillsController extends Controller
         }
 
         $title = "Cancel Forecasting";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','isOperationsExecutive'));
+        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','isOperationsExecutive'));
     }
     // for cancel bills get using ajax
     public function getAllCancelBillsDetails(){
@@ -576,7 +576,7 @@ class BillsController extends Controller
     }
 
     public function billsMade(){
-       // $bnm = Bills::getAllBills(1);
+
         $cancel_bill = 0;
         $user = \Auth::user();
         $user_id = $user->id;
@@ -668,12 +668,12 @@ class BillsController extends Controller
         }
 
         $title = "Recovery";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','year_array','year','isOperationsExecutive'));
+        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','year_array','year','isOperationsExecutive'));
 
     }
 
     public function cancelbm(){
-       // $bnm = Bills::getAllBills(1);
+
         $cancel_bill = 1;
         $cancel_bnm = 0;
         $cancel_bn = 1;
@@ -706,7 +706,7 @@ class BillsController extends Controller
         }
 
         $title = "Cancel Recovery";
-        return view('adminlte::bills.index', compact('bnm','access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn','isOperationsExecutive'));
+        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn','isOperationsExecutive'));
 
     }
 
