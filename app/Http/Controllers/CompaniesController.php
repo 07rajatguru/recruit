@@ -7,18 +7,15 @@ use App\Companies;
 
 class CompaniesController extends Controller
 {
-
-
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
+
         $companies = Companies::orderBy('id','DESC')->get();
         return view('adminlte::companies.index',compact('companies'));
-
     }
 
     /**
@@ -27,8 +24,8 @@ class CompaniesController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create()
-    {
+    public function create() {
+
         $action = "add" ;
         return view('adminlte::companies.create',compact('action'));
     }
@@ -40,20 +37,18 @@ class CompaniesController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
         ]);
-
 
         $company = new Companies();
         $company->name = $request->input('name');
         $company->description = $request->input('description');
         $company->save();
 
-        return redirect()->route('companies.index')->with('success','Company created successfully');
-
+        return redirect()->route('companies.index')->with('success','Company Added Successfully.');
     }
 
     /**
@@ -63,8 +58,8 @@ class CompaniesController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function edit($id)
-    {
+    public function edit($id) {
+
         $companies = Companies::find($id);
         $action = 'edit';
         return view('adminlte::companies.edit',compact('companies','action'));
@@ -78,8 +73,8 @@ class CompaniesController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
+        
         $this->validate($request, [
             'name' => 'required'
         ]);
@@ -89,8 +84,6 @@ class CompaniesController extends Controller
         $companies->description = $request->input('description');
         $companies->save();
 
-        return redirect()->route('companies.index')->with('success','Company updated successfully');
-
+        return redirect()->route('companies.index')->with('success','Company Details Updated Successfully.');
     }
-
 }

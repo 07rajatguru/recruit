@@ -16,6 +16,7 @@ use Excel;
 use DB;
 use Calendar;
 use App\UserRemarks;
+use App\PermissionRole;
 
 class HomeController extends Controller
 {
@@ -24,32 +25,32 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
+
         $this->middleware('auth');
     }
 
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
 
-            $user = \Auth::user();
-            //$user_id = \Auth::user()->id;
-            // Entry of login
-            $users_log= new UsersLog();
-            $users_log->user_id = $user->id;
-            $users_log->date = gmdate("Y-m-d");
-            $users_log->time = gmdate("H:i:s");
-            $users_log->type ='login';
-            $users_log->created_at = gmdate("Y-m-d H:i:s");
-            $users_log->updated_at = gmdate("Y-m-d H:i:s");
-            $users_log->save();
+        $user = \Auth::user();
 
-            return redirect()->route('dashboard')->with('success', 'Login Successfully');
+        // Entry of login
+        $users_log= new UsersLog();
+        $users_log->user_id = $user->id;
+        $users_log->date = gmdate("Y-m-d");
+        $users_log->time = gmdate("H:i:s");
+        $users_log->type ='login';
+        $users_log->created_at = gmdate("Y-m-d H:i:s");
+        $users_log->updated_at = gmdate("Y-m-d H:i:s");
+        $users_log->save();
+
+        return redirect()->route('dashboard')->with('success', 'Login Successfully.');
     }
 
-    public function logout(Request $request)
-    {
+    public function logout(Request $request) {
+
         $user_id = \Auth::user()->id;
+
         // Entry of login
         $users_log= new UsersLog();
         $users_log->user_id = $user_id;
@@ -60,11 +61,10 @@ class HomeController extends Controller
         $users_log->updated_at = gmdate("Y-m-d H:i:s");
         $users_log->save();
 
-        return redirect()->route('dashboard')->with('success', 'Logout Successfully');
-
+        return redirect()->route('dashboard')->with('success', 'Logout Successfully.');
     }
 
-    public function dashboard(){
+    /*public function dashboard(){
 
         $user_role_id = \Auth::user()->roles->first()->id;
 
@@ -86,40 +86,12 @@ class HomeController extends Controller
             $toDos = ToDos::getAllTodosdash($todo_ids,7);
         }
 
-        // Set Current Year Job Count
-
-        /*$get_month =  date('m');
-
-        if($get_month == '01' || $get_month == '02' || $get_month == '03') {
-            $get_next_year =  date('Y');
-            $get_current_year = $get_next_year - 1;
-        }
-        else {
-            $get_current_year =  date('Y');
-            $get_next_year = $get_current_year + 1;
-        }
-
-        $year = $get_current_year."-4, ".$get_next_year."-3";
-
-        if (isset($year) && $year != 0) {
-            $year_data = explode(", ", $year);
-            $year1 = $year_data[0];
-            $year2 = $year_data[1];
-            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
-        }
-        else {
-            $current_year = NULL;
-            $next_year = NULL;    
-        }*/
         //get Job List
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
-            //$job_response = JobOpen::getAllJobs(1,$user->id,0,0,'','','',$current_year,$next_year,'');
             $job_response = JobOpen::getAllJobs(1,$user->id);
         }
         else{
-            //$job_response = JobOpen::getAllJobs(0,$user->id,0,0,'','','',$current_year,$next_year,'');
             $job_response = JobOpen::getAllJobs(0,$user->id);
         }
 
@@ -214,12 +186,117 @@ class HomeController extends Controller
         $viewVariable['year'] = $year;
 
         return view('dashboard',$viewVariable);
+    }*/
+
+    public function dashboard() {
+
+        $user_id =  \Auth::user()->id;
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $toDos = array();
+        if(isset($todo_ids) && sizeof($todo_ids)>0){
+            $toDos = ToDos::getAllTodosdash($todo_ids,7);
+        }
+
+        $date = date('Y-m-d');
+        $month = date('m');
+        $year = date('Y');
+
+        if(in_array('display-all-count', $permissions)) {
+
+            // Client Count
+
+            $client = DB::table('client_basicinfo')
+            ->whereRaw('MONTH(created_at) = ?',[$month])
+            ->whereRaw('YEAR(created_at) = ?',[$year])->count();
+
+            // Job Count
+
+            $job_response = JobOpen::getAllJobs(1,$user_id);
+            $job = sizeof($job_response);
+
+            // Interview Count
+
+            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
+
+            // Cvs Associated this month
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
+
+            // Interview Attended this month
+
+            $interview_attend = DB::table('interview')
+            ->whereRaw('MONTH(interview_date) = ?',[$month])
+            ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();
+
+            // Candidate Join this month
+
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+        }
+        else if(in_array('display-userwise-count', $permissions)) {
+
+            // Client Count
+
+            $client = DB::table('client_basicinfo')
+            ->whereRaw('MONTH(created_at) = ?',[$month])
+            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)->count();
+
+            // Job Count
+
+            $job_response = JobOpen::getAllJobs(0,$user_id);
+            $job = sizeof($job_response);
+
+            // Interview Count
+
+            $interviews = Interview::getDashboardInterviews(0,$user_id);
+            $interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user_id);
+
+            // Cvs Associated this month
+
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
+
+            // Interview Attended this month
+
+            $interview_attend = DB::table('interview')
+            ->whereRaw('MONTH(interview_date) = ?',[$month])
+            ->whereRaw('YEAR(interview_date) = ?',[$year])
+            ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();
+
+            // Candidate Join this month
+
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+        }
+
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['interviews'] = $interviews;
+        $viewVariable['interviewCount'] = sizeof($interviews_cnt);
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
+        $viewVariable['associatedCount'] = $associate_count;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['date'] = $date;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
+
+        return view('dashboard',$viewVariable);
     }
 
     public function dashboardMonthwise(){
 
         $user_id =  \Auth::user()->id;
-
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        
         if(isset($_POST['month']) && $_POST['month']!=''){
             $month = $_POST['month'];
         }
@@ -239,58 +316,109 @@ class HomeController extends Controller
         }
 
         $year_array = array();
-        $year_array[2016] = 2016;
         $year_array[2017] = 2017;
         $year_array[2018] = 2018;
         $year_array[2019] = 2019;
         $year_array[2020] = 2020;
+        $year_array[2021] = 2021;
 
-        // Client Count
-        $client = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])->count();
+        if(in_array('display-month-wise-dashboard', $permissions)) {
 
-        // Job Count
-        $job_response = JobOpen::getAllJobs(1,$user_id);
-        $job = sizeof($job_response);
+            if(in_array('display-all-count', $permissions)) {
 
-        // Interview Count
-        $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
-        $interviews = sizeof($interviews_cnt);
+                // Client Count
 
-        // Cvs Associated this month
-        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
-        $associate_count = $associate_monthly_response['cvs_cnt'];
+                $clientCount = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
+                ->whereRaw('YEAR(created_at) = ?',[$year])->count();
 
-        // Interview attended this month
-        $interview_attend = DB::table('interview')->whereRaw('MONTH(interview_date) = ?',[$month])
-                                                    ->whereRaw('YEAR(interview_date) = ?',[$year])
-                                                    ->where('status','=','Attended')
-                                                    ->count();
+                // Job Count
 
-        // Candidate Join this month
-        $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+                $job_response = JobOpen::getAllJobs(1,$user_id);
+                $jobCount = sizeof($job_response);
 
-        $viewVariable = array();
-        $viewVariable['month'] = $month;
-        $viewVariable['month_list'] = $month_array;
-        $viewVariable['year'] = $year;
-        $viewVariable['year_list'] = $year_array;
-        $viewVariable['clientCount'] = $client;
-        $viewVariable['jobCount'] = $job;
-        $viewVariable['interviewCount'] = $interviews;
-        $viewVariable['associatedCount'] = $associate_count;
-        $viewVariable['interviewAttendCount'] = $interview_attend;
-        $viewVariable['candidatejoinCount'] = $candidatecount;
+                // Interview Count
 
-        $superadmin_role_id =  env('SUPERADMINUSERID');
-        if ($user_id != $superadmin_role_id) {
+                $interviews = Interview::getTodayTomorrowsInterviews(1,$user_id);
+                $interviewCount = sizeof($interviews);
+
+                // Cvs Associated this month
+
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+                $associatedCount = $associate_monthly_response['cvs_cnt'];
+
+                // Interview Attended this month
+
+                $interviewAttendCount = DB::table('interview')
+                ->whereRaw('MONTH(interview_date) = ?',[$month])
+                ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();
+
+                // Candidate Join this month
+
+                $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+            }
+            else if(in_array('display-userwise-count', $permissions)) {
+
+                // Client Count
+
+                $clientCount = DB::table('client_basicinfo')
+                ->whereRaw('MONTH(created_at) = ?',[$month])
+                ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)->count();
+
+                // Job Count
+
+                $job_response = JobOpen::getAllJobs(0,$user_id);
+                $jobCount = sizeof($job_response);
+
+                // Interview Count
+
+                $interviews = Interview::getTodayTomorrowsInterviews(0,$user_id);
+                $interviewCount = sizeof($interviews);
+
+                // Cvs Associated this month
+
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associatedCount = $associate_monthly_response['cvs_cnt'];
+
+                // Interview Attended this month
+
+                $interviewAttendCount = DB::table('interview')
+                ->whereRaw('MONTH(interview_date) = ?',[$month])
+                ->whereRaw('YEAR(interview_date) = ?',[$year])
+                ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();
+
+                // Candidate Join this month
+
+                $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+            }
+
+            $viewVariable = array();
+            $viewVariable['month'] = $month;
+            $viewVariable['month_list'] = $month_array;
+            $viewVariable['year'] = $year;
+            $viewVariable['year_list'] = $year_array;
+            $viewVariable['clientCount'] = $clientCount;
+            $viewVariable['jobCount'] = $jobCount;
+            $viewVariable['interviewCount'] = $interviewCount;
+            $viewVariable['associatedCount'] = $associatedCount;
+            $viewVariable['interviewAttendCount'] = $interviewAttendCount;
+            $viewVariable['candidatejoinCount'] = $candidatejoinCount;
+
+            return view('dashboardmonthwise',$viewVariable);
+        }
+        else {
             return view('errors.403');
+        }
+
+        /*$superadmin_role_id =  env('SUPERADMINUSERID');
+        if ($user_id != $superadmin_role_id) {
+            
         }
         else{
             return view('dashboardmonthwise',$viewVariable);
-        }
+        }*/
     }
 
-    public function OpentoAllJob(){
+    /*public function OpentoAllJob(){
 
         $user_id =  \Auth::user()->id;
 
@@ -301,11 +429,27 @@ class HomeController extends Controller
         $manager_role_id = env('MANAGER');
         $strategy_role_id = env('STRATEGY');
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$strategy_role_id);
+        $access_roles_id = array($admin_role_id,$director_role_id,$superadmin_role_id,$strategy_role_id);
         if(in_array($user_role_id,$access_roles_id)){
             $job_opened = JobOpen::getOpenToAllJobs(1,$user_id,10);
         }
         else {
+            $job_opened = JobOpen::getOpenToAllJobs(0,$user_id,10);
+        }
+
+        return json_encode($job_opened);
+    }*/
+
+    public function OpentoAllJob(){
+
+        $user_id =  \Auth::user()->id;
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+
+        if(in_array('display-jobs-open-to-all', $permissions)) {
+            $job_opened = JobOpen::getOpenToAllJobs(1,$user_id,10);
+        }
+        else if(in_array('display-jobs-open-to-all-by-loggedin-user', $permissions)) {
             $job_opened = JobOpen::getOpenToAllJobs(0,$user_id,10);
         }
 
@@ -317,7 +461,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+/*    public function index()
     {
         $user =  \Auth::user();
 
@@ -396,17 +540,11 @@ class HomeController extends Controller
         if(in_array($user_role_id,$access_roles_id)){
             $response = UsersLog::getUsersAttendance(0,$month,$year);
             $user_remark = UserRemarks::getUserRemarksByUserid(0);
-            /*$response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
-                        join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year group by date,users.id");*/
         }
         else{
             $response = UsersLog::getUsersAttendance($loggedin_userid,$month,$year);
             $user_remark = UserRemarks::getUserRemarksByUserid($loggedin_userid);
-           /* $response = \DB::select("select users.id ,name ,date ,min(time) as login , max(time) as logout from users_log
-                        join users on users.id = users_log.user_id where month(date)= $month and year(date)=$year and users.id = $loggedin_userid group by date ,users.id");*/
         }
-
-        //print_r($response);exit;
 
         $date = new Date();
         if(sizeof($response)>0){
@@ -456,8 +594,6 @@ class HomeController extends Controller
             }
         }
 
-       //print_r($list);exit;
-
         // New List1
         $list1 = array();
         for($d1=1; $d1<=31; $d1++)
@@ -469,8 +605,6 @@ class HomeController extends Controller
                     $list1[$key][date('j S', $time1)]='';
             }
         }
-
-        //print_r($list1);exit;
 
         if(sizeof($list)>0) {
             foreach ($list as $key => $value) {
@@ -497,11 +631,8 @@ class HomeController extends Controller
 
         $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
 
-        //print_r($list1);exit;
-
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('isSuperAdmin','isAdmin','isAccountant','isDirector','users_name','isOperationsExecutive'));
 
-        //return view('home');
         $from = date('Y-m-d 00:00:00');
         $to = date('Y-m-d 23:59:59');
         $today = date('Y-m-d');
@@ -519,16 +650,165 @@ class HomeController extends Controller
             ->where('interview_date','<=',$to)
             ->get();
 
-        //print_r($interviews);exit;
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
         $viewVariable['interviewCount'] = sizeof($interviews);
 
         return view('home', $viewVariable);
+    }*/
+
+    public function index() {
+
+        $user_id =  \Auth::user()->id;
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+
+        if(in_array('display-attendance-of-all-users-in-admin-panel', $permissions)) {
+            $users = User::getOtherUsers();
+        }
+        else if(in_array('display-attendance-by-loggedin-user-in-admin-panel', $permissions)) {
+            $users = User::getOtherUsers($user_id);
+        }
+
+        if(isset($_POST['month']) && $_POST['month']!=''){
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date("n");
+        }
+
+        if(isset($_POST['year']) && $_POST['year']!=''){
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date("Y");
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m));
+        }
+
+        $starting_year = '2016';
+        $ending_year = date('Y',strtotime('+3 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        $list = array();
+        for($d=1; $d<=31; $d++)
+        {
+            $time = mktime(12, 0, 0, $month, $d, $year);
+            foreach ($users as $key => $value) {
+              //  echo date('m', $time);exit;
+                if (date('n', $time) == $month)
+                    $list[$key][date('j', $time)]['login']='';
+                $list[$key][date('j', $time)]['logout']='';
+                $list[$key][date('j', $time)]['total']='';
+                $list[$key][date('j', $time)]['remarks']='';
+            }
+        }
+
+        if(in_array('display-attendance-of-all-users-in-admin-panel', $permissions)) {
+            $response = UsersLog::getUsersAttendance(0,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksByUserid(0);
+        }
+        else if(in_array('display-attendance-by-loggedin-user-in-admin-panel', $permissions)) {
+            $response = UsersLog::getUsersAttendance($user_id,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksByUserid($user_id);
+        }
+
+        $date = new Date();
+        if(sizeof($response)>0){
+            foreach ($response as $key => $value) {
+
+                $login_time = $date->converttime($value->login);
+                $logout_time = $date->converttime($value->logout);
+
+                $combine_name = $value->first_name."-".$value->last_name;
+
+                $list[$combine_name][date("j",strtotime($value->date))]['login'] = date("h:i A",$login_time);
+                $list[$combine_name][date("j",strtotime($value->date))]['logout'] = date("h:i A",$logout_time);
+
+                $total = ($logout_time - $login_time) / 60;
+
+                $list[$combine_name][date("j",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
+
+                if (isset($user_remark) && sizeof($user_remark)>0) {
+                    foreach ($user_remark as $k => $v) {
+
+                        $split_month = date('n',strtotime($v['remark_date']));
+                        $split_year = date('Y',strtotime($v['remark_date']));
+
+                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
+                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                        }
+                        else{
+
+                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else{
+
+            if (isset($user_remark) && sizeof($user_remark)>0) {
+                foreach ($user_remark as $k => $v) {
+                    $split_month = date('n',strtotime($v['remark_date']));
+                    $split_year = date('Y',strtotime($v['remark_date']));
+                    if (($month == $split_month) && ($year == $split_year)) {
+                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                    }
+                }
+            }
+        }
+
+        // New List1
+        $list1 = array();
+        for($d1=1; $d1<=31; $d1++)
+        {
+            $time1=mktime(12, 0, 0, $month, $d1, $year);
+            foreach ($users as $key => $value)
+            {
+                if (date('n', $time1)==$month)
+                    $list1[$key][date('j S', $time1)]='';
+            }
+        }
+
+        if(sizeof($list)>0) {
+            foreach ($list as $key => $value) {
+                if(sizeof($value)>0) {
+                    $i=0;
+                    foreach ($value as $key1 => $value1) {
+                        if (isset($user_remark) && sizeof($user_remark)>0) {
+                            foreach ($user_remark as $u_k1 => $u_v1) {
+
+                                $split_month = date('n',strtotime($u_v1['remark_date']));
+                                $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                    
+                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                }
+                                $i++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
+
+        return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
     }
 
-    public function userAttendance(){
+    /*public function userAttendance(){
 
         $user =  \Auth::user();
         $loggedin_userid = \Auth::user()->id;
@@ -627,6 +907,96 @@ class HomeController extends Controller
         $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
         
         return view('userattendance', compact('calendar','isSuperAdmin','isAccountant','users_name','isOperationsExecutive'));
+    }*/
+
+    public function userAttendance(){
+
+        $loggedin_userid =  \Auth::user()->id;
+
+        if(isset($_POST['selected_user_id']) && $_POST['selected_user_id'] != '') {
+
+            $user_id = $_POST['selected_user_id'];
+
+            // get selected user attendance for current month
+            $response = UsersLog::getUsersAttendance($user_id,0,0);
+
+            // get selected user remarks
+            $user_remarks = UserRemarks::getUserRemarksByUserid($user_id);
+        }
+        else {
+
+            // get logged in user attendance for current month
+            $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
+
+            // get logged in user remarks
+            $user_remarks = UserRemarks::getUserRemarksByUserid($loggedin_userid);
+        }
+
+        $date = new Date();
+
+        if($response->count()>0){
+            foreach ($response as $k=>$v) {
+                $title = '';
+
+                $login_time = $date->converttime($v->login);
+                $logout_time = $date->converttime($v->logout);
+
+                $total = ($logout_time - $login_time) / 60;
+
+                $title = "Login : ". date('h:i A',$login_time);
+                $title .= "\n Logout : ". date('h:i A',$logout_time);
+                $title .= "\n Total : ".date('H:i', mktime(0,$total));
+
+                // light yellow : FFFACD - between 8-9 hours
+                // blue : B0E0E6 : more than or euqal to 9 hours
+                // red : F08080 : less than 8 hours
+                $color = '';
+                if($total>=540){
+                    $color= '#B0E0E6';
+                }
+                else if ($total>=480 && $total<540){
+                    $color= '#FFFACD';
+                }
+                else{
+                    $color= '#F08080';
+                }
+                // "Login:9:30 PM \n Logout:6:30 PM \n Total : 9 "
+                $events[] = Calendar::event(
+                    $title,
+                    true,
+                    $v->date,
+                    $v->date,
+                    null,
+                    [
+                        'color' => $color,
+                    ]
+                );
+            }
+        }
+
+        foreach ($user_remarks as $k=>$v) {
+            $title = '';
+
+            $title .= $v['remarks'];
+            $color = '#5cb85c';
+            // Remarks
+            $events[] = Calendar::event(
+                $title,
+                true,
+                $v['remark_date'],
+                $v['remark_date'],
+                null,
+                [
+                    'color' => $color,
+                ]
+            );
+        }
+
+        $calendar = Calendar::addEvents($events);
+
+        $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
+        
+        return view('userattendance', compact('calendar','users_name'));
     }
 
     // Save User remarks in calendar
@@ -662,102 +1032,89 @@ class HomeController extends Controller
 
     public function export(){
 
-       // $user_log = UsersLog::all();
+        // $user_log = UsersLog::all();
 
         Excel::create('Attendance', function($excel) {
 
-        $excel->sheet('Sheet 1', function($sheet) {
+            $excel->sheet('Sheet 1', function($sheet) {
 
-            if(isset($_POST['month']) && $_POST['month']!=''){
-                $month = $_POST['month'];
-            }
-            else{
-                $month = date("n");
-            }
-            if(isset($_POST['year']) && $_POST['year']!=''){
-                $year = $_POST['year'];
-            }
-            else{
-                $year = date("Y");
-            }
-
-           $response = UsersLog::getUsersAttendanceList(0,$month,$year);
-           
-           /*print_r($response);
-           exit;*/
-
-
-            /*$list = array();
-            $date = new Date();
-            if(sizeof($response)>0){
-                foreach ($response as $key => $value) {
-                    $data[] = array(
-                        $login_time = $date->converttime($value->login),
-                        $logout_time = $date->converttime($value->logout),
-                        $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time),
-                        $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time),
-
-                        $total = ($logout_time - $login_time) / 60,
-
-                        $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total)),
-                    );
+                if(isset($_POST['month']) && $_POST['month']!='') {
+                    $month = $_POST['month'];
                 }
-            }*/
-        //print_r($response);exit;
-        /*user=DB::table('users_log')->join("users","users.id","=","users_log.user_id")
-                                        ->select("users_log.*","users.name as name")
-                                        ->orderBy('users_log.id','desc')
-                                        ->get();
-                foreach($list as $lists) {
-                 $data[] = array(
-                    $lists->id,
-                    $lists->name,
-                    $lists->login,
-                    $lists->logout,
-                    $lists->total,
-                );
-            }*/
+                else{
+                    $month = date("n");
+                }
+                if(isset($_POST['year']) && $_POST['year']!='') {
+                    $year = $_POST['year'];
+                }
+                else{
+                    $year = date("Y");
+                }
 
-          
-            //$dt_header = array();
+                $response = UsersLog::getUsersAttendanceList(0,$month,$year);
+               
+                /*print_r($response);exit;*/
 
-            for($d=1; $d<=31; $d++)
-            {
-                $time=mktime(12, 0, 0, $month, $d, $year);
+                /*$list = array();
+                $date = new Date();
+                if(sizeof($response)>0){
+                    foreach ($response as $key => $value) {
+                        $data[] = array(
+                            $login_time = $date->converttime($value->login),
+                            $logout_time = $date->converttime($value->logout),
+                            $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time),
+                            $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time),
 
-                $dt = date('j S', $time);
+                            $total = ($logout_time - $login_time) / 60,
 
-                $dt_header = array($dt);
+                            $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total)),
+                        );
+                    }
+                }*/
+                //print_r($response);exit;
+                /*user=DB::table('users_log')->join("users","users.id","=","users_log.user_id")
+                                            ->select("users_log.*","users.name as name")
+                                            ->orderBy('users_log.id','desc')
+                                            ->get();
+                    foreach($list as $lists) {
+                     $data[] = array(
+                        $lists->id,
+                        $lists->name,
+                        $lists->login,
+                        $lists->logout,
+                        $lists->total,
+                    );
+                }*/
 
-               // $sheet->prependRow(1,$dt_header);
-                $sheet->fromArray($dt_header, null, 'B1', false, false);
-                   
-            }
+                for($d=1; $d<=31; $d++) {
 
-        //$sheet->fromArray($response, null, 'A2', false, false);
+                    $time = mktime(12, 0, 0, $month, $d, $year);
+                    $dt = date('j S', $time);
+                    $dt_header = array($dt);
 
-          foreach($response as $key=>$value)
-           {
-               $heading1 = array($key);
+                   // $sheet->prependRow(1,$dt_header);
+                    $sheet->fromArray($dt_header, null, 'B1', false, false);   
+                }
 
-               $sheet->prependRow(2, $heading1);
+                //$sheet->fromArray($response, null, 'A2', false, false);
 
-               $heading2 = array('Login');
+                foreach($response as $key=>$value) {
 
-               $sheet->prependRow(3, $heading2);
+                    $heading1 = array($key);
+                    $sheet->prependRow(2, $heading1);
 
-               $heading3 =array('Logout');
+                    $heading2 = array('Login');
+                    $sheet->prependRow(3, $heading2);
 
-               $sheet->prependRow(4, $heading3);
+                    $heading3 = array('Logout');
+                    $sheet->prependRow(4, $heading3);
 
-               $heading4 =array('Total');
+                    $heading4 = array('Total');
+                    $sheet->prependRow(5, $heading4);
+                }
+            });
+        })->export('xls');
 
-               $sheet->prependRow(5, $heading4);
-
-           }
-           
-        });
-    })->export('xls');
         return view('home');
     }
 

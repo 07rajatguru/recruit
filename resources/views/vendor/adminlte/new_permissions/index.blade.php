@@ -66,6 +66,7 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
+            
             var table = jQuery('#permissions_table').DataTable({
                 responsive: true,
                 stateSave : true,

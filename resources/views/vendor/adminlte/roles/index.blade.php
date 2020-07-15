@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-                @permission(('role-create'))
+                @permission(('role-add'))
                     <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a>
                 @endpermission
             </div>
@@ -50,31 +50,17 @@
                 <td>{{ $role->display_name }}</td>
                 <td>{{ $role->description }}</td>
                 <td>
-
                     <a class="fa fa-circle" title="Show" href="{{ route('roles.show',$role->id) }}"></a>
 
                     @permission(('role-edit'))
                         <a class="fa fa-edit" title="Edit" href="{{ route('roles.edit',$role->id) }}"></a>
                     @endpermission
 
-                    @if($isSuperAdmin)
-                        @permission(('role-delete'))
-
-                            @include('adminlte::partials.deleteModalUser', ['data' => $role, 'name' => 'roles','display_name'=>'Role'])
-
-                            {{-- {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-
-                            {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-
-                            {!! Form::close() !!} --}}
-
-                        @endpermission
-                    @endif
-
+                    @permission(('role-delete'))
+                        @include('adminlte::partials.deleteModalUser', ['data' => $role, 'name' => 'roles','display_name'=>'Role'])
+                    @endpermission
                 </td>
-
             </tr>
-
         @endforeach
         </tbody>
     </table>
@@ -83,10 +69,11 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#roles_table').DataTable( {
+
+            var table = jQuery('#roles_table').DataTable({
                 responsive: true,
                 stateSave : true,
-            } );
+            });
 
             new jQuery.fn.dataTable.FixedHeader( table );
         });

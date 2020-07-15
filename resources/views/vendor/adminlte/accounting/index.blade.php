@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Accounting Head')
 
 @section('content_header')
     <h1></h1>
@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('accounting.create') }}"> Create New Accounting Head</a>
+                <a class="btn btn-success" href="{{ route('accounting.create') }}">Add New Accounting Head</a>
             </div>
         </div>
     </div>
@@ -23,7 +23,12 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
+    @endif
 
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
     @endif
 
     <table id="training_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
@@ -45,25 +50,25 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['description'] }}</td>
                 <td>            
                     <a class="fa fa-edit" title="Edit" href="{{route('accounting.edit',$value['id']) }}"></a>
-                   
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'accounting','display_name'=>'Accounting Head'])
-                    @endif
                     
+                    @permission(('accounting-head-delete'))
+                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'accounting','display_name'=>'Accounting Head'])
+                    @endpermission
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
-    
 @stop
+
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#training_table').DataTable( {
+
+            var table = jQuery('#training_table').DataTable({
                 responsive: true,
                 stateSave : true,
-            } );
+            });
 
             new jQuery.fn.dataTable.FixedHeader( table );
         });

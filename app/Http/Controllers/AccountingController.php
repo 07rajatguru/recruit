@@ -10,30 +10,20 @@ use App\Utils;
 use DB;
 
 class AccountingController extends Controller
-
 {
-    public function index(){
-
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+    public function index() {
 
     	$accountings = AccountingHeads::All();
-
-    	return view('adminlte::accounting.index',compact('accountings','isSuperAdmin'));
+    	return view('adminlte::accounting.index',compact('accountings'));
     }
 
-    public function create(){
+    public function create() {
 
     	$action ='add';
-
     	return view('adminlte::accounting.create',compact('action'));
     }
 
-
-    public function store(Request $request){
+    public function store(Request $request) {
 
     	$user_id = \Auth::user()->id;
         
@@ -43,10 +33,10 @@ class AccountingController extends Controller
         $accounting->description = $request->input('description');
         $accountingStored  = $accounting->save();
 
-        return redirect()->route('accounting.index')->with('success','Accounting Head Created Successfully');
+        return redirect()->route('accounting.index')->with('success','Accounting Head Added Successfully.');
     }
 
-    public function edit($id){
+    public function edit($id) {
 
     	$users = User::getAllUsers();
      	$accounting = AccountingHeads::find($id);
@@ -56,7 +46,7 @@ class AccountingController extends Controller
         return view('adminlte::accounting.edit',compact('users','accounting','action'));
     }
 
-     public function update(Request $request,$id){
+    public function update(Request $request,$id) {
 
      	$user_id = \Auth::user()->id;
         
@@ -65,15 +55,12 @@ class AccountingController extends Controller
         $accounting->description = $request->input('description');
         $accountingStored  = $accounting->save();
 
-       return redirect()->route('accounting.index')->with('success','Accounting Head Updated Successfully');
-
-}
-
-	public function Destroy($id){
-        
-        $accounting = AccountingHeads::where('id',$id)->delete();
-
-        return redirect()->route('accounting.index')->with('success','Accounting Head Deleted Successfully');
+        return redirect()->route('accounting.index')->with('success','Accounting Head Updated Successfully.');
     }
 
+	public function destroy($id) {
+        
+        AccountingHeads::where('id',$id)->delete();
+        return redirect()->route('accounting.index')->with('success','Accounting Head Deleted Successfully.');
+    }
 }

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Users')
 
 @section('content_header')
     <h1></h1>
@@ -44,51 +44,49 @@
             </tr>
         </thead>
         <tbody>
-        @foreach ($data as $key => $user)
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td>
-                    <a class="fa fa-eye" title="Show" href="{{ route('users.show',$user->id) }}"></a>
-                    <a class="fa fa-edit" title="Edit" href="{{ route('users.edit',$user->id) }}"></a>
+            <?php $i=0; ?>
+            @foreach ($users as $key => $user)
+                <tr>
+                    <td>{{ ++$i }}</td>
+                    <td>
+                        <a class="fa fa-eye" title="Show" href="{{ route('users.show',$user->id) }}"></a>
+                        <a class="fa fa-edit" title="Edit" href="{{ route('users.edit',$user->id) }}"></a>
 
-                    {{-- {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                    {!! Form::close() !!} --}}
-
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModalUser', ['data' => $user, 'name' => 'users','display_name'=>'User'])
-                    @endif
-                    
-                    @if($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive)
-                        <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
-                    @endif
-                </td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    @if(!empty($user->roles))
-                        @foreach($user->roles as $v)
-                            <label class="label label-success">{{ $v->display_name }}</label>
-                        @endforeach
-                    @endif
-                </td>
-                <td>{{ $user->type }}</td>
-                <td>{{ $user->status }}</td>
-            </tr>
-        @endforeach
+                        @permission(('user-delete'))
+                            @include('adminlte::partials.deleteModalUser', ['data' => $user, 'name' => 'users','display_name'=>'User'])
+                        @endpermission
+                        
+                        @permission(('edit-user-profile'))
+                            <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
+                        @endpermission
+                    </td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>
+                        @if(!empty($user->roles))
+                            @foreach($user->roles as $v)
+                                <label class="label label-success">{{ $v->display_name }}</label>
+                            @endforeach
+                        @endif
+                    </td>
+                    <td>{{ $user->type }}</td>
+                    <td>{{ $user->status }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
-  {{--!! $data->render() !!--}}
 @endsection
+
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#users_table').DataTable( {
+
+            var table = jQuery('#users_table').DataTable({
                 responsive: true,
                 stateSave : true,
-            } );
+            });
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            new jQuery.fn.dataTable.FixedHeader(table);
         });
     </script>
 @endsection

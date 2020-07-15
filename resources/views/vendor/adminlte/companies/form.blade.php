@@ -18,9 +18,7 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('companies.index') }}"> Back</a>
         </div>
-
     </div>
-
 </div>
 
 @if( $action == 'edit')

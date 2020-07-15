@@ -16,8 +16,8 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
+
         $user = \Auth::user();
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -26,12 +26,7 @@ class RoleController extends Controller
 
         $roles = Role::orderBy('id','ASC')->get();
         return view('adminlte::roles.index',compact('roles','isSuperAdmin'));
-
-       // $roles = Role::orderBy('id','ASC')->paginate(10);
-        //return view('adminlte::roles.index',compact('roles'))->with('i', ($request->input('page', 1) - 1) * 10);
-
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -39,13 +34,12 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create()
-    {
+    public function create() {
+
         $action = 'add';
         $permission = Permission::get();
         return view('adminlte::roles.create',compact('permission','action'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -54,8 +48,8 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
             'display_name' => 'required',
@@ -63,13 +57,11 @@ class RoleController extends Controller
             'permission' => 'required',
         ]);
 
-
         $role = new Role();
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
         $role->save();
-
 
         $permissions = $request->input('permission');
         if(isset($permissions)) {
@@ -77,9 +69,7 @@ class RoleController extends Controller
                 $role->attachPermission($value);
             }
         }
-
-        return redirect()->route('roles.index')->with('success','Role created successfully');
-
+        return redirect()->route('roles.index')->with('success','Role Created Successfully.');
     }
 
     /**
@@ -89,12 +79,10 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($id)
-    {
+    public function show($id) {
+
         $role = Role::find($id);
-        $rolePermissions = Permission::join("permission_role","permission_role.permission_id","=","permissions.id")
-            ->where("permission_role.role_id",$id)
-            ->get();
+        $rolePermissions = Permission::join("permission_role","permission_role.permission_id","=","permissions.id")->where("permission_role.role_id",$id)->get();
 
         return view('adminlte::roles.show',compact('role','rolePermissions'));
     }
@@ -106,13 +94,13 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function edit($id)
-    {
+    public function edit($id) {
+
         $role = Role::find($id);
         $permission = Permission::get();
         $action = 'edit';
         $rolePermissions = DB::table("permission_role")->where("permission_role.role_id",$id)
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+        ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
         return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action'));
     }
@@ -125,22 +113,20 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
+
         $this->validate($request, [
             'display_name' => 'required',
             'description' => 'required',
             //'permission' => 'required',
         ]);
 
-
         $role = Role::find($id);
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
         $role->save();
 
-        DB::table("permission_role")->where("permission_role.role_id",$id)
-            ->delete();
+        DB::table("permission_role")->where("permission_role.role_id",$id)->delete();
 
         $permissions = $request->input('permission');
         if(isset($permissions)) {
@@ -149,11 +135,7 @@ class RoleController extends Controller
             }
 
         }
-
-
-        return redirect()->route('roles.index')
-            ->with('success','Role updated successfully');
-
+        return redirect()->route('roles.index')->with('success','Role Updated Successfully.');
     }
 
     /**
@@ -163,12 +145,9 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
 
         DB::table("roles")->where('id',$id)->delete();
-        return redirect()->route('roles.index')
-            ->with('success','Role deleted successfully');
-
+        return redirect()->route('roles.index')->with('success','Role Deleted Successfully.');
     }
 }

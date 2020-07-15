@@ -8,19 +8,10 @@ use Illuminate\Http\Request;
 use App\User;
 class PermissionsController extends Controller
 {
-    //
-
     public function index(Request $request) {
 
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
         $permissions = Permission::orderBy('id','desc')->get();
-        return view('adminlte::permissions.index',compact('permissions','isSuperAdmin'));
-        //return view('adminlte::permissions.index',compact('permissions'))->with('i', ($request->input('page', 1) - 1) * 5);
+        return view('adminlte::permissions.index',compact('permissions'));
     }
 
     public function create(Request $request) {
@@ -44,9 +35,7 @@ class PermissionsController extends Controller
         if($permissionStored) {
             event(new PermissionSeederEvent());
         }
-
-        return redirect()->route('permission.index')->with('success','Permission Created Successfully');
-
+        return redirect()->route('permission.index')->with('success','Permission Created Successfully.');
     }
 
     public function show($id) {
@@ -54,6 +43,7 @@ class PermissionsController extends Controller
     }
 
     public function edit($id) {
+        
         $permission = Permission::find($id);
 
         $viewVariable = array();
@@ -81,15 +71,12 @@ class PermissionsController extends Controller
             event(new PermissionSeederEvent());
         }
 
-        return redirect()->route('permission.index')->with('success','Permission Updated Successfully');
-
+        return redirect()->route('permission.index')->with('success','Permission Updated Successfully.');
     }
 
     public function destroy($id) {
+
         $permissionDelete = Permission::where('id',$id)->delete();
-
-        return redirect()->route('permission.index')->with('success','Permission deleted Successfully');
+        return redirect()->route('permission.index')->with('success','Permission Deleted Successfully.');
     }
-
-
 }

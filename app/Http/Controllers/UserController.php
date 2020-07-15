@@ -27,6 +27,7 @@ use App\JobVisibleUsers;
 use App\RoleUser;
 use App\ModuleVisibleUser;
 use App\CandidateBasicInfo;
+use App\PermissionRole;
 
 class UserController extends Controller
 {
@@ -36,23 +37,10 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request)
-    {   
-        $user =  \Auth::user();
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+    public function index(Request $request) {
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $data = User::orderBy('status','ASC')->get();
-        return view('adminlte::users.index',compact('data','isSuperAdmin','isAccountant','isOfficeAdmin','isOperationsExecutive'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
-
+        $users = User::orderBy('status','ASC')->get();
+        return view('adminlte::users.index',compact('users'));
     }
 
     /**
@@ -61,8 +49,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create()
-    {
+    public function create() {
+
         $user_id = \Auth::user()->id;
 
         $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id')->toArray();
@@ -82,7 +70,6 @@ class UserController extends Controller
         return view('adminlte::users.create',compact('roles', 'reports_to','companies','type','floor_incharge'));
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -90,15 +77,14 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
             'roles' => 'required',
-           // 'company_id' => 'required'
-            'type' => 'required'
+            'type' => 'required',
         ]);
 
         $input = $request->all();
@@ -115,7 +101,6 @@ class UserController extends Controller
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
         $role_id = $request->input('roles');
-        //print_r($account_manager);exit;
 
         // Start Report Status
 
@@ -157,7 +142,7 @@ class UserController extends Controller
 
         $check_floor_incharge = $request->input('check_floor_incharge');
 
-        $user->secondary_email=$request->input('semail');
+        $user->secondary_email = $request->input('semail');
         $user->daily_report = $check_report;
         $user->reports_to = $reports_to;
         $user->floor_incharge = $floor_incharge;
@@ -232,8 +217,7 @@ class UserController extends Controller
                 }
             }
         }
-     
-        return redirect()->route('users.index')->with('success','User created successfully');
+        return redirect()->route('users.index')->with('success','User Created Successfully.');
     }
 
     /**
@@ -243,8 +227,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($id)
-    {
+    public function show($id) {
+
         $user = User::find($id);
         return view('adminlte::users.show',compact('user'));
     }
@@ -256,8 +240,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function edit($id)
-    {
+    public function edit($id) {
+
         $user = User::find($id);
         $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id');
 
@@ -290,18 +274,15 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'same:confirm-password',
             'roles' => 'required',
-         //   'company_id' => 'required'
-            'type' => 'required'
-
+            'type' => 'required',
         ]);
-
 
         $input = $request->all();
 
@@ -338,7 +319,7 @@ class UserController extends Controller
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
 
-        $user->secondary_email=$request->input('semail');
+        $user->secondary_email = $request->input('semail');
         $user->daily_report = $check_report;
         $user->reports_to = $reports_to; 
         $user->floor_incharge = $floor_incharge;
@@ -401,14 +382,13 @@ class UserController extends Controller
 
         //  If status is inactive then delete this user process and training
         if (isset($status) && $status == 'Inactive') {
-
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
         }
         if (isset($status) && $status == 'Active') {
             return redirect()->route('users.index')->with('success','User updated successfully. please add this user manually in training and process module.');
         }
-        return redirect()->route('users.index')->with('success','User updated successfully');
+        return redirect()->route('users.index')->with('success','User Updated Successfully.');
     }
 
     /**
@@ -418,8 +398,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
+
         return redirect()->route('users.index')->with('error','User can not be delete because associated with other modules.');
 
         $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
@@ -466,57 +446,52 @@ class UserController extends Controller
             $user = User::where('id','=',$id)->delete();
         }
 
-        return redirect()->route('users.index')->with('success','User deleted successfully');
+        return redirect()->route('users.index')->with('success','User Deleted Successfully.');
     }
 
-    public function uploadSignatureImage(Request $request)
-    {
+    public function uploadSignatureImage(Request $request) {
+
         $user_id = \Auth::user()->id;
 
         $CKEditor = $request->input('CKEditor');
         $funcNum  = $request->input('CKEditorFuncNum');
         $message  = $url = '';
 
-        if (Input::hasFile('upload'))
-        {
+        if (Input::hasFile('upload')) {
+
             $file = Input::file('upload');
-            if ($file->isValid())
-            {
+            if ($file->isValid()) {
+
                 $filename = $file->getClientOriginalName();
                 $file->move(public_path().'/uploads/users/'.$user_id.'/signature/', $filename);
                 $url = url('uploads/users/'.$user_id.'/signature/' . $filename);
             }
-            else
-            {
+            else {
+
                 $message = 'An error occurred while uploading the file.';
             }
         }
-        else
-        {
+        else {
+
             $message = 'No file uploaded.';
         }
         return '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$url.'", "'.$message.'")</script>';
     }
 
-    public function profileShow($user_id)
-    {
-        //superadmin
-        $users =  \Auth::user();
-        $loggedin_user_id = \Auth::user()->id;
-        $userRole = $users->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+    public function profileShow($user_id) {
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+        $loggedin_user_id =  \Auth::user()->id;
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
 
-        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive || $loggedin_user_id == $user_id) {        
+        if ($loggedin_user_id == $user_id || in_array('edit-user-profile', $permissions)) {
+
             $dateClass = new Date();
             $user = array();
 
             // profile photo
             $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,'Photo');
+
             if(isset($user_doc_info)){
                 $user['photo'] = $user_doc_info->file;
                 $user['type'] = $user_doc_info->type;
@@ -532,7 +507,7 @@ class UserController extends Controller
 
                 // Official email & gmail
                 $user['id'] = $user_id;
-                $user['name'] = $user_info->name;
+                $user['name'] = $user_info->first_name . " " . $user_info->last_name;
                 $user['email'] = $user_info->email;
                 $user['semail'] = $user_info->secondary_email;
                 $user['designation'] = $user_info->designation;
@@ -581,14 +556,12 @@ class UserController extends Controller
             $users_upload_type = $userModel->users_upload_type;
             $j=0;
             $user['doc'] = array();
-            $users_docs = \DB::table('users_doc')
-                          ->select('users_doc.*')
-                          ->where('user_id','=',$user_id)
-                          ->whereNotIn('type',$type_array)
-                          ->get();
+            $users_docs = \DB::table('users_doc')->select('users_doc.*')->where('user_id','=',$user_id)->whereNotIn('type',$type_array)->get();
 
             $utils = new Utils();
-            foreach($users_docs as $key=>$value){
+
+            foreach($users_docs as $key => $value) {
+
                 $user['doc'][$j]['name'] = $value->name;
                 $user['doc'][$j]['id'] = $value->id;
                 $user['doc'][$j]['url'] = "../".$value->file;
@@ -601,34 +574,28 @@ class UserController extends Controller
                 $j++;
             }
 
-            //$users_upload_type['Others'] = 'Others';
-
-            return view('adminlte::users.myprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','user_id','user_family','users_upload_type','isOperationsExecutive'));
+            return view('adminlte::users.myprofile',array('user' => $user),compact('user_id','user_family','users_upload_type'));
         }
         else {
             return view('errors.403');
         }
     }
-    public function editProfile($user_id)
-    {
-        $users =  \Auth::user();
-        $loggedin_user_id = \Auth::user()->id;
-        $userRole = $users->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+    public function editProfile($user_id) {
 
-        if ($isSuperAdmin || $isAccountant || $isOfficeAdmin || $isOperationsExecutive || $loggedin_user_id == $user_id) {
+        $loggedin_user_id =  \Auth::user()->id;
+        $user_role_id = \Auth::user()->roles->first()->id;
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+
+        if ($loggedin_user_id == $user_id || in_array('edit-user-profile', $permissions)) {
+
             $dateClass = new Date();
             $user = array();
 
             // profile photo
             $user_doc_info = UsersDoc::getUserDocInfoByIDType($user_id,'Photo');
             if(isset($user_doc_info)){
+
                 $user['photo'] = $user_doc_info->file;
                 $user['type'] = $user_doc_info->type;
                 $user_photo_updated_date = date('Y-m-d',strtotime($user_doc_info->updated_at));
@@ -643,11 +610,9 @@ class UserController extends Controller
             $curr_date = date('Y-m-d');
 
             if($next_date == $curr_date || $next_date < $curr_date) {
-
                 $user['edit_photo'] = '1';
             }
             else {
-
                 $user['edit_photo'] = '0';
             }
 
@@ -701,8 +666,11 @@ class UserController extends Controller
 
                 // Family Details                
                 for ($i=1; $i <= 5 ; $i++) {
+
                     $users_family = UsersFamily::getFamilyDetailsofUser($user_id,$i);
+
                     if (isset($users_family) && $users_family != '') {
+
                         $user['name_'.$i] = $users_family->name;
                         $user['relationship_'.$i] = $users_family->relationship;
                         $user['occupation_'.$i] = $users_family->occupation;
@@ -723,16 +691,15 @@ class UserController extends Controller
 
             $j=0;
             $user['doc'] = array();
-            $users_docs = \DB::table('users_doc')
-                ->select('users_doc.*')
-                ->where('user_id','=',$user_id)
-                ->whereNotIn('type',$type_array)
-                ->get();
+            $users_docs = \DB::table('users_doc')->select('users_doc.*')->where('user_id','=',$user_id)
+            ->whereNotIn('type',$type_array)->get();
 
             $utils = new Utils();
 
             if(isset($users_docs) && sizeof($users_docs) > 0) {
+
                 foreach($users_docs as $key=>$value){
+
                     $user['doc'][$j]['name'] = $value->name;
                     $user['doc'][$j]['id'] = $value->id;
                     $user['doc'][$j]['url'] = "../".$value->file;
@@ -753,31 +720,23 @@ class UserController extends Controller
 
             // Generate Emp ID Incrment Number
 
-            $max_id = UserOthersInfo::find(\DB::table('users_otherinfo')
-                ->max('id'));
+            $max_id = UserOthersInfo::find(\DB::table('users_otherinfo')->max('id'));
 
             if(isset($max_id->employee_id_increment) && $max_id->employee_id_increment != '') {
-
                 $number = $max_id->employee_id_increment;
             }
             else {
-
                 $number = 0;
             }
 
             $employee_id_increment = $number + 1;
 
             if($employee_id_increment < 10) {
-
                 $employee_id_increment = '0' . $employee_id_increment;
-
             }
             else {
-
                 $employee_id_increment = $employee_id_increment;
             }
-
-            //echo $employee_id_increment;exit;
 
             return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus','employee_id_increment','isOperationsExecutive'));
         }
@@ -786,8 +745,8 @@ class UserController extends Controller
         }
     }
 
-    public function profileStore($user_id,Request $request)
-    {
+    public function profileStore($user_id,Request $request) {
+
         $dateClass = new Date();
 
         $users =  \Auth::user();
@@ -1006,41 +965,6 @@ class UserController extends Controller
             $users_doc->type = "Photo";
             $users_doc->save();
         }
-
-        /*//Stored others documents
-        $upload_documents = $request->file('upload_documents');
-        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-
-            $users_upload_type = Input::get('users_upload_type');
-
-            foreach ($upload_documents as $k => $v) {
-                if (isset($v) && $v->isValid()) {
-
-                    $file_name = $v->getClientOriginalName();
-                    $file_extension = $v->getClientOriginalExtension();
-                    $file_realpath = $v->getRealPath();
-                    $file_size = $v->getSize();
-
-                    $dir = 'uploads/users/' . $user_id . '/';
-
-                    if (!file_exists($dir) && !is_dir($dir)) {
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-                    $v->move($dir, $file_name);
-
-                    $file_path = $dir . $file_name;
-
-                    $users_doc = new UsersDoc();
-                    $users_doc->user_id = $user_id;
-                    $users_doc->file = $file_path;
-                    $users_doc->name = $file_name;
-                    $users_doc->size = $file_size;
-                    $users_doc->type = $users_upload_type;
-                    $users_doc->save();
-                }
-            }
-        }*/
 
         //Educational Credentials Start
         // Stored SSC Marksheet
@@ -1830,32 +1754,30 @@ class UserController extends Controller
         return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
     }
 
-    public function Upload(Request $request)
-    {
+    public function Upload(Request $request) {
+
         $file = $request->file('file');
         $users_upload_type = Input::get('users_upload_type');
 
         $id = $request->id;
 
-        if (isset($file) && $file->isValid()) 
-        {
+        if (isset($file) && $file->isValid()) {
+
             $doc_name = $file->getClientOriginalName();
             $doc_filesize = filesize($file);
 
             $dir_name = "uploads/users/".$id."/";
             $others_doc_key = "uploads/users/".$id."/".$doc_name;
 
-             if (!file_exists($dir_name)) 
-            {
+            if (!file_exists($dir_name)) {
                 mkdir("uploads/users/$id", 0777,true);
             }
 
-            if(!$file->move($dir_name, $doc_name))
-            {
+            if(!$file->move($dir_name, $doc_name)) {
                 return false;
             }
-            else
-            {
+            else {
+
                 $users_doc = new UsersDoc();
                 $users_doc->user_id = $id;
                 $users_doc->file = $others_doc_key;
@@ -1868,8 +1790,9 @@ class UserController extends Controller
 
         return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully.'); 
     }
-    public function attachmentsDestroy($docid,Request $request)
-    {
+
+    public function attachmentsDestroy($docid,Request $request) {
+
         $user_id = \Auth::user()->id;
         $type = $request->input('type');
 
@@ -1946,7 +1869,7 @@ class UserController extends Controller
          return redirect()->route('users.leave')->with('success',' Successfully');
     }*/
 
-    public function testEmail(){
+    public function testEmail() {
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -1964,7 +1887,7 @@ class UserController extends Controller
         });
     }
 
-    public function UserAttendanceAdd(){
+    public function UserAttendanceAdd() {
 
         $users = User::getAllUsers();
         $type = UsersLog::getattendancetype();
@@ -1972,7 +1895,7 @@ class UserController extends Controller
         return view('adminlte::users.attendanceadd',compact('users','type'));
     }
 
-    public function UserAttendanceStore(Request $request){
+    public function UserAttendanceStore(Request $request) {
 
         $dateClass = new Date();
         $user = $request->users;

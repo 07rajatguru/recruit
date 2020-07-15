@@ -14,11 +14,11 @@
                     <input type="hidden" name="name" id="name" value="{{ $name }}">
                 @endif
 
-                @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+                @permission(('add-remarks-of-all-users-in-admin-panel'))
                     <strong>Select User :</strong><br/>
                     {!! Form::select('user_id', $users,null, array('id'=>'user_id','class' => 'form-control')) !!}
                     <br/><br/>
-                @endif
+                @endpermission
                 
                 <strong>Select Date: </strong>
                 {!! Form::text('date',null,array('id' => 'date', 'placeholder' => 'Select Date', 'class' => 'form-control'))!!}

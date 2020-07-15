@@ -42,9 +42,8 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6 ">
-
-                </div>
+                <div class="box-header col-md-6 "></div>
+                
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="">

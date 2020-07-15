@@ -46,7 +46,6 @@
             <div class="attendance_submit col-md-2">
                 <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" />
             </div>
-          
         </div>
     </div>
     <br/><br/><br/>
@@ -128,9 +127,7 @@
                 <a href="/candidatejoin/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-
     </div>
-
 @stop
 
 @section('customscripts')

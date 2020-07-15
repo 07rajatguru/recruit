@@ -165,7 +165,7 @@ Route::get('specialization/getspecializationbyid',[
 Route::group(['middleware' => ['auth']], function () {
 
     Route::any('/dashboard', array (
-        'middleware' => ['permission:dashboard'],
+        //'middleware' => ['permission:dashboard'],
         'uses' => 'HomeController@dashboard'
     ));
 
@@ -180,13 +180,13 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::any('/home', array (
-        'middleware' => ['permission:attendance'],
+        //'middleware' => ['permission:attendance'],
         'uses' => 'HomeController@index'
     ));
 
     Route::any('/userattendance', array (
         'as' => 'user.attendance',
-        'middleware' => ['permission:attendance'],
+        //'middleware' => ['permission:attendance'],
         'uses' => 'HomeController@userAttendance'
     ));
 
@@ -282,29 +282,36 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'LeadController@cancel'
     ]);
 
-
     //User Profile
     
     Route::get('users/editprofile/{id}',[
         'as' => 'users.editprofile',
-        'uses' => 'UserController@editProfile'
+        'uses' => 'UserController@editProfile',
+        'middleware' => ['permission:edit-profile-of-loggedin-user']
     ]);
+
     Route::post('users/profilestore/{id}',[
         'as' => 'users.profilestore',
-        'uses' => 'UserController@profileStore'
+        'uses' => 'UserController@profileStore',
+        'middleware' => ['permission:edit-profile-of-loggedin-user']
     ]);
+
     Route::get('users/myprofile/{id}',[
         'as' => 'users.myprofile',
-        'uses' => 'UserController@profileShow'
+        'uses' => 'UserController@profileShow',
+        'middleware' => ['permission:user-profile']
     ]);
+
     Route::post('usersattachments/upload/{id}',[
         'as' => 'usersattachments.upload',
         'uses' => 'UserController@Upload'
     ]);
+
     Route::post('/upload-signature',[
         'as' => 'upload.signature',
         'uses' => 'UserController@uploadSignatureImage'
     ]);
+
     Route::delete('usersattachments/destroy/{id}',[
         'as' =>'usersattachments.destroy',
         'uses' =>'UserController@attachmentsDestroy'
@@ -367,88 +374,96 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Admin > Users
+
     Route::get('users', [
         'as' => 'users.index',
         'uses' => 'UserController@index',
-        'middleware' => ['permission:user-list|user-create|user-edit|user-delete']
+        'middleware' => ['permission:display-users|user-add|user-edit|user-delete']
     ]);
-/*
-    Route::post('users/upload/{id}',[
-        'as' => 'users.upload',
-        'uses' => 'UserController@Upload'
-    ]);*/
+
     Route::get('users/attendance',[
         'as' => 'users.attendance',
         'uses' => 'UserController@UserAttendanceAdd',
-        'middleware' => ['permission:user-create']
+        'middleware' => ['permission:display-attendance-of-all-users']
     ]);
 
     Route::post('users/attendance',[
         'as' => 'users.attendancestore',
-        'uses' => 'UserController@UserAttendanceStore'
+        'uses' => 'UserController@UserAttendanceStore',
+        'middleware' => ['permission:display-attendance-of-all-users']
     ]);
     
     Route::get('users/create', [
         'as' => 'users.create',
         'uses' => 'UserController@create',
-        'middleware' => ['permission:user-create']
+        'middleware' => ['permission:user-add']
     ]);
+
     Route::post('users/create', [
         'as' => 'users.store',
         'uses' => 'UserController@store',
-        'middleware' => ['permission:user-create']
+        'middleware' => ['permission:user-add']
     ]);
+
     Route::get('users/{id}', [
         'as' => 'users.show',
         'uses' => 'UserController@show'
     ]);
+
     Route::get('users/{id}/edit', [
         'as' => 'users.edit',
         'uses' => 'UserController@edit',
         'middleware' => ['permission:user-edit']
     ]);
+
     Route::patch('users/{id}', [
         'as' => 'users.update',
         'uses' => 'UserController@update',
         'middleware' => ['permission:user-edit']
     ]);
+
     Route::delete('users/{id}', [
         'as' => 'users.destroy',
         'uses' => 'UserController@destroy',
         'middleware' => ['permission:user-delete']
     ]);
 
-
     // Admin > Roles
     Route::get('roles', [
         'as' => 'roles.index',
         'uses' => 'RoleController@index',
-        'middleware' => ['permission:role-list|role-create|role-edit|role-delete']
+        'middleware' => ['permission:display-roles|role-add|role-edit|role-delete']
     ]);
+
     Route::get('roles/create', [
         'as' => 'roles.create',
         'uses' => 'RoleController@create',
-        'middleware' => ['permission:role-create']
+        'middleware' => ['permission:role-add']
     ]);
+
     Route::post('roles/create', [
         'as' => 'roles.store',
         'uses' => 'RoleController@store',
-        'middleware' => ['permission:role-create']
+        'middleware' => ['permission:role-add']
     ]);
+
     Route::get('roles/{id}', [
         'as' => 'roles.show',
         'uses' => 'RoleController@show'
     ]);
+
     Route::get('roles/{id}/edit', [
         'as' => 'roles.edit',
         'uses' => 'RoleController@edit',
         'middleware' => ['permission:role-edit']
     ]);
+
     Route::patch('roles/{id}', [
         'as' => 'roles.update',
         'uses' => 'RoleController@update',
         'middleware' => ['permission:role-edit']
     ]);
+    
     Route::delete('roles/{id}', [
         'as' => 'roles.destroy',
         'uses' => 'RoleController@destroy',
@@ -495,7 +510,8 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Admin > Permissions
-    Route::group(['middleware' => ['permission:permission-list']], function () {
+    //Route::group(['middleware' => ['permission:permission-list']], function () {
+    Route::group([], function () {
         Route::resource('permissions', 'PermissionsController', [
             'except' => 'show',
             'names' => [
@@ -868,7 +884,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidatejoin/{month}/{year}', [
         'as' => 'candidatejoin.index',
         'uses' => 'CandidateController@candidatejoin',
-        'middleware' => ['permission:candidate-list']
+        'middleware' => ['permission:display-candidates']
     ]);
 
     Route::get('candidate/importExport', 'CandidateController@importExport');
@@ -948,13 +964,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs/create', [
         'as' => 'jobopen.create',
         'uses' => 'JobOpenController@create',
-        'middleware' => ['permission:job-create']
+        'middleware' => ['permission:job-add']
     ]);
 
     Route::get('jobs/clone/{id}', [
         'as' => 'jobopen.clone',
         'uses' => 'JobOpenController@jobClone',
-        'middleware' => ['permission:job-create']
+        'middleware' => ['permission:job-add']
     ]);
 
 
@@ -973,13 +989,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
-        'middleware' => ['permission:job-list|job-create|job-edit|job-delete']
+        'middleware' => ['permission:display-jobs|job-add|job-edit|job-delete']
     ]);
     
     Route::get('jobs/all', [
         'as' => 'jobopen.all',
         'uses' => 'JobOpenController@getAllJobsDetails',
-        'middleware' => ['permission:job-list|job-create|job-edit|job-delete']
+        'middleware' => ['permission:display-jobs|job-add|job-edit|job-delete']
     ]);
 
     Route::post('jobs', [
@@ -1011,13 +1027,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('jobs/create', [
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',
-        'middleware' => ['permission:job-create']
+        'middleware' => ['permission:job-add']
     ]);
 
     Route::post('jobs/clone', [
         'as' => 'jobopen.clonestore',
         'uses' => 'JobOpenController@clonestore',
-        'middleware' => ['permission:job-create']
+        'middleware' => ['permission:job-add']
     ]); 
     
     Route::get('jobs/{id}', [
@@ -1200,7 +1216,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('associatedcvs/{month}/{year}', [
         'as' => 'jobopen.associatedcvs',
         'uses' => 'JobOpenController@associatedCVS',
-        //'middleware' => ['permission:industry-edit']
     ]);
 
     // Associated candidate mail route
@@ -1233,61 +1248,61 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('interview', [
         'as' => 'interview.index',
         'uses' => 'InterviewController@index',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('interview/all', [
         'as' => 'interview.all',
         'uses' => 'InterviewController@getAllInterviewsDetails',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('todaytomorrow',[
         'as' => 'interview.todaytomorrow',
         'uses' => 'InterviewController@todaytomorrow',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('interview/today', [
         'as' => 'interview.today',
         'uses' => 'InterviewController@today',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('interview/tomorrow', [
         'as' => 'interview.tomorrow',
         'uses' => 'InterviewController@tomorrow',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('interview/thisweek', [
         'as' => 'interview.thisweek',
         'uses' => 'InterviewController@thisweek',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('interview/upcomingprevious', [
         'as' => 'interview.upcomingprevious',
         'uses' => 'InterviewController@UpcomingPrevious',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('attendedinterview/{month}/{year}',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview',
-        'middleware' => ['permission:interview-list']
+        'middleware' => ['permission:display-interviews']
     ]);
 
     Route::get('interview/create', [
         'as' => 'interview.create',
         'uses' => 'InterviewController@create',
-        'middleware' => ['permission:interview-create']
+        'middleware' => ['permission:interview-add']
     ]);
 
     Route::post('interview/store', [
         'as' => 'interview.store',
         'uses' => 'InterviewController@store',
-        'middleware' => ['permission:interview-create']
+        'middleware' => ['permission:interview-add']
     ]);
 
     Route::get('interview/{id}/show', [
@@ -1515,37 +1530,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos', [
         'as' => 'todos.index',
         'uses' => 'ToDosController@index',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/alltodos', [
         'as' => 'todos.alltodos',
         'uses' => 'ToDosController@getAllTodosDetails',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/complete', [
         'as' => 'todos.completetodo',
         'uses' => 'ToDosController@completetodo',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/complete/all',[
         'as' => 'todos.completeall',
         'uses' => 'ToDosController@getCompleteTodosDetails',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/mytask', [
         'as' => 'todos.mytask',
         'uses' => 'ToDosController@mytask',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/my/all', [
         'as' => 'todos.myall',
         'uses' => 'ToDosController@getMyTodosDetails',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/create', [
@@ -1577,25 +1592,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos/daily', [
         'as' => 'todos.daily',
         'uses' => 'ToDosController@daily',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/weekly', [
         'as' => 'todos.weekly',
         'uses' => 'ToDosController@weekly',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/monthly', [
         'as' => 'todos.monthly',
         'uses' => 'ToDosController@monthly',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/read', [
         'as' => 'todos.read',
         'uses' => 'ToDosController@readTodos',
-        'middleware' => ['permission:todo-list']
+        'middleware' => ['permission:display-todos']
     ]);
 
     Route::get('todos/{id}', [
@@ -1631,41 +1646,46 @@ Route::group(['middleware' => ['auth']], function () {
 
     // To do's Routes End
 
+    // Admin > Company
 
-    // Admin > Industry
     Route::get('companies', [
         'as' => 'companies.index',
         'uses' => 'CompaniesController@index',
-        'middleware' => ['permission:companies-list|companies-create|companies-edit']
+        'middleware' => ['permission:display-companies|companies-add|companies-edit']
     ]);
+
     Route::get('companies/create', [
-            'as' => 'companies.create',
-            'uses' => 'CompaniesController@create',
-            'middleware' => ['permission:companies-create']
+        'as' => 'companies.create',
+        'uses' => 'CompaniesController@create',
+        'middleware' => ['permission:companies-add']
     ]);
+
     Route::post('companies/create', [
         'as' => 'companies.store',
         'uses' => 'CompaniesController@store',
-        'middleware' => ['permission:companies-create']
+        'middleware' => ['permission:companies-add']
     ]);
+
     Route::get('companies/{id}', [
         'as' => 'companies.show',
         'uses' => 'CompaniesController@show'
     ]);
+
     Route::get('companies/{id}/edit', [
         'as' => 'companies.edit',
         'uses' => 'CompaniesController@edit',
         'middleware' => ['permission:companies-edit']
     ]);
+
     Route::patch('companies/{id}', [
         'as' => 'companies.update',
         'uses' => 'CompaniesController@update',
-        'middleware' => ['permission:industry-edit']
+        'middleware' => ['permission:companies-edit']
     ]);
+
     /*Route::delete('companies/{id}', [
         'as' => 'companies.destroy',
-        'uses' => 'CompaniesController@destroy',
-         'middleware' => ['permission:industry-delete']
+        'uses' => 'CompaniesController@destroy'
     ]);*/
 
 
@@ -1832,34 +1852,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('accounting', [
         'as' => 'accounting.index',
         'uses' => 'AccountingController@index',
-        'middleware' => ['permission:accounting-list']
+        'middleware' => ['permission:display-accounting-heads|accounting-head-add|accounting-head-edit|accounting-head-delete']
     ]);
+
     Route::get('accounting/create', [
         'as' => 'accounting.create',
         'uses' => 'AccountingController@create',
-        'middleware' => ['permission:accounting-create']
+        'middleware' => ['permission:accounting-head-add']
     ]);
+
     Route::post('accounting/create', [
         'as' => 'accounting.store',
         'uses' => 'AccountingController@store',
-        'middleware' => ['permission:accounting-create']
+        'middleware' => ['permission:accounting-head-add']
     ]);
     
     Route::get('accounting/{id}/edit', [
         'as' => 'accounting.edit',
         'uses' => 'AccountingController@edit',
-        'middleware' => ['permission:accounting-edit']
+        'middleware' => ['permission:accounting-head-edit']
     ]);
+
     Route::patch('accounting/{id}', [
         'as' => 'accounting.update',
         'uses' => 'AccountingController@update',
-        'middleware' => ['permission:accounting-edit']
+        'middleware' => ['permission:accounting-head-edit']
     ]);
     
     Route::delete('accounting/{id}', [
         'as' => 'accounting.destroy',
-        'uses' => 'AccountingController@Destroy',
-        'middleware' => ['permission:accounting-delete']
+        'uses' => 'AccountingController@destroy',
+        'middleware' => ['permission:accounting-head-delete']
     ]);
 
     // Expense Route
@@ -2545,7 +2568,8 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Admin > New User Permissions
-    Route::group(['middleware' => ['permission:permission-list']], function () {
+    //Route::group(['middleware' => ['permission:permission-list']], function () {
+    Route::group([], function () {
         Route::resource('user-permissions', 'NewPermissionsController', [
             'names' => [
                 'index' => 'userpermission.index',
@@ -2573,30 +2597,42 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('user-role', [
         'as' => 'userrole.index',
         'uses' => 'NewRoleController@index',
+        'middleware' => ['permission:display-roles|role-add|role-edit|role-delete']
     ]);
+
     Route::get('user-role/create', [
         'as' => 'userrole.create',
-        'uses' => 'NewRoleController@create'
+        'uses' => 'NewRoleController@create',
+        'middleware' => ['permission:role-add']
     ]);
+
     Route::post('user-role/create', [
         'as' => 'userrole.store',
-        'uses' => 'NewRoleController@store'
+        'uses' => 'NewRoleController@store',
+        'middleware' => ['permission:role-add']
     ]);
+
     Route::get('user-role/{id}', [
         'as' => 'userrole.show',
         'uses' => 'NewRoleController@show'
     ]);
+
     Route::get('user-role/{id}/edit', [
         'as' => 'userrole.edit',
-        'uses' => 'NewRoleController@edit'
+        'uses' => 'NewRoleController@edit',
+        'middleware' => ['permission:role-edit']
     ]);
+
     Route::patch('user-role/{id}', [
         'as' => 'userrole.update',
-        'uses' => 'NewRoleController@update'
+        'uses' => 'NewRoleController@update',
+        'middleware' => ['permission:role-edit']
     ]);
+
     Route::delete('user-role/{id}', [
         'as' => 'userrole.destroy',
-        'uses' => 'NewRoleController@destroy'
+        'uses' => 'NewRoleController@destroy',
+        'middleware' => ['permission:role-delete']
     ]);
 
     // User Bench Mark Routes
