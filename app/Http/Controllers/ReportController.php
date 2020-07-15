@@ -75,7 +75,7 @@ class ReportController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($user_id);
 
-        return view('adminlte::reports.dailyreport',compact('date','users','user_id','users_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
+        return view('adminlte::reports.dailyreport',compact('date','users','user_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
     }
 
     public function weeklyreportIndex(){
@@ -151,7 +151,7 @@ class ReportController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($user_id);
 
-        return view('adminlte::reports.weeklyreport',compact('user_id','users','users_id','from_date','to_date','associate_weekly','associate_count','leads_weekly','lead_count','interview_weekly','interview_count','user_details'));
+        return view('adminlte::reports.weeklyreport',compact('user_id','users','from_date','to_date','associate_weekly','associate_count','leads_weekly','lead_count','interview_weekly','interview_count','user_details'));
     }
 
     public function userWiseMonthlyReport(){
