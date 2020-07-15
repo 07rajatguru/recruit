@@ -68,7 +68,12 @@
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );
+
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
 
         function export_data() {
