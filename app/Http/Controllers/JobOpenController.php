@@ -1056,8 +1056,6 @@ class JobOpenController extends Controller
         //print_r($users);exit;
       //  $team_mates = $user_id;
 
-        // job opening status
-        /*$job_open_status = JobOpen::getJobOpenStatus();*/
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1081,7 +1079,7 @@ class JobOpenController extends Controller
 
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
     }
 
     public function store(Request $request)
@@ -1737,9 +1735,6 @@ class JobOpenController extends Controller
             }
         }*/
 
-        // job opening status
-        $job_open_status = JobOpen::getJobOpenStatus();
-
         // job type
         $job_type = JobOpen::getJobTypes();
 
@@ -1792,7 +1787,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users',, 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
     }
 
     public function editClosedJob($id,$year) {
@@ -1876,9 +1871,6 @@ class JobOpenController extends Controller
         // For account manager
         $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
-        
-        // job opening status
-        $job_open_status = JobOpen::getJobOpenStatus();
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1927,7 +1919,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year'));
     }
 
     public function update(Request $request, $id)
@@ -2195,11 +2187,6 @@ class JobOpenController extends Controller
          
         $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
-        //print_r($users);exit;
-      //  $team_mates = $user_id;
-
-        // job opening status
-        /*$job_open_status = JobOpen::getJobOpenStatus();*/
 
         $job_open = JobOpen::find($id);
         $posting_title = $job_open->posting_title;
@@ -2242,7 +2229,7 @@ class JobOpenController extends Controller
 
         $action = "clone";
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users', 'job_open_status', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type'));
     }
 
     public function clonestore(Request $request){
