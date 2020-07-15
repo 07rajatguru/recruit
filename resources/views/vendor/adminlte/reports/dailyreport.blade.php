@@ -184,22 +184,39 @@
                 autoclose: true,
             });
 
-			var table = jQuery("#daily_report_cv_table").DataTable({
+			var table1 = jQuery("#daily_report_cv_table").DataTable({
 				responsive: true,
 				"pageLength": 100,
 				stateSave: true
 			});
-			var table = jQuery("#daily_report_interview_table").DataTable({
+			var table2 = jQuery("#daily_report_interview_table").DataTable({
 				responsive: true,
 				"pageLength": 100,
 				stateSave: true
 			});
-			var table = jQuery("#daily_report_leads_table").DataTable({
+			var table3 = jQuery("#daily_report_leads_table").DataTable({
 				responsive: true,
 				"pageLength": 100,
 				stateSave: true
 			});
-			new jQuery.fn.dataTable.FixedHeader( table );
+
+			if ( ! table1.data().any() ) {
+			}
+			else{
+				new jQuery.fn.dataTable.FixedHeader( table1 );
+			}
+
+			if ( ! table2.data().any() ) {
+			}
+			else{
+				new jQuery.fn.dataTable.FixedHeader( table2 );
+			}
+
+			if ( ! table3.data().any() ) {
+			}
+			else{
+				new jQuery.fn.dataTable.FixedHeader( table3 );
+			}
 			
             //$('#date').datepicker().datepicker('setDate', 'today');
 		});
