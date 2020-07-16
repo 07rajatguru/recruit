@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Date;
 use App\Events\NotificationEvent;
 use App\JobVisibleUsers;
-use App\TeamMates;
+//use App\TeamMates;
 use Illuminate\Http\Request;
 use App\Industry;
 use App\ClientBasicinfo;
@@ -1053,9 +1053,6 @@ class JobOpenController extends Controller
          
         $users = User::getAllUsers(NULL,'Yes');
         $select_all_users = User::getAllUsers('recruiter');
-        //print_r($users);exit;
-      //  $team_mates = $user_id;
-
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1756,12 +1753,6 @@ class JobOpenController extends Controller
             $date_opened = $dateClass->changeYMDtoDMY($job_open->date_opened);
             $target_date = $dateClass->changeYMDtoDMY($job_open->target_date);
             $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();
-           /* $team_mates = array();
-            if(isset($job_visible_users) && sizeof($job_visible_users)>0){
-                foreach($job_visible_users as $row){
-                    $team_mates[] = $row->user_id;
-                }
-            }*/
 
             $selected_users = array();
             if(isset($job_visible_users) && sizeof($job_visible_users)>0){
@@ -1787,7 +1778,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users',, 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users',, 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
     }
 
     public function editClosedJob($id,$year) {
@@ -1919,7 +1910,7 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','team_mates','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year'));
     }
 
     public function update(Request $request, $id)
