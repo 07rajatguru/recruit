@@ -118,8 +118,13 @@
                 stateSave : true,
                 "pageLength": 50,
 
-            } );
-            new jQuery.fn.dataTable.FixedHeader( table );
+            });
+
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
     </script>
 @endsection

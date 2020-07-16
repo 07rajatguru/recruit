@@ -77,13 +77,18 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#vendor_table').DataTable( {
+
+            var table = jQuery('#vendor_table').DataTable({
                 responsive: true,
                 stateSave : true,
                 "pageLength": 100
-            } );
+            });
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
     </script>
 @endsection

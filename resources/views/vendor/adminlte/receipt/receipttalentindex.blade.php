@@ -156,15 +156,18 @@
     <script type="text/javascript">
 
         $(document).ready(function(){
-            var table = jQuery('#receipt_talent').DataTable( {
+
+            var table = jQuery('#receipt_talent').DataTable({
                 responsive: true,
                 stateSave : true,
                 "bStateSave": true,
-            } );
+            });
 
-            new jQuery.fn.dataTable.FixedHeader( table );
-
-            
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
 
         function select_bank(){

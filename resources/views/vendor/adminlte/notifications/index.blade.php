@@ -34,11 +34,17 @@
 @section('customscripts')
     <script>
         $(document).ready(function(){
-            var table = jQuery('#noti_table').DataTable( {
+
+            var table = jQuery('#noti_table').DataTable({
                 responsive: true,
                 stateSave : true,
-            } );
-            new jQuery.fn.dataTable.FixedHeader( table );
+            });
+            
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
     </script>
 @endsection

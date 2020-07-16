@@ -162,9 +162,11 @@
                 "bStateSave": true,
             } );
 
-            new jQuery.fn.dataTable.FixedHeader( table );
-
-            
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
 
         function select_bank(){

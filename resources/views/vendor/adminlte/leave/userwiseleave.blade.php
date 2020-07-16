@@ -59,12 +59,18 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#user_leave_table').DataTable( {
+
+            var table = jQuery('#user_leave_table').DataTable({
                 responsive: true,
                 "pageLength": 100,
                 stateSave: true
             });
-            new jQuery.fn.dataTable.FixedHeader( table );
+            
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
     </script>
 @endsection

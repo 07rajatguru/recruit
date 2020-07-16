@@ -71,7 +71,7 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            var table = jQuery('#candidate_table').DataTable( {
+            var table = jQuery('#candidate_table').DataTable({
                 responsive: true,
                 "columnDefs": [
                     { "width": "10px", "targets": 0 },
@@ -87,9 +87,13 @@
 
                 "autoWidth": false,
                 "pageLength": 100
-            } );
+            });
 
-            new jQuery.fn.dataTable.FixedHeader( table );
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }
         });
     </script>
 @endsection
