@@ -112,20 +112,22 @@ class Bills extends Model
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
-       // $bills_query = $bills_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
-        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
         $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','client_heirarchy.name as level_name');
 
         if($all==0){
-            //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
-              //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
-                //$bills_query = $bills_query->orwhere('bills_efforts.employee_name',$user_id);
-                $bills_query = $bills_query->where('uploaded_by',$user_id);
-            //});
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
         }
+
         if (isset($limit) && $limit > 0) {
             $bills_query = $bills_query->limit($limit);
         }
@@ -183,6 +185,8 @@ class Bills extends Model
 
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
+
+        $bills_query = $bills_query->groupBy('bills.id');
 
         $bills_res = $bills_query->get();
 
@@ -279,25 +283,29 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0,$current_year=NULL,$next_year=NULL){
+    public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0,$current_year=NULL,$next_year=NULL) {
+        
         $cancel_bill = 1;
         $cancel = array($cancel_bill);
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
-       // $bills_query = $bills_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
-        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
         $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
         ,'candidate_basicinfo.lname','client_heirarchy.name as level_name');
+
         if($all==0){
-            //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
-              //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
-                //$bills_query = $bills_query->orwhere('bills_efforts.employee_name',$user_id);
-                $bills_query = $bills_query->where('uploaded_by',$user_id);
-            //});
+
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
         }
         $bills_query = $bills_query->where(function($bills_query) use ($search){
 
@@ -347,6 +355,8 @@ class Bills extends Model
             $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
         }
 
+        $bills_query = $bills_query->groupBy('bills.id');
+
         $bills_count = $bills_query->count();
 
         return $bills_count;
@@ -361,7 +371,8 @@ class Bills extends Model
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
-        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
         $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
@@ -369,7 +380,12 @@ class Bills extends Model
         ,'candidate_basicinfo.lname','client_heirarchy.name as level_name');
 
         if($all==0){
-            $bills_query = $bills_query->where('uploaded_by',$user_id);
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
         }
 
         if (isset($limit) && $limit > 0) {
@@ -421,6 +437,7 @@ class Bills extends Model
 
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
+        $bills_query = $bills_query->groupBy('bills.id');
 
         $bills_res = $bills_query->get();
 
@@ -522,20 +539,23 @@ class Bills extends Model
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
-       // $bills_query = $bills_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
-        $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
         $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
         ,'candidate_basicinfo.lname','client_heirarchy.name as level_name');
+
         if($all==0){
-            //$bills_query = $bills_query->where(function($bills_query) use ($user_id){
-              //  $bills_query = $bills_query->where('client_basicinfo.account_manager_id',$user_id);
-                //$bills_query = $bills_query->orwhere('bills_efforts.employee_name',$user_id);
-                $bills_query = $bills_query->where('uploaded_by',$user_id);
-            //});
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
         }
+
         $bills_query = $bills_query->where(function($bills_query) use ($search){
 
             $date_search = false;
@@ -575,6 +595,7 @@ class Bills extends Model
         });
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
+        $bills_query = $bills_query->groupBy('bills.id');
         $bills_count = $bills_query->count();
 
         return $bills_count;
@@ -940,15 +961,15 @@ class Bills extends Model
             }
 
             $data[] = array(
-            $recovery[$i]['candidate_name'] = $value->fname,
-            $recovery[$i]['company_name'] = $value->company_name,
-            $recovery[$i]['position'] = $value->designation_offered,
-            $recovery[$i]['salary_offered'] = Utils::IND_money_format(round($fixed_salary)),
-            $recovery[$i]['billing'] = Utils::IND_money_format(round($billing)),
-            $recovery[$i]['expected_payment'] = Utils::IND_money_format(round($expected_payment)),
-            $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
-            $recovery[$i]['efforts'] = $efforts_str,
-            $recovery[$i]['contact_person'] = $value->client_name,
+                $recovery[$i]['candidate_name'] = $value->fname,
+                $recovery[$i]['company_name'] = $value->company_name,
+                $recovery[$i]['position'] = $value->designation_offered,
+                $recovery[$i]['salary_offered'] = Utils::IND_money_format(round($fixed_salary)),
+                $recovery[$i]['billing'] = Utils::IND_money_format(round($billing)),
+                $recovery[$i]['expected_payment'] = Utils::IND_money_format(round($expected_payment)),
+                $recovery[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
+                $recovery[$i]['efforts'] = $efforts_str,
+                $recovery[$i]['contact_person'] = $value->client_name,
             );
             $i++;
         }
@@ -999,49 +1020,49 @@ class Bills extends Model
         $selection = array();
         $i = 0;
         if(sizeof($selection_res)>0){
-        foreach ($selection_res as $key => $value) {
+            foreach ($selection_res as $key => $value) {
 
-            $salary = str_replace(",", "", $value->fixed_salary);
-            $fixed_salary = round($salary);
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $fixed_salary = round($salary);
 
-            $percentage_charged = (float)$value->percentage_charged;
+                $percentage_charged = (float)$value->percentage_charged;
 
-            if($percentage_charged == 0) {
+                if($percentage_charged == 0) {
 
-                $billing = '0';
-                $gst = '0';
-                $invoice = '0';
-                $payment = '0';
+                    $billing = '0';
+                    $gst = '0';
+                    $invoice = '0';
+                    $payment = '0';
+                }
+                else {
+
+                    $billing = ($fixed_salary * $percentage_charged) / 100;
+                    $gst = ($billing * 18 ) / 100;
+                    $invoice = $billing+$gst;
+                    $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
+                }
+
+                $data[] = array(
+                    $selection[$i]['candidate_name'] = $value->fname,
+                    $selection[$i]['company_name'] = $value->company_name,
+                    $selection[$i]['position'] = $value->position,
+                    $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary)),
+                    $selection[$i]['billing'] = Utils::IND_money_format(round($billing)),
+                    $selection[$i]['gst'] = Utils::IND_money_format(round($gst)),
+                    $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice)),
+                    $selection[$i]['payment'] = Utils::IND_money_format(round($payment)),
+                    $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
+                    $selection[$i]['contact_person'] = $value->client_name,
+                    $selection[$i]['location'] = $value->job_location,
+                );
+                $i++;
             }
-            else {
-
-                $billing = ($fixed_salary * $percentage_charged) / 100;
-                $gst = ($billing * 18 ) / 100;
-                $invoice = $billing+$gst;
-                $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
-            }
-
-            $data[] = array(
-            $selection[$i]['candidate_name'] = $value->fname,
-            $selection[$i]['company_name'] = $value->company_name,
-            $selection[$i]['position'] = $value->position,
-            $selection[$i]['fixed_salary'] = Utils::IND_money_format(round($fixed_salary)),
-            $selection[$i]['billing'] = Utils::IND_money_format(round($billing)),
-            $selection[$i]['gst'] = Utils::IND_money_format(round($gst)),
-            $selection[$i]['invoice'] = Utils::IND_money_format(round($invoice)),
-            $selection[$i]['payment'] = Utils::IND_money_format(round($payment)),
-            $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining),
-            $selection[$i]['contact_person'] = $value->client_name,
-            $selection[$i]['location'] = $value->job_location,
-            );
-            $i++;
         }
-        }
-
         return $data;
     }
 
     public static function getUserwiseReportdata($user_id,$m1,$m2,$month,$year){
+
         $date_class = new Date();
 
         $cancel = 1;
