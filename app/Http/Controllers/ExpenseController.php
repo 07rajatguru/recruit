@@ -27,7 +27,7 @@ class ExpenseController extends Controller
     	
         $count=sizeof($expense);
 
-        return view('adminlte::expense.index',compact('expense','isSuperAdmin','count'));
+        return view('adminlte::expense.index',compact('expense','count'));
     }
 
     public function getOrderExpenseColumnName($order){

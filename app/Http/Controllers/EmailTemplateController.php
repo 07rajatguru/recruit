@@ -77,7 +77,7 @@ class EmailTemplateController extends Controller
     public function show($id){
 
     	$email_template = EmailTemplate::find($id);
-    	return view('adminlte::emailtemplate.show',compact('email_template','action'));
+    	return view('adminlte::emailtemplate.show',compact('email_template'));
     }
 
     public function edit($id){
