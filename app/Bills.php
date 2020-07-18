@@ -72,6 +72,8 @@ class Bills extends Model
             $bills[$i]['job_location'] = $value->job_location;
 
             $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
+
             $bills[$i]['fixed_salary'] = Utils::IND_money_format(round($salary));
 
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
@@ -203,6 +205,7 @@ class Bills extends Model
             $bills[$i]['job_location'] = $value->job_location;
 
             $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
             $bills[$i]['fixed_salary'] = round($salary);
 
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
@@ -458,6 +461,7 @@ class Bills extends Model
             $bills[$i]['job_location'] = $value->job_location;
 
             $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
             $bills[$i]['fixed_salary'] = round($salary);
 
             $bills[$i]['percentage_charged'] = $value->percentage_charged;
@@ -630,6 +634,7 @@ class Bills extends Model
             $billsdetails['job_location'] = $bills->location;
 
             $salary = str_replace(",", "", $bills->salary);
+            $salary = (int)$salary;
             $billsdetails['fixed_salary'] = round($salary);
 
             $billsdetails['percentage_charged'] = $bills->percentage;
@@ -731,9 +736,11 @@ class Bills extends Model
         foreach ($recovery_res as $key => $value) {
 
             $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
             $fixed_salary = round($salary);
 
             $percentage_charged = $value->percentage_charged;
+            $percentage_charged = (int)$percentage_charged;
 
             if($percentage_charged == 0) {
 
@@ -745,7 +752,6 @@ class Bills extends Model
                 $billing = ($fixed_salary * $percentage_charged) / 100;
                 $expected_payment = (($billing * 90) / 100) + (($billing * 18) / 100);
             }
-
 
             $billing = ($fixed_salary * $percentage_charged) / 100;
             $expected_payment = (($billing * 90) / 100) + (($billing * 18) / 100);
@@ -939,9 +945,11 @@ class Bills extends Model
         foreach ($recovery_res as $key => $value) {
 
             $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
             $fixed_salary = round($salary);
 
             $percentage_charged = (float)$value->percentage_charged;
+            $percentage_charged = (int)$percentage_charged;
 
             if($percentage_charged==0) {
 
@@ -1028,9 +1036,11 @@ class Bills extends Model
             foreach ($selection_res as $key => $value) {
 
                 $salary = str_replace(",", "", $value->fixed_salary);
+                $salary = (int)$salary;
                 $fixed_salary = round($salary);
 
                 $percentage_charged = (float)$value->percentage_charged;
+                $percentage_charged = (int)$percentage_charged;
 
                 if($percentage_charged == 0) {
 
@@ -1106,9 +1116,11 @@ class Bills extends Model
             foreach ($userwise_res as $key => $value) {
 
                 $salary = str_replace(",", "", $value->fixed_salary);
+                $salary = (int)$salary;
                 $fixed_salary = round($salary);
 
                 $percentage_charged = (float)$value->percentage_charged;
+                $percentage_charged = (int)$percentage_charged;
 
                 if($percentage_charged<=0) {
 
@@ -1162,7 +1174,10 @@ class Bills extends Model
         if (isset($join_mail_res) && $join_mail_res != '') {
 
             $salary = str_replace(",", "", $join_mail_res->fixed_salary);
+            $salary = (int)$salary;
+
             $pc = $join_mail_res->percentage_charged;
+            $pc = (int)$pc;
 
             $fees = round(($salary * $pc)/100);
             $gst = round(($fees * 18)/100);
@@ -1333,7 +1348,10 @@ class Bills extends Model
 
                 //$salary = $value->fixed_salary;
                 $salary = str_replace(",", "", $value->fixed_salary);
+                $salary = (int)$salary;
+
                 $pc = $value->percentage_charged;
+                $pc = (int)$pc;
 
                 $fees = round(($salary * $pc)/100);
                 $gst = round(($fees * 18)/100);
@@ -1387,7 +1405,6 @@ class Bills extends Model
                 $j++;
             }
         }
-
         return $person_data;
     }
 
@@ -1411,7 +1428,11 @@ class Bills extends Model
         foreach ($clientwise_res as $key => $value) {
 
             $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
+
             $pc = $value->percentage_charged;
+            $pc = (int)$pc;
+
             $fees = round(($salary * $pc)/100);
             $gst = round(($fees * 18)/100);
             $billing_amount = round($fees + $gst);
