@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-             @permission(('expense-create')) 
+             @permission(('expense-add')) 
                 <a class="btn btn-primary" href="{{ route('expense.importExport') }}"> Import Expense</a>
                 <a class="btn btn-success" href="{{ route('expense.create') }}"> Create New Expense</a>
              @endpermission
@@ -26,7 +26,12 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
+    @endif
 
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
     @endif
 
     <table id="expense_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">

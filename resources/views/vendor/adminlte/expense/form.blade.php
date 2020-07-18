@@ -15,11 +15,9 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('expense.index') }}"> Back </a>
+            <a class="btn btn-primary" href="{{ route('expense.index') }}">Back</a>
         </div>
-
     </div>
-
 </div>
 
 @if( $action == 'edit')

@@ -43,9 +43,9 @@
                 <td>
                     <a class="fa fa-edit" title="edit" href="{{ route('module.edit',$value['id']) }}"></a>
 
-                    @if($isSuperAdmin)
+                    @permission(('module-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'module','display_name'=>'Module'])
-                    @endif
+                    @endpermission
                 </td>
             </tr>
         @endforeach

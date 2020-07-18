@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Email Template | Add')
+@section('title', 'Email Template')
 
 @section('content_header')
     <h1></h1>

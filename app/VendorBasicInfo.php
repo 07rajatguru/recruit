@@ -53,11 +53,9 @@ class VendorBasicInfo extends Model
         $vendor_cnt = $vendor_query->count();
 
         return $vendor_cnt;
-
     }
 
-
-     public static function getLoggedInUserVendors($all=0,$user_id){
+    public static function getLoggedInUserVendors(){
 
         $vendor_query = VendorBasicInfo::query();
 

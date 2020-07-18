@@ -509,8 +509,8 @@ return [
                     'icon' => 'circle-o',
                 ],
                 [
-                    'text' => 'Client Heirarchy',
-                    'url'  => 'client-heirarchy',
+                    'text' => 'Client Hierarchy',
+                    'url'  => 'client-hierarchy',
                     'icon' => 'circle-o',
                 ],
                 [

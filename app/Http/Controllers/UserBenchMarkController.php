@@ -12,19 +12,13 @@ class UserBenchMarkController extends Controller
 {
     public function index() {
 
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
     	$user_bench_mark = UserBenchMark::getAllUsersBenchMark();
     	$count = sizeof($user_bench_mark);
 
-    	return view('adminlte::userbenchmark.index',compact('user_bench_mark','count','isSuperAdmin'));
+    	return view('adminlte::userbenchmark.index',compact('user_bench_mark','count'));
     }
 
-    public function create(){
+    public function create() {
 
     	$action = 'add';
     	$all_users = User::getAllUsers('recruiter');
@@ -44,7 +38,6 @@ class UserBenchMarkController extends Controller
     	$joining_ratio = $request->get('joining_ratio');
     	$after_joining_success_ratio = $request->get('after_joining_success_ratio');
     	
-
     	$user_bench_mark = new UserBenchMark();
     	$user_bench_mark->user_id = $user_id;
     	$user_bench_mark->no_of_resumes = $no_of_resumes;
@@ -81,7 +74,6 @@ class UserBenchMarkController extends Controller
     	$joining_ratio = $request->get('joining_ratio');
     	$after_joining_success_ratio = $request->get('after_joining_success_ratio');
     	
-
     	$user_bench_mark = UserBenchMark::find($id);
     	$user_bench_mark->user_id = $user_id;
     	$user_bench_mark->no_of_resumes = $no_of_resumes;
@@ -99,7 +91,6 @@ class UserBenchMarkController extends Controller
     public function destroy($id) {
 
     	UserBenchMark::where('id',$id)->delete();
-
     	return redirect()->route('userbenchmark.index')->with('success','Bench Mark Deleted Successfully.');
     }
 }

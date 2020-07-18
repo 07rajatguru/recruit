@@ -151,15 +151,15 @@ Route::get('specialization/getspecializationbyid',[
 ]);
 
 // Report > Daily , Weekly
-    Route::get('report/daily' ,[
-        'as' => 'report.daily',
-        'uses' => 'ReportController@dailyreport'
-    ]);
+Route::get('report/daily' ,[
+    'as' => 'report.daily',
+    'uses' => 'ReportController@dailyreport'
+]);
 
-    Route::get('report/weekly' ,[
-        'as' => 'report.weekly',
-        'uses' => 'ReportController@weeklyreport'
-    ]);
+Route::get('report/weekly' ,[
+    'as' => 'report.weekly',
+    'uses' => 'ReportController@weeklyreport'
+]);
 
 
 Route::group(['middleware' => ['auth']], function () {
@@ -407,7 +407,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('users/{id}', [
         'as' => 'users.show',
-        'uses' => 'UserController@show'
+        'uses' => 'UserController@show',
+        'middleware' => ['permission:display-users']
     ]);
 
     Route::get('users/{id}/edit', [
@@ -449,7 +450,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('roles/{id}', [
         'as' => 'roles.show',
-        'uses' => 'RoleController@show'
+        'uses' => 'RoleController@show',
+        'middleware' => ['permission:display-roles']
     ]);
 
     Route::get('roles/{id}/edit', [
@@ -476,37 +478,43 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('industry', [
         'as' => 'industry.index',
         'uses' => 'IndustryController@index',
-       // 'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
     ]);
+
     Route::get('industry/create', [
-            'as' => 'industry.create',
-            'uses' => 'IndustryController@create',
-           // 'middleware' => ['permission:industry-create']
-     ]
-    );
+        'as' => 'industry.create',
+        'uses' => 'IndustryController@create',
+        //'middleware' => ['permission:industry-create']
+    ]);
+
     Route::post('industry/create', [
         'as' => 'industry.store',
         'uses' => 'IndustryController@store',
         //'middleware' => ['permission:industry-create']
     ]);
+
     Route::get('industry/{id}', [
         'as' => 'industry.show',
-        'uses' => 'IndustryController@show'
+        'uses' => 'IndustryController@show',
+        //'middleware' => ['permission:industry-list']
     ]);
+
     Route::get('industry/{id}/edit', [
         'as' => 'industry.edit',
         'uses' => 'IndustryController@edit',
         //'middleware' => ['permission:industry-edit']
     ]);
+
     Route::patch('industry/{id}', [
         'as' => 'industry.update',
         'uses' => 'IndustryController@update',
-       // 'middleware' => ['permission:industry-edit']
+        //'middleware' => ['permission:industry-edit']
     ]);
+
     Route::delete('industry/{id}', [
         'as' => 'industry.destroy',
         'uses' => 'IndustryController@destroy',
-       // 'middleware' => ['permission:industry-delete']
+        //'middleware' => ['permission:industry-delete']
     ]);
 
     // Admin > Permissions
@@ -530,37 +538,43 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidateSource', [
         'as' => 'candidateSource.index',
         'uses' => 'CandidateSourceController@index',
-         'middleware' => ['permission:candidatesource-list|candidatesource-create|candidatesource-edit|candidatesource-delete']
+        //'middleware' => ['permission:candidatesource-list|candidatesource-create|candidatesource-edit|candidatesource-delete']
     ]);
+
     Route::get('candidateSource/create', [
-            'as' => 'candidateSource.create',
-            'uses' => 'CandidateSourceController@create',
-            'middleware' => ['permission:candidatesource-create']
-        ]
-    );
+        'as' => 'candidateSource.create',
+        'uses' => 'CandidateSourceController@create',
+        //'middleware' => ['permission:candidatesource-create']
+    ]);
+
     Route::post('candidateSource/create', [
         'as' => 'candidateSource.store',
         'uses' => 'CandidateSourceController@store',
-        'middleware' => ['permission:candidatesource-create']
+        //'middleware' => ['permission:candidatesource-create']
     ]);
+
     Route::get('candidateSource/{id}', [
         'as' => 'candidateSource.show',
-        'uses' => 'CandidateSourceController@show'
+        'uses' => 'CandidateSourceController@show',
+        //'middleware' => ['permission:candidatesource-list']
     ]);
+
     Route::get('candidateSource/{id}/edit', [
         'as' => 'candidateSource.edit',
         'uses' => 'CandidateSourceController@edit',
-        'middleware' => ['permission:candidatesource-edit']
+        //'middleware' => ['permission:candidatesource-edit']
     ]);
+
     Route::patch('candidateSource/{id}', [
         'as' => 'candidateSource.update',
         'uses' => 'CandidateSourceController@update',
-        'middleware' => ['permission:candidatesource-edit']
+        //'middleware' => ['permission:candidatesource-edit']
     ]);
+
     Route::delete('candidateSource/{id}', [
         'as' => 'candidateSource.destroy',
         'uses' => 'CandidateSourceController@destroy',
-        'middleware' => ['permission:candidatesource-delete']
+        //'middleware' => ['permission:candidatesource-delete']
     ]);
 
     Route::get('candidate/resume', [
@@ -577,40 +591,46 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidateStatus', [
         'as' => 'candidateStatus.index',
         'uses' => 'candidateStatusController@index',
-        'middleware' => ['permission:candidatestatus-list|candidatestatus-create|candidatestatus-edit|candidatestatus-delete']
+        //'middleware' => ['permission:candidatestatus-list|candidatestatus-create|candidatestatus-edit|candidatestatus-delete']
     ]);
     Route::get('candidateStatus/create', [
-            'as' => 'candidateStatus.create',
-            'uses' => 'candidateStatusController@create',
-            'middleware' => ['permission:candidatestatus-create']
-        ]
-    );
+        'as' => 'candidateStatus.create',
+        'uses' => 'candidateStatusController@create',
+        //'middleware' => ['permission:candidatestatus-create']
+    ]);
+
     Route::post('candidateStatus/create', [
         'as' => 'candidateStatus.store',
         'uses' => 'candidateStatusController@store',
-        'middleware' => ['permission:candidatestatus-create']
+        //'middleware' => ['permission:candidatestatus-create']
     ]);
+
     Route::get('candidateStatus/{id}', [
         'as' => 'candidateStatus.show',
-        'uses' => 'candidateStatusController@show'
+        'uses' => 'candidateStatusController@show',
+        //'middleware' => ['permission:candidatestatus-list']
     ]);
+
     Route::get('candidateStatus/{id}/edit', [
         'as' => 'candidateStatus.edit',
         'uses' => 'candidateStatusController@edit',
-        'middleware' => ['permission:candidatestatus-edit']
+        //'middleware' => ['permission:candidatestatus-edit']
     ]);
+
     Route::patch('candidateStatus/{id}', [
         'as' => 'candidateStatus.update',
         'uses' => 'candidateStatusController@update',
-        'middleware' => ['permission:candidatestatus-edit']
+        //'middleware' => ['permission:candidatestatus-edit']
     ]);
+
     Route::delete('candidateStatus/{id}', [
         'as' => 'candidateStatus.destroy',
         'uses' => 'candidateStatusController@destroy',
-        'middleware' => ['permission:candidatestatus-delete']
+        //'middleware' => ['permission:candidatestatus-delete']
     ]);
 
     // Client
+
     Route::get('client/create', [
         'as' => 'client.create',
         'uses' => 'ClientController@create',
@@ -619,14 +639,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('client/clientemail', [
         'as' => 'client.clientemail',
-        'uses' => 'ClientController@postClientNames',
-        //'middleware' => ['permission:industry-edit']
+        'uses' => 'ClientController@postClientNames'
     ]);
 
     Route::post('client/emailnotification', [
         'as' => 'client.emailnotification',
-        'uses' => 'ClientController@postClientEmails',
-        //'middleware' => ['permission:industry-edit']
+        'uses' => 'ClientController@postClientEmails'
     ]);
 
     Route::post('client/checkClientId',[
@@ -634,10 +652,9 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@checkClientId'
     ]);
 
-     Route::post('client/accountmanager', [
+    Route::post('client/accountmanager', [
         'as' => 'client.accountmanager',
-        'uses' => 'ClientController@postClientAccountManager',
-        //'middleware' => ['permission:industry-edit']
+        'uses' => 'ClientController@postClientAccountManager'
     ]);
      
     Route::get('client', [
@@ -645,54 +662,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@index',
         'middleware' => ['permission:client-list']
     ]);
-
-/*    Route::get('client/active',[
-        'as' => 'client.active',
-        'uses' => 'ClientController@ActiveClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/passive',[
-        'as' => 'client.passive',
-        'uses' => 'ClientController@PassiveClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/leaders',[
-        'as' => 'client.leaders',
-        'uses' => 'ClientController@LeadersClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/forbid',[
-        'as' => 'client.forbid',
-        'uses' => 'ClientController@ForbidClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/left',[
-        'as' => 'client.left',
-        'uses' => 'ClientController@LeftClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/paramount',[
-        'as' => 'client.paramount',
-        'uses' => 'ClientController@ParamountClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/moderate',[
-        'as' => 'client.moderate',
-        'uses' => 'ClientController@ModerateClient',
-        'middleware' => ['permission:client-list']
-    ]);
-
-    Route::get('client/standard',[
-        'as' => 'client.standard',
-        'uses' => 'ClientController@StandardClient',
-        'middleware' => ['permission:client-list']
-    ]);*/
 
     Route::get('client-list/Forbid',[
         'as' => 'clients.forbid',
@@ -702,8 +671,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('client/all', [
         'as' => 'client.all',
-        'uses' => 'ClientController@getAllClientsDetails',
-        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+        'uses' => 'ClientController@getAllClientsDetails'
     ]);
 
     Route::get('client-list/{source}', [
@@ -741,21 +709,44 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:client-edit']
     ]);
 
+    // Client Remarks Section Start
+
     Route::get('client/{id}/remarks', [
         'as' => 'client.remarks',
         'uses' => 'ClientController@remarks',
     ]);
 
-    Route::post('client/{client_id}/post',['as'=>'client.post.write','uses'=>'ClientController@writePost']);
-    Route::post('post/update/{client_id}/{post_id}',['as'=>'client.post.update','uses'=>'ClientController@updateClientRemarks']);
+    Route::post('client/{client_id}/post',[
+        'as'=>'client.post.write',
+        'uses'=>'ClientController@writePost'
+    ]);
 
-    Route::post('post/{post_id}',['as'=>'post.comments.write','uses'=>'ClientController@writeComment']);
+    Route::post('post/update/{client_id}/{post_id}',[
+        'as'=>'client.post.update',
+        'uses'=>'ClientController@updateClientRemarks'
+    ]);
 
-    Route::post('client/post/delete/{id}',['as'=>'client.reviewdestroy','uses'=>'ClientController@postDestroy']);
-    Route::post('client/comment/delete/{id}',['as'=>'client.commentdelete','uses'=>'ClientController@commentDestroy']);
+    Route::post('post/{post_id}',[
+        'as'=>'post.comments.write',
+        'uses'=>'ClientController@writeComment'
+    ]);
 
-    Route::post('client/comment/update',['as'=>'client.commentupdate','uses'=>'ClientController@updateComment']);
+    Route::post('client/post/delete/{id}',[
+        'as'=>'client.reviewdestroy',
+        'uses'=>'ClientController@postDestroy'
+    ]);
 
+    Route::post('client/comment/delete/{id}',[
+        'as'=>'client.commentdelete',
+        'uses'=>'ClientController@commentDestroy'
+    ]);
+
+    Route::post('client/comment/update',[
+        'as'=>'client.commentupdate',
+        'uses'=>'ClientController@updateComment'
+    ]);
+
+    // Client Remarks Section End
 
     Route::delete('client/{id}', [
         'as' => 'client.destroy',
@@ -957,8 +948,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('all-jobs/{id}/associated_candidates', [
         'as' => 'alljobs.associated_candidates_get',
-        'uses' => 'JobOpenController@getAllJobsAssociatedCandidates',
-        //'middleware' => ['permission:associated-candidate-list']
+        'uses' => 'JobOpenController@getAllJobsAssociatedCandidates'
     ]);
 
     Route::get('jobs/create', [
@@ -973,11 +963,9 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:job-add']
     ]);
 
-
     Route::get('jobs/getopenjobs', [
         'as' => 'jobopen.getOpenJobs',
-        'uses' => 'JobOpenController@getOpenJobs',
-        // 'middleware' => ['permission:industry-create']
+        'uses' => 'JobOpenController@getOpenJobs'
     ]);
 
     Route::get('jobs/importExport', 'JobOpenController@importExport');
@@ -1000,8 +988,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('jobs', [
         'as' => 'jobopen.index',
-        'uses' => 'JobOpenController@index',
-        //'middleware' => ['permission:industry-list|industry-create|industry-edit|industry-delete']
+        'uses' => 'JobOpenController@index'
     ]); 
 
     Route::get('jobs/opentoall', [
@@ -1074,14 +1061,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('jobs/upload/{id}', [
         'as' => 'jobopen.upload',
-        'uses' => 'JobOpenController@upload',
-        //    'middleware' => ['permission:industry-delete']
+        'uses' => 'JobOpenController@upload'
     ]);
 
     Route::delete('jobs/destroy/{id}', [
         'as' => 'jobopenattachments.destroy',
-        'uses' => 'JobOpenController@attachmentsDestroy',
-        //    'middleware' => ['permission:industry-delete']
+        'uses' => 'JobOpenController@attachmentsDestroy'
     ]);
 
     Route::get('jobs/{id}/associate_candidate', [
@@ -1105,7 +1090,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('jobs/associated_candidates_count', [
         'as' => 'jobopen.associated_candidates_count',
         'uses' => 'JobOpenController@associateCandidateCount',
-        //'middleware' => ['permission:industry-edit']
     ]);
 
     Route::get('jobs/{id}/associated_candidates', [
@@ -1122,38 +1106,32 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('jobs/{id}/candidates_details', [
         'as' => 'jobopen.candidates_details_get',
-        'uses' => 'JobOpenController@getCandidateDetailsByJob',
-        //'middleware' => ['permission:associated-candidate-list']
+        'uses' => 'JobOpenController@getCandidateDetailsByJob'
     ]);
     
     Route::post('jobs/updatecandidatestatus', [
         'as' => 'jobopen.updatecandidatestatus',
-        'uses' => 'JobOpenController@updateCandidateStatus',
-        //'middleware' => ['permission:industry-edit']
+        'uses' => 'JobOpenController@updateCandidateStatus'
     ]);
 
     Route::post('jobs/scheduleinterview', [
         'as' => 'jobopen.scheduleinterview',
-        'uses' => 'JobOpenController@scheduleInterview',
-        //'middleware' => ['permission:industry-create']
+        'uses' => 'JobOpenController@scheduleInterview'
     ]);
 
     Route::post('jobs/addjoiningdate', [
         'as' => 'jobopen.addjoiningdate',
         'uses' => 'JobOpenController@addJoiningDate',
-        //'middleware' => ['permission:industry-create']
     ]);
 
     Route::post('jobs/moreoptions', [
         'as' => 'jobopen.moreoptions',
-        'uses' => 'JobOpenController@moreOptions',
-        //'middleware' => ['permission:industry-create']
+        'uses' => 'JobOpenController@moreOptions'
     ]);
 
     Route::post('jobs/status', [
         'as' => 'jobopen.status',
-        'uses' => 'JobOpenController@status',
-        //'middleware' => ['permission:industry-create']
+        'uses' => 'JobOpenController@status'
     ]);
 
     // Route for changes priority of multiple job
@@ -1169,8 +1147,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('job/close', [
         'as' => 'jobopen.close',
-        'uses' => 'JobOpenController@close',
-        // 'middleware' => ['permission:industry-create']
+        'uses' => 'JobOpenController@close'
     ]);
 
     Route::get('job/allclose', [
@@ -1180,39 +1157,22 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('job/associatedcandidate', [
         'as' => 'jobopen.associatedcandidate',
-        'uses' => 'JobOpenController@getAssociatedcandidates',
-        // 'middleware' => ['permission:industry-create']
+        'uses' => 'JobOpenController@getAssociatedcandidates'
     ]);
 
-    //job status
-     Route::post('jobs/jobonhlod', [
-        'as' => 'jobopen.jobonhold',
-        'uses' => 'JobOpenController@jobonhold',
-    ]);
-
-    Route::post('jobs/jobclosebyus', [
-        'as' => 'jobopen.jobclosebyus',
-        'uses' => 'JobOpenController@jobclosebyus',
-    ]);
-
-    Route::post('jobs/jobclosebyclient', [
-        'as' => 'jobopen.jobclosebyclient',
-        'uses' => 'JobOpenController@jobclosebyclient',
-    ]);
-
-    //candidate shortlisted
+    //Candidate Shortlisted
     Route::post('jobs/shortlisted/{id}',[
         'as' => 'jobopen.shortlisted',
         'uses' => 'JobOpenController@shortlisted',
     ]);
 
-    //undo shortlisted candidate
+    //Undo Shortlisted Candidate
     Route::post('jobs/undo/{id}',[
         'as' => 'jobopen.undo',
         'uses' => 'JobOpenController@undoshortlisted',
     ]);
 
-    // get list of associated cvs
+    // Get list of Associated cvs
     Route::get('associatedcvs/{month}/{year}', [
         'as' => 'jobopen.associatedcvs',
         'uses' => 'JobOpenController@associatedCVS',
@@ -1328,6 +1288,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@destroy',
         'middleware' => ['permission:interview-delete']
     ]);
+
     Route::get('interview/getclientinfos', [
         'as' => 'interview.getclientinfos',
         'uses' => 'InterviewController@getClientInfos'
@@ -1342,10 +1303,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'interview.multipleinterviewschedule',
         'uses' => 'InterviewController@multipleInterviewScheduleMail'
     ]);
-    /*Route::get('ajax/interviewcandidate', [
-        'as' => 'interview.getCandidate',
-        'uses' => 'InterviewController@getCandidate',
-    ]);*/
 
     // Bills Module
     Route::get('forecasting/create', [
@@ -1440,38 +1397,46 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'bills.getclientinfo',
         'uses' => 'BillsController@getClientInfo'
     ]);
+
     Route::get('bills/getcandidateinfo', [
         'as' => 'bills.getcandidateinfo',
         'uses' => 'BillsController@getCandidateInfo'
     ]);
+
     Route::delete('bills/destroy/{id}', [
         'as' => 'billattachments.destroy',
         'uses' => 'BillsController@attachmentsDestroy'
     ]);
+
     Route::post('billattachments/upload/{id}', [
         'as' => 'billattachments.upload',
         'uses' => 'BillsController@upload',
     ]);
+
     // for recovery joining confirmation mail route
     Route::post('recovery/sendconfirmationmail/{id}',[
         'as' => 'recovery.sendconfirmationmail',
         'uses' => 'BillsController@getSendConfirmationMail'
     ]);
+
     // for recovery go confirmation route
     Route::post('recovery/gotconfirmation/{id}',[
         'as' => 'recovery.gotconfirmation',
         'uses' => 'BillsController@getGotConfirmation'
     ]);
+
     // for recovery invoice genereate route
     Route::post('recovery/invoicegenerate/{id}',[
         'as' => 'recovery.invoicegenerate',
         'uses' => 'BillsController@getInvoiceGenerate'
     ]);
+
     // for recovery payment received route
     Route::post('recovery/paymentreceived/{id}',[
         'as' => 'recovery.paymentreceived',
         'uses' => 'BillsController@getPaymentReceived'
     ]);
+
     //for relive bill
     Route::get('recovery/{id}',[
         'as' => 'recovery.relive',
@@ -1492,36 +1457,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('team', [
         'as' => 'team.index',
         'uses' => 'TeamController@index',
-//        'middleware' => ['permission:team-list|team-create|team-edit|team-delete']
+        //'middleware' => ['permission:team-list|team-create|team-edit|team-delete']
     ]);
+
     Route::get('team/create', [
         'as' => 'team.create',
         'uses' => 'TeamController@create',
-//        'middleware' => ['permission:team-create']
+        //'middleware' => ['permission:team-create']
     ]);
+
     Route::post('team/create', [
         'as' => 'team.store',
         'uses' => 'TeamController@store',
-//        'middleware' => ['permission:team-create']
+        //'middleware' => ['permission:team-create']
     ]);
-    Route::get('team/{id}', [
-        'as' => 'team.show',
-//        'uses' => 'TeamController@show'
-    ]);
+
     Route::get('team/{id}/edit', [
         'as' => 'team.edit',
         'uses' => 'TeamController@edit',
-//        'middleware' => ['permission:team-edit']
+        //'middleware' => ['permission:team-edit']
     ]);
+
     Route::patch('team/{id}', [
         'as' => 'team.update',
         'uses' => 'TeamController@update',
-        'middleware' => ['permission:team-edit']
+        //'middleware' => ['permission:team-edit']
     ]);
+
     Route::delete('team/{id}', [
         'as' => 'team.destroy',
         'uses' => 'TeamController@destroy',
-//        'middleware' => ['permission:team-delete']
+        //'middleware' => ['permission:team-delete']
     ]);
 
 
@@ -1579,6 +1545,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'todos.getType',
         'uses' => 'ToDosController@getType',
     ]);
+
     Route::get('todos/getselectedtypelist', [
         'as' => 'todos.getselectedtypelist',
         'uses' => 'ToDosController@getSelectedTypeList',
@@ -1618,17 +1585,19 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ToDosController@show',
         'middleware' => ['permission:todo-show']
     ]);
+
     Route::get('todos/{id}/edit', [
         'as' => 'todos.edit',
         'uses' => 'ToDosController@edit',
         'middleware' => ['permission:todo-edit']
     ]);
+
     Route::put('todos/{id}', [
         'as' => 'todos.update',
         'uses' => 'ToDosController@update',
         'middleware' => ['permission:todo-edit']
-        
     ]);
+
     Route::delete('todos/{id}', [
         'as' => 'todos.destroy',
         'uses' => 'ToDosController@destroy',
@@ -1639,6 +1608,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'todos.status',
         'uses' => 'ToDosController@status',
     ]);
+
     Route::post('todos/{id}', [
         'as' => 'todos.complete',
         'uses' => 'ToDosController@complete',
@@ -1688,7 +1658,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CompaniesController@destroy'
     ]);*/
 
-
     // Notification Related Routes Start
 
     Route::get('notifications', [
@@ -1700,6 +1669,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'notification.list',
         'uses' => 'NotificationController@getAjaxNotification',
     ]);
+
     Route::get('notifications/read', [
         'as' => 'notification.read',
         'uses' => 'NotificationController@readNotification',
@@ -1707,7 +1677,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Notification Related Routes End
 
-    
     //Email Notification start
     Route::get('sendingmail', [
         'as' => 'email.sendingmail',
@@ -1718,7 +1687,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Training Routes start
 
-     // Admin > Training
+    // Admin > Training
+
     Route::get('training', [
         'as' => 'training.index',
         'uses' => 'TrainingController@index',
@@ -1736,6 +1706,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@create',
         'middleware' => ['permission:training-create']
     ]);
+
     Route::post('training/create', [
         'as' => 'training.store',
         'uses' => 'TrainingController@store',
@@ -1747,6 +1718,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@edit',
         'middleware' => ['permission:training-edit']
     ]);
+
     Route::patch('training/{id}', [
         'as' => 'training.update',
         'uses' => 'TrainingController@update',
@@ -1808,21 +1780,25 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ProcessController@store',
         'middleware' => ['permission:process-create']
     ]);
+
     Route::get('process/{id}/edit', [
         'as' => 'process.edit',
         'uses' => 'ProcessController@edit',
         'middleware' => ['permission:process-edit']
     ]);
+
     Route::patch('process/{id}', [
         'as' => 'process.update',
         'uses' => 'ProcessController@update',
         'middleware' => ['permission:process-edit']
     ]);
+
     Route::post('process/upload/{id}', [
         'as' => 'processattachments.upload',
         'uses' => 'ProcessController@upload',
         'middleware' => ['permission:process-edit']
     ]);
+
     Route::get('process/{id}/show', [
         'as' => 'process.show',
         'uses' => 'ProcessController@show',
@@ -1889,36 +1865,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('expense',[
         'as' => 'expense.index',
         'uses' => 'ExpenseController@index',
-        'middleware' => ['permission:expense-list|expense-create|expense-edit|expense-delete']
+        'middleware' => ['permission:display-expense|expense-add|expense-edit|expense-delete']
     ]);
 
     Route::get('expense/all',[
         'as' => 'expense.all',
         'uses' => 'ExpenseController@getAllExpenseDetails',
-        'middleware' => ['permission:expense-list|expense-create|expense-edit|expense-delete'] 
+        'middleware' => ['permission:display-expense|expense-add|expense-edit|expense-delete'] 
     ]);
 
     Route::get('expense/create',[
         'as' => 'expense.create',
         'uses' => 'ExpenseController@create',
-        'middleware' => ['permission:expense-create']
+        'middleware' => ['permission:expense-add']
     ]);
 
     Route::post('expense/create',[
         'as' => 'expense.store',
         'uses' => 'ExpenseController@store',
-        'middleware' => ['permission:expense-create']
+        'middleware' => ['permission:expense-add']
     ]);
 
     Route::get('expense/importExport',[ 
         'as' => 'expense.importExport',
         'uses' => 'ExpenseController@importExport',
-        'middleware' => ['permission:expense-create']
+        'middleware' => ['permission:expense-add']
     ]);
 
     Route::post('expense/importExcel',[
         'as' => 'expense.importExcel',
-        'uses' => 'ExpenseController@importExcel'
+        'uses' => 'ExpenseController@importExcel',
+        'middleware' => ['permission:expense-add']
     ]);
 
     Route::get('expense/getvendorinfo', [
@@ -1929,7 +1906,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('expense/{id}', [
         'as' => 'expense.show',
         'uses' => 'ExpenseController@show',
-        'middleware' => ['permission:expense-list']
+        'middleware' => ['permission:display-expense']
     ]);
 
     Route::get('expense/{id}/edit', [
@@ -1959,7 +1936,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' =>'expenseattachments.destroy',
         'uses' =>'ExpenseController@attachmentsDestroy'
     ]);
-
 
     // Reports Routes
 
@@ -1991,7 +1967,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'userreport.index',
         'uses' => 'UserwiseReportController@index',
         'middleware' => ['permission:billuserwise-list']
-
     ]);
 
     Route::post('userreport/export',[
@@ -2086,21 +2061,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('vendors', [
         'as' => 'vendor.index',
         'uses' => 'VendorController@index',
-        'middleware' => ['permission:vendor-list|vendor-create|vendor-edit|vendor-delete']
-        
+        'middleware' => ['permission:display-vendors|vendor-add|vendor-edit|vendor-delete']
     ]);
 
     Route::get('vendor/create', [
         'as' => 'vendor.create',
         'uses' => 'VendorController@create',
-        'middleware' => ['permission:vendor-create']
-        
+        'middleware' => ['permission:vendor-add']
     ]);
 
     Route::post('vendor/create', [
         'as' => 'vendor.store',
         'uses' => 'VendorController@store',
-        'middleware' => ['permission:vendor-create']
+        'middleware' => ['permission:vendor-add']
     ]);
 
     Route::get('vendor/importExport', 
@@ -2114,8 +2087,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('vendor/{id}', [
         'as' => 'vendor.show',
         'uses' => 'VendorController@show',
-        'middleware' => ['permission:vendor-list']
+        'middleware' => ['permission:display-vendors']
     ]);
+
     Route::get('vendor/{id}/edit', [
         'as' => 'vendor.edit',
         'uses' => 'VendorController@edit',
@@ -2153,37 +2127,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('holidays', [
         'as' => 'holidays.index',
         'uses' => 'HolidaysController@index',
-        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+        'middleware' => ['permission:display-holidays|holiday-add|holiday-edit|holiday-delete']
     ]);
 
     Route::get('holidays/create', [
         'as' => 'holidays.create',
         'uses' => 'HolidaysController@create',
-        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+        'middleware' => ['permission:holiday-add']
     ]);
 
     Route::post('holidays/create', [
         'as' => 'holidays.store',
         'uses' => 'HolidaysController@store',
-        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+        'middleware' => ['permission:holiday-add']
     ]);
 
     Route::get('holidays/edit/{id}', [
         'as' => 'holidays.edit',
         'uses' => 'HolidaysController@edit',
-        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+        'middleware' => ['permission:holiday-edit']
     ]);
 
     Route::patch('holidays/{id}', [
         'as' => 'holidays.update',
         'uses' => 'HolidaysController@update',
-        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+        'middleware' => ['permission:holiday-edit']
     ]);
 
     Route::delete('holidays/{id}', [
         'as' => 'holidays.destroy',
         'uses' => 'HolidaysController@destroy',
-        'middleware' => ['permission:holiday-list|holiday-create|holiday-edit|holiday-delete']
+        'middleware' => ['permission:holiday-delete']
     ]);
 
     // Receipt module
@@ -2192,31 +2166,31 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('receipt/talent',[
         'as' => 'receipt.talent',
         'uses' => 'ReceiptController@receiptTalent',
-        'middleware' => ['permission:receipt-talent']
+        //'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::get('receipt/talent/import',[
         'as' => 'receipt.talentimport',
         'uses' => 'ReceiptController@receiptTalentImport',
-        'middleware' => ['permission:receipt-talent']
+        //'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::post('receipt/talent/import',[
         'as' => 'receipt.talentimportstore',
         'uses' => 'ReceiptController@receiptTalentImportStore',
-        'middleware' => ['permission:receipt-talent']
+        //'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::get('receipt/talent/create',[
         'as' => 'receipt.talentcreate',
         'uses' => 'ReceiptController@receiptTalentCreate',
-        'middleware' => ['permission:receipt-talent']
+        //'middleware' => ['permission:receipt-talent']
     ]);
 
     Route::post('receipt/talent/store',[
         'as' => 'receipt.talentstore',
         'uses' => 'ReceiptController@receiptTalentStore',
-        'middleware' => ['permission:receipt-talent']
+        //'middleware' => ['permission:receipt-talent']
     ]);
 
     //Temp
@@ -2224,31 +2198,31 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('receipt/temp',[
         'as' => 'receipt.temp',
         'uses' => 'ReceiptController@receiptTemp',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/temp/import',[
         'as' => 'receipt.tempimport',
         'uses' => 'ReceiptController@receiptTempImport',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/temp/import',[
         'as' => 'receipt.tempimportstore',
         'uses' => 'ReceiptController@receiptTempImportStore',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/temp/create',[
         'as' => 'receipt.tempcreate',
         'uses' => 'ReceiptController@receiptTempCreate',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/temp/store',[
         'as' => 'receipt.tempstore',
         'uses' => 'ReceiptController@receiptTempStore',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     //Other
@@ -2256,123 +2230,123 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('receipt/other',[
         'as' => 'receipt.other',
         'uses' => 'ReceiptController@receiptOther',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/other/import',[
         'as' => 'receipt.otherimport',
         'uses' => 'ReceiptController@receiptOtherImport',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/other/import',[
         'as' => 'receipt.otherimportstore',
         'uses' => 'ReceiptController@receiptOtherImportStore',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/other/create',[
         'as' => 'receipt.othercreate',
         'uses' => 'ReceiptController@receiptOtherCreate',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::post('receipt/other/store',[
         'as' => 'receipt.otherstore',
         'uses' => 'ReceiptController@receiptOtherStore',
-        'middleware' => ['permission:receipt-temp']
+        //'middleware' => ['permission:receipt-temp']
     ]);
 
     Route::get('receipt/edit/{id}',[
         'as' => 'receipt.edit',
         'uses' => 'ReceiptController@edit',
-        'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
+        //'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
     ]);
 
     Route::patch('receipt/{id}',[
         'as' => 'receipt.update',
         'uses' => 'ReceiptController@update',
-        'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
+        //'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
     ]);
 
     Route::delete('receipt/{id}',[
         'as' => 'receipt.destroy',
         'uses' => 'ReceiptController@ReceiptDestroy',
-        'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
+        //'middleware' => ['permission:receipt-temp|receipt-talent|receipt-others']
     ]);
 
     // Module Route
     Route::get('module',[
         'as' => 'module.index',
         'uses' => 'ModuleController@index',
-        'middleware' => ['permission:modulevisible-list']
+        'middleware' => ['permission:display-modules|module-add|module-edit|module-delete|']
     ]);
 
     Route::get('module/create',[
         'as' => 'module.create',
         'uses' => 'ModuleController@create',
-        'middleware' => ['permission:modulevisible-create']
+        'middleware' => ['permission:module-add']
     ]);
 
     Route::post('module/create',[
         'as' => 'module.store',
         'uses' => 'ModuleController@store',
-        'middleware' => ['permission:modulevisible-create']
+        'middleware' => ['permission:module-add']
     ]);
 
     Route::get('module/edit/{id}',[
         'as' => 'module.edit',
         'uses' => 'ModuleController@edit',
-        'middleware' => ['permission:modulevisible-edit']
+        'middleware' => ['permission:module-edit']
     ]);
 
     Route::patch('module/edit/{id}',[
         'as' => 'module.update',
         'uses' => 'ModuleController@update',
-        'middleware' => ['permission:modulevisible-edit']
+        'middleware' => ['permission:module-edit']
     ]);
 
     Route::delete('module/{d}',[
         'as' => 'module.destroy',
         'uses' => 'ModuleController@destroy',
-        'middleware' => ['permission:modulevisible-delete']
+        'middleware' => ['permission:module-delete']
     ]);
 
     // Module Visible Users route
     Route::get('modulevisible',[
         'as' => 'modulevisible.index',
         'uses' => 'ModuleVisibleController@index',
-        'middleware' => ['permission:modulevisible-list']
+        'middleware' => ['permission:display-module-visibilities|module-visibility-add|module-visibility-edit|module-visibility-delete']
     ]);
 
     Route::get('modulevisible/create',[
         'as' => 'modulevisible.create',
         'uses' => 'ModuleVisibleController@create',
-        'middleware' => ['permission:modulevisible-create']
+        'middleware' => ['permission:module-visibility-add']
     ]);
 
     Route::post('modulevisible/create',[
         'as' => 'modulevisible.store',
         'uses' => 'ModuleVisibleController@store',
-        'middleware' => ['permission:modulevisible-create']
+        'middleware' => ['permission:module-visibility-add']
     ]);
 
     Route::get('modulevisible/{id}/edit',[
         'as' => 'modulevisible.edit',
         'uses' => 'ModuleVisibleController@edit',
-        'middleware' => ['permission:modulevisible-edit']
+        'middleware' => ['permission:module-visibility-edit']
     ]);
 
     Route::patch('modulevisible/{id}/edit',[
         'as' => 'modulevisible.update',
         'uses' => 'ModuleVisibleController@update',
-        'middleware' => ['permission:modulevisible-edit']
+        'middleware' => ['permission:module-visibility-edit']
     ]);
 
     Route::delete('modulevisible/{id}',[
         'as' => 'modulevisible.destroy',
         'uses' => 'ModuleVisibleController@destroy',
-        'middleware' => ['permission:modulevisible-delete']
+        'middleware' => ['permission:module-visibility-delete']
     ]);
 
     Route::post('/usermodule/visible',[
@@ -2427,55 +2401,54 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CustomerSupportController@destroy'
     ]);
 
-
     // Client Heirarchy Route
-    Route::get('client-heirarchy',[
+    Route::get('client-hierarchy',[
         'as' => 'clientheirarchy.index',
         'uses' => 'ClientHeirarchyController@index',
-        'middleware' => ['permission:clientheirarchy-list']
+        'middleware' => ['permission:display-client-hierarchy|client-hierarchy-add|client-hierarchy-edit|client-hierarchy-delete']
     ]);
 
-    Route::get('client-heirarchy/create',[
+    Route::get('client-hierarchy/create',[
         'as' => 'clientheirarchy.create',
         'uses' => 'ClientHeirarchyController@create',
-        'middleware' => ['permission:clientheirarchy-create']
+        'middleware' => ['permission:client-hierarchy-add']
     ]);
 
-    Route::post('client-heirarchy/create',[
+    Route::post('client-hierarchy/create',[
         'as' => 'clientheirarchy.store',
         'uses' => 'ClientHeirarchyController@store',
-        'middleware' => ['permission:clientheirarchy-create']
+        'middleware' => ['permission:client-hierarchy-add']
     ]);
 
-    Route::get('client-heirarchy/edit/{id}',[
+    Route::get('client-hierarchy/edit/{id}',[
         'as' => 'clientheirarchy.edit',
         'uses' => 'ClientHeirarchyController@edit',
-        'middleware' => ['permission:clientheirarchy-edit']
+        'middleware' => ['permission:client-hierarchy-edit']
     ]);
 
-    Route::patch('client-heirarchy/edit/{id}',[
+    Route::patch('client-hierarchy/edit/{id}',[
         'as' => 'clientheirarchy.update',
         'uses' => 'ClientHeirarchyController@update',
-        'middleware' => ['permission:clientheirarchy-edit']
+        'middleware' => ['permission:client-hierarchy-edit']
     ]);
 
-    Route::delete('client-heirarchy/{id}',[
+    Route::delete('client-hierarchy/{id}',[
         'as' => 'clientheirarchy.destroy',
         'uses' => 'ClientHeirarchyController@destroy',
-        'middleware' => ['permission:clientheirarchy-delete']
+        'middleware' => ['permission:client-hierarchy-delete']
     ]);
 
-    Route::get('client-heirarchy/update-position',[
+    Route::get('client-hierarchy/update-position',[
         'as' => 'clientheirarchy.update-position',
         'uses' => 'ClientHeirarchyController@UpdatePosition',
-        'middleware' => ['permission:clientheirarchy-list']
+        'middleware' => ['permission:display-client-hierarchy']
     ]);
 
     // Client Remarks Route
     Route::get('client-remarks',[
         'as' => 'clientremarks.index',
         'uses' => 'ClientRemarksController@index',
-        'middleware' => ['permission:clientremarks-list']
+        'middleware' => ['permission:display-client-remarks|client-remarks-add|client-remarks-edit|client-remarks-delete']
     ]);
 
     Route::get('/search-remarks',[
@@ -2486,51 +2459,50 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('client-remarks/create',[
         'as' => 'clientremarks.create',
         'uses' => 'ClientRemarksController@create',
-        'middleware' => ['permission:clientremarks-create']
+        'middleware' => ['permission:client-remarks-add']
     ]);
 
     Route::post('client-remarks/create',[
         'as' => 'clientremarks.store',
         'uses' => 'ClientRemarksController@store',
-        'middleware' => ['permission:clientremarks-create']
+        'middleware' => ['permission:client-remarks-add']
     ]);
 
     Route::get('client-remarks/edit/{id}',[
         'as' => 'clientremarks.edit',
         'uses' => 'ClientRemarksController@edit',
-        'middleware' => ['permission:clientremarks-edit']
+        'middleware' => ['permission:client-remarks-edit']
     ]);
 
     Route::patch('client-remarks/edit/{id}',[
         'as' => 'clientremarks.update',
         'uses' => 'ClientRemarksController@update',
-        'middleware' => ['permission:clientremarks-edit']
+        'middleware' => ['permission:client-remarks-edit']
     ]);
 
     Route::delete('client-remarks/{id}',[
         'as' => 'clientremarks.destroy',
         'uses' => 'ClientRemarksController@destroy',
-        'middleware' => ['permission:clientremarks-delete']
+        'middleware' => ['permission:client-remarks-delete']
     ]);
-
 
     // Email Template Routes
     Route::get('email-template',[
         'as' => 'emailtemplate.index',
         'uses' => 'EmailTemplateController@index',
-        'middleware' => ['permission:emailtemplate-list']
+        'middleware' => ['permission:display-email-template|email-template-add|email-template-edit|email-template-delete']
     ]);
 
     Route::get('email-template/create',[
         'as' => 'emailtemplate.create',
         'uses' => 'EmailTemplateController@create',
-        'middleware' => ['permission:emailtemplate-create']
+        'middleware' => ['permission:email-template-add']
     ]);
 
     Route::post('email-template/create',[
         'as' => 'emailtemplate.store',
         'uses' => 'EmailTemplateController@store',
-        'middleware' => ['permission:emailtemplate-create']
+        'middleware' => ['permission:email-template-add']
     ]);
 
     Route::get('email-template/getDetailsById',[
@@ -2546,25 +2518,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('email-template/edit/{id}',[
         'as' => 'emailtemplate.edit',
         'uses' => 'EmailTemplateController@edit',
-        'middleware' => ['permission:emailtemplate-edit']
+        'middleware' => ['permission:email-template-edit']
     ]);
 
     Route::patch('email-template/edit/{id}',[
         'as' => 'emailtemplate.update',
         'uses' => 'EmailTemplateController@update',
-        'middleware' => ['permission:emailtemplate-edit']
+        'middleware' => ['permission:email-template-edit']
     ]);
 
     Route::get('email-template/{id}/show', [
         'as' => 'emailtemplate.show',
         'uses' => 'EmailTemplateController@show',
-        'middleware' => ['permission:emailtemplate-show']
+        'middleware' => ['permission:display-email-template']
     ]);
 
     Route::delete('email-template/{id}',[
         'as' => 'emailtemplate.destroy',
         'uses' => 'EmailTemplateController@destroy',
-        'middleware' => ['permission:emailtemplate-delete']
+        'middleware' => ['permission:email-template-delete']
     ]);
 
     // Admin > New User Permissions
@@ -2640,37 +2612,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('user-bench-mark',[
         'as' => 'userbenchmark.index',
         'uses' => 'UserBenchMarkController@index',
-        'middleware' => ['permission:userbenchmark-list|userbenchmark-add|userbenchmark-edit|userbenchmark-delete']
+        'middleware' => ['permission:display-user-benchmark|user-benchmark-add|user-benchmark-edit|user-benchmark-delete']
     ]);
 
     Route::get('user-bench-mark/add',[
         'as' => 'userbenchmark.create',
         'uses' => 'UserBenchMarkController@create',
-        'middleware' => ['permission:userbenchmark-add']
+        'middleware' => ['permission:user-benchmark-add']
     ]);
 
     Route::post('user-bench-mark/add',[
         'as' => 'userbenchmark.store',
         'uses' => 'UserBenchMarkController@store',
-        'middleware' => ['permission:userbenchmark-add']
+        'middleware' => ['permission:user-benchmark-add']
     ]);
 
     Route::get('user-bench-mark/edit/{id}',[
         'as' => 'userbenchmark.edit',
         'uses' => 'UserBenchMarkController@edit',
-        'middleware' => ['permission:userbenchmark-edit']
+        'middleware' => ['permission:user-benchmark-edit']
     ]);
 
     Route::patch('user-bench-mark/edit/{id}',[
         'as' => 'userbenchmark.update',
         'uses' => 'UserBenchMarkController@update',
-        'middleware' => ['permission:userbenchmark-edit']
+        'middleware' => ['permission:user-benchmark-edit']
     ]);
 
     Route::delete('user-bench-mark/{id}',[
         'as' => 'userbenchmark.destroy',
         'uses' => 'UserBenchMarkController@destroy',
-        'middleware' => ['permission:userbenchmark-delete']
+        'middleware' => ['permission:user-benchmark-delete']
     ]);
 
     // User Bench Mark Routes End

@@ -46,10 +46,10 @@
                 <td>
                     <a class="fa fa-edit" href="{{ route('clientremarks.edit',$value['id']) }}"></a>
 
-                    @if($isSuperAdmin)
+                    @permission(('client-remarks-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 
                         'name' => 'clientremarks','display_name'=>'Client Remarks'])
-                    @endif
+                    @endpermission
                 </td>
                 <td>{{ $value['remarks'] }}</td>
             </tr>

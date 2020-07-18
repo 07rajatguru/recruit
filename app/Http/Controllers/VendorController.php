@@ -17,9 +17,8 @@ use App\User;
 
 class VendorController extends Controller
 {
-    //
-    public function index()
-    {
+    public function index() {
+
         $vendor_array = array();
         $vendors=VendorBasicInfo::select('id','name','mobile','mail','contact_point');
 
@@ -42,12 +41,11 @@ class VendorController extends Controller
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
 
-        return view('adminlte::vendor.index',compact('vendor_array','count','isSuperAdmin'));
+        return view('adminlte::vendor.index',compact('vendor_array','count'));
     }
-    public function create()
-    {
+
+    public function create() {
 
         $generate_lead = '1';
 
@@ -63,16 +61,14 @@ class VendorController extends Controller
         }
 
         $state_id = '';
-
-
         $acc_type = VendorBasicInfo::getTypeArray();
-
         $gst_charge = VendorBasicInfo::getGSTChargeArray();
 
        return view('adminlte::vendor.create',compact('state','state_id','generate_lead','action','acc_type','gst_charge'));
     }
-    public function edit($id)
-    {
+
+    public function edit($id) {
+
         $state_res = State::orderBy('state_id','ASC')->get();
         $state = array();
 
@@ -83,21 +79,18 @@ class VendorController extends Controller
         }
 
         $acc_type = VendorBasicInfo::getTypeArray();
-
         $gst_charge = VendorBasicInfo::getGSTChargeArray();
 
         $vendor = array();
         $vendor_basicinfo  = \DB::table('vendor_basicinfo')
-            ->leftjoin('vendor_bank_details', 'vendor_bank_details.vendor_id', '=', 'vendor_basicinfo.id')
-            ->leftjoin('state', 'state.state_id', '=', 'vendor_basicinfo.state_id')
-            ->select('vendor_basicinfo.*','vendor_basicinfo.address as vendor_address','state.state_nm as state_name','vendor_bank_details.*','vendor_bank_details.address as bank_address')
-            ->where('vendor_basicinfo.id','=',$id)
-            ->get();
+        ->leftjoin('vendor_bank_details', 'vendor_bank_details.vendor_id', '=', 'vendor_basicinfo.id')
+        ->leftjoin('state', 'state.state_id', '=', 'vendor_basicinfo.state_id')
+        ->select('vendor_basicinfo.*','vendor_basicinfo.address as vendor_address','state.state_nm as state_name','vendor_bank_details.*','vendor_bank_details.address as bank_address')
+         ->where('vendor_basicinfo.id','=',$id)->get();
 
-            /*print_r($vendor_basicinfo);
-            exit;*/
+         
+        foreach ($vendor_basicinfo as $key=>$value) {
 
-            foreach ($vendor_basicinfo as $key=>$value){
             $vendor['name'] = $value->name;
             $vendor['mobile'] = $value->mobile;
             $vendor['landline'] = $value->landline;
@@ -117,8 +110,7 @@ class VendorController extends Controller
             $vendor['account']=$value->acc_no;
             $vendor['ifsc']=$value->ifsc_code;
             $vendor['acc_type']=$value->acc_type;
-            $vendor['nicr']=$value->nicr_no;      
-
+            $vendor['nicr']=$value->nicr_no;
         }
 
         $vendor['id'] = $id;
@@ -127,8 +119,8 @@ class VendorController extends Controller
 
         return view('adminlte::vendor.edit',compact('action','state','vendor','state_id','acc_type','gst_charge'));
     }
-     public function store(Request $request)
-    {
+
+    public function store(Request $request) {
 
         $vendor = new VendorBasicInfo;
         $vendor->name = Input::get('name');
@@ -136,12 +128,10 @@ class VendorController extends Controller
 
         $pincode = Input::get('pincode');
     
-        if(isset($pincode) && $pincode!='')
-        {
+        if(isset($pincode) && $pincode!='') {
             $vendor->pincode = $pincode;
         }
-        else
-        {
+        else {
             $vendor->pincode = '0';
         }
         
@@ -156,12 +146,10 @@ class VendorController extends Controller
 
         $gst_charge = Input::get('gst_charge');
 
-        if(isset($gst_charge) && $gst_charge!='')
-        {
+        if(isset($gst_charge) && $gst_charge!='') {
             $vendor->gst_charge = $gst_charge;
         }
-        else
-        {
+        else {
             $vendor->gst_charge = '0';
         }
         
@@ -172,16 +160,15 @@ class VendorController extends Controller
         
         $validator = \Validator::make(Input::all(),$vendor::$rules);
 
-        if($validator->fails())
-        {
+        if($validator->fails()) {
             return redirect('vendor/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
         $vendor->save();
 
-        $vendor_id=$vendor->id;
+        $vendor_id = $vendor->id;
 
-        $vendor_bank= new VendorBankDetails;
+        $vendor_bank = new VendorBankDetails;
         $vendor_bank->bank_name = Input::get('bank_name');
         $vendor_bank->address = Input::get('bank_address');
         $vendor_bank->acc_no = Input::get('account');
@@ -190,12 +177,10 @@ class VendorController extends Controller
 
         $nicr_no = Input::get('nicr');
 
-        if(isset($nicr_no) && $nicr_no!='')
-        {
+        if(isset($nicr_no) && $nicr_no!='') {
             $vendor_bank->nicr_no = $nicr_no;
         }
-        else
-        {
+        else {
             $vendor_bank->nicr_no = '0';
         }
         
@@ -203,46 +188,38 @@ class VendorController extends Controller
 
         $validator = \Validator::make(Input::all(),$vendor_bank::$rules);
 
-        if($validator->fails())
-        {
+        if($validator->fails()) {
             return redirect('vendor/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
         $vendor_bank->save();
 
-        $vendor_id=$vendor->id;
+        $vendor_id = $vendor->id;
 
-          $document1=$request->file('document1');
-          $document2=$request->file('document2');
-          $document3=$request->file('document3');
+        $document1 = $request->file('document1');
+        $document2 = $request->file('document2');
+        $document3 = $request->file('document3');
 
-
-        if (isset($document1) && $document1->isValid()) 
-        {
+        if (isset($document1) && $document1->isValid()) {
                     
             $file_name_doc1 = $document1->getClientOriginalName();
-
-      
             $file_size_doc1 = fileSize($document1);
 
-            //$extention = File::extension($file_name);
             $dir = "uploads/vendor/" . $vendor_id . '/';
             $vendor_doc1_key = "uploads/vendor/".$vendor_id."/".$file_name_doc1;
 
             $file_path = $dir . $file_name_doc1;
 
-            if (!file_exists($dir) && !is_dir($dir)) 
-            {
+            if (!file_exists($dir) && !is_dir($dir)) {
                 mkdir("uploads/vendor/$vendor_id", 0777, true);
                 chmod($dir, 0777);
             }
 
-            if(!$document1->move($dir, $file_name_doc1))
-            {
+            if(!$document1->move($dir, $file_name_doc1)) {
                 return false;
             }
-            else
-            {
+            else {
+
                 $vendor_doc = new VendorDoc();
                 $vendor_doc->vendor_id = $vendor_id;
                 $vendor_doc->file = $file_path;
@@ -252,35 +229,27 @@ class VendorController extends Controller
                 $vendor_doc->updated_at = date('Y-m-d');
                 $vendor_doc->save();
             }
-
         }
 
-        if (isset($document2) && $document2->isValid()) 
-        {
+        if (isset($document2) && $document2->isValid()) {
                     
             $file_name_doc2 = $document2->getClientOriginalName();
-
-      
             $file_size_doc2 = fileSize($document2);
 
-            //$extention = File::extension($file_name);
             $dir = "uploads/vendor/" . $vendor_id . '/';
             $vendor_doc2_key = "uploads/vendor/".$vendor_id."/".$file_name_doc2;
 
             $file_path = $dir . $file_name_doc2;
 
-            if (!file_exists($dir) && !is_dir($dir)) 
-            {
+            if (!file_exists($dir) && !is_dir($dir)) {
                 mkdir("uploads/vendor/$vendor_id", 0777, true);
                 chmod($dir, 0777);
             }
 
-            if(!$document2->move($dir, $file_name_doc2))
-            {
+            if(!$document2->move($dir, $file_name_doc2)){
                 return false;
             }
-            else
-            {
+            else{
                 $vendor_doc = new VendorDoc();
                 $vendor_doc->vendor_id = $vendor_id;
                 $vendor_doc->file = $file_path;
@@ -290,36 +259,28 @@ class VendorController extends Controller
                 $vendor_doc->updated_at = date('Y-m-d');
                 $vendor_doc->save();
             }
-
         }
 
-
-        if (isset($document3) && $document3->isValid()) 
-        {
+        if (isset($document3) && $document3->isValid()) {
                     
             $file_name_doc3 = $document3->getClientOriginalName();
-
-      
             $file_size_doc3 = fileSize($document3);
 
-            //$extention = File::extension($file_name);
             $dir = "uploads/vendor/" . $vendor_id . '/';
             $vendor_doc3_key = "uploads/vendor/".$vendor_id."/".$file_name_doc3;
 
             $file_path = $dir . $file_name_doc3;
 
-            if (!file_exists($dir) && !is_dir($dir)) 
-            {
+            if (!file_exists($dir) && !is_dir($dir)) {
                 mkdir("uploads/vendor/$vendor_id", 0777, true);
                 chmod($dir, 0777);
             }
 
-            if(!$document3->move($dir, $file_name_doc3))
-            {
+            if(!$document3->move($dir, $file_name_doc3)) {
                 return false;
             }
-            else
-            {
+            else {
+
                 $vendor_doc = new VendorDoc();
                 $vendor_doc->vendor_id = $vendor_id;
                 $vendor_doc->file = $file_path;
@@ -329,19 +290,14 @@ class VendorController extends Controller
                 $vendor_doc->updated_at = date('Y-m-d');
                 $vendor_doc->save();
             }
-
         }
 
         return redirect()->route('vendor.index')->with('success','Vendor Created Successfully');
     }
 
-    /*
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response*/
-    public function show($id)
-    {
+  
+    public function show($id) {
+
         $vendor = array();
         $vendor_basicinfo  = \DB::table('vendor_basicinfo')
             ->leftjoin('vendor_bank_details', 'vendor_bank_details.vendor_id', '=', 'vendor_basicinfo.id')
@@ -350,10 +306,7 @@ class VendorController extends Controller
             ->where('vendor_basicinfo.id','=',$id)
             ->get();
 
-
         $vendor['id'] = $id;
-/*       print_r($vendor_basicinfo);
-        exit;*/
 
         foreach ($vendor_basicinfo as $key=>$value){
 
@@ -376,23 +329,18 @@ class VendorController extends Controller
             $vendor['acc_no']=$value->acc_no;
             $vendor['ifsc_code']=$value->ifsc_code;
             $vendor['acc_type']=$value->acc_type;
-            $vendor['nicr_no']=$value->nicr_no;      
-
+            $vendor['nicr_no']=$value->nicr_no;
         }
 
         $i=0;
         $vendor['doc']=array();
 
-        $vendor_doc=\DB::table('vendor_doc')
-                    ->select('vendor_doc.*')
-                    ->where('vendor_id','=',$id)
-                    ->get();
-
+        $vendor_doc = \DB::table('vendor_doc')->select('vendor_doc.*')->where('vendor_id','=',$id)->get();
 
         $utils = new Utils();
 
-        foreach($vendor_doc as $key=>$value)
-        {
+        foreach($vendor_doc as $key=>$value) {
+
             $vendor['doc'][$i]['name'] = $value->name ;
             $vendor['doc'][$i]['id'] = $value->id;
             $vendor['doc'][$i]['url'] = "../".$value->file;
@@ -403,9 +351,10 @@ class VendorController extends Controller
         $vendor_upload_type['Others'] = 'Others';
 
         return view('adminlte::vendor.show',compact('vendor','vendor_upload_type'));
-    }   
-    public function update(Request $request, $id)
-    {     
+    }
+
+    public function update(Request $request, $id) {     
+
         $input = $request->all();
         $input = (object)$input;
 
@@ -423,25 +372,21 @@ class VendorController extends Controller
 
         $pincode = $input->pincode;
     
-        if(isset($pincode) && $pincode!='')
-        {
+        if(isset($pincode) && $pincode!='') {
             $vendor_basicinfo->pincode = $pincode;
         }
-        else
-        {
+        else{
            $vendor_basicinfo->pincode = '0';
         }
 
-        $vendor_basicinfo->gst_in=$input->gst_no;
+        $vendor_basicinfo->gst_in = $input->gst_no;
 
         $gst_charge = $input->gst_charge;
 
-        if(isset($gst_charge) && $gst_charge!='')
-        {
+        if(isset($gst_charge) && $gst_charge!='') {
             $vendor_basicinfo->gst_charge = $gst_charge;
         }
-        else
-        {
+        else {
             $vendor_basicinfo->gst_charge = '0';
         }
 
@@ -454,127 +399,111 @@ class VendorController extends Controller
             return redirect('vendor/create')->withInput(Input::all())->withErrors($validator->errors());
         }
 
-
         $vendor_basicinfo->save();
 
-        if($vendor_basicinfo)
-        {
-            $vendor_id=$vendor_basicinfo->id;
+        if($vendor_basicinfo) {
+            $vendor_id = $vendor_basicinfo->id;
 
-            $vendor_bank=VendorBankDetails::where('vendor_id','=',$vendor_id)->first();
+            $vendor_bank = VendorBankDetails::where('vendor_id','=',$vendor_id)->first();
 
             if(!isset($vendor_bank)){
-                    $vendor_bank = new VendorBankDetails();
-                }
-                $vendor_bank->vendor_id=$vendor_id;
-                $vendor_bank->bank_name = $input->bank_name;
-                $vendor_bank->address = $input->bank_address;
-                $vendor_bank->acc_no = $input->account;
-                $vendor_bank->acc_type = $input->acc_type;
-                $vendor_bank->ifsc_code = $input->ifsc;
+                $vendor_bank = new VendorBankDetails();
+            }
 
-                $nicr_no =  $input->nicr;
+            $vendor_bank->vendor_id=$vendor_id;
+            $vendor_bank->bank_name = $input->bank_name;
+            $vendor_bank->address = $input->bank_address;
+            $vendor_bank->acc_no = $input->account;
+            $vendor_bank->acc_type = $input->acc_type;
+            $vendor_bank->ifsc_code = $input->ifsc;
 
-                if(isset($nicr_no) && $nicr_no!='')
-                {
-                   $vendor_bank->nicr_no = $nicr_no;
-                }
-                else
-                {
-                   $vendor_bank->nicr_no = '0';
-                }
-                    
-                }
+            $nicr_no =  $input->nicr;
+
+            if(isset($nicr_no) && $nicr_no!='') {
+                $vendor_bank->nicr_no = $nicr_no;
+            }
+            else{
+                $vendor_bank->nicr_no = '0';
+            }        
+        }
 
         $validator = \Validator::make(Input::all(),$vendor_bank::$rules);
 
         if($validator->fails()){
             return redirect('vendor/create')->withInput(Input::all())->withErrors($validator->errors());
         }
+
         $vendor_bank->save();
 
         return redirect()->route('vendor.index')->with('success','Vendor Updated Successfully');
     }
 
+    public function destroy($id) {
 
-    public function destroy($id)
-    {
-        $vendor_expense=\DB::table('vendor_basicinfo')
+        $vendor_expense = \DB::table('vendor_basicinfo')
         ->leftjoin('expense','expense.vendor_id','=','vendor_basicinfo.id')
         ->select('vendor_basicinfo.*','expense.vendor_id as v_id')
         ->where('vendor_id','=',$id)->first();
 
-       /* print_r($vendor_expense);
-        exit;*/
-
-
-        if(isset($vendor_expense))
-        {
+        if(isset($vendor_expense)) {
             return redirect()->route('vendor.index')->with('error','Cannot Delete Vendor Because Expense is Added for the same.');
         }
-        else
-        {
+        else {
+
             $vendor_attach=\DB::table('vendor_doc')->select('file','vendor_id')->where('vendor_id','=',$id)->first();
 
-            if(isset($vendor_attach))
-            {
-                $path="uploads/vendor/" . $vendor_attach->vendor_id;
+            if(isset($vendor_attach)) {
 
-                $files=glob($path . "/*");
+                $path = "uploads/vendor/" . $vendor_attach->vendor_id;
 
-                foreach($files as $file)
-                {
-                    if(is_file($file))
-                    {
+                $files = glob($path . "/*");
+
+                foreach($files as $file) {
+
+                    if(is_file($file)){
                         unlink($file);
                     }
                 }
 
-                $vendor_id=$vendor_attach->vendor_id;
-                $path1="uploads/vendor/". $vendor_id . "/";
+                $vendor_id = $vendor_attach->vendor_id;
+                $path1 = "uploads/vendor/". $vendor_id . "/";
                 rmdir($path1);
 
                 $vendor_bank=VendorBankDetails::where('vendor_id','=',$id)->delete();
                 $vendor_doc=VendorDoc::where('vendor_id','=',$id)->delete();
                 $vendor = VendorBasicInfo::where('id',$id)->delete();
             }
-        
-            else
-            {
-                  $vendor_bank=VendorBankDetails::where('vendor_id','=',$id)->delete();
-                 $vendor = VendorBasicInfo::where('id',$id)->delete();
+            else {
+                $vendor_bank=VendorBankDetails::where('vendor_id','=',$id)->delete();
+                $vendor = VendorBasicInfo::where('id',$id)->delete();
             }
         }
-        
         return redirect()->route('vendor.index')->with('success','Vendor Deleted Successfully');
     }
 
+    public function upload(Request $request) {
 
-    public function upload(Request $request)
-    {
         $vendor_upload_type = $request->vendor_upload_type;
         $file = $request->file('file');
         $id = $request->id;
 
-        if (isset($file) && $file->isValid()) 
-        {
+        if (isset($file) && $file->isValid()) {
+
             $doc_name = $file->getClientOriginalName();
             $doc_filesize = filesize($file);
 
             $dir_name = "uploads/vendor/".$id."/";
             $others_doc_key = "uploads/vendor/".$id."/".$doc_name;
 
-            if (!file_exists($dir_name)) 
-            {
+            if (!file_exists($dir_name)) {
                 mkdir("uploads/vendor/$id", 0777,true);
             }
 
-            if(!$file->move($dir_name, $doc_name))
-            {
+            if(!$file->move($dir_name, $doc_name)) {
                 return false;
             }
-            else
-            {
+            else {
+
                 $vendor_doc = new VendorDoc();
                 $vendor_doc->vendor_id = $id;
                 $vendor_doc->file = $others_doc_key;
@@ -583,27 +512,23 @@ class VendorController extends Controller
                 $vendor_doc->created_at = date('Y-m-d');
                 $vendor_doc->updated_at = date('Y-m-d');
                 $vendor_doc->save();
-
             }
-
         }
 
         return redirect()->route('vendor.show',[$id])->with('success','Attachment Uploaded Successfully');
-
     }
-    public function attachmentsDestroy($docid)
-    {
-        $vendor_attach=\DB::table('vendor_doc')
-        ->select('vendor_doc.*')
-        ->where('id','=',$docid)->first();
 
-        if(isset($vendor_attach))
-        {
-            $path="uploads/vendor/".$vendor_attach->vendor_id . "/" . $vendor_attach->name;
+    public function attachmentsDestroy($docid) {
+
+        $vendor_attach = \DB::table('vendor_doc')->select('vendor_doc.*')->where('id','=',$docid)->first();
+
+        if(isset($vendor_attach)) {
+
+            $path = "uploads/vendor/".$vendor_attach->vendor_id . "/" . $vendor_attach->name;
 
             unlink($path);
 
-            $id=$vendor_attach->vendor_id;
+            $id = $vendor_attach->vendor_id;
     
             $vendor_doc=VendorDoc::where('id','=',$docid)->delete();
         }
@@ -616,9 +541,9 @@ class VendorController extends Controller
         return view('adminlte::vendor.import');
     }
 
-     public function importExcel(Request $request){
+    public function importExcel(Request $request) {
 
-        if($request->hasFile('import_file')){
+        if($request->hasFile('import_file')) {
 
             $path = $request->file('import_file')->getRealPath();
 
@@ -626,9 +551,9 @@ class VendorController extends Controller
 
             $messages = array();
 
-            if(!empty($data) && $data->count()){
+            if(!empty($data) && $data->count()) {
 
-                foreach($data->toArray() as $key => $value){
+                foreach($data->toArray() as $key => $value) {
 
                     if(!empty($value)){
 
@@ -692,25 +617,21 @@ class VendorController extends Controller
                                 $vendor_bank_details->nicr_no=$nicr_no;
                                 $vendor_bank_details->vendor_id=$vendor_id;
 
-                                if($vendor_bank_details->save())
-                                {
+                                if($vendor_bank_details->save()) {
                                     $messages[] = "Record $srno inserted successfully";
                                 }
-                                else
-                                {
-                                     $messages[] = "Error while inserting record $srno";  
+                                else {
+                                    $messages[] = "Error while inserting record $srno";  
                                 }
-                                
-                                }
+                            }
                         }
                     }
-                    else
-                    {
+                    else {
                         $messages[] = "No Data in file";
                     }
                 }
             }
             return view('adminlte::vendor.import',compact('messages'));
-       }
-   }
+        }
+    }
 }

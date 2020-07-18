@@ -12,21 +12,14 @@ use App\Date;
 class HolidaysController extends Controller
 {
     public function index(){
-    	
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
+  
     	$holidays = Holidays::getAllholidaysList();
     	$count = sizeof($holidays);
 
-    	return view('adminlte::holidays.index',compact('holidays','count','isSuperAdmin'));
+    	return view('adminlte::holidays.index',compact('holidays','count'));
     }
 
-    public function create(){
-
+    public function create() {
 
     	$type = Holidays::getHolidaysType();
     	$users = User::getAllUsers();
@@ -37,7 +30,8 @@ class HolidaysController extends Controller
     	return view('adminlte::holidays.create',compact('action','type','users','selected_users'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
+        
     	$dateClass = new Date();
 
     	$title = $request->title;

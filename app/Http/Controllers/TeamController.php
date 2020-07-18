@@ -81,10 +81,6 @@ class TeamController extends Controller
         }
     }
 
-    public function show(){
-
-    }
-
     public function edit($id){
 
         $team = Team::find($id);

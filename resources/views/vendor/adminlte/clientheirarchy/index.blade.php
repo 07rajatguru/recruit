@@ -37,7 +37,6 @@
 	       <th width="100px">Action</th>
 	       <th>Name</th>
            <th>Position</th>
-           {{--<th>Order</th>--}}
 	    </tr>
     </thead>
     <tbody id="sortable_data">
@@ -46,15 +45,14 @@
             <tr id="{{ $value['id'] }}">
                 <td>{{ ++$i }}</td>
                 <td>
-                    {{--<a class="fa fa-circle" href="{{ route('clientheirarchy.show',$value['id']) }}"></a>--}}
                     <a class="fa fa-edit" href="{{ route('clientheirarchy.edit',$value['id']) }}"></a>
-                    @if($isSuperAdmin)
+
+                    @permission(('client-hierarchy-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Client Hierarchy'])
-                    @endif
+                    @endpermission
                 </td>
                 <td>{{ $value['name'] }}</td>
                 <td>{{ $value['position'] }}</td>
-                {{--<td>{{ $value['order'] }}</td>--}}
             </tr>
         @endforeach
     </tbody>
@@ -72,25 +70,23 @@
 
             new jQuery.fn.dataTable.FixedHeader( table );*/
             jQuery("#sortable_data").sortable({
+
                 update: function (event, ui){
+
                     var order = $(this).sortable('toArray');
                     //alert(order);
                     var dataString = 'ids=' + order;
                     $.ajax
                     ({
                         type: "GET",
-                        url: '/client-heirarchy/update-position',
+                        url: '/client-hierarchy/update-position',
                         data: dataString,
                         cache: false,
-                        success: function (data)
-                        {
+                        success: function (data) {
                             if (data == 'success') {
-
                             }
-
                         }
                     });
-
                 }
             });
         });

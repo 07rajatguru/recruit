@@ -12,10 +12,11 @@ use App\ExpenseDoc;
 use App\VendorBasicInfo;
 use Excel;
 use App\Utils;
+use App\PermissionRole;
 
 class ExpenseController extends Controller
 {
-    public function index(){
+    public function index() {
 
         $user = \Auth::user();
 
@@ -23,14 +24,12 @@ class ExpenseController extends Controller
         $role_id = key($userRole);
         $user_obj = new User();
         $expense = Expense::getAllExpense();
-        //print_r($expense);exit;
-    	
-        $count=sizeof($expense);
+        $count = sizeof($expense);
 
         return view('adminlte::expense.index',compact('expense','count'));
     }
 
-    public function getOrderExpenseColumnName($order){
+    public function getOrderExpenseColumnName($order) {
 
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
@@ -62,11 +61,10 @@ class ExpenseController extends Controller
                 $order_column_name = "expense.reference_number";
             }
         }
-
         return $order_column_name;
     }
 
-    public function getAllExpenseDetails(){
+    public function getAllExpenseDetails() {
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -79,19 +77,22 @@ class ExpenseController extends Controller
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($role_id);
 
         $order_column_name = self::getOrderExpenseColumnName($order);
         $expense = Expense::getAllExpense($limit,$offset,$search,$order_column_name,$type);
-        $count=sizeof($expense);
+        $count = sizeof($expense);
 
         $expense_data = array();
         $i = 0; $j = 0;
+
         foreach ($expense as $key => $value) {
+
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('expense.show',$value['id']).'" style="margin:2px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('expense.edit',$value['id']).'" style="margin:2px;"></a>';
-            if ($isSuperAdmin) {
+
+            if(in_array('expense-delete', $permissions)) {
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense']);
                 $delete = $delete_view->render();
                 $action .= $delete;
@@ -116,37 +117,19 @@ class ExpenseController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function create(){
+    public function create() {
 
         $payment_mode = Expense::getPaymentMode();
         $payment_type = Expense::getPaymentType();
-
-        $input_tax=Expense::getInputTax();
-
+        $input_tax = Expense::getInputTax();
         $head = AccountingHeads::getAllHead();
 
         $pmode = '';
         $ptype = '';
-        $tax='';
+        $tax ='';
         $expense_head = '';
-        $user = \Auth::user();
-        $user_id = $user->id;
-
-        $user_role_id = User::getLoggedinUserRole($user);
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
-            // get all vendor
-            $vendor_res = VendorBasicInfo::getLoggedInUserVendors(1,$user_id);
-        }
-        else{
-            // get logged in user vendor
-            $vendor_res = VendorBasicInfo::getLoggedInUserVendors(0,$user_id);
-        }
+        
+        $vendor_res = VendorBasicInfo::getLoggedInUserVendors();
 
         $vendor = array();
         if (sizeof($vendor_res) > 0) {
@@ -161,13 +144,9 @@ class ExpenseController extends Controller
         return view('adminlte::expense.create',compact('action','payment_mode','payment_type','head','pmode','ptype','expense_head','input_tax','tax','vendor','vendor_id'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
         $dateClass = new Date();
-
-     //   $document = $request->file('document');
-/*        echo $document;
-        exit;*/
 
         $input = $request->all();
         $date = $input['date'];
@@ -218,6 +197,7 @@ class ExpenseController extends Controller
         {
             $tds_deduct="";
         }
+
         $expense = new Expense();
         $expense->date = $dateClass->changeDMYtoYMD($date);
         $expense->amount = $amount;
@@ -235,15 +215,15 @@ class ExpenseController extends Controller
         $gst_split=substr($gst_no,0,2);
         if($gst_split=="24")
         {
-             $expense->cgst=$cgst;
-             $expense->sgst=$sgst;
-             $expense->igst='0';
+            $expense->cgst=$cgst;
+            $expense->sgst=$sgst;
+            $expense->igst='0';
         }
         else
         {
-             $expense->cgst='0';
-             $expense->sgst='0';
-             $expense->igst=$igst;
+            $expense->cgst='0';
+            $expense->sgst='0';
+            $expense->igst=$igst;
         }
        
         $expense->total_bill_amount=$total_bill_amount;
@@ -251,6 +231,7 @@ class ExpenseController extends Controller
         $expense->paid_amount=$paid_amount;
         $expense->tds_percentage=$tds;
         $expense->tds_deducted=$tds_detuct;
+
         if (isset($tds_date) && $tds_date != '') {
             $expense->tds_payment_date = $dateClass->changeDMYtoYMD($tds_date);
         }
@@ -273,8 +254,7 @@ class ExpenseController extends Controller
         $document3=$request->file('document3');
 
         if (isset($document1) && $document1->isValid()) 
-        {
-                    
+        {    
             $file_name_doc1 = $document1->getClientOriginalName();
             $file_size_doc1 = fileSize($document1);
 
@@ -305,12 +285,10 @@ class ExpenseController extends Controller
                 $expense_doc->updated_at = date('Y-m-d');
                 $expense_doc->save();
             }
-
         }
 
         if (isset($document2) && $document2->isValid()) 
-        {
-                    
+        {    
             $file_name_doc2 = $document2->getClientOriginalName();
             $file_size_doc2 = fileSize($document2);
 
@@ -341,12 +319,10 @@ class ExpenseController extends Controller
                 $expense_doc->updated_at = date('Y-m-d');
                 $expense_doc->save();
             }
-
         }
 
         if (isset($document3) && $document3->isValid()) 
-        {
-                    
+        {    
             $file_name_doc3 = $document3->getClientOriginalName();
             $file_size_doc3 = fileSize($document3);
 
@@ -377,12 +353,11 @@ class ExpenseController extends Controller
                 $expense_doc->updated_at = date('Y-m-d');
                 $expense_doc->save();
             }
-
         }
         return redirect()->route('expense.index')->with('success', 'Expense Added Successfully');
     }
 
-    public function edit($id){
+    public function edit($id) {
 
         $vendor_res = VendorBasicInfo::orderBy('id','ASC')->get();
         $vendor = array();
@@ -400,17 +375,17 @@ class ExpenseController extends Controller
         $input_tax=Expense::getInputTax();
         $head = AccountingHeads::getAllHead();
 
-        $expense=array();
+        $expense = array();
 
         $expense_info  = \DB::table('expense')
-            
-            ->leftjoin('vendor_basicinfo', 'vendor_basicinfo.id', '=', 'expense.vendor_id')
-            ->select('expense.*','vendor_basicinfo.name as v_name')
-            ->where('expense.id','=',$id)
-            ->get();
+        ->leftjoin('vendor_basicinfo', 'vendor_basicinfo.id', '=', 'expense.vendor_id')
+        ->select('expense.*','vendor_basicinfo.name as v_name')
+        ->where('expense.id','=',$id)
+        ->get();
 
 
-         foreach ($expense_info as $key=>$value){
+        foreach ($expense_info as $key=>$value) {
+
             $expense['date'] = $dateClass->changeYMDtoDMY($value->date);
             $expense['amount'] = $value->amount;
             $vendor_id=$value->vendor_id;
@@ -432,7 +407,6 @@ class ExpenseController extends Controller
             $expense['tds']=$value->tds_percentage;
             $expense['tds_deduct']=$value->tds_deducted;
             $expense['tds_date']=$dateClass->changeYMDtoDMY($value->tds_payment_date);
-
         }
 
         $expense['id'] = $id;
@@ -442,7 +416,7 @@ class ExpenseController extends Controller
         return view('adminlte::expense.edit',compact('action','payment_mode','pmode','ptype','payment_type','expense_head','head','input_tax','tax','vendor','expense','vendor_id'));
     }
 
-    public function update(Request $request,$id){
+    public function update(Request $request,$id) {
 
         $input = $request->all();
         $input = (object)$input;
@@ -460,17 +434,18 @@ class ExpenseController extends Controller
 
         $expense->gst=$input->gst;
         $gst_split=substr($expense->gst_in,0,2);
+
         if($gst_split=="24")
         {
-             $expense->cgst=$input->cgst;
-             $expense->sgst=$input->sgst;
-             $expense->igst='0';
+            $expense->cgst=$input->cgst;
+            $expense->sgst=$input->sgst;
+            $expense->igst='0';
         }
         else
         {
-             $expense->cgst='0';
-             $expense->sgst='0';
-             $expense->igst=$input->igst;
+            $expense->cgst='0';
+            $expense->sgst='0';
+            $expense->igst=$input->igst;
         }
      
         $expense->total_bill_amount=$input->bill_amount;
@@ -478,7 +453,8 @@ class ExpenseController extends Controller
         $expense->expense_head = $input->head;
         $expense->paid_amount=$input->paid_amount;
 
-        $tds=$input->tds;
+        $tds = $input->tds;
+
         if(isset($tds) && $tds!=null)
         {
             $expense->tds_percentage=$input->tds;
@@ -488,14 +464,15 @@ class ExpenseController extends Controller
             $expense->tds_percentage='0.0';
         }
 
-        $tds_detuct=$input->tds_deduct;
+        $tds_detuct = $input->tds_deduct;
+
         if(isset($tds_detuct) && $tds_detuct!=null)
         {
-             $expense->tds_deducted=$input->tds_deduct;
+            $expense->tds_deducted=$input->tds_deduct;
         }
         else
         {
-             $expense->tds_deducted='0.0';
+            $expense->tds_deducted='0.0';
         }
 
         $expense->tds_payment_date=$dateClass->changeDMYtoYMD($input->tds_date);
@@ -512,26 +489,22 @@ class ExpenseController extends Controller
         }
 
         $expenseUpdated =  $expense->save();
-
         return redirect()->route('expense.index')->with('success', 'Expense Updated Successfully');
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
 
-        
         $expense_attach=\DB::table('expense_doc')->select('file','expence_id')->where('expence_id','=',$id)->first();
 
         if(isset($expense_attach))
         {
-            $path="uploads/expense/".$expense_attach->expence_id;
+            $path = "uploads/expense/".$expense_attach->expence_id;
  
-            $files=glob($path . "/*");
+            $files = glob($path . "/*");
 
-            foreach($files as $file)
-            {
-                if(is_file($file))
-                {
+            foreach($files as $file) {
+
+                if(is_file($file)) {
                     unlink($file);
                 }
             }
@@ -542,45 +515,32 @@ class ExpenseController extends Controller
             $expense_doc=ExpenseDoc::where('expence_id','=',$id)->delete();
             $expense = Expense::where('id',$id)->delete();
         }
-        else 
-        {
+        else {
             $expense = Expense::where('id',$id)->delete();
         }
-     
-
         return redirect()->route('expense.index')->with('success','Expense Deleted Successfully');
     }
 
-
-    public function getVendorInfo(){
+    public function getVendorInfo() {
 
         $vendor_id = $_GET['vendor_id'];
-
-        // get vendor info
         $vendor = VendorBasicInfo::getVendorInfoByVendorId($vendor_id);
-
         echo json_encode($vendor);exit;
-
     }
 
-    public function show($id)
-    {   
+    public function show($id) {
+
         $dateClass = new Date();
 
         $expense = array();
         $expense_info  = \DB::table('expense')
-            ->leftjoin('vendor_basicinfo', 'expense.vendor_id', '=', 'vendor_basicinfo.id')
-            ->leftjoin('accounting_heads','accounting_heads.id','=','expense.expense_head')
-            ->select('expense.*','vendor_basicinfo.name as v_name','accounting_heads.name as expense_head_name')
-            ->where('expense.id','=',$id)
-            ->get();
-
+        ->leftjoin('vendor_basicinfo', 'expense.vendor_id', '=', 'vendor_basicinfo.id')
+        ->leftjoin('accounting_heads','accounting_heads.id','=','expense.expense_head')
+        ->select('expense.*','vendor_basicinfo.name as v_name','accounting_heads.name as expense_head_name')->where('expense.id','=',$id)->get();
 
         $expense['id'] = $id;
-       /* print_r( $expense_info);
-        exit;*/
 
-        foreach ($expense_info as $key=>$value){
+        foreach ($expense_info as $key=>$value) {
 
             $expense['date'] = $dateClass->changeYMDtoDMY($value->date);
             $expense['amount'] = Utils::IND_money_format($value->amount);
@@ -602,22 +562,18 @@ class ExpenseController extends Controller
             $expense['tds']=$value->tds_percentage;
             $expense['tds_deduct']=$value->tds_deducted;
             $expense['tds_date']= $dateClass->changeYMDtoDMY($value->tds_payment_date);
-
         }
 
         $i=0;
         $expense['doc']=array();
 
-        $expense_doc=\DB::table('expense_doc')
-                    ->select('expense_doc.*')
-                    ->where('expence_id','=',$id)
-                    ->get();
-
+        $expense_doc = \DB::table('expense_doc')->select('expense_doc.*')
+        ->where('expence_id','=',$id)->get();
 
         $utils = new Utils();
 
-        foreach($expense_doc as $key=>$value)
-        {
+        foreach($expense_doc as $key=>$value) {
+
             $expense['doc'][$i]['name'] = $value->name ;
             $expense['doc'][$i]['id'] = $value->id;
             $expense['doc'][$i]['url'] = "../".$value->file;
@@ -629,8 +585,8 @@ class ExpenseController extends Controller
         return view('adminlte::expense.show',compact('expense','expense_upload_type'));
     }  
 
-    public function upload(Request $request)
-    {
+    public function upload(Request $request) {
+
         $expense_upload_type = $request->expense_upload_type;
         $file = $request->file('file');
         $id = $request->id;
@@ -663,16 +619,12 @@ class ExpenseController extends Controller
                 $expense_doc->updated_at = date('Y-m-d');
                 $expense_doc->save();
             }
-
         }
-
         return redirect()->route('expense.show',[$id])->with('success','Attachment Uploaded Successfully');
-
     }
 
     public function attachmentsDestroy($docid)
     {
-
         $expense_attach=\DB::table('expense_doc')
         ->select('expense_doc.*')
         ->where('id','=',$docid)->first();
@@ -689,6 +641,7 @@ class ExpenseController extends Controller
         }
         return redirect()->route('expense.show',[$id])->with('success','Attachment Deleted Successfully');
     }
+
     public function importExport()
     {
         return view('adminlte::expense.import');
@@ -698,11 +651,10 @@ class ExpenseController extends Controller
     {
         $dateClass = new Date();
 
-        if($request->hasFile('import_file')){
+        if($request->hasFile('import_file')) {
+
             $path = $request->file('import_file')->getRealPath();
-
             $data = Excel::load($path, function ($reader) {})->get();
-
             $messages = array();
 
             if(!empty($data) && $data->count()){
@@ -781,13 +733,10 @@ class ExpenseController extends Controller
                     }
                 } 
             }
-
             return view('adminlte::expense.import',compact('messages'));
         }
         else {
             return redirect()->route('expense.importExport')->with('error','Please Select Excel file.');
         }
-
     }
-    
 }

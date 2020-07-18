@@ -9,20 +9,14 @@ use App\User;
 
 class ModuleVisibleController extends Controller
 {
-    public function index(){
-
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+    public function index() {
 
     	$module_user = ModuleVisibleUser::getAllModuleVisibleUser();
 
-    	return view('adminlte::modulevisible.index',compact('module_user','isSuperAdmin'));
+    	return view('adminlte::modulevisible.index',compact('module_user'));
     }
 
-    public function create(){
+    public function create() {
 
         $users = User::getAllUsers();
         $modules = Module::getAllModulesName();
@@ -33,7 +27,7 @@ class ModuleVisibleController extends Controller
         return view('adminlte::modulevisible.create',compact('action','users','modules','selected_modules','userid'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
         $user_id = $request->get('user_id');
         $module_ids = $request->get('module_ids');
@@ -45,10 +39,10 @@ class ModuleVisibleController extends Controller
             $module_user_add->save();
         }
 
-        return redirect()->route('modulevisible.index')->with('success','Module Visibility Added Successfully');
+        return redirect()->route('modulevisible.index')->with('success','Module Visibility Added Successfully.');
     }
 
-    public function edit($id){
+    public function edit($id) {
 
         $users = User::getAllUsers();
         $modules = Module::getAllModulesName();
@@ -65,7 +59,7 @@ class ModuleVisibleController extends Controller
         return view('adminlte::modulevisible.edit',compact('action','users','modules','selected_modules','userid','module_user'));
     }
 
-    public function update(Request $request,$id){
+    public function update(Request $request,$id) {
 
         $user_id = $request->get('user_id');
         $module_ids = $request->get('module_ids');
@@ -79,14 +73,14 @@ class ModuleVisibleController extends Controller
             $module_user_add->save();
         }
 
-        return redirect()->route('modulevisible.index')->with('success','Module Visibility Updated Successfully');
+        return redirect()->route('modulevisible.index')->with('success','Module Visibility Updated Successfully.');
     }
 
-    public function destroy($user_id){
+    public function destroy($user_id) {
 
-        $module_user_delete = ModuleVisibleUser::where('user_id',$user_id)->delete();
+        ModuleVisibleUser::where('user_id',$user_id)->delete();
 
-        return redirect()->route('modulevisible.index')->with('success','Module Visibility Deleted Successfully');
+        return redirect()->route('modulevisible.index')->with('success','Module Visibility Deleted Successfully.');
     }
 
     public function userWiseModuleAjax(){

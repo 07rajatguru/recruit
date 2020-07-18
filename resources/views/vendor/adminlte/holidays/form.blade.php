@@ -17,7 +17,6 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
         </div>
-
     </div>
 </div>
 
@@ -109,12 +108,11 @@
                             @endforeach
                             @if ($errors->has('user_ids'))
                                 <span class="help-block">
-                                        <strong>{{ $errors->first('user_ids') }}</strong>
-                                    </span>
+                                    <strong>{{ $errors->first('user_ids') }}</strong>
+                                </span>
                             @endif
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -125,7 +123,6 @@
             </div>
         </div>
     </div>
-
 @endif
 
 @section('customscripts')

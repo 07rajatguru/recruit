@@ -50,9 +50,9 @@
                         </a>
                         <a class="fa fa-edit" href="{{ route('emailtemplate.edit',$value['id']) }}">
                         </a>
-                        @if($isSuperAdmin)
+                        @permission(('email-template-delete'))
                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'emailtemplate','display_name'=>'Email Template'])
-                        @endif
+                        @endpermission
                     </td>
                     <td>{{ $value['name'] }}</td>
                     <td>{{ $value['subject'] }}</td>

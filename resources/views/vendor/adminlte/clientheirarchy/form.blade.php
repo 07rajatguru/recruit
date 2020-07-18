@@ -11,13 +11,13 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if( $action == 'edit')
-                <h2>Edit Client Heirarchy</h2>
+                <h2>Edit Client Hierarchy</h2>
             @else
-                <h2>Add New Client Heirarchy</h2>
+                <h2>Add New Client Hierarchy</h2>
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+            <a class="btn btn-primary" href="{{ route('clientheirarchy.index') }}">Back</a>
         </div>
     </div>
 </div>

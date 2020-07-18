@@ -11,7 +11,7 @@
 	<div class="row">
 	    <div class="col-lg-12 margin-tb">
 	        <div class="pull-left">
-	                <h2>Holidays List ({{ $count or 0 }})</h2>  
+	           <h2>Holidays List ({{ $count or 0 }})</h2>  
 	        </div>
 
 	        <div class="pull-right">
@@ -53,9 +53,9 @@
                 <td>
                     <a title="Edit" class="fa fa-edit" href="{{ route('holidays.edit',$value['id']) }}"></a>
 
-                    @if($isSuperAdmin)
+                    @permission(('holiday-delete'))
                         @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'holidays','display_name'=>'Holiday'])
-                    @endif
+                    @endpermission
                 </td>
                 <td>{{$value['title']}}</td>
                 <td>{{$value['type']}}</td>
@@ -66,7 +66,6 @@
             @endforeach
         </tbody>
     </table>
-
 @stop
 
 @section('customscripts')

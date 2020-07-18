@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Vendor')
+@section('title', 'Vendors')
 
 @section('content_header')
     <h1></h1>
@@ -13,7 +13,7 @@
                 <h2>Vendor List ({{ $count }})</h2>
              </div>
             <div class="pull-right">
-                @permission(('vendor-create'))
+                @permission(('vendor-add'))
                 <a class="btn btn-success" href="{{ route('vendor.create') }}"> Create New Vendor</a>
                 @endpermission
             </div>
@@ -24,14 +24,12 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     @if ($message = Session::get('error'))
         <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="vendor_table">
@@ -54,19 +52,17 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $vendor['mobile'] }}</td>
                 <td>{{ $vendor['mail'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $vendor['contact_point'] }}</td>
-
                 <td>
-                        <a title="Show" class="fa fa-circle"  href="{{ route('vendor.show',$vendor['id']) }}"></a>
+                    <a title="Show" class="fa fa-circle"  href="{{ route('vendor.show',$vendor['id']) }}">
+                    </a>
 
-                        @permission(('vendor-edit'))
+                    @permission(('vendor-edit'))
                         <a title="Edit" class="fa fa-edit" href="{{ route('vendor.edit',$vendor['id']) }}"></a>
-                        @endpermission
+                    @endpermission
 
-                        @if($isSuperAdmin)
-                            @permission(('vendor-delete'))
-                            @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor',''])
-                            @endpermission
-                        @endif
+                    @permission(('vendor-delete'))
+                        @include('adminlte::partials.deleteModal', ['data' => $vendor, 'name' => 'vendor','display_name'=>'vendor',''])
+                    @endpermission
                 </td>
             </tr>
         @endforeach

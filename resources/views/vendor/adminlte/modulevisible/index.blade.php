@@ -41,9 +41,9 @@
                 <td>
                     <a class="fa fa-edit" title="edit" href="{{ route('modulevisible.edit',$value['main_id']) }}"></a>
 
-                    @if($isSuperAdmin)
+                    @permission(('module-visibility-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'modulevisible','display_name'=>'Module Visible User'])
-                    @endif
+                    @endpermission
                 </td>
                 <td>{{ $value['uname'] }}</td>
                 <td>{{ $value['mname'] }}</td>

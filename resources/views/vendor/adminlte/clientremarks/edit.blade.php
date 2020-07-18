@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Client Remarks | Edit')
+@section('title', 'Client Remarks')
 
 @section('content_header')
     <h1></h1>

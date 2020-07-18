@@ -9,27 +9,21 @@ use App\User;
 
 class EmailTemplateController extends Controller
 {
-    public function index(){
-
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+    public function index() {
 
     	$email_template = EmailTemplate::getAllEmailTemplates();
     	$count = sizeof($email_template);
 
-    	return view('adminlte::emailtemplate.index',compact('email_template','count','isSuperAdmin'));
+    	return view('adminlte::emailtemplate.index',compact('email_template','count'));
     }
 
-    public function create(){
+    public function create() {
 
     	$action = 'add';
     	return view('adminlte::emailtemplate.create',compact('action'));
     }
 
-    public function uploadEmailbodyImage(Request $request){
+    public function uploadEmailbodyImage(Request $request) {
 
         $user_id = \Auth::user()->id;
 
@@ -37,8 +31,8 @@ class EmailTemplateController extends Controller
         $funcNum  = $request->input('CKEditorFuncNum');
         $message  = $url = '';
 
-        if (Input::hasFile('upload'))
-        {
+        if (Input::hasFile('upload')) {
+
             $file = Input::file('upload');
             if ($file->isValid())
             {
@@ -52,14 +46,13 @@ class EmailTemplateController extends Controller
                 $message = 'An error occurred while uploading the file.';
             }
         }
-        else
-        {
+        else {
             $message = 'No file uploaded.';
         }
         return '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$url.'", "'.$message.'")</script>';
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
     	$name = $request->get('name');
     	$subject = $request->get('subject');
@@ -74,13 +67,13 @@ class EmailTemplateController extends Controller
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Added Successfully.');
     }
 
-    public function show($id){
+    public function show($id) {
 
     	$email_template = EmailTemplate::find($id);
     	return view('adminlte::emailtemplate.show',compact('email_template'));
     }
 
-    public function edit($id){
+    public function edit($id) {
 
     	$email_template = EmailTemplate::find($id);
     	$action = 'edit';
@@ -88,7 +81,7 @@ class EmailTemplateController extends Controller
     	return view('adminlte::emailtemplate.edit',compact('email_template','action'));
     }
 
-    public function update($id,Request $request){
+    public function update($id,Request $request) {
     	
     	$name = $request->get('name');
     	$subject = $request->get('subject');
@@ -103,15 +96,15 @@ class EmailTemplateController extends Controller
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Updated Successfully.');
     }
 
-    public function destroy($id){
+    public function destroy($id) {
 
     	EmailTemplate::where('id',$id)->delete();
 
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Deleted Successfully.');
     }
 
-    public function getEmailTemplateById()
-    {
+    public function getEmailTemplateById() {
+        
         $template_id = $_GET['email_template_id'];
         $template_details = EmailTemplate::getEmailTemplateDetailsById($template_id);
 

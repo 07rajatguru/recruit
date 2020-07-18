@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Client Heirarchy | Create')
+@section('title', 'Client Hierarchy')
 
 @section('content_header')
     <h1></h1>

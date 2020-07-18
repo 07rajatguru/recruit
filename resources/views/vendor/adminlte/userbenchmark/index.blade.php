@@ -64,16 +64,15 @@
                     <td>
                         <a class = "fa fa-edit" title = "Edit" href="{{ route('userbenchmark.edit',$value['id']) }}"></a>
 
-                        @if($isSuperAdmin)
+                        @permission(('user-benchmark-delete'))
                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'userbenchmark','display_name'=>'Bench Mark'])
-                        @endif
+                        @endpermission
                     </td>
                 </tr>
             @endforeach
         @endif
         </tbody>
     </table>
-
 @endsection
 
 @section('customscripts')
