@@ -207,7 +207,7 @@
                                             }
                                         }
 
-                                        if($client_all_status == '1')
+                                        /*if($client_all_status == '1')
                                         {
                                             if (in_array('Passive', $client_all_status_key)) 
                                             {
@@ -220,7 +220,7 @@
                                             {
                                                 unset($client_all_status_key[array_search('Active',$client_all_status_key)]);
                                             }
-                                        }
+                                        }*/
                                     ?>
                                 @endif
 
