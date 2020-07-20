@@ -738,7 +738,7 @@ class UserController extends Controller
                 $employee_id_increment = $employee_id_increment;
             }
 
-            return view('adminlte::users.editprofile',array('user' => $user),compact('isSuperAdmin','isAccountant','isOfficeAdmin','user_id','users_upload_type','gender','maritalStatus','employee_id_increment','isOperationsExecutive'));
+            return view('adminlte::users.editprofile',array('user' => $user),compact('user_id','users_upload_type','gender','maritalStatus','employee_id_increment'));
         }
         else {
             return view('errors.403');
