@@ -1692,67 +1692,66 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('training', [
         'as' => 'training.index',
         'uses' => 'TrainingController@index',
-        'middleware' => ['permission:training-list']
+        'middleware' => ['permission:display-training-material|training-material-add|training-material-edit|training-material-delete|display-training-material-added-by-loggedin-user']
     ]);
 
     Route::get('training/all', [
         'as' => 'training.all',
         'uses' => 'TrainingController@getAllTrainingDetails',
-        'middleware' => ['permission:training-list']
+        'middleware' => ['permission:display-training-material']
     ]);
 
     Route::get('training/create', [
         'as' => 'training.create',
         'uses' => 'TrainingController@create',
-        'middleware' => ['permission:training-create']
+        'middleware' => ['permission:training-material-add']
     ]);
 
     Route::post('training/create', [
         'as' => 'training.store',
         'uses' => 'TrainingController@store',
-        'middleware' => ['permission:training-create']
+        'middleware' => ['permission:training-material-add']
     ]);
     
     Route::get('training/{id}/edit', [
         'as' => 'training.edit',
         'uses' => 'TrainingController@edit',
-        'middleware' => ['permission:training-edit']
+        'middleware' => ['permission:training-material-edit']
     ]);
 
     Route::patch('training/{id}', [
         'as' => 'training.update',
         'uses' => 'TrainingController@update',
-        'middleware' => ['permission:training-edit']
+        'middleware' => ['permission:training-material-edit']
     ]);
 
     Route::post('training/upload/{id}', [
         'as' => 'trainingattachments.upload',
         'uses' => 'TrainingController@upload',
-        'middleware' => ['permission:training-edit']
+        'middleware' => ['permission:training-material-edit']
     ]);
 
     Route::get('training/{id}/show', [
         'as' => 'training.show',
         'uses' => 'TrainingController@show',
-        'middleware' => ['permission:training-list']
+        'middleware' => ['permission:display-training-material-added-by-loggedin-user']
     ]);
 
     Route::delete('training/{id}', [
         'as' => 'training.destroy',
         'uses' => 'TrainingController@trainingDestroy',
-        'middleware' => ['permission:training-delete']
+        'middleware' => ['permission:training-material-delete']
     ]);
 
     Route::delete('training/destroy/{id}', [
         'as' => 'trainingattachments.destroy',
         'uses' => 'TrainingController@attachmentsDestroy',
-        'middleware' => ['permission:training-delete']
+        'middleware' => ['permission:training-material-delete']
     ]);
 
     Route::get('training/update-position',[
         'as' => 'training.update-position',
-        'uses' => 'TrainingController@UpdatePosition',
-        'middleware' => ['permission:training-list']
+        'uses' => 'TrainingController@UpdatePosition'
     ]);
 
     // Admin > Process Manual
