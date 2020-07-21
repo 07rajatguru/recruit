@@ -1496,7 +1496,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos', [
         'as' => 'todos.index',
         'uses' => 'ToDosController@index',
-        'middleware' => ['permission:display-todos']
+        'middleware' => ['permission:display-todos|todo-create|todo-edit|todo-delete']
     ]);
 
     Route::get('todos/alltodos', [
@@ -1508,25 +1508,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos/complete', [
         'as' => 'todos.completetodo',
         'uses' => 'ToDosController@completetodo',
-        'middleware' => ['permission:display-todos']
+        'middleware' => ['permission:display-completed-todos']
     ]);
 
     Route::get('todos/complete/all',[
         'as' => 'todos.completeall',
         'uses' => 'ToDosController@getCompleteTodosDetails',
-        'middleware' => ['permission:display-todos']
+        'middleware' => ['permission:display-completed-todos']
     ]);
 
     Route::get('todos/mytask', [
         'as' => 'todos.mytask',
         'uses' => 'ToDosController@mytask',
-        'middleware' => ['permission:display-todos']
+        'middleware' => ['permission:display-my-todos']
     ]);
 
     Route::get('todos/my/all', [
         'as' => 'todos.myall',
         'uses' => 'ToDosController@getMyTodosDetails',
-        'middleware' => ['permission:display-todos']
+        'middleware' => ['permission:display-my-todos']
     ]);
 
     Route::get('todos/create', [
@@ -1583,7 +1583,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos/{id}', [
         'as' => 'todos.show',
         'uses' => 'ToDosController@show',
-        'middleware' => ['permission:todo-show']
+        'middleware' => ['permission:display-todos-by-loggedin-user']
     ]);
 
     Route::get('todos/{id}/edit', [
