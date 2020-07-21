@@ -94,7 +94,7 @@
                                         @if($training_material['owner_id'] == $user_id)      
                                             @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
                                         @else
-                                            @permission('training-material-edit')
+                                            @permission('training-material-delete')
                                                 @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
                                             @endpermission
                                         @endif
