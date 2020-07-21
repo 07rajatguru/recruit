@@ -29,6 +29,10 @@
            <div class="pull-right">
             @if(isset($process['access']) && $process['access']==1)
                 <a class="btn btn-primary" href="{{ route('process.edit',$process['id']) }}">Edit</a>
+            @else
+                @permission('process-manual-edit')
+                    <a class="btn btn-primary" href="{{route('process.edit',$process['id']) }}"></a>
+                @endpermission
             @endif
                 <a class="btn btn-primary" href="{{ route('process.index') }}">Back</a>
             </div>
@@ -65,6 +69,10 @@
                     &nbsp;&nbsp;
                     @if(isset($process['access']) && $process['access']==1)
                         @include('adminlte::process.upload', ['name' => 'processattachments' , 'data' =>$process])
+                    @else
+                        @permission('process-manual-edit')
+                            @include('adminlte::process.upload', ['name' => 'processattachments' , 'data' =>$process])
+                        @endpermission
                     @endif
                 </div>
 
@@ -84,6 +92,10 @@
                                         &nbsp;
                                         @if(isset($process['access']) && $process['access']==1)
                                             @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
+                                        @else
+                                            @permission('process-manual-delete')
+                                                @include('adminlte::partials.confirm', ['data' => $value,'id'=>$process['id'], 'name' => 'processattachments' ,'display_name'=> 'Attachments'])
+                                            @endpermission
                                         @endif
                                     </td>
 

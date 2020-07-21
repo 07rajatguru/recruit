@@ -1685,8 +1685,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Email Notification stop
 
-    //Training Routes start
-
     // Admin > Training
 
     Route::get('training', [
@@ -1759,67 +1757,67 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('process', [
         'as' => 'process.index',
         'uses' => 'ProcessController@index',
-        'middleware' => ['permission:process-list']
+        'middleware' => ['permission:display-process-manual|process-manual-add|process-manual-edit|process-manual-delete|display-process-manual-added-by-loggedin-user']
     ]);
 
     Route::get('process/all', [
         'as' => 'process.all',
         'uses' => 'ProcessController@getAllProcessDetails',
-        'middleware' => ['permission:process-list']
+        'middleware' => ['permission:display-process-manual|process-manual-add|process-manual-edit|process-manual-delete|display-process-manual-added-by-loggedin-user']
     ]);
     
     Route::get('process/create', [
         'as' => 'process.create',
         'uses' => 'ProcessController@create',
-        'middleware' => ['permission:process-create']
+        'middleware' => ['permission:process-manual-add']
     ]);
 
     Route::post('process/create', [
         'as' => 'process.store',
         'uses' => 'ProcessController@store',
-        'middleware' => ['permission:process-create']
+        'middleware' => ['permission:process-manual-add']
     ]);
 
     Route::get('process/{id}/edit', [
         'as' => 'process.edit',
         'uses' => 'ProcessController@edit',
-        'middleware' => ['permission:process-edit']
+        'middleware' => ['permission:process-manual-edit']
     ]);
 
     Route::patch('process/{id}', [
         'as' => 'process.update',
         'uses' => 'ProcessController@update',
-        'middleware' => ['permission:process-edit']
+        'middleware' => ['permission:process-manual-edit']
     ]);
 
     Route::post('process/upload/{id}', [
         'as' => 'processattachments.upload',
         'uses' => 'ProcessController@upload',
-        'middleware' => ['permission:process-edit']
+        'middleware' => ['permission:process-manual-edit']
     ]);
 
     Route::get('process/{id}/show', [
         'as' => 'process.show',
         'uses' => 'ProcessController@show',
-        'middleware' => ['permission:process-list']
+        'middleware' => ['permission:display-process-manual-added-by-loggedin-user']
     ]);
 
     Route::delete('process/{id}', [
         'as' => 'process.destroy',
         'uses' => 'ProcessController@processDestroy',
-        'middleware' => ['permission:process-delete']
+        'middleware' => ['permission:process-manual-delete']
     ]);
 
     Route::delete('process/destroy/{id}', [
         'as' => 'processattachments.destroy',
         'uses' => 'ProcessController@attachmentsDestroy',
-        'middleware' => ['permission:process-delete']
+        'middleware' => ['permission:process-manual-delete']
     ]);
 
     Route::get('process/update-position',[
         'as' => 'process.update-position',
         'uses' => 'ProcessController@UpdatePosition',
-        'middleware' => ['permission:process-list']
+        'middleware' => ['permission:display-process-manual']
     ]);
 
     // Admin > Accounting Heads

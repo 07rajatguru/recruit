@@ -19,29 +19,16 @@ class ProcessController extends Controller
     public function index() {
 
         $user = \Auth::user();
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        $all_perm = $user->can('display-process-manual');
+        $user_perm = $user->can('display-process-manual-added-by-loggedin-user');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_perm) {
 
             $process_response = ProcessManual::getAllprocess(1,$user_id);
             $count = ProcessManual::getAllprocessCount(1,$user_id);
         }
-        else{
+        else if($user_perm) {
 
             $process_response = ProcessManual::getAllprocess(0,$user_id);
             $count = ProcessManual::getAllprocessCount(0,$user_id);
@@ -49,14 +36,12 @@ class ProcessController extends Controller
 
         $viewVariable = array();
         $viewVariable['processList'] = $process_response;
-        $viewVariable['isSuperAdmin'] = $isSuperAdmin;
-        //$viewVariable['processFiles'] = $processFiles;
         $viewVariable['count'] = $count;
 
     	return view('adminlte::process.index ',$viewVariable);
     }
 
-    public function getOrderProcessColumnName($order){
+    public function getOrderProcessColumnName($order) {
 
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
@@ -70,7 +55,7 @@ class ProcessController extends Controller
         return $order_column_name;
     }
 
-    public function getAllProcessDetails(){
+    public function getAllProcessDetails() {
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -80,32 +65,23 @@ class ProcessController extends Controller
         $type = $_GET['order'][0]['dir'];
 
         $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        
+        $all_perm = $user->can('display-process-manual');
+        $user_perm = $user->can('display-process-manual-added-by-loggedin-user');
+        $edit_perm = $user->can('process-manual-edit');
+        $delete_perm = $user->can('process-manual-delete');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-        $edit_perm = $user->can('training-edit');
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_perm) {
             $order_column_name = self::getOrderProcessColumnName($order);
             $process_response = ProcessManual::getAllprocess(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = ProcessManual::getAllprocessCount(1,$user_id,$search);
         }
-        else{
+        else if($user_perm) {
             $order_column_name = self::getOrderProcessColumnName($order);
             $process_response = ProcessManual::getAllprocess(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = ProcessManual::getAllprocessCount(0,$user_id,$search);
         }
-
-        $processFiles = ProcessDoc::select('process_doc.file')->get();
 
         $process = array();
         $i = 0; $j = 0;
@@ -114,10 +90,12 @@ class ProcessController extends Controller
             $action = '';
 
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',$value['id']).'" style="margin:2px;"></a>';
+
             if(isset($value['access']) && $value['access']==1 || $edit_perm){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-            if ($isSuperAdmin) {
+            if ($delete_perm) {
+
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process']);
                 $delete = $delete_view->render();
                 $action .= $delete;
@@ -147,7 +125,7 @@ class ProcessController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function create(){
+    public function create() {
 
 		$action = 'add';
 
@@ -155,31 +133,34 @@ class ProcessController extends Controller
         $user_id = $user->id;
 
         $users = User::getAllUsers();
+
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
         
         return view('adminlte::process.create',compact('action','users','selected_users','user_id'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
-    	//$users = User::getAllUsers('recruiter');
 		$user_id = \Auth::user()->id;
         $title = $request->input('title');
 
         $process = new ProcessManual();
         $process->title = $request->input('title');
         $process->owner_id = $user_id;
-        $processStored  = $process->save();
+        $process->save();
 
         $upload_documents = $request->file('upload_documents');
+
         //save files in ProcessDoc table
         $process_id = $process->id;
 
         if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
             foreach ($upload_documents as $k => $v) {
+
                 if (isset($v) && $v->isValid()) {
-                    // echo "here";
+                    
                     $file_name = $v->getClientOriginalName();
                     $file_extension = $v->getClientOriginalExtension();
                     $file_realpath = $v->getRealPath();
@@ -260,25 +241,23 @@ class ProcessController extends Controller
         $message = "Process Manual - ". $title;
         $module_id = $process_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc,''));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
     	return redirect()->route('process.index')->with('success','Process Manual Created Successfully.');
     }
 
-    public function edit($id){
+    public function edit($id) {
 
      	$users = User::getAllUsers();
      	$process = ProcessManual::find($id);
        
-        $action = "edit" ;
+        $action = "edit";
 
         $i = 0;
         $processdetails['files'] = array();
 
-        $processFiles = ProcessDoc::select('process_doc.*')
-        ->where('process_doc.process_id',$id)
-        ->orderBy('process_doc.id','asc')
-        ->get();
+        $processFiles = ProcessDoc::select('process_doc.*')->where('process_doc.process_id',$id)
+        ->orderBy('process_doc.id','asc')->get();
 
         $utils = new Utils();
 
@@ -295,17 +274,7 @@ class ProcessController extends Controller
             }
         }
 
-        // get all users
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $user_id = $user->id;
-        
         $process_visible_users = ProcessVisibleUser::where('process_id',$id)->get();
-       // echo'<pre>'; print_r($process_visible_users);die;
        
         $selected_users = array();
         if(isset($process_visible_users) && sizeof($process_visible_users)>0){
@@ -317,28 +286,25 @@ class ProcessController extends Controller
         return view('adminlte::process.edit',compact('action','users','process','processdetails','selected_users'));
      }
 
-    public function update(Request $request,$id){
+    public function update(Request $request,$id) {
         
-        //$users = User::getAllUsers();
      	$user_id = \Auth::user()->id;
         
         $process = ProcessManual::find($id);
         $process->title = $request->input('title');
-        //$process->owner_id = $user_id;
-        $processStored  = $process->save();
+        $process->save();
 
         $file = $request->file('file');
         //save files 
-        $process_id = $process->id;         
+        $process_id = $process->id;     
         if (isset($file) && $file != '') {
+
             if (isset($file) && $file->isValid()) {
-                // echo "here";
+
                 $file_name = $file->getClientOriginalName();
                 $file_extension = $file->getClientOriginalExtension();
                 $file_realpath = $file->getRealPath();
                 $file_size = $file->getSize();
-
-                //$extention = File::extension($file_name);
 
                 $dir = 'uploads/process/' . $process_id . '/';
 
@@ -366,14 +332,15 @@ class ProcessController extends Controller
         $process_id = $process->id;
         ProcessVisibleUser::where('process_id',$process_id)->delete();
         if(isset($users) && sizeof($users)>0){
+
             foreach ($users as $key=>$value){
+
                 $process_visible_users = new ProcessVisibleUser();
                 $process_visible_users->process_id = $process_id;
                 $process_visible_users->user_id = $value;
                 $process_visible_users->save();
             }
         }
-        //echo '<pre>';print_r($process_visible_users);die;
 
         // Check Process Manual for all users or not and update select_all field in database
         $users_id = User::getAllUsers();
@@ -390,16 +357,15 @@ class ProcessController extends Controller
         return redirect()->route('process.index')->with('success','Process Manual Updated Successfully.');
     }
 
-
-	public function upload(Request $request){
+	public function upload(Request $request) {
 
         $file = $request->file('file');
         $process_id = $request->id;
 
         $user_id = \Auth::user()->id;
 
-        if(isset($file) && $file->isValid())
-        {
+        if(isset($file) && $file->isValid()) {
+
             $fileName = $file->getClientOriginalName();
             $fileSize = $file->getSize();
 
@@ -425,49 +391,36 @@ class ProcessController extends Controller
         return redirect()->route('process.show',[$process_id])->with('success','Attachment Uploaded Successfully.');
     }
 
-    public function show($id){
+    public function show($id) {
 		
         $process_res = \DB::table('process_manual')
-        ->select('process_manual.*')
-        ->where('process_manual.id','=',$id)
-        ->get();
+        ->select('process_manual.*')->where('process_manual.id','=',$id)->first();
 
         $process = array();
 
-        foreach ($process_res as $key => $value) {
+        $process['id'] = $process_res->id;
+        $process['title'] = $process_res->title;
 
-            $process['id'] = $value->id;
-            $process['title'] = $value->title;
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_perm = $user->can('display-process-manual');
+        $user_perm = $user->can('display-process-manual-added-by-loggedin-user');
 
-            $user = \Auth::user();
-            $user_id = $user->id;
-            $user_role_id = User::getLoggedinUserRole($user);
-
-            $admin_role_id = env('ADMIN');
-            $director_role_id = env('DIRECTOR');
-            $manager_role_id = env('MANAGER');
-            $superadmin_role_id = env('SUPERADMIN');
-
-            $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-
-            if(in_array($user_role_id,$access_roles_id)){
+        if($all_perm){
+                $process['access'] = '1';
+        }
+        else{
+            if((isset($process_res->owner_id) && $process_res->owner_id==$user_id) || $user_perm){
                 $process['access'] = '1';
             }
             else{
-                if(isset($value->owner_id) && $value->owner_id==$user_id){
-                    $process['access'] = '1';
-                }
-                else{
-                    $process['access'] = '0';
-                }
+                $process['access'] = '0';
             }
         }
 
         $process_user_res = \DB::table('process_visible_users')
         ->join('users','users.id','=','process_visible_users.user_id')
-        ->select('users.id', 'users.name as name')
-        ->where('process_visible_users.process_id',$id)
-        ->get();
+        ->select('users.id', 'users.name as name')->where('process_visible_users.process_id',$id)->get();
 
         $c = 0;
         foreach ($process_user_res as $key => $value) {
@@ -477,10 +430,8 @@ class ProcessController extends Controller
 
 		$i = 0;
         $processdetails['files'] = array();
-        $processFiles = ProcessDoc::select('process_doc.*')
-                ->where('process_doc.process_id',$id)
-                ->orderBy('process_doc.id','asc')
-                ->get();
+        $processFiles = ProcessDoc::select('process_doc.*')->where('process_doc.process_id',$id)
+        ->orderBy('process_doc.id','asc')->get();
 
         $utils = new Utils();
 
@@ -536,7 +487,7 @@ class ProcessController extends Controller
         }
     }
 
-    public function UpdatePosition(){
+    public function UpdatePosition() {
 
         $ids_array = explode(",", $_GET['ids']);
 

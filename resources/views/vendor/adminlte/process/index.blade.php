@@ -45,19 +45,22 @@
                 <tr id="{{ $value['id'] }}">
 
                     <td>{{ ++$i }}</td>
-                   
                     <td>{{ $value['title'] }}</td>
                     
                     <td>
                         <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>
 
-                        @if(isset($value['access']) && $value['access']==1 || $isSuperAdmin)
+                        @if(isset($value['access']) && $value['access']==1)
                             <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
+                        @else
+                            @permission('process-manual-edit')
+                                <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
+                            @endpermission
                         @endif
 
-                        @if($isSuperAdmin)
+                        @permission('process-manual-delete')
                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'process','display_name'=>'Process'])
-                        @endif
+                        @endpermission
                     </td>
                </tr>
             @endforeach
@@ -94,14 +97,14 @@
                 stateSave : true,
             });*/
 
-            jQuery("#process_table_tbody_id").sortable(
-            {
-                update: function (event, ui)
-                {
+            jQuery("#process_table_tbody_id").sortable( {
+
+                update: function (event, ui) {
+
                     var order = $(this).sortable('toArray');
                     var dataString = 'ids=' + order;
-                    $.ajax
-                    ({
+                    $.ajax({
+                        
                         type: "GET",
                         url: '/process/update-position',
                         data: dataString,
