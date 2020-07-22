@@ -12,17 +12,11 @@ use App\ExpenseDoc;
 use App\VendorBasicInfo;
 use Excel;
 use App\Utils;
-use App\PermissionRole;
 
 class ExpenseController extends Controller
 {
     public function index() {
 
-        $user = \Auth::user();
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
         $expense = Expense::getAllExpense();
         $count = sizeof($expense);
 
@@ -74,10 +68,7 @@ class ExpenseController extends Controller
         $type = $_GET['order'][0]['dir'];
 
         $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($role_id);
+        $delete_perm = $user->can('expense-delete');
 
         $order_column_name = self::getOrderExpenseColumnName($order);
         $expense = Expense::getAllExpense($limit,$offset,$search,$order_column_name,$type);
@@ -92,7 +83,7 @@ class ExpenseController extends Controller
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('expense.show',$value['id']).'" style="margin:2px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('expense.edit',$value['id']).'" style="margin:2px;"></a>';
 
-            if(in_array('expense-delete', $permissions)) {
+            if($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense']);
                 $delete = $delete_view->render();
                 $action .= $delete;
@@ -372,23 +363,21 @@ class ExpenseController extends Controller
 
         $payment_mode = Expense::getPaymentMode();
         $payment_type = Expense::getPaymentType();
-        $input_tax=Expense::getInputTax();
+        $input_tax = Expense::getInputTax();
         $head = AccountingHeads::getAllHead();
 
         $expense = array();
 
         $expense_info  = \DB::table('expense')
         ->leftjoin('vendor_basicinfo', 'vendor_basicinfo.id', '=', 'expense.vendor_id')
-        ->select('expense.*','vendor_basicinfo.name as v_name')
-        ->where('expense.id','=',$id)
-        ->get();
+        ->select('expense.*','vendor_basicinfo.name as v_name')->where('expense.id','=',$id)->get();
 
 
         foreach ($expense_info as $key=>$value) {
 
             $expense['date'] = $dateClass->changeYMDtoDMY($value->date);
             $expense['amount'] = $value->amount;
-            $vendor_id=$value->vendor_id;
+            $vendor_id = $value->vendor_id;
             $expense['name'] = $value->v_name;
             $expense_head = $value->expense_head;
             $expense['remark'] = $value->remarks;
@@ -402,11 +391,11 @@ class ExpenseController extends Controller
             $expense['sgst'] = $value->sgst;
             $expense['igst'] = $value->igst;
             $expense['total_bill'] = $value->total_bill_amount;
-            $tax=$value->input_tax;
-            $expense['paid_amount']=$value->paid_amount;
-            $expense['tds']=$value->tds_percentage;
-            $expense['tds_deduct']=$value->tds_deducted;
-            $expense['tds_date']=$dateClass->changeYMDtoDMY($value->tds_payment_date);
+            $tax = $value->input_tax;
+            $expense['paid_amount'] = $value->paid_amount;
+            $expense['tds'] = $value->tds_percentage;
+            $expense['tds_deduct'] = $value->tds_deducted;
+            $expense['tds_date'] = $dateClass->changeYMDtoDMY($value->tds_payment_date);
         }
 
         $expense['id'] = $id;
@@ -494,12 +483,11 @@ class ExpenseController extends Controller
 
     public function destroy($id) {
 
-        $expense_attach=\DB::table('expense_doc')->select('file','expence_id')->where('expence_id','=',$id)->first();
+        $expense_attach = \DB::table('expense_doc')->select('file','expence_id')->where('expence_id','=',$id)->first();
 
-        if(isset($expense_attach))
-        {
+        if(isset($expense_attach)) {
+
             $path = "uploads/expense/".$expense_attach->expence_id;
- 
             $files = glob($path . "/*");
 
             foreach($files as $file) {
@@ -509,10 +497,10 @@ class ExpenseController extends Controller
                 }
             }
 
-            $expense_id=$expense_attach->expence_id;
-            $path1="uploads/expense/". $expense_id . "/";
+            $expense_id = $expense_attach->expence_id;
+            $path1 = "uploads/expense/". $expense_id . "/";
             rmdir($path1);
-            $expense_doc=ExpenseDoc::where('expence_id','=',$id)->delete();
+            $expense_doc = ExpenseDoc::where('expence_id','=',$id)->delete();
             $expense = Expense::where('id',$id)->delete();
         }
         else {
@@ -623,32 +611,27 @@ class ExpenseController extends Controller
         return redirect()->route('expense.show',[$id])->with('success','Attachment Uploaded Successfully');
     }
 
-    public function attachmentsDestroy($docid)
-    {
-        $expense_attach=\DB::table('expense_doc')
-        ->select('expense_doc.*')
-        ->where('id','=',$docid)->first();
+    public function attachmentsDestroy($docid) {
 
-        if(isset($expense_attach))
-        {
+        $expense_attach = \DB::table('expense_doc')->select('expense_doc.*')->where('id','=',$docid)->first();
+
+        if(isset($expense_attach)) {
+
             $path="uploads/expense/".$expense_attach->expence_id . "/" . $expense_attach->name;
-
             unlink($path);
-
-            $id=$expense_attach->expence_id;
-    
-            $expense_doc=ExpenseDoc::where('id','=',$docid)->delete();
+            $id = $expense_attach->expence_id;
+            ExpenseDoc::where('id','=',$docid)->delete();
         }
         return redirect()->route('expense.show',[$id])->with('success','Attachment Deleted Successfully');
     }
 
-    public function importExport()
-    {
+    public function importExport() {
+
         return view('adminlte::expense.import');
     } 
 
-    public function importExcel(Request $request)
-    {
+    public function importExcel(Request $request) {
+
         $dateClass = new Date();
 
         if($request->hasFile('import_file')) {

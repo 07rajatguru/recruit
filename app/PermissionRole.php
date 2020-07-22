@@ -34,26 +34,4 @@ class PermissionRole extends Model
 
     	return $module_permissions;
     }
-
-    public static function getPermissionNamesArrayByRoleID($role_id) {
-        
-        $query = PermissionRole::query();
-        $query = $query->leftjoin('permissions','permissions.id','=','permission_role.permission_id');
-        $query = $query->select('permissions.module_id as module_id','permission_role.permission_id','permissions.name as permission_name');
-
-        if(isset($role_id) && $role_id > 0) {
-           $query = $query->where('permission_role.role_id','=',$role_id);
-        }
-        
-        $response = $query->get();
-
-        $permissions = array();
-
-        foreach ($response as $key => $value) {
-
-            $permissions[$value->permission_id] = $value->permission_name;
-        }
-
-        return $permissions;
-    }
 }

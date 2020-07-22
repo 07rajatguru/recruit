@@ -27,7 +27,6 @@ use App\JobVisibleUsers;
 use App\RoleUser;
 use App\ModuleVisibleUser;
 use App\CandidateBasicInfo;
-use App\PermissionRole;
 
 class UserController extends Controller
 {
@@ -480,11 +479,11 @@ class UserController extends Controller
 
     public function profileShow($user_id) {
 
+        $user = \Auth::user();
         $loggedin_user_id =  \Auth::user()->id;
-        $user_role_id = \Auth::user()->roles->first()->id;
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        $edit_perm = $user->can('edit-user-profile');
 
-        if ($loggedin_user_id == $user_id || in_array('edit-user-profile', $permissions)) {
+        if ($loggedin_user_id == $user_id || $edit_perm) {
 
             $dateClass = new Date();
             $user = array();
@@ -583,11 +582,11 @@ class UserController extends Controller
 
     public function editProfile($user_id) {
 
+        $user = \Auth::user();
         $loggedin_user_id =  \Auth::user()->id;
-        $user_role_id = \Auth::user()->roles->first()->id;
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        $edit_perm = $user->can('edit-user-profile');
 
-        if ($loggedin_user_id == $user_id || in_array('edit-user-profile', $permissions)) {
+        if ($loggedin_user_id == $user_id || $edit_perm) {
 
             $dateClass = new Date();
             $user = array();

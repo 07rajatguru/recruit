@@ -16,7 +16,6 @@ use Excel;
 use DB;
 use Calendar;
 use App\UserRemarks;
-use App\PermissionRole;
 
 class HomeController extends Controller
 {
@@ -190,9 +189,10 @@ class HomeController extends Controller
 
     public function dashboard() {
 
+        $user = \Auth::user();
         $user_id =  \Auth::user()->id;
-        $user_role_id = \Auth::user()->roles->first()->id;
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
@@ -208,7 +208,7 @@ class HomeController extends Controller
         $month = date('m');
         $year = date('Y');
 
-        if(in_array('display-all-count', $permissions)) {
+        if($display_all_count) {
 
             // Client Count
 
@@ -240,7 +240,7 @@ class HomeController extends Controller
 
             $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
         }
-        else if(in_array('display-userwise-count', $permissions)) {
+        else if($display_userwise_count) {
 
             // Client Count
 
@@ -293,9 +293,11 @@ class HomeController extends Controller
 
     public function dashboardMonthwise(){
 
+        $user = \Auth::user();
         $user_id =  \Auth::user()->id;
-        $user_role_id = \Auth::user()->roles->first()->id;
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        $display_monthwise = $user->can('display-month-wise-dashboard');
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
         
         if(isset($_POST['month']) && $_POST['month']!=''){
             $month = $_POST['month'];
@@ -322,9 +324,9 @@ class HomeController extends Controller
         $year_array[2020] = 2020;
         $year_array[2021] = 2021;
 
-        if(in_array('display-month-wise-dashboard', $permissions)) {
+        if($display_monthwise) {
 
-            if(in_array('display-all-count', $permissions)) {
+            if($display_all_count) {
 
                 // Client Count
 
@@ -356,7 +358,7 @@ class HomeController extends Controller
 
                 $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
             }
-            else if(in_array('display-userwise-count', $permissions)) {
+            else if($display_userwise_count) {
 
                 // Client Count
 
@@ -442,14 +444,15 @@ class HomeController extends Controller
 
     public function OpentoAllJob(){
 
-        $user_id =  \Auth::user()->id;
-        $user_role_id = \Auth::user()->roles->first()->id;
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_jobs = $user->can('display-jobs-open-to-all');
+        $display_jobs_by_user = $user->can('display-jobs-open-to-all-by-loggedin-user');
 
-        if(in_array('display-jobs-open-to-all', $permissions)) {
+        if($display_jobs) {
             $job_opened = JobOpen::getOpenToAllJobs(1,$user_id,10);
         }
-        else if(in_array('display-jobs-open-to-all-by-loggedin-user', $permissions)) {
+        else if($display_jobs_by_user) {
             $job_opened = JobOpen::getOpenToAllJobs(0,$user_id,10);
         }
 
@@ -660,14 +663,15 @@ class HomeController extends Controller
 
     public function index() {
 
-        $user_id =  \Auth::user()->id;
-        $user_role_id = \Auth::user()->roles->first()->id;
-        $permissions = PermissionRole::getPermissionNamesArrayByRoleID($user_role_id);
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_attendance = $user->can('display-attendance-of-all-users-in-admin-panel');
+        $display_attendance_by_user = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
 
-        if(in_array('display-attendance-of-all-users-in-admin-panel', $permissions)) {
+        if($display_attendance) {
             $users = User::getOtherUsers();
         }
-        else if(in_array('display-attendance-by-loggedin-user-in-admin-panel', $permissions)) {
+        else if($display_attendance_by_user) {
             $users = User::getOtherUsers($user_id);
         }
 
@@ -711,11 +715,11 @@ class HomeController extends Controller
             }
         }
 
-        if(in_array('display-attendance-of-all-users-in-admin-panel', $permissions)) {
+        if($display_attendance) {
             $response = UsersLog::getUsersAttendance(0,$month,$year);
             $user_remark = UserRemarks::getUserRemarksByUserid(0);
         }
-        else if(in_array('display-attendance-by-loggedin-user-in-admin-panel', $permissions)) {
+        else if($display_attendance_by_user) {
             $response = UsersLog::getUsersAttendance($user_id,$month,$year);
             $user_remark = UserRemarks::getUserRemarksByUserid($user_id);
         }
