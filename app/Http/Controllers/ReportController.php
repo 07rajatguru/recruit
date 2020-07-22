@@ -16,29 +16,20 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 
 class ReportController extends Controller
-{
-   
-    public function dailyreportIndex(){
+{  
+    public function dailyreportIndex() {
 
-        $user_id = \Auth::user()->id;
-
-        // get role of logged in user
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-daily-report-of-all-users');
+        $userwise_perm = $user->can('display-daily-report-of-loggedin-user');
+        $teamwise_perm = $user->can('display-daily-report-of-loggedin-user-team');
 
-        $user_obj = new User();
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-        $superAdminUserID = getenv('SUPERADMINUSERID');
-        $managerUserID = getenv('MANAGERUSERID');
-        $hrUserID = getenv('HRUSERID');
-
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$isOperationsExecutive,$hrUserID);
-        if(in_array($user_id,$access_roles_id)){
-            $users = User::getAllUsers('recruiter');
+        if($all_perm){
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
-        else{
+        else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id,'recruiter');
         }
 
@@ -56,13 +47,11 @@ class ReportController extends Controller
             $date = date('Y-m-d');
         }
 
-        //echo $date;exit;
-
         $associate_res = JobAssociateCandidates::getDailyReportAssociate($user_id,$date);
         $associate_daily = $associate_res['associate_data'];
         $associate_count = $associate_res['cvs_cnt'];
 
-         // Get Leads with count
+        // Get Leads with count
 
         $leads = Lead::getDailyReportLeads($user_id,$date);
         $leads_daily = $leads['leads_data'];
@@ -78,28 +67,19 @@ class ReportController extends Controller
         return view('adminlte::reports.dailyreport',compact('date','users','user_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
     }
 
-    public function weeklyreportIndex(){
+    public function weeklyreportIndex() {
 
-        $user_id = \Auth::user()->id;
-
-        $superAdminUserID = getenv('SUPERADMINUSERID');
-        $managerUserID = getenv('MANAGERUSERID');
-        $hrUserID = getenv('HRUSERID');
-
-        // get role of logged in user
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-weekly-report-of-all-users');
+        $userwise_perm = $user->can('display-weekly-report-of-loggedin-user');
+        $teamwise_perm = $user->can('display-weekly-report-of-loggedin-user-team');
 
-        $user_obj = new User();
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$isOperationsExecutive,$hrUserID);
-        if(in_array($user_id,$access_roles_id)){
-            $users = User::getAllUsers('recruiter');
+        if($all_perm) {
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
-        else{
+        else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id,'recruiter');
         }
 
@@ -137,7 +117,6 @@ class ReportController extends Controller
         $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($user_id,$from_date,$to_date);
         $associate_weekly = $associate_weekly_response['associate_data'];
         $associate_count = $associate_weekly_response['cvs_cnt'];
-        //print_r($associate_weekly_response);exit;
 
         // Get Leads with count
         $leads = Lead::getWeeklyReportLeads($user_id,$from_date,$to_date);
@@ -154,7 +133,7 @@ class ReportController extends Controller
         return view('adminlte::reports.weeklyreport',compact('user_id','users','from_date','to_date','associate_weekly','associate_count','leads_weekly','lead_count','interview_weekly','interview_count','user_details'));
     }
 
-    public function userWiseMonthlyReport(){
+    public function userWiseMonthlyReport() {
 
         // Month data
         $month_array = array();
@@ -163,11 +142,11 @@ class ReportController extends Controller
         }
 
         // Year Data
-        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+        $starting_year = '2017';
         $ending_year = date('Y',strtotime('+5 year'));
 
         $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
             $year_array[$y] = $y;
         }
 
@@ -185,27 +164,17 @@ class ReportController extends Controller
             $year = date('Y');
         }
 
-        $user_id = \Auth::user()->id;
-
-        $superAdminUserID = getenv('SUPERADMINUSERID');
-        $managerUserID = getenv('MANAGERUSERID');
-        $hrUserID = getenv('HRUSERID');
-
-        // get role of logged in user
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-monthly-report-of-all-users');
+        $userwise_perm = $user->can('display-monthly-report-of-loggedin-user');
+        $teamwise_perm = $user->can('display-monthly-report-of-loggedin-user-team');
 
-        $user_obj = new User();
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $access_roles_id = array($superAdminUserID,$managerUserID,$isAccountant,$isOperationsExecutive,$hrUserID);
-        if(in_array($user_id,$access_roles_id)){
+        if($all_perm){
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
-        else{
+        else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id,'recruiter');
         }
 
@@ -250,35 +219,31 @@ class ReportController extends Controller
         }
 
         if(isset($j) && $j != '0') {
-
             $total_leads = $j;
         }
         else {
-
             $total_leads = '0';
         }
-        //print_r($response);exit;
 
         // Get users reports
         $user_details = User::getAllDetailsByUserID($user_id);
 
-       // print_r($response);exit;
-        return view('adminlte::reports.userwise-monthlyreport',compact('month_array','year_array','month','year','response','user_details','total_leads','isSuperAdmin'));
+        return view('adminlte::reports.userwise-monthlyreport',compact('month_array','year_array','month','year','response','user_details','total_leads'));
     }
 
-    public function monthlyreportIndex(){
+    public function monthlyreportIndex() {
 
+        // get logged in user
+        $user =  \Auth::user();
         $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-monthly-report-of-all-users');
+        $userwise_perm = $user->can('display-monthly-report-of-loggedin-user');
+        $teamwise_perm = $user->can('display-monthly-report-of-loggedin-user-team');
 
-        $superAdminUserID = getenv('SUPERADMINUSERID');
-        $managerUserID = getenv('MANAGERUSERID');
-        $hrUserID = getenv('HRUSERID');
-
-        $access_roles_id = array($superAdminUserID,$managerUserID,$hrUserID);
-        if(in_array($user_id,$access_roles_id)){
-            $users = User::getAllUsers('recruiter');
+        if($all_perm){
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
-        else{
+        else if($userwise_perm || $teamwise_perm){
             $users = User::getAssignedUsers($user_id,'recruiter');
         }
 
@@ -289,7 +254,7 @@ class ReportController extends Controller
         }
 
         // Year Data
-        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+        $starting_year = '2017';
         $ending_year = date('Y',strtotime('+5 year'));
 
         $year_array = array();
@@ -331,14 +296,12 @@ class ReportController extends Controller
         return view('adminlte::reports.monthlyreport',compact('users','user_id','month_array','year_array','month','year','associate_monthly','associate_count','lead_count','interview_monthly','interview_count'));
     }
 
-
-    public function dailyreport(){
+    public function dailyreport() {
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $to_address = 'tarikapanjwani@gmail.com';
         $cc_address = 'rajlalwani@adlertalent.com';
-        //$cc_address = 'tarikapanjwani@gmail.com';
         $app_url = getenv('APP_URL');
 
         $users = User::getAllUsersEmails('recruiter','Yes');
@@ -371,12 +334,10 @@ class ReportController extends Controller
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['cc'],$input['to'])->subject('Daily Activity Report - '.$input['value'] . ' - ' . date("d-m-Y"));
             });
-
-           //return view('adminlte::emails.DailyReport', compact('app_url','associate_daily','associate_count','lead_count','interview_daily','interview_count','users'));
         }
     }
 
-    public function weeklyreport(){
+    public function weeklyreport() {
 
     	$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -411,32 +372,23 @@ class ReportController extends Controller
             $input['interview_count'] = $interview_count;
             $input['lead_count'] = $lead_count;
 
-
             \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                 $message->from($input['from_address'], $input['from_name'])->cc($input['cc']);
                 $message->to($input['to'])->subject('Weekly Activity Report -'.$input['value']);
             });
-
-//echo 'Weekly Activity Report -'.$input['value'];
-            //return view('adminlte::emails.WeeklyReport',compact('app_url','associate_weekly_response','associate_weekly','associate_count','interview_weekly_response','interview_weekly','interview_count','lead_count'));
         }
     }
 
-    public function personWiseReportIndex(){
+    public function personWiseReportIndex() {
 
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-person-wise-report-of-all-users');
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-        $isHr = $user_obj::isHr($role_id);
-
-        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
+        if ($all_perm) {
             // Year Data
-            $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+            $starting_year = '2017';
             $ending_year = date('Y',strtotime('+1 year'));
             $year_array = array();
             for ($y=$starting_year; $y < $ending_year ; $y++) {
@@ -470,8 +422,6 @@ class ReportController extends Controller
             foreach ($users as $key => $value) {
                 $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
             }
-            //print_r($personwise_data);exit;
-            
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
         }
         else {
@@ -479,7 +429,7 @@ class ReportController extends Controller
         }
     }
 
-    public function personWiseReportExport(){
+    public function personWiseReportExport() {
 
         Excel::create('Personwise Report',function($excel){
             $excel->sheet('sheet 1',function($sheet){
@@ -516,21 +466,17 @@ class ReportController extends Controller
         })->export('xls');
     }
 
-    public function monthwiseReprotIndex(){
+    public function monthwiseReprotIndex() {
 
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-month-wise-report-of-all-users');
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
+        if ($all_perm) {
 
             // Year Data
-            $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+            $starting_year = '2017';
             $ending_year = date('Y',strtotime('+1 year'));
             $year_array = array();
             for ($y=$starting_year; $y < $ending_year ; $y++) {
@@ -552,9 +498,6 @@ class ReportController extends Controller
                     $n = $y-1;
                     $year = $n.'-4-'.$y.'-3';
                 }
-                // $y = date('Y');
-                // $n = $y-1;
-                // $year = $n.'-4-'.$y.'-3';
             }
 
             $year_data = explode('-', $year);
@@ -598,8 +541,6 @@ class ReportController extends Controller
 
                 $monthwise_data[$value] = Bills::getPersonwiseReportData(NULL,$month_start,$month_last);
             }
-            //print_r($monthwise_data);exit;
-
             return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data'));
         }
         else {
@@ -607,7 +548,7 @@ class ReportController extends Controller
         }
     }
 
-    public function monthWiseReportExport(){
+    public function monthWiseReportExport() {
 
         Excel::create('Month-wise Report',function($excel){
 
@@ -627,9 +568,6 @@ class ReportController extends Controller
                         $n = $y-1;
                         $year = $n.'-4-'.$y.'-3';
                     }
-                    // $y = date('Y');
-                    // $n = $y-1;
-                    // $year = $n.'-4-'.$y.'-3';
                 }
 
                 $year_data = explode('-', $year);
@@ -679,18 +617,14 @@ class ReportController extends Controller
         })->export('xls');
     }
 
-    public function clientWiseReportIndex(){
+    public function clientWiseReportIndex() {
 
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $user_id = \Auth::user()->id;
+        $all_perm = $user->can('display-client-wise-report-of-all-users');
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
+        if ($all_perm) {
             // Year Data
             $starting_year = '2017';
             $ending_year = date('Y',strtotime('+1 year'));
@@ -714,9 +648,6 @@ class ReportController extends Controller
                     $n = $y-1;
                     $year = $n.'-4, '.$y.'-3';
                 }
-                // $y = date('Y');
-                // $n = $y-1;
-                // $year = $n.'-4, '.$y.'-3';
             }
 
             $year_data = explode(',', $year);
@@ -730,9 +661,7 @@ class ReportController extends Controller
                 $client_name = $value->name.' - '.$value->billing_city;
                 $c_name = $value->name;
                 $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_name,$current_year,$next_year);
-                //print_r($clientwise_data);exit;
             }
-
             return view('adminlte::reports.clientwise-report',compact('year_array','year','clientwise_data'));
         }
         else {
@@ -740,7 +669,7 @@ class ReportController extends Controller
         }
     }
 
-    public function clientWiseReportExport(){
+    public function clientWiseReportExport() {
 
         Excel::create('Client-wise Report',function($excel){
 
@@ -760,9 +689,6 @@ class ReportController extends Controller
                         $n = $y-1;
                         $year = $n.'-4, '.$y.'-3';
                     }
-                    // $y = date('Y');
-                    // $n = $y-1;
-                    // $year = $n.'-4, '.$y.'-3';
                 }
 
                 $year_data = explode(',', $year);
@@ -782,24 +708,21 @@ class ReportController extends Controller
         })->export('xls');
     }
 
-    public function productivityReport(Request $request) {
+    public function productivityReport() {
 
-        $user_id = \Auth::user()->id;
-
-        // get role of logged in user
+        // get logged in user
         $user =  \Auth::user();
+        $user_id = \Auth::user()->id;
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
+        $all_perm = $user->can('display-productivity-report-of-all-users');
+        $userwise_perm = $user->can('display-productivity-report-of-loggedin-user');
+        $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
 
-        $superAdminUserID = env('SUPERADMINUSERID');
-        $managerUserID = env('MANAGERUSERID');
-
-        $access_users_id = array($superAdminUserID,$managerUserID);
-
-        if(in_array($user_id,$access_users_id)){
+        if($all_perm) {
             $users = User::getAllUsers('recruiter');
         }
-        else{
+        else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id,'recruiter');
         }
 
@@ -810,7 +733,7 @@ class ReportController extends Controller
             $role_name = Role::getUserRoleNameById($select_user_role_id['role_id']);
             $user_name = User::getUserNameById($user_id);
         }
-        else{
+        else {
             
             $user_id = $user_id;
             $role_name = '';
@@ -819,7 +742,6 @@ class ReportController extends Controller
 
         // Get user Bench Mark from master
         $user_bench_mark = UserBenchMark::getBenchMarkByUserID($user_id);
-
 
         // Get Selected Month
         $month_array = array();
@@ -832,7 +754,7 @@ class ReportController extends Controller
         $ending_year = date('Y',strtotime('+5 year'));
 
         $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
             $year_array[$y] = $y;
         }
 
@@ -871,8 +793,6 @@ class ReportController extends Controller
                 Carbon::parse("first monday of $next_month $year")
             );
         }
-
-        //print_r($mondays);exit;
 
         // Get no of weeks in month & get from date & to date
         $i=1;
@@ -919,8 +839,6 @@ class ReportController extends Controller
             }
         }
 
-        //print_r($user_bench_mark);exit;
-
         if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
             
             $user_bench_mark['no_of_resumes_monthly'] = $user_bench_mark['no_of_resumes'];
@@ -944,8 +862,6 @@ class ReportController extends Controller
             $user_bench_mark['after_joining_success_ratio_monthly'] = number_format($user_bench_mark['joining_ratio_monthly'] * $user_bench_mark['after_joining_success_ratio'] / 100);
             $user_bench_mark['after_joining_success_ratio_weekly'] = number_format($user_bench_mark['after_joining_success_ratio_monthly'] / $no_of_weeks);
         }
-
-        //print_r($user_bench_mark);exit;
 
         return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name'));
     }

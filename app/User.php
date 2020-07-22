@@ -365,15 +365,6 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isHr($user_role_id)
-    {
-        $hr_role_id = env('HR');
-        if ($hr_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
     public  static function isStrategyCoordination($user_role_id){
         $admin_role_id = getenv('STRATEGY');
         if ($admin_role_id == $user_role_id) {

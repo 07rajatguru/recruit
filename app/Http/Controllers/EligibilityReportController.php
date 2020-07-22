@@ -11,18 +11,14 @@ use App\Bills;
 
 class EligibilityReportController extends Controller
 {
-    public function index(){
+    public function index() {
 
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $all_perm = $user->can('display-eligibility-report-of-all-users');
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+        if ($all_perm) {
 
-        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
         	// Year Data
             $starting_year = '2017';
             $ending_year = date('Y',strtotime('+2 year'));
@@ -274,18 +270,13 @@ class EligibilityReportController extends Controller
         })->export('xls');
     }
 
-    public function create(){
-        
+    public function create() {
+
+        // get logged in user
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $all_perm = $user->can('display-eligibility-report-of-all-users');
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        if ($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
+        if ($all_perm) {
             // Month data
             $month_array = array();
             for ($i=1; $i <=12 ; $i++) { 
@@ -311,12 +302,13 @@ class EligibilityReportController extends Controller
         }
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
         $month = $request->get('month');
         $year = $request->get('year');
 
         $users = User::getAllUsersExpectSuperAdmin('recruiter');
+        
         foreach ($users as $key => $value) {
             $user_data = UserOthersInfo::getUserOtherInfo($key);
             $user_salary = $user_data['fixed_salary'];

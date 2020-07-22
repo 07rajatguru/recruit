@@ -1939,91 +1939,97 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('recoveryreport',[
         'as' => 'recoveryreport.index',
         'uses' => 'RecoveryReportController@index',
-        'middleware' => ['permission:billrecovery-list']
+        'middleware' => ['permission:display-recovery-report']
     ]);
 
     Route::post('recoveryreport/export',[
         'as' => 'recoveryreport.export',
         'uses' => 'RecoveryReportController@export',
-        'middleware' => ['permission:billrecovery-list']
+        'middleware' => ['permission:display-recovery-report']
     ]);
 
     Route::any('selectionreport',[
         'as' => 'selectionreport.index',
         'uses' => 'SelectionReportController@index',
-        'middleware' => ['permission:billselection-list']
+        'middleware' => ['permission:display-selection-report']
     ]);
 
     Route::post('selectionreport/export',[
         'as' => 'selectionreport.export',
         'uses' => 'SelectionReportController@export',
-        'middleware' => ['permission:billselection-list']
+        'middleware' => ['permission:display-selection-report']
     ]);
 
     Route::any('userreport',[
         'as' => 'userreport.index',
         'uses' => 'UserwiseReportController@index',
-        'middleware' => ['permission:billuserwise-list']
+        'middleware' => ['permission:display-user-report']
     ]);
 
     Route::post('userreport/export',[
         'as' => 'userreport.export',
         'uses' => 'UserwiseReportController@export',
-        'middleware' => ['permission:billuserwise-list']
+        'middleware' => ['permission:display-user-report']
     ]);
 
     Route::any('daily-report',[
         'as' => 'report.dailyreportindex',
         'uses' => 'ReportController@dailyreportIndex',
-        'middleware' => ['permission:daily-report']
+        'middleware' => ['permission:display-daily-report-of-loggedin-user']
     ]);
 
     Route::any('weekly-report',[
         'as' => 'report.weeklyreportindex',
         'uses' => 'ReportController@weeklyreportIndex',
-        'middleware' => ['permission:weekly-report']
+        'middleware' => ['permission:display-weekly-report-of-loggedin-user']
     ]);
 
     Route::any('monthly-report',[
         'as' => 'report.monthlyreportindex',
         'uses' => 'ReportController@monthlyreportIndex',
-        'middleware' => ['permission:userwise-report']
+        'middleware' => ['permission:display-monthly-report-of-loggedin-user']
     ]);
 
     Route::any('userwise-monthly-report',[
         'as' => 'report.monthlyreportindex',
         'uses' => 'ReportController@userWiseMonthlyReport',
-        'middleware' => ['permission:userwise-report']
+        'middleware' => ['permission:display-monthly-report-of-loggedin-user']
     ]);
 
     Route::any('personwise-report',[
         'as' => 'report.personwisereportindex',
-        'uses' => 'ReportController@personWiseReportIndex'
+        'uses' => 'ReportController@personWiseReportIndex',
+        'middleware' => ['permission:display-person-wise-report-of-all-users']
     ]);
 
     Route::post('personwise-report/export',[
         'as' => 'report.personwisereportexport',
-        'uses' => 'ReportController@personWiseReportExport'
+        'uses' => 'ReportController@personWiseReportExport',
+        'middleware' => ['permission:display-person-wise-report-of-all-users']
     ]);
 
     Route::any('monthwise-report',[
         'as' => 'report.monthwisereportindex',
-        'uses' => 'ReportController@monthwiseReprotIndex'
+        'uses' => 'ReportController@monthwiseReprotIndex',
+        'middleware' => ['permission:display-month-wise-report-of-all-users']
     ]);
 
     Route::post('monthwise-report/export',[
         'as' => 'report.monthwisereportexport',
-        'uses' => 'ReportController@monthWiseReportExport'
+        'uses' => 'ReportController@monthWiseReportExport',
+        'middleware' => ['permission:display-month-wise-report-of-all-users']
     ]);
 
     Route::any('eligibility-report',[
         'as' => 'report.eligibilityreportindex',
-        'uses' => 'EligibilityReportController@index'
+        'uses' => 'EligibilityReportController@index',
+        'middleware' => ['permission:display-eligibility-report-of-all-users']
     ]);
 
     Route::post('eligibility-report/export',[
         'as' => 'report.eligibilityreportexport',
-        'uses' => 'EligibilityReportController@export'
+        'uses' => 'EligibilityReportController@export',
+        'middleware' => ['permission:display-eligibility-report-of-all-users']
     ]);
 
     Route::get('eligibility-report/add',[
@@ -2038,18 +2044,20 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::any('clientwise-report',[
         'as' => 'report.clientwisereportindex',
-        'uses' => 'ReportController@clientWiseReportIndex'
+        'uses' => 'ReportController@clientWiseReportIndex',
+        'middleware' => ['permission:display-client-wise-report-of-all-users']
     ]);
 
     Route::post('clientwise-report/export',[
         'as' => 'report.clientwisereportexport',
-        'uses' => 'ReportController@clientWiseReportExport'
+        'uses' => 'ReportController@clientWiseReportExport',
+        'middleware' => ['permission:display-client-wise-report-of-all-users']
     ]);
 
     Route::any('productivity-report',[
         'as' => 'productivity.report',
         'uses' => 'ReportController@productivityReport',
-        'middleware' => ['permission:productivity-report']
+        'middleware' => ['permission:display-productivity-report-of-loggedin-user']
     ]);
 
     // Report End
