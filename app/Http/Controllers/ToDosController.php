@@ -410,7 +410,7 @@ class ToDosController extends Controller
         $typelist = $request->to;
         $status = $request->status;
 
-        $cc_user_id=$request->cc_user;
+        $cc_user_id = $request->cc_user;
         $priority = $request->priority;
         $description = $request->description;
         $users = $request->user_ids;
@@ -497,9 +497,9 @@ class ToDosController extends Controller
 
             $toDos_id = $toDos->id;
 
-            foreach ($users as $key=>$value) {
+            foreach ($users as $key => $value) {
 
-                if($value!=$task_owner){
+                if($value != $task_owner){
 
                     $user_arr = trim($value);
 
@@ -596,8 +596,8 @@ class ToDosController extends Controller
         // get assigned users list
         $assigned_users = TodoAssignedUsers::where('todo_id','=',$id)->get();
         $selected_users = array();
-        if(isset($assigned_users) && sizeof($assigned_users)>0){
 
+        if(isset($assigned_users) && sizeof($assigned_users)>0) {
             foreach($assigned_users as $row){
                 $selected_users[] = $row->user_id;
             }
@@ -606,7 +606,7 @@ class ToDosController extends Controller
         $todo_frequency = TodoFrequency::where('todo_id','=',$id)->first();
         $reminder_id = array();
 
-        if (isset($todo_frequency) && sizeof($todo_frequency)>0) {
+        if (isset($todo_frequency) && $todo_frequency != '') {
             $reminder_id = $todo_frequency->reminder;
         }
 
@@ -668,12 +668,14 @@ class ToDosController extends Controller
             $toDos->type =$type;
         if(isset($status))
             $toDos->status = $status;
+
         if(isset($cc_user_id) && $cc_user_id > 0){
             $toDos->cc_user = $cc_user_id;
         }
         else {
             $toDos->cc_user = NULL;
         }
+
         if(isset($priority))
             $toDos->priority = $priority;
         if(isset($description))
@@ -698,6 +700,7 @@ class ToDosController extends Controller
         TodoAssignedUsers::where('todo_id',$todo_id)->delete();
         AssociatedTypeList::where('todo_id',$todo_id)->delete();
         TodoFrequency::where('todo_id',$todo_id)->delete();
+
         if($todo_id){
             if(isset($users) && sizeof($users)>0){
                 foreach ($users as $key=>$value){
@@ -718,7 +721,6 @@ class ToDosController extends Controller
             }
 
             if (isset($frequency_type) && $frequency_type!='') {
-
                 $todo_reminder = new TodoFrequency();
                 $todo_reminder->todo_id = $todo_id;
                 $todo_reminder->reminder = $frequency_type;
@@ -775,11 +777,6 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
@@ -790,18 +787,15 @@ class ToDosController extends Controller
         $todo_ids = array_unique($todo_ids);
 
         if(isset($todo_ids) && sizeof($todo_ids)>0){
-
             $count = ToDos::getCompleteTodosCount($todo_ids,'');
         }
         else {
-
             $count = 0;
         }
-        return view('adminlte::toDo.complete',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
-
+        return view('adminlte::toDo.complete',compact('todo_status','user_id','count'));
     }
 
-    public function getCompleteTodosDetails(){
+    public function getCompleteTodosDetails() {
         
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -812,11 +806,9 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
+        $edit_perm = $user->can('todo-edit');
+        $delete_perm = $user->can('todo-delete');
+
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
         $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
@@ -831,18 +823,20 @@ class ToDosController extends Controller
             $todos = ToDos::getCompleteTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
             $count = ToDos::getCompleteTodosCount($todo_ids,$search);
         }
-        else
-        {
+        else {
             $count = 0;
         }
+
         $status = Status::getStatusArray();
 
         $completed_details = array();
         $i = 0;$j = 0;
         foreach ($todos as $key => $value) {
+
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
-            if(($value['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination){
+
+            if(($value['task_owner'] == $user_id) || $edit_perm) {
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
             }
 
@@ -864,17 +858,12 @@ class ToDosController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function mytask(Request $request){
+    public function mytask(Request $request) {
         
         $todo_status = env('COMPLETEDSTATUS');
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
@@ -885,18 +874,16 @@ class ToDosController extends Controller
         $todo_ids = array_unique($todo_ids);
 
         if(isset($todo_ids) && sizeof($todo_ids)>0){
-
             $count = ToDos::getMyTodosCount($todo_ids,'');
         }
         else {
-
             $count = 0;
         }
 
-        return view('adminlte::toDo.mytask',compact('todo_status','user_id','count','isSuperAdmin','isStrategyCoordination'));
+        return view('adminlte::toDo.mytask',compact('todo_status','user_id','count'));
     }
 
-    public function getMyTodosDetails(){
+    public function getMyTodosDetails() {
         
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -907,11 +894,8 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategyCoordination = $user_obj::isStrategyCoordination($role_id);
+        $edit_perm = $user->can('todo-edit');
+
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
         $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user->id);
@@ -926,18 +910,20 @@ class ToDosController extends Controller
             $todos = ToDos::getMyTodos($todo_ids,$limit,$offset,$search,$order_column_name,$type);
             $count = ToDos::getMyTodosCount($todo_ids,$search);
         }
-        else
-        {
+        else {
             $count = 0;
         }
+
         $status = Status::getStatusArray();
 
         $my_details = array();
         $i = 0;$j = 0;
         foreach ($todos as $key => $value) {
+
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
-            if(($value['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination){
+
+            if(($value['task_owner'] == $user_id) || $edit_perm) {
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
             }
 
@@ -972,7 +958,7 @@ class ToDosController extends Controller
         $status_todo->status = $todos;
         $status_todo->save();
 
-        return redirect()->route('todos.index')->with('success', 'Todo Status Updated successfully');
+        return redirect()->route('todos.index')->with('success', 'Todo Status Updated Successfully.');
     }
 
     public function getType() {
@@ -980,21 +966,18 @@ class ToDosController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $user_role_id = User::getLoggedinUserRole($user);
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
         $selectedType = Input::get('selectedType');
 
         // For Job Opening Details
         if($selectedType == 1){
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-            if(in_array($user_role_id,$access_roles_id)){
+           
+            $all_jobs_perm = $user->can('display-jobs');
+            $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+            if($all_jobs_perm) {
                 $job_response = JobOpen::getAllJobs(1,$user_id);
             }
-            else{
+            else if($user_jobs_perm){
                 $job_response = JobOpen::getAllJobs(0,$user_id);
             }
 
@@ -1014,17 +997,21 @@ class ToDosController extends Controller
                 $userArr[$j]['user_name'] = $value;
                 $j++;
             }
+        }
 
-        } 
         // For Interview Details
         elseif($selectedType == 2) {
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-            if(in_array($user_role_id,$access_roles_id)){
+            
+            $all_perm = $user->can('display-interviews');
+            $user_perm = $user->can('display-interviews-by-loggedin-user');
+
+            if($all_perm) {
                 $typeDetails = Interview::getAllInterviews(1,$user_id);
             }
-            else{
+            else if($user_perm) {
                 $typeDetails = Interview::getAllInterviews(0,$user_id);
             }
+
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
@@ -1043,42 +1030,37 @@ class ToDosController extends Controller
                 $userArr[$j]['user_name'] = $value;
                 $j++;
             }
-        } 
+        }
+
         // For Client Details
         elseif($selectedType == 3) {
 
-                $user = \Auth::user();
-                $userRole = $user->roles->pluck('id','id')->toArray();
-                $role_id = key($userRole);
+            $user = \Auth::user();
+            $user_id = $user->id;
 
-                $user_obj = new User();
-                $user_id = $user->id;
+            $all_perm = $user->can('display-client');
+            $user_perm = $user->can('display-account-manager-wise-client');
 
-                $user_role_id = User::getLoggedinUserRole($user);
-                $admin_role_id = env('ADMIN');
-                $director_role_id = env('DIRECTOR');
-                $manager_role_id = env('MANAGER');
-                $superadmin_role_id = env('SUPERADMIN');
+            if($all_perm) {
+                // get all clients
+                $typeDetails = ClientBasicinfo::getLoggedInUserClients(0);
+            }
+            else if($user_perm) {
+                // get logged in user clients
+                $typeDetails = ClientBasicinfo::getLoggedInUserClients($user_id);
+            }
 
-                $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-                if(in_array($user_role_id,$access_roles_id)){
-                    // get all clients
-                    $typeDetails = ClientBasicinfo::getLoggedInUserClients(0);
+            // $typeDetails = ClientBasicinfo::all();
+            if(isset($typeDetails) && sizeof($typeDetails)>0){
+
+                $i = 0;
+                foreach ($typeDetails as $typeDetail) {
+                    $typeArr[$i]['id'] = $typeDetail->id;
+                    $typeArr[$i]['value'] = $typeDetail->name."-".$typeDetail->coordinator_name;
+                    $i++;
                 }
-                else{
-                    // get logged in user clients
-                    $typeDetails = ClientBasicinfo::getLoggedInUserClients($user_id);
-                }
-
-                // $typeDetails = ClientBasicinfo::all();
-                if(isset($typeDetails) && sizeof($typeDetails)>0){
-                    $i = 0;
-                    foreach ($typeDetails as $typeDetail) {
-                        $typeArr[$i]['id'] = $typeDetail->id;
-                        $typeArr[$i]['value'] = $typeDetail->name."-".$typeDetail->coordinator_name;
-                        $i++;
-                    }
-            } else {
+            } 
+            else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
             
@@ -1092,8 +1074,10 @@ class ToDosController extends Controller
         }
 
         // For Candidate Details
-         elseif($selectedType == 4) {
+        elseif($selectedType == 4) {
+
             $typeDetails = CandidateBasicInfo::all();
+
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
@@ -1101,9 +1085,11 @@ class ToDosController extends Controller
                     $typeArr[$i]['value'] = $typeDetail->full_name;
                     $i++;
                 }
-            } else{
+            }
+            else{
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }
+
             $candidate_user = User::getAllUsers();
             $j=0;
             foreach ($candidate_user as $key => $value) {
@@ -1111,9 +1097,8 @@ class ToDosController extends Controller
                 $userArr[$j]['user_name'] = $value;
                 $j++;
             }
-         }
-
-         else {
+        }
+        else {
             $typeArr[0] = array('id' => '','value'=>'Select Type' );
         }
 
@@ -1128,27 +1113,23 @@ class ToDosController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $user_role_id = User::getLoggedinUserRole($user);
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
         $selectedType = Input::get('selectedType');
         $toDoId = Input::get('toDoId');
 
         $selected_typeList = AssociatedTypeList::getAssociatedListByTodoId($toDoId);
         $selected_userArr = TodoAssignedUsers::getUserListByTodoId($toDoId);
-        //print_r($selected_userArr);exit;
 
         // For Job Opening Details
         $typeArr = array();
-        if($selectedType == 1){
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-            if(in_array($user_role_id,$access_roles_id)){
+        if($selectedType == 1) {
+
+            $all_jobs_perm = $user->can('display-jobs');
+            $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+            if($all_jobs_perm) {
                 $job_response = JobOpen::getJobsByIds(1,explode(',',$selected_typeList));
             }
-            else{
+            else if($user_jobs_perm) {
                 $job_response = JobOpen::getJobsByIds(0,explode(',',$selected_typeList));
             }
 
@@ -1172,17 +1153,22 @@ class ToDosController extends Controller
 
         // For Interview Details
         elseif($selectedType == 2) {
+
             $typeDetails = Interview::getTodosInterviewsByIds(explode(',',$selected_typeList));
+
             if(isset($typeDetails) && sizeof($typeDetails)>0){
+
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
                     $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$typeDetail->city;
                     $i++;
                 }
-            } /*else {
+            } 
+            /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }*/
+
             $interview_user = User::getAllUsers();
             $j=0;
             foreach ($interview_user as $key => $value) {
@@ -1195,28 +1181,33 @@ class ToDosController extends Controller
         // For Client Details
         elseif($selectedType == 3) {
 
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-            if(in_array($user_role_id,$access_roles_id)){
+            $all_perm = $user->can('display-client');
+            $user_perm = $user->can('display-account-manager-wise-client');
+
+            if($all_perm) {
                 // get all clients
                 $typeDetails = ClientBasicinfo::getClientsByIds(0,explode(',',$selected_typeList));
             }
-            else{
+            else if($user_perm) {
                 // get logged in user clients
                 $typeDetails = ClientBasicinfo::getClientsByIds($user_id,explode(',',$selected_typeList));
             }
 
             if(isset($typeDetails) && sizeof($typeDetails)>0){
+
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
                     $typeArr[$i]['id'] = $typeDetail->id;
                     $typeArr[$i]['value'] = $typeDetail->name."-".$typeDetail->coordinator_name;
                     $i++;
                 }
-            } /*else {
+            } 
+            /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }*/
             $client_user = User::getAllUsers();
             $j=0;
+
             foreach ($client_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
@@ -1226,8 +1217,9 @@ class ToDosController extends Controller
 
         // For Candidate Details
         elseif($selectedType == 4) {
+
             $typeDetails = CandidateBasicInfo::getAllCandidatesById(explode(',',$selected_typeList));
-            //print_r($typeDetails);exit;
+
             if(isset($typeDetails) && sizeof($typeDetails)>0){
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
@@ -1235,11 +1227,14 @@ class ToDosController extends Controller
                     $typeArr[$i]['value'] = $typeDetail->full_name;
                     $i++;
                 }
-            }/* else{
+            }
+            /* else{
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }*/
+
             $candidate_user = User::getAllUsers();
             $j=0;
+
             foreach ($candidate_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
@@ -1256,7 +1251,6 @@ class ToDosController extends Controller
         $data['userArr'] = $userArr;
 
         return json_encode($data);
-
     }
 
     public function readTodos() {

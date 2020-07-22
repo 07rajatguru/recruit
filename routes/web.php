@@ -1496,13 +1496,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('todos', [
         'as' => 'todos.index',
         'uses' => 'ToDosController@index',
-        'middleware' => ['permission:display-todos|todo-create|todo-edit|todo-delete']
+        'middleware' => ['permission:display-todos|display-todos-by-loggedin-user|todo-create|todo-edit|todo-delete']
     ]);
 
     Route::get('todos/alltodos', [
         'as' => 'todos.alltodos',
         'uses' => 'ToDosController@getAllTodosDetails',
-        'middleware' => ['permission:display-todos']
+        'middleware' => ['permission:display-todos-by-loggedin-user']
     ]);
 
     Route::get('todos/complete', [

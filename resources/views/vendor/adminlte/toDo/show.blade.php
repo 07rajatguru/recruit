@@ -4,11 +4,9 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
-
     <div>
         <div class="row">
             <div class="col-lg-12 margin-tb">
@@ -18,15 +16,12 @@
                 <div class="pull-right">
                     <a class="btn btn-primary" href="{{ url()->previous() }}"> Back</a>
                 </div>
-
             </div>
-
         </div>
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Basic Information</h3>
                     </div>
@@ -57,7 +52,7 @@
                                 <th>Type List:</th>
                                 <td>{!! $toDos['typelist'] !!}</td>
                             </tr>
-                            @if(isset($toDos['frequency_type']) && sizeof($toDos['frequency_type'])>0)
+                            @if(isset($toDos['frequency_type']) && $toDos['frequency_type'] != '')
                             <tr>
                                 <th scope="row">Frequency Type:</th>
                                 <td>{{ $frequency_type }}</td>
@@ -68,15 +63,11 @@
                             <tr>
                                 <th scope="row">Remarks :</th>
                                 <td>{!! $toDos['description'] !!}</td>
-                               
                             </tr>
                         </table>
                     </div>
-                   
                 </div>
             </div>
         </div>
     </div>
-
 @stop
-

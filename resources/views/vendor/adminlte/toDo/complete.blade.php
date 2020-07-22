@@ -14,11 +14,9 @@
             </div>
 
             <div class="pull-right">
-                {{--@permission(('permision-create'))--}}
-
-                <a class="btn btn-success" href="{{ route('todos.create') }}"> Create New To Do</a>
-                {{--@endpermission--}}
-
+                @permission(('todo-create'))
+                    <a class="btn btn-success" href="{{ route('todos.create') }}"> Create New To Do</a>
+                @endpermission
             </div>
         </div>
     </div>

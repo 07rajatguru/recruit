@@ -396,7 +396,6 @@ class ToDos extends Model
         if(isset($ids) && sizeof($ids)>0){
             $todo_query = $todo_query->whereIn('to_dos.id',$ids);
         }
-
         if (isset($limit) && $limit > 0) {
             $todo_query = $todo_query->limit($limit);
         }
@@ -649,7 +648,9 @@ class ToDos extends Model
         $todo_show_res = $todo_show->first();
 
         $todo = array();
-        if (isset($todo_show_res) && sizeof($todo_show_res)>0) {
+        
+        if (isset($todo_show_res) && $todo_show_res != '') {
+
             $todo['task_owner'] = $todo_show_res->name;
             $todo['subject'] = $todo_show_res->subject;
             $todo['due_date'] = $todo_show_res->due_date;
@@ -704,7 +705,6 @@ class ToDos extends Model
                 $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }
-                
         }
         else if ($type == 3) {
             $client_res = ClientBasicinfo::getClientsByIds(0,explode(',',$type_list));
@@ -713,7 +713,6 @@ class ToDos extends Model
                 $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }
-                
         }
         else if ($type == 4) {
             $candidate_res = CandidateBasicInfo::getAllCandidatesById(explode(',',$type_list));
@@ -722,7 +721,6 @@ class ToDos extends Model
                 $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }
-                
         }
         else{
             $jobopen = '';

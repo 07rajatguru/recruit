@@ -18,7 +18,6 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
         </div>
-
     </div>
 </div>
 
@@ -37,94 +36,88 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6 ">
+                <div class="box-header col-md-6 "></div>
 
-                </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <div class="">
-
-                    <div class="form-group {{ $errors->has('assigned_by') ? 'has-error' : '' }}">
-                        <strong>Task Owner: <span class = "required_fields">*</span> </strong>
-                        {!! Form::select('assigned_by', $assigned_by, $assigned_by_id, array('id'=>'assigned_by','class' => 'form-control','tabindex' => '1' )) !!}
-                        @if ($errors->has('assigned_by'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('assigned_by') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                     <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                        <strong>Status:</strong>
-                        {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control','tabindex' => '3')) !!}
-                        @if ($errors->has('status'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('status') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-
-                    <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                        <strong>Type:</strong>
-                        @if($action == 'edit')
-                        {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '5', 'onchange' => 'getType()' )) !!}
-                        @else
-                        {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '5', 'onchange' => 'getType()' )) !!}
-                        @endif
-                        @if ($errors->has('type'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('type') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                <div class="">
-                    <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
-                        <strong>Subject: <span class = "required_fields">*</span> </strong>
-                        {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '2' )) !!}
-                        @if ($errors->has('subject'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('subject') }}</strong>
-                                </span>
-                        @endif
-                    </div>
-
-                    <div  class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
-                        <strong>Due Date: <span class = "required_fields">*</span></strong>
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar due_date_class"></i>
-                            </div>
-                            {!! Form::text('due_date',  isset($due_date) ? $due_date : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '4'  )) !!}
-                        </div>
-                        @if ($errors->has('due_date'))
-                            <span class="help-block">
-                                    <strong>{{ $errors->first('due_date') }}</strong>
+                        <div class="">
+                            <div class="form-group {{ $errors->has('assigned_by') ? 'has-error' : '' }}">
+                                <strong>Task Owner: <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('assigned_by', $assigned_by, $assigned_by_id, array('id'=>'assigned_by','class' => 'form-control','tabindex' => '1' )) !!}
+                                @if ($errors->has('assigned_by'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('assigned_by') }}</strong>
                                     </span>
-                        @endif
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                                <strong>Status:</strong>
+                                {!! Form::select('status', $status,$status_id, array('id'=>'status','class' => 'form-control','tabindex' => '3')) !!}
+                                @if ($errors->has('status'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('status') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                <strong>Type:</strong>
+                                @if($action == 'edit')
+                                {!! Form::select('type', $type, null, array('id'=>'type','class' => 'form-control', 'tabindex' => '5', 'onchange' => 'getType()' )) !!}
+                                @else
+                                {!! Form::select('type', $type, 5, array('id'=>'type','class' => 'form-control', 'tabindex' => '5', 'onchange' => 'getType()' )) !!}
+                                @endif
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                        <strong>Select CC:</strong>
-                        {!! Form::select('cc_user',$users,$cc_user_id, array('id'=>'cc_user','class' => 'form-control','tabindex' => '6')) !!}
-                        @if ($errors->has('cc_user'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('cc_user') }}</strong>
-                                </span>
-                        @endif
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
+                                <strong>Subject: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('subject', null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '2' )) !!}
+                                @if ($errors->has('subject'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('subject') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div  class="form-group {{ $errors->has('due_date') ? 'has-error' : '' }}">
+                                <strong>Due Date: <span class = "required_fields">*</span></strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar due_date_class"></i>
+                                    </div>
+                                    {!! Form::text('due_date',  isset($due_date) ? $due_date : null, array('id'=>'due_date','placeholder' => 'Due Date','class' => 'form-control', 'tabindex' => '4'  )) !!}
+                                </div>
+                                @if ($errors->has('due_date'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('due_date') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                                <strong>Select CC:</strong>
+                                {!! Form::select('cc_user',$users,$cc_user_id, array('id'=>'cc_user','class' => 'form-control','tabindex' => '6')) !!}
+                                @if ($errors->has('cc_user'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('cc_user') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
-                </div>
-            </div>
-             <input type="hidden" id="cc_user_id" name="cc_user_id" value="{{$cc_user_id}}">
-
-                    <div class="form-group type_list" >
-
+                    <input type="hidden" id="cc_user_id" name="cc_user_id" value="{{$cc_user_id}}">
+                    <div class="form-group type_list">
                         <div class="col-sm-5">
                             <select name="from[]" id="search" class="form-control" size="8" multiple="multiple"  readonly="true">
                             </select>
@@ -216,16 +209,14 @@
                                 </span>
                             @endif
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
-                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <div class="">
-                </div>
-                </div>
+
+        <div class="box-body col-xs-6 col-sm-6 col-md-6">
+            <div class=""></div>
+        </div>
 
         <div class="form-group">
             <div class="col-sm-2">&nbsp;</div>
@@ -234,26 +225,20 @@
             </div>
         </div>
     </div>
-
-
     {!! Form::close() !!}
 
 @else
-
     <div class="error-page">
         <h2 class="headline text-info"> 403</h2>
         <div class="error-content">
             <h3><i class="fa fa-warning text-yellow"></i> Whoops, looks like something went wrong.</h3>
-
         </div><!-- /.error-content -->
     </div>
-
 @endif
-
 
 @section('customscripts')
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function() {
 
             $("#toDo_form").validate({
                 rules: {
@@ -373,7 +358,6 @@
                 $("#search_to").empty();
                 $(".type_list").hide();
             }
-
         }
 
         function getselectedtypelist() {
@@ -407,8 +391,5 @@
                 });
             }
         }
-
-        //$("#typeList").select2();
-
     </script>
 @endsection
