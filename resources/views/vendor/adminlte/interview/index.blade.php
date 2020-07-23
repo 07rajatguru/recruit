@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -14,10 +13,9 @@
                 <h2>Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
-                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()"> Send Mail</button>
-                <a class="btn btn-success" href="{{ route('interview.create') }}"> Create New Interview</a>
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()">Send Mail</button>
+                <a class="btn btn-success" href="{{ route('interview.create') }}">Create New Interview</a>
             </div>
-
         </div>
     </div>
 
@@ -35,7 +33,6 @@
             <div class="col-md-2 col-sm-3">
                 <a href="{{ route('interview.upcomingprevious') }}" style="text-decoration: none;color: black;"><div style="width:165px;height:40px;background-color:#F08080;padding:9px 17px;font-weight: 600;border-radius: 22px;">Upcoming/Previous</div></a>
             </div>
-
         </div>
     </div>
 
@@ -44,7 +41,6 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="interview_table">
@@ -99,39 +95,41 @@
         </tbody>--}}
     </table>
 
+    <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule'])!!}
+                <div class="modal-body check-id">
+                    
+                </div>
+                <input type="hidden" name="inter_ids" id="inter_ids" value="">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="yes-btn">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
-<div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
-            </div>
-            {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule'])!!}
-            <div class="modal-body check-id">
-                
-            </div>
-            <input type="hidden" name="inter_ids" id="inter_ids" value="">
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="yes-btn">Send</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-            {!! Form::close() !!}
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
+
             $(".date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true
             });
 
             $("#interview_table").dataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [6,'desc'],
@@ -154,7 +152,7 @@
                 }
             });
 
-            $('#allcb').change(function(){
+            $('#allcb').change(function() {
                 if($(this).prop('checked')){
                     $('tbody tr td input[type="checkbox"]').each(function(){
                         $(this).prop('checked', true);
@@ -177,7 +175,7 @@
             });
         });
 
-        function checkIdsforMail(){
+        function checkIdsforMail() {
             var token = $('input[name="csrf_token"]').val();
             var interview_ids = new Array();
 

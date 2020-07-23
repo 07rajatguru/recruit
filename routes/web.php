@@ -1268,7 +1268,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('interview/{id}/show', [
         'as' => 'interview.show',
         'uses' => 'InterviewController@show',
-        'middleware' => ['permission:interview-show']
+        'middleware' => ['permission:display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/{id}/edit/{source}', [
@@ -1296,12 +1296,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('interview/checkidsmail',[
         'as' => 'interview.checkidsmail',
-        'uses' => 'InterviewController@CheckIdsforMail'
+        'uses' => 'InterviewController@CheckIdsforMail',
+        'middleware' => ['permission:send-consolidated-schedule']
     ]);
 
     Route::post('interview/multipleinterviewschedule',[
         'as' => 'interview.multipleinterviewschedule',
-        'uses' => 'InterviewController@multipleInterviewScheduleMail'
+        'uses' => 'InterviewController@multipleInterviewScheduleMail',
+        'middleware' => ['permission:send-consolidated-schedule']
     ]);
 
     // Bills Module
