@@ -1310,84 +1310,85 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('forecasting/create', [
         'as' => 'bills.create',
         'uses' => 'BillsController@create',
-        'middleware' => ['permission:bnm-create']
+        'middleware' => ['permission:forecasting-add']
     ]);
 
     Route::get('forecasting', [
         'as' => 'forecasting.index',
         'uses' => 'BillsController@index',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:display-forecasting|display-forecasting-by-loggedin-user|display-forecasting-by-candidate-owner']
     ]);
 
     Route::any('bills/all', [
         'as' => 'bills.all',
         'uses' => 'BillsController@getAllBillsDetails',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:display-forecasting|display-forecasting-by-loggedin-user|display-forecasting-by-candidate-owner']
     ]);
 
     Route::get('forecasting/cancel', [
         'as' => 'forecasting.cancelbnm',
         'uses' => 'BillsController@cancelbnm',
-        'middleware' => ['permission:bnm-create']
+        'middleware' => ['permission:cancel-bill']
     ]);
 
     Route::get('/bills/cancel/all', [
         'as' => 'bills.cancelall',
         'uses' => 'BillsController@getAllCancelBillsDetails',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:cancel-bill']
     ]);
 
     Route::get('recovery', [
         'as' => 'bills.recovery',
         'uses' => 'BillsController@billsMade',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner']
     ]);
 
     Route::get('recovery/cancel', [
         'as' => 'bills.bmcancel',
         'uses' => 'BillsController@cancelbm',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:cancel-bill']
     ]);
 
     Route::get('forecasting/{id}/edit', [
         'as' => 'forecasting.edit',
         'uses' => 'BillsController@edit',
-        'middleware' => ['permission:bnm-edit']
+        'middleware' => ['permission:forecasting-edit']
     ]);
 
     Route::patch('forecasting/{id}', [
         'as' => 'forecasting.update',
         'uses' => 'BillsController@update',
-        'middleware' => ['permission:bnm-edit']
+        'middleware' => ['permission:forecasting-edit']
     ]);
 
     Route::post('forecasting/store', [
         'as' => 'forecasting.store',
         'uses' => 'BillsController@store',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:forecasting-add']
     ]);
 
     Route::get('recovery/{id}/generaterecovery', [
         'as' => 'bills.generaterecovery',
         'uses' => 'BillsController@generateBM',
-        'middleware' => ['permission:bm-create']
+        'middleware' => ['permission:generate-recovery']
     ]);
 
     Route::get('forecasting/{id}/show', [
         'as' => 'forecasting.show',
         'uses' => 'BillsController@show',
-        'middleware' => ['permission:bills-list']
+        'middleware' => ['permission:display-forecasting-by-loggedin-user|display-recovery-by-loggedin-user|display-forecasting-by-candidate-owner|display-recovery-by-candidate-owner']
     ]);
 
     Route::delete('forecasting/{id}', [
         'as' => 'forecasting.destroy',
         'uses' => 'BillsController@delete',
-        'middleware' => ['permission:bnm-delete']
+        'middleware' => ['permission:forecasting-delete']
     ]);
 
     Route::get('forecasting/{id}', [
         'as' => 'forecasting.cancel',
-        'uses' => 'BillsController@cancel'
+        'uses' => 'BillsController@cancel',
+        'middleware' => ['permission:cancel-bill']
     ]);
 
     Route::post('bills/downloadexcel', [
@@ -1407,42 +1408,49 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::delete('bills/destroy/{id}', [
         'as' => 'billattachments.destroy',
-        'uses' => 'BillsController@attachmentsDestroy'
+        'uses' => 'BillsController@attachmentsDestroy',
+        'middleware' => ['permission:forecasting-edit']
     ]);
 
     Route::post('billattachments/upload/{id}', [
         'as' => 'billattachments.upload',
         'uses' => 'BillsController@upload',
+        'middleware' => ['permission:forecasting-edit']
     ]);
 
     // for recovery joining confirmation mail route
     Route::post('recovery/sendconfirmationmail/{id}',[
         'as' => 'recovery.sendconfirmationmail',
-        'uses' => 'BillsController@getSendConfirmationMail'
+        'uses' => 'BillsController@getSendConfirmationMail',
+        'middleware' => ['permission:send-joining-confirmation']
     ]);
 
     // for recovery go confirmation route
     Route::post('recovery/gotconfirmation/{id}',[
         'as' => 'recovery.gotconfirmation',
-        'uses' => 'BillsController@getGotConfirmation'
+        'uses' => 'BillsController@getGotConfirmation',
+        'middleware' => ['permission:send-joining-confirmation']
     ]);
 
     // for recovery invoice genereate route
     Route::post('recovery/invoicegenerate/{id}',[
         'as' => 'recovery.invoicegenerate',
-        'uses' => 'BillsController@getInvoiceGenerate'
+        'uses' => 'BillsController@getInvoiceGenerate',
+        'middleware' => ['permission:send-joining-confirmation']
     ]);
 
     // for recovery payment received route
     Route::post('recovery/paymentreceived/{id}',[
         'as' => 'recovery.paymentreceived',
-        'uses' => 'BillsController@getPaymentReceived'
+        'uses' => 'BillsController@getPaymentReceived',
+        'middleware' => ['permission:send-joining-confirmation']
     ]);
 
     //for relive bill
     Route::get('recovery/{id}',[
         'as' => 'recovery.relive',
-        'uses' => 'BillsController@reliveBill'
+        'uses' => 'BillsController@reliveBill',
+        'middleware' => ['permission:cancel-bill']
     ]);
 
     Route::get('invoice/exceldownload/{id}',[

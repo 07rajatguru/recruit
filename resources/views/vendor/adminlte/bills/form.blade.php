@@ -15,7 +15,7 @@
                 @else
                     <h2>Edit Recovery</h2>
                 @endif
-            @elseif( $action == 'edit')
+            @elseif($action == 'edit')
                 <h2>Edit Forecasting</h2>
             @else
                 <h2>Create Forecasting</h2>
@@ -23,18 +23,22 @@
         </div>
         <div class="pull-right">
             @if($status==0)
-                <a class="btn btn-primary" href="{{ route('forecasting.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('forecasting.index') }}">Back</a>
             @else
-                <a class="btn btn-primary" href="{{ route('bills.recovery') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('bills.recovery') }}">Back</a>
             @endif
         </div>
-
     </div>
-
 </div>
 
 @if ($message = Session::get('error'))
     <div class="alert alert-error">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
+@if($message = Session::get('success'))
+    <div class="alert alert-success">
         <p>{{ $message }}</p>
     </div>
 @endif
@@ -61,13 +65,12 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
-
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
                                 <strong>Select Job Opening : <span class = "required_fields">*</span></strong>
                                 {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '1','onchange'=>'prefilleddata()' )) !!}
                                 @if ($errors->has('job'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('job') }}</strong>
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('job') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -76,8 +79,8 @@
                                 <strong>Client Name : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('client_name', null, array('id'=>'client_name','placeholder' => 'Client Name','tabindex' => '3','class' => 'form-control' )) !!}
                                 @if ($errors->has('client_name'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('client_name') }}</strong>
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('client_name') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -86,8 +89,8 @@
                                 <strong>Client Contact Number : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('client_contact_number', null, array('id'=>'client_contact_number','placeholder' => 'Client Contact Number','class' => 'form-control', 'tabindex' => '5')) !!}
                                 @if ($errors->has('client_contact_number'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('client_contact_number') }}</strong>
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('client_contact_number') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -96,16 +99,17 @@
                                 <strong>Candidate Name : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('candidate_name', array(''=>'Select Candidate'),null, array('id'=>'candidate_name','class' => 'form-control', 'tabindex' => '7', 'onchange'=> 'prefilledcandidatedata()' )) !!}
                                 @if ($errors->has('candidate_name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('candidate_name') }}</strong>
-                                    </span>
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('candidate_name') }}</strong>
+                                </span>
                                 @endif
                             </div>
 
                             <input type="hidden" id="candidate_id" name="candidate_id" value="{{$candidate_id}}">
 
                             <div class="form-group {{ $errors->has('date_of_joining') ? 'has-error' : '' }}">
-                                <strong>Joining Date : <span class = "required_fields">*</span> </strong>
+                                <strong>Joining Date : <span class = "required_fields">*</span>
+                                </strong>
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -118,8 +122,8 @@
                                 <strong>Fixed Salary : <span class = "required_fields">*</span> </strong>
                                 {!! Form::number('fixed_salary', null, array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '11')) !!}
                                 @if ($errors->has('fixed_salary'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('fixed_salary') }}</strong>
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('fixed_salary') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -128,8 +132,8 @@
                                 <strong>Candidate Source :</strong>
                                 {!! Form::select('source', $candidateSource,null, array('id'=>'source','class' => 'form-control', 'tabindex' => '13')) !!}
                                 @if ($errors->has('source'))
-                                    <span class="help-block">
-                                <strong>{{ $errors->first('source') }}</strong>
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('source') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -142,9 +146,9 @@
                             <strong>Company Name : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('company_name', null, array('id'=>'company_name','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '2')) !!}
                             @if ($errors->has('company_name'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('company_name') }}</strong>
-                                </span>
+                            </span>
                             @endif
                         </div>
 
@@ -152,9 +156,9 @@
                             <strong>Client Email ID : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('client_email_id', null, array('id'=>'client_email_id','placeholder' => 'Client Email ID','class' => 'form-control', 'tabindex' => '4' )) !!}
                             @if ($errors->has('client_email_id'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('client_email_id') }}</strong>
-                                </span>
+                            </span>
                             @endif
                         </div>
 
@@ -162,9 +166,9 @@
                             <strong>Designation offered : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('designation_offered', null, array('id'=>'designation_offered','placeholder' => 'Designation offered','class' => 'form-control', 'tabindex' => '6' )) !!}
                             @if ($errors->has('designation_offered'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('designation_offered') }}</strong>
-                                </span>
+                            </span>
                             @endif
                         </div>
 
@@ -172,9 +176,9 @@
                             <strong>Candidate Contact Number : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('candidate_contact_number', null, array('id'=>'candidate_contact_number','placeholder' => 'Candidate Mobile','class' => 'form-control', 'tabindex' => '8' )) !!}
                             @if ($errors->has('candidate_contact_number'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('candidate_contact_number') }}</strong>
-                                </span>
+                            </span>
                             @endif
                         </div>
 
@@ -182,19 +186,20 @@
                             <strong>Job Location : <span class = "required_fields">*</span> </strong>
                             {!! Form::text('job_location', null, array('id'=>'job_location','placeholder' => 'Job Location','class' => 'form-control', 'tabindex' => '10' )) !!}
                             @if ($errors->has('job_location'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('job_location') }}</strong>
-                                </span>
+                            </span>
                             @endif
                         </div>
+
                         @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
                         <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
                             <strong>Percentage Charged :</strong>
                             {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
                             @if ($errors->has('percentage_charged'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('percentage_charged') }}</strong>
-                                </span>
+                            </span>
                             @endif
                         </div>
                         @endif
@@ -203,7 +208,7 @@
                             <strong>Address of Communication : <span class = "required_fields">*</span> </strong>
                             {!! Form::textarea('address_of_communication', null, array('rows'=>'3','id'=>'address_of_communication','placeholder' => 'Address of Communication','class' => 'form-control', 'tabindex' => '14' )) !!}
                             @if ($errors->has('address_of_communication'))
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong>{{ $errors->first('address_of_communication') }}</strong>
                             </span>
                             @endif
@@ -304,8 +309,7 @@
                     </div>
                 </div>
             @elseif($action == 'edit')
-             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">
                         <h3 class="box-title">Attachmetns</h3>
                         &nbsp;&nbsp;
@@ -313,36 +317,36 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th></th>
-                            <th>File Name</th>
-                            <th>Name</th>
-                            <th>Size</th>
-                            <th>Category</th>
-                        </tr>
-                                @if(isset($billsdetails['files']) && sizeof($billsdetails['files']) > 0)
-                                @foreach($billsdetails['files'] as $key => $value)
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>File Name</th>
+                                <th>Name</th>
+                                <th>Size</th>
+                                <th>Category</th>
+                            </tr>
+                                    @if(isset($billsdetails['files']) && sizeof($billsdetails['files']) > 0)
+                                    @foreach($billsdetails['files'] as $key => $value)
 
-                                <tr>
-                                    <td>
-                                       <a download href="{{ $value['url'] }}">
-                                            <i class="fa fa-fw fa-download"></i>
-                                        </a>
-                                        &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'id'=> $bnm, 'name' => 'billattachments' ,'display_name'=> 'Attachments'])
-                                    </td>
+                                    <tr>
+                                        <td>
+                                           <a download href="{{ $value['url'] }}">
+                                                <i class="fa fa-fw fa-download"></i>
+                                            </a>
+                                            &nbsp;
+                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=> $bnm, 'name' => 'billattachments' ,'display_name'=> 'Attachments'])
+                                        </td>
 
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
-                                    <td>{{ $value['name'] }}</td>
-                                    <td>{{ $value['size'] }}</td>    
-                                    <td>{{ $value['category'] }}</td>
-                                </tr>
-                             @endforeach
-                            @endif
-                    </table>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['fileName'] }}</a></td>
+                                        <td>{{ $value['name'] }}</td>
+                                        <td>{{ $value['size'] }}</td>    
+                                        <td>{{ $value['category'] }}</td>
+                                    </tr>
+                                 @endforeach
+                                @endif
+                        </table>
+                    </div>
                 </div>
-            </div>
             @endif
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 {!! Form::submit(isset($bnm) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
@@ -352,6 +356,7 @@
 </div>
 
 <input type="hidden" name="action" id="action" value="{{ $action }}">
+
 {!! Form::close() !!}
 
 @section('customscripts')
@@ -366,7 +371,6 @@
             $("#employee_name_4").select2();
             $("#employee_name_5").select2();
             $("#lead_name").select2();
-            //$("#address_of_communication").wysihtml5();
 
             prefilleddata();
             // on job select pre filled all data
@@ -617,6 +621,7 @@
         }
 
         function prefilledcandidatedata() {
+
             var candidate_id = $("#candidate_name").val();
             var mobile  = $("#candidate_name>option:selected").attr('data-content');
             $("#candidate_contact_number").val(mobile);
