@@ -13,15 +13,15 @@
                 <h2>Training Material ({{$count or '0'}})</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('training.create') }}"> Create New Training Material</a>
+                <a class="btn btn-success" href="{{ route('training.create') }}">Add New Training Material</a>
             </div>
         </div>
     </div>
 
     @if ($message = Session::get('success'))
-    <div class="alert alert-success">
-        <p>{{ $message }}</p>
-    </div>
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
     @endif
 
     @if ($message = Session::get('error'))
@@ -50,24 +50,26 @@
                     <td>
                         <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
                        
-                        @if($value['owner_id'] == $user_id || $isSuperAdmin || $isManager)         
-                        <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
+                        @if($value['owner_id'] == $user_id)
+                            <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
                         @endif
 
-                        @if($isSuperAdmin)
+                        @permission(('training-material-delete'))
                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training'])                  
-                        @endif
+                        @endpermission
                     </td>
                </tr>
             @endforeach
         </tbody>
-    </table>
-    
+    </table> 
 @stop
+
 @section('customscripts')
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
+
         jQuery(document).ready(function(){
+            
             /*var table = jQuery('#training_table').DataTable( {
                 responsive: true,
                 stateSave : true,
@@ -95,10 +97,10 @@
                 stateSave : true,
             });*/
 
-            jQuery("#training_table_tbody_id").sortable(
-            {
-                update: function (event, ui)
-                {
+            jQuery("#training_table_tbody_id").sortable( {
+
+                update: function (event, ui) {
+
                     var order = $(this).sortable('toArray');
                     var dataString = 'ids=' + order;
                     $.ajax
