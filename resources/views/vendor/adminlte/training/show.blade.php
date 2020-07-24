@@ -27,8 +27,8 @@
             </div>
 
            <div class="pull-right">
-                @if($training_material['owner_id'] == $user_id)      
-                    <a class="btn btn-primary" href="{{route('training.edit',$training_material['id']) }}">Edit</a>
+                @if($training_material['owner_id'] == $user_id || $isSuperAdmin || $isManager)
+                    <a class="btn btn-primary" href="{{ route('training.edit',$training_material['id']) }}">Edit</a>
                 @endif
                 <a class="btn btn-primary" href="{{ route('training.index') }}">Back</a>
             </div>
@@ -63,7 +63,7 @@
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Attachments</h3>
                     &nbsp;&nbsp;
-                    @if($training_material['owner_id'] == $user_id)      
+                    @if($training_material['owner_id'] == $user_id || $isSuperAdmin || $isManager)
                         @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_material])
                     @endif
                 </div>
@@ -83,10 +83,10 @@
                                     <td>
                                         {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
                                         &nbsp;
-                                        @if($training_material['owner_id'] == $user_id)      
+                                        @if($training_material['owner_id'] == $user_id || $isSuperAdmin || $isManager)
                                             @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
                                         @endif
-                                    </td>
+                                          </td>
 
                                     <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
                                     <td>{{ $value['size'] }}</td>
