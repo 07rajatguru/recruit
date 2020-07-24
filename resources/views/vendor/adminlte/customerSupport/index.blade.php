@@ -54,10 +54,8 @@
                     </a>
                     <a class="fa fa-edit" href="{{ route('customer.edit',$value['id']) }}"></a>
 
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'customer','display_name'=>'Support'])
-                    @endif
-                </td>
+                    @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'customer','display_name'=>'Support'])
+               </td>
             </tr>
         @endforeach
     </tbody>

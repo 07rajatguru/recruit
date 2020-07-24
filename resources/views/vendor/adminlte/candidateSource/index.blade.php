@@ -52,10 +52,7 @@
                 <td>{{ $source->name }}</td>
                 <td>
                     <a class="fa fa-edit" href="{{ route('candidateSource.edit',$source->id) }}"></a>
-
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModal', ['data' => $source, 'name' => 'candidateSource','display_name'=>'Candidate Source'])
-                    @endif
+                    @include('adminlte::partials.deleteModal', ['data' => $source, 'name' => 'candidateSource','display_name'=>'Candidate Source'])
                 </td>
             </tr>
         @endforeach

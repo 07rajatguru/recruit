@@ -53,21 +53,10 @@
                         @endforeach
                     @endif
                 </td>
-
                 <td>
                     <a class="fa fa-edit" href="{{ route('team.edit',$key) }}"></a>
-
-                    @if($isSuperAdmin)
-
-                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'team','display_name'=>'Team'])
-
-                        {{-- {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $key],'style'=>'display:inline']) !!}
-                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                        {!! Form::close() !!} --}}
-                        
-                    @endif
+                    @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'team','display_name'=>'Team'])
                 </td>
-
             </tr>
         @endforeach
         </tbody>

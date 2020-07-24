@@ -13,18 +13,8 @@ class CandidateSourceController extends Controller
 
     public function index(Request $request) {
 
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
         $candidateSource = CandidateSource::orderBy('id','desc')->get();
-        return view('adminlte::candidateSource.index',compact('candidateSource','isSuperAdmin'));
-
-        //$candidateSource = CandidateSource::orderBy('id','desc')->paginate(10);
-
-        //return view('adminlte::candidateSource.index',compact('candidateSource'))->with('i', ($request->input('page', 1) - 1) * 5);
+        return view('adminlte::candidateSource.index',compact('candidateSource'));
     }
 
     public function create(Request $request) {
@@ -46,7 +36,7 @@ class CandidateSourceController extends Controller
         return redirect()->route('candidateSource.index')->with('success','Candidate Source Created Successfully');
     }
 
-    public function edit($id){
+    public function edit($id) {
         $candidateSource = CandidateSource::find($id);
 
         $viewVariable = array();
@@ -56,7 +46,7 @@ class CandidateSourceController extends Controller
         return view('adminlte::candidateSource.edit',$viewVariable);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id) {
 
         $candidateSource = CandidateSource::find($id);
         $candidateSource->name = $request->input('name');
@@ -71,7 +61,7 @@ class CandidateSourceController extends Controller
         return redirect()->route('candidateSource.index')->with('success','Candidate Source Updated Successfully');
     }
 
-    public function destroy($id){
+    public function destroy($id) {
         $candidateSourceDelete = CandidateSource::where('id',$id)->delete();
 
         return redirect()->route('candidateSource.index')->with('success','Candidate Source deleted Successfully');

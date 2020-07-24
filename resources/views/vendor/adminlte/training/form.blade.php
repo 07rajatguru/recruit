@@ -53,7 +53,7 @@
                         @if ($errors->has('title'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('title') }}</strong>
-                                </span>
+                            </span>
                         @endif
                     </div>
 
@@ -129,8 +129,7 @@
 
 @section('customscripts')
     <script>
-        $(document).ready(function(){
-            //$( "#user_ids" ).select2();
+        $(document).ready(function() {
 
             $("#training_form").validate({
                 rules: {

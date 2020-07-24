@@ -36,8 +36,7 @@
                 <div class="col-md-12 col-md-offset-1">
                     <div class="col-md-3"><div style="text-align:center;width:95%;margin-bottom:10px;background-color:#B0E0E6;padding:9px 17px;font-weight: 600;border-radius: 22px;">More than or equal to 9 hours</div></div>
                     <div class="col-md-3"><div style="text-align:center;width:95%;margin-bottom:10px;background-color:#FFFACD;padding:9px 17px;font-weight: 600;border-radius: 22px;">Between 8 to 9 hours</div></div>
-                    <div class="col-md-3"><div style="text-align:center;width:95%;background-color:#F08080;padding:9px 17px;font-weight: 600;border-radius: 22px;">Less than 8 hours</div>
-                    </div>
+                    <div class="col-md-3"><div style="text-align:center;width:95%;background-color:#F08080;padding:9px 17px;font-weight: 600;border-radius: 22px;">Less than 8 hours</div></div>
                     <div class="col-md-3">
                         @include('adminlte::partials.userRemarks', ['name' => 'UserAttendance','users' => $users_name])
                     </div>

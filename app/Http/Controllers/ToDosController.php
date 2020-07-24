@@ -273,7 +273,6 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $edit_perm = $user->can('todo-edit');
         $delete_perm = $user->can('todo-delete');
         
         // get assigned to todos
@@ -304,7 +303,7 @@ class ToDosController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
 
-            if(($value['task_owner'] == $user_id) || $edit_perm) {
+            if(($value['task_owner'] == $user_id)) {
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
             }
 
@@ -314,10 +313,12 @@ class ToDosController extends Controller
                 $action .= $delete;
             }
 
-            $status_view = \View::make('adminlte::partials.todostatus', ['data' => $value, 'name' => 'todos','display_name'=>'More Information', 'status' => $status]);
-            $status_display = $status_view->render();
-            $action .= $status_display;
-
+            if(($value['task_owner'] == $user_id)) {
+                $status_view = \View::make('adminlte::partials.todostatus', ['data' => $value, 'name' => 'todos','display_name'=>'More Information', 'status' => $status]);
+                $status_display = $status_view->render();
+                $action .= $status_display;
+            }
+            
             $subject = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['subject'].'</a>';
             $due_date = '<a style="color:black; text-decoration:none;" data-th="Lastrun" data-order="'.$value['due_date_ts'].'">'.$value['due_date'].'</a>';
 
@@ -747,13 +748,12 @@ class ToDosController extends Controller
 
     public function destroy($id) {
 
+        Notifications::where('module','=','Todos')->where('module_id','=',$id)->delete();
+
         TodoFrequency::where('todo_id',$id)->delete();
         AssociatedTypeList::where('todo_id',$id)->delete();
         TodoAssignedUsers::where('todo_id',$id)->delete();
-
-        Notifications::where('module','=','Todos')->where('module_id','=',$id)->delete();
-
-        $todo = ToDos::where('id',$id)->delete();
+        ToDos::where('id',$id)->delete();
 
         return redirect()->route('todos.index')->with('success','ToDo Deleted Successfully');
     }
@@ -806,8 +806,6 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $edit_perm = $user->can('todo-edit');
-        $delete_perm = $user->can('todo-delete');
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
@@ -836,7 +834,7 @@ class ToDosController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
 
-            if(($value['task_owner'] == $user_id) || $edit_perm) {
+            if(($value['task_owner'] == $user_id)) {
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
             }
 
@@ -894,7 +892,6 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $edit_perm = $user->can('todo-edit');
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
@@ -923,7 +920,7 @@ class ToDosController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
 
-            if(($value['task_owner'] == $user_id) || $edit_perm) {
+            if(($value['task_owner'] == $user_id)) {
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
             }
 

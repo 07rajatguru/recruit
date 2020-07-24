@@ -14,11 +14,7 @@
         </div>
 
         <div class="pull-right">
-            {{--@permission(('permision-create'))--}}
-
             <a class="btn btn-success" href="{{ route('candidateStatus.create') }}"> Create New Candidate Status</a>
-
-            {{--@endpermission--}}
         </div>
     </div>
 </div>
@@ -51,10 +47,7 @@
                 <td>{{ $status->name }}</td>
                 <td>
                     <a class="fa fa-edit" href="{{ route('candidateStatus.edit',$status->id) }}"></a>
-
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModal', ['data' => $status, 'name' => 'candidateStatus','display_name'=>'Candidate Status'])
-                    @endif
+                    @include('adminlte::partials.deleteModal', ['data' => $status, 'name' => 'candidateStatus','display_name'=>'Candidate Status'])
                 </td>
             </tr>
         @endforeach

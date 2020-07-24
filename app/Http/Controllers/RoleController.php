@@ -18,14 +18,8 @@ class RoleController extends Controller
 
     public function index(Request $request) {
 
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
         $roles = Role::orderBy('id','ASC')->get();
-        return view('adminlte::roles.index',compact('roles','isSuperAdmin'));
+        return view('adminlte::roles.index',compact('roles'));
     }
 
     /**

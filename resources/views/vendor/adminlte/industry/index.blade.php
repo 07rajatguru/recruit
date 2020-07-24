@@ -52,10 +52,8 @@
 
                     <a class="fa fa-edit" href="{{ route('industry.edit',$role->id) }}"></a>
 
-                    @if($isSuperAdmin)
-                        @include('adminlte::partials.deleteModalNew', ['data' => $role, 
+                    @include('adminlte::partials.deleteModalNew', ['data' => $role, 
                         'name' => 'industry','display_name'=>'Industry'])
-                    @endif
                 </td>
             </tr>
         @endforeach

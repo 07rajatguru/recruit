@@ -52,10 +52,6 @@
                        
                         @if($value['owner_id'] == $user_id)      
                             <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
-                        @else
-                            @permission('training-material-edit')
-                                <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
-                            @endpermission
                         @endif
 
                         @permission(('training-material-delete'))

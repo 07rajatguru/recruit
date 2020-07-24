@@ -65,7 +65,6 @@ class TrainingController extends Controller
 
         $all_perm = $user->can('display-training-material');
         $user_perm = $user->can('display-training-material-added-by-loggedin-user');
-        $edit_perm = $user->can('training-material-edit');
         $delete_perm = $user->can('training-material-delete');
 
         if($all_perm) {
@@ -90,7 +89,7 @@ class TrainingController extends Controller
 
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('training.show',$value['id']).'" style="margin:2px;"></a>';
 
-            if($value['owner_id'] == $user_id || $edit_perm) {
+            if($value['owner_id'] == $user_id) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
             }

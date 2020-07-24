@@ -11,30 +11,24 @@ use App\Events\NotificationMail;
 
 class CustomerSupportController extends Controller
 {
-    public function index()
-    {
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+    public function index() {
 
     	$customer_support_res = CustomerSupport::getAllDetails();
     	$count = sizeof($customer_support_res);
         
-    	return view('adminlte::customerSupport.index',compact('customer_support_res','count','isSuperAdmin'));
+    	return view('adminlte::customerSupport.index',compact('customer_support_res','count'));
     }
 
-    public function create()
-    {
+    public function create() {
+
         $modules = Module::getModules();
         $selected_modules = '';
         $action = 'add';
     	return view('adminlte::customerSupport.create',compact('action','modules','selected_modules'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
     	$user_id = \Auth::user()->id;
 
     	$sub = $request->input('subject');;
@@ -114,17 +108,16 @@ class CustomerSupportController extends Controller
     	return redirect()->route('customer.index')->with('success','Support Added Successfully');
     }
 
-    public function show($id)
-    {
-    	$customer_support_res = CustomerSupport::getCustomerSupportDetailsById($id);
+    public function show($id) {
 
+    	$customer_support_res = CustomerSupport::getCustomerSupportDetailsById($id);
     	$customer_support_doc = CustomerSupportDoc::getCustomerSupportDocsById($id);
 
     	return view('adminlte::customerSupport.show',compact('customer_support_res','customer_support_doc'));
     }
 
-    public function edit($id)
-    {
+    public function edit($id) {
+
     	$modules = Module::getModules();
         $action = 'edit';
 
@@ -134,8 +127,8 @@ class CustomerSupportController extends Controller
     	return view('adminlte::customerSupport.edit',compact('action','modules','selected_modules','customer_support'));
     }
 
-    public function update(Request $request,$id)
-    {
+    public function update(Request $request,$id) {
+
     	$sub = $request->input('subject');;
     	$msg = $request->input('message');
     	$mod = $request->input('module');
@@ -149,18 +142,16 @@ class CustomerSupportController extends Controller
     	return redirect()->route('customer.index')->with('success','Support Updated Successfully');
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
+
     	$path = "uploads/customer_support/" . $id . "/";
     	$files = glob($path . "/*");
 
-    	foreach ($files as $file_nm)
-    	{
+    	foreach ($files as $file_nm) {
     		unlink($file_nm);
     	}
 
-    	if(is_dir($path))
-    	{
+    	if(is_dir($path)) {
     		rmdir($path);
     	}
 
@@ -170,8 +161,8 @@ class CustomerSupportController extends Controller
     	return redirect()->route('customer.index')->with('success','Support Deleted Successfully');
     }
 
-    public function upload(Request $request)
-    {
+    public function upload(Request $request) {
+
     	$actiontype = $request->input('actiontype');
     	$user_id = \Auth::user()->id;
     	$upload_documents = $request->file('file');
@@ -218,21 +209,18 @@ class CustomerSupportController extends Controller
         return redirect()->route('customer.show',[$customer_support_id])->with('success','Attachment Uploaded Successfully');
     }
 
-    public function attachmentsDestroy($docid,Request $request)
-    {
-    	$customer_support_doc=\DB::table('customer_support_doc')
-        ->select('customer_support_doc.*')
-        ->where('id','=',$docid)->first();
+    public function attachmentsDestroy($docid,Request $request) {
 
-        if(isset($customer_support_doc))
-        {
+    	$customer_support_doc = \DB::table('customer_support_doc')
+        ->select('customer_support_doc.*')->where('id','=',$docid)->first();
+
+        if(isset($customer_support_doc)) {
+
         	$path = 'uploads/customer_support/' . $customer_support_doc->customer_support_id . '/' . $customer_support_doc->name;
-
         	unlink($path);
         }
 
     	$customer_support_id = $customer_support_doc->customer_support_id;
-
         CustomerSupportDoc::where('id',$docid)->delete();
 
         return redirect()->route('customer.show',[$customer_support_id])->with('success','Attachment Deleted Successfully');

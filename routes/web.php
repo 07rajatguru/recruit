@@ -1208,49 +1208,49 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('interview', [
         'as' => 'interview.index',
         'uses' => 'InterviewController@index',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/all', [
         'as' => 'interview.all',
         'uses' => 'InterviewController@getAllInterviewsDetails',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('todaytomorrow',[
         'as' => 'interview.todaytomorrow',
         'uses' => 'InterviewController@todaytomorrow',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/today', [
         'as' => 'interview.today',
         'uses' => 'InterviewController@today',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/tomorrow', [
         'as' => 'interview.tomorrow',
         'uses' => 'InterviewController@tomorrow',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/thisweek', [
         'as' => 'interview.thisweek',
         'uses' => 'InterviewController@thisweek',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/upcomingprevious', [
         'as' => 'interview.upcomingprevious',
         'uses' => 'InterviewController@UpcomingPrevious',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('attendedinterview/{month}/{year}',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview',
-        'middleware' => ['permission:display-interviews']
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
     Route::get('interview/create', [
@@ -1698,7 +1698,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('training/all', [
         'as' => 'training.all',
         'uses' => 'TrainingController@getAllTrainingDetails',
-        'middleware' => ['permission:display-training-material']
+        'middleware' => ['permission:display-training-material|display-training-material-added-by-loggedin-user']
     ]);
 
     Route::get('training/create', [
@@ -2036,7 +2036,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('eligibility-report/add',[
         'as' => 'report.eligibilityreportadd',
-        'uses' => 'EligibilityReportController@create'
+        'uses' => 'EligibilityReportController@create',
+        'middleware' => ['permission:display-eligibility-report-of-all-users']
     ]);
 
     Route::post('eligibility-report/add',[

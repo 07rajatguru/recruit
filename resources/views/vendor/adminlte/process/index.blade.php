@@ -52,10 +52,6 @@
 
                         @if(isset($value['access']) && $value['access']==1)
                             <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
-                        @else
-                            @permission('process-manual-edit')
-                                <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
-                            @endpermission
                         @endif
 
                         @permission('process-manual-delete')

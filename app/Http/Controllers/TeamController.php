@@ -10,21 +10,22 @@ use Illuminate\Support\Facades\Input;
 
 class TeamController extends Controller
 {
-    public function index(){
+    public function index() {
+
         $teams = \DB::table('team')->get();
 
         $team_response = array();
         $i=0;
-        foreach ($teams as $key=>$value){
-            $users = \DB::table('team_mates')
-                    ->join('users',"users.id","=","team_mates.user_id")
-                    ->where("team_mates.team_id",$value->id)
-                    ->select("users.*")
-                    ->get();
 
+        foreach ($teams as $key=>$value) {
+
+            $users = \DB::table('team_mates')
+            ->join('users',"users.id","=","team_mates.user_id")->where("team_mates.team_id",$value->id)
+            ->select("users.*")->get();
 
             $j = 0;
-            foreach ($users as $key1=>$value1){
+
+            foreach ($users as $key1=>$value1) {
                 $team_response[$value->id]['id'] = $value->id;
                 $team_response[$value->id]['team_name'] = $value->team_name;
                 $team_response[$value->id]['users'][$j] = $value1->name;
@@ -33,16 +34,10 @@ class TeamController extends Controller
             }
         }
 
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
-        return view('adminlte::team.index',compact('team_response','isSuperAdmin'));
+        return view('adminlte::team.index',compact('team_response'));
     }
 
-    public function create(){
+    public function create() {
 
         $action = 'add';
         $users = User::getAllUsers();
@@ -50,10 +45,9 @@ class TeamController extends Controller
         return view('adminlte::team.create',compact('action','users'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
         $user_id = \Auth::user()->id;
-
         $input = $request->all();
 
         $users = $input['user_ids'];
@@ -81,35 +75,31 @@ class TeamController extends Controller
         }
     }
 
-    public function edit($id){
+    public function edit($id) {
 
         $team = Team::find($id);
-
         $users = User::getAllUsers();
 
         $team_mates = \DB::table('team_mates')
-            ->join('users',"users.id","=","team_mates.user_id")
-            ->where("team_mates.team_id",$id)
-            ->pluck("users.id")
-            ->toArray();
+        ->join('users',"users.id","=","team_mates.user_id")->where("team_mates.team_id",$id)
+        ->pluck("users.id")->toArray();
 
-        $action = "edit" ;
-
+        $action = "edit";
 
         return view('adminlte::team.edit',compact('action','users','team','team_mates'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id) {
 
         $team = Team::find($id);
         $team->team_name = $request->input('team_name');
         $users = $request->input('user_ids');
 
-        if($team->save()){
+        if($team->save()) {
 
             $team_id = $team->id;
 
-            if(isset($users) && sizeof($users)>0){
+            if(isset($users) && sizeof($users)>0) {
                 \DB::table("team_mates")->where("team_mates.team_id",$id)->delete();
 
                 foreach ($users as $key=>$value){
@@ -129,7 +119,7 @@ class TeamController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id) {
 
         TeamMates::where('team_id',$id)->delete();
         Team::where('id',$id)->delete();

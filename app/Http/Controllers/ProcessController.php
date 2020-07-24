@@ -69,7 +69,6 @@ class ProcessController extends Controller
         
         $all_perm = $user->can('display-process-manual');
         $user_perm = $user->can('display-process-manual-added-by-loggedin-user');
-        $edit_perm = $user->can('process-manual-edit');
         $delete_perm = $user->can('process-manual-delete');
 
         if($all_perm) {
@@ -78,6 +77,7 @@ class ProcessController extends Controller
             $count = ProcessManual::getAllprocessCount(1,$user_id,$search);
         }
         else if($user_perm) {
+
             $order_column_name = self::getOrderProcessColumnName($order);
             $process_response = ProcessManual::getAllprocess(0,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = ProcessManual::getAllprocessCount(0,$user_id,$search);
@@ -91,7 +91,7 @@ class ProcessController extends Controller
 
             $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',$value['id']).'" style="margin:2px;"></a>';
 
-            if(isset($value['access']) && $value['access']==1 || $edit_perm){
+            if(isset($value['access']) && $value['access']==1){
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($delete_perm) {
@@ -103,7 +103,7 @@ class ProcessController extends Controller
 
             $doc_count = ProcessManual::getProcessManualsDocCount($value['id']);
 
-            if($doc_count==1){
+            if($doc_count == 1){
                 $title = '<a target="_blank" href="'.$value['url'].'">'.$value['title'].'</a>';
             }
             else{
@@ -404,13 +404,12 @@ class ProcessController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
         $all_perm = $user->can('display-process-manual');
-        $user_perm = $user->can('display-process-manual-added-by-loggedin-user');
 
         if($all_perm){
-                $process['access'] = '1';
+            $process['access'] = '1';
         }
         else{
-            if((isset($process_res->owner_id) && $process_res->owner_id==$user_id) || $user_perm){
+            if((isset($process_res->owner_id) && $process_res->owner_id == $user_id)) {
                 $process['access'] = '1';
             }
             else{
@@ -455,7 +454,7 @@ class ProcessController extends Controller
 
         ProcessDoc::where('process_id',$id)->delete();
         ProcessVisibleUser::where('process_id',$id)->delete();
-        $process = ProcessManual::where('id',$id)->delete();
+        ProcessManual::where('id',$id)->delete();
 
         return redirect()->route('process.index')->with('success','Process Deleted Successfully');
     }

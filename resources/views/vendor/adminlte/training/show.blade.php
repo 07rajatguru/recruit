@@ -29,10 +29,6 @@
            <div class="pull-right">
                 @if($training_material['owner_id'] == $user_id)      
                     <a class="btn btn-primary" href="{{route('training.edit',$training_material['id']) }}">Edit</a>
-                @else
-                    @permission('training-material-edit')
-                    <a class="btn btn-primary" href="{{route('training.edit',$training_material['id']) }}">Edit</a>
-                    @endpermission
                 @endif
                 <a class="btn btn-primary" href="{{ route('training.index') }}">Back</a>
             </div>
@@ -69,10 +65,6 @@
                     &nbsp;&nbsp;
                     @if($training_material['owner_id'] == $user_id)      
                         @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_material])
-                    @else
-                        @permission('training-material-edit')
-                            @include('adminlte::training.upload', ['name' => 'trainingattachments' , 'data' => $training_material])
-                        @endpermission
                     @endif
                 </div>
 
@@ -93,10 +85,6 @@
                                         &nbsp;
                                         @if($training_material['owner_id'] == $user_id)      
                                             @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
-                                        @else
-                                            @permission('training-material-delete')
-                                                @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
-                                            @endpermission
                                         @endif
                                     </td>
 

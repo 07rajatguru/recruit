@@ -15,19 +15,12 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request)
-    {
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+    public function index(Request $request) {
 
         $industry = Industry::orderBy('id','DESC')->get();
         $count = sizeof($industry);
 
-        return view('adminlte::industry.index',compact('industry','count','isSuperAdmin'));
-
+        return view('adminlte::industry.index',compact('industry','count'));
     }
 
 
@@ -37,8 +30,8 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create()
-    {
+    public function create() {
+
         $action = "add" ;
         return view('adminlte::industry.create',compact('action'));
     }
@@ -51,19 +44,17 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
         ]);
-
 
         $industry = new Industry();
         $industry->name = $request->input('name');
         $industry->save();
 
         return redirect()->route('industry.index')->with('success','Industry created successfully');
-
     }
 
     /**
@@ -73,10 +64,9 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($id)
-    {
-        $industry = Industry::find($id);
+    public function show($id) {
 
+        $industry = Industry::find($id);
         return view('adminlte::industry.show',compact('industry'));
     }
 
@@ -87,8 +77,8 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function edit($id)
-    {
+    public function edit($id) {
+
         $industry = Industry::find($id);
         $action = 'edit';
         return view('adminlte::industry.edit',compact('industry','action'));
@@ -102,8 +92,8 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
+
         $this->validate($request, [
             'name' => 'required'
         ]);
@@ -113,7 +103,6 @@ class IndustryController extends Controller
         $industry->save();
 
         return redirect()->route('industry.index')->with('success','Industry updated successfully');
-
     }
 
     /**
@@ -123,14 +112,15 @@ class IndustryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
+
         $client_industry = Industry::existIndustryInClient($id);
 
         if($client_industry) {
 
             return redirect()->route('industry.index')->with('error','Cannot delete Industry because use with client module.');
         }
+        
         DB::table("industry")->where('id',$id)->delete();
         return redirect()->route('industry.index')->with('success','Industry deleted successfully.');
     }
