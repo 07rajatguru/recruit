@@ -242,7 +242,7 @@ class BillsController extends Controller
                 }
                 if($cancel_bill_perm) {
 
-                    if($value['cancel_bill']==1) {
+                    if($value['cancel_bill'] == 1) {
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
                         $relive = $relive_view->render();
                         $action .= $relive;
@@ -256,7 +256,9 @@ class BillsController extends Controller
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
                     if($cancel_bill_perm) {
-                        if($value['cancel_bill']==0) {
+
+                        if($value['cancel_bill'] == 0) {
+
                             $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
                             $cancel = $cancel_view->render();
                             $action .= $cancel;
@@ -357,34 +359,21 @@ class BillsController extends Controller
         $cancel_bnm = 1;
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
-
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-        $accountant_role_id = env('ACCOUNTANT');
-        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        $all_forecasting_perm = $user->can('display-forecasting');
+        $all_recovery_perm = $user->can('display-recovery');
+        $cancel_bill_perm = $user->can('cancel-bill');
+        
+        if($all_forecasting_perm && $all_recovery_perm && $cancel_bill_perm) {
             $count = Bills::getAllCancelBillsCount(0,1,$user_id);
             $access = true;
         }
-        else{
+        else if($cancel_bill_perm) {
             $count = Bills::getAllCancelBillsCount(0,0,$user_id);
             $access = false;
         }
 
         $title = "Cancel Forecasting";
-        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','isOperationsExecutive'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm'));
     }
     // for cancel bills get using ajax
     public function getAllCancelBillsDetails(){
@@ -401,46 +390,40 @@ class BillsController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        $all_forecasting_perm = $user->can('display-forecasting');
+        $all_recovery_perm = $user->can('display-recovery');
+        
+        $forecasting_delete_perm = $user->can('forecasting-delete');
+        $recovery_delete_perm = $user->can('recovery-delete');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-        $accountant_role_id = env('ACCOUNTANT');
-        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+        $cancel_bill_perm = $user->can('cancel-bill');
+        $generate_recovery_perm = $user->can('generate-recovery');
+        $joining_confirmation_perm = $user->can('send-joining-confirmation');
 
         if ($title == 'Cancel Forecasting') {
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
-            if(in_array($user_role_id,$access_roles_id)){
+
+            if($all_forecasting_perm && $cancel_bill_perm) {
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getCancelBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
                 $count = Bills::getAllCancelBillsCount(0,1,$user_id,$search);
                 $access = true;
             }
-            else{
+            else if($cancel_bill_perm) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getCancelBills(0,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
                 $count = Bills::getAllCancelBillsCount(0,0,$user_id,$search);
                 $access = false;
             }
         }
-        else if($title == 'Cancel Recovery'){
-            $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
-            if(in_array($user_role_id,$access_roles_id)){
+        else if($title == 'Cancel Recovery') {
+
+            if($all_recovery_perm && $cancel_bill_perm) {
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
                 $count = Bills::getAllCancelBillsCount(1,1,$user_id,$search);
                 $access = true;
             }
-            else{
+            else if($cancel_bill_perm) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getCancelBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
                 $count = Bills::getAllCancelBillsCount(1,0,$user_id,$search);
@@ -454,32 +437,40 @@ class BillsController extends Controller
             $action = '';
             $checkbox = '';
             if ($title == 'Cancel Forecasting') {
-                if($access || ($user_id==$value['uploaded_by'])) {
+
+                if($access || ($user_id == $value['uploaded_by'])) {
                     
                     $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
-                    if($value['cancel_bill']==0) {
-                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                        $cancel = $cancel_view->render();
-                        $action .= $cancel;
+                    if($cancel_bill_perm) {
+
+                        if($value['cancel_bill'] == 0) {
+
+                            $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                            $cancel = $cancel_view->render();
+                            $action .= $cancel;
+                        }
                     }
 
-                    if($isSuperAdmin) {
+                    if($forecasting_delete_perm) {
                         $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
                         $delete = $delete_view->render();
                         $action .= $delete;
                     }
 
-                    if($value['status']==0 && $value['cancel_bill']!=1){
-                        //BM will be generated after date of joining
-                        if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
-                            $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
+                    if($generate_recovery_perm) {
+                        if($value['status']==0 && $value['cancel_bill']!=1){
+                            //BM will be generated after date of joining
+                            if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
+                                $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
+                            }
                         }
                     }
                 }
-                if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
-                    if($value['cancel_bill']==1){
+                if($cancel_bill_perm) {
+
+                    if($value['cancel_bill']==1) {
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting']);
                         $relive = $relive_view->render();
                         $action .= $relive;
@@ -492,30 +483,33 @@ class BillsController extends Controller
 
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
-                    if($value['cancel_bill']==0) {
-                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
-                        $cancel = $cancel_view->render();
-                        $action .= $cancel;
+                    if($cancel_bill_perm) {
+                        if($value['cancel_bill']==0) {
+                            $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
+                            $cancel = $cancel_view->render();
+                            $action .= $cancel;
+                        }
                     }
 
-                    if($isSuperAdmin) {
+                    if($recovery_delete_perm) {
                         $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill']);
                         $delete = $delete_view->render();
                         $action .= $delete;
                     }
 
-                    if($isSuperAdmin || $isAccountant || $isOperationsExecutive){
-                        if($value['job_confirmation'] == 0 && $value['cancel_bill']==0){
+                    if($joining_confirmation_perm) {
+
+                        if($value['job_confirmation'] == 0 && $value['cancel_bill']==0) {
                             $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?']);
                             $job_con = $job_confirmation->render();
                             $action .= $job_con;
                         }
-                        else if($value['job_confirmation'] == 1 && $value['cancel_bill']==0){
+                        else if($value['job_confirmation'] == 1 && $value['cancel_bill']==0) {
                             $got_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?']);
                             $got_con = $got_confirmation->render();
                             $action .= $got_con;
                         }
-                        else if($value['job_confirmation'] == 2 && $value['cancel_bill']==0){
+                        else if($value['job_confirmation'] == 2 && $value['cancel_bill']==0) {
                             $invoice_generate = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?']);
                             $invoice = $invoice_generate->render();
                             $action .= $invoice;
@@ -538,7 +532,7 @@ class BillsController extends Controller
                         }*/
                     }
                 }
-                if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
+                if($cancel_bill_perm) {
                     if($value['cancel_bill']==1){
                         $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery']);
                         $relive = $relive_view->render();
@@ -556,7 +550,9 @@ class BillsController extends Controller
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
-            if($isSuperAdmin || $isAccountant || $isOperationsExecutive) {
+
+            if($all_forecasting_perm || $all_recovery_perm) {
+
                 $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
                 $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
 
@@ -580,7 +576,7 @@ class BillsController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function billsMade(){
+    public function billsMade() {
 
         $cancel_bill = 0;
         $user = \Auth::user();
