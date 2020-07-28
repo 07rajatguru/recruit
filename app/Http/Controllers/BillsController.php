@@ -205,13 +205,16 @@ class BillsController extends Controller
         $forecasting = array();
         $i = 0;$j = 0;
         foreach ($bnm as $key => $value) {
+
             $action = '';
             $checkbox = '';
+
             if ($title == 'Forecasting') {
+
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
 
                 if($access || ($user_id == $value['uploaded_by'])) {
                     
-                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
                     if($generate_recovery_perm) {
@@ -360,14 +363,15 @@ class BillsController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
         $all_forecasting_perm = $user->can('display-forecasting');
-        $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_forecasting_perm = $user->can('display-forecasting-by-loggedin-user');
+        $can_owner_forecasting_perm = $user->can('display-forecasting-by-candidate-owner');
         $cancel_bill_perm = $user->can('cancel-bill');
         
-        if($all_forecasting_perm && $all_recovery_perm && $cancel_bill_perm) {
+        if($all_forecasting_perm && $cancel_bill_perm) {
             $count = Bills::getAllCancelBillsCount(0,1,$user_id);
             $access = true;
         }
-        else if($cancel_bill_perm) {
+        else if(($loggedin_forecasting_perm && $cancel_bill_perm) || ($can_owner_forecasting_perm && $cancel_bill_perm)) {
             $count = Bills::getAllCancelBillsCount(0,0,$user_id);
             $access = false;
         }
@@ -376,7 +380,7 @@ class BillsController extends Controller
         return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm'));
     }
     // for cancel bills get using ajax
-    public function getAllCancelBillsDetails(){
+    public function getAllCancelBillsDetails() {
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -391,7 +395,12 @@ class BillsController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
         $all_forecasting_perm = $user->can('display-forecasting');
+        $loggedin_forecasting_perm = $user->can('display-forecasting-by-loggedin-user');
+        $can_owner_forecasting_perm = $user->can('display-forecasting-by-candidate-owner');
+
         $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
+        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
         
         $forecasting_delete_perm = $user->can('forecasting-delete');
         $recovery_delete_perm = $user->can('recovery-delete');
@@ -408,7 +417,7 @@ class BillsController extends Controller
                 $count = Bills::getAllCancelBillsCount(0,1,$user_id,$search);
                 $access = true;
             }
-            else if($cancel_bill_perm) {
+            else if(($loggedin_forecasting_perm && $cancel_bill_perm) || ($can_owner_forecasting_perm && $cancel_bill_perm)) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getCancelBills(0,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
                 $count = Bills::getAllCancelBillsCount(0,0,$user_id,$search);
@@ -423,7 +432,7 @@ class BillsController extends Controller
                 $count = Bills::getAllCancelBillsCount(1,1,$user_id,$search);
                 $access = true;
             }
-            else if($cancel_bill_perm) {
+            else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getCancelBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
                 $count = Bills::getAllCancelBillsCount(1,0,$user_id,$search);
@@ -434,13 +443,16 @@ class BillsController extends Controller
         $forecasting = array();
         $i = 0;$j = 0;
         foreach ($bnm as $key => $value) {
+
             $action = '';
             $checkbox = '';
+
             if ($title == 'Cancel Forecasting') {
+
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
 
                 if($access || ($user_id == $value['uploaded_by'])) {
                     
-                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
                     if($cancel_bill_perm) {
@@ -479,7 +491,7 @@ class BillsController extends Controller
             }
             else if ($title == 'Cancel Recovery') {
 
-                if($access || ($user_id==$value['uploaded_by'])) {
+                if($access || ($user_id == $value['uploaded_by'])) {
 
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
@@ -542,7 +554,7 @@ class BillsController extends Controller
             }
             $checkbox .= '<input type=checkbox name=id[] value='.$value['id'].'/>';
 
-            if($access=='true'){
+            if($access=='true') {
                 $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
             }
             //$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
@@ -559,6 +571,7 @@ class BillsController extends Controller
                 $data = array($checkbox,$action,++$j,$user_name,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$percentage_charged,$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$lead_efforts,$value['job_confirmation']);
             }
             else {
+
                 $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id']);
             }
 
@@ -579,55 +592,8 @@ class BillsController extends Controller
     public function billsMade() {
 
         $cancel_bill = 0;
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
-
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-        $accountant_role_id = env('ACCOUNTANT');
-        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
+        
         // Year Data
-        /*$starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
-        $year_array = array();
-        $year_array[0] = "Select Year";
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
-            $next = $y+1;
-            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
-        }
-
-        if (isset($_POST['year']) && $_POST['year'] != '') {
-            $year = $_POST['year'];
-            if (isset($year) && $year != 0) {
-                $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
-                $year1 = $year_data[0]; // [result : 2019-4]
-                $year2 = $year_data[1]; // [result : 2020-3]
-                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
-            }
-            else {
-                $year = NULL;
-                $current_year = NULL;
-                $next_year = NULL;    
-            }
-        }
-        else{
-            $year = NULL;
-            $current_year = NULL;
-            $next_year = NULL;
-        }*/
-
         $starting_year = '2017';
         $ending_year = date('Y',strtotime('+1 year'));
         $year_array = array();
@@ -658,100 +624,81 @@ class BillsController extends Controller
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
         $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
 
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
+        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
+
+        if($all_recovery_perm) {
             $count = Bills::getAllBillsCount(1,1,$user_id,$current_year,$next_year);
             $access = true;
         }
-        else{
+        else if($loggedin_recovery_perm || $can_owner_recovery_perm) {
             $count = Bills::getAllBillsCount(1,0,$user_id,$current_year,$next_year);
             $access = false;
         }
 
         $title = "Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','year_array','year','isOperationsExecutive'));
-
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year'));
     }
 
-    public function cancelbm(){
+    public function cancelbm() {
 
         $cancel_bill = 1;
         $cancel_bnm = 0;
         $cancel_bn = 1;
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        
+        $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
+        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
+        $cancel_bill_perm = $user->can('cancel-bill');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-        $accountant_role_id = env('ACCOUNTANT');
-        $operations_excutive_role_id = env('OPERATIONSEXECUTIVE');
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$accountant_role_id,$operations_excutive_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_recovery_perm && $cancel_bill_perm) {
             $count = Bills::getAllCancelBillsCount(1,1,$user_id);
             $access = true;
         }
-        else{
+        else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
             $count = Bills::getAllCancelBillsCount(1,0,$user_id);
             $access = false;
         }
 
         $title = "Cancel Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','isSuperAdmin','isAccountant','count','cancel_bill','cancel_bnm','cancel_bn','isOperationsExecutive'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn'));
 
     }
 
-    public function create()
-    {
+    public function create() {
+
         $action = 'add';
         $generate_bm = '0';
         $status = '0';
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant,$isOperationsExecutive);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_jobs_perm) {
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
-        else{
+        else if($user_jobs_perm) {
             $job_response = JobOpen::getAllBillsJobs(0,$user_id);
         }
 
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            //$jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name']." ,".$v['location'];
-
+           
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title']." ,".$v['location'];
         }
+
         $job_id = 0;
 
         $users = User::getAllUsersCopy('recruiter');
-        //print_r($users);exit;
 
         $employee_name = array();
         $employee_percentage = array();
@@ -768,19 +715,13 @@ class BillsController extends Controller
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','isOperationsExecutive'));
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','lead_name','lead_percentage'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
-
-        // Get all documents
-
-        $unedited_resume = $request->file('unedited_resume');
-        $offer_letter = $request->file('offer_letter');
-        $upload_documents = $request->file('upload_documents');
 
         $input = $request->all();
 
@@ -822,6 +763,7 @@ class BillsController extends Controller
         $employee_percentage[] = $input['employee_percentage_4'];
         $employee_percentage[] = $input['employee_percentage_5'];
         $total = 0;
+
         foreach ($employee_name as $k => $v) {
             if ($v != '' && $v!=0) {
                 $employee_final[$v] = $employee_percentage[$k];
@@ -829,7 +771,7 @@ class BillsController extends Controller
             }
         }
 
-        if($total>100){
+        if($total>100) {
            return redirect('forecasting/create')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
         }
 
@@ -839,6 +781,7 @@ class BillsController extends Controller
         else{
             $lead_name = '';
         }
+
         if (isset($input['lead_percentage']) && $input['lead_percentage']!='') {
             $lead_percentage = $input['lead_percentage'];
         }
@@ -858,6 +801,7 @@ class BillsController extends Controller
         $bill->candidate_name = $candidate_name;
         $bill->designation_offered = $designation_offered;
         $bill->job_location = $job_location;
+
         if(isset($percentage_charged) && $percentage_charged!='')
             $bill->percentage_charged = $percentage_charged;
         else
@@ -881,6 +825,7 @@ class BillsController extends Controller
         $bill_response = $bill->save();
 
         if ($bill_response) {
+
             $bill_id = $bill->id;
 
             foreach ($employee_final as $k => $v) {
@@ -889,9 +834,9 @@ class BillsController extends Controller
                 $bill_efforts->bill_id = $bill_id;
                 $bill_efforts->employee_name = $k;
                 $bill_efforts->employee_percentage = $v;
-
                 $bill_efforts->save();
             }
+
             if (isset($lead_name) && $lead_name != '' && isset($lead_percentage) && $lead_percentage != '') {
                 $bill_lead_efforts = new BillsLeadEfforts();
                 $bill_lead_efforts->bill_id = $bill_id;
@@ -899,6 +844,12 @@ class BillsController extends Controller
                 $bill_lead_efforts->employee_percentage = $lead_percentage;
                 $bill_lead_efforts->save();
             }
+
+            // Get all documents
+
+            $unedited_resume = $request->file('unedited_resume');
+            $offer_letter = $request->file('offer_letter');
+            $upload_documents = $request->file('upload_documents');
 
             // Save unedited resume
 
@@ -910,18 +861,15 @@ class BillsController extends Controller
                 $dir = "uploads/bills/" . $bill_id . '/';
                 $file_path = $dir . $file_name;
 
-                if (!file_exists($dir) && !is_dir($dir)) 
-                {
+                if (!file_exists($dir) && !is_dir($dir)) {
                     mkdir("uploads/bills/$bill_id", 0777, true);
                     chmod($dir, 0777);
                 }
 
-                if(!$unedited_resume->move($dir, $file_name))
-                {
+                if(!$unedited_resume->move($dir, $file_name)) {
                     return false;
                 }
-                else
-                {
+                else {
                     $bills_doc = new BillsDoc();
                     $bills_doc->bill_id = $bill_id;
                     $bills_doc->category = "Unedited Resume";
@@ -942,18 +890,15 @@ class BillsController extends Controller
                 $dir = "uploads/bills/" . $bill_id . '/';
                 $file_path = $dir . $file_name;
 
-                if (!file_exists($dir) && !is_dir($dir)) 
-                {
+                if (!file_exists($dir) && !is_dir($dir)) {
                     mkdir("uploads/bills/$bill_id", 0777, true);
                     chmod($dir, 0777);
                 }
 
-                if(!$offer_letter->move($dir, $file_name))
-                {
+                if(!$offer_letter->move($dir, $file_name)) {
                     return false;
                 }
-                else
-                {
+                else {
                     $bills_doc = new BillsDoc();
                     $bills_doc->bill_id = $bill_id;
                     $bills_doc->category = "Offer Letter";
@@ -1047,61 +992,37 @@ class BillsController extends Controller
         return redirect()->route('forecasting.index')->with('success', 'Bills Created Successfully.');
     }
 
-    public function show($id){
-
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
+    public function show($id) {
 
         $viewVariable = Bills::getShowBill($id);
 
-       return view('adminlte::bills.show', $viewVariable,compact('isSuperAdmin','isAccountant','isOperationsExecutive'));
+       return view('adminlte::bills.show', $viewVariable);
     }
 
-    public function edit($id)
-    {
+    public function edit($id) {
+
         $action = 'edit';
         $generate_bm ='0';
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id,$isAccountant,$isOperationsExecutive);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_jobs_perm) {
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
-        else{
+        else if($user_jobs_perm) {
             $job_response = JobOpen::getAllBillsJobs(0,$user_id);
         }
 
         $jobopen = array();
         $jobopen[0] = 'Select';
         foreach ($job_response as $k=>$v){
-            //$jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
 
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title']." ,".$v['location'];
         }
-        
-        $action = 'edit';
+
         $dateClass = new Date();
 
         $bnm = Bills::find($id);
@@ -1178,7 +1099,7 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','upload_type','isOperationsExecutive'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','lead_name','lead_percentage','upload_type'));
     }
 
     public function update(Request $request, $id) {
@@ -1203,9 +1124,10 @@ class BillsController extends Controller
         $address_of_communication = $input['address_of_communication'];
         $generateBM = $input['generateBM'];
 
-        $status=0;
+        $status = 0;
 
-        if($generateBM==1){
+        if($generateBM == 1) {
+
             $status = 1;
 
             // Add Recovery Date
@@ -1236,6 +1158,7 @@ class BillsController extends Controller
         $employee_percentage[] = $input['employee_percentage_4'];
         $employee_percentage[] = $input['employee_percentage_5'];
         $total = 0;
+
         foreach ($employee_name as $k => $v) {
             if ($v != '') {
                 $employee_final[$v] = $employee_percentage[$k];
@@ -1243,7 +1166,7 @@ class BillsController extends Controller
             }
         }
 
-        if($total>100){
+        if($total>100) {
             return redirect('forecasting/'.$id.'/edit')->withInput(Input::all())->with('error','Total percentage of efforts should be less than or equal to 100');
         }
 
@@ -1253,6 +1176,7 @@ class BillsController extends Controller
         else{
             $lead_name = '';
         }
+
         if (isset($input['lead_percentage']) && $input['lead_percentage']!='') {
             $lead_percentage = $input['lead_percentage'];
         }
@@ -1308,10 +1232,10 @@ class BillsController extends Controller
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
 
-        if($validator->fails()){
+        if($validator->fails()) {
             return redirect('forecasting/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
-        else{
+        else {
 
             $bill_response = $bill->save();
             BillsEffort::where('bill_id','=',$id)->delete();
@@ -1326,7 +1250,6 @@ class BillsController extends Controller
 
                     $bill_efforts->save();
                 }
-
             }
 
             if (isset($lead_name) && $lead_name != '' && isset($lead_percentage) && $lead_percentage != '') {
@@ -1342,6 +1265,7 @@ class BillsController extends Controller
         }
 
         $file = $request->file('file');
+
         if (isset($file) && $file->isValid()) {
 
             $upload_type = $request->upload_type;
@@ -1355,6 +1279,7 @@ class BillsController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
+
             $file->move($dir, $file_name);
             $file_path = $dir . $file_name;
 
@@ -1370,13 +1295,11 @@ class BillsController extends Controller
             $bills_doc->save();
 
             if ($status == 1) {
-                //return redirect('recovery/'.$id.'/generaterecovery');
 
                 return redirect()->route('bills.generaterecovery',$id)->with('success', 'Attchment Upload Successfully.');
             }
             else{
-            //return redirect('forecasting/'.$id.'/edit');
-
+           
             return redirect()->route('forecasting.edit',$id)->with('success', 'Attchment Upload Successfully.');
             }
         }
@@ -1419,7 +1342,7 @@ class BillsController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
-        if($status == 1){
+        if($status == 1) {
 
             return redirect()->route('bills.recovery')
             ->with('success', 'Recovery Updated Successfully.');
@@ -1429,21 +1352,17 @@ class BillsController extends Controller
         }
     }
 
-    public function delete(Request $request,$id){
+    public function delete(Request $request,$id) {
 
         $year = $request->input('year');
 
         // Destroy Attchments
-
-        $bills_attach=\DB::table('bills_doc')
-        ->select('bills_doc.*')
-        ->where('bill_id','=',$id)->get();
+        $bills_attach = \DB::table('bills_doc')->select('bills_doc.*')->where('bill_id','=',$id)->get();
 
         // Delete all atttchments
-        if(isset($bills_attach) && sizeof($bills_attach)>0)
-        {
-            foreach ($bills_attach as $key => $value) {
+        if(isset($bills_attach) && sizeof($bills_attach)>0) {
 
+            foreach ($bills_attach as $key => $value) {
                 $path = "uploads/bills/".$id . "/" . $value->name;
                 unlink($path);
            }
@@ -1451,8 +1370,7 @@ class BillsController extends Controller
 
         // Delete Empty Directory
         $dir_path = "uploads/bills/".$id;
-        if(is_dir($dir_path))
-        {
+        if(is_dir($dir_path)) {
             rmdir($dir_path);
         }
 
@@ -1464,8 +1382,7 @@ class BillsController extends Controller
 
         if(isset($year) && $year != '') {
 
-            return redirect()->route('bills.recovery')
-            ->with('success', 'Recovery Deleted Successfully.')
+            return redirect()->route('bills.recovery')->with('success', 'Recovery Deleted Successfully.')
             ->with('selected_year',$year);
         }
         else {
@@ -1474,10 +1391,9 @@ class BillsController extends Controller
         }
     }
 
-    public function cancel($id){
+    public function cancel($id) {
 
         // Get Selected Year
-
         if(isset($_GET['year']) && $_GET['year'] != ''){    
             $year = $_GET['year'];
         }
@@ -1491,14 +1407,11 @@ class BillsController extends Controller
         $bill->cancel_bill = $cancel_bill;
         $bill_cancel = $bill->save();
         
-
-        //print_r($bill_cancel);exit;
         $candidate_join_delete = JobCandidateJoiningdate::where('job_id',$bills['job_id'])->where('candidate_id',$bills['candidate_id'])->delete();
 
         if ($bills['status'] == 1) {
 
             // Set Bill Forecating date to NULL
-
             \DB::statement("UPDATE bills_date SET recovery_date = NULL where bills_id = $id");
 
             // For Cancel Recovery mail [email_notification table entry]
@@ -1532,9 +1445,7 @@ class BillsController extends Controller
         else if ($bills['status'] == 0) {
 
             // Set Bill Forecating date to NULL
-
             \DB::statement("UPDATE bills_date SET forecasting_date = NULL where bills_id = $id");
-
 
             // For Cancel Forecasting mail [email_notification table entry]
             $user_id = \Auth::user()->id;
@@ -1565,17 +1476,16 @@ class BillsController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
-        if($bills['status'] == 1){
-            return redirect()->route('bills.recovery')
-            ->with('success', 'Recovery Canceled Successfully.')
+        if($bills['status'] == 1) {
+            return redirect()->route('bills.recovery')->with('success', 'Recovery Canceled Successfully.')
             ->with('selected_year',$year);
         }
-        else{
+        else {
             return redirect()->route('forecasting.index')->with('success', 'Forecasting Canceled Successfully.');
         }
     }
 
-    public function reliveBill($id){
+    public function reliveBill($id) {
 
         $relive_bill = 0;
         $bills = array();
@@ -1587,7 +1497,6 @@ class BillsController extends Controller
         $bills['fixed_salary'] = $bill->fixed_salary;
         $bill->cancel_bill = $relive_bill;
         $bill_cancel = $bill->save();
-        //print_r($bills);exit;
 
         $candidatejoindate = new JobCandidateJoiningdate();
         $candidatejoindate->job_id = $bills['job_id'];
@@ -1599,9 +1508,7 @@ class BillsController extends Controller
         if ($bills['status'] == 1) {
 
             // Set Bill Recovery date to current date
-
             $current_dt = date('Y-m-d');
-
             \DB::statement("UPDATE bills_date SET recovery_date = '$current_dt' where bills_id = $id");
 
             // For Relive Recovery mail [email_notification table entry]
@@ -1635,9 +1542,7 @@ class BillsController extends Controller
         else if ($bills['status'] == 0) {
 
             // Set Bill Forecasting date to current date
-
             $current_dt = date('Y-m-d');
-
             \DB::statement("UPDATE bills_date SET forecasting_date = '$current_dt' where bills_id = $id");
 
             // For Relive Forecasting mail [email_notification table entry]
@@ -1677,28 +1582,25 @@ class BillsController extends Controller
         }
     }
 
-    public function attachmentsDestroy($id){
+    public function attachmentsDestroy($id) {
 
         $billFileDetails = BillsDoc::find($id);
 
-        $billId =  $billFileDetails->bill_id;
+        $billId = $billFileDetails->bill_id;
 
         unlink($billFileDetails->file);
 
         $billFileDelete = BillsDoc::where('id',$id)->delete();
 
-        //$billId = $_POST['id'];
-
-        return redirect()->route('forecasting.show',[$billId])->with('success','Attachment deleted Successfully');
+        return redirect()->route('forecasting.show',[$billId])->with('success','Attachment Deleted Successfully.');
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request) {
 
         $upload_type = $request->upload_type;
         $file = $request->file('file');
         $bill_id = $request->id;
 
-        
         if (isset($file) && $file->isValid()) {
             $file_name = $file->getClientOriginalName();
             $file_size = $file->getSize();
@@ -1708,6 +1610,7 @@ class BillsController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
+
             $file->move($dir, $file_name);
             $file_path = $dir . $file_name;
 
@@ -1722,38 +1625,28 @@ class BillsController extends Controller
         return redirect()->route('forecasting.show',[$bill_id])->with('success','Attachment uploaded successfully.');
     }
 
-    public function generateBM($id){
+    public function generateBM($id) {
 
         $generate_bm = '1';
+        $action = 'edit';
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
-        $access_roles_id = array($admin_role_id,$director_role_id/*,$manager_role_id*/,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_jobs_perm) {
             $job_response = JobOpen::getAllBillsJobs(1,$user_id);
         }
-        else{
+        else if($user_jobs_perm) {
             $job_response = JobOpen::getAllBillsJobs(0,$user_id);
         }
 
         $jobopen = array();
         $jobopen[0] = 'Select';
-        foreach ($job_response as $k=>$v){
-            //$jobopen[$v['id']] = $v['posting_title']." - ".$v['company_name'];
+
+        foreach ($job_response as $k=>$v) {
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title']." ,".$v['location'];
         }
 
@@ -1764,8 +1657,6 @@ class BillsController extends Controller
         $doj = $dateClass->changeYMDtoDMY($bnm->date_of_joining);
 
         $percentage_charged = $bnm->percentage_charged;
-
-        $action = 'edit';
 
         $employee_name = array();
         $employee_percentage = array();
@@ -1809,11 +1700,10 @@ class BillsController extends Controller
         $i = 0;
             
         $billsdetails['files'] = array();
-        $billsFiles = BillsDoc::select('bills_doc.*')
-        ->where('bills_doc.bill_id',$id)
-        ->get();
+        $billsFiles = BillsDoc::select('bills_doc.*')->where('bills_doc.bill_id',$id)->get();
 
         $utils = new Utils();
+
         if(isset($billsFiles) && sizeof($billsFiles) > 0){
             foreach ($billsFiles as $billfile) {
                 $billsdetails['files'][$i]['id'] = $billfile->id;
@@ -1833,17 +1723,15 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','isSuperAdmin','isAccountant','lead_name','lead_percentage','doj','upload_type','percentage_charged','isOperationsExecutive'));
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','lead_name','lead_percentage','doj','upload_type','percentage_charged'));
     }
 
-    public function downloadExcel(){
+    public function downloadExcel() {
 
         $ids = $_POST['ids'];
-
         $response = Bills::getBillsByIds($ids);
 
         ob_end_clean();
-
         ob_start();
 
         Excel::create('Laravel Excel', function($excel) use ($response){
@@ -1859,7 +1747,7 @@ class BillsController extends Controller
         exit();
     }
 
-    public function getClientInfo(){
+    public function getClientInfo() {
 
         $job_id = $_GET['job_id'];
 
@@ -1869,7 +1757,7 @@ class BillsController extends Controller
         echo json_encode($client);exit;
     }
 
-    public function getCandidateInfo(){
+    public function getCandidateInfo() {
 
         $job_id = $_GET['job_id'];
 
@@ -1887,8 +1775,8 @@ class BillsController extends Controller
         echo json_encode($response);exit;
     }
 
-    // Joining Confirmation Mail to SA & Acc
-    public function getSendConfirmationMail($id){
+    // Joining Confirmation Mail
+    public function getSendConfirmationMail($id) {
         
 /*        $user_id = \Auth::user()->id;
         //Logged in User Email Id
@@ -1976,13 +1864,12 @@ class BillsController extends Controller
         // Get Selected Year
         $year = $_POST['year'];
 
-        return redirect('/recovery')
-        ->with('success','Joining Confirmation Mail Send Successfully.')
+        return redirect('/recovery')->with('success','Joining Confirmation Mail Send Successfully.')
         ->with('selected_year',$year);
     }
 
     // Got Confirmation Check
-    public function getGotConfirmation($id){
+    public function getGotConfirmation($id) {
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '2' where id=$id");
 
@@ -1995,7 +1882,7 @@ class BillsController extends Controller
     }
 
     // Generate Invoice and send mail to SA & Acc
-    public function getInvoiceGenerate($id){
+    public function getInvoiceGenerate($id) {
 
         // Get Selected Year
         $year = $_POST['year'];
@@ -2009,14 +1896,14 @@ class BillsController extends Controller
         
         if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
 
-            return redirect('/recovery')
-            ->with('error','Please add GST No. of Client to Generate the Invoice.')
+            return redirect('/recovery')->with('error','Please add GST No. of Client to Generate the Invoice.')
             ->with('selected_year',$year);
         }
 
         // Generate excel sheet and save at bill id location
-        Excel::create($invoice_name, function($excel) use ($invoice_data){
-            $excel->sheet('Sheet 1', function($sheet) use ($invoice_data){
+        Excel::create($invoice_name, function($excel) use ($invoice_data) {
+
+            $excel->sheet('Sheet 1', function($sheet) use ($invoice_data) {
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
                 ->getStyle('B6')
@@ -2136,31 +2023,26 @@ class BillsController extends Controller
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '3' where id=$id");
 
-        return redirect('/recovery')
-        ->with('success','Invoice Generated and Mailed Successfully.')
+        return redirect('/recovery')->with('success','Invoice Generated and Mailed Successfully.')
         ->with('selected_year',$year);
     }
 
     // Payment received or not
-    public function getPaymentReceived($id){
+    public function getPaymentReceived($id) {
 
         \DB::statement("UPDATE bills SET joining_confirmation_mail = '4' where id=$id");
 
         // Set Bill joining success date to current date
-
         $current_dt = date('Y-m-d');
-
         \DB::statement("UPDATE bills_date SET joining_success_date = '$current_dt' where bills_id = $id");
 
         // Get Selected Year
         $year = $_POST['year'];
 
-        return redirect('/recovery')
-        ->with('success','Payment Received Successfully.')
-        ->with('selected_year',$year);
+        return redirect('/recovery')->with('success','Payment Received Successfully.')->with('selected_year',$year);
     }
 
-    /*public function DownloadInvoicePDF($id){
+    /*public function DownloadInvoicePDF($id) {
 
         $invoice_data = Bills::getJoinConfirmationMail($id);
         $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
@@ -2169,7 +2051,7 @@ class BillsController extends Controller
         return $pdf->download($id.'_Invoice'.'.pdf');
     }*/
 
-    public function DownloadInvoiceExcel($id){
+    public function DownloadInvoiceExcel($id) {
 
         $invoice_data = Bills::getJoinConfirmationMail($id);
 
@@ -2178,8 +2060,9 @@ class BillsController extends Controller
         $invoice_name = $bill_invoice['name'];
 
         // Generate excel sheet and save at bill id location
-        Excel::create($invoice_name, function($excel) use ($invoice_data){
-            $excel->sheet('Sheet 1', function($sheet) use ($invoice_data){
+        Excel::create($invoice_name, function($excel) use ($invoice_data) {
+
+            $excel->sheet('Sheet 1', function($sheet) use ($invoice_data) {
 
                 $sheet->loadView('adminlte::bills.sheet')->with('invoice_data', $invoice_data)
                 ->getStyle('B6')

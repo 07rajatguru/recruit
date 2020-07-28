@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -31,7 +30,7 @@
     </div>
 
     @if($title == "Recovery")
-      {{--@if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+      {{--@permission(('display-recovery'))
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-2 col-sm-4">
@@ -48,7 +47,7 @@
               </div>
             </div>
           </div><br/>
-      @endif--}}
+      @endpermission--}}
     @endif
 
     @if($message = Session::get('success'))
@@ -86,12 +85,12 @@
     @endif
     <div>
         {{--{!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm')) !!}
-            <button type="button" class="btn btn-primary" onclick="downloadExcel();">Download Excel</button>
+        <button type="button" class="btn btn-primary" onclick="downloadExcel();">Download Excel</button>
         {!! Form::close() !!}--}}
-
     </div>
-<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="bill_table">
-    <thead>
+
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="bill_table">
+      <thead>
         <tr>
             <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
             <th>Action</th>
@@ -106,16 +105,16 @@
             <th>Efforts</th>
             <th>Candidate Contact Number</th>
             <th>Job Location</th>
-            @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+            @permission(('display-forecasting'))
               <th>Percentage Charged</th>
-            @endif
+            @endpermission
             <th>Source</th>
             <th>Client Name</th>
             <th>Client Contact Number</th>
             <th>Client Email Id</th>
-            @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+            @permission(('display-forecasting'))
               <th>Lead Efforts</th>
-            @endif
+            @endpermission
         </tr>
     </thead>
        {{-- php $i=0;
@@ -225,11 +224,12 @@
                    @endif
                </tr>
            @endforeach
-           </tbody>--}}
-       </table>
-       <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
-       <input type="hidden" name="title" id="title" value="{{ $title }}">
+      </tbody>--}}
+    </table>
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="title" id="title" value="{{ $title }}">
 @stop
+
 @section('customscripts')
    <script type="text/javascript">
        $(document).ready(function(){
@@ -380,14 +380,12 @@
                url: 'bills/downloadexcel',
                data: { ids:ids ,'_token':token},
                success: function(res)
-               {
-
-               }
+               {}
            });
-
        }
-       function select_data()
-       {
+
+       function select_data() {
+
           $("#bill_table").dataTable().fnDestroy();
 
           var year = $("#year").val();
@@ -433,6 +431,5 @@
             }
           });
         }
-
    </script>
 @endsection

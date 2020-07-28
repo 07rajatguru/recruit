@@ -192,17 +192,17 @@
                             @endif
                         </div>
 
-                        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
-                        <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
-                            <strong>Percentage Charged :</strong>
-                            {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
-                            @if ($errors->has('percentage_charged'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('percentage_charged') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                        @endif
+                        @permission(('display-forecasting'))
+                            <div class="form-group {{ $errors->has('percentage_charged') ? 'has-error' : '' }}">
+                                <strong>Percentage Charged :</strong>
+                                {!! Form::text('percentage_charged', null, array('id'=>'percentage_charged','placeholder' => 'Percentage Charged','class' => 'form-control', 'tabindex' => '12' )) !!}
+                                @if ($errors->has('percentage_charged'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('percentage_charged') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        @endpermission
 
                         <div class="form-group {{ $errors->has('address_of_communication') ? 'has-error' : '' }}">
                             <strong>Address of Communication : <span class = "required_fields">*</span> </strong>
@@ -254,7 +254,7 @@
             </div>
         </div>
 
-        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+        @permission(('display-forecasting'))
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">
@@ -282,7 +282,7 @@
                     </div>
                 </div>
             </div>
-        @endif
+        @endpermission
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             @if( $action == 'add')
@@ -424,6 +424,7 @@
             });
 
             $("#bills_form").validate({
+
                 rules: {
                     "company_name": {
                         required: true
@@ -565,14 +566,16 @@
             var app_url = "{!! env('APP_URL'); !!}";
             var action = $("#action").val();
 
-            if(job_id>0){
+            if(job_id>0) {
+
                 // get client data from job id
                 $.ajax({
+
                     url: app_url+'/bills/getclientinfo',
-                    //url: 'http://127.0.0.1:8000/bills/getclientinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
-                    success: function(data){
+                    success: function(data) {
+
                         var cname = data.cname;
                         var coordinator_name = data.coordinator_name;
                         var mail = data.mail;
@@ -588,25 +591,27 @@
                         $("#designation_offered").val(designation);
                         $("#job_location").val(location);
 
-                        if(action == 'add'){
+                        if(action == 'add') {
                             $("#percentage_charged").val(percentage_charged);
                         }
                         else {
-                            
                         }
                     }
                 });
 
                 // get candidate data
                 $.ajax({
+
                     url: app_url+'/bills/getcandidateinfo',
-                    //url: 'http://127.0.0.1:8000/bills/getcandidateinfo',
                     data:'job_id='+job_id,
                     dataType:'json',
-                    success: function(data){
+                    success: function(data) {
+                        
                         var returnvalue = data.returnvalue;
                         var response = data.data;
-                        if(returnvalue=='valid'){
+
+                        if(returnvalue == 'valid') {
+
                             $('#candidate_name').empty();
                             $('#candidate_name').append($('<option></option>').val('').html('Select'));
                             for(var i=0;i<response.length;i++){
