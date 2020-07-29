@@ -47,7 +47,8 @@ class Bills extends Model
         'Offer Letter' => 'Offer Letter',
         'Others' => 'Others');
 
-    public static function getBillsByIds(array $ids){
+    public static function getBillsByIds(array $ids) {
+
         $date_class = new Date();
 
         $bills_query = Bills::query();
@@ -105,9 +106,9 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL){
-        $date_class = new Date();
+    public static function getAllBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL) {
 
+        $date_class = new Date();
         $cancel_bill = 1;
 
         $cancel = array($cancel_bill);
@@ -139,43 +140,46 @@ class Bills extends Model
         if (isset($order) && $order !='') {
             $bills_query = $bills_query->orderBy($order,$type);
         }
-        $bills_query = $bills_query->where(function($bills_query) use ($search){
 
-            $date_search = false;
-                $date_array = explode("-",$search);
-                if(isset($date_array) && sizeof($date_array)>0){
-                    $stamp = strtotime($search);
-                    if (is_numeric($stamp)){
-                        $month = date( 'm', $stamp );
-                        $day   = date( 'd', $stamp );
-                        $year  = date( 'Y', $stamp );
+        if (isset($search) && $search != '') {
 
-                    if(checkdate($month, $day, $year)){
-                        $date_search = true;
+            $bills_query = $bills_query->where(function($bills_query) use ($search){
+
+                $date_search = false;
+                    $date_array = explode("-",$search);
+                    if(isset($date_array) && sizeof($date_array)>0){
+                        $stamp = strtotime($search);
+                        if (is_numeric($stamp)){
+                            $month = date( 'm', $stamp );
+                            $day   = date( 'd', $stamp );
+                            $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
                     }
                 }
-            }
 
-            $bills_query = $bills_query->where('users.name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
-            if($date_search){
-                $dateClass = new Date();
-                $search_string = $dateClass->changeDMYtoYMD($search);
-                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
-                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
-                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
-                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
-            }
-        });
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
 
          // Get data by financial year
         if (isset($current_year) && $current_year != NULL) {
@@ -194,7 +198,8 @@ class Bills extends Model
 
         $bills = array();
         $i = 0 ;
-        foreach ($bills_res as $key=>$value){
+        foreach ($bills_res as $key => $value) {
+
             $bills[$i]['id'] = $value->id;
             $bills[$i]['company_name'] = $value->company_name;
             $bills[$i]['candidate_name'] = $value->candidate_name;
@@ -286,6 +291,99 @@ class Bills extends Model
         return $bills;
     }
 
+    public static function getAllBills2($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL) {
+
+        $date_class = new Date();
+
+        $cancel_bill = 1;
+
+        $cancel = array($cancel_bill);
+
+        $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','client_heirarchy.name as level_name');
+
+        if($all==0){
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
+        }
+
+        if (isset($limit) && $limit > 0) {
+            $bills_query = $bills_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $bills_query = $bills_query->offset($offset);
+        }
+        if (isset($order) && $order !='') {
+            $bills_query = $bills_query->orderBy($order,$type);
+        }
+
+        if (isset($search) && $search != '') {
+            $bills_query = $bills_query->where(function($bills_query) use ($search){
+
+                $date_search = false;
+                    $date_array = explode("-",$search);
+                    if(isset($date_array) && sizeof($date_array)>0){
+                        $stamp = strtotime($search);
+                        if (is_numeric($stamp)){
+                            $month = date( 'm', $stamp );
+                            $day   = date( 'd', $stamp );
+                            $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
+        }
+
+        $bills_query = $bills_query->where('bills.status',$status);
+        $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
+
+        $bills_query = $bills_query->groupBy('bills.id');
+
+        $bills_res = $bills_query->get();
+
+        return $bills_res;
+    }
+
     public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0,$current_year=NULL,$next_year=NULL) {
         
         $cancel_bill = 1;
@@ -311,43 +409,45 @@ class Bills extends Model
             });
         }
 
-        $bills_query = $bills_query->where(function($bills_query) use ($search){
+        if (isset($search) && $search != '') {
 
-            $date_search = false;
-                $date_array = explode("-",$search);
-                if(isset($date_array) && sizeof($date_array)>0){
-                    $stamp = strtotime($search);
-                    if (is_numeric($stamp)){
-                        $month = date( 'm', $stamp );
-                        $day   = date( 'd', $stamp );
-                        $year  = date( 'Y', $stamp );
+            $bills_query = $bills_query->where(function($bills_query) use ($search) {
 
-                    if(checkdate($month, $day, $year)){
-                        $date_search = true;
+                $date_search = false;
+                    $date_array = explode("-",$search);
+                    if(isset($date_array) && sizeof($date_array)>0){
+                        $stamp = strtotime($search);
+                        if (is_numeric($stamp)){
+                            $month = date( 'm', $stamp );
+                            $day   = date( 'd', $stamp );
+                            $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
                     }
                 }
-            }
 
-            $bills_query = $bills_query->where('users.name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
-            if($date_search){
-                $dateClass = new Date();
-                $search_string = $dateClass->changeDMYtoYMD($search);
-                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
-                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
-                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
-                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
-            }
-        });
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
 
         // Get data by financial year
         if (isset($current_year) && $current_year != NULL) {
@@ -404,43 +504,46 @@ class Bills extends Model
         if (isset($order) && $order !='') {
             $bills_query = $bills_query->orderBy($order,$type);
         }
-        $bills_query = $bills_query->where(function($bills_query) use ($search){
 
-            $date_search = false;
-                $date_array = explode("-",$search);
-                if(isset($date_array) && sizeof($date_array)>0){
-                    $stamp = strtotime($search);
-                    if (is_numeric($stamp)){
-                        $month = date( 'm', $stamp );
-                        $day   = date( 'd', $stamp );
-                        $year  = date( 'Y', $stamp );
+        if (isset($search) && $search != '') {
 
-                    if(checkdate($month, $day, $year)){
-                        $date_search = true;
+            $bills_query = $bills_query->where(function($bills_query) use ($search) {
+
+                $date_search = false;
+                    $date_array = explode("-",$search);
+                    if(isset($date_array) && sizeof($date_array)>0){
+                        $stamp = strtotime($search);
+                        if (is_numeric($stamp)){
+                            $month = date( 'm', $stamp );
+                            $day   = date( 'd', $stamp );
+                            $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
                     }
                 }
-            }
 
-            $bills_query = $bills_query->where('users.name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
-            if($date_search){
-                $dateClass = new Date();
-                $search_string = $dateClass->changeDMYtoYMD($search);
-                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
-                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
-                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
-                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
-            }
-        });
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
 
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
@@ -450,7 +553,8 @@ class Bills extends Model
 
         $bills = array();
         $i = 0 ;
-        foreach ($bills_res as $key=>$value){
+        foreach ($bills_res as $key => $value) {
+
             $bills[$i]['id'] = $value->id;
             $bills[$i]['company_name'] = $value->company_name;
             $bills[$i]['candidate_name'] = $value->candidate_name;
@@ -541,7 +645,8 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllCancelBillsCount($status=0,$all=0,$user_id=0,$search=0){
+    public static function getAllCancelBillsCount($status=0,$all=0,$user_id=0,$search=0) {
+
         $cancel_bill = 1;
         $cancel = array($cancel_bill);
 
@@ -564,43 +669,46 @@ class Bills extends Model
             });
         }
 
-        $bills_query = $bills_query->where(function($bills_query) use ($search){
+        if (isset($search) && $search != '') {
 
-            $date_search = false;
-                $date_array = explode("-",$search);
-                if(isset($date_array) && sizeof($date_array)>0){
-                    $stamp = strtotime($search);
-                    if (is_numeric($stamp)){
-                        $month = date( 'm', $stamp );
-                        $day   = date( 'd', $stamp );
-                        $year  = date( 'Y', $stamp );
+            $bills_query = $bills_query->where(function($bills_query) use ($search) {
 
-                    if(checkdate($month, $day, $year)){
-                        $date_search = true;
+                $date_search = false;
+                    $date_array = explode("-",$search);
+                    if(isset($date_array) && sizeof($date_array)>0){
+                        $stamp = strtotime($search);
+                        if (is_numeric($stamp)){
+                            $month = date( 'm', $stamp );
+                            $day   = date( 'd', $stamp );
+                            $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
                     }
                 }
-            }
-            
-            $bills_query = $bills_query->where('users.name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-            //$bills_query = $bills_query->orwhere('bills.date_of_joining','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
-            $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
-            $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
-            $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-            $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
 
-            if($date_search){
-                $dateClass = new Date();
-                $search_string = $dateClass->changeDMYtoYMD($search);
-                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
-                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
-                $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
-                $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
-            }
-        });
+                if($date_search){
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
+
         $bills_query = $bills_query->where('bills.status',$status);
         $bills_query = $bills_query->whereIn('cancel_bill',$cancel);
         $bills_query = $bills_query->groupBy('bills.id');
@@ -610,7 +718,7 @@ class Bills extends Model
         return $bills_count;
     }
 
-    public static function getShowBill($id){
+    public static function getShowBill($id) {
         
         $bills = Bills::leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id')
         ->leftjoin('bills_efforts', 'bills_efforts.bill_id', '=', 'bills.id')
@@ -624,7 +732,7 @@ class Bills extends Model
         $employeename = array();
         $employeepercentage = array();
     
-         if(isset($bills) && $bills != ''){
+         if(isset($bills) && $bills != '') {
             $billsdetails['id'] = $bills->id;
             $billsdetails['company_name'] = $bills->company_name;
             $billsdetails['candidate_name'] = $bills->candidate_name;
@@ -716,7 +824,8 @@ class Bills extends Model
         return $viewVariable;
     }
 
-    public static function getRecoveryReport(){
+    public static function getRecoveryReport() {
+
         $date_class = new Date();
 
         $cancel = 1;
@@ -822,7 +931,6 @@ class Bills extends Model
         }
 
         if ($select == 3) {   
-            //$selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
             $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
         }
         //});
@@ -856,7 +964,8 @@ class Bills extends Model
         return $selection_res;
     }
 
-    public static function getUserwiseReport($user_id,$m1,$m2,$month,$year){
+    public static function getUserwiseReport($user_id,$m1,$m2,$month,$year) {
+
         $date_class = new Date();
 
         $cancel = 1;
@@ -893,7 +1002,7 @@ class Bills extends Model
         return $userwise_res;
     }
 
-    public static function getEmployeeEffortsById($id){
+    public static function getEmployeeEffortsById($id) {
 
         $efforts_query = BillsEffort::query();
         $efforts_query = $efforts_query->join('users','users.id','=','bills_efforts.employee_name');
@@ -909,7 +1018,7 @@ class Bills extends Model
         return $employees;
     }
 
-    public static function getEmployeeEffortsNameById($id){
+    public static function getEmployeeEffortsNameById($id) {
 
         $efforts_query = BillsEffort::query();
         $efforts_query = $efforts_query->join('users','users.id','=','bills_efforts.employee_name');
@@ -925,7 +1034,8 @@ class Bills extends Model
         return $employees;
     }
 
-    public static function getRecoveryReportdata(){
+    public static function getRecoveryReportdata() {
+
         $date_class = new Date();
 
         $cancel = 1;
@@ -942,6 +1052,7 @@ class Bills extends Model
 
         $recovery = array();
         $i = 0;
+
         foreach ($recovery_res as $key => $value) {
 
             $salary = str_replace(",", "", $value->fixed_salary);
@@ -990,7 +1101,8 @@ class Bills extends Model
         return $data;
     }
 
-    public static function getSelectionReportdata($m1,$m2,$month,$year){
+    public static function getSelectionReportdata($m1,$m2,$month,$year) {
+
         $date_class = new Date();
 
         $cancel = 1;
@@ -1022,8 +1134,7 @@ class Bills extends Model
             $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
         }
 
-        if ($select == 3) {   
-            //$selection_query = $selection_query->where(\DB::raw('MONTH(date_of_joining)'),'=', $month);
+        if ($select == 3) {
             $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
         }
         //});
@@ -1032,6 +1143,7 @@ class Bills extends Model
 
         $selection = array();
         $i = 0;
+        
         if(sizeof($selection_res)>0){
             foreach ($selection_res as $key => $value) {
 
@@ -1076,7 +1188,7 @@ class Bills extends Model
         return $data;
     }
 
-    public static function getUserwiseReportdata($user_id,$m1,$m2,$month,$year){
+    public static function getUserwiseReportdata($user_id,$m1,$m2,$month,$year) {
 
         $date_class = new Date();
 
@@ -1152,13 +1264,10 @@ class Bills extends Model
                 );
                 $i++;
             }
-
-        //print_r($userwise_res);exit;
-
         return $data;
     }
     
-    public static function getJoinConfirmationMail($id){
+    public static function getJoinConfirmationMail($id) {
 
         $join_mail = Bills::query();
         $join_mail = $join_mail->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
@@ -1282,7 +1391,7 @@ class Bills extends Model
         return $join_confirmation_mail;
     }
 
-    public static function getCandidateOwnerEmail($bill_id){
+    public static function getCandidateOwnerEmail($bill_id) {
 
         $query = Bills::query();
         $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
@@ -1294,7 +1403,7 @@ class Bills extends Model
         return $res;
     }
 
-    public static function getClientOwnerEmail($bill_id){
+    public static function getClientOwnerEmail($bill_id) {
 
         $query = Bills::query();
         $query = $query->join('job_openings','job_openings.id','=','bills.job_id');
@@ -1307,7 +1416,7 @@ class Bills extends Model
         return $response;
     }
 
-    public static function getCandidatesalaryByJobidCandidateid($job_id,$candidate_id){
+    public static function getCandidatesalaryByJobidCandidateid($job_id,$candidate_id) {
 
         $salary_data = Bills::query();
         $salary_data = $salary_data->where('job_id',$job_id);
@@ -1322,7 +1431,7 @@ class Bills extends Model
         return $salary;
     }
 
-    public static function getPersonwiseReportData($user_id=NULL,$current_year,$next_year){
+    public static function getPersonwiseReportData($user_id=NULL,$current_year,$next_year) {
         
         $personwise_query = Bills::query();
         $personwise_query = $personwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
@@ -1408,7 +1517,7 @@ class Bills extends Model
         return $person_data;
     }
 
-    public static function getClientwiseReportData($client_name,$current_year,$next_year){
+    public static function getClientwiseReportData($client_name,$current_year,$next_year) {
 
         $clientwise_query = Bills::query();
         $clientwise_query = $clientwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
@@ -1466,7 +1575,7 @@ class Bills extends Model
     }
 
     // Get Recovery bills data where PC value 0
-    public static function getRecoveryBillData(){
+    public static function getRecoveryBillData() {
 
         $query = Bills::query();
         $query = $query->select('bills.*');
@@ -1478,7 +1587,7 @@ class Bills extends Model
         return $res;
     }
 
-    public static function getProductivityReportOfferAcceptanceRatio($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportOfferAcceptanceRatio($user_id,$from_date=NULL,$to_date=NULL) {
 
         $query = Bills::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
@@ -1500,7 +1609,7 @@ class Bills extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportJoiningRatio($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportJoiningRatio($user_id,$from_date=NULL,$to_date=NULL) {
 
         $query = Bills::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
@@ -1522,7 +1631,7 @@ class Bills extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportJoiningSuccessRatio($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportJoiningSuccessRatio($user_id,$from_date=NULL,$to_date=NULL) {
 
         $query = Bills::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');

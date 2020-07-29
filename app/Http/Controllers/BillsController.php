@@ -101,7 +101,6 @@ class BillsController extends Controller
                 }
             }
         }
-
         return $order_column_name;
     }
 
@@ -136,8 +135,8 @@ class BillsController extends Controller
                 $year_data = explode(", ", $year);
                 $year1 = $year_data[0];
                 $year2 = $year_data[1];
-                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+                $current_year = date('Y-m-d',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d',strtotime("last day of $year2"));
             }
             else {
                 $year = NULL;
@@ -621,8 +620,8 @@ class BillsController extends Controller
         $year_data = explode(", ", $year);
         $year1 = $year_data[0];
         $year2 = $year_data[1];
-        $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -641,6 +640,14 @@ class BillsController extends Controller
 
         $title = "Recovery";
         return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year'));
+    }
+
+    public function billsMade2() {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $bnm = Bills::getAllBills2(1,1,$user_id,0,0,0,0,'','','');
     }
 
     public function cancelbm() {
