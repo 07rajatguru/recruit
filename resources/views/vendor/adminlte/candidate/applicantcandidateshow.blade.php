@@ -9,7 +9,6 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-left">
                 <h2>Candidate Details</h2>
             </div>
@@ -35,7 +34,6 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Basic Information</h3>
                 </div>
@@ -48,14 +46,12 @@
                             <th>Email</th>
                             <td>{{ $candidateDetails['email'] }}</td>
                         </tr>
-
                         <tr>
                             <th scope="row">Gender</th>
                             <td>{{ $candidateDetails['gender'] }}</td>
                             <th>Marital Status</th>
                             <td>{{ $candidateDetails['marital_status'] }}</td>
                         </tr>
-
                         <tr>
                             <th>Mobile Number</th>
                             <td>{{ $candidateDetails['mobile'] }}</td>
@@ -64,13 +60,11 @@
                         </tr>
                     </table>
                 </div>
-
             </div>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Address Information</h3>
                 </div>
@@ -83,15 +77,12 @@
                             <th>Street 2</th>
                             <td>{{ $candidateDetails['street2'] }}</td>
                         </tr>
-
                         <tr>
-                            
                             <th>Country</th>
                             <td>{{ $candidateDetails['country'] }}</td>
                             <th>State</th>
                             <td>{{ $candidateDetails['state'] }}</td>
                         </tr>
-
                         <tr>
                             <th>City</th>
                             <td>{{ $candidateDetails['city'] }}</td>
@@ -105,7 +96,6 @@
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-
                 <div class="box-header with-border col-md-6 ">
                     <h3 class="box-title">Education and Professional Information</h3>
                 </div>
@@ -118,35 +108,30 @@
                             <th>Last Job Title</th>
                             <td>{{ $candidateDetails['current_job_title'] }}</td>
                         </tr>
-
                         <tr>
                             <th>Key Skills</th>
                             <td>{{ $candidateDetails['skill'] }}</td>
                             <th>Functional Roles</th>
                             <td>{{ $candidateDetails['functional_roles_name'] }}</td>
                         </tr>
-
                         <tr>
                             <th>Education Qualification</th>
                             <td>{{ $candidateDetails['eduction_qualification'] }}</td>
                             <th>Specialization</th>
                             <td>{{ $candidateDetails['education_specialization'] }}</td>
                         </tr>
-
                         <tr>
                             <th>Experience years</th>
                             <td>{{ $candidateDetails['experience_years'] }}</td>
                             <th>Experience Months</th>
                             <td>{{ $candidateDetails['experience_months'] }}</td>
                         </tr>
-
                         <tr>
                             <th>Current Salary</th>
                             <td>{{ $candidateDetails['current_salary'] }}</td>
                             <th>Expected Salary</th>
                             <td>{{ $candidateDetails['expected_salary'] }}</td>
                         </tr>
-
                         <tr>
                             <th>Skype Id</th>
                             <td colspan="3">{{ $candidateDetails['skype_id'] }}</td>
@@ -189,7 +174,6 @@
                                     <td>{{ $value['uploaded_by'] }}</td>
                                     <td>{{ $value['size'] }}</td>
                                     <td>{{ $value['category'] }}</td>
-
                                 </tr>
                             @endforeach
                         @endif

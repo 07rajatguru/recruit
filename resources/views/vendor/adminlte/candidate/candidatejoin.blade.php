@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
+                <a class="btn btn-success" href="{{ route('candidate.create') }}">Create New Candidate</a>
             </div>
         </div>
     </div>
@@ -23,7 +23,6 @@
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
-
     @endif
 
     @if ($message = Session::get('error'))
@@ -39,8 +38,6 @@
                 <th>Candidate Name</th>
                 <th>Position Name</th>
                 <th>Fixed Salary</th>
-                {{--<th>Min CTC</th>
-                <th>Max CTC</th>--}}
                 <th>Joining <br/>Date</th>
                 <th>Efforts</th>
                 <th>Candidate Email</th>
@@ -53,11 +50,8 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $candidate['candidate_name'] or '' }}</td>
-                <td><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">
-                        {{ $candidate['position_name'] or '' }}</a></td>
+                <td><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">{{ $candidate['position_name'] or '' }}</a></td>
                 <td>{{ $candidate['salary'] }}</td>
-                {{--<td>{{ $candidate['min_ctc'] or ''}}</td>
-                <td>{{ $candidate['max_ctc'] or '' }}</td>--}}
                 <td>{{ date('d-m-Y', strtotime($candidate['date'])) }}</td>
                 <td>{{ $candidate['efforts'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['candidate_email'] or ''}}</td>
@@ -71,7 +65,9 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
+
             var table = jQuery('#candidate_table').DataTable({
+
                 responsive: true,
                 "columnDefs": [
                     { "width": "10px", "targets": 0 },
@@ -82,7 +78,6 @@
                     { "width": "10px", "targets": 5 },
                     { "width": "10px", "targets": 6 },
                     { "width": "10px", "targets": 7 },
-                    //{ "width": "10px", "targets": 8 }
                 ],
 
                 "autoWidth": false,

@@ -13,10 +13,8 @@
                 <h2>Candidates List <span id="candidate_count">({{ $count or 0 }})</span></h2>
                 <h4><span>Total No. of Candidates - {{ $total_count }}</span></h4>
             </div>
-
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('all.jobs') }}"> Advanced Search</a>
-
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
         </div>
@@ -31,7 +29,6 @@
                     {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()','id' => 'select_btn']) !!}
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -67,18 +64,12 @@
                 <td>
                     <a class="fa fa-circle" href="{{ route('candidate.show',$candidate->id) }}" title="Show"></a>
                     <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>
-             
-
-                  @if($isSuperAdmin)
                     @include('adminlte::partials.deleteModal', ['data' => $candidate, 'name' => 'candidate','display_name'=>'Candidate'])
-                  @endif
-          
                 </td>
                 <td>{{ $candidate->fname or '' }}</td>
                 <td>{{ $candidate->owner or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate->email or ''}}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate->mobile or ''}}</td>
-
             </tr>
         @endforeach
         </tbody>--}}
@@ -87,25 +78,18 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-           /* var table = jQuery('#candidate_table').DataTable( {
-                responsive: true,
-                stateSave : true,
-                "autoWidth": false,
-                "pageLength": 100
-            } );
-
-            new jQuery.fn.dataTable.FixedHeader( table );*/
+        jQuery(document).ready(function() {
 
             var initial_letter = $("#letter").val();
 
             $("#candidate_table").dataTable({
+
                 "bProcessing": true,
                 "serverSide": true,
                 "order": [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]},
-                                ],
+                "columnDefs": [ {orderable: false, targets: [1]},],
                 "ajax":{
+
                     url :"candidate/all", // json datasource
                     data: {initial_letter:initial_letter},
                     type: "get",  // type of method  , by default would be get
@@ -131,17 +115,18 @@
             $("#letter").select2();
         });
 
-        function select_data(){
+        function select_data() {
 
             $("#candidate_table").dataTable().fnDestroy();
 
-           var initial_letter = $("#letter").val();
+            var initial_letter = $("#letter").val();
+
             $("#candidate_table").dataTable({
+
                 "bProcessing": true,
                 "serverSide": true,
                 "order": [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]},
-                               ],
+                "columnDefs": [ {orderable: false, targets: [1]},],
                "ajax":{
                     url :"candidate/all", // json datasource
                     data: {initial_letter:initial_letter},
@@ -170,8 +155,5 @@
                 "stateSave" : true,
             });
         }
-
     </script>
-
-
 @endsection

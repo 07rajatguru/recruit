@@ -11,20 +11,14 @@ class CandidateBasicInfo extends Model
 
     public static $rules = array(
         'fname' => 'required',
-       // 'lname' => 'required',
-//        'candidateSex' => 'required',
-//        'maritalStatus' => 'required',
         'mobile' => 'required',
         'email' => 'required'
     );
 
-    public function messages()
-    {
+    public function messages() {
+
         return [
             'fname.required' => 'Full Name is required field',
-         //   'lname.required' => 'Last Name is required field',
-        //   'candidateSex.required' => 'Sex is required field',
-        //    'maritalStatus.required' => 'Marital Status is required field',
             'mobile.required' => 'Mobile is required field',
             'email.required' => 'Email is required field'
         ];
@@ -35,7 +29,8 @@ class CandidateBasicInfo extends Model
         'Candidate Cover Latter' => 'Candidate Cover Latter',
         'Others' => 'Others');
 
-    public static function getTypeArray(){
+    public static function getTypeArray() {
+
         $type = array();
         $type[''] = 'Select gender';
         $type['Male'] = 'Male';
@@ -44,7 +39,8 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-    public static function getMaritalStatusArray(){
+    public static function getMaritalStatusArray() {
+
         $type = array();
         $type[''] = 'Select Marital Status';
         $type['Single'] = 'Single';
@@ -54,7 +50,7 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL){
+    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
@@ -75,7 +71,7 @@ class CandidateBasicInfo extends Model
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
 
         if (isset($search) && $search != '') {
-            $query = $query->where(function($query) use ($search){
+            $query = $query->where(function($query) use ($search) {
 
                 $date_search = false;
                 $date_array = explode("-",$search);
@@ -113,7 +109,9 @@ class CandidateBasicInfo extends Model
 
         $candidate = array();
         $i = 0;
+
         foreach ($res as $key => $value) {
+
             $candidate[$i]['id'] = $value->id;
             $candidate[$i]['full_name'] = $value->fname;
             $candidate[$i]['owner'] = $value->owner;
@@ -123,11 +121,10 @@ class CandidateBasicInfo extends Model
             
             $i++;
         }
-
         return $candidate;
     }
 
-    public static function getAllCandidatesCount($search,$initial_letter){
+    public static function getAllCandidatesCount($search,$initial_letter) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
@@ -137,62 +134,66 @@ class CandidateBasicInfo extends Model
         $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
 
-        $query = $query->where(function($query) use ($search){
+        if (isset($search) && $search != '') {
 
-            $date_search = false;
-            $date_array = explode("-",$search);
-            if(isset($date_array) && sizeof($date_array)>0){
-                $stamp = strtotime($search);
-                if (is_numeric($stamp)){
-                    $month = date( 'm', $stamp );
-                    $day   = date( 'd', $stamp );
-                    $year  = date( 'Y', $stamp );
+            $query = $query->where(function($query) use ($search) {
 
-                    if(checkdate($month, $day, $year)){
-                        $date_search = true;
+                $date_search = false;
+                $date_array = explode("-",$search);
+
+                if(isset($date_array) && sizeof($date_array)>0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
                     }
                 }
-            }
 
-            $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
-            $query = $query->orwhere('users.name','like',"%$search%");
-            $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
-            $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
 
-            if($date_search){
-                   
-                $dateClass = new Date();
-                $search_string = $dateClass->changeDMYtoYMD($search);
-                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
-                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
-                $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
-                $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
-            }
-        });
+                if($date_search) {
+                       
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+                    $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+                }
+            });
+        }
        
         $res = $query->count();
-
         return $res;
     }
 
-     public static function CheckAssociation($id){
+     public static function CheckAssociation($id) {
 
         $job_query = JobAssociateCandidates::query();
         $job_query = $job_query->where('candidate_id','=',$id);
         $job_res = $job_query->first();
         
-        if(isset($job_res->candidate_id) && $job_res->candidate_id==$id){
+        if(isset($job_res->candidate_id) && $job_res->candidate_id == $id) {
             return false;
         }
-        else{ 
+        else {
             if(isset($id) && $id != null){
                 return true;
             }
         }
-      
     }
 
-    public static function getCandidateimportsource(){
+    public static function getCandidateimportsource() {
+
         $candidateimportsource = array();
         $candidateimportsource['n1'] = 'N1';
         $candidateimportsource['n2'] = 'N2';
@@ -203,7 +204,8 @@ class CandidateBasicInfo extends Model
         return $candidateimportsource;
     }
 
-    public static function getCandidateSourceArray(){
+    public static function getCandidateSourceArray() {
+
         $candidateSourceArray = array();
 
         $candidateSource = CandidateSource::all();
@@ -213,68 +215,60 @@ class CandidateBasicInfo extends Model
                 $candidateSourceArray[$item->id] = ucwords($item->name);
             }
         }
-
         return $candidateSourceArray;
     }
 
-    public static function getCandidateSourceArrayByName(){
-        $candidateSourceArray = array();
+    public static function getCandidateSourceArrayByName() {
 
+        $candidateSourceArray = array();
         $candidateSource = CandidateSource::all();
         if(isset($candidateSource) && sizeof($candidateSource) > 0){
             foreach ($candidateSource as $item) {
                 $candidateSourceArray[$item->name] = ucwords($item->name);
             }
         }
-
         return $candidateSourceArray;
     }
 
-    public static function getCandidateStatusArray(){
-        $candidateStatusArray = array('' => 'Select Candidate Status');
+    public static function getCandidateStatusArray() {
 
+        $candidateStatusArray = array('' => 'Select Candidate Status');
         $candidateStatus = CandidateStatus::all();
+
         if(isset($candidateStatus) && sizeof($candidateStatus) > 0){
             foreach ($candidateStatus as $item) {
                 $candidateStatusArray[$item->id] = $item->name;
             }
         }
-
         return $candidateStatusArray;
     }
 
-    public static function getCandidateArray(){
+    public static function getCandidateArray() {
+
         $candidateArray = array('' => 'Select Candidate');
-        
-        //$candidateDetails = JobAssociateCandidates::all();
 
         $candidateDetails = JobAssociateCandidates::join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id')
         ->select('job_associate_candidates.id as id','job_associate_candidates.candidate_id as candidate_id')
         ->get();
-
-        //print_r($candidateDetails);exit;
 
         if(isset($candidateDetails) && sizeof($candidateDetails) > 0){
             foreach ($candidateDetails as $candidateDetail) {
                 $candidateArray[$candidateDetail->id] = $candidateDetail->candidate_id;
             }
         }
-
         return $candidateArray;
     }
 
-
-    public static function getAllCandidatesById($ids){
+    public static function getAllCandidatesById($ids) {
 
         $query = new CandidateBasicInfo();
         $query = $query->whereIn('id',$ids);
         $response = $query->get();
 
         return $response;
-
     }
 
-    public static function getCandidateInfoByJobId($job_id){
+    public static function getCandidateInfoByJobId($job_id) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->join('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
@@ -286,27 +280,27 @@ class CandidateBasicInfo extends Model
 
         $candidate = array();
         $i = 0 ;
-        foreach ($response as $k=>$v){
+
+        foreach ($response as $k=>$v) {
+
             $candidate[$i]['id'] = $v->id;
             $candidate[$i]['name'] = $v->full_name;
             $candidate[$i]['mobile'] = $v->mobile;
             $i++;
         }
-
         return $candidate;
     }
 
-    public static function checkCandidateByEmail($email){
+    public static function checkCandidateByEmail($email) {
 
         $candidate_query = CandidateBasicInfo::query();
         $candidate_query = $candidate_query->where('email','like',$email);
         $candidate_cnt = $candidate_query->count();
 
         return $candidate_cnt;
-
     }
 
-    public static function getCandidateNameById($candidate_id){
+    public static function getCandidateNameById($candidate_id) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->where('id',$candidate_id);
@@ -316,12 +310,11 @@ class CandidateBasicInfo extends Model
         if (isset($res) && $res != '') {
             $candidate_name = $res->full_name;
         }
-
         return $candidate_name;
     }
 
-    public static function getAssociateCandidates($limit=0,$offset=0,$search=NULL,$initial_letter=NULL,$candidates)
-    {
+    public static function getAssociateCandidates($limit=0,$offset=0,$search=NULL,$initial_letter=NULL,$candidates) {
+
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
@@ -335,10 +328,10 @@ class CandidateBasicInfo extends Model
             $query = $query->offset($offset);
         }
 
-        if (isset($search) && $search != '')
-        {
-            $query = $query->where(function($query) use ($search)
-            {
+        if (isset($search) && $search != '') {
+
+            $query = $query->where(function($query) use ($search) {
+
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
@@ -352,8 +345,9 @@ class CandidateBasicInfo extends Model
 
         $candidate = array();
         $i = 0;
-        foreach ($response as $key => $value)
-        {
+
+        foreach ($response as $key => $value) {
+
             $candidate[$i]['id'] = $value->id;
             $candidate[$i]['fname'] = $value->fname;
             $candidate[$i]['owner'] = $value->owner;
@@ -363,8 +357,8 @@ class CandidateBasicInfo extends Model
         return $candidate;
     }
 
-    public static function candidateAssociatedEmail($candidate_id,$user_id,$job_id)
-    {
+    public static function candidateAssociatedEmail($candidate_id,$user_id,$job_id) {
+
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         $app_url = getenv('APP_URL');
@@ -417,14 +411,14 @@ class CandidateBasicInfo extends Model
         $input['job_location'] = $job_details['job_location'];
         $input['job_description'] = $job_details['job_description'];
      
-        \Mail::send('adminlte::emails.candidateassociatemail', $input, function ($message) use($input)
-        {
+        \Mail::send('adminlte::emails.candidateassociatemail', $input, function ($message) use($input) {
+
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
         });
     }
 
-    public static function getApplicantCandidatesCount($search){
+    public static function getApplicantCandidatesCount($search) {
 
         $query = CandidateBasicInfo::query();
 
@@ -436,9 +430,10 @@ class CandidateBasicInfo extends Model
 
         $query = $query->where('candidate_otherinfo.login_candidate','=',"1");
         
-        if(isset($search) && ($search) != ''){
+        if(isset($search) && ($search) != '') {
 
-            $query = $query->where(function($query) use ($search){
+            $query = $query->where(function($query) use ($search) {
+
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
@@ -451,7 +446,6 @@ class CandidateBasicInfo extends Model
         }
      
         $response = $query->count();
-
         return $response;
     }
 
@@ -478,7 +472,9 @@ class CandidateBasicInfo extends Model
         $query = $query->where('candidate_otherinfo.login_candidate','=',"1");
 
         if (isset($search) && $search != '') {
-            $query = $query->where(function($query) use ($search){
+
+            $query = $query->where(function($query) use ($search) {
+
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
@@ -495,7 +491,7 @@ class CandidateBasicInfo extends Model
         $candidate = array();
         $i = 0;
 
-        foreach ($response as $key => $value){
+        foreach ($response as $key => $value) {
 
             $candidate[$i]['id'] = $value->id;
             $candidate[$i]['full_name'] = $value->fname;
@@ -512,7 +508,7 @@ class CandidateBasicInfo extends Model
         return $candidate;
     }
 
-    public static function getCandidateDetailsById($candidate_id){
+    public static function getCandidateDetailsById($candidate_id) {
 
         $query = CandidateBasicInfo::query();
 
@@ -522,7 +518,6 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
         $query = $query->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.educational_qualification_id');
         $query = $query->leftjoin('education_specialization','education_specialization.id','=','candidate_otherinfo.specialization');
-
 
         $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary',
             'candidate_otherinfo.expected_salary as expected_salary',
@@ -615,7 +610,6 @@ class CandidateBasicInfo extends Model
             
             $i++;
         }
-
         return $candidate;
     }
 }

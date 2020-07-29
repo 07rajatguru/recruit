@@ -785,37 +785,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidate', [
         'as' => 'candidate.index',
         'uses' => 'CandidateController@index',
-        'middleware' => ['permission:candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('applicant-candidate', [
         'as' => 'applicant.candidate',
         'uses' => 'CandidateController@applicantIndex',
-        'middleware' => ['permission:candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('candidate/all', [
         'as' => 'candidate.all',
         'uses' => 'CandidateController@getAllCandidates',
-        'middleware' => ['permission:candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('applicant-candidate/all', [
         'as' => 'applicant-candidate.all',
         'uses' => 'CandidateController@getAllApplicantCandidates',
-        'middleware' => ['permission:candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('candidate/create', [
         'as' => 'candidate.create',
         'uses' => 'CandidateController@create',
-        'middleware' => ['permission:candidate-create']
+        'middleware' => ['permission:candidate-add']
     ]);
 
     Route::post('candidate', [
         'as' => 'candidate.store',
         'uses' => 'CandidateController@store',
-        'middleware' => ['permission:candidate-create']
+        'middleware' => ['permission:candidate-add']
     ]);
 
     Route::get('candidate/{id}/edit', [
@@ -851,31 +851,34 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidate/{id}/show', [
         'as' => 'candidate.show',
         'uses' => 'CandidateController@show',
-        'middleware' => ['permission:candidate-show']
+        'middleware' => ['permission:candidate-edit']
     ]);
 
     Route::get('applicant-candidate/{id}/show', [
         'as' => 'applicant-candidate.show',
         'uses' => 'CandidateController@applicantCandidateShow',
-        'middleware' => ['permission:candidate-show']
+        'middleware' => ['permission:candidate-edit']
     ]);
 
     Route::post('candidateattachments/upload/{id}', [
         'as' => 'candidateattachments.upload',
         'uses' => 'CandidateController@upload',
     ]);
+
     Route::delete('candidate/destroy/{id}', [
         'as' => 'candidateattachments.destroy',
         'uses' => 'CandidateController@attachmentsDestroy'
     ]);
+
     Route::get('candidateinfo/{id}', [
         'as' => 'candidate.candidateinfo',
         'uses' => 'CandidateController@getCandidateInfo'
     ]);
+
     Route::get('candidatejoin/{month}/{year}', [
         'as' => 'candidatejoin.index',
         'uses' => 'CandidateController@candidatejoin',
-        'middleware' => ['permission:display-candidates']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('candidate/importExport', 'CandidateController@importExport');
@@ -1304,6 +1307,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'interview.multipleinterviewschedule',
         'uses' => 'InterviewController@multipleInterviewScheduleMail',
         'middleware' => ['permission:send-consolidated-schedule']
+    ]);
+
+    Route::get('recovery-duplicate', [
+        'as' => 'recovery.duplicate',
+        'uses' => 'BillsController@billsMade2'
     ]);
 
     // Bills Module

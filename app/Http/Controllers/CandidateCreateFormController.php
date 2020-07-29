@@ -18,7 +18,7 @@ use App\Events\NotificationMail;
 
 class CandidateCreateFormController extends Controller
 {
-    public function createf(){
+    public function createf() {
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
@@ -38,7 +38,7 @@ class CandidateCreateFormController extends Controller
         return view('adminlte::candidate.createform',$viewVariable);
     }
 
-    public function storef(Request $request){
+    public function storef(Request $request) {
 
         $owner_id = getenv('RECRUITMENTCONSULTANTUSERID');
 
@@ -117,14 +117,15 @@ class CandidateCreateFormController extends Controller
 
         $candidateStored = $candidate->save();
 
-        if($candidateStored){
+        if($candidateStored) {
+
             $candidate_id = $candidate->id;
 
             // Save Candidate Other Info
 
             $candidateOtherInfo = new CandidateOtherInfo();
-
             $candidateOtherInfo->candidate_id = $candidate_id;
+
             if(isset($candiateHighest_qualification) && $candiateHighest_qualification != ''){
                 $candidateOtherInfo->highest_qualification = $candiateHighest_qualification;
             }
@@ -168,7 +169,7 @@ class CandidateCreateFormController extends Controller
             $candidateOtherInfo->login_candidate = '1';
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 
-            if($candidateOtherInfoStored){
+            if($candidateOtherInfoStored) {
 
                 // Save Candidate Documentes
                 $fileResume = $request->file('resume');
@@ -176,7 +177,8 @@ class CandidateCreateFormController extends Controller
                 $fileCoverLatter = $request->file('cover_latter');
                 $fileOthers = $request->file('others');
 
-                if(isset($fileResume) && $fileResume->isValid()){
+                if(isset($fileResume) && $fileResume->isValid()) {
+
                     $fileResumeName = $fileResume->getClientOriginalName();
                     $fileResumeExtention = $fileResume->getClientOriginalExtension();
                     $fileResumeRealPath = $fileResume->getRealPath();
@@ -212,7 +214,8 @@ class CandidateCreateFormController extends Controller
                     $candidateFileUploadStored = $candidateFileUpload->save();
                 }
 
-                if(isset($fileFormattedResume) && $fileFormattedResume->isValid()){
+                if(isset($fileFormattedResume) && $fileFormattedResume->isValid()) {
+
                     $fileFormattedResumeName = $fileFormattedResume->getClientOriginalName();
                     $fileFormattedResumeExtention = $fileFormattedResume->getClientOriginalExtension();
                     $fileFormattedResumeRealPath = $fileFormattedResume->getRealPath();
@@ -246,10 +249,9 @@ class CandidateCreateFormController extends Controller
                     $candidateFormattedFileUpload->size = $fileFormattedResumeSize;
                     $candidateFormattedFileUpload->uploaded_date = date('Y-m-d');
                     $candidateFormattedFileUploadStored = $candidateFormattedFileUpload->save();
-
                 }
 
-                if(isset($fileCoverLatter) && $fileCoverLatter->isValid()){
+                if(isset($fileCoverLatter) && $fileCoverLatter->isValid()) {
 
                     $fileCoverLatterName = $fileCoverLatter->getClientOriginalName();
                     $fileCoverLatterExtention = $fileCoverLatter->getClientOriginalExtension();
@@ -284,10 +286,9 @@ class CandidateCreateFormController extends Controller
                     $candidateCoverLatterUpload->size = $fileCoverLatterSize;
                     $candidateCoverLatterUpload->uploaded_date = date('Y-m-d');
                     $candidateCoverLatterUploadStored = $candidateCoverLatterUpload->save();
-
                 }
 
-                if(isset($fileOthers) && $fileOthers->isValid()){
+                if(isset($fileOthers) && $fileOthers->isValid()) {
 
                     $fileOthersName = $fileOthers->getClientOriginalName();
                     $fileOthersExtention = $fileOthers->getClientOriginalExtension();
@@ -322,7 +323,6 @@ class CandidateCreateFormController extends Controller
                     $candidateOthersUpload->size = $fileOthersSize;
                     $candidateOthersUpload->uploaded_date = date('Y-m-d');
                     $candidateOthersUploadStored = $candidateOthersUpload->save();
-
                 }
             }
 
@@ -343,10 +343,8 @@ class CandidateCreateFormController extends Controller
     public function getSpecialization() {
 
         $educational_qualification_id = $_GET['educational_qualification_id'];
-
         $specialization_res = EducationSpecialization::getSpecializationByEducationId($educational_qualification_id);
 
         return json_encode($specialization_res);exit;
     }
 }
-

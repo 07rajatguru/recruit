@@ -22,11 +22,9 @@
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-left">
                 <h2>Candidate Details</h2>
             </div>
-
            <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('candidate.index') }}">Back</a>
             </div>
@@ -187,13 +185,11 @@
                                     <td>{{ $value['uploaded_by'] }}</td>
                                     <td>{{ $value['size'] }}</td>
                                     <td>{{ $value['category'] }}</td>
-
                                 </tr>
                             @endforeach
                         @endif
                     </table>
                 </div>
-
             </div>
         </div>
 
@@ -227,9 +223,7 @@
                         @endif
                     </table>
                 </div>
-
             </div>
         </div>
-
     </div>
 @endsection

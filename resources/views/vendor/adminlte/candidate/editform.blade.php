@@ -84,16 +84,6 @@
                                 </span>
                                 @endif
                             </div>
-
-                            {{--<div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
-                             <strong>Associated Job Opening:</strong>
-                                  {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '7' )) !!}
-                                 @if ($errors->has('job'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('job') }}</strong>
-                                </span>
-                             @endif
-                            </div>--}}
                         </div>
                     </div>
 
@@ -354,7 +344,7 @@
             </div>
         </div>
 
-        @if( $action == 'add')
+        @if($action == 'add')
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">
@@ -377,7 +367,7 @@
             </div>
         @endif
 
-        @if( $action == 'edit')
+        @if($action == 'edit')
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                     <div class="box-header with-border col-md-6 ">
@@ -578,7 +568,7 @@
                     }
                 }
             }
-            catch (exception){
+            catch (exception) {
 
             }
         }
@@ -587,6 +577,7 @@
         // as supplied by the browser's 'navigator.geolocation' object.
 
         function geolocate() {
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var geolocation = {
@@ -602,8 +593,10 @@
             }
         }
 
-        function getNotifications(){
+        function getNotifications() {
+
             jQuery.ajax({
+
                 url:'/notifications/all',
                 dataType:'json',
                 success: function(data){
@@ -634,8 +627,9 @@
             var specialization = $("#specialization").val();
             
             if(educational_qualification_id>0) {
-                $.ajax(
-                {
+
+                $.ajax({
+
                     url:'/specialization/getspecializationbyid',
                     data:{educational_qualification_id:educational_qualification_id},
                     dataType:'json',
@@ -709,9 +703,7 @@
                 return false;
             }
         }
-
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>
-
 @endsection

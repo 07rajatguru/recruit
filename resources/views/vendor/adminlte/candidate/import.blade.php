@@ -23,24 +23,20 @@
     @if(isset($messages) && sizeof($messages)>0)
         <div class="alert alert-success">
             @foreach($messages as $key=>$value)
-                    <p>{{ $value }}</p>
+                <p>{{ $value }}</p>
             @endforeach
         </div>
     @endif
 
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-left">
                 <h2>Import Excel</h2>
             </div>
-
            <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('candidate.index') }}">Back</a>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -49,20 +45,11 @@
                <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
                         <strong>Candidate Source:</strong>
-                            {!! Form::select('candidateSource', $candidateSource,null, array('id'=>'candidateSource','class' => 'form-control', 'tabindex' => '25')) !!}
-
-                <br>
-                <form style="" action="{{ URL::to('candidate/importExcel') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
-
-                    <input type="file" name="import_file" />
-                    {{ csrf_field() }}
-                    <br/>
-
-                    <button class="btn btn-primary">Import CSV or Excel File</button>
-
-                </form>
-
-                <br>
+                        {!! Form::select('candidateSource', $candidateSource,null, array('id'=>'candidateSource','class' => 'form-control', 'tabindex' => '25')) !!}<br>
+                        <form style="" action="{{ URL::to('candidate/importExcel') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+                            <input type="file" name="import_file" />{{ csrf_field() }}<br/>
+                            <button class="btn btn-primary">Import CSV or Excel File</button>
+                        </form><br>
                     </div>
                 </div>
             </div>

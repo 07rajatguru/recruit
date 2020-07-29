@@ -12,7 +12,6 @@
             <div class="pull-left">
                 <h2>Applicant Candidates List <span id="candidate_count">({{ $count or 0 }})</span></h2>
             </div>
-
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
@@ -55,9 +54,10 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
+        jQuery(document).ready(function() {
 
             $("#candidate_table").dataTable({
+                
                 "bProcessing": true,
                 "serverSide": true,
                 "order": [0,'desc'],

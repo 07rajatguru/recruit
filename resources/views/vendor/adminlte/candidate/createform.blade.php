@@ -1,6 +1,6 @@
 @extends('adminlte::master')
 
-@section('title', 'Candidate | Add')
+@section('title', 'Candidate')
 
 @section('customs_css')
 <style>
@@ -18,7 +18,6 @@
 @endsection
 
 @section('body')
-
 
 @if($message = Session::get('success'))
     <div class="alert alert-success">
@@ -385,7 +384,6 @@
 
     <script src="{{ asset('vendor/adminlte/dist/js/app.min.js') }}"></script>
     <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-
     <script>
 
         jQuery(document).ready(function () {
@@ -405,22 +403,18 @@
             });
         });
 
-
-        function getNotifications(){
+        function getNotifications() {
 
             jQuery.ajax({
 
                 url:'/notifications/all',
-
                 dataType:'json',
 
-                success: function(data){
-
-                    console.log(data);
+                success: function(data) {
 
                     $(".notification-ul").empty();
 
-                    for (var i=0; i<data.length; i++){
+                    for (var i=0; i<data.length; i++) {
 
                         var li = '';
 
@@ -441,7 +435,6 @@
                 }
             });
         }
-
     </script>
 
     @stack('js')
@@ -666,7 +659,6 @@
                     }
                 });
             }
-
             else {
 
                 $("#specialization").empty();
@@ -722,6 +714,4 @@
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>
-
 @endsection
-

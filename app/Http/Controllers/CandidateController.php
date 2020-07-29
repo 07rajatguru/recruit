@@ -24,16 +24,13 @@ use App\EducationSpecialization;
     
 class CandidateController extends Controller
 {
-    //
-    public function fullname(){
+    public function fullname() {
         
-        $candidate_fullname = CandidateBasicInfo::select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname')
-                                               // ->limit(20)
-                                                
-                                                ->get();
+        $candidate_fullname = CandidateBasicInfo::select('candidate_basicinfo.id as id', 'candidate_basicinfo.fname as fname', 'candidate_basicinfo.lname as lname')->get();
         
         $i = 0;
         foreach ($candidate_fullname as $candidatefullname) {
+
             $id[$i] = $candidatefullname->id;
             $fname[$i] = $candidatefullname->fname;
             $lname[$i] = $candidatefullname->lname;
@@ -42,62 +39,41 @@ class CandidateController extends Controller
             $ffullname = $fname[$i];
             $lfullname = $lname[$i];
             $fullname = $ffullname. ' ' . $lfullname;
+
             DB::statement("UPDATE candidate_basicinfo SET full_name = '$fullname' where id=$fid");
-        $i++; 
+            $i++; 
         }
-           //print_r($fullname);exit;
-
-
     }
 
     // Candidate Fix salary set to job_candidate_joining table from bills
-    public function candidatesalary(){
+    public function candidatesalary() {
 
         $candidate = JobCandidateJoiningdate::select('job_candidate_joining_date.job_id as job_id','job_candidate_joining_date.candidate_id as candidate_id')->get();
 
         $ids = array();
         $i = 0;
+
         foreach ($candidate as $key => $value) {
+
             $ids[$i]['job_id'] = $value->job_id;
             $ids[$i]['candidate_id'] = $value->candidate_id;
 
             $salary = Bills::getCandidatesalaryByJobidCandidateid($ids[$i]['job_id'],$ids[$i]['candidate_id']);
 
-            
-            //print_r($salary);exit;
             $job_id = $ids[$i]['job_id'];
             $candidate_id = $ids[$i]['candidate_id'];
+
             DB::statement("UPDATE job_candidate_joining_date SET fixed_salary = '$salary' where job_id=$job_id and candidate_id=$candidate_id");
             $i++;
         }
     }
 
-    public function index(){
-
-        /*$user =  \Auth::user();
-
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
-
-
-        $candidateDetails = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
-            ->leftjoin('users','users.id','=','candidate_otherinfo.owner_id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
-                'candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile')
-            ->orderBy('candidate_basicinfo.id','desc')
-            ->get();
-
-        $count = sizeof($candidateDetails);*/
+    public function index() {
 
         $letter = 'Z';
         $letter_array = array();
         $range = range("A", "Z");
+
         foreach ($range as $key => $value) {
             $letter_array[$value] = $value;
         }
@@ -105,18 +81,21 @@ class CandidateController extends Controller
         $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
         $total_count = CandidateBasicInfo::getAllCandidatesCount('','');
         
-        return view('adminlte::candidate.index',/*array('candidates' => $candidateDetails,'count' => sizeof($candidateDetails)),*/compact('count','letter','letter_array','total_count'));
+        return view('adminlte::candidate.index',compact('count','letter','letter_array','total_count'));
     }
 
-    public function applicantIndex()
-    {
+    public function applicantIndex() {
+
         $count = CandidateBasicInfo::getApplicantCandidatesCount('');
         return view('adminlte::candidate.applicantindex',compact('count'));
     }
 
-    public function getCandidateOrderColumnName($order){
+    public function getCandidateOrderColumnName($order) {
+
         $order_column_name = '';
+
         if (isset($order) && $order >= 0) {
+
             if ($order == 0) {
                 $order_column_name = "candidate_basicinfo.id";
             }
@@ -139,10 +118,12 @@ class CandidateController extends Controller
         return $order_column_name;
     }
 
-    public function getApplicantCandidateOrderColumnName($order){
+    public function getApplicantCandidateOrderColumnName($order) {
 
         $order_column_name = '';
+
         if (isset($order) && $order >= 0) {
+
             if ($order == 0) {
                 $order_column_name = "candidate_basicinfo.id";
             }
@@ -174,13 +155,10 @@ class CandidateController extends Controller
         return $order_column_name;
     }
 
-    public function getAllCandidates(){
+    public function getAllCandidates() {
 
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $delete_perm = $user->can('candidate-delete');
 
         $limit = $_GET['length'];
         $offset = $_GET['start'];
@@ -197,11 +175,14 @@ class CandidateController extends Controller
 
         $candidate_details = array();
         $i = 0;$j = 0;
+
         foreach ($response as $key => $value) {
+
             $action = '';
             $action .= '<a class="fa fa-circle" href="'.route('candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
             $action .= '<a class="fa fa-edit" href="'.route('candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
-            if ($isSuperAdmin) {
+
+            if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate','form_name' => 'login']);
                 $delete = $delete_view->render();
                 $action .= $delete;
@@ -218,18 +199,14 @@ class CandidateController extends Controller
             'recordsFiltered' => intval($count),
             "data" => $candidate_details
         );
-        //print_r($json_data);exit;
 
         echo json_encode($json_data);exit;
     }
 
-    public function getAllApplicantCandidates(){
+    public function getAllApplicantCandidates() {
 
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $delete_perm = $user->can('candidate-delete');
 
         $limit = $_GET['length'];
         $offset = $_GET['start'];
@@ -247,10 +224,13 @@ class CandidateController extends Controller
         $all_users = User::getAllUsers('recruiter');
 
         foreach ($response as $key => $value) {
+
             $action = '';
             $action .= '<a class="fa fa-circle" href="'.route('applicant-candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
             $action .= '<a class="fa fa-edit" href="'.route('applicant-candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
-            if ($isSuperAdmin) {
+
+            if ($delete_perm) {
+
                 $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate','form_name' => 'applicant']);
                 $delete = $delete_view->render();
                 $action .= $delete;
@@ -273,68 +253,55 @@ class CandidateController extends Controller
             'recordsFiltered' => intval($count),
             "data" => $candidate_details
         );
-        
-        //print_r($json_data);exit;
-
         echo json_encode($json_data);exit;
     }
 
-    public function candidatejoin($month,$year){
+    public function candidatejoin($month,$year) {
 
         $user =  \Auth::user();
+        $all_perm = $user->can('display-candidates');
+        $owner_perm = $user->can('display-candidates-by-loggedin-user');
 
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        if($all_perm) {
 
-        $user_obj = new User();
-
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-
-        if($isSuperAdmin){
             $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year);
             $count = sizeof($response);
         }
-        else{
+        else if($owner_perm) {
+
             $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year);
             $count = sizeof($response);
         }
         
-        return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count,compact('isSuperAdmin')));
+        return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count));
     }
 
-    public function create(){
+    public function create() {
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
         $candidateSource = CandidateBasicInfo::getCandidateSourceArray();
         $candidateStatus = CandidateBasicInfo::getCandidateStatusArray();
         $highest_qualification = EducationQualification::getAllEducationQualifications();
-        //$jobopen = JobOpen::getJobOpen();
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_jobs_perm) {
             $job_response = JobOpen::getAllJobs(1,$user_id);
         }
-        else{
+        else if($user_jobs_perm) {
             $job_response = JobOpen::getAllJobs(0,$user_id);
         }
 
         $jobopen = array();
         $jobopen[0] = 'Select';
-        foreach ($job_response as $k=>$v){
+
+        foreach ($job_response as $k=>$v) {
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
         }
-
 
         $job_id = 0;
         $highest_qualification_id = '';
@@ -353,17 +320,15 @@ class CandidateController extends Controller
         return view('adminlte::candidate.create',$viewVariable);
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
         $user_id = \Auth::user()->id;
 
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
         $candiateFname = $request->input('fname');
-       // $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
-     //   $candiateFAX = $request->input('fax');
         $candiateStreet1 = $request->input('street1');
         $candiateStreet2 = $request->input('street2');
         $candiateCity = $request->input('city');
@@ -371,7 +336,6 @@ class CandidateController extends Controller
         $candiateCountry = $request->input('country');
         $candiateZipCode = $request->input('zipcode');
         $candidateEmail = $request->input('email');
-      //  $candidatejobopen = $request->input('jobopen');
 
         $candiateHighest_qualification = $request->input('highest_qualification');
         $candiateExperience_years = $request->input('experience_years');
@@ -382,7 +346,6 @@ class CandidateController extends Controller
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        //$candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
         $job_id = $request->input('jobopen');
 
@@ -398,9 +361,6 @@ class CandidateController extends Controller
         if(isset($candiateFname)){
             $candidate->full_name = $candiateFname;
         }
-       /* if(isset($candiateFname)){
-            $candidate->lname = $candiateLname;
-        }*/
         if(isset($candidateEmail)){
             $candidate->email = $candidateEmail;
         }
@@ -440,14 +400,15 @@ class CandidateController extends Controller
 
         $candidateStored = $candidate->save();
 
-        if($candidateStored){
+        if($candidateStored) {
+
             $candidate_id = $candidate->id;
 
             // Save Candidate Other Info
 
             $candidateOtherInfo = new CandidateOtherInfo();
-
             $candidateOtherInfo->candidate_id = $candidate_id;
+
             if(isset($candiateHighest_qualification)){
                 $candidateOtherInfo->highest_qualification = $candiateHighest_qualification;
             }
@@ -475,35 +436,16 @@ class CandidateController extends Controller
             if(isset($candiateSkype_id)){
                 $candidateOtherInfo->skype_id = $candiateSkype_id;
             }
-            /*if(isset($candiateStatus) && $candiateStatus>0){
-                $candidateOtherInfo->status_id = $candiateStatus;
-            }*/
             if(isset($candidateSource)){
                 $candidateOtherInfo->source_id = $candidateSource;
             }
             if(isset($user_id)){
                 $candidateOtherInfo->owner_id = $user_id;
             }
-          
-        
-            
-            /*$candidateOtherInfo->candidate_id = $candidate_id;
-            $candidateOtherInfo->highest_qualification = $request->input('highest_qualification');
-            $candidateOtherInfo->experience_years = $request->input('experience_years');
-            $candidateOtherInfo->experience_months = $request->input('experience_months');
-            $candidateOtherInfo->current_job_title = $request->input('current_job_title');
-            $candidateOtherInfo->current_employer = $request->input('current_employer');
-            $candidateOtherInfo->expected_salary = $request->input('expected_salary');
-            $candidateOtherInfo->current_salary = $request->input('current_salary');
-            $candidateOtherInfo->skill = $request->input('skill');
-            $candidateOtherInfo->skype_id = $request->input('skype_id');
-            $candidateOtherInfo->status_id = $request->input('candidateStatus');
-            $candidateOtherInfo->source_id = $request->input('candidateSource');
-            $candidateOtherInfo->owner_id = $user_id;*/
 
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 
-            if($candidateOtherInfoStored){
+            if($candidateOtherInfoStored) {
 
                 // Save Candidate Documentes
 
@@ -512,7 +454,8 @@ class CandidateController extends Controller
                 $fileCoverLatter = $request->file('cover_letter');
                 $fileOthers = $request->file('others');
 
-                if(isset($fileResume) && $fileResume->isValid()){
+                if(isset($fileResume) && $fileResume->isValid()) {
+
                     $fileResumeName = $fileResume->getClientOriginalName();
                     $fileResumeExtention = $fileResume->getClientOriginalExtension();
                     $fileResumeRealPath = $fileResume->getRealPath();
@@ -548,7 +491,8 @@ class CandidateController extends Controller
                     $candidateFileUploadStored = $candidateFileUpload->save();
                 }
 
-                if(isset($fileFormattedResume) && $fileFormattedResume->isValid()){
+                if(isset($fileFormattedResume) && $fileFormattedResume->isValid()) {
+
                     $fileFormattedResumeName = $fileFormattedResume->getClientOriginalName();
                     $fileFormattedResumeExtention = $fileFormattedResume->getClientOriginalExtension();
                     $fileFormattedResumeRealPath = $fileFormattedResume->getRealPath();
@@ -582,10 +526,9 @@ class CandidateController extends Controller
                     $candidateFormattedFileUpload->size = $fileFormattedResumeSize;
                     $candidateFormattedFileUpload->uploaded_date = date('Y-m-d');
                     $candidateFormattedFileUploadStored = $candidateFormattedFileUpload->save();
-
                 }
 
-                if(isset($fileCoverLatter) && $fileCoverLatter->isValid()){
+                if(isset($fileCoverLatter) && $fileCoverLatter->isValid()) {
 
                     $fileCoverLatterName = $fileCoverLatter->getClientOriginalName();
                     $fileCoverLatterExtention = $fileCoverLatter->getClientOriginalExtension();
@@ -620,10 +563,9 @@ class CandidateController extends Controller
                     $candidateCoverLatterUpload->size = $fileCoverLatterSize;
                     $candidateCoverLatterUpload->uploaded_date = date('Y-m-d');
                     $candidateCoverLatterUploadStored = $candidateCoverLatterUpload->save();
-
                 }
 
-                if(isset($fileOthers) && $fileOthers != ''){
+                if(isset($fileOthers) && $fileOthers != '') {
 
                     foreach ($fileOthers as $k => $v) {
 
@@ -644,6 +586,7 @@ class CandidateController extends Controller
                             mkdir($dir, 0777, true);
                             chmod($dir, 0777);
                         }
+
                         $temp_file_name = trim($fileOthersNameArray[0]);
                         $fileOthersNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
                         $v->move($dir,$fileOthersNewName);
@@ -663,7 +606,8 @@ class CandidateController extends Controller
                     }
                 }
 
-                if(isset($job_id) && $job_id>0){
+                if(isset($job_id) && $job_id>0) {
+
                     $job_id = $request->input('jobopen');
                     $status_id = env('associate_candidate_status', 1);
 
@@ -678,40 +622,24 @@ class CandidateController extends Controller
                     $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
-
             }
         }
 
-        if(isset($job_id) && $job_id>0){
+        if(isset($job_id) && $job_id>0) {
+
             // Candidate Vacancy Details email
             $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($candidate_id,$user_id,$job_id);
         }
-    
         return redirect()->route('candidate.index')->with('success','Candidate Created Successfully');
-
     }
 
-    public function edit($id){
+    public function edit($id) {
 
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
-            ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
-                'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
-                'candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone',
-                'candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email',
-                'candidate_basicinfo.country as country', 'candidate_basicinfo.state as state',
-                'candidate_basicinfo.city as city', 'candidate_basicinfo.street1 as street1',
-                'candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode',
-                'candidate_otherinfo.highest_qualification as highest_qualification', 'candidate_otherinfo.experience_years as experience_years',
-                'candidate_otherinfo.experience_months as experience_months', 'candidate_otherinfo.current_job_title as current_job_title',
-                'candidate_otherinfo.current_employer as current_employer', 'candidate_otherinfo.expected_salary as expected_salary',
-                'candidate_otherinfo.current_salary as current_salary', 'candidate_otherinfo.skill as skill',
-                'candidate_otherinfo.skype_id as skype_id', 'candidate_otherinfo.status_id as candidateStatus',
-                'candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume')
-            ->where('candidate_basicinfo.id',$id)
-            ->where('candidate_otherinfo.deleted_at',null)
-            ->where('candidate_uploaded_resume.deleted_at',null)
-            ->first();
+        ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
+        ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus','candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone','candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email','candidate_basicinfo.country as country', 'candidate_basicinfo.state as state','candidate_basicinfo.city as city', 'candidate_basicinfo.street1 as street1','candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode','candidate_otherinfo.highest_qualification as highest_qualification', 'candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months', 'candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_employer as current_employer', 'candidate_otherinfo.expected_salary as expected_salary','candidate_otherinfo.current_salary as current_salary', 'candidate_otherinfo.skill as skill','candidate_otherinfo.skype_id as skype_id', 'candidate_otherinfo.status_id as candidateStatus','candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume')
+        ->where('candidate_basicinfo.id',$id)->where('candidate_otherinfo.deleted_at',null)
+        ->where('candidate_uploaded_resume.deleted_at',null)->first();
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
@@ -722,24 +650,21 @@ class CandidateController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $user_role_id = User::getLoggedinUserRole($user);
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $manager_role_id = env('MANAGER');
-        $superadmin_role_id = env('SUPERADMIN');
-
-        $access_roles_id = array($admin_role_id,$director_role_id,$manager_role_id,$superadmin_role_id);
-        if(in_array($user_role_id,$access_roles_id)){
+        if($all_jobs_perm) {
             $job_response = JobOpen::getAllJobs(1,$user_id);
         }
-        else{
+        else if($user_jobs_perm) {
             $job_response = JobOpen::getAllJobs(0,$user_id);
         }
 
         $jobopen = array();
         $jobopen[0] = 'Select';
-        foreach ($job_response as $k=>$v){
+
+        foreach ($job_response as $k=>$v) {
+
             $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
         }
 
@@ -752,13 +677,13 @@ class CandidateController extends Controller
 
         $i = 0;
         $candidateDetails = array();
-        $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')
-            ->select('candidate_uploaded_resume.*', 'users.name as upload_name')
-            ->where('candidate_uploaded_resume.candidate_id',$id)
-            ->get();
+        $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')->select('candidate_uploaded_resume.*', 'users.name as upload_name')->where('candidate_uploaded_resume.candidate_id',$id)->get();
+
         $utils = new Utils();
-        if(isset($candidateFiles) && sizeof($candidateFiles) > 0){
+        if(isset($candidateFiles) && sizeof($candidateFiles) > 0) {
+
             foreach ($candidateFiles as $candidateFile) {
+
                 $candidateDetails[$i]['id'] = $candidateFile->id;
                 $candidateDetails[$i]['fileName'] = $candidateFile->file_name;
                 $candidateDetails[$i]['url'] = "../../".$candidateFile->file;
@@ -772,6 +697,7 @@ class CandidateController extends Controller
                 $i++;
             }
         }
+
         $candidate_upload_type['Others'] = 'Others';
 
         $viewVariable = array();
@@ -779,7 +705,6 @@ class CandidateController extends Controller
         $viewVariable['maritalStatus'] = $maritalStatus;
         $viewVariable['candidateSource'] = $candidateSource;
         $viewVariable['candidateStatus'] = $candidateStatus;
-        //$viewVariable['emailDisabled'] = 'disabled';
         $viewVariable['candidate'] = $candidates;
         $viewVariable['jobopen'] = $jobopen;
         $viewVariable['action'] = 'edit';
@@ -789,11 +714,10 @@ class CandidateController extends Controller
         $viewVariable['highest_qualification'] = $highest_qualification;
         $viewVariable['highest_qualification_id'] = $highest_qualification_id;
 
-        //print_r($viewVariable);exit;
         return view('adminlte::candidate.edit',$viewVariable);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id) {
 
         $this->validate($request, [
             'fname' => 'required',
@@ -803,12 +727,9 @@ class CandidateController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        // for redirecting to candidate associating page after updating candidate info
-
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
         $candiateFname = $request->input('fname');
-       // $candiateLname = $request->input('lname');
         $candiateMobile = $request->input('mobile');
         $candiatePhone = $request->input('phone');
         $candiateFAX = $request->input('fax');
@@ -829,11 +750,12 @@ class CandidateController extends Controller
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        //$candiateStatus = $request->input('candidateStatus');
         $candidateSource = $request->input('candidateSource');
 
         $candidate = CandidateBasicInfo::find($id);
-        if(isset($candidate) && $candidate != ''){
+
+        if(isset($candidate) && $candidate != '') {
+
             if(isset($candidateEmail)){
                 $candidate->email = $candidateEmail;
             }
@@ -846,9 +768,6 @@ class CandidateController extends Controller
             if(isset($candiateFname)){
                 $candidate->full_name = $candiateFname;
             }
-            /*if(isset($candiateFname)){
-                $candidate->lname = $candiateLname;
-            }*/
             if(isset($candiateMobile)){
                 $candidate->mobile = $candiateMobile;
             }
@@ -879,19 +798,22 @@ class CandidateController extends Controller
 
             $validator = \Validator::make(Input::all(),$candidate::$rules);
 
-            if($validator->fails()){
+            if($validator->fails()) {
                 return redirect('candidate/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
             }
 
             $candidateUpdated = $candidate->save();
 
-            if($candidateUpdated){
+            if($candidateUpdated) {
+
                 $candidate_id = $candidate->id;
 
                 $candidateOtherInfo = CandidateOtherInfo::where('candidate_id',$candidate_id)->first();
-                if(!isset($candidateOtherInfo) && sizeof($candidateOtherInfo) == 0){
+
+                if(!isset($candidateOtherInfo) && sizeof($candidateOtherInfo) == 0) {
                     $candidateOtherInfo = new CandidateOtherInfo();
                 }
+
                 $candidateOtherInfo->candidate_id = $candidate_id;
 
                 if(isset($candiateHighest_qualification)){
@@ -921,22 +843,19 @@ class CandidateController extends Controller
                 if(isset($candiateSkype_id)){
                     $candidateOtherInfo->skype_id = $candiateSkype_id;
                 }
-                /*if(isset($candiateStatus) && $candiateStatus!=''){
-                    $candidateOtherInfo->status_id = $candiateStatus;
-                }*/
                 if(isset($candidateSource)){
                     $candidateOtherInfo->source_id = $candidateSource;
                 }
-                
-                /*if(isset($user_id)){
-                    $candidate->owner_id = $user_id;
-                }*/
+
                 $candidateOtherInfoUpdated = $candidateOtherInfo->save();
 
-                if($candidateOtherInfoUpdated){
+                if($candidateOtherInfoUpdated) {
+
                     $candidate_upload_type = $request->candidate_upload_type;
                     $file = $request->file('file');
+
                     if (isset($file) && $file->isValid()) {
+
                         $fileName = $file->getClientOriginalName();
                         $fileExtention = $file->getClientOriginalExtension();
                         $fileRealPath = $file->getRealPath();
@@ -954,6 +873,7 @@ class CandidateController extends Controller
                             mkdir($dir, 0777, true);
                             chmod($dir, 0777);
                         }
+
                         $temp_file_name = trim($fileNameArray[0]);
                         $fileNewName = $temp_file_name.date('ymdhhmss').'.'.$extention;
                         $file->move($dir,$fileNewName);
@@ -970,15 +890,16 @@ class CandidateController extends Controller
                         $candidateFileUpload->uploaded_date = date('Y-m-d');
                         $candidateFileUploadUpdated = $candidateFileUpload->save();
 
-                        //return redirect('candidate/'.$candidate_id.'/edit');
-
                         return redirect()->route('candidate.edit',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
                     }
                 }
+
                 $job_id = $request->input('jobopen');
 
                 JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->delete();
-                if(isset($job_id) && $job_id>0){
+
+                if(isset($job_id) && $job_id>0) {
+
                     $job_id = $request->input('jobopen');
                     $status_id = env('associate_candidate_status', 1);
 
@@ -993,20 +914,19 @@ class CandidateController extends Controller
                     $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
-            } 
-
+            }
             else {
                 return redirect('candiate/')->with('error','Something went wrong while updating');
             }
-            return redirect()->route('candidate.index')->with('success','Candidate Updated Successfully');
-
-        } else {
+            return redirect()->route('candidate.index')->with('success','Candidate Updated Successfully.');
+        }
+        else {
             return redirect('candiate/')->with('error','No Candiate found');
         }
     }
 
-    public function show($id){
-//print_r($id);exit;
+    public function show($id) {
+
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
             ->leftjoin('candidate_source','candidate_source.id','=','candidate_otherinfo.source_id')
@@ -1027,28 +947,24 @@ class CandidateController extends Controller
                 'candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume',
                 'candidate_uploaded_resume.file as file', 'users.name as uploaded_by',
                 'candidate_status.name as candidate_status_name', 'candidate_source.name as candidate_source_name','eduction_qualification.name as eduction_qualification_value')
-            ->where('candidate_basicinfo.id',$id)
-            ->where('candidate_otherinfo.deleted_at',null)
-            ->where('candidate_uploaded_resume.deleted_at',null)
-            ->first();
-//print_r($candidates);exit;
+            ->where('candidate_basicinfo.id',$id)->where('candidate_otherinfo.deleted_at',null)
+            ->where('candidate_uploaded_resume.deleted_at',null)->first();
+
         $candidateDetails = array();
 
         $candidateModel = new CandidateBasicInfo();
         $candidate_upload_type = $candidateModel->candidate_upload_type;
 
-        if(isset($candidates) && $candidates != ''){
+        if(isset($candidates) && $candidates != '') {
 
             $candidateDetails['id'] = $candidates->id;
             $candidateDetails['fname'] = $candidates->fname;
-           // $candidateDetails['lname'] = $candidates->lname;
             $candidateDetails['email'] = $candidates->email;
             $candidateDetails['candidateSex'] = $candidates->candidateSex;
             $candidateDetails['maritalStatus'] = $candidates->maritalStatus;
             $candidateDetails['mobile'] = $candidates->mobile;
             $candidateDetails['phone'] = $candidates->phone;
             $candidateDetails['jobopen'] = $candidates->jobopen;
-          //  $candidateDetails['fax'] = $candidates->fax;
             $candidateDetails['country'] = $candidates->country;
             $candidateDetails['state'] = $candidates->state;
             $candidateDetails['city'] = $candidates->city;
@@ -1071,16 +987,18 @@ class CandidateController extends Controller
             $candidateDetails['fileUrl'] = $candidates->file;
             $candidateDetails['uploaded_by'] = $candidates->uploaded_by;
 
-
             $i = 0;
             $candidateDetails['files'] = array();
+
             $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')
                 ->select('candidate_uploaded_resume.*', 'users.name as upload_name')
-                ->where('candidate_uploaded_resume.candidate_id',$id)
-                ->get();
+                ->where('candidate_uploaded_resume.candidate_id',$id)->get();
+
             $utils = new Utils();
-            if(isset($candidateFiles) && sizeof($candidateFiles) > 0){
+            if(isset($candidateFiles) && sizeof($candidateFiles) > 0) {
+
                 foreach ($candidateFiles as $candidateFile) {
+
                     $candidateDetails['files'][$i]['id'] = $candidateFile->id;
                     $candidateDetails['files'][$i]['fileName'] = $candidateFile->file_name;
                     $candidateDetails['files'][$i]['url'] = "../../".$candidateFile->file;
@@ -1093,7 +1011,6 @@ class CandidateController extends Controller
                     }
 
                     $i++;
-
                 }
             }
 
@@ -1101,34 +1018,36 @@ class CandidateController extends Controller
             $i = 0;
 
             $candidateJob = JobAssociateCandidates::join('job_openings','job_openings.id','=','job_associate_candidates.job_id')
-                                ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
-                                ->join('users','users.id','=','job_openings.hiring_manager_id')
-                                ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date')
-                                ->where('job_associate_candidates.candidate_id',$id)
-                                ->get();
-
+            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
+            ->join('users','users.id','=','job_openings.hiring_manager_id')
+            ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date')
+            ->where('job_associate_candidates.candidate_id',$id)->get();
 
             if (isset($candidateJob) && sizeof($candidateJob) > 0) {
+
                 foreach ($candidateJob as $candidateJobs) {
+
                     $candidateDetails['job'][$i]['posting_title'] = $candidateJobs->posting_title;
                     $candidateDetails['job'][$i]['company_name'] = $candidateJobs->company_name;
 
                     $location ='';
-                    if($candidateJobs->city!=''){
+
+                    if($candidateJobs->city!='') {
                         $location .= $candidateJobs->city;
                     }
-                    if($candidateJobs->state!=''){
+                    if($candidateJobs->state!='') {
                         if($location=='')
                             $location .= $candidateJobs->state;
                         else
                             $location .= ", ".$candidateJobs->state;
                     }
-                    if($candidateJobs->country!=''){
+                    if($candidateJobs->country!='') {
                         if($location=='')
                             $location .= $candidateJobs->country;
                         else
                             $location .= ", ".$candidateJobs->country;
                     }
+
                     $date_time = strtotime($candidateJobs->date);
                     date_default_timezone_set("Asia/kolkata");
                     $candidateDetails['job'][$i]['location'] = $location;
@@ -1147,38 +1066,35 @@ class CandidateController extends Controller
         $viewVariable['candidate_upload_type'] = $candidate_upload_type;
         $viewVariable['action'] = 'show';
 
-//        print_r($candidates);exit;
-
         return view('adminlte::candidate.show',$viewVariable);
     }
 
-    public function destroy($id){
+    public function destroy($id) {
 
         $form_name = $_POST['form_name'];
 
         $res = CandidateBasicInfo::CheckAssociation($id);
 
-        if($res){
+        if($res) {
+
             $candidateUplodedDocDel = CandidateUploadedResume::where('candidate_id',$id)->delete();
             $candidateOtherInfoDel = CandidateOtherInfo::where('candidate_id',$id)->delete();
             $candidateBasicInfoDel = CandidateBasicInfo::where('id',$id)->delete();
 
-            if(isset($form_name) && $form_name == 'applicant'){
+            if(isset($form_name) && $form_name == 'applicant') {
 
                 return redirect()->route('applicant.candidate')->with('success','Candidate Deleted Successfully.');
             }
-            else{
-
+            else {
                 return redirect()->route('candidate.index')->with('success','Candidate Deleted Successfully.');
             }
         }
-        else{
+        else {
             return redirect()->route('candidate.index')->with('error','Candidate is associated with job.!!');
         }
-        //return redirect()->route('candidate.index');
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request) {
 
         // For Applicant candidate
         $form_name = $request->form_name;
@@ -1189,7 +1105,8 @@ class CandidateController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        if(isset($file) && $file->isValid()){
+        if(isset($file) && $file->isValid()) {
+
             $fileName = $file->getClientOriginalName();
             $fileExtention = $file->getClientOriginalExtension();
             $fileRealPath = $file->getRealPath();
@@ -1207,6 +1124,7 @@ class CandidateController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
+
             $temp_file_name = trim($fileNameArray[0]);
             $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
             $file->move($dir,$fileNewName);
@@ -1233,13 +1151,11 @@ class CandidateController extends Controller
         }
     }
 
-    public function attachmentsDestroy($fileId){
+    public function attachmentsDestroy($fileId) {
 
         $candiateFileDetails = CandidateUploadedResume::find($fileId);
-
         unlink($candiateFileDetails->file);
-
-        $candidateFileDelete = CandidateUploadedResume::where('id',$fileId)->delete();
+        CandidateUploadedResume::where('id',$fileId)->delete();
 
         $candidateId = $_POST['id'];
 
@@ -1249,21 +1165,23 @@ class CandidateController extends Controller
             return redirect()->route('candidate.edit',[$candidateId])->with('success','Attachment Deleted Successfully.');
         }
 
-        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantShow'){
+        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantShow') {
             return redirect()->route('applicant-candidate.show',[$candidateId])->with('success','Attachment Deleted Successfully.');
         }
 
-        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantEdit'){
+        if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantEdit') {
             return redirect()->route('applicant-candidate.edit',[$candidateId])->with('success','Attachment Deleted Successfully.');
         }
 
         return redirect()->route('candidate.show',[$candidateId])->with('success','Attachment deleted Successfully');
     }
 
-    public function getCandidateInfo($id){
+    public function getCandidateInfo($id) {
+
         $candidate = CandidateBasicInfo::find($id);
 
         $response['returnvalue'] = 'invalid';
+
         if(isset($candidate->phone)) {
             $response['phone'] = $candidate->phone;
             $response['returnvalue'] = 'valid';
@@ -1276,22 +1194,23 @@ class CandidateController extends Controller
         return json_encode($response);exit;
     }
 
-    public function extractResume(){
+    public function extractResume() {
+
         return view('adminlte::candidate.extractResume');
     }
 
-    public function extractResumeStore(Request $request){
+    public function extractResumeStore(Request $request) {
 
         $file = $request->file('file');
         $user_id = \Auth::user()->id;
 
-        if(isset($file) && $file->isValid()){
+        if(isset($file) && $file->isValid()) {
+
             $fileName = $file->getClientOriginalName();
             $fileExtention = $file->getClientOriginalExtension();
             $fileRealPath = $file->getRealPath();
             $fileSize = $file->getSize();
             $fileMimeType = $file->getMimeType();
-//            print_r($fileExtention);exit;
 
             $extention = File::extension($fileName);
 
@@ -1304,6 +1223,7 @@ class CandidateController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
+
             $glob = glob('uploads/resume/*.*');
             $glob = sprintf('%02d', count($glob) + 1);
             $fileNewName = $glob.'-'.$fileName;
@@ -1313,8 +1233,8 @@ class CandidateController extends Controller
             if ($fileExtention == 'pdf') {
                 $pdfObj = new pdfParser();
                 $resumeText = $pdfObj->parseFile($fileNewPath);
-                // $resumeText = $pdfObj->getText();
-            } else {
+            }
+            else {
                 $docObj = new docParser($fileNewPath);
                 $resumeText = $docObj->convertToText();
             }
@@ -1324,20 +1244,15 @@ class CandidateController extends Controller
             $records = [];
 
             foreach ($fileInfo as $row) {
-                // if($row == '') continue;
-                // $parts = explode(',12', $row);
+
                 $parts = preg_split('/(?<=[.?!])\s+(?=[a-z])/i', $row);
 
                 foreach ($parts as $part) {
                     if ($part == '') {
                         continue;
                     }
-
-                    // echo $part.'<br><br>';
+                   
                     $part = strtolower($part);
-
-//                    print_r(strpos($part,'name'));exit;
-                    //  ***************  EMAIL  **************
 
                     if (strpos($part, '@') || strpos($part, 'mail')) {
                         $pattern = '/[a-z0-9_\-\+]+@[a-z0-9\-]+\.([a-z]{2,3})(?:\.[a-z]{2})?/i';
@@ -1346,9 +1261,7 @@ class CandidateController extends Controller
                         foreach ($matches[0] as $match) {
                             $records['email'] = $match;
                         }
-//                        print_r($part);exit;
                     }
-
 
                     //  ***************  MOBILE  **************
 
@@ -1374,13 +1287,10 @@ class CandidateController extends Controller
                     }
 
                     //  ***************  NAME  **fe************
-//                    print_r($part);exit;
-
 
                     if (preg_match('/name/', $part)) {
-                        $name = preg_split('/:|-/', $part);
 
-//                        print_r($name);exit;
+                        $name = preg_split('/:|-/', $part);
 
                         if(sizeof($name) > 1){
                             $nameArr = explode(' ',$name[1]);
@@ -1400,36 +1310,28 @@ class CandidateController extends Controller
                         $records['fname'] = $fname;
                         $records['lname'] = $lname;
 
-                    } else {
+                    }
+                    else {
 
                         if (isset($records['email'])) {
                             $email = $records['email'];
                             $e = explode('@', $email);
                             $records['name']= $e[0];
-                            if(!isset($records['fname']) || $records['fname']==''){
+                            if(!isset($records['fname']) || $records['fname']=='') {
                                 $records['fname'] = $e[0];
-                                //$records['lname'] = $e[0];
                             }
-                            if(!isset($records['lname']) || $records['lname']==''){
+                            if(!isset($records['lname']) || $records['lname']=='') {
                                 $records['lname'] = $e[0];
-                                //$records['lname'] = $e[0];
                             }
-                            /*foreach ($records['email'] as $email) {
-                                $e = explode('@', $email);
-                                $records['name']= $e[0];
-                                // code...
-                            }*/
                         }
                     }
-
-
 
                     if (preg_match('/phone/', $part)) {
 
                         $phone = preg_split('/:|-/', $part);
-
                         $records['phone'] = $phone[1];
-                    } else {
+                    }
+                    else {
                         $records['phone'] = null;
                     }
 
@@ -1437,7 +1339,8 @@ class CandidateController extends Controller
 
                         $fax = preg_split('/:|-/', $part);
                         $records['fax'] = $fax[1];
-                    } else {
+                    }
+                    else {
                         $records['fax'] = null;
                     }
 
@@ -1449,14 +1352,17 @@ class CandidateController extends Controller
                         } else {
                             $records['sex'] = 'Female';
                         }
-                    } else {
+                    }
+                    else {
                         $records['sex'] = null;
                     }
 
                     if (preg_match('/marital status/', $part)) {
+
                         $marital_status = preg_split('/:_|-/', $part);
 
-                        if(sizeof($marital_status) > 1){
+                        if(sizeof($marital_status) > 1) {
+
                             if($marital_status[1] == 'Single' || $marital_status[1] == 'single'){
                                 $records['marital_status'] = 'Single';
                             } elseif($marital_status[1] == 'Engaged' || $marital_status[1] == 'engaged') {
@@ -1464,7 +1370,9 @@ class CandidateController extends Controller
                             } elseif($marital_status[1] == 'Married' || $marital_status[1] == 'married') {
                                 $records['marital_status'] = 'Married';
                             }
-                        } else {
+                        }
+                        else {
+
                             if($marital_status[0] == 'Single' || $marital_status[0] == 'single'){
                                 $records['marital_status'] = 'Single';
                             } elseif($marital_status[0] == 'Engaged' || $marital_status[0] == 'engaged') {
@@ -1473,7 +1381,8 @@ class CandidateController extends Controller
                                 $records['marital_status'] = 'Married';
                             }
                         }
-                    } else {
+                    }
+                    else {
                         $records['marital_status'] = null;
                     }
                 }
@@ -1488,11 +1397,13 @@ class CandidateController extends Controller
             if(!isset($records['marital_status']) || $records['marital_status']==''){
                 $records['marital_status'] = 'Single';
             }
-            //print_r($records);exit;
+
             if(isset($records) && sizeof($records) > 0){
+
                 if(isset($records['fname']) && $records['fname']!= ''
                     && isset($records['lname']) && $records['lname']!=''
-                    && isset($records['mobile']) && $records['mobile']!='' ){
+                    && isset($records['mobile']) && $records['mobile']!='' ) {
+
                     $candidateBasicInfo = new CandidateBasicInfo();
                     $candidateBasicInfo->fname = $records['fname'];
                     $candidateBasicInfo->lname = $records['lname'];
@@ -1503,19 +1414,14 @@ class CandidateController extends Controller
                     $candidateBasicInfo->phone = $records['phone'];
                     $candidateBasicInfo->fax = $records['fax'];
 
-                    //print_r($candidateBasicInfo);exit;
                     $candidateBasicInfoStored = $candidateBasicInfo->save();
-
                     $candidateId = $candidateBasicInfo->id;
 
-                    if(isset($candidateId)){
+                    if(isset($candidateId)) {
 
                         $fileName = $file->getClientOriginalName();
                         $fileExtention = $file->getClientOriginalExtension();
                         $fileRealPath = $file->getRealPath();
-//                    $fileSize = $file->getSize();
-//                    $fileMimeType = $file->getMimeType();
-
                         $extention = File::extension($fileName);
 
                         $fileNameArray = explode('.',$fileName);
@@ -1529,8 +1435,7 @@ class CandidateController extends Controller
                         }
                         $temp_file_name = trim($fileNameArray[0]);
                         $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-//                    $file->move($dirNew,$fileNewName);
-//                    $move = File::move($fileNewPath)
+
                         rename($fileNewPath,$dirNew.$fileNewName);
 
                         $fileRenamedNewPath = $dirNew.$fileNewName;
@@ -1546,35 +1451,33 @@ class CandidateController extends Controller
                         $candidateFileUpload->uploaded_date = date('Y-m-d');
                         $candidateFileUploadStored = $candidateFileUpload->save();
 
-
                         @unlink($fileNewPath);
                     }
-
                     return redirect('candidate/'.$candidateId.'/show');
                 }
                 else {
                     return redirect('candidate/resume')->with('error','Sorry, not able to fetch data from file');
                 }
-
-            } else {
+            }
+            else {
                 return redirect('candidate/resume')->with('error','Sorry, there was an error uploading your file');
             }
-        } else {
+        }
+        else {
             return redirect('candidate/resume')->with('error','Sorry, invalid file type.');
         }
-//        return view('adminlte::candidate.extractResume');
     }
 
-    public function importExport(){
+    public function importExport() {
 
         $candidateSource = CandidateBasicInfo::getCandidateimportsource();
-
         return view('adminlte::candidate.import',compact('candidateSource'));
     }
 
-    public function importn1excel(){
+    public function importn1excel() {
 
         if($request->hasFile('import_file')) {
+
             $path = $request->file('import_file')->getRealPath();
 
             $data = Excel::load($path, function ($reader) {})->get();
@@ -1586,11 +1489,7 @@ class CandidateController extends Controller
                 foreach ($data->toArray() as $key => $value) {
 
                     if(!empty($value)) {
-                        //foreach ($value as $v) {
-                           //print_r($value);exit;
-
-                            //$sr_no = $v['sr_no'];
-                          //  $managed_by = $v['managed_by'];
+                       
                             $name = $value['name'];
                             $gender = $value['gender'];
                             $marital_status =$value['marital_status'];
@@ -1608,18 +1507,16 @@ class CandidateController extends Controller
                             // first check email already exist or not , if exist doesnot update data
                             $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
 
-                            if($candidate_cnt>0){
+                            if($candidate_cnt>0) {
                                 $messages[] = "Record $name already present ";
                             }
-                            else{
-                                   // $namearray = explode(' ', $name);
+                            else {
                                     $mobilearray = explode(',', $mobile_number);
                                     $addressarray = explode(',', $address);
 
                                     // Insert new candidate
                                     $candidate_basic_info = new CandidateBasicInfo();
                                     $candidate_basic_info->full_name = $name;
-                                    //$candidate_basic_info->lname = $namearray[1];
                                     $candidate_basic_info->email = $email;
                                     $candidate_basic_info->mobile = $mobilearray[0];
                                     if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){
@@ -1635,9 +1532,9 @@ class CandidateController extends Controller
                                     $candidate_basic_info->city = $city;
                                     $candidate_basic_info->zipcode = $zipcode;
                                     $candidate_basic_info->street1 = $addressarray[0];
-                                    //$candidate_basic_info->street2 = $addressarray[1];
 
                                     if($candidate_basic_info->save()) {
+
                                         $candidate_id = $candidate_basic_info->id;
 
                                         $experiencearray = explode(' ', $experience);
@@ -1650,47 +1547,33 @@ class CandidateController extends Controller
                                         $candidate_otherinfo->experience_years = $experiencearray[0];
                                         $candidate_otherinfo->experience_months = $experiencearray[2];
                                         $candidate_otherinfo->skill = $skill;
+
                                         if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
-                                            # code...
-                                        $candidate_otherinfo->current_salary = $currentsalaryarray[1];
+                                            $candidate_otherinfo->current_salary = $currentsalaryarray[1];
                                         }
+
                                         $candidate_otherinfo->owner_id = $user_id;
                                         $candidate_otherinfo->save();
-                                        //CandidateOtherInfo::create($input);
 
                                         if ($candidate_id > 0) {
                                             $messages[] = "Record $name inserted successfully";
                                         }
-
                                     }
-                                    else{
+                                    else {
                                         $messages[] = "Error while inserting record $sr_no ";
                                     }
                                 }
-
                             }
-                    
-                    else{
+                    else {
                         $messages[] = "No Data in file";
                     }
-
                 }
             }
-
             return view('adminlte::candidate.import',compact('messages'));
-            //return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
-     }
-    
+    }
 
-    public function importn2excel(){
-
-        $messages = "Work in progress";
-
-        return view('adminlte::candidate.import',compact('messages'));
-     }
-
-    public function importExcel(Request $request){
+    public function importExcel(Request $request) {
 
         $user_id = \Auth::user()->id;
 
@@ -1718,11 +1601,7 @@ class CandidateController extends Controller
                 foreach ($data->toArray() as $key => $value) {
 
                     if(!empty($value)) {
-                        //foreach ($value as $v) {
-                           //print_r($value);exit;
 
-                            //$sr_no = $v['sr_no'];
-                          //  $managed_by = $v['managed_by'];
                             $name = $value['name'];
                             $gender = $value['gender'];
                             $marital_status =$value['marital_status'];
@@ -1740,36 +1619,37 @@ class CandidateController extends Controller
                             // first check email already exist or not , if exist doesnot update data
                             $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
 
-                            if($candidate_cnt>0){
+                            if($candidate_cnt>0) {
                                 $messages[] = "Record $name already present ";
                             }
-                            else{
-                                   // $namearray = explode(' ', $name);
+                            else {
                                     $mobilearray = explode(',', $mobile_number);
                                     $addressarray = explode(',', $address);
 
                                     // Insert new candidate
                                     $candidate_basic_info = new CandidateBasicInfo();
                                     $candidate_basic_info->full_name = $name;
-                                    //$candidate_basic_info->lname = $namearray[1];
                                     $candidate_basic_info->email = $email;
                                     $candidate_basic_info->mobile = $mobilearray[0];
-                                    if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){
+
+                                    if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0) {
                                         $candidate_basic_info->phone = $mobilearray[1];
                                     }
+
                                     if ($marital_status == 'Single/unmarried') {
                                          $candidate_basic_info->marital_status = 'Single';     
                                     }
-                                    else{
-                                    $candidate_basic_info->marital_status = $marital_status;
+                                    else {
+                                        $candidate_basic_info->marital_status = $marital_status;
                                     }
+
                                     $candidate_basic_info->type = $gender;
                                     $candidate_basic_info->city = $city;
                                     $candidate_basic_info->zipcode = $zipcode;
                                     $candidate_basic_info->street1 = $addressarray[0];
-                                    //$candidate_basic_info->street2 = $addressarray[1];
 
                                     if($candidate_basic_info->save()) {
+
                                         $candidate_id = $candidate_basic_info->id;
 
                                         $experiencearray = explode(' ', $experience);
@@ -1782,41 +1662,35 @@ class CandidateController extends Controller
                                         $candidate_otherinfo->experience_years = $experiencearray[0];
                                         $candidate_otherinfo->experience_months = $experiencearray[2];
                                         $candidate_otherinfo->skill = $skill;
+
                                         if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
-                                            # code...
-                                        $candidate_otherinfo->current_salary = $currentsalaryarray[1];
+                                            $candidate_otherinfo->current_salary = $currentsalaryarray[1];
                                         }
+
                                         $candidate_otherinfo->owner_id = $user_id;
                                         $candidate_otherinfo->save();
-                                        //CandidateOtherInfo::create($input);
 
                                         if ($candidate_id > 0) {
                                             $messages[] = "Record $name inserted successfully";
                                         }
-
                                     }
-                                    else{
+                                    else {
                                         $messages[] = "Error while inserting record $sr_no ";
                                     }
                                 }
-
                             }
                     
-                    else{
+                    else {
                         $messages[] = "No Data in file";
                     }
-
                 }
             }
-
             return view('adminlte::candidate.import',compact('messages'));
-            //return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
-
         return view('adminlte::candidate.import',compact('messages','candidateSource'));
     }
 
-    public function getCandidateOwner(Request $request){
+    public function getCandidateOwner(Request $request) {
 
         $candidate_owner = $request->get('candidate_owner');
         $id = $request->get('id');
@@ -1826,7 +1700,7 @@ class CandidateController extends Controller
         return redirect()->route('applicant.candidate')->with('success', 'Candidate owner Updated Successfully.');
     }
 
-    public function applicantCandidateShow($id){
+    public function applicantCandidateShow($id) {
 
         $candidateDetails = CandidateBasicInfo::getCandidateDetailsById($id);
 
@@ -1853,8 +1727,8 @@ class CandidateController extends Controller
                 $candidateDetails['files'][$i]['uploaded_by'] = $candidateFile->upload_name ;
                 $candidateDetails['files'][$i]['size'] = $utils->formatSizeUnits($candidateFile->size);
 
-                if (array_search($candidateFile->file_type, $candidate_upload_type))
-                {
+                if (array_search($candidateFile->file_type, $candidate_upload_type)) {
+
                     unset($candidate_upload_type[array_search($candidateFile->file_type, $candidate_upload_type)]);
                 }
 
@@ -1870,7 +1744,7 @@ class CandidateController extends Controller
         return view('adminlte::candidate.applicantcandidateshow',$viewVariable);
     }
 
-    public function applicantCandidateEdit($id){
+    public function applicantCandidateEdit($id) {
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
@@ -1897,14 +1771,13 @@ class CandidateController extends Controller
         $candidateDetails = array();
         $candidateFiles = CandidateUploadedResume::join('users','users.id','=','candidate_uploaded_resume.uploaded_by')
             ->select('candidate_uploaded_resume.*', 'users.name as upload_name')
-            ->where('candidate_uploaded_resume.candidate_id',$id)
-            ->get();
+            ->where('candidate_uploaded_resume.candidate_id',$id)->get();
 
         $utils = new Utils();
-        if(isset($candidateFiles) && sizeof($candidateFiles) > 0)
-        {
-            foreach ($candidateFiles as $candidateFile)
-            {
+        if(isset($candidateFiles) && sizeof($candidateFiles) > 0) {
+
+            foreach ($candidateFiles as $candidateFile) {
+
                 $candidateDetails[$i]['id'] = $candidateFile->id;
                 $candidateDetails[$i]['fileName'] = $candidateFile->file_name;
                 $candidateDetails[$i]['url'] = "../../".$candidateFile->file;
@@ -1912,18 +1785,17 @@ class CandidateController extends Controller
                 $candidateDetails[$i]['uploaded_by'] = $candidateFile->upload_name ;
                 $candidateDetails[$i]['size'] = $utils->formatSizeUnits($candidateFile->size);
 
-                if (array_search($candidateFile->file_type, $candidate_upload_type))
-                {
+                if (array_search($candidateFile->file_type, $candidate_upload_type)) {
+
                     unset($candidate_upload_type[array_search($candidateFile->file_type, $candidate_upload_type)]);
                 }
                 $i++;
             }
         }
+
         $candidate_upload_type['Others'] = 'Others';
 
-
         $viewVariable = array();
-
         $viewVariable['action'] = 'edit';
         $viewVariable['candidateSex'] = $candidateSex;
         $viewVariable['maritalStatus'] = $maritalStatus;
@@ -1937,7 +1809,7 @@ class CandidateController extends Controller
         return view('adminlte::candidate.editform',$viewVariable);
     }
 
-    public function applicantCandidateUpdate(Request $request, $id){
+    public function applicantCandidateUpdate(Request $request, $id) {
 
         // For Applicant candidate Attchments
         $form_name = $request->form_name;
@@ -1947,6 +1819,7 @@ class CandidateController extends Controller
         $user_id = \Auth::user()->id;
 
         if(isset($file) && $file->isValid()){
+
             $fileName = $file->getClientOriginalName();
             $fileExtention = $file->getClientOriginalExtension();
             $fileRealPath = $file->getRealPath();
@@ -1964,6 +1837,7 @@ class CandidateController extends Controller
                 mkdir($dir, 0777, true);
                 chmod($dir, 0777);
             }
+            
             $temp_file_name = trim($fileNameArray[0]);
             $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
             $file->move($dir,$fileNewName);
@@ -2100,11 +1974,9 @@ class CandidateController extends Controller
             if(isset($educational_qualification_id) && $educational_qualification_id != ''){
                 $candidateOtherInfo->educational_qualification_id = $educational_qualification_id;
             }
-
             $candidateOtherInfo->login_candidate = '1';
             $candidateOtherInfo->save();
         }
-
         return redirect()->route('applicant.candidate')->with('success','Candidate Details Updated Successfully.');
     }
 }
