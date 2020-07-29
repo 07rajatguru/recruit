@@ -23,7 +23,6 @@ class IndustryController extends Controller
         return view('adminlte::industry.index',compact('industry','count'));
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -35,7 +34,6 @@ class IndustryController extends Controller
         $action = "add" ;
         return view('adminlte::industry.create',compact('action'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -54,7 +52,7 @@ class IndustryController extends Controller
         $industry->name = $request->input('name');
         $industry->save();
 
-        return redirect()->route('industry.index')->with('success','Industry created successfully');
+        return redirect()->route('industry.index')->with('success','Industry Added Successfully.');
     }
 
     /**
@@ -102,7 +100,7 @@ class IndustryController extends Controller
         $industry->name = $request->input('name');
         $industry->save();
 
-        return redirect()->route('industry.index')->with('success','Industry updated successfully');
+        return redirect()->route('industry.index')->with('success','Industry Updated Successfully.');
     }
 
     /**
@@ -122,6 +120,6 @@ class IndustryController extends Controller
         }
         
         DB::table("industry")->where('id',$id)->delete();
-        return redirect()->route('industry.index')->with('success','Industry deleted successfully.');
+        return redirect()->route('industry.index')->with('success','Industry Deleted Successfully.');
     }
 }

@@ -30,12 +30,12 @@ class candidateStatusController extends Controller
         if($validator->fails()){
             return redirect('candidateSource/create')->withInput(Input::all())->withErrors($validator->errors());
         }
-        $candidateStatusStored = $candidateStatus->save();
+        $candidateStatus->save();
 
-        return redirect()->route('candidateStatus.index')->with('success','Candidate Status Created Successfully');
+        return redirect()->route('candidateStatus.index')->with('success','Candidate Status Created Successfully.');
     }
 
-    public function edit(Request $request,$id) {
+    public function edit($id) {
 
         $candidateStatus = CandidateStatus::find($id);
 
@@ -46,7 +46,7 @@ class candidateStatusController extends Controller
         return view('adminlte::candidateStatus.edit',$viewVariable);
     }
 
-    public function update(Request $request,$id) {
+    public function update(Request $request, $id) {
 
         $candidateStatus = CandidateStatus::find($id);
         $candidateStatus->name = $request->input('name');
@@ -55,14 +55,15 @@ class candidateStatusController extends Controller
         if($validator->fails()){
             return redirect('candidateStatus/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
-        $candidateStatusStored = $candidateStatus->save();
 
-        return redirect()->route('candidateStatus.index')->with('success','Candidate Status Updated Successfully');
+        $candidateStatus->save();
+
+        return redirect()->route('candidateStatus.index')->with('success','Candidate Status Updated Successfully.');
     }
 
     public function destroy($id) {
-        $candidateStatusDelete = CandidateStatus::where('id',$id)->delete();
 
-        return redirect()->route('candidateStatus.index')->with('success','Candidate Status deleted Successfully');
+        CandidateStatus::where('id',$id)->delete();
+        return redirect()->route('candidateStatus.index')->with('success','Candidate Status Deleted Successfully.');
     }
 }

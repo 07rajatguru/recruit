@@ -46,12 +46,12 @@ class CustomerSupportController extends Controller
 
     	$customer_support_id = $customer_support->id;
 
-    	if (isset($upload_documents) && sizeof($upload_documents) > 0)
-    	{
-            foreach ($upload_documents as $k => $v)
-            {
-                if (isset($v) && $v->isValid())
-                {
+    	if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
+            foreach ($upload_documents as $k => $v) {
+
+                if (isset($v) && $v->isValid()) {
+
                     $file_name = $v->getClientOriginalName();
                     $file_extension = $v->getClientOriginalExtension();
                     $file_realpath = $v->getRealPath();
@@ -59,8 +59,8 @@ class CustomerSupportController extends Controller
 
                     $dir = 'uploads/customer_support/' . $customer_support_id . '/';
 
-                    if (!file_exists($dir) && !is_dir($dir))
-                    {
+                    if (!file_exists($dir) && !is_dir($dir)) {
+
                         mkdir($dir, 0777, true);
                         chmod($dir, 0777);
                     }
@@ -78,7 +78,6 @@ class CustomerSupportController extends Controller
                     $customer_support_doc->created_at = date('Y-m-d');
                     $customer_support_doc->updated_at = date('Y-m-d');
                     $customer_support_doc->save();
-
                 }
             }
         }
@@ -105,7 +104,7 @@ class CustomerSupportController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-    	return redirect()->route('customer.index')->with('success','Support Added Successfully');
+    	return redirect()->route('customer.index')->with('success','Support Added Successfully.');
     }
 
     public function show($id) {
@@ -139,7 +138,7 @@ class CustomerSupportController extends Controller
     	$customer_support->message = $msg;
     	$customer_support->save();
 
-    	return redirect()->route('customer.index')->with('success','Support Updated Successfully');
+    	return redirect()->route('customer.index')->with('success','Support Updated Successfully.');
     }
 
     public function destroy($id) {
@@ -158,7 +157,7 @@ class CustomerSupportController extends Controller
     	CustomerSupportDoc::where('customer_support_id','=',$id)->delete();
     	CustomerSupport::where('id','=',$id)->delete();
 
-    	return redirect()->route('customer.index')->with('success','Support Deleted Successfully');
+    	return redirect()->route('customer.index')->with('success','Support Deleted Successfully.');
     }
 
     public function upload(Request $request) {
@@ -169,12 +168,12 @@ class CustomerSupportController extends Controller
 
     	$customer_support_id = $request->id;
 
-    	if (isset($upload_documents) && sizeof($upload_documents) > 0)
-    	{
-            foreach ($upload_documents as $k => $v)
-            {
-                if (isset($v) && $v->isValid())
-                {
+    	if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
+            foreach ($upload_documents as $k => $v) {
+
+                if (isset($v) && $v->isValid()) {
+
                     $file_name = $v->getClientOriginalName();
                     $file_extension = $v->getClientOriginalExtension();
                     $file_realpath = $v->getRealPath();
@@ -201,12 +200,10 @@ class CustomerSupportController extends Controller
                     $customer_support_doc->created_at = date('Y-m-d');
                     $customer_support_doc->updated_at = date('Y-m-d');
                     $customer_support_doc->save();
-
                 }
             }
         }
-
-        return redirect()->route('customer.show',[$customer_support_id])->with('success','Attachment Uploaded Successfully');
+        return redirect()->route('customer.show',[$customer_support_id])->with('success','Attachment Uploaded Successfully.');
     }
 
     public function attachmentsDestroy($docid,Request $request) {
@@ -223,6 +220,6 @@ class CustomerSupportController extends Controller
     	$customer_support_id = $customer_support_doc->customer_support_id;
         CustomerSupportDoc::where('id',$docid)->delete();
 
-        return redirect()->route('customer.show',[$customer_support_id])->with('success','Attachment Deleted Successfully');
+        return redirect()->route('customer.show',[$customer_support_id])->with('success','Attachment Deleted Successfully.');
     }
 }

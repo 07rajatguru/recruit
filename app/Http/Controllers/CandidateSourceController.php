@@ -9,8 +9,6 @@ use App\USer;
 
 class CandidateSourceController extends Controller
 {
-    //
-
     public function index(Request $request) {
 
         $candidateSource = CandidateSource::orderBy('id','desc')->get();
@@ -18,6 +16,7 @@ class CandidateSourceController extends Controller
     }
 
     public function create(Request $request) {
+
         return view('adminlte::candidateSource.create', array('action' => 'add'));
     }
 
@@ -31,12 +30,13 @@ class CandidateSourceController extends Controller
         if($validator->fails()){
             return redirect('candidateSource/create')->withInput(Input::all())->withErrors($validator->errors());
         }
-        $candidateSourceStored = $candidateSource->save();
+        $candidateSource->save();
 
-        return redirect()->route('candidateSource.index')->with('success','Candidate Source Created Successfully');
+        return redirect()->route('candidateSource.index')->with('success','Candidate Source Created Successfully.');
     }
 
     public function edit($id) {
+
         $candidateSource = CandidateSource::find($id);
 
         $viewVariable = array();
@@ -56,14 +56,14 @@ class CandidateSourceController extends Controller
             return redirect('candidateSource/'.$id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
 
-        $candidateSourceStored = $candidateSource->save();
+        $candidateSource->save();
 
-        return redirect()->route('candidateSource.index')->with('success','Candidate Source Updated Successfully');
+        return redirect()->route('candidateSource.index')->with('success','Candidate Source Updated Successfully.');
     }
 
     public function destroy($id) {
-        $candidateSourceDelete = CandidateSource::where('id',$id)->delete();
 
-        return redirect()->route('candidateSource.index')->with('success','Candidate Source deleted Successfully');
+        CandidateSource::where('id',$id)->delete();
+        return redirect()->route('candidateSource.index')->with('success','Candidate Source Deleted Successfully.');
     }
 }
