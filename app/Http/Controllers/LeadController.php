@@ -17,23 +17,18 @@ use App\ClientTimeline;
 
 class LeadController extends Controller
 {
-    public function index(){
+    public function index() {
 
         $user = \Auth::user();
-        $user_role_id = User::getLoggedinUserRole($user);
-        $user_obj = new User();
+        $all_perm = $user->can('display-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
 
-        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
-        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
-
-        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+        if($all_perm) {
         
             $count = Lead::getAllLeadsCount(1,$user->id);
             $convert_client = Lead::getConvertedClient(1,$user->id);
         }
-        else {
+        else if($userwise_perm) {
 
             $count = Lead::getAllLeadsCount(0,$user->id);
             $convert_client = Lead::getConvertedClient(0,$user->id);
@@ -43,7 +38,8 @@ class LeadController extends Controller
         return view('adminlte::lead.index',compact('count','convert_client_count'));
     }
 
-    public static function getLeadOrderColumnName($order){
+    public static function getLeadOrderColumnName($order) {
+
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
             if ($order == 0) {
@@ -80,7 +76,7 @@ class LeadController extends Controller
         return $order_column_name;
     }
 
-    public function getAllLeadsDetails(){
+    public function getAllLeadsDetails() {
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -93,20 +89,18 @@ class LeadController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($role_id);
-        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
+        $all_perm = $user->can('display-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
+        $cancel_perm = $user->can('cancel-lead');
+        $lead_to_client_perm = $user->can('lead-to-client');
+        $delete_perm = $user->can('lead-delete');
 
-        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+        if($all_perm) {
 
             $count = Lead::getAllLeadsCount(1,$user->id,$search);
             $leads_res = Lead::getAllLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
         }
-        else{
+        else if($userwise_perm) {
 
             $count = Lead::getAllLeadsCount(0,$user->id,$search);
             $leads_res = Lead::getAllLeads(0,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
@@ -117,21 +111,23 @@ class LeadController extends Controller
         foreach ($leads_res as $key => $value) {
             $action = '';
 
-            if($value['access'] || $isAsstManagerMarketing || $isAllClientVisibleUser){
+            if($value['access']) {
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-            if ($isSuperAdmin) {
+
+            if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Index']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
-            if ($isSuperAdmin || $isAllClientVisibleUser) {
+            if ($cancel_perm) {
                 $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
                 $cancel = $cancel_view->render();
                 $action .= $cancel;
             }
-            if ($value['convert_client'] == 0){
-                if($value['access'] || $isAsstManagerMarketing || $isAllClientVisibleUser){
+            if ($value['convert_client'] == 0) {
+
+                if($lead_to_client_perm) {
                     $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
                 }
             }
@@ -154,22 +150,20 @@ class LeadController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function cancellead()
-    {
+    public function cancellead() {
+
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
 
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
-        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
+        $cancel_perm = $user->can('display-cancel-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
 
-        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+        if($cancel_perm) {
 
             $leads = Lead::getCancelLeads(1,$user->id,$user_role_id);
         }
-        else{
+        else if($userwise_perm) {
+
             $leads = Lead::getCancelLeads(0,$user->id,$user_role_id);
         }
 
@@ -179,7 +173,7 @@ class LeadController extends Controller
         return view('adminlte::lead.cancel',compact('leads','lead_count','count'));        
     }
 
-    public function getCancelLeadsDetails(){
+    public function getCancelLeadsDetails() {
 
         $draw = $_GET['draw'];
         $limit = $_GET['length'];
@@ -192,31 +186,32 @@ class LeadController extends Controller
         $user = \Auth::user();
         $user_role_id = User::getLoggedinUserRole($user);
      
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
-        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
+        $cancel_perm = $user->can('display-cancel-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
+        $delete_perm = $user->can('lead-delete');
 
-        if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+        if($cancel_perm) {
 
             $leads_res = Lead::getCancelLeads(1,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Lead::getCancelLeadsCount(1,$user->id,$search);
         }
-        else {
+        else if($userwise_perm) {
+
             $leads_res = Lead::getCancelLeads(0,$user->id,$user_role_id,$limit,$offset,$search,$order_column_name,$type);
             $count = Lead::getCancelLeadsCount(0,$user->id,$search);
         }
 
         $lead = array();
         $i = 0;$j = 0;
+
         foreach ($leads_res as $key => $value) {
+
             $action = '';
 
-            if($value['access'] || $isAsstManagerMarketing || $isAllClientVisibleUser){
+            if($value['access']) {
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-            if ($isSuperAdmin) {
+            if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Cancel']);
                 $delete = $delete_view->render();
                 $action .= $delete;
@@ -240,7 +235,7 @@ class LeadController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function cancel($id){
+    public function cancel($id) {
 
         $lead = Lead::find($id);
         $lead->cancel_lead = '1';
@@ -280,27 +275,27 @@ class LeadController extends Controller
         return redirect()->route('lead.index')->with('success','Lead Canceled Successfully.');
     }
 
-    public function create(){
+    public function create() {
 
         $user = \Auth::user();
         $user_id = $user->id;
         $action = 'add';
         $generate_lead = '0';
         $cancel_lead = '0';
-        $leadservices_status=Lead::getLeadService();
-        $users=User::getAllUsers();
+        $leadservices_status = Lead::getLeadService();
+        $users = User::getAllUsers();
         $status = Lead::getLeadStatus();
         $service ='';
         $lead_status ='Active';
         $referredby = $user_id;
 
-        $co_prefix=ClientBasicinfo::getcoprefix();
-        $co_category='';
+        $co_prefix = ClientBasicinfo::getcoprefix();
+        $co_category = '';
 
         return view('adminlte::lead.create',compact('leadservices_status','action','generate_lead','service','users', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
 
         $user = \Auth::user();
  	    $input = $request->all();
@@ -383,7 +378,7 @@ class LeadController extends Controller
         return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
 
 	}
-	 public function edit($id){
+	 public function edit($id) {
 
         $action = 'edit';
         $generate_lead = '0';
@@ -392,17 +387,10 @@ class LeadController extends Controller
         $lead = Lead::find($id);
 
         $user = \Auth::user();
-        $user_role_id = User::getLoggedinUserRole($user);
-        $user_id=$user->id;
+        $all_perm = $user->can('display-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
 
-        $user_obj = new User();
-
-        $isSuperAdmin = $user_obj::isSuperAdmin($user_role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($user_role_id);
-        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($user_role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user_id);
-
-       if($isSuperAdmin || $isStrategy || $isAsstManagerMarketing || $isAllClientVisibleUser){
+        if($all_perm || $userwise_perm) {
 
             $cancel_lead = $lead->cancel_lead;
             $convert_client = $lead->convert_client;
@@ -413,14 +401,11 @@ class LeadController extends Controller
             $service = $lead->service;
             $referredby = $lead->referredby;
             $lead_status = $lead->lead_status;
-            //print_r($lead_s); exit;
+
             // in refered by all users with inactive if inactive user added lead so
-            $users=User::getAllUsersWithInactive();
-            $leadsarr = array();
-            $leads_info = \DB::table('lead_management')
-            ->get();
+            $users = User::getAllUsersWithInactive();
         }
-        else{
+        else {
             
             return view('errors.403');
         }
@@ -432,10 +417,9 @@ class LeadController extends Controller
 	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
 
 	 }
-	 public function update(Request $request, $id){
+	 public function update(Request $request, $id) {
 
-	   $user  = \Auth::user()->id;
-
+	    $user  = \Auth::user()->id;
         $input = $request->all();
 
 	 	$name = trim($request->get('name'));
@@ -515,14 +499,12 @@ class LeadController extends Controller
             return redirect('lead/'.$lead_basic->id.'/edit')->withInput(Input::all())->withErrors($validator->errors());
         }
 
-        $leadUpdated = $lead_basic->save();
-
+        $lead_basic->save();
         return redirect()->route('lead.index')->with('success','Lead Updated Successfully.');
-
 	 }
 
-     public function leadClone($id)
-     {
+    public function leadClone($id) {
+
         $client_cat=ClientBasicinfo::getCategory();
         $client_category='';
 
@@ -869,17 +851,17 @@ class LeadController extends Controller
         }
      }
 
-	public function destroy(Request $request,$id){
+	public function destroy(Request $request,$id) {
 
         $Lead_Type = $request->input('Lead_Type');
 
-        $lead = Lead::where('id',$id)->delete();
+        Lead::where('id',$id)->delete();
 
         if($Lead_Type == 'Index') {
-            return redirect()->route('lead.index')->with('success','Leads Deleted Successfully.');
+            return redirect()->route('lead.index')->with('success','Lead Deleted Successfully.');
         }
         else {
-            return redirect()->route('lead.leadcancel')->with('success','Leads Deleted Successfully.');
+            return redirect()->route('lead.leadcancel')->with('success','Lead Deleted Successfully.');
         }
     }
 }

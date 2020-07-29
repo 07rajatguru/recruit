@@ -215,36 +215,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('lead/create',[
         'as'=>'lead.create',
         'uses'=>'LeadController@create',
-        'middleware' => ['permission:lead-create']
+        'middleware' => ['permission:lead-add']
     ]);
 
     Route::get('lead',[
         'as'=>'lead.index',
         'uses'=>'LeadController@index',
-        'middleware' => ['permission:lead-list'],
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
     ]);
 
     Route::get('lead/all',[
         'as' => 'lead.all',
-        'uses' => 'LeadController@getAllLeadsDetails'
+        'uses' => 'LeadController@getAllLeadsDetails',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
     ]);
 
     Route::get('lead/cancel', [
         'as' => 'lead.leadcancel',
         'uses' => 'LeadController@cancellead',
-        'middleware' => ['permission:lead-list'],
+        'middleware' => ['permission:display-cancel-lead|display-user-wise-lead'],
     ]);
 
     Route::get('lead/cancel/all', [
         'as' => 'lead.cancelall',
         'uses' => 'LeadController@getCancelLeadsDetails',
-        'middleware' => ['permission:lead-list'],
+        'middleware' => ['permission:display-cancel-lead|display-user-wise-lead'],
     ]);
     
    Route::post('lead/store', [
         'as' => 'lead.store',
         'uses' => 'LeadController@store',
-        'middleware' => ['permission:lead-create'],
+        'middleware' => ['permission:lead-add'],
     ]);
      
     Route::get('lead/{id}/edit', [
@@ -268,18 +269,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('lead/{id}/clone', [
         'as' => 'lead.clone',
         'uses' => 'LeadController@leadClone',
-        'middleware' => ['permission:lead-clone'],
+        'middleware' => ['permission:lead-to-client'],
     ]);
     
     Route::post('lead/{id}', [
         'as' => 'lead.clonestore',
         'uses' => 'LeadController@clonestore',
-        'middleware' => ['permission:lead-clone'],
+        'middleware' => ['permission:lead-to-client'],
     ]); 
 
     Route::get('lead/{id}', [
         'as' => 'lead.cancel',
-        'uses' => 'LeadController@cancel'
+        'uses' => 'LeadController@cancel',
+        'middleware' => ['permission:cancel-lead'],
     ]);
 
     //User Profile
