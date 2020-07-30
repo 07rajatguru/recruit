@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lead extends Model
 {
-
 	public $table = "lead_management";
 
 	public static $rules = array(
@@ -17,8 +16,8 @@ class Lead extends Model
         'display_name' => 'required',
     );
 
-    public function messages()
-    {
+    public function messages() {
+
         return [
             'name.required' => 'Company Name is Required Field.',
             'contact_point.required' => 'Contact Point is Required Field.',
@@ -28,7 +27,7 @@ class Lead extends Model
         ];
     }
 
-    public static function getLeadService(){
+    public static function getLeadService() {
 
         //$typeArray = array('' => 'Select Lead Service');
         $typeArray = array('' => '-NONE-');
@@ -43,7 +42,7 @@ class Lead extends Model
         return $typeArray;
     }
 
-    public static function getLeadStatus(){
+    public static function getLeadStatus() {
 
         $statusArray = array('' => 'Select Lead Status');
         $statusArray['Active'] = 'Active';
@@ -54,110 +53,95 @@ class Lead extends Model
         return $statusArray;
     }
 
-    public static function getAllLeads($all=0,$user_id,$user_role_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
+    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc') {
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id = env('STRATEGY');
+        $superadmin_user_id = env('SUPERADMINUSERID');
+        $strategy_user_id = env('STRATEGYUSERID');
 
         $cancel_lead = 0;
         $query = Lead::query();
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
+
         if (isset($order) && $order != '') {
             $query = $query->orderBy($order,$type);
         }
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
         }
-
         if (isset($offset) && $offset > 0) {
             $query = $query->offset($offset);
         }
-
-        if($all==0){
+        if($all==0) {
             $query = $query->where('account_manager_id',$user_id);
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
-        }
-        else{
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
         }
 
+        if (isset($search) && $search != '') {
+
+            $query = $query->where(function($query) use ($search) {
+
+                $query = $query->where('lead_management.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                $query = $query->orwhere('lead_management.city','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.website','like',"%$search%");
+                $query = $query->orwhere('lead_management.source','like',"%$search%");
+                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+            });
+        }
         $response = $query->get();
 
         $i = 0;
-        foreach ($response as $key=>$value){
-            $response[$i]['id'] = $value->id;
-            $response[$i]['name'] = $value->name;
+        $leads_array = array();
+
+        foreach ($response as $key => $value) {
+
+            $leads_array[$i]['id'] = $value->id;
+            $leads_array[$i]['name'] = $value->name;
 
             if(isset($value->coordinator_prefix) && $value->coordinator_prefix != '') {
 
-                $response[$i]['coordinator_name'] = $value->coordinator_prefix . " " .$value->coordinator_name;
+                $leads_array[$i]['coordinator_name'] = $value->coordinator_prefix . " " .$value->coordinator_name;
             }
             else {
 
-                $response[$i]['coordinator_name'] = $value->coordinator_name;
+                $leads_array[$i]['coordinator_name'] = $value->coordinator_name;
             }
             
-            $response[$i]['mail'] = $value->mail;
-            $response[$i]['mobile'] = $value->mobile;
-            $response[$i]['s_email'] = $value->s_email;
-            $response[$i]['other_number'] = $value->other_number;
-            $response[$i]['service'] = $value->service;
-            $response[$i]['city'] = $value->city;
-            $response[$i]['state'] = $value->state;
-            $response[$i]['country'] = $value->country;
-            $response[$i]['website'] = $value->website;
-            $response[$i]['source'] = $value->source;
-            $response[$i]['Designation'] = $value->designation;
-            $response[$i]['referredby'] = $value->referredby;
-            $response[$i]['convert_client'] = $value->convert_client;
-            $response[$i]['lead_status'] = $value->lead_status;
+            $leads_array[$i]['mail'] = $value->mail;
+            $leads_array[$i]['mobile'] = $value->mobile;
+            $leads_array[$i]['s_email'] = $value->s_email;
+            $leads_array[$i]['other_number'] = $value->other_number;
+            $leads_array[$i]['service'] = $value->service;
+            $leads_array[$i]['city'] = $value->city;
+            $leads_array[$i]['state'] = $value->state;
+            $leads_array[$i]['country'] = $value->country;
+            $leads_array[$i]['website'] = $value->website;
+            $leads_array[$i]['source'] = $value->source;
+            $leads_array[$i]['designation'] = $value->designation;
+            $leads_array[$i]['referredby'] = $value->referredby;
+            $leads_array[$i]['convert_client'] = $value->convert_client;
+            $leads_array[$i]['lead_status'] = $value->lead_status;
+            $leads_array[$i]['remarks'] = $value->remarks;
+            
+            if($user_id == $value->account_manager_id || $user_id == $superadmin_user_id || $user_id == $strategy_user_id) {
 
-            $response[$i]['access'] = false;
-            if($user_id==$value->account_manager_id){
-                $response[$i]['access'] = true;
+                $leads_array[$i]['access'] = true;
             }
-            /*else if ($superadmin_role_id || $strategy_role_id) {
-                $response[$i]['access'] = true;
-            }*/
-            else if($user_role_id == $superadmin_role_id || $user_role_id == $strategy_role_id)
-            {           
-                $response[$i]['access'] = true;
+            else {
+
+                $leads_array[$i]['access'] = false;
             }
             $i++;
         }
-
-        return $response;
+        return $leads_array;
     }
 
-    public static function getAllLeadsCount($all=0,$user_id,$search=NULL){
+    public static function getAllLeadsCount($all=0,$user_id,$search=NULL) {
 
         $cancel_lead = 0;
         $query = Lead::query();
@@ -165,49 +149,34 @@ class Lead extends Model
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
 
-        if($all==0){
+        if($all==0) {
             $query = $query->where('account_manager_id',$user_id);
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
-        }
-        else{
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
         }
 
-        $response = $query->count();
+        if (isset($search) && $search != '') {
 
-        return $response;
+            $query = $query->where(function($query) use ($search) {
+
+                $query = $query->where('lead_management.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                $query = $query->orwhere('lead_management.city','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.website','like',"%$search%");
+                $query = $query->orwhere('lead_management.source','like',"%$search%");
+                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+            });
+        }
+        $count = $query->count();
+        return $count;
     }
 
-    public static function getCancelLeads($all=0,$user_id,$user_role_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc'){
+    public static function getCancelLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc') {
 
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id = env('STRATEGY');
+        $superadmin_user_id = env('SUPERADMINUSERID');
+        $strategy_user_id = env('STRATEGYUSERID');
         
         $cancel_lead = 1;
         $query = Lead::query();
@@ -215,38 +184,25 @@ class Lead extends Model
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
 
-        if($all==0){
+        if($all==0) {
             $query = $query->where('account_manager_id',$user_id);
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
         }
-        else{
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
+
+        if (isset($search) && $search != '') {
+
+            $query = $query->where(function($query) use ($search) {
+
+                $query = $query->where('lead_management.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                $query = $query->orwhere('lead_management.city','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.website','like',"%$search%");
+                $query = $query->orwhere('lead_management.source','like',"%$search%");
+                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+            });
         }
 
         if (isset($order) && $order != '') {
@@ -258,58 +214,55 @@ class Lead extends Model
         if (isset($offset) && $offset > 0) {
             $query = $query->offset($offset);
         }
-
         $response = $query->get();
 
         $i = 0;
-        foreach ($response as $key=>$value){
-            $response[$i]['id'] = $value->id;
-            $response[$i]['name'] = $value->name;
+        $leads_array = array();
+
+        foreach ($response as $key => $value) {
+
+            $leads_array[$i]['id'] = $value->id;
+            $leads_array[$i]['name'] = $value->name;
 
             if(isset($value->coordinator_prefix) && $value->coordinator_prefix != '') {
 
-                $response[$i]['coordinator_name'] = $value->coordinator_prefix . " " .$value->coordinator_name;
+                $leads_array[$i]['coordinator_name'] = $value->coordinator_prefix . " " .$value->coordinator_name;
             }
             else {
 
-                $response[$i]['coordinator_name'] = $value->coordinator_name;
+                $leads_array[$i]['coordinator_name'] = $value->coordinator_name;
             }
 
-            $response[$i]['mail'] = $value->mail;
-            $response[$i]['mobile'] = $value->mobile;
-            $response[$i]['s_email'] = $value->s_email;
-            $response[$i]['other_number'] = $value->other_number;
-            $response[$i]['service'] = $value->service;
-            $response[$i]['city'] = $value->city;
-            $response[$i]['state'] = $value->state;
-            $response[$i]['country'] = $value->country;
-            $response[$i]['website'] = $value->website;
-            $response[$i]['source'] = $value->source;
-            $response[$i]['Designation'] = $value->designation;
-            $response[$i]['referredby'] = $value->referredby;
-            $response[$i]['convert_client'] = $value->convert_client;
-            $response[$i]['lead_status'] = $value->lead_status;
-            $response[$i]['access'] = false;
-            if($user_id==$value->account_manager_id){
-                $response[$i]['access'] = true;
+            $leads_array[$i]['mail'] = $value->mail;
+            $leads_array[$i]['mobile'] = $value->mobile;
+            $leads_array[$i]['s_email'] = $value->s_email;
+            $leads_array[$i]['other_number'] = $value->other_number;
+            $leads_array[$i]['service'] = $value->service;
+            $leads_array[$i]['city'] = $value->city;
+            $leads_array[$i]['state'] = $value->state;
+            $leads_array[$i]['country'] = $value->country;
+            $leads_array[$i]['website'] = $value->website;
+            $leads_array[$i]['source'] = $value->source;
+            $leads_array[$i]['designation'] = $value->designation;
+            $leads_array[$i]['referredby'] = $value->referredby;
+            $leads_array[$i]['convert_client'] = $value->convert_client;
+            $leads_array[$i]['lead_status'] = $value->lead_status;
+            $leads_array[$i]['remarks'] = $value->remarks;
+
+            if($user_id == $value->account_manager_id || $user_id == $superadmin_user_id || $user_id == $strategy_user_id) {
+
+                $leads_array[$i]['access'] = true;
             }
-            /*else if ($superadmin_role_id || $strategy_role_id) {
-                $response[$i]['access'] = true;
-            }*/
-            else if($user_role_id == $superadmin_role_id || $user_role_id == $strategy_role_id)
-            {           
-                $response[$i]['access'] = true;
+            else {
+
+                $leads_array[$i]['access'] = false;
             }
             $i++;
         }
-
-        return $response;
+        return $leads_array;
     }
 
-    public static function getCancelLeadsCount($all=0,$user_id,$search=NULL){
-
-        $superadmin_role_id = env('SUPERADMIN');
-        $strategy_role_id = env('STRATEGY');
+    public static function getCancelLeadsCount($all=0,$user_id,$search=NULL) {
 
         $cancel_lead = 1;
         $query = Lead::query();
@@ -317,62 +270,47 @@ class Lead extends Model
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
 
-        if($all==0){
+        if($all==0) {
             $query = $query->where('account_manager_id',$user_id);
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
         }
-        else{
-            if (isset($search) && $search != '') {
-                $query = $query->where(function($query) use ($search){
-                    $query = $query->where('lead_management.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
-                    $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mail','like',"%$search%");
-                    $query = $query->orwhere('lead_management.mobile','like',"%$search%");
-                    $query = $query->orwhere('lead_management.city','like',"%$search%");
-                    $query = $query->orwhere('users.name','like',"%$search%");
-                    $query = $query->orwhere('lead_management.website','like',"%$search%");
-                    $query = $query->orwhere('lead_management.source','like',"%$search%");
-                    $query = $query->orwhere('lead_management.designation','like',"%$search%");
-                });
-            }
-        }
-        $response = $query->count();
 
-        return $response;
+        if (isset($search) && $search != '') {
+
+            $query = $query->where(function($query) use ($search) {
+
+                $query = $query->where('lead_management.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_prefix','like',"%$search%");
+                $query = $query->orwhere('lead_management.coordinator_name','like',"%$search%");
+                $query = $query->orwhere('lead_management.mail','like',"%$search%");
+                $query = $query->orwhere('lead_management.mobile','like',"%$search%");
+                $query = $query->orwhere('lead_management.city','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+                $query = $query->orwhere('lead_management.website','like',"%$search%");
+                $query = $query->orwhere('lead_management.source','like',"%$search%");
+                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+            });
+        }
+
+        $count = $query->count();
+        return $count;
     }
 
-    public static function getConvertedClient($all=0,$user_id){
+    public static function getConvertedClient($all=0,$user_id) {
 
         $convert_client = '1';
         $query = Lead::query();
         $query = $query->select('lead_management.*');
         $query = $query->where('convert_client',$convert_client);
 
-        if($all==0){
+        if($all==0) {
             $query = $query->where('account_manager_id',$user_id);
         }
 
-        $response = $query->get();
-
-        //print_r($response);exit;
-        return $response;
+        $count = $query->count();
+        return $count;
     }
 
-    public static function getDailyReportLeads($user_id,$date=NULL){
+    public static function getDailyReportLeads($user_id,$date=NULL) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -387,7 +325,6 @@ class Lead extends Model
             $query = $query->where('created_at','>=',"$from_date");
             $query = $query->where('created_at','<=',"$to_date");
         }
-
         if ($date != '') {
             $query = $query->where(\DB::raw('date(created_at)'),$date);
         }
@@ -407,16 +344,16 @@ class Lead extends Model
             $response['leads_data'][$i]['mobile'] = $value1->mobile;
 
             $location ='';
-            if($value1->city!=''){
+            if($value1->city!='') {
                 $location .= $value1->city;
             }
-            if($value1->state!=''){
+            if($value1->state!='') {
                 if($location=='')
                     $location .= $value1->state;
                 else
                     $location .= ", ".$value1->state;
             }
-            if($value1->country!=''){
+            if($value1->country!='') {
                 if($location=='')
                     $location .= $value1->country;
                 else
@@ -431,10 +368,10 @@ class Lead extends Model
             $response['leads_data'][$i]['source'] = $value1->source;
             $i++;
         }
-        
         return $response;   
     }
-    public static function getDailyReportLeadCount($user_id,$date=NULL){
+
+    public static function getDailyReportLeadCount($user_id,$date=NULL) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -459,7 +396,7 @@ class Lead extends Model
         return $lead_cnt;
     }
 
-    public static function getWeeklyReportLeads($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getWeeklyReportLeads($user_id,$from_date=NULL,$to_date=NULL) {
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
@@ -493,7 +430,6 @@ class Lead extends Model
             $response['leads_data'][$i]['lead_count'] = $value->count;
 
             // Get all data
-
             $response['leads_data'][$i]['company_name'] = $value->name;
             $response['leads_data'][$i]['contact_point'] = $value->coordinator_name;
             $response['leads_data'][$i]['designation'] = $value->designation;
@@ -501,16 +437,16 @@ class Lead extends Model
             $response['leads_data'][$i]['mobile'] = $value->mobile;
 
             $location ='';
-            if($value->city!=''){
+            if($value->city!='') {
                 $location .= $value->city;
             }
-            if($value->state!=''){
+            if($value->state!='') {
                 if($location=='')
                     $location .= $value->state;
                 else
                     $location .= ", ".$value->state;
             }
-            if($value->country!=''){
+            if($value->country!='') {
                 if($location=='')
                     $location .= $value->country;
                 else
@@ -528,7 +464,7 @@ class Lead extends Model
         return $response;  
     }
 
-    public static function getWeeklyReportLeadCount($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getWeeklyReportLeadCount($user_id,$from_date=NULL,$to_date=NULL) {
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
@@ -538,23 +474,20 @@ class Lead extends Model
         $query = $query->where('lead_management.cancel_lead','=','0');
         $query = $query->where('lead_management.convert_client','=','0');
         
-
         if ($from_date == NULL && $to_date == NULL) {
             $query = $query->where('created_at','>=',date('Y-m-d',strtotime('Monday this week')));
             $query = $query->where('created_at','<=',date('Y-m-d',strtotime("$date +6days")));
         }
-
         if ($from_date != '' && $to_date != '') {
             $query = $query->where(\DB::raw('date(created_at)'),'>=',$from_date);
             $query = $query->where(\DB::raw('date(created_at)'),'<=',$to_date);
         }
 
         $lead_cnt = $query->count();
-
         return $lead_cnt;   
     }
 
-    public static function getUserWiseMonthlyReportLeadCount($users,$month,$year){
+    public static function getUserWiseMonthlyReportLeadCount($users,$month,$year) {
 
         $u_keys = array_keys($users);
 
@@ -570,11 +503,9 @@ class Lead extends Model
         }
 
         $query = $query->groupBy('lead_management.account_manager_id');
-
         $lead_res = $query->get();
 
         $lead_count = array();
-
         if($lead_res->count()>0){
 
             foreach ($lead_res  as $k=>$v){
@@ -584,7 +515,7 @@ class Lead extends Model
         return $lead_count;
     }
 
-    public static function getUserWiseMonthlyReportLeads($users,$month,$year){
+    public static function getUserWiseMonthlyReportLeads($users,$month,$year) {
 
         $u_keys = array_keys($users);
 
@@ -606,10 +537,10 @@ class Lead extends Model
         $lead_res = array();
         $i=0;
 
-        if($response->count()>0)
-        {
-            foreach ($response as $key=>$value)
-            {
+        if($response->count()>0) {
+
+            foreach ($response as $key => $value) {
+
                 $lead_res[$value->account_manager_id][$i]['company_name'] = $value->name;
                 $lead_res[$value->account_manager_id][$i]['contact_point'] = $value->coordinator_name;
                 $lead_res[$value->account_manager_id][$i]['designation'] = $value->designation;
@@ -617,16 +548,16 @@ class Lead extends Model
                 $lead_res[$value->account_manager_id][$i]['mobile'] = $value->mobile;
 
                 $location ='';
-                if($value->city!=''){
+                if($value->city!='') {
                     $location .= $value->city;
                 }
-                if($value->state!=''){
+                if($value->state!='') {
                     if($location=='')
                         $location .= $value->state;
                     else
                         $location .= ", ".$value->state;
                 }
-                if($value->country!=''){
+                if($value->country!='') {
                     if($location=='')
                         $location .= $value->country;
                     else
@@ -645,7 +576,7 @@ class Lead extends Model
         return $lead_res;
     }
 
-    public static function getMonthlyReportLeadCount($user_id,$month=NULL,$year=NULL){
+    public static function getMonthlyReportLeadCount($user_id,$month=NULL,$year=NULL) {
 
         $query = Lead::query();
         $query = $query->select('lead_management.*','lead_management.created_at');
@@ -661,7 +592,7 @@ class Lead extends Model
         return $lead_cnt;
     }
 
-    public static function getLeadDetailsById($lead_id){
+    public static function getLeadDetailsById($lead_id) {
         
         $query = Lead::query();
         $query = $query->join('users','users.id','=','lead_management.referredby');
@@ -670,7 +601,9 @@ class Lead extends Model
         $res = $query->first();
 
         $lead = array();
+
         if (isset($res) && $res != '') {
+
             $lead['id'] = $res->id;
             $lead['name'] = $res->name;
             $lead['mail'] = $res->mail;
@@ -688,16 +621,16 @@ class Lead extends Model
             $lead['referredby'] = $res->referredby;
 
             $location ='';
-            if($res->city!=''){
+            if($res->city!='') {
                 $location .= $res->city;
             }
-            if($res->state!=''){
+            if($res->state!='') {
                 if($location=='')
                     $location .= $res->state;
                 else
                     $location .= ", ".$res->state;
             }
-            if($res->country!=''){
+            if($res->country!='') {
                 if($location=='')
                     $location .= $res->country;
                 else
@@ -710,4 +643,3 @@ class Lead extends Model
         return $lead;
     }
 }
-

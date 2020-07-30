@@ -11,7 +11,7 @@
    <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Total Leads({{$count}})</h2>
+                <h2>Total Leads({{ $count or '0' }})</h2>
                 <h4><span>Leads converted to client - {{ $convert_client_count }}</span></h4>
             </div>
 
@@ -121,25 +121,18 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-           /* var table = jQuery('#lead_table').DataTable( {
-                responsive: true,
-                "pageLength": 100,
-                stateSave: true
-            });
-            new jQuery.fn.dataTable.FixedHeader( table );*/
-
+        jQuery(document).ready(function() {
             
             $("#lead_table").DataTable({
+
                 "bProcessing": true,
                 "serverSide": true,
                 "order" : [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]}],
                 "ajax":{
-                    url :"lead/all", // json datasource
-                    type: "get",  // type of method  , by default would be get
-                    error: function(){  // error handling code
-                      //  $("#employee_grid_processing").css("display","none");
+                    url :"lead/all",
+                    type: "get",
+                    error: function() {
                     }
                 },
                 "pageLength": 50,
@@ -147,12 +140,10 @@
                 "pagingType": "full_numbers",
                 "stateSave" : true,
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[19] == "1" )
-                    {
+                    if ( Data[19] == "1" ) {
                         $('td:eq(2)', Row).css('background-color', 'LimeGreen');
                     }
-                    else
-                    {
+                    else {
                         $('td:eq(2)', Row).css('background-color', 'white');
                     }
                 }

@@ -233,13 +233,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('lead/cancel', [
         'as' => 'lead.leadcancel',
         'uses' => 'LeadController@cancellead',
-        'middleware' => ['permission:display-cancel-lead|display-user-wise-lead'],
+        'middleware' => ['permission:display-cancel-lead'],
     ]);
 
     Route::get('lead/cancel/all', [
         'as' => 'lead.cancelall',
         'uses' => 'LeadController@getCancelLeadsDetails',
-        'middleware' => ['permission:display-cancel-lead|display-user-wise-lead'],
+        'middleware' => ['permission:display-cancel-lead'],
     ]);
     
    Route::post('lead/store', [

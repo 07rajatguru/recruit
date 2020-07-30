@@ -11,7 +11,7 @@
    <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Cancel Lead ({{$count}})</h2>
+                <h2>Cancel Lead ({{ $count or '0' }})</h2>
             </div>
 
             <!-- <div class="pull-right">
@@ -31,8 +31,9 @@
             <p>{{ $message }}</p>
         </div>
     @endif
+
     <div class = "table-responsive">
-       <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%"" id="lead_table">
+       <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="lead_table">
             <thead>
                 <tr>
                     <th>No</th>
@@ -106,24 +107,20 @@
 @stop
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-            /*var table = jQuery('#lead_table').DataTable( {
-                responsive: true,
-                "pageLength": 100,
-                stateSave: true
-            });
-            new jQuery.fn.dataTable.FixedHeader( table );*/
+        jQuery(document).ready(function() {
 
             $("#lead_table").DataTable({
+
                 "bProcessing": true,
                 "serverSide": true,
                 "order" : [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]}],
-                "ajax":{
-                    url :"../lead/cancel/all", // json datasource
-                    type: "get",  // type of method  , by default would be get
-                    error: function(){  // error handling code
-                      //  $("#employee_grid_processing").css("display","none");
+                "ajax": {
+
+                    url :"../lead/cancel/all",
+                    type: "get",
+                    error: function() {
+                    
                     }
                 },
                 "pageLength": 50,

@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-               @if($generate_lead==1)
+                @if($generate_lead==1)
                     <h2>Please confirm the details and generate Lead</h2>
                 @elseif( $action == 'edit')
                     <h2>Edit Lead</h2>
@@ -28,25 +28,17 @@
         </div>
     </div>
 
-@if(isset($action))
     @if($action == 'edit')
-
         {!! Form::model($lead,['method' => 'PUT', 'files' => true, 'route' => ['lead.update', $lead['id']],'id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
-
         {!! Form::hidden('leadId', $lead['id'], array('id'=>'leadId')) !!}
 
     @elseif($action == 'copy')
-
         {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
 
     @else
-
         {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
-
     @endif
      {!! Form::hidden('action', $action, array('id'=>'action')) !!}
-
-    {!! Form::open(array('route' => 'lead.store','method'=>'POST')) !!}
 
     <input type="hidden" id="generatelead" name="generatelead" value="{{$generate_lead}}">
 
@@ -90,7 +82,7 @@
                         </div>
                 
                         <div class="form-group">
-                            <strong>Status :</strong>
+                            <strong>Status : </strong>
                             {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
                         </div>
 
@@ -122,17 +114,17 @@
                             </div>
                     
                             <div class="form-group">
-                                <strong>Secondary Email :</strong>
+                                <strong>Secondary Email : </strong>
                                 {!! Form::email('s_email', null, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '4','id' => 's_email')) !!}
                             </div>
                         
                             <div class="form-group">
-                                <strong>Other number :</strong>
+                                <strong>Other number : </strong>
                                 {!! Form::text('other_number', null, array('id' => 'other_number','placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10','minLength' => '10')) !!}
                             </div> 
 
                             <div class="form-group">
-                                <strong>Select Leads :</strong>
+                                <strong>Select Leads : </strong>
                                 {!! Form::select('leads',$leadservices_status,$service, array('id'=>'leads','class' => 'form-control','tabindex' => '8')) !!}
                                 @if ($errors->has('leads'))
                                     <span class="help-block">
@@ -142,23 +134,18 @@
                             </div>
                        
                             <div class="form-group">
-                                <strong>Website :</strong>
+                                <strong>Website : </strong>
                                 {!! Form::text('website', null, array('id'=>'website', 'placeholder' => 'Website','class' => 'form-control','tabindex' => '10')) !!}
                             </div>
                        
                             <div class="form-group">
-                                <strong>Source :</strong>
+                                <strong>Source : </strong>
                                 {!! Form::text('source', null, array('placeholder' => 'Source','class' => 'form-control','tabindex' => '12')) !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
-                                <strong>Designation : <!-- <span class = "required_fields">*</span> --></strong>
+                                <strong>Designation : </strong>
                                 {!! Form::text('designation', null, array('id'=>'designation', 'placeholder' => 'Designation','class' => 'form-control','tabindex' => '13')) !!}
-                                @if ($errors->has('designation'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('designation') }}</strong>
-                                    </span>
-                                @endif
                             </div>
                         
                             <div class="form-group">
@@ -170,7 +157,7 @@
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
-                            <strong>Address :</strong>
+                            <strong>Address : </strong>
                             {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()",'tabindex' => '15')) !!}
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6">
@@ -178,7 +165,6 @@
                                 <strong>City : <span class = "required_fields">*</span></strong>
                                 {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '16')) !!}
                             </div>
-
                             <div class="form-group">
                                 <strong>State :</strong>
                                 {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control','tabindex' => '17')) !!}
@@ -186,7 +172,7 @@
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <strong>Country :</strong>
+                                <strong>Country : </strong>
                                 {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control','tabindex' => '18')) !!}
                             </div>
                         </div>
@@ -199,13 +185,12 @@
     <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
         {!! Form::submit(isset($lead) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
     </div>
-</div>
-    {!! Form::close() !!}
-    @endif
 
+    {!! Form::close() !!}
 @endsection
 
 @section('customscripts')
+
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -244,8 +229,8 @@
             }
         });
 
-
         $("#lead_form").validate({
+
             rules: {
                 "name": {
                     required: true
@@ -289,7 +274,6 @@
         });
 
         $("#referredby_id").select2();
-
     });
 
     function validCompanyNameText() {
@@ -349,10 +333,10 @@
         }
 
         if(s_email_value != '') {
-                if (reg.test(s_email_value) == false) {
-                    alert('Please Enter Valid Secondary Email Address');
-                    return false;
-                }
+            if (reg.test(s_email_value) == false) {
+                alert('Please Enter Valid Secondary Email Address');
+                return false;
+            }
         }
 
         if(website != '') {
@@ -376,7 +360,6 @@
             return false;
         }
     }
-
 
     var placeSearch, autocomplete;
     var componentForm = {
