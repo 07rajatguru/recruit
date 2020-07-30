@@ -636,7 +636,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('client/create', [
         'as' => 'client.create',
         'uses' => 'ClientController@create',
-        'middleware' => ['permission:client-create']
+        'middleware' => ['permission:client-add']
     ]);
 
     Route::get('client/clientemail', [
@@ -662,39 +662,43 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('client', [
         'as' => 'client.index',
         'uses' => 'ClientController@index',
-        'middleware' => ['permission:client-list']
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
     Route::get('client-list/Forbid',[
         'as' => 'clients.forbid',
         'uses' => 'ClientController@getForbidClient',
-        'middleware' => ['permission:client-list']
+        'middleware' => ['permission:display-forbid-client']
     ]);
     
     Route::get('client/all', [
         'as' => 'client.all',
-        'uses' => 'ClientController@getAllClientsDetails'
+        'uses' => 'ClientController@getAllClientsDetails',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
     Route::get('client-list/{source}', [
         'as' => 'client.list',
         'uses' => 'ClientController@getAllClientsBySource',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client|']
     ]);
 
     Route::get('client/allbytype', [
         'as' => 'client.allbytype',
         'uses' => 'ClientController@getAllClientsDetailsByType',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
     Route::get('monthwiseclient/{month}/{year}', [
         'as' => 'monthwiseclient.index',
-        'uses' => 'ClientController@getMonthWiseClient'
+        'uses' => 'ClientController@getMonthWiseClient',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
     Route::post('client/create', [
         'as' => 'client.store',
         'uses' => 'ClientController@store',
-        'middleware' => ['permission:client-create']
+        'middleware' => ['permission:client-add']
     ]);
 
     Route::get('client/importExport', 'ClientController@importExport');
@@ -702,7 +706,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('client/{id}', [
         'as' => 'client.show',
-        'uses' => 'ClientController@show'
+        'uses' => 'ClientController@show',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
     
     Route::get('client/{id}/edit', [
@@ -715,7 +720,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('client/{id}/remarks', [
         'as' => 'client.remarks',
-        'uses' => 'ClientController@remarks',
+        'uses' => 'ClientController@remarks'
     ]);
 
     Route::post('client/{client_id}/post',[
@@ -750,12 +755,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Client Remarks Section End
 
-    Route::delete('client/{id}', [
-        'as' => 'client.destroy',
-        'uses' => 'ClientController@destroy',
-        'middleware' => ['permission:client-delete']
-    ]);
-
     Route::patch('client/{id}', [
         'as' => 'client.update',
         'uses' => 'ClientController@update',
@@ -764,17 +763,19 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::delete('client/destroy/{id}', [
         'as' => 'clientattachments.destroy',
-        'uses' => 'ClientController@attachmentsDestroy'
+        'uses' => 'ClientController@attachmentsDestroy',
+        'middleware' => ['permission:client-edit']
     ]);
 
     Route::post('clientattachments/upload/{id}', [
         'as' => 'clientattachments.upload',
-        'uses' => 'ClientController@upload'
+        'uses' => 'ClientController@upload',
+        'middleware' => ['permission:client-edit']
     ]);
 
     Route::delete('client/{id}', [
         'as' => 'client.destroy',
-        'uses' => 'ClientController@delete',
+        'uses' => 'ClientController@destroy',
         'middleware' => ['permission:client-delete']
     ]);
     
