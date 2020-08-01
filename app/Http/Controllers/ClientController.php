@@ -35,18 +35,12 @@ class ClientController extends Controller
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
 
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-
-        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
-
         if($all_perm) {
-            $client_array = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+            $client_array = ClientBasicinfo::getAllClients(1,$user->id);
             $count = sizeof($client_array);
         }
         else if($userwise_perm) {
-            $client_array = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+            $client_array = ClientBasicinfo::getAllClients(0,$user->id);
             $count = sizeof($client_array);
         }
 
@@ -62,29 +56,29 @@ class ClientController extends Controller
 
         foreach($client_array as $client) {
 
-            if($client['status'] == 'Active' ){
+            if($client['status'] == 'Active' ) {
                 $active++;
             }
-            else if ($client['status'] == 'Passive'){
+            else if ($client['status'] == 'Passive') {
                 $passive++;
             }
-            else if($client['status'] == 'Leaders' ){
+            else if($client['status'] == 'Leaders' ) {
                 $leaders++;
             }
-            else if($client['status'] == 'Forbid' ){
+            else if($client['status'] == 'Forbid' ) {
                 $forbid++;
             }
-            else if($client['status'] == 'Left' ){
+            else if($client['status'] == 'Left' ) {
                 $left++;
             }
 
-            if($client['category'] == 'Paramount'){
+            if($client['category'] == 'Paramount') {
                 $para_cat++;
             }
-            else if($client['category'] == 'Moderate'){
+            else if($client['category'] == 'Moderate') {
                 $mode_cat++;
             }
-            else if($client['category'] == 'Standard'){
+            else if($client['category'] == 'Standard') {
                 $std_cat++;
             }
         }
@@ -95,7 +89,7 @@ class ClientController extends Controller
 
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
-        return view('adminlte::client.index',compact('client_array','count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names'));
+        return view('adminlte::client.index',compact('count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names'));
     }
 
     public static function getOrderColumnName($order) {
@@ -141,26 +135,22 @@ class ClientController extends Controller
         $type = $_GET['order'][0]['dir'];
 
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
         $edit_perm = $user->can('client-edit');
         $delete_perm = $user->can('client-delete');
         $category_perm = $user->can('display-client-category-in-client-list');
 
-        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
-
         if($all_perm) {
 
             $order_column_name = self::getOrderColumnName($order);
-            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
         }
         else if($userwise_perm) {
 
             $order_column_name = self::getOrderColumnName($order);
-            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
             $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
         }
         
@@ -172,22 +162,21 @@ class ClientController extends Controller
         foreach ($client_res as $key => $value) {
 
             $action = '';
-            
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
         
             if($edit_perm || $value['client_owner']) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
-
-                if(isset($value['url']) && $value['url']!='') {
-                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
-                }
             }
             if($delete_perm) {
 
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
                 $delete = $delete_view->render();
                 $action .= $delete;
+
+                if(isset($value['url']) && $value['url'] != '') {
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
             }
             if($all_perm) {
 
@@ -250,21 +239,15 @@ class ClientController extends Controller
     public function getAllClientsBySource($source) {
 
         $user =  \Auth::user();
-
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
 
-        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
-
         if($all_perm) {
-            $clients = ClientBasicinfo::getAllClients(1,$user->id,$rolePermissions);
+            $clients = ClientBasicinfo::getAllClients(1,$user->id);
             $count = '0';
         }
         else if($userwise_perm) {
-            $clients = ClientBasicinfo::getAllClients(0,$user->id,$rolePermissions);
+            $clients = ClientBasicinfo::getAllClients(0,$user->id);
             $count = '0';
         }
 
@@ -280,29 +263,29 @@ class ClientController extends Controller
 
         foreach($clients as $client) {
 
-            if($client['status'] == 'Active' ){
+            if($client['status'] == 'Active' ) {
                 $active++;
             }
-            else if ($client['status'] == 'Passive'){
+            else if ($client['status'] == 'Passive') {
                 $passive++;
             }
-            else if($client['status'] == 'Leaders' ){
+            else if($client['status'] == 'Leaders' ) {
                 $leaders++;
             }
-            else if($client['status'] == 'Forbid' ){
+            else if($client['status'] == 'Forbid' ) {
                 $forbid++;
             }
-            else if($client['status'] == 'Left' ){
+            else if($client['status'] == 'Left' ) {
                 $left++;
             }
 
-            if($client['category'] == 'Paramount'){
+            if($client['category'] == 'Paramount') {
                 $para_cat++;
             }
-            else if($client['category'] == 'Moderate'){
+            else if($client['category'] == 'Moderate') {
                 $mode_cat++;
             }
-            else if($client['category'] == 'Standard'){
+            else if($client['category'] == 'Standard') {
                 $std_cat++;
             }
         }
@@ -310,7 +293,7 @@ class ClientController extends Controller
         $account_manager = User::getAllUsers('recruiter','Yes');
         $account_manager[0] = 'Yet to Assign';
 
-        return view('adminlte::client.clienttypeindex',compact('isAdmin','isSuperAdmin','isStrategy','isAccountant','isAccountManager','isAllClientVisibleUser','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','account_manager','count','isOperationsExecutive'));
+        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','account_manager','count'));
     }
 
     public function getAllClientsDetailsByType() {
@@ -324,8 +307,6 @@ class ClientController extends Controller
         $source = $_GET['source'];
 
         $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
         $edit_perm = $user->can('client-edit');
@@ -337,22 +318,19 @@ class ClientController extends Controller
         $stan_perm = $user->can('display-standard-client-list');
         $mode_perm = $user->can('display-moderate-client-list');
 
-        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
-
         // Get Active Clients
         if($source == 'Active') {
 
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,1,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,1,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,1,'');
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,1,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,1,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,1,'');
             }
         }
@@ -363,12 +341,12 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,0,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,0,'');
             }
             else if($userwise_perm) {
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,0,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,0,'');
             }
         }
@@ -379,13 +357,13 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,2,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,2,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,2,'');
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,2,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,2,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,2,'');
             }
         }
@@ -396,13 +374,13 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,4,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,4,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,4,'');
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,4,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,4,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,4,'');
             }
         }
@@ -413,13 +391,13 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,3,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,3,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,3,'');
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,3,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,3,'');
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,3,'');
             }
         }
@@ -430,13 +408,13 @@ class ClientController extends Controller
             if($all_perm && $para_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source);
             }
             else if($userwise_perm && $para_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source);
             }
         }
@@ -447,13 +425,13 @@ class ClientController extends Controller
             if($all_perm && $mode_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source);
             }
             else if($userwise_perm && $mode_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source);
             }
         }
@@ -464,13 +442,13 @@ class ClientController extends Controller
             if($all_perm && $stan_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source);
             }
             else if($userwise_perm && $stan_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$rolePermissions,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
                 $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source);
             }
         }
@@ -484,24 +462,24 @@ class ClientController extends Controller
         foreach ($client_res as $key => $value) {
 
             $action = '';
-
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
            
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
-
-                 if(isset($value['url']) && $value['url']!='') {
-                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
-                }
             }
             if($delete_perm) {
 
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
                 $delete = $delete_view->render();
                 $action .= $delete;
+
+                if(isset($value['url']) && $value['url'] != '') {
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
             }
             if($all_perm) {
+
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
                 $account = $account_manager_view->render();
                 $action .= $account;
@@ -511,7 +489,7 @@ class ClientController extends Controller
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
             }
 
-            if($all_perm || $value['client_owner']){
+            if($all_perm || $value['client_owner']) {
 
                 $days_array = ClientTimeline::getDetailsByClientId($value['id']);
 
@@ -525,15 +503,15 @@ class ClientController extends Controller
             $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
             $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
-            if($value['status']=='Active')
+            if($value['status'] == 'Active')
                 $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
-            else if($value['status']=='Passive')
+            else if($value['status'] == 'Passive')
                 $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
-            else if($value['status']=='Leaders')
+            else if($value['status'] == 'Leaders')
                 $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
-            else if($value['status']=='Forbid')
+            else if($value['status'] == 'Forbid')
                 $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
-            else if($value['status']=='Left')
+            else if($value['status'] == 'Left')
                 $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
 
             $client_category = $value['category'];
@@ -555,7 +533,6 @@ class ClientController extends Controller
             'recordsFiltered' => intval($count),
             "data" => $clients
         );
-
         echo json_encode($json_data);exit;
     }
 
@@ -564,24 +541,16 @@ class ClientController extends Controller
 
         $utils = new Utils();
         $user =  \Auth::user();
-
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
 
-        $rolePermissions = \DB::table("permission_role")->where("permission_role.role_id",key($userRole))
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
-
         if($all_perm) {
 
-            $client_array = ClientBasicinfo::getForbidClients(1,$user->id,$rolePermissions,3);
-            $count = sizeof($client_array);
+            $count = ClientBasicinfo::getForbidClientsCount(1,$user->id,3);
         }
         else if($userwise_perm) {
 
-            $client_array = ClientBasicinfo::getForbidClients(0,$user->id,$rolePermissions,3);
-            $count = sizeof($client_array);
+            $count = ClientBasicinfo::getForbidClientsCount(0,$user->id,3);
         }
 
         $account_manager = User::getAllUsers('recruiter','Yes');
@@ -763,7 +732,6 @@ class ClientController extends Controller
             $i++;
 
             if(array_search($value->category, $client_upload_type)) {
-
                 unset($client_upload_type[array_search($value->category, $client_upload_type)]);
             }
         }
@@ -791,17 +759,17 @@ class ClientController extends Controller
         $client_basic_info->website = $input['website'];
 
         if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '' ) {
-            $client_basic_info->percentage_charged_below=$input['percentage_charged_below'];
+            $client_basic_info->percentage_charged_below = $input['percentage_charged_below'];
         }
         else {
-            $client_basic_info->percentage_charged_below='8.33';
+            $client_basic_info->percentage_charged_below = '8.33';
         }
         
         if(isset($input['percentage_charged_above']) && $input['percentage_charged_above']!='' ) {
-            $client_basic_info->percentage_charged_above=$input['percentage_charged_above'];
+            $client_basic_info->percentage_charged_above = $input['percentage_charged_above'];
         }
         else {
-            $client_basic_info->percentage_charged_above='8.33';
+            $client_basic_info->percentage_charged_above = '8.33';
         }
         
         $status = $input['status'];
@@ -834,15 +802,13 @@ class ClientController extends Controller
             $client_basic_info->tan = '';
 
         $client_basic_info->coordinator_name = trim($input['contact_point']);
-        $client_basic_info->coordinator_prefix= $input['co_category'];
+        $client_basic_info->coordinator_prefix = $input['co_category'];
 
         if(isset($input['client_category'])) {
-
             $client_basic_info->category = $input['client_category'];
         }
         else {
-
-            $client_basic_info->category='';
+            $client_basic_info->category = '';
         }
 
         $client_basic_info->created_at = time();
@@ -994,7 +960,7 @@ class ClientController extends Controller
                 } 
             }
 
-            // TODO:: Notifications : On adding new client notify Super Admin via notification
+            // Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
             $message = $user_name . " added new Client";
@@ -1039,25 +1005,9 @@ class ClientController extends Controller
     public function show($id) {
         
         $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isAdmin = $user_obj::isAdmin($role_id);
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-        //$isOfficeAdmin = $user_obj::isOfficeAdmin($role_id);
-        $isManager = $user_obj::isManager($role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($user->id);
-        // Display Lead & Client to one user
-        $isAsstManagerMarketing = $user_obj::isAsstManagerMarketing($role_id);
-
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-
         $user_id = $user->id;
-
-        $access_roles_id = array($isAdmin,$isSuperAdmin,$isStrategy,$isAccountant,$isAllClientVisibleUser,$isAsstManagerMarketing,$isOperationsExecutive);
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
 
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
@@ -1066,161 +1016,144 @@ class ClientController extends Controller
         $client_basicinfo  = \DB::table('client_basicinfo')
             ->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
             ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
-            ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id', 'industry.name as ind_name')
-            ->where('client_basicinfo.id','=',$id)
-            ->get();
+            ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id', 'industry.name as ind_name')->where('client_basicinfo.id','=',$id)->first();
 
         $client['id'] = $id;
    
-    foreach ($client_basicinfo as $key=>$value)
-    {
-        $client_category = $value->category;
-        if ($client_category == 'Moderate' || $client_category == 'Standard') {
-            $manager_user_id = env('MANAGERUSERID');
-            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
-        }
-        else {
-            $manager_user_id = 0;
-            $marketing_intern_user_id = 0;
-        }
+        if(isset($client_basicinfo) && $client_basicinfo != '') {
 
-        if(in_array($role_id,$access_roles_id) || ($value->am_id == $user_id) || ($manager_user_id == $user_id) || ($marketing_intern_user_id == $user_id))
-        {   
-            $client['name'] = $value->name;
-            $client['source'] = $value->source;
-            $client['fax'] = $value->fax;
-            $client['mobile'] = $value->mobile;
-            $client['am_name'] = $value->am_name;
-            $client['mail'] = $value->mail;
-            $client['ind_name'] = $value->ind_name;
-            $client['website'] = $value->website;
-            $client['description'] = $value->description;
-            $client['gst_no'] = $value->gst_no;
-            /*$client['tds'] = $value->tds;*/
-            $client['coordinator_name'] = $value->coordinator_prefix. " " .$value->coordinator_name;
-            $client['tan'] = $value->tan;
-            $client['status']=$value->status;
-            $client['category']=$value->category;
-            $client['display_name'] = $value->display_name;
+            $client_category = $client_basicinfo->category;
 
-            if(isset($client['status']))
-            {
-                if($client['status'] == '1')
-                {
-                    $client['status']='Active';
-                }
-                else if($client['status'] == '0')
-                {
-                    $client['status']='Passive';
-                }
-                else if($client['status'] == '2')
-                {
-                    $client['status']='Leaders';
-                }
-                else if($client['status'] == '3')
-                {
-                    $client['status']='Forbid';
-                }
-                else if($client['status'] == '4')
-                {
-                    $client['status']='Left';
-                }
+            if ($client_category == 'Moderate' || $client_category == 'Standard') {
+                $manager_user_id = env('MANAGERUSERID');
+                $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
+            }
+            else {
+                $manager_user_id = 0;
+                $marketing_intern_user_id = 0;
             }
 
-            $client['percentage_charged_below']=$value->percentage_charged_below;
-            $client['percentage_charged_above']=$value->percentage_charged_above;
+            if($all_perm || $userwise_perm || ($manager_user_id == $user_id) || ($marketing_intern_user_id == $user_id)) {   
 
-            if($value->am_id==$user->id)
-            {
-                $client['client_owner'] = true;
+                $client['name'] = $client_basicinfo->name;
+                $client['source'] = $client_basicinfo->source;
+                $client['fax'] = $client_basicinfo->fax;
+                $client['mobile'] = $client_basicinfo->mobile;
+                $client['am_name'] = $client_basicinfo->am_name;
+                $client['mail'] = $client_basicinfo->mail;
+                $client['ind_name'] = $client_basicinfo->ind_name;
+                $client['website'] = $client_basicinfo->website;
+                $client['description'] = $client_basicinfo->description;
+                $client['gst_no'] = $client_basicinfo->gst_no;
+                $client['coordinator_name'] = $client_basicinfo->coordinator_prefix. " " .$client_basicinfo->coordinator_name;
+                $client['tan'] = $client_basicinfo->tan;
+                $client['status'] = $client_basicinfo->status;
+                $client['category'] = $client_basicinfo->category;
+                $client['display_name'] = $client_basicinfo->display_name;
+
+                if(isset($client['status'])) {
+
+                    if($client['status'] == '1') {
+                        $client['status'] = 'Active';
+                    }
+                    else if($client['status'] == '0') {
+                        $client['status'] = 'Passive';
+                    }
+                    else if($client['status'] == '2') {
+                        $client['status'] = 'Leaders';
+                    }
+                    else if($client['status'] == '3') {
+                        $client['status'] = 'Forbid';
+                    }
+                    else if($client['status'] == '4') {
+                        $client['status'] = 'Left';
+                    }
+                }
+
+                $client['percentage_charged_below'] = $client_basicinfo->percentage_charged_below;
+                $client['percentage_charged_above'] = $client_basicinfo->percentage_charged_above;
+
+                if($client_basicinfo->am_id == $user->id) {
+                    $client['client_owner'] = true;
+                }
+                else {
+                    $client['client_owner'] = false;
+                }
             }
-            else 
-            {
-                $client['client_owner'] = false;
-            }
+           else {
+               return view('errors.403');
+           }
         }
-       else
-       {
-           return view('errors.403');
-       }
-    }
 
-        $client_address = \DB::table('client_address')
-                        ->where('client_id','=',$id)
-                        ->get();
+        $client_address = \DB::table('client_address')->where('client_id','=',$id)->first();
 
-        foreach ($client_address as $key=>$value)
-        {
-            $client['billing_country'] = $value->billing_country;
-            $client['billing_state'] = $value->billing_state;
-            $client['billing_street'] = $value->billing_street1."\n".$value->billing_street2;
-            $client['billing_code'] = $value->billing_code;
-            $client['billing_city'] = $value->billing_city;
-            $client['shipping_country'] = $value->shipping_country;
-            $client['shipping_state'] = $value->shipping_state;
-            $client['shipping_street'] = $value->shipping_street1."\n".$value->shipping_street2;
-            $client['shipping_code'] = $value->shipping_code;
-            $client['shipping_city'] = $value->shipping_city;
+        if(isset($client_address) && $client_address != '') {
+
+            $client['billing_country'] = $client_address->billing_country;
+            $client['billing_state'] = $client_address->billing_state;
+            $client['billing_street'] = $client_address->billing_street1."\n".$client_address->billing_street2;
+            $client['billing_code'] = $client_address->billing_code;
+            $client['billing_city'] = $client_address->billing_city;
+            $client['shipping_country'] = $client_address->shipping_country;
+            $client['shipping_state'] = $client_address->shipping_state;
+            $client['shipping_street'] = $client_address->shipping_street1."\n".$client_address->shipping_street2;
+            $client['shipping_code'] = $client_address->shipping_code;
+            $client['shipping_city'] = $client_address->shipping_city;
         }
 
         $i = 0;
         $client['doc'] = array();
-        $client_doc = \DB::table('client_doc')
-                    ->join('users', 'users.id', '=', 'client_doc.uploaded_by')
-                    ->select('client_doc.*', 'users.name as upload_name')
-                    ->where('client_id','=',$id)
-                    ->get();
-
         $utils = new Utils();
-        foreach ($client_doc as $key=>$value)
-        {
+        $client_doc = \DB::table('client_doc')
+        ->join('users', 'users.id', '=', 'client_doc.uploaded_by')
+        ->select('client_doc.*', 'users.name as upload_name')->where('client_id','=',$id)->get();
+        
+        foreach ($client_doc as $key => $value) {
+
             $client['doc'][$i]['name'] = $value->name ;
             $client['doc'][$i]['id'] = $value->id;
-            $client['doc'][$i]['url'] = "../".$value->file ;//$utils->getUrlAttribute($value->file);
+            $client['doc'][$i]['url'] = "../".$value->file ;
             $client['doc'][$i]['category'] = $value->category ;
             $client['doc'][$i]['uploaded_by'] = $value->upload_name ;
             $client['doc'][$i]['size'] = $utils->formatSizeUnits($value->size);
             $i++;
-            if(array_search($value->category, $client_upload_type)) 
-            {
+
+            if(array_search($value->category, $client_upload_type))  {
                 unset($client_upload_type[array_search($value->category, $client_upload_type)]);
             }
         }
 
         $client_upload_type['Others'] = 'Others';
     
-        //print_r($client);exit;
-        return view('adminlte::client.show',compact('client','client_upload_type','isSuperAdmin','isAdmin','isStrategy','isManager','user_id','marketing_intern_user_id','isAllClientVisibleUser','isAsstManagerMarketing','isOperationsExecutive'));
+        return view('adminlte::client.show',compact('client','client_upload_type','user_id','marketing_intern_user_id'));
     }
 
-    public function attachmentsDestroy(Request $request,$docid){
+    public function attachmentsDestroy(Request $request,$docid) {
 
-        $type = $request->type;
+        $client_attach = \DB::table('client_doc')->select('client_doc.*')->where('id','=',$docid)->first();
 
-        $client_attach=\DB::table('client_doc')
-        ->select('client_doc.*')
-        ->where('id','=',$docid)->first();
+        if(isset($client_attach)) {
 
-        if(isset($client_attach))
-        {
-            $path="uploads/clients/".$client_attach->client_id . "/" . $client_attach->name;
-
+            $path = "uploads/clients/".$client_attach->client_id . "/" . $client_attach->name;
             unlink($path);
 
-            $clientid=$client_attach->client_id;
-    
-            $client_doc=ClientDoc::where('id','=',$docid)->delete();
+            $clientid = $client_attach->client_id;
+            $client_doc = ClientDoc::where('id','=',$docid)->delete();
         }
+
+        $type = $request->type;
 
         if($type == 'edit') {
 
             return redirect()->route('client.edit',[$clientid])->with('success','Attachment Deleted Successfully.');
         }
+        else {
 
-        return redirect()->route('client.show',[$clientid])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('client.show',[$clientid])->with('success','Attachment Deleted Successfully.');
+        }
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request) {
 
         $client_upload_type = $request->client_upload_type;
         $file = $request->file('file');
@@ -1229,6 +1162,7 @@ class ClientController extends Controller
         $type = $request->type;
 
         if (isset($file) && $file->isValid()) {
+
             $doc_name = $file->getClientOriginalName();
             $doc_filesize = filesize($file);
 
@@ -1239,12 +1173,12 @@ class ClientController extends Controller
                 mkdir("uploads/clients/$client_id", 0777,true);
             }
 
-            if(!$file->move($dir_name, $doc_name)){
+            if(!$file->move($dir_name, $doc_name)) {
                 return false;
             }
-            else{
-                $client_doc = new ClientDoc;
+            else {
 
+                $client_doc = new ClientDoc;
                 $client_doc->client_id = $client_id;
                 $client_doc->category = $client_upload_type;
                 $client_doc->name = $doc_name;
@@ -1255,7 +1189,6 @@ class ClientController extends Controller
                 $client_doc->updated_at = time();
                 $client_doc->save();
             }
-
         }
 
         if($type == 'show') {
@@ -1266,12 +1199,10 @@ class ClientController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id) {
 
         $lead_res = \DB::table('client_basicinfo')
-                    ->select('client_basicinfo.lead_id')
-                    ->where('id','=',$id)
-                    ->first();
+        ->select('client_basicinfo.lead_id')->where('id','=',$id)->first();
 
         if (isset($lead_res) && $lead_res !='') {
             $lead_id = $lead_res->lead_id;
@@ -1285,54 +1216,39 @@ class ClientController extends Controller
             }
         }
 
-
         $res = ClientBasicinfo::checkAssociation($id);
 
-        if($res){
-            // delete address info
+        if($res) {
+
             \DB::table('client_address')->where('client_id', '=', $id)->delete();
-
-            // delete attachments
             \DB::table('client_doc')->where('client_id', '=', $id)->delete();
-
-            // Delete from notifications table
-            Notifications::where('module','=','Client')
-            ->where('module_id','=',$id)
-            ->delete();
-
-            // delete basic info
+            Notifications::where('module','=','Client')->where('module_id','=',$id)->delete();
             ClientBasicinfo::where('id',$id)->delete();
 
             // unlink documents
             $dir_name = "uploads/clients/".$id."/";
             $client_doc = new ClientDoc();
-            if(is_dir($dir_name)){
+            if(is_dir($dir_name)) {
                 $response = $client_doc->recursiveRemoveDirectory($dir_name);
             }
 
             // Delete Timeline table entry
-
             \DB::table('client_timeline')->where('client_id', '=', $id)->delete();
 
             return redirect()->route('client.index')->with('success','Client Deleted Successfully.');
-        }else{
+        }
+        else {
             return redirect()->route('client.index')->with('error','Client is associated with job.!!');
         }
-        return redirect()->route('client.index'); 
     }
 
-   /* public function deleteAssociatedJob($id){
-    }*/
+    public function update(Request $request, $id) {
 
-    public function update(Request $request, $id){
         $user_id = \Auth::user()->id;
-
         $input = $request->all();
         $input = (object)$input;
 
-        //print_r($input);exit;
         $client_basicinfo = ClientBasicinfo::find($id);
-
         $client_basicinfo->name = trim($input->name);
         $client_basicinfo->display_name = trim($input->display_name);
         $client_basicinfo->mobile = $input->mobile;
@@ -1341,136 +1257,114 @@ class ClientController extends Controller
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
 
-        if(isset($input->percentage_charged_below) && $input->percentage_charged_below!= '' )
-        {
-            $client_basicinfo->percentage_charged_below=$input->percentage_charged_below;
+        if(isset($input->percentage_charged_below) && $input->percentage_charged_below!= '') {
+            $client_basicinfo->percentage_charged_below = $input->percentage_charged_below;
         }
         else if (isset($client_basicinfo->percentage_charged_below) && $client_basicinfo->percentage_charged_below != '') {
             $client_basicinfo->percentage_charged_below = $client_basicinfo->percentage_charged_below;
         }
-        else
-        {
+        else {
             $client_basicinfo->percentage_charged_below='8.33';
         }
         
-        if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='' )
-        {
-            $client_basicinfo->percentage_charged_above=$input->percentage_charged_above;
+        if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='') {
+            $client_basicinfo->percentage_charged_above = $input->percentage_charged_above;
         }
         else if (isset($client_basicinfo->percentage_charged_above) && $client_basicinfo->percentage_charged_above != '') {
             $client_basicinfo->percentage_charged_above = $client_basicinfo->percentage_charged_above;
         }
-        else
-        {
-             $client_basicinfo->percentage_charged_above='8.33';
+        else {
+            $client_basicinfo->percentage_charged_above='8.33';
         }
-        
-        //$client_basicinfo->fax = $input->fax;
-        $client_basicinfo->industry_id = $input->industry_id;
 
-        $status=$input->status;
+        $client_basicinfo->industry_id = $input->industry_id;
+        $status = $input->status;
         $client_basicinfo->status = $status;
 
         // save passive date for passive client
-        if($status == '0')
-        {
+        if($status == '0') {
             $today_date = date('Y-m-d'); 
             $client_basicinfo->passive_date = $today_date;
         }
 
-        $client_basicinfo->website = $input->website;
-        if(isset($input->source) && $input->source!=''){
+        if(isset($input->source) && $input->source!='') {
             $client_basicinfo->source = $input->source;
         }
-        else{
+        else {
             $client_basicinfo->source = '';
         }
 
-        //$client_basicinfo->gst_no = $input->gst_no;
-        //$client_basicinfo->tds = $input->tds;
+        $client_basicinfo->website = $input->website;
         $client_basicinfo->coordinator_name = trim($input->contact_point);
-
-        $client_basicinfo->coordinator_prefix=$input->co_category;
+        $client_basicinfo->coordinator_prefix = $input->co_category;
         $client_basicinfo->account_manager_id = $input->account_manager;
 
         if(isset($input->gst_no) && $input->gst_no!='')
             $client_basicinfo->gst_no = $input->gst_no;
         else
             $client_basicinfo->gst_no = '';
-
-       /* if(isset($input->tds) && $input->tds!='')
-            $client_basicinfo->tds = $input->tds;
-        else
-            $client_basicinfo->tds = '';*/
         
         if(isset($input->tan) && $input->tan!='')
             $client_basicinfo->tan = $input->tan;
         else
             $client_basicinfo->tan = '';
 
-        if(isset($input->client_category))
-        {
-            $client_basicinfo->category=$input->client_category;
+        if(isset($input->client_category)) {
+            $client_basicinfo->category = $input->client_category;
         }
         else if (isset($client_basicinfo->category) && $client_basicinfo->category != '') {
             $client_basicinfo->category = $client_basicinfo->category;
         }
-        else
-        {
-            $client_basicinfo->category='';
+        else {
+            $client_basicinfo->category = '';
         }
-        /*if (isset($input->yet_to_assign_id)) {
-            $client_basicinfo->yet_to_assign_user = $input->yet_to_assign_id;
-        }
-        else{
-            $client_basicinfo->yet_to_assign_user = 0;
-        }*/
-        
-        if($client_basicinfo->save()){
+
+        if($client_basicinfo->save()) {
 
             // update client address
             $client_address = ClientAddress::find($input->client_address_id);
-               if(!isset($client_address) && empty($client_address)){
-                   $client_address = new ClientAddress();
-                   $client_address->client_id = $id;
-               }
-            if(isset($input->billing_country) && $input->billing_country!=''){
+
+            if(!isset($client_address) && empty($client_address)) {
+                $client_address = new ClientAddress();
+                $client_address->client_id = $id;
+            }
+            if(isset($input->billing_country) && $input->billing_country!='') {
                 $client_address->billing_country = $input->billing_country;
             }
-            if(isset($input->billing_state) && $input->billing_state!=''){
+            if(isset($input->billing_state) && $input->billing_state!='') {
                 $client_address->billing_state = $input->billing_state;
             }
-            if(isset($input->billing_street1) && $input->billing_street1!=''){
+            if(isset($input->billing_street1) && $input->billing_street1!='') {
                 $client_address->billing_street1 = $input->billing_street1;
             }
-            if(isset($input->billing_street2) && $input->billing_street2!=''){
+            if(isset($input->billing_street2) && $input->billing_street2!='') {
                 $client_address->billing_street2 = $input->billing_street2;
             }
-            if(isset($input->billing_code) && $input->billing_code!=''){
+            if(isset($input->billing_code) && $input->billing_code!='') {
                 $client_address->billing_code = $input->billing_code;
             }
-            if(isset($input->billing_city) && $input->billing_city!=''){
+            if(isset($input->billing_city) && $input->billing_city!='') {
                 $client_address->billing_city = $input->billing_city;
             }
-
-            if(isset($input->shipping_country) && $input->shipping_country!=''){
+            if(isset($input->shipping_country) && $input->shipping_country!='') {
                 $client_address->shipping_country = $input->shipping_country;
             }
-            if(isset($input->shipping_state) && $input->shipping_state!=''){
+            if(isset($input->shipping_state) && $input->shipping_state!='') {
                 $client_address->shipping_state = $input->shipping_state;
             }
-            if(isset($input->shipping_street1) && $input->shipping_street1!=''){
+            if(isset($input->shipping_street1) && $input->shipping_street1!='') {
                 $client_address->shipping_street1 = $input->shipping_street1;
             }
-            if(isset($input->shipping_street2) && $input->shipping_street2!=''){
+            if(isset($input->shipping_street2) && $input->shipping_street2!='') {
                 $client_address->shipping_street2 = $input->shipping_street2;
             }
-            if(isset($input->shipping_code) && $input->shipping_code!=''){
+            if(isset($input->shipping_code) && $input->shipping_code!='') {
                 $client_address->shipping_code = $input->shipping_code;
             }
-            if(isset($input->shipping_city) && $input->shipping_city!=''){
+            if(isset($input->shipping_city) && $input->shipping_city!='') {
                 $client_address->shipping_city = $input->shipping_city;
             }
+
             $client_address->updated_at = date("Y-m-d H:i:s");
             $client_address->save();
 
@@ -1485,7 +1379,7 @@ class ClientController extends Controller
             }
             foreach ($job_ids as $key => $value) {
 
-                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id=$value");
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id = $value");
 
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
 
@@ -1520,15 +1414,12 @@ class ClientController extends Controller
             // Add Entry in Client Timeline.
             $check_entry_exist = ClientTimeline::checkTimelineEntry($input->account_manager,$id);
 
-            if(isset($check_entry_exist) && $check_entry_exist != ''){
+            if(isset($check_entry_exist) && $check_entry_exist != '') {
             }
+            else {
 
-            else
-            {
                 $get_latest_record = \DB::table('client_timeline')
-                ->select('client_timeline.*')
-                ->where('client_id','=',$id)
-                ->orderBy('client_timeline.id','desc')
+                ->select('client_timeline.*')->where('client_id','=',$id)->orderBy('client_timeline.id','desc')
                 ->first();
 
                 $to_date = date('Y-m-d');
@@ -1548,7 +1439,7 @@ class ClientController extends Controller
                 $client_timeline->save();
             }
 
-            if($status == '3'){
+            if($status == '3') {
 
                 // Forbid Client Email Notifications : On change status of client as forbid
                 $module_id = $id;
@@ -1591,7 +1482,8 @@ class ClientController extends Controller
 
                     return false;
 
-                } else {
+                }
+                else {
 
                     $client_doc = new ClientDoc;
                     $client_doc->client_id = $id;
@@ -1604,18 +1496,17 @@ class ClientController extends Controller
                     $client_doc->updated_at = time();
                     $client_doc->save();
                 }
-
                 return redirect('client/'.$id.'/edit')->with('success','Attachment Uploaded Successfully.');
             }
-
             return redirect()->route('client.index')->with('success','Client Details Updated Successfully.');
-        }else{
-            return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ( $client_basicinfo->errors() );
+        }
+        else {
+            return redirect('client/'.$client_basicinfo->id.'/edit')->withInput(Input::all())->withErrors ($client_basicinfo->errors());
         }
     }
 
-    public function postClientEmails(Request $request)
-    {
+    public function postClientEmails(Request $request) {
+
         $user = \Auth::user();
         $user_id = $user->id;
 
