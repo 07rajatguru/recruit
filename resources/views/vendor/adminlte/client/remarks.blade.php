@@ -116,8 +116,6 @@
 
         $("#content").select2({'placeholder': 'Select Remark'});
         $(".update-review-textarea").select2({'placeholder': 'Select Remark','width': '100%'});
-        // initSearchRemarks();
-        // initSearchComment();
     });
 
     function emptyTextValidation(id) {
@@ -125,15 +123,14 @@
         var content = $("#comment_"+id).val();
 
         if(content == '') {
-
             alert("Please Select One Remark");
             return false;
         }
-
         return true;
     }
 
-    function AddnewRemarkspopup(){
+    function AddnewRemarkspopup() {
+
         var content = $("#content").val();
 
         if (content == 'other') {
@@ -141,7 +138,8 @@
         }
     }
 
-    function AddnewRemarkCommentpopup(id){
+    function AddnewRemarkCommentpopup(id) {
+
         var content = $("#comment_"+id).val();
 
         if (content == 'other') {
@@ -152,6 +150,7 @@
     function initSearchRemarks() {
 
         $("#content").autocomplete({
+
             minLength: 1,
             source: '/search-remarks',
             
@@ -165,47 +164,20 @@
                 return false;
             },
         }).autocomplete( "instance" )._renderItem = function( ul,item ) {
+
             if(item.label !== '') {
                 ul.addClass('srch-remarks');
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
             }
-            // else{
-            //     $("#content").val('');
-            // }
         };
     }
-
-    /*function initUpdateSearchRemarks(id) {
-
-       $("#update-review-textarea-"+id).autocomplete({
-            minLength: 1,
-            source: '/search-remarks',
-            appendTo : '#update-review-'+id+'',
-            
-            select: function( event, ui ) {
-                if(ui.item.label == "No Remarks Found") {
-                    $("#update-review-textarea-"+id).val(ui.item.label);
-                }
-                if(ui.item.label !== '') {
-                    $("#update-review-textarea-"+id).val(ui.item.label);
-                }
-                return false;
-            },
-        }).autocomplete( "instance" )._renderItem = function( ul,item ) {
-            if(item.label !== '') {
-                ul.addClass('srch-remarks');
-                return $( "<li>" )
-                .append( "<div><span>" + item.label + "</span></div>")
-                .appendTo( ul )
-            }
-        };
-    }*/
 
     function initSearchComment(id) {
 
         $("#comment_"+id).autocomplete({
+
             minLength: 1,
             source: '/search-remarks',
             
@@ -224,10 +196,7 @@
                 return $( "<li>" )
                 .append( "<div><span>" + item.label + "</span></div>")
                 .appendTo( ul )
-            } 
-            // else{
-            //     $("#comment_"+id).val('');
-            // }
+            }
         };
     }
 
@@ -258,11 +227,13 @@
     }
 
     function showcommentbox(post_id) {
+
         $("#comment_"+post_id).select2({'placeholder' : 'Select Remark','width':'100%'});
-        if($(".comment-"+post_id).is(':hidden')){
+
+        if($(".comment-"+post_id).is(':hidden')) {
             $(".comment-"+post_id).show();
         }
-        else{
+        else {
             $(".comment-"+post_id).hide();
         }
     }
@@ -274,17 +245,21 @@
         var csrf_token = $("#csrf_token").val();
         var hidden_clientid = $("#hidden_clientid").val();
         
-        if(confirmvalue){
+        if(confirmvalue) {
+
             jQuery.ajax({
+
                 url:'/client/post/delete/'+id,
                 type:"POST",
                 dataType:'json',
                 data : {client_id:hidden_clientid,_token:csrf_token},
-                success: function(response){
+
+                success: function(response) {
+
                     if (response.returnvalue == 'valid') {
                         alert("Remarks Deleted Succesfully.");
                     }
-                    else{
+                    else {
                         alert("Error while Deleting Remarks.");
                     }
                     window.location.reload();
@@ -298,19 +273,23 @@
         var csrf_token = $("#csrf_token").val();
         var super_admin_userid = $("#super_admin_userid").val();
         var hidden_clientid = $("#hidden_clientid").val();
-        if(id>0){
+
+        if(id > 0) {
+
             var content = $("#update-comment-textarea-"+id).val();
             jQuery.ajax({
+
                 url:'/client/comment/update',
                 type:"POST",
                 dataType:'json',
-                // data : "content="+content+"&id="+id+"&_token="+csrf_token+"&super_admin_userid="+super_admin_userid,
                 data : {content:content,id:id,_token:csrf_token,super_admin_userid:super_admin_userid,client_id:hidden_clientid},
-                success: function(response){
+
+                success: function(response) {
+
                     if (response.returnvalue == 'valid') {
                         alert("Data updated Succesfully.");
                     }
-                    else{
+                    else {
                         alert("Error while updating comment");
                     }
                     window.location.reload();
@@ -326,18 +305,21 @@
         var csrf_token = $("#csrf_token").val();
         var hidden_clientid = $("#hidden_clientid").val();
 
-        if(confirmvalue){
+        if(confirmvalue) {
+
             jQuery.ajax({
                 url:'/client/comment/delete/'+id,
                 type:"POST",
                 dataType:'json',
                 data : {client_id:hidden_clientid,_token:csrf_token},
-                success: function(response){
+
+                success: function(response) {
+
                     if (response.returnvalue == 'valid') {
-                        alert("Comment deleted Succesfully.");
+                        alert("Comment Deleted Succesfully.");
                     }
-                    else{
-                        alert("Error while deleting comment");
+                    else {
+                        alert("Error while Deleting Comment.");
                     }
                     window.location.reload();
                 }

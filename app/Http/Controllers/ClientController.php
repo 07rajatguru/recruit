@@ -1519,32 +1519,27 @@ class ClientController extends Controller
         $email_body = $request->input('email_body');
         $updated_at = date('Y-m-d H:i:s');
 
-        foreach($client_ids_array as $key => $value)
-        {
+        foreach($client_ids_array as $key => $value) {
+
             $client_email = ClientBasicinfo::getClientEmailByID($value);
             $client_name = ClientBasicinfo::getClientNameByID($value);
-            //$client_company = ClientBasicinfo::getCompanyOfClientByID($value);
 
             $module = 'Client Bulk Email';
             $sender_name = $user_id;
             $to = $client_email;
-            $subject = $email_subject;
-           
+            $subject = $email_subject;           
             //$cc='rajlalwani@adlertalent.com';
             $cc = 'saloni@trajinfotech.com';
 
-            if(strpos($email_body, 'Clientname') !== false)
-            {
+            if(strpos($email_body, 'Clientname') !== false) {
                 $new_email_body = str_replace('Clientname',$client_name,$email_body);
                 $body_message = "<tr><td style='padding:8px;'>$new_email_body</td></tr>";
             }
-            else
-            {
+            else {
                 $body_message = "<tr><td style='padding:8px;'>$email_body</td></tr>";
             }
            
             $module_id = $value;
-            
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
         }
 
@@ -1553,7 +1548,7 @@ class ClientController extends Controller
         return redirect()->route('client.index')->with('success','Email Sent Successfully.');
     }
 
-    public function checkClientId(){
+    public function checkClientId() {
 
         if (isset($_POST['client_ids']) && $_POST['client_ids'] != '') {
             $client_ids = $_POST['client_ids'];
@@ -1570,19 +1565,17 @@ class ClientController extends Controller
         return $msg;
     }
 
-    public function postClientAccountManager()
-    {
-        $account_manager_id = $_POST['account_manager_id'];
+    public function postClientAccountManager() {
 
+        $account_manager_id = $_POST['account_manager_id'];
         $client_ids = $_POST['client_ids'];
         $client_ids_array = explode(",",$client_ids);
 
         $updated_at = date('Y-m-d H:i:s');
 
-        foreach($client_ids_array as $key => $value)
-        {
-            // If account manager change then jobs hiring manager all changes
+        foreach($client_ids_array as $key => $value) {
 
+            // If account manager change then jobs hiring manager also change
             $job_ids = JobOpen::getJobIdByClientId($value);
             if ($account_manager_id == '0') {
                 $super_admin_userid = getenv('SUPERADMINUSERID');
@@ -1594,8 +1587,7 @@ class ClientController extends Controller
 
             foreach ($job_ids as $k1 => $v1) {
 
-                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id= $v1");
-
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id = $v1");
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($v1,$a_m);
 
                 if ($check_job_user_id == false) {
@@ -1608,19 +1600,12 @@ class ClientController extends Controller
 
             // Add Entry in Client Timeline.
 
-            $get_latest_record = \DB::table('client_timeline')
-                ->select('client_timeline.*')
-                ->where('client_id','=',$value)
-                ->orderBy('client_timeline.id','desc')
-                ->first();
+            $get_latest_record = \DB::table('client_timeline')->select('client_timeline.*')
+                ->where('client_id','=',$value)->orderBy('client_timeline.id','desc')->first();
 
             $to_date = date('Y-m-d');
 
-            if(isset($get_latest_record) && $get_latest_record != '')
-            {
-                /*$to = \Carbon\Carbon::parse($to_date);
-                $from = \Carbon\Carbon::parse($get_latest_record->created_at);
-                $diff_in_days = $to->diffInDays($from);*/
+            if(isset($get_latest_record) && $get_latest_record != '') {
 
                 $to = strtotime($to_date);
                 $from = strtotime($get_latest_record->created_at);
@@ -1646,8 +1631,7 @@ class ClientController extends Controller
             $module_id = $value;
             $module = 'Client Account Manager';
             $link = route('client.show',$value);
-            $subject = "Client Account Manager changed - " . $client_name . " - " . 
-                        $billing_city;
+            $subject = "Client Account Manager changed - " . $client_name . " - " . $billing_city;
             $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
             $sender_name = $user_id;
 
@@ -1665,57 +1649,48 @@ class ClientController extends Controller
         return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
     }
 
-    public function getMonthWiseClient($month,$year)
-    {
+    public function getMonthWiseClient($month,$year) {
+
         $user =  \Auth::user();
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
 
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($role_id);
-
-        if($isSuperAdmin){
+        if($all_perm) {
             $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year);
             $count = sizeof($response);
         }
-        else{
+        else if($userwise_perm) {
             $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0,$month,$year);
             $count = sizeof($response);
         }
 
-        return view('adminlte::client.monthwiseclient', array('clients' => $response,'count' => $count),compact('isSuperAdmin','isStrategy'));
+        return view('adminlte::client.monthwiseclient', array('clients' => $response,'count' => $count));
     }
 
-    public function getAccountManager(Request $request)
-    {
+    public function getAccountManager(Request $request) {
+
         $account_manager = $request->get('account_manager');
         $id = $request->get('id');
-
-        $act_man=ClientBasicinfo::find($id);
-
+        $act_man = ClientBasicinfo::find($id);
         $a_m='';
 
-        if(isset($act_man)){
+        if(isset($act_man)) {
             $a_m = $account_manager;
         }
-
-        $act_man->account_manager_id=$a_m;
+        $act_man->account_manager_id = $a_m;
         $act_man->save();
 
         if ($act_man) {
+
             $job_ids = JobOpen::getJobIdByClientId($id);
             if ($account_manager == '0') {
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $a_m = $super_admin_userid;
             }
+
             foreach ($job_ids as $key => $value) {
 
-                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id=$value");
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id = $value");
 
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
 
@@ -1729,16 +1704,12 @@ class ClientController extends Controller
         }
 
         // Add Entry in Client Timeline.
-
-        $get_latest_record = \DB::table('client_timeline')
-            ->select('client_timeline.*')
-            ->where('client_id','=',$id)
-            ->orderBy('client_timeline.id','desc')
-            ->first();
+        $get_latest_record = \DB::table('client_timeline')->select('client_timeline.*')
+        ->where('client_id','=',$id)->orderBy('client_timeline.id','desc')->first();
 
         $to_date = date('Y-m-d');
 
-        if(isset($get_latest_record) && $get_latest_record != ''){
+        if(isset($get_latest_record) && $get_latest_record != '') {
 
             $to = strtotime($to_date);
             $from = strtotime($get_latest_record->created_at);
@@ -1753,7 +1724,6 @@ class ClientController extends Controller
         $client_timeline->save();
 
         // Email Notifications : On change account manager of client.
-
         $client_name = $act_man->name;
         $billing_city = ClientBasicinfo::getBillingCityOfClientByID($id);
         $user_id = \Auth::user()->id;
@@ -1761,8 +1731,7 @@ class ClientController extends Controller
         $module_id = $id;
         $module = 'Client Account Manager';
         $link = route('client.show',$id);
-        $subject = "Client Account Manager changed - " . $client_name . " - " . 
-                    $billing_city;
+        $subject = "Client Account Manager changed - " . $client_name . " - " . $billing_city;
         $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
         $sender_name = $user_id;
 
@@ -1779,17 +1748,18 @@ class ClientController extends Controller
 
        return redirect()->route('client.index')->with('success', 'Client Account Manager updated Successfully.');
     }
-    public function importExport(){
+
+    public function importExport() {
 
         return view('adminlte::client.import');
     }
 
-    public function importExcel(Request $request){
+    public function importExcel(Request $request) {
+
         if($request->hasFile('import_file')) {
+
             $path = $request->file('import_file')->getRealPath();
-
             $data = Excel::load($path, function ($reader) {})->get();
-
             $messages = array();
 
             if (!empty($data) && $data->count()) {
@@ -1810,14 +1780,16 @@ class ClientController extends Controller
                             // first check email already exist or not , if exist doesnot update data
                             $client_cnt = ClientBasicinfo::checkClientByEmail($email);
 
-                            if($client_cnt>0){
+                            if($client_cnt>0) {
                                 $messages[] = "Record $sr_no already present ";
                             }
-                            else{
+                            else {
+
                                 // get user id from managed_by (i.e. username)
                                 $acc_mngr_id = User::getUserIdByName($managed_by);
 
-                                if($acc_mngr_id>0){
+                                if($acc_mngr_id > 0) {
+
                                     // Insert new client
                                     $client_basic_info = new ClientBasicinfo();
                                     $client_basic_info->name = $name;
@@ -1827,8 +1799,8 @@ class ClientController extends Controller
                                     $client_basic_info->account_manager_id = $acc_mngr_id;
 
                                     if($client_basic_info->save()) {
-                                        $client_id = $client_basic_info->id;
 
+                                        $client_id = $client_basic_info->id;
                                         $input['client_id'] = $client_id;
                                         $input['billing_city'] = $location;
                                         $input['shipping_city'] = $location;
@@ -1837,44 +1809,28 @@ class ClientController extends Controller
                                         if ($client_id > 0) {
                                             $messages[] = "Record $sr_no inserted successfully";
                                         }
-
                                     }
-                                    else{
+                                    else {
                                         $messages[] = "Error while inserting record $sr_no ";
                                     }
                                 }
-
-                                else{
+                                else {
                                     $messages[] = "Error while inserting record $sr_no ";
                                 }
-
-
                             }
-
-
                         }
                     }
-                    else{
+                    else {
                         $messages[] = "No Data in file";
                     }
-
                 }
             }
-
             return view('adminlte::client.import',compact('messages'));
-            //return redirect()->route('client.index')->with('success','Client Created Successfully');
         }
     }
 
+    public function remarks($id) {
 
-    public function remarks($id){
-
-        $user =  \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $user_id = \Auth::user()->id;
         $client_id = $id;
 
@@ -1895,21 +1851,20 @@ class ClientController extends Controller
         
         $client_remarks_edit = ClientRemarks::getAllClientRemarksData();
 
-        return view('adminlte::client.remarks',compact('user_id','client_id','post','client','isSuperAdmin','client_location','super_admin_userid','manager_user_id','days_array','client_remarks','client_remarks_edit'));
-
+        return view('adminlte::client.remarks',compact('user_id','client_id','post','client','client_location','super_admin_userid','manager_user_id','days_array','client_remarks','client_remarks_edit'));
     }
 
-    public function writePost(Request $request, $client_id){
+    public function writePost(Request $request, $client_id) {
 
         $input = $request->all();
-
         $user_id = $input['user_id'];
         $client_id = $input['client_id'];
         $content = $input['content'];
         $super_admin_userid = $input['super_admin_userid'];
         $manager_user_id = $input['manager_user_id'];
 
-        if(isset($user_id) && $user_id>0){
+        if(isset($user_id) && $user_id>0) {
+
             // If remarks not added then add that only by superadmin
             if ($user_id == $super_admin_userid || $user_id == $manager_user_id) {
                 // Check remark found or not
@@ -1941,15 +1896,12 @@ class ClientController extends Controller
             $client_info->latest_remarks = $get_latest_remarks;
             $client_info->save();
         }
-
         return redirect()->route('client.remarks',[$client_id]);
     }
 
-
-    public function writeComment(Request $request,$post_id){
+    public function writeComment(Request $request,$post_id) {
 
         $input = $request->all();
-
         $client_id = $input['client_id'];
         $super_admin_userid = $input['super_admin_userid'];
 
@@ -1957,6 +1909,7 @@ class ClientController extends Controller
 
         // If remarks not added then add that only by superadmin
         if ($user_id == $super_admin_userid) {
+
             // Check remark found or not
             $client_remark_check = ClientRemarks::checkClientRemark($input["content"]);
             if (isset($client_remark_check) && $client_remark_check != '') {
@@ -1991,16 +1944,16 @@ class ClientController extends Controller
         return redirect()->route('client.remarks',[$client_id]);
     }
 
-    public function updateClientRemarks(Request $request, $client_id,$post_id){
+    public function updateClientRemarks(Request $request, $client_id,$post_id) {
 
         $input = $request->all();
-
         $user_id = $input['user_id'];
         $client_id = $input['client_id'];
         $super_admin_userid = $input['super_admin_userid'];
 
         // If remarks not added then add that only by superadmin
         if ($user_id == $super_admin_userid) {
+
             // Check remark found or not
             $client_remark_check = ClientRemarks::checkClientRemark($input["content"]);
             if (isset($client_remark_check) && $client_remark_check != '') {
@@ -2026,10 +1979,9 @@ class ClientController extends Controller
         $client_info->save();
 
        return redirect()->route('client.remarks',[$client_id]);
-
     }
 
-    public function updateComment(){
+    public function updateComment() {
 
         $client_id = $_POST['client_id'];
         $id = $_POST['id'];
@@ -2039,6 +1991,7 @@ class ClientController extends Controller
 
         // If remarks not added then add that only by superadmin
         if ($user_id == $super_admin_userid) {
+
             // Check remark found or not
             $client_remark_check = ClientRemarks::checkClientRemark($content);
             if (isset($client_remark_check) && $client_remark_check != '') {
@@ -2055,7 +2008,7 @@ class ClientController extends Controller
 
         $res = Comments::updateComment($id,$content);
 
-        if($res){
+        if($res) {
             $response['returnvalue'] = 'valid';
         }
 
@@ -2069,16 +2022,14 @@ class ClientController extends Controller
         return json_encode($response);exit;
     }
 
-    public function commentDestroy($id){
+    public function commentDestroy($id) {
 
         $response['returnvalue'] = 'invalid';
         $res = Comments::deleteComment($id);
-        if($res){
-            // delete replies on it
-            //Comments::where('parent_id', '=', $id)->delete();
+
+        if($res) {
             $response['returnvalue'] = 'valid';
         }
-
         $client_id = $_POST['client_id'];
 
         // Update in Client Basicinfo Table
@@ -2091,11 +2042,12 @@ class ClientController extends Controller
         return json_encode($response);exit;
     }
 
-    public function postDestroy($id){
+    public function postDestroy($id) {
 
         $response['returnvalue'] = 'invalid';
         $res = Post::deletePost($id);
-        if($res){
+
+        if($res) {
             \DB::table('comments')->where('commentable_id', '=', $id)->delete();
             $response['returnvalue'] = 'valid';
         }

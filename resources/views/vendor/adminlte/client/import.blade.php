@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Client Detail')
+@section('title', 'Client')
 
 @section('content_header')
     <h1></h1>
@@ -23,7 +23,7 @@
     @if(isset($messages) && sizeof($messages)>0)
         <div class="alert alert-success">
             @foreach($messages as $key=>$value)
-                    <p>{{ $value }}</p>
+                <p>{{ $value }}</p>
             @endforeach
         </div>
     @endif
@@ -38,15 +38,9 @@
 
                 <h3>Import File Form:</h3>
                 <form style="" action="{{ URL::to('client/importExcel') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
-
-                    <input type="file" name="import_file" />
-                    {{ csrf_field() }}
-                    <br/>
-
+                    <input type="file" name="import_file" />{{ csrf_field() }}<br/>
                     <button class="btn btn-primary">Import CSV or Excel File</button>
-
                 </form>
-
                 <br>
             </div>
         </div>

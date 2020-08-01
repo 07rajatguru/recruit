@@ -1,6 +1,5 @@
 <div class="modal fade" id="new-remark-comment">
     <div class="modal-dialog ui-block window-popup edit-widget add-comment">
-
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h2 class="modal-title">Add Remarks</h2>
@@ -20,7 +19,6 @@
         {!! Form::close() !!}
     </div>
 </div>
-
 
 {!! Form::open(['route' => ['post.comments.write', $per_post->id], 'name' => 'write_a_review', 'id' => 'write_a_review','onsubmit' => "return emptyTextValidation('$per_post->id')"]) !!}
 {!! Form::hidden('post_id', $per_post->id) !!}

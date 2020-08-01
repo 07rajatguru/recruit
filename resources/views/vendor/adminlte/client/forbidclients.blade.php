@@ -4,18 +4,16 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('client.create') }}"> Create New Client</a>
-                
+                <a class="btn btn-success" href="{{ route('client.create') }}">Add New Client</a>
             </div>
             <div  class="pull-left">
-                <h2>Forbidden Clients ({{ $count }}) </h2>
+                <h2>Forbidden Clients ({{ $count or 0 }}) </h2>
             </div>
         </div>
     </div>
@@ -27,6 +25,7 @@
             <p>{{ $message }}</p>
         </div>
     @endif
+
     @if ($message = Session::get('error'))
         <div class="alert alert-error">
             <p>{{ $message }}</p>
@@ -41,9 +40,11 @@
                 <th>Client Owner</th>
                 <th>Company Name</th>   
                 <th>Contact Point</th>
-                <?php if($isSuperAdmin || $isStrategy || $isAccountManager ) { ?>
-                <th>Client Category</th>
-                <?php }?>
+
+                @permission(('display-client-category-in-client-list'))
+                    <th>Client Category</th>
+                @endpermission
+
                 <th>Status</th>
                 <th>City</th>
                 <th>Remarks</th>
@@ -56,26 +57,20 @@
     <script type="text/javascript">
 
         jQuery( document ).ready(function() {
-            /*var table = jQuery('#clienttype_table').DataTable( {
-                responsive: true,
-                "pageLength": 50,
-                stateSave : true,
-            });*/
 
             var source = $("#source").val();
 
             $("#clienttype_table").dataTable({
+                
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [1,'desc'],
-                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}
-                            ],
+                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]} ],
                 "ajax" : {
                     'url' : '/client/allbytype',
                     data : {"source" : source},
                     'type' : 'get',
-                    error: function(){
-
+                    error: function() {
                     }
                 },
                 responsive: true,
@@ -83,28 +78,30 @@
                 "pagingType": "full_numbers",
             });
 
-            $('#allcb').change(function(){
-                if($(this).prop('checked')){
-                    $('tbody tr td input[type="checkbox"]').each(function(){
+            $('#allcb').change(function() {
+
+                if($(this).prop('checked')) {
+                    $('tbody tr td input[type="checkbox"]').each(function() {
                         $(this).prop('checked', true);
                     });
-                }else{
-                    $('tbody tr td input[type="checkbox"]').each(function(){
+                }
+                else {
+                    $('tbody tr td input[type="checkbox"]').each(function() {
                         $(this).prop('checked', false);
                     });
                 }
             });
             $('.others_client').change(function() {
+
                 if ($(this).prop('checked')) {
                     if ($('.others_client:checked').length == $('.others_client').length) {
                         $("#allcb").prop('checked', true);
                     }
                 }
-                else{
+                else {
                     $("#allcb").prop('checked', false);
                 }
             });
         });
-
     </script>
 @endsection

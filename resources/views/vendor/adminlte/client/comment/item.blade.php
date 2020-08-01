@@ -1,9 +1,8 @@
-
 <?php
-                $comment_time = explode(" ", $comment->updated_at);
-                $time = App\Date::converttime($comment_time[1]);
-                $comment_date = date('d-m-Y' ,strtotime($comment->updated_at)) . ' at '. date('h:i A' ,$time);
-            ?>
+    $comment_time = explode(" ", $comment->updated_at);
+    $time = App\Date::converttime($comment_time[1]);
+    $comment_date = date('d-m-Y' ,strtotime($comment->updated_at)) . ' at '. date('h:i A' ,$time);
+?>
 
 <div class="singal-row-wrapper">
     <div class="post__author author-date">
@@ -26,20 +25,26 @@
             </div>
         </div>
      </div>
+
     <div class="right-detail"> 
         <div class="user-option">
             <ul>
                 <div class="auth-links">
                     {{--<li><a href="#" title="Add Comment" data-toggle="modal" onclick="showcommentbox({{$comment->id }})"><i class="fa fa-plus" aria-hidden="true"></i></a></li>--}}
-                    @if((isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id ) || $isSuperAdmin)
+                    @if(isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id)
                         <li>
                             <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         </li>
-                    @endif
-                    @if($isSuperAdmin)
-                        <li>
-                            <a href="javascript:void(0);" title="Dlete Post" onclick="deleteComment({{$comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                        </li>
+                    @else
+                        @permission(('display-client'))
+                            <li>
+                                <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true">
+                                </i></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" title="Delete Post" onclick="deleteComment({{ $comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            </li>
+                        @endpermission
                     @endif
                 </div>
             </ul>
@@ -52,7 +57,6 @@
     </div>
 
     <!-- Window-popup Update Review -->
-
     <div class="modal fade" id="update-comment-{{$comment->id }}">
         <div class="modal-dialog ui-block window-popup edit-widget update-review">
             <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">X</a>
