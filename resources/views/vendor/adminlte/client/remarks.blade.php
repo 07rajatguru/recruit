@@ -102,7 +102,6 @@
 </div>
 
 <input type="hidden" name="super_admin_userid" id="super_admin_userid" value="{{ $super_admin_userid }}">
-
 <input type="hidden" name="hidden_clientid" id="hidden_clientid" value="{{ $client_id }}">
 
 @stop

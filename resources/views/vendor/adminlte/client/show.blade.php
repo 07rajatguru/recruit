@@ -45,30 +45,24 @@
                             @permission(('display-client'))
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
-                            @endpermission
-
-                            @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
-                                <th>Contact Number</th>
-                                <td colspan="3">{{ $client['mobile'] }}</td>
                             @else
-                                <th>Contact Number</th>
-                                <td colspan="3"></td>
-                            @endif
+                                @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
+                                    <th>Contact Number</th>
+                                    <td colspan="3">{{ $client['mobile'] }}</td>
+                                @endif
+                            @endpermission
                         </tr>
 
                         <tr>
                             @permission(('display-client'))
                                 <th>Email</th>
                                 <td>{{ $client['mail'] }}</td>
-                            @endpermission
-
-                            @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
-                                <th>Email</th>
-                                <td colspan="3">{{ $client['mail'] }}</td>
                             @else
-                                <th>Email</th>
-                                <td colspan="3"></td>
-                            @endif
+                                @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
+                                    <th>Email</th>
+                                    <td colspan="3">{{ $client['mail'] }}</td>
+                                @endif
+                            @endpermission
 
                             @permission(('display-client'))
                                 <th>Source</th>
@@ -100,7 +94,7 @@
                      
                         <tr>
                             <th>About</th>
-                            <td style="white-space: pre-wrap; word-wrap: break-word;">{!! $client['description'] !!}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{!! $client['description'] !!} </td>
                             <th> Client Status</th>
                             <td>{{ $client['status'] }}</td>
                         </tr>
@@ -116,7 +110,8 @@
                         <tr>
                             <th>Display Name</th>
                             <td>{{ $client['display_name'] }}</td>
-                            @permission(('display-client'))
+
+                            @permission(('display-client-category-in-client-list'))
                                 <th>Client Category</th>
                                 <td>{{ $client['category'] }}</td>
                             @endpermission
@@ -173,50 +168,49 @@
                             <th>Code</th>
                             <td>{{ $client['shipping_code'] }}</td>
                         </tr>
-
                     </table>
-                 </div>
+                </div>
              </div>
         </div>
-    @permission(('display-client'))
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header  col-md-6 ">
-                    <h3 class="box-title">Attachments</h3>
-                    &nbsp;&nbsp;
-                    @include('adminlte::client.upload', ['data' => $client, 'name' => 'clientattachments','type' => 'show'])
-                </div>
+        @permission(('display-client'))
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header  col-md-6 ">
+                        <h3 class="box-title">Attachments</h3>
+                        &nbsp;&nbsp;
+                        @include('adminlte::client.upload', ['data' => $client, 'name' => 'clientattachments','type' => 'show'])
+                    </div>
 
-                <div class="box-header col-md-8"></div>
+                    <div class="box-header col-md-8"></div>
 
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <table class="table table-bordered">
-                    <tr>
-                        <th></th>
-                        <th>File Name</th>
-                        <th>Uploaded by</th>
-                        <th>Size</th>
-                        <th>Category</th>
-                    </tr>
-                        @if(sizeof($client['doc'])>0)
-                            @foreach($client['doc'] as $key=>$value)
-                                <tr>
-                                    <td>
-                                        <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
-                                        &nbsp;
-                                        @include('adminlte::partials.confirm', ['data' => $value,'clientid'=> $client['id'], 'name' => 'clientattachments' ,'display_name'=> 'Attachments', 'type' => 'show'])
-                                    </td>
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
-                                    <td>{{ $value['uploaded_by'] }}</td>
-                                    <td>{{ $value['size'] }}</td>
-                                    <td>{{ $value['category'] }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    </table>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <table class="table table-bordered">
+                        <tr>
+                            <th></th>
+                            <th>File Name</th>
+                            <th>Uploaded by</th>
+                            <th>Size</th>
+                            <th>Category</th>
+                        </tr>
+                            @if(sizeof($client['doc'])>0)
+                                @foreach($client['doc'] as $key=>$value)
+                                    <tr>
+                                        <td>
+                                            <a download href="{{ $value['url'] }}" ><i  class="fa fa-fw fa-download"></i></a>
+                                            &nbsp;
+                                            @include('adminlte::partials.confirm', ['data' => $value,'clientid'=> $client['id'], 'name' => 'clientattachments' ,'display_name'=> 'Attachments', 'type' => 'show'])
+                                        </td>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                        <td>{{ $value['uploaded_by'] }}</td>
+                                        <td>{{ $value['size'] }}</td>
+                                        <td>{{ $value['category'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endpermission
+        @endpermission
     </div>
 @endsection

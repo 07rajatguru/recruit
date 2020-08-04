@@ -31,21 +31,23 @@
             <ul>
                 <div class="auth-links">
                     {{--<li><a href="#" title="Add Comment" data-toggle="modal" onclick="showcommentbox({{$comment->id }})"><i class="fa fa-plus" aria-hidden="true"></i></a></li>--}}
-                    @if(isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id)
+
+                    @permission(('display-client'))
                         <li>
-                            <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" title="Delete Post" onclick="deleteComment({{ $comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </li>
                     @else
-                        @permission(('display-client'))
+                        @if(isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id)
                             <li>
                                 <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true">
                                 </i></a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0);" title="Delete Post" onclick="deleteComment({{ $comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                            </li>
-                        @endpermission
-                    @endif
+                        @endif
+                    @endpermission
                 </div>
             </ul>
         </div>
