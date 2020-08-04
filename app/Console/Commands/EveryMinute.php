@@ -666,6 +666,96 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+            else if ($value['module'] == 'Monthly Report') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $superAdminUserID = getenv('SUPERADMINUSERID');
+                $managerUserID = getenv('MANAGERUSERID');
+
+                $access_roles_id = array($superAdminUserID,$managerUserID);
+
+                if(in_array($value['sender_name'],$access_roles_id)) {
+                    $users = User::getAllUsersExpectSuperAdmin('recruiter');
+                }
+                else {
+                    $users = User::getAssignedUsers($value['sender_name'],'recruiter');
+                }
+
+                $response = array();
+
+                // set 0 value for all users
+                foreach ($users as $k => $v) {
+
+                    $response[$k]['cvs'] = 0;
+                    $response[$k]['interviews'] = 0;
+                    $response[$k]['lead_count'] = 0;
+                    $response[$k]['leads_data'] = 0;
+                    $response[$k]['uname'] = $users[$k];
+                }
+
+                $month = date('m',strtotime('last month'));
+
+                if($month == 12) {
+                    $year = date('Y',strtotime('last year'));
+                }
+                else {
+                    $year = date('Y');
+                }
+
+                $associate_response = JobAssociateCandidates::getUserWiseAssociatedCVS($users,$month,$year);
+
+                foreach ($associate_response as $k => $v) {
+                    $response[$k]['cvs'] = $v;
+                }
+
+                $interview_count = Interview::getUserWiseMonthlyReportInterview($users,$month,$year);
+
+                if(sizeof($interview_count) > 0) {
+                    foreach ($interview_count as $k => $v) {
+                        $response[$k]['interviews'] = $v;
+                    }
+                }
+
+                $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
+
+                if(isset($lead_count) && sizeof($lead_count) > 0) {
+                    foreach ($lead_count as $k => $v) {
+                        $response[$k]['lead_count'] = $v;
+                    }
+                }
+
+                $leads_details = Lead::getUserWiseMonthlyReportLeads($users,$month,$year);
+
+                if(isset($leads_details) && sizeof($leads_details) > 0) {
+                    foreach ($leads_details as $k => $v) {
+                        $response[$k]['leads_data'] = $v;
+                    }
+                }
+
+                if(isset($leads_details) && sizeof($leads_details) > 0)
+                    $total_leads = sizeof($leads_details);
+                else
+                    $total_leads = '';
+                   
+                $user_details = User::getAllDetailsByUserID($sender_id);
+
+                $input['value'] = $user_details->name;
+                $input['user_details'] = $user_details;
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
+
+                $input['response'] = $response;
+                $input['total_leads'] = $total_leads;
+
+                \Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F",strtotime("last month"))." ".date("Y"));
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }

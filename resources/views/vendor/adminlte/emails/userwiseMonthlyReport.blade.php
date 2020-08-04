@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Adler Talent</title>
+    <title>Adler Talent Solutions Pvt. Ltd.</title>
     @yield('style')
 </head>
 
@@ -33,13 +33,14 @@
             <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;"  id="userwise-monthly-report">
                 <thead>
                 <tr style="font-weight: bold;">
+
                     <td style="background-color: #FA8258">Sr. No.</td>
-                    <td style="background-color: #FA8258">User</td>
+                    <td style="background-color: #FA8258" width="20%">User</td>
+
                     @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
                         <td style="background-color: #F7D358;">No. of Cvs Associated</td>
                         <td style="background-color: #F7D358;">Benchmarks of cvs</td>
-                        <td style="background-color: #F7D358;">Benchmarks not achieved in cvs
-                        </td>
+                        <td style="background-color: #F7D358;">Benchmarks not achieved in cvs</td>
                     @endif
 
                     @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
@@ -88,7 +89,7 @@
                                 @endif
 
                                 @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
-                                    @if(isset($v['lead_count']) && sizeof($v['lead_count']) > 0)
+                                    @if(isset($v['lead_count']) && $v['lead_count'] != '')
                                         <td>{!! $v['lead_count'] !!}</td>
                                     @else
                                         <td></td>
@@ -130,7 +131,7 @@
                             <?php $i=0;?>
                             <tbody>
                                 @foreach($response as $key => $value)
-                                    @if(isset($value['leads_data']) && sizeof ($value['leads_data']) > 0 && $value['leads_data']!='' && $value['leads_data']!=0)
+                                    @if(isset($value['leads_data']) && $value['leads_data'] != '' && $value['leads_data']!='' && $value['leads_data']!=0)
                                         @foreach($value['leads_data'] as $k1 => $v1)
                                             <tr style="text-align: center;">
                                                 <td>{{ ++$i }}</td>

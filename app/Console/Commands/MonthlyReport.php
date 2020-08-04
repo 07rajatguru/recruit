@@ -7,6 +7,7 @@ use App\User;
 use App\JobAssociateCandidates;
 use App\Interview;
 use App\Lead;
+use App\Events\NotificationMail;
 
 class MonthlyReport extends Command
 {
@@ -41,7 +42,7 @@ class MonthlyReport extends Command
      */
     public function handle()
     {
-        $from_name = getenv('FROM_NAME');
+        /*$from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
         // $to_address = 'saloni@trajinfotech.com';
         // $cc_address = 'tarikapanjwani@gmail.com';
@@ -133,6 +134,24 @@ class MonthlyReport extends Command
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F",strtotime("last month"))." ".date("Y"));
             });
+        }*/
+
+        $users_all = User::getAllUsersEmails('recruiter','Yes');
+
+        foreach ($users_all as $k1 => $v1) {
+
+            $user_name = User::getUserNameById($k1);
+
+            $module = "Monthly Report";
+            $subject = 'Monthly Activity Report - ' . $user_name . ' - ' . date("F",strtotime("last month"))." ".date("Y");
+            $message = "";
+            $to = $v1;
+            $cc = 'rajlalwani@adlertalent.com';
+
+            $module_id = 0;
+            $sender_name = $k1;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
     }
 }
