@@ -9,9 +9,8 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if($generate_lead==0)
-                <!-- <h2>Please confirm the details and generate Client</h2> -->
                 <h2>Confirm the details to generate Client</h2>
-            @elseif( $action == 'edit')
+            @elseif($action == 'edit')
                 <h2>Edit Client</h2>
             @else
                 <h2>Create New Client</h2>
@@ -19,9 +18,9 @@
         </div>
         <div class="pull-right">
             @if( $action == 'copy')
-                <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('lead.index') }}">Back</a>
             @else
-                <a class="btn btn-primary" href="{{ route('client.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
             @endif
         </div>
     </div>
@@ -106,13 +105,17 @@
 
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager :</strong>
-                            @if($isSuperAdmin || $isStrategy || $isAllClientVisibleUser)
-                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10' )) !!}
-                            @elseif($action == 'copy')
-                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10' )) !!}
+
+                            @permission(('display-client'))
+                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10')) !!}
                             @else
-                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled', 'tabindex' => '10' )) !!}
-                            @endif
+                                @if($action == 'copy')
+                                    {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10')) !!}
+                                @else
+                                    {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled', 'tabindex' => '10')) !!}
+                                @endif
+                            @endpermission
+
                             @if ($errors->has('account_manager_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('account_manager_id') }}</strong>
@@ -143,98 +146,92 @@
                                 </span>
                             @endif
                         </div>
-                        @if($isSuperAdmin || $isAdmin)
-                        <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
-                            <strong>Source :</strong>
-                            {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control', 'tabindex' => '14' )) !!}
-                            @if ($errors->has('source'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('source') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                        @endif
+
+                        @permission(('display-client'))
+                            <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
+                                <strong>Source :</strong>
+                                {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control', 'tabindex' => '14' )) !!}
+                                @if ($errors->has('source'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('source') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        @endpermission
 
                         {{--<div class="form-group">
                             <strong>Fax : </strong>
                             {!! Form::text('fax', null, array('id'=>'fax','placeholder' => 'Fax','class' => 'form-control')) !!}
                         </div>--}}
 
-                        @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
-                        <div class="form-group">
-                            <strong>GST Number : </strong>
-                            {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control','tabindex' => '16')) !!}
-                        </div>
-                        @endif
-                        <!-- @if($isSuperAdmin || $isAdmin)
+                        @permission(('display-client'))
+                            <div class="form-group">
+                                <strong>GST Number : </strong>
+                                {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control','tabindex' => '16')) !!}
+                            </div>
+                        @endpermission
+                        
+                        {{-- @if($isSuperAdmin || $isAdmin)
                         <div class="form-group">
                             <strong>TDS </strong>
                             {!! Form::text('tds', null, array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control', 'tabindex' => '20' )) !!}
                         </div>
-                        @endif -->
+                        @endif --}}
 
-                        @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
-                        <div class="form-group">
-                            <strong>Charges Below AM Position(%) : </strong>
-                            {!! Form::number('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charges Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
-                        </div>
-                        @endif
+                        @permission(('display-client'))
+                            <div class="form-group">
+                                <strong>Charges Below AM Position(%) : </strong>
+                                {!! Form::number('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charges Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
+                            </div>
 
-                        @if($isSuperAdmin || $isAdmin || $isOperationsExecutive)
-                        <div class="form-group">
-                            <strong>Charges Above AM Position(%) : </strong>
-                            {!! Form::number('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charges Above AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
-                        </div>
-                        @endif
+                            <div class="form-group">
+                                <strong>Charges Above AM Position(%) : </strong>
+                                {!! Form::number('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charges Above AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
+                            </div>
+                        @endpermission
 
                         <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                             <strong>Status : <span class = "required_fields">*</span></strong>
+                            @if($action == 'edit')
+                                <?php
+                                    if($client_status == '1') {
 
-                                @if($action == 'edit')
-                                    <?php
-                                        if($client_status == '1')
-                                        {
-                                            if (in_array('Passive', $client_status_key)) 
-                                            {
-                                                unset($client_status_key[array_search('Passive',$client_status_key)]);
-                                            }
+                                        if (in_array('Passive', $client_status_key)) {
+                                            unset($client_status_key[array_search('Passive',$client_status_key)]);
                                         }
-                                        if($client_status == '0')
-                                        {
-                                            if (in_array('Active', $client_status_key)) 
-                                            {
-                                                unset($client_status_key[array_search('Active',$client_status_key)]);
-                                            }
-                                        }
+                                    }
+                                    if($client_status == '0') {
 
-                                        /*if($client_all_status == '1')
-                                        {
-                                            if (in_array('Passive', $client_all_status_key)) 
-                                            {
-                                                unset($client_all_status_key[array_search('Passive',$client_all_status_key)]);
-                                            }
+                                        if (in_array('Active', $client_status_key)) {
+                                            unset($client_status_key[array_search('Active',$client_status_key)]);
                                         }
-                                        if($client_all_status == '0')
-                                        {
-                                            if (in_array('Active', $client_all_status_key)) 
-                                            {
-                                                unset($client_all_status_key[array_search('Active',$client_all_status_key)]);
-                                            }
-                                        }*/
-                                    ?>
-                                @endif
+                                    }
+                                    /*if($client_all_status == '1') {
 
-                                @if($isSuperAdmin || $isManager || $isStrategy || $isAllClientVisibleUser)
-                                    {!! Form::select('status', $client_all_status_key, $client_all_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
-                                @else
-                                    {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
-                                @endif
+                                        if (in_array('Passive', $client_all_status_key)) {
+                                            unset($client_all_status_key[array_search('Passive',$client_all_status_key)]);
+                                        }
+                                    }
+                                    if($client_all_status == '0') {
+
+                                        if (in_array('Active', $client_all_status_key)) {
+                                            unset($client_all_status_key[array_search('Active',$client_all_status_key)]);
+                                        }
+                                    }*/
+                                ?>
+                            @endif
+
+                            @permission(('display-client'))
+                                {!! Form::select('status', $client_all_status_key, $client_all_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
+                            @else
+                                {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
+                            @endpermission
                                 
-                                @if ($errors->has('status'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('status') }}</strong>
-                                    </span>
-                                @endif
+                            @if ($errors->has('status'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('status') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -261,22 +258,10 @@
                                 @endif
                             </div>
 
-                            <!-- @if($isSuperAdmin || $isStrategy) 
-                            <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
-                                <strong>Select Category: <span class = "required_fields">*</span></strong>
-                                {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5' )) !!}
-
-                                @if ($errors->has('client_category'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('client_category') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            @endif -->
-
+                            @permission(('display-client'))
                             <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
                                 <strong>Select Category : <span class = "required_fields">*</span></strong>
-                                {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5' )) !!}
+                                {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5')) !!}
 
                                 @if ($errors->has('client_category'))
                                     <span class="help-block">
@@ -284,6 +269,7 @@
                                     </span>
                                 @endif
                             </div>
+                            @endpermission
                     
                             <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
                                 <strong>Email : <span class = "required_fields">*</span></strong>
@@ -309,6 +295,7 @@
                                 <strong>Website :</strong>
                                 {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
                             </div>
+
                             {{-- @if($isSuperAdmin || $isAdmin)
                             <div class="form-group">
                                 <strong>TAN:</strong>
@@ -351,29 +338,28 @@
                             {!! Form::text('billing_street2', null, array('id'=>'billing_street2','placeholder' => 'Address Line 2','class' => 'form-control', 'tabindex' => '23')) !!}
                         </div>
 
-
                         <div class="form-group {{ $errors->has('billing_city') ? 'has-error' : '' }}">
                             <strong>City :  <span class = "required_fields">*</span> </strong>
 
-                                @if( $action == 'copy')
-                                    {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
-                                @else
-                                    {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '25')) !!}
-                                @endif
+                            @if($action == 'copy')
+                                {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
+                            @else
+                                {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '25')) !!}
+                            @endif
 
-                                @if ($errors->has('billing_city'))
-                                    <span class="help-block">
+                            @if ($errors->has('billing_city'))
+                                <span class="help-block">
                                     <strong>{{ $errors->first('billing_city') }}</strong>
-                                    </span>
-                                @endif
+                                </span>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <strong>State :</strong>
                             @if( $action == 'copy')
-                            {!! Form::text('billing_state', $billing_state, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '26')) !!}
+                                {!! Form::text('billing_state', $billing_state, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '26')) !!}
                             @else
-                            {!! Form::text('billing_state', null, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '27')) !!}
+                                {!! Form::text('billing_state', null, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '27')) !!}
                             @endif
                         </div>
 
@@ -385,12 +371,11 @@
                         <div class="form-group">
                             <strong>Country :</strong>
                             @if( $action == 'copy')
-                            {!! Form::text('billing_country', $billing_country, array('id'=>'billing_country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '29')) !!}
+                                {!! Form::text('billing_country', $billing_country, array('id'=>'billing_country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '29')) !!}
                             @else
-                            {!! Form::text('billing_country', null, array('id'=>'billing_country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '30')) !!}
+                                {!! Form::text('billing_country', null, array('id'=>'billing_country','placeholder' => 'Country','class' => 'form-control', 'tabindex' => '30')) !!}
                             @endif
                         </div>
-
                     </div>
                 </div>
 
@@ -432,7 +417,8 @@
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
-    @if($isSuperAdmin || $isAdmin)
+
+    @permission(('display-client'))
         @if($action == 'add' || $action == 'copy')
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
@@ -498,7 +484,7 @@
                 </div>
             </div>
         @endif
-    @endif
+    @endpermission
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
         {!! Form::submit(isset($client) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
     </div>
@@ -845,7 +831,9 @@
         // as supplied by the browser's 'navigator.geolocation' object.
 
         function geolocate() {
+
             if (navigator.geolocation) {
+                
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var geolocation = {
                         lat: position.coords.latitude,
@@ -860,8 +848,9 @@
             }
         }
 
-        function copyAddress(type){
-            if(type=='toshipping'){
+        function copyAddress(type) {
+
+            if(type == 'toshipping') {
                 var billing_street1 = document.getElementById('billing_street1').value;
                 document.getElementById('shipping_street1').value = billing_street1;
 
@@ -881,7 +870,7 @@
                 document.getElementById('shipping_country').value = billing_country;
 
             }
-            else if(type=='tobilling'){
+            else if(type == 'tobilling') {
                 var shipping_street1 = document.getElementById('shipping_street1').value;
                 document.getElementById('billing_street1').value = shipping_street1;
 
@@ -901,12 +890,8 @@
                 document.getElementById('billing_country').value = shipping_country;
             }
         }
-
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete"
-            async defer></script>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer>
+    </script>
 @endsection
-
-

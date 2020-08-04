@@ -1131,13 +1131,13 @@ class ClientController extends Controller
     public function attachmentsDestroy(Request $request,$docid) {
 
         $client_attach = \DB::table('client_doc')->select('client_doc.*')->where('id','=',$docid)->first();
+        $clientid = $client_attach->client_id;
 
         if(isset($client_attach)) {
 
             $path = "uploads/clients/".$client_attach->client_id . "/" . $client_attach->name;
             unlink($path);
 
-            $clientid = $client_attach->client_id;
             $client_doc = ClientDoc::where('id','=',$docid)->delete();
         }
 

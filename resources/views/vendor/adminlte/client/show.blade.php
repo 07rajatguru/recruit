@@ -57,16 +57,13 @@
                             @permission(('display-client'))
                                 <th>Email</th>
                                 <td>{{ $client['mail'] }}</td>
+                                <th>Source</th>
+                                <td>{{ $client['source'] }}</td>
                             @else
                                 @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
                                     <th>Email</th>
                                     <td colspan="3">{{ $client['mail'] }}</td>
                                 @endif
-                            @endpermission
-
-                            @permission(('display-client'))
-                                <th>Source</th>
-                                <td>{{ $client['source'] }}</td>
                             @endpermission
                         </tr>
 
@@ -81,14 +78,11 @@
                             @permission(('display-client'))
                                 <th>Industry</th>
                                 <td>{{ $client['ind_name'] }}</td>
+                                <th>GST Number</th>
+                                <td>{{ $client['gst_no'] }}</td>
                             @else
                                 <th>Industry</th>
                                 <td colspan="3">{{ $client['ind_name'] }}</td>
-                            @endpermission
-
-                            @permission(('display-client'))
-                                <th>GST Number</th>
-                                <td>{{ $client['gst_no'] }}</td>
                             @endpermission
                         </tr>
                      

@@ -165,7 +165,6 @@ class LeadController extends Controller
         }
 
         $lead_count = 0;
-
         return view('adminlte::lead.cancel',compact('count'));        
     }
 
@@ -370,11 +369,10 @@ class LeadController extends Controller
         $module_id = $lead_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
         return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
-
 	}
-	 public function edit($id) {
+
+	public function edit($id) {
 
         $action = 'edit';
         $generate_lead = '0';
@@ -410,7 +408,7 @@ class LeadController extends Controller
         $lead['contact_point'] = $lead->coordinator_name;
         	        
 	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
-	 }
+	}
 
 	public function update(Request $request, $id) {
 
@@ -520,16 +518,6 @@ class LeadController extends Controller
 
         $user = \Auth::user();
         $loggedin_user_id = $user->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isAdmin = $user_obj::isAdmin($role_id);
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isStrategy = $user_obj::isStrategyCoordination($role_id);
-        $isManager = $user_obj::isManager($role_id);
-        $isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
-        $isAllClientVisibleUser = $user_obj::isAllClientVisibleUser($loggedin_user_id);
 
         // For account manager
         $users = User::getAllUsers('recruiter','Yes');
@@ -544,7 +532,7 @@ class LeadController extends Controller
         $user_id = $lead->referredby;
         $convert_client = 0;
 
-        if($generate_lead==1){
+        if($generate_lead == 1) {
             $lead->convert_client = 1;
         }
         $lead->save();
@@ -560,10 +548,10 @@ class LeadController extends Controller
 
         $lead['contact_point'] = $lead->coordinator_name;
 
-        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','isSuperAdmin','user_id','isAdmin','industry_id','isStrategy','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby','isManager','client_all_status_key','client_all_status','isAllClientVisibleUser','isOperationsExecutive'));
-     }
+        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','user_id','industry_id','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby','client_all_status_key','client_all_status'));
+    }
 
-     public function clonestore(Request $request,$id) {
+    public function clonestore(Request $request,$id) {
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
@@ -679,7 +667,6 @@ class LeadController extends Controller
             if(isset($input['billing_city']) && $input['billing_city']!='') {
                 $client_address->billing_city = $input['billing_city'];
             }
-
             if(isset($input['shipping_country']) && $input['shipping_country']!='') {
                 $client_address->shipping_country = $input['shipping_country'];
             }
