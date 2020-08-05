@@ -232,9 +232,12 @@ class HomeController extends Controller
 
             // Interview Attended this month
 
-            $interview_attend = DB::table('interview')
+            /*$interview_attend = DB::table('interview')
             ->whereRaw('MONTH(interview_date) = ?',[$month])
-            ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();
+            ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();*/
+
+            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+            $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
 
@@ -265,10 +268,13 @@ class HomeController extends Controller
 
             // Interview Attended this month
 
-            $interview_attend = DB::table('interview')
+            /*$interview_attend = DB::table('interview')
             ->whereRaw('MONTH(interview_date) = ?',[$month])
             ->whereRaw('YEAR(interview_date) = ?',[$year])
-            ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();
+            ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();*/
+
+            $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+            $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
 
@@ -350,9 +356,12 @@ class HomeController extends Controller
 
                 // Interview Attended this month
 
-                $interviewAttendCount = DB::table('interview')
+                /*$interviewAttendCount = DB::table('interview')
                 ->whereRaw('MONTH(interview_date) = ?',[$month])
-                ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();
+                ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();*/
+
+                $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+                $interviewAttendCount = sizeof($interview_attended_list);
 
                 // Candidate Join this month
 
@@ -383,10 +392,13 @@ class HomeController extends Controller
 
                 // Interview Attended this month
 
-                $interviewAttendCount = DB::table('interview')
+                /*$interviewAttendCount = DB::table('interview')
                 ->whereRaw('MONTH(interview_date) = ?',[$month])
                 ->whereRaw('YEAR(interview_date) = ?',[$year])
-                ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();
+                ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();*/
+
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interviewAttendCount = sizeof($interview_attended_list);
 
                 // Candidate Join this month
 

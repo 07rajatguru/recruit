@@ -380,7 +380,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL){
+    public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL) {
 
         //$month = date('m');
         //$year = date('Y');
@@ -401,7 +401,8 @@ class Interview extends Model
         $query = $query->orderby('interview.interview_date','desc');
     
         if($all==0){
-            $query = $query->where('interview_owner_id',$user_id);
+            //$query = $query->where('interview_owner_id',$user_id);
+            $query = $query->where('candidate_otherinfo.owner_id',$user_id);
         }
         $response = $query->get();
 
