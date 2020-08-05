@@ -39,6 +39,7 @@ class LeadController extends Controller
     public static function getLeadOrderColumnName($order) {
 
         $order_column_name = '';
+
         if (isset($order) && $order >= 0) {
             if ($order == 0) {
                 $order_column_name = "lead_management.id";
@@ -107,12 +108,12 @@ class LeadController extends Controller
         $i = 0;$j = 0;
 
         foreach ($leads_res as $key => $value) {
+
             $action = '';
 
             if($value['access']) {
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
-
             if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Index']);
                 $delete = $delete_view->render();
@@ -248,9 +249,10 @@ class LeadController extends Controller
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
 
-        $strategyuserid = getenv('STRATEGYUSERID');
-        $strategyemail = User::getUserEmailById($strategyuserid);
+        //$strategyuserid = getenv('STRATEGYUSERID');
+        $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
         
+        $strategyemail = User::getUserEmailById($strategyuserid);
         $referredby_email = User::getUserEmailById($referredby_id);
 
         $cc_users_array = array($superadminemail,$strategyemail,$referredby_email);
@@ -349,7 +351,8 @@ class LeadController extends Controller
         $user_id = $user->id;
         $user_email = $user->email;
         $superadminuserid = getenv('SUPERADMINUSERID');
-        $strategyuserid = getenv('STRATEGYUSERID');
+        //$strategyuserid = getenv('STRATEGYUSERID');
+        $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $strategyemail = User::getUserEmailById($strategyuserid);
@@ -798,7 +801,9 @@ class LeadController extends Controller
             $referredby_id = $input['referredby'];
 
             // Email Notification : data store in datebase
-            $strategyuserid = getenv('STRATEGYUSERID');
+            //$strategyuserid = getenv('STRATEGYUSERID');
+            $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+            
             $superadminemail = User::getUserEmailById($super_admin_userid);
             $strategyemail = User::getUserEmailById($strategyuserid);
             $referredby_email = User::getUserEmailById($referredby_id);
