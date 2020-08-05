@@ -161,7 +161,6 @@ Route::get('report/weekly' ,[
     'uses' => 'ReportController@weeklyreport'
 ]);
 
-
 Route::group(['middleware' => ['auth']], function () {
 
     Route::any('/dashboard', array (
@@ -180,13 +179,13 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::any('/home', array (
-        //'middleware' => ['permission:attendance'],
+        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
         'uses' => 'HomeController@index'
     ));
 
     Route::any('/userattendance', array (
         'as' => 'user.attendance',
-        //'middleware' => ['permission:attendance'],
+        'middleware' => ['permission:display-attendance-of-all-users|display-attendance-by-loggedin-user'],
         'uses' => 'HomeController@userAttendance'
     ));
 
@@ -329,6 +328,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'leave.add',
         'uses' => 'LeaveController@userLeaveAdd'
     ]);
+
     Route::post('leave/add',[
         'as' => 'leave.store',
         'uses' => 'LeaveController@leaveStore'
@@ -966,12 +966,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs/clone/{id}', [
         'as' => 'jobopen.clone',
         'uses' => 'JobOpenController@jobClone',
-        'middleware' => ['permission:job-add']
-    ]);
-
-    Route::get('jobs/getopenjobs', [
-        'as' => 'jobopen.getOpenJobs',
-        'uses' => 'JobOpenController@getOpenJobs'
+        'middleware' => ['permission:clone-job']
     ]);
 
     Route::get('jobs/importExport', 'JobOpenController@importExport');
@@ -983,23 +978,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('jobs', [
         'as' => 'jobopen.index',
         'uses' => 'JobOpenController@index',
-        'middleware' => ['permission:display-jobs|job-add|job-edit|job-delete']
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
     
     Route::get('jobs/all', [
         'as' => 'jobopen.all',
         'uses' => 'JobOpenController@getAllJobsDetails',
-        'middleware' => ['permission:display-jobs|job-add|job-edit|job-delete']
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
     Route::post('jobs', [
         'as' => 'jobopen.index',
-        'uses' => 'JobOpenController@index'
+        'uses' => 'JobOpenController@index',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]); 
 
     Route::get('jobs/opentoall', [
         'as' => 'jobopen.toall',
-        'uses' => 'JobOpenController@OpentoAll'
+        'uses' => 'JobOpenController@OpentoAll',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
     /*Route::get('jobs/priority/{priority}/{year}',[
@@ -1009,12 +1006,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('jobs/priority/{priority}',[
         'as' => 'jobopen.priority',
-        'uses' => 'JobOpenController@priorityWise'
+        'uses' => 'JobOpenController@priorityWise',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
     Route::get('jobs/priority/{priority}/{year}',[
         'as' => 'jobclose.priority',
-        'uses' => 'JobOpenController@priorityWiseClosedJobs'
+        'uses' => 'JobOpenController@priorityWiseClosedJobs',
+        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
     Route::post('jobs/create', [
@@ -1026,13 +1025,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('jobs/clone', [
         'as' => 'jobopen.clonestore',
         'uses' => 'JobOpenController@clonestore',
-        'middleware' => ['permission:job-add']
+        'middleware' => ['permission:clone-job']
     ]); 
     
     Route::get('jobs/{id}', [
         'as' => 'jobopen.show',
         'uses' => 'JobOpenController@show',
-        'middleware' => ['permission:job-show']
+        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
    /* Route::get('jobs/{id}/{year}/edit', [
@@ -1067,47 +1066,50 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('jobs/upload/{id}', [
         'as' => 'jobopen.upload',
-        'uses' => 'JobOpenController@upload'
+        'uses' => 'JobOpenController@upload',
+        'middleware' => ['permission:job-edit']
     ]);
 
     Route::delete('jobs/destroy/{id}', [
         'as' => 'jobopenattachments.destroy',
-        'uses' => 'JobOpenController@attachmentsDestroy'
+        'uses' => 'JobOpenController@attachmentsDestroy',
+        'middleware' => ['permission:job-edit']
     ]);
 
     Route::get('jobs/{id}/associate_candidate', [
         'as' => 'jobopen.associate_candidate_get',
         'uses' => 'JobOpenController@associateCandidate',
-        'middleware' => ['permission:associate-candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('/associate-candidate/all', [
         'as' => 'associate-candidate.all',
         'uses' => 'JobOpenController@getAllAssociateCandidates',
-        'middleware' => ['permission:associate-candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::post('jobs/associate_candidate', [
         'as' => 'jobopen.associate_candidate',
         'uses' => 'JobOpenController@postAssociateCandidates',
-        'middleware' => ['permission:associate-candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::post('jobs/associated_candidates_count', [
         'as' => 'jobopen.associated_candidates_count',
         'uses' => 'JobOpenController@associateCandidateCount',
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('jobs/{id}/associated_candidates', [
         'as' => 'jobopen.associated_candidates_get',
         'uses' => 'JobOpenController@associatedCandidates',
-        'middleware' => ['permission:associated-candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::post('jobs/deassociate_candidate', [
         'as' => 'jobopen.deassociate_candidate',
         'uses' => 'JobOpenController@deAssociateCandidates',
-        'middleware' => ['permission:associated-candidate-list']
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
     Route::get('jobs/{id}/candidates_details', [
@@ -1137,7 +1139,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('jobs/status', [
         'as' => 'jobopen.status',
-        'uses' => 'JobOpenController@status'
+        'uses' => 'JobOpenController@status',
+        'middleware' => ['permission:change-job-priority']
     ]);
 
     // Route for changes priority of multiple job
@@ -1149,16 +1152,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('jobs/mutijobpriority', [
         'as' => 'jobopen.mutijobpriority',
         'uses' => 'JobOpenController@MultipleJobPriority',
+        'middleware' => ['permission:update-multiple-jobs-priority']
     ]);
 
     Route::get('job/close', [
         'as' => 'jobopen.close',
-        'uses' => 'JobOpenController@close'
+        'uses' => 'JobOpenController@close',
+        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
     Route::get('job/allclose', [
         'as' => 'jobopen.allclose',
         'uses' => 'JobOpenController@getAllCloseJobDetails',
+        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
     Route::get('job/associatedcandidate', [
@@ -1711,7 +1717,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('training', [
         'as' => 'training.index',
         'uses' => 'TrainingController@index',
-        'middleware' => ['permission:display-training-material|training-material-add|training-material-edit|training-material-delete|display-training-material-added-by-loggedin-user']
+        'middleware' => ['permission:display-training-material|display-training-material-added-by-loggedin-user']
     ]);
 
     Route::get('training/all', [
@@ -1778,13 +1784,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('process', [
         'as' => 'process.index',
         'uses' => 'ProcessController@index',
-        'middleware' => ['permission:display-process-manual|process-manual-add|process-manual-edit|process-manual-delete|display-process-manual-added-by-loggedin-user']
+        'middleware' => ['permission:display-process-manual|display-process-manual-added-by-loggedin-user']
     ]);
 
     Route::get('process/all', [
         'as' => 'process.all',
         'uses' => 'ProcessController@getAllProcessDetails',
-        'middleware' => ['permission:display-process-manual|process-manual-add|process-manual-edit|process-manual-delete|display-process-manual-added-by-loggedin-user']
+        'middleware' => ['permission:display-process-manual|display-process-manual-added-by-loggedin-user']
     ]);
     
     Route::get('process/create', [

@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('customs_css')
@@ -90,15 +89,19 @@
             
             <div class="pull-right">
                 <button type="button" class="btn bg-green" data-toggle="modal" data-target="#modal-advanced-search">Advanced Search</button>
-                @permission('job-create')
+
+                @permission(('update-multiple-jobs-priority'))
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleJobId()">Update Status</button>
+                @endpermission
+
+                @permission(('job-add'))
                     <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
                 @endpermission
             </div>
 
             <div class="pull-right">
-                {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>--}}
-               {{-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Search</button>--}}
+                {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Search</button>--}}
             </div>
         </div>
     </div>
@@ -122,7 +125,6 @@
             </div>
         </div>
     </div> <br/> --}}
-
 
     {{--<div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -283,29 +285,31 @@
     <div class = "table-responsive">
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>
-        <tr>
-            <th>No</th>
-            <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
-            <th>Action</th>
-            <th>MB</th>
-            <th>Company Name</th>
-            {{--<th>Level</th>--}}
-            <th>Position Title</th>
-            <th>CA</th>
-            <th>Location</th>
-            <th>Min CTC<br/>(in Lacs)</th>
-            <th>Max CTC<br/>(in Lacs)</th>
-            <th>Added Date</th>
-            <th>Updated Date</th>
-            <th>No. Of <br/> Positions</th>
-            <th>Contact <br/> Point</th>
-            <th>Edu Qualifications</th>
-            <th>Target Industries</th>
-            <th>Desired Candidate</th>
+            <tr>
+                <th>No</th>
 
-            {{--<th>Target Date</th>--}}
+                @permission(('change-job-priority'))
+                    <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
+                @else
+                    <th></th>
+                @endpermission
 
-        </tr>
+                <th>Action</th>
+                <th>MB</th>
+                <th>Company Name</th>
+                <th>Position Title</th>
+                <th>CA</th>
+                <th>Location</th>
+                <th>Min CTC<br/>(in Lacs)</th>
+                <th>Max CTC<br/>(in Lacs)</th>
+                <th>Added Date</th>
+                <th>Updated Date</th>
+                <th>No. Of <br/> Positions</th>
+                <th>Contact <br/> Point</th>
+                <th>Edu Qualifications</th>
+                <th>Target Industries</th>
+                <th>Desired Candidate</th>
+            </tr>
         </thead>
         <?php $i=0; ?>
         {{--<tbody>
@@ -378,13 +382,10 @@
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="getJobsByPosition()">Submit</button>
-
                     <button type="button" class="btn btn-primary" id="btnmodelreset" name="btnmodelreset">Reset
                     </button>
-                    
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
-                
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -400,7 +401,7 @@
                 <div class="modal-body">
                     <div class="status">
                         <strong>Select Job Priority :</strong> <br>
-                        {!! Form::select('job_priority', $job_priority,null, array('id'=>'job_priority','class' => 'form-control')) !!}
+                        {!! Form::select('priority', $job_priority,null, array('id'=>'priority','class' => 'form-control')) !!}
                     </div>
                     <div class="error"></div>
                 </div>
@@ -425,13 +426,15 @@
 
             var client_heirarchy = $("#client_heirarchy").val();
             $("#client_heirarchy").select2({width:"565px"});
-
             var year = $("#year").val();
+
             $("#jo_table").dataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [11,'desc'],
                 "columnDefs": [ 
+
                     { "width": "10px", "targets": 0, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 2, "searchable": false, "orderable": false},
@@ -453,7 +456,8 @@
 
                     },
                 },
-                initComplete:function( settings, json){
+                initComplete:function( settings, json) {
+
                     var count = json.recordsTotal;
                     var job_priority = json.job_priority;
 
@@ -544,7 +548,7 @@
                 }
             });
 
-            $("#priority").select2();
+            //$("#priority").select2();
 
             $("#btnmodelreset").bind("click", function () {
                 $("#client_heirarchy").val('0');
