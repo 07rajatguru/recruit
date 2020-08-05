@@ -432,7 +432,7 @@ class InterviewController extends Controller
         $type = $request->get('type');
         $status = $request->get('status');
         $about = $request->get('about');
-        $interview_owner_id = $user_id;
+        //$interview_owner_id = $user_id;
         $skype_id = $request->get('skype_id');
         $round = $request->get('round');
         $candidate_location = $request->get('candidate_location');
@@ -460,7 +460,7 @@ class InterviewController extends Controller
         if(isset($comments))
             $interview->comments = $comments;
 
-        $interview->interview_owner_id = $interview_owner_id;
+        //$interview->interview_owner_id = $interview_owner_id;
         $interview->interview_date = $interview_date;
 
         if (isset($skype_id) && $skype_id != '') {
