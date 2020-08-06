@@ -9,10 +9,7 @@ class JobAssociateCandidates extends Model
 {
     public $table = "job_associate_candidates";
 
-    //use SoftDeletes;
-
-
-    public static function getAssociatedJobIdByCandidateId($candidate_id){
+    public static function getAssociatedJobIdByCandidateId($candidate_id) {
 
         $query = new JobAssociateCandidates();
         $query = $query->where('candidate_id','=',$candidate_id);
@@ -25,7 +22,7 @@ class JobAssociateCandidates extends Model
         return $job_id;
     }
 
-    public static function getAssociatedCandidatesByJobId($job_id){
+    public static function getAssociatedCandidatesByJobId($job_id) {
 
         $query = new JobAssociateCandidates();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
@@ -40,11 +37,10 @@ class JobAssociateCandidates extends Model
         $query = $query->orderBy('job_associate_candidates.date','desc');
 
         $response = $query->get();
-//print_r($response);exit;
         return $response;
     }
 
-    public static function getAssociatedCandidatesDetailsByJobId($job_id){
+    public static function getAssociatedCandidatesDetailsByJobId($job_id) {
 
         $query = new JobAssociateCandidates();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
@@ -57,7 +53,7 @@ class JobAssociateCandidates extends Model
         return $response;
     }
 
-    public static function getDailyReportAssociate($user_id,$date=NULL){
+    public static function getDailyReportAssociate($user_id,$date=NULL) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
@@ -111,18 +107,13 @@ class JobAssociateCandidates extends Model
             $i++;
         }
         $response['cvs_cnt'] = $cnt;
-        //print_r($response);exit;
         return $response;   
-
     }
 
-    public static function getWeeklyReportAssociate($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getWeeklyReportAssociate($user_id,$from_date=NULL,$to_date=NULL) {
 
         $date = date('Y-m-d',strtotime('Monday this week'));
-        /*$daten = date('Y-m-d',strtotime("$date +5days"));
-        $d = $date . $daten;
-        print_r($d);exit;*/
-
+     
         $query = JobAssociateCandidates::query();
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.created_at as created_at');
         $query = $query->where('job_associate_candidates.associate_by',$user_id);
@@ -150,15 +141,13 @@ class JobAssociateCandidates extends Model
             $i++;
         }
         $response['cvs_cnt'] = $cnt;
-        //print_r($response);exit;
         return $response;  
-
     }
 
-    public static function getUserWiseAssociatedCVS($users,$month,$year){
+    public static function getUserWiseAssociatedCVS($users,$month,$year) {
 
         $u_keys = array_keys($users);
-        //print_r($u_keys);exit;
+
         $query = JobAssociateCandidates::query();
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.associate_by as uid','job_associate_candidates.created_at as created_at');
         $query = $query->whereIn('job_associate_candidates.associate_by',$u_keys);
@@ -167,8 +156,8 @@ class JobAssociateCandidates extends Model
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
             $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
         }
+
         $query = $query->groupBy('job_associate_candidates.associate_by');
-        //$query = $query->select('');
         $query_response = $query->get();
 
         $cvs_associated_res = array();
@@ -178,12 +167,12 @@ class JobAssociateCandidates extends Model
         return $cvs_associated_res;
     }
 
-    public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL){
+    public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL) {
 
-        $query = JobAssociateCandidates::query();
+        $query = JobAssociateCandidates::query(); 
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.created_at as created_at');
 
-        if($user_id>0){
+        if($user_id>0) {
             $query = $query->where('job_associate_candidates.associate_by',$user_id);
         }
 
@@ -191,12 +180,12 @@ class JobAssociateCandidates extends Model
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
             $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
         }
-        //$query = $query->groupBy(\DB::raw('date(job_associate_candidates.created_at)'));
         $query_response = $query->get();
 
         $response['associate_data'] = array();
         $i = 0;
         $cnt= 0;
+
         foreach ($query_response as $key => $value) {
             $cnt += $value->count;
             $datearry = explode(' ', $value->created_at);
@@ -205,11 +194,10 @@ class JobAssociateCandidates extends Model
             $i++;
         }
         $response['cvs_cnt'] = $cnt;
-        //print_r($response);exit;
         return $response;  
     }
 
-    public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL){
+    public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name',
@@ -263,11 +251,10 @@ class JobAssociateCandidates extends Model
             $result[$i]['candidate_email'] = $v->candidate_email;
             $i++;
         }
-
         return $result;
     }
 
-    public static function getJobAssociatedCvsCount($job_id){
+    public static function getJobAssociatedCvsCount($job_id) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->where('job_id',$job_id);
@@ -276,7 +263,7 @@ class JobAssociateCandidates extends Model
         return $res;
     }
 
-    public static function getAssociatedCandidatesByJobCandidateId($job_id,$candidate_id){
+    public static function getAssociatedCandidatesByJobCandidateId($job_id,$candidate_id) {
 
         $query = new JobAssociateCandidates();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
@@ -299,7 +286,6 @@ class JobAssociateCandidates extends Model
             $candidate['status'] = $response->status;
             $candidate['mobile'] = $response->mobile;
         }
-
         return $candidate;
     }
 
@@ -315,7 +301,7 @@ class JobAssociateCandidates extends Model
         return $job_cvs_res;
     }*/
 
-    public static function getProductivityReportCVCount($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportCVCount($user_id,$from_date=NULL,$to_date=NULL) {
         
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
@@ -330,13 +316,12 @@ class JobAssociateCandidates extends Model
 
         $cnt= 0;
         foreach ($query_response as $key => $value) {
-
             $cnt += $value->count;
         }
         return $cnt;  
     }
 
-    public static function getProductivityReportShortlistedCount($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportShortlistedCount($user_id,$from_date=NULL,$to_date=NULL) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
@@ -353,13 +338,12 @@ class JobAssociateCandidates extends Model
 
         $cnt= 0;
         foreach ($query_response as $key => $value) {
-
             $cnt += $value->count;
         }
         return $cnt;  
     }
 
-    public static function getProductivityReportSelectedCount($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportSelectedCount($user_id,$from_date=NULL,$to_date=NULL) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
@@ -377,7 +361,6 @@ class JobAssociateCandidates extends Model
 
         $cnt= 0;
         foreach ($query_response as $key => $value) {
-
             $cnt += $value->count;
         }
         return $cnt;  
