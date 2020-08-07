@@ -849,7 +849,7 @@ class Bills extends Model
             $fixed_salary = round($salary);
 
             $percentage_charged = $value->percentage_charged;
-            $percentage_charged = (int)$percentage_charged;
+            $percentage_charged = (float)$percentage_charged;
 
             if($percentage_charged == 0) {
 
@@ -1060,7 +1060,7 @@ class Bills extends Model
             $fixed_salary = round($salary);
 
             $percentage_charged = (float)$value->percentage_charged;
-            $percentage_charged = (int)$percentage_charged;
+            //$percentage_charged = (int)$percentage_charged;
 
             if($percentage_charged==0) {
 
@@ -1152,7 +1152,7 @@ class Bills extends Model
                 $fixed_salary = round($salary);
 
                 $percentage_charged = (float)$value->percentage_charged;
-                $percentage_charged = (int)$percentage_charged;
+                //$percentage_charged = (int)$percentage_charged;
 
                 if($percentage_charged == 0) {
 
@@ -1232,7 +1232,7 @@ class Bills extends Model
                 $fixed_salary = round($salary);
 
                 $percentage_charged = (float)$value->percentage_charged;
-                $percentage_charged = (int)$percentage_charged;
+                //$percentage_charged = (int)$percentage_charged;
 
                 if($percentage_charged<=0) {
 
@@ -1286,7 +1286,7 @@ class Bills extends Model
             $salary = (int)$salary;
 
             $pc = $join_mail_res->percentage_charged;
-            $pc = (int)$pc;
+            $pc = (float)$pc;
 
             $fees = round(($salary * $pc)/100);
             $gst = round(($fees * 18)/100);
@@ -1460,7 +1460,7 @@ class Bills extends Model
                 $salary = (int)$salary;
 
                 $pc = $value->percentage_charged;
-                $pc = (int)$pc;
+                $pc = (float)$pc;
 
                 $fees = round(($salary * $pc)/100);
                 $gst = round(($fees * 18)/100);
@@ -1540,7 +1540,7 @@ class Bills extends Model
             $salary = (int)$salary;
 
             $pc = $value->percentage_charged;
-            $pc = (int)$pc;
+            $pc = (float)$pc;
 
             $fees = round(($salary * $pc)/100);
             $gst = round(($fees * 18)/100);
