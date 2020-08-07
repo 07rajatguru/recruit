@@ -1031,7 +1031,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs/{id}', [
         'as' => 'jobopen.show',
         'uses' => 'JobOpenController@show',
-        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
    /* Route::get('jobs/{id}/{year}/edit', [

@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -14,7 +13,6 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -27,25 +25,20 @@
             </div>
 
             <div class="pull-right">
-                {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>--}}
-               {{-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Search</button>--}}
-
+                {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>
+               <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Search</button>--}}
             </div>
-
-
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box-body col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
                 <strong>Select Financial Year:</strong>
-
                 @if($selected_year = Session::get('selected_year'))
                     {{Form::select('year',$year_array, $selected_year, array('id'=>'year','class'=> 'form-control'))}}
                 @else
                     {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
                 @endif
-
             </div>
         </div>
 
@@ -56,20 +49,24 @@
         </div>
     </div>
     <br/>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-             <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a id="on_hold_href" href="" title="On Hold" style="text-decoration: none;color: black;"><div  id="on_hold" style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_4'] }}</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a id="closed_us_href" href="" title="Closed By Us" style="text-decoration: none;color: black;"><div id="closed_us" style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_9'] }}</div></a>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a id="closed_client_href" href="" title="Closed By Client" style="text-decoration: none;color: black;"><div id="closed_client" style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_10'] }}</div></a>
+
+    @permission(('display-job-priority-count-in-listing'))
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="on_hold_href" href="" title="On Hold" style="text-decoration: none;color: black;"><div  id="on_hold" style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_4'] }}</div></a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="closed_us_href" href="" title="Closed By Us" style="text-decoration: none;color: black;"><div id="closed_us" style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_9'] }}</div></a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="closed_client_href" href="" title="Closed By Client" style="text-decoration: none;color: black;"><div id="closed_client" style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_10'] }}</div></a>
+                </div>
             </div>
         </div>
-    </div>
     <br/>
+    @endpermission
+
     <div class = "table-responsive">
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>
@@ -130,8 +127,6 @@
                 <td>{{ $value['desired_candidate'] or ''}}</td>
 
                 <td>{{ $value['close_date'] or ''}}</td>
-
-
             </tr>
         @endforeach
         </tbody>--}}
@@ -141,10 +136,11 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function() {
 
             var year = $("#year").val();
             $("#jo_table").dataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0,'desc'],
@@ -159,16 +155,16 @@
                     { "width": "10px", "targets": 8 },
                     { "width": "10px", "targets": 9 },
                     { "width": "5px", "targets": 10 },
-                            ],
+                ],
                 "ajax" : {
                     'url' : 'allclose',
                     'type' : 'get',
                     data : {year:year},
-                    error: function(){
-
+                    error: function() {
                     }
                 },
-                initComplete:function( settings, json){
+                initComplete:function( settings, json) {
+
                     var count = json.recordsTotal;
                     var close_priority = json.close_priority;
                     var job_priority = json.job_priority;
@@ -206,12 +202,13 @@
             });
         });
 
-        function select_data(){
+        function select_data() {
 
             $("#jo_table").dataTable().fnDestroy();
 
             var year = $("#year").val();
             $("#jo_table").dataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0,'desc'],
@@ -226,7 +223,7 @@
                     { "width": "10px", "targets": 8 },
                     { "width": "10px", "targets": 9 },
                     { "width": "5px", "targets": 10 },
-                            ],
+                ],
                 "ajax" : {
                     'url' : 'allclose',
                     'type' : 'get',
@@ -235,7 +232,7 @@
 
                     }
                 },
-                initComplete:function( settings, json){
+                initComplete:function( settings, json) {
                     var count = json.recordsTotal;
                     var close_priority = json.close_priority;
                     var job_priority = json.job_priority;

@@ -4,7 +4,6 @@
 
 @section('content_header')
     <h1></h1>
-
 @stop
 
 @section('content')
@@ -23,7 +22,7 @@
 
             <div class="pull-right">
                 <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
-                <a class="btn btn-info"  onclick="associate_candidates({{ $job_id }});">Submit</a>
+                <a class="btn btn-info" onclick="associate_candidates({{ $job_id }});">Submit</a>
             </div>
         </div>
     </div><br/>
@@ -56,13 +55,12 @@
             @endforeach
         </tbody>--}}
     </table>
-    <input type="hidden" id="token" value="{{ csrf_token() }}">
 
+    <input type="hidden" id="token" value="{{ csrf_token() }}">
     <input type="hidden" value="{{ $job_id }}" id="job_id" name="job_id" />
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
-
             <div class="pull-right">
                 <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
                 <a class="btn btn-info"  onclick="associate_candidates({{ $job_id }});">Submit</a>
@@ -71,23 +69,23 @@
     </div>
 @stop
 
-
-
 @section('customscripts')
     <script type="text/javascript">
-        $( document ).ready(function()
-        {
+
+        $( document ).ready(function() {
+
             $("#letter").select2({"width":"180px"});
 
             var initial_letter = $("#letter").val();
             var job_id = $("#job_id").val();
 
             $("#candidate_table").dataTable({
+
                 "bProcessing": true,
                 "serverSide": true,
                 "columnDefs": [ {orderable: false, targets: [0]} ],
-                "ajax":
-                {
+                "ajax": {
+
                     type: "GET",
                     url :"/associate-candidate/all",
                     data: {initial_letter:initial_letter,job_id:job_id},
@@ -100,18 +98,13 @@
                         document.getElementById("select_btn").disabled = false;
                     }
                 },
-                // initComplete:function( settings, json){
-                //     var success = json.success;
-
-                //     document.getElementById("select_btn").value=success;
-                // },
                 "pageLength": 100,
                 "responsive": true,
                 "autoWidth": false,
                 "pagingType": "full_numbers",
             });
 
-            $('#allcb').change(function(){
+            $('#allcb').change(function() {
                 if($(this).prop('checked')){
                     $('tbody tr td input[type="checkbox"]').each(function(){
                         $(this).prop('checked', true);
@@ -135,7 +128,8 @@
             });
         });
 
-        function associate_candidates(jobid){
+        function associate_candidates(jobid) {
+
             var candidate_ids = new Array();
             var token = $("#token").val();
             var app_url = "{!! env('APP_URL'); !!}";
@@ -161,19 +155,19 @@
             }
         }
 
-        function select_data()
-        {
+        function select_data() {
+
             $("#candidate_table").dataTable().fnDestroy();
             var initial_letter = $("#letter").val();
             var job_id = $("#job_id").val();
 
-            $("#candidate_table").dataTable(
-            {
+            $("#candidate_table").dataTable({
+
                 "bProcessing": true,
                 "serverSide": true,
                 "columnDefs": [ {orderable: false, targets: [0]} ],
-                "ajax":
-                {
+                "ajax":{
+
                     type: "GET",
                     url :"/associate-candidate/all",
                     data: {initial_letter:initial_letter,job_id:job_id},

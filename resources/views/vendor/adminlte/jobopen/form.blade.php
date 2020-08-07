@@ -30,11 +30,9 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+            <a class="btn btn-primary" href="{{ route('jobopen.index') }}">Back</a>
         </div>
-
     </div>
-
 </div>
 
 @if( $action == 'edit')
@@ -48,7 +46,6 @@
 @if(isset($year) && $year != '')
     <input type="hidden" name="year" id="year" value="{{ $year }}">
 @endif
-
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -199,7 +196,6 @@
                                 </span>
                             @endif
                         </div>
-
 
                         {{--<div class="form-group {{ $errors->has('job_type') ? 'has-error' : '' }}">
                             <strong>View To All :</strong>
@@ -392,7 +388,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -641,14 +636,14 @@
                 format: "dd-mm-yyyy",
                 autoclose: true,
             });
+
             $("#date_opened").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
-
             });
 
-            if(action=="add" || action=="clone")
-            {
+            if(action == "add" || action == "clone") {
+
                 $('#date_opened').datepicker().datepicker('setDate', 'today');
                 var date2 = $('#date_opened').datepicker('getDate');
                 date2.setMonth(date2.getMonth()+1);
@@ -663,7 +658,6 @@
                 $("#date_opened").focus();
             })
 
-
             $("#hiring_manager_id").select2();
             $("#client_id").select2();
             $("#job_description").wysihtml5();
@@ -674,8 +668,8 @@
 
                 var ext = $('#candidate_tracker').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','docx','pdf','xlsx','xls']) == -1)
-                {
+                if($.inArray(ext, ['doc','docx','pdf','xlsx','xls']) == -1) {
+
                     alert('Please Select Document File.');
                     this.value = null;
                 }
@@ -685,8 +679,8 @@
 
                 var ext = $('#job_summary').val().split('.').pop().toLowerCase();
 
-                if($.inArray(ext, ['doc','docx','pdf','txt']) == -1)
-                {
+                if($.inArray(ext, ['doc','docx','pdf','txt']) == -1) {
+
                     alert('Please Select Document File.');
                     this.value = null;
                 }
@@ -699,7 +693,6 @@
             var PostingTitleLength = txt.trim().length;
 
             if(PostingTitleLength < 1) {
-
                 alert("Blank Entry Not Allowed.")
                 document.getElementById("posting_title").value = '';
                 document.getElementById("posting_title").focus();
@@ -712,7 +705,6 @@
             var lacs_to = $("#lacs_to").val();
 
             if(lacs_from > lacs_to) {
-
                 alert('Salary from should be less then or equal to Salary to.');
                 return false;
             }
@@ -789,6 +781,5 @@
             }
         }
     </script>
-
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rfr9axYY2kE1hyBHFNR9ySTSY5Fcag&libraries=places&callback=initAutocomplete" async defer></script>
 @endsection

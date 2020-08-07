@@ -21,7 +21,6 @@
     @endif
 
     <div class="row">
-
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
@@ -33,8 +32,8 @@
                     <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
                 @else
                     <a class="btn bg-maroon" id="associated_candidates" href="{{ route('jobopen.associated_candidates_get',$jobopen['id']) }}">Associated Candidates (...)</a>
-                    @if($strategy_role_id == $user_role_id)
-                        <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+                    @if($strategy_role_id == $role_id)
+                        <a class="btn btn-primary" href="{{url()->previous()}}">Back</a>
                     @else
                         <a class="btn btn-success" href="{{ route('jobopen.associate_candidate_get',$jobopen['id'] ) }}">Associate New Candidates</a>
 
@@ -68,11 +67,6 @@
                             <th scope="row">Client Name</th>
                             <td colspan="3">{{ $jobopen['client_name'] }}</td>
                         </tr>
-                       {{--<tr>
-                            
-                           <th>Job Opening Status</th>
-                            <td>{{ $jobopen['job_opening_status'] }}</td> 
-                        </tr>--}}
                         <tr>
                             <th scope="row">Hiring Manager</th>
                             <td>{{ $jobopen['hiring_manager_name'] }}</td>
@@ -88,21 +82,21 @@
                         <tr>
                             <th>Industry</th>
                             <td>{{ $jobopen['industry_name'] }}</td>
-                            <th scope="row" >Education Qualification</th>
+                            <th scope="row">Education Qualification</th>
                             <td colspan="3">{{ $jobopen['education_qualification']}}</td>
                         </tr>
                         <tr>
                             <th scope="row">Job Type</th>
                             <td>{{ $jobopen['job_type'] }}</td>
-                            <th scope="row" >Desired Candidates</th>
+                            <th scope="row">Desired Candidates</th>
                             <td colspan="3">{!! $jobopen['desired_candidate'] !!}</td>
                         </tr>
                          <tr>
-                            <th scope="row" >Users who can access the job</th>
+                            <th scope="row">Users who can access the job</th>
                             <td colspan="3">{{ implode(",",$jobopen['users']) }}</td>
                         </tr>
                         <tr>
-                            <th scope="row" >Job Description</th>
+                            <th scope="row">Job Description</th>
                             <td colspan="3">{!! $jobopen['description'] !!}</td>
                         </tr>
                      </table>
@@ -198,7 +192,6 @@
         </div>
         <input type="hidden" id="token" value="{{ csrf_token() }}">
     </div>
-
 @endsection
 
 @section('customscripts')
@@ -209,16 +202,18 @@
         });
 
         function associated_candidates(jobid) {
+
             var token = $("#token").val();
             var app_url = "{!! env('APP_URL') !!}";
 
             jQuery.ajax ({
+
                 type: "POST",
                 url: app_url+"/jobs/associated_candidates_count",
                 data: "_token="+token+"&jobid="+jobid,
                 dataType: "json"
             }).done(function( response ) {
-                if(response.returnvalue=='valid'){
+                if(response.returnvalue=='valid') {
                     document.getElementById("associated_candidates").text ="Associated Candidates ("+response.count+")";
                 }
             });

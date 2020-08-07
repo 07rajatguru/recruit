@@ -14,8 +14,8 @@
             </div>
             
             <div class="pull-right">
-                @permission('job-create')
-                    <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                @permission('job-add')
+                    <a class="btn btn-success" href="{{ route('jobopen.create') }}">Create Job Openings</a>
                 @endpermission
             </div>
         </div>
@@ -49,11 +49,11 @@
 @stop
 
 @section('customscripts')
-
     <script type="text/javascript">
-        $(document).ready(function()
-        {
+        $(document).ready(function() {
+
             $("#jo_table").DataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0, 'desc'],
@@ -72,9 +72,7 @@
                 "pageLength": 50,
                 "pagingType" : "full_numbers",
                 stateSave : true,
-
             });
-
             //$('#jo_table tr:eq(0) th:eq(0)').text("Text");
         });
     </script>

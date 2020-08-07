@@ -666,6 +666,7 @@ class JobOpenController extends Controller
         $all_jobs_perm = $user->can('display-jobs');
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
         $change_priority_perm = $user->can('change-job-priority');
+        $change_multiple_priority_perm = $user->can('update-multiple-jobs-priority');
         $clone_perm = $user->can('clone-job');
         $delete_perm = $user->can('job-delete');
 
@@ -736,7 +737,14 @@ class JobOpenController extends Controller
                 if($clone_perm) {
                     $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
                 }
-                $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
+
+                if($change_multiple_priority_perm) {
+                    $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
+                }
+                else {
+
+                    $checkbox .= '';
+                }
             }
 
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
@@ -1206,6 +1214,8 @@ class JobOpenController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
+        $strategy_role_id = getenv('STRATEGY');
+
         $all_jobs_perm = $user->can('display-jobs');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -1386,7 +1396,7 @@ class JobOpenController extends Controller
         }
         $year = $get_current_year."-4, ".$get_next_year."-3";
 
-        return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'role_id' => $role_id, 'isClient' => $isClient,'year' => $year));   
+        return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'role_id' => $role_id, 'isClient' => $isClient,'year' => $year,'strategy_role_id' => $strategy_role_id));   
     }
 
     /*public function edit($id,$year)*/
@@ -3024,7 +3034,6 @@ class JobOpenController extends Controller
         foreach ($job_response as $key => $value) {
 
             $action = '';
-            $checkbox = '';
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 

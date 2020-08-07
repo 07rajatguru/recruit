@@ -67,7 +67,7 @@
         <div class="col-lg-12 margin-tb" style="margin-top:15px;">
             <div class="pull-left">
                 <h3>Candidates associated to Job Opening : {{ $posting_title }}</h3>
-                <span> </span>
+                <span></span>
             </div>
 
             <div class="pull-right">
@@ -109,14 +109,17 @@
                                                 </li>
                                             @endif
                                         </ul>
-                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;">
+                                        </div>
+                                        <div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;">
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         @endforeach
                 </li>
             </ul>--}}
            
-
             <!-- Schedule interview popup starts -->
             <div id="modal-schedule-interview"  class="modal text-left fade">
                 <div class="modal-dialog">
@@ -154,7 +157,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar interview_class"></i>
                                         </div>
-                                        {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'interview_date','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '1' )) !!}
+                                        {!! Form::text('interview_date', isset($fromDateTime) ? $fromDateTime : null, array('id'=>'interview_date','placeholder' => 'Interview Date','class' => 'form-control' , 'tabindex' => '1')) !!}
                                     </div>
                                     @if ($errors->has('interview_date'))
                                         <span class="help-block">
@@ -163,14 +166,9 @@
                                     @endif
                                 </div>
 
-                                <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                                <div class="form-group">
                                     <strong>Status : </strong>
-                                    {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '3' )) !!}
-                                    @if ($errors->has('status'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('status') }}</strong>
-                                        </span>
-                                    @endif
+                                    {!! Form::select('status', $status,null, array('id'=>'status','class' => 'form-control', 'tabindex' => '3')) !!}
                                 </div>
 
                                 <div class="form-group venue {{ $errors->has('location') ? 'has-error' : '' }}" style="display: none;">
@@ -183,26 +181,16 @@
                                     @endif
                                 </div>
 
-                                <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
+                                <div class="form-group">
                                     <strong>Interview Location : </strong>
-                                    {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '7' , 'rows' => '3')) !!}
-                                    @if ($errors->has('interview_location'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('interview_location') }}</strong>
-                                        </span>
-                                    @endif
+                                    {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '7', 'rows' => '3')) !!}
                                 </div>
                             </div>
 
                             <div class="col-md-6 ">
-                                <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                <div class="form-group">
                                     <strong>Interview Type : </strong>
                                     {!! Form::select('type',$type,null, array('id'=>'type','class' => 'form-control', 'tabindex' => '2', 'onchange' => 'showHideDiv()' )) !!}
-                                    @if ($errors->has('type'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('type') }}</strong>
-                                        </span>
-                                    @endif
                                 </div>
 
                                 <div class="form-group skype {{ $errors->has('skype_id') ? 'has-error' : '' }}" style="display: none;">
@@ -215,24 +203,14 @@
                                     @endif
                                 </div>
 
-                                <div class="form-group {{ $errors->has('interviewer_id') ? 'has-error' : '' }}">
+                                <div class="form-group">
                                     <strong>Interviewe Cordinator : </strong>
                                     {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '4' )) !!}
-                                    @if ($errors->has('interviewer_id'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('interviewer_id') }}</strong>
-                                        </span>
-                                    @endif
                                 </div>
 
-                                <div class="form-group {{ $errors->has('candidate_location') ? 'has-error' : '' }}">
+                                <div class="form-group">
                                     <strong>Candidate Location : </strong>
                                     {!! Form::textarea('candidate_location', null, array('id'=>'candidate_location','placeholder' => 'Candidate Location','class' => 'form-control', 'tabindex' => '6' , 'rows' => '3')) !!}
-                                    @if ($errors->has('candidate_location'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('candidate_location') }}</strong>
-                                    </span>
-                                    @endif
                                 </div>
                             </div>
 
@@ -384,11 +362,11 @@
             <th>Candidate Email</th>
             <th>Round Cleared</th>
             <th>Associated Date/Time</th>
-
         </tr>
         <?php $i = 0; ?>
+
         @foreach ($candidates as $candidate)
-            <?php $color=''; ?>
+            <?php $color = ''; ?>
             <tr style="background-color: {{$color}}">
                 <td>{{ Form::checkbox('candidate', $candidate->id,null,array('class'=>'others_cbs' ,'id'=>$candidate->id )) }}</td> 
                 <td>
@@ -424,16 +402,17 @@
                                                 @endif
                                             @endif
                                         </ul>
-                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                                        <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;">
+                                        </div>
+                                        <div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;">
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         </li>
                     </ul>
-                    &nbsp;
-                    <a title="Edit Candidate Information"  href="/candidate/{{$candidate->id}}/edit?jobid={{$job_id}}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    &nbsp;
+                    &nbsp;<a title="Edit Candidate Information"  href="/candidate/{{$candidate->id}}/edit?jobid={{$job_id}}"><i class="fa fa-edit"></i></a>&nbsp;
+
                     @if(isset($access) && $access==true)
                         <a title="Deassociate Candidate" onclick="deassociate_candidate('{{ $job_id }}' , '{{ $candidate->id }}');" style="cursor: pointer;">
                             <i class="fa fa-trash-o"></i>
@@ -450,10 +429,10 @@
                     $associated_date = $dt->format('Y-m-d H:i:s');
                     $month = date('m',strtotime($associated_date));
                 ?>
-                @if($candidate->shortlisted==1 || $candidate->shortlisted==2)
+                @if($candidate->shortlisted == 1 || $candidate->shortlisted == 2)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
 
-                @elseif($candidate->shortlisted==3)
+                @elseif($candidate->shortlisted == 3)
                 <td style="background:#32CD32"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color:blue;">
                    {{ $candidate->fname or '' }}</a></td>
 
@@ -464,7 +443,6 @@
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
-                <!-- <td>{{ $candidate->status or '' }}</td> -->
                 <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
 
                 @if($month == '1')
@@ -486,7 +464,8 @@
                     <td style="background:#D2691E;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
 
                 @elseif($month == '7')
-                    <td style="background:lightgreen;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
+                    <td style="background:lightgreen;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}
+                    </td>
 
                 @elseif($month == '8')
                     <td style="background:#FFD700;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
@@ -506,10 +485,8 @@
                 @else
                     <td>{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
                 @endif
-
             </tr>
         @endforeach
-
     </table>
 
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
@@ -522,9 +499,8 @@
                     <h1 class="modal-title">Associated Candidate Mail</h1>
                 </div>
                 
-                <div class="modal-body check-id">
-                    
-                </div>
+                <div class="modal-body check-id"></div>
+
                 <input type="hidden" name="candi_ids" id="candi_ids" value="">
                 <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
                 <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
@@ -532,7 +508,6 @@
                     <button type="submit" class="btn btn-primary" id="submit">Yes</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
                 </div>
-                
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -545,12 +520,13 @@
                     <h2 class="modal-title">Select User for send mail</h2>
                 </div>
                 {!! Form::open(['method' => 'POST', 'route' => 'jobs.associatedcandidatemail'])!!}
-                <div class="modal-body mail_users">
-                    
-                </div>
+
+                <div class="modal-body mail_users"></div>
+
                 <input type="hidden" name="can_ids" id="can_ids" value="">
                 <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
                 <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
+
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Send</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -570,19 +546,15 @@
                 {!! Form::open(['method' => 'POST', 'route' => 'jobs.shortlistedcandidate'])!!}
 
                 <div class="modal-body">
-                    <div class="check-all-candidate-ids" style="display:none;">
-                    
-                    </div>
+                    <div class="check-all-candidate-ids" style="display:none;"></div>
 
                     <div class="shortlist-round" style="display:none;">
                         <!-- <p>
                         {!! Form::select('shortlist_type', $shortlist_type, null, array('id'=>'shortlist_type','class' => 'form-control')) !!}
                         </p> -->
                         Are You sure want to update Candidate Status?
-
                         <input type="hidden" name="update_status_id" id="update_status_id" value="">
                     </div>
-
                     <input type="hidden" name="all_can_ids" id="all_can_ids" value="">
                     <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
                     <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
@@ -704,7 +676,6 @@
 
                     $('body').append(form);
                     form.submit();
-
                 }
                 else {
                     alert("Select candidate to deassociate");
@@ -712,7 +683,7 @@
             }
         }
 
-        function update_candidate_status(jobid){
+        function update_candidate_status(jobid) {
 
             var status_id = jQuery("#candiate_status_id > option:selected").val();
             var token = $("#token").val();
@@ -741,7 +712,6 @@
                 alert("Select candidate to update status");
             }
         }
-
         
         function addJoiningDate(jobid) {
 
@@ -750,7 +720,7 @@
             var token = $("#token").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            if(joining_date!=''){
+            if(joining_date!='') {
 
                 var url = app_url+'/jobs/addjoiningdate';
                 var form = $('<form action="' + url + '" method="post">' +
@@ -762,9 +732,8 @@
 
                 $('body').append(form);
                 form.submit();
-
             }
-            else{
+            else {
                 alert("Add joining date");
             }
         }
@@ -776,43 +745,20 @@
             if (type == 'Video Interview') {
                 $(".skype").show();
             }
-            else{
+            else {
                 $(".skype").hide();
             }
 
             if (type == 'Personal Interview') {
                 $(".venue").show();
             }
-            else{
+            else {
                 $(".venue").hide();
             }
         }
-       /* function associated_candidates_get(jobid){
-            var candidate_ids = new Array();
-            var token = $("#token").val();
 
-            if(jobid>0){
+        function associatedmail() {
 
-                $("input:checkbox[name=candidate]:checked").each(function(){
-                    candidate_ids.push($(this).val());
-                });
-
-                var url = '/jobs/associated_candidates_get';
-
-                if(candidate_ids.length > 0){
-                    var form = $('<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="_token" value="'+token+'" />' +
-                            '<input type="text" name="jobid" value="'+jobid+'" />' +
-                            '<input type="text" name="candidate_ids" value="'+candidate_ids+'" />' +
-                            '</form>');
-
-                    $('body').append(form);
-                    form.submit();
-                }
-            }
-        }*/
-
-        function associatedmail(){
             var token = $("#token").val();           
             var candidate_ids = new Array();
             var app_url = "{!! env('APP_URL'); !!}";
@@ -820,11 +766,11 @@
             $("input:checkbox[name=candidate]:checked").each(function(){
                 candidate_ids.push($(this).val());
             });
-            //alert(candidate_ids);
 
             $("#candi_ids").val(candidate_ids);
             $(".check-id").empty();
             $.ajax({
+
                 type: 'POST',
                 url: app_url+'/jobs/checkids',
                 data: { can_ids:candidate_ids, '_token':token },
@@ -841,7 +787,8 @@
             });
         }
 
-        function usertosendmail(){
+        function usertosendmail() {
+
             var token = $("#token").val();           
             var candidate_ids = new Array();
             var app_url = "{!! env('APP_URL'); !!}";
@@ -849,12 +796,13 @@
             $("input:checkbox[name=candidate]:checked").each(function(){
                 candidate_ids.push($(this).val());
             });
-            //alert(candidate_ids);
+
             var job_id = $("#job_id").val();
             $("#can_ids").val(candidate_ids);
             $(".mail_users").empty();
 
             $.ajax({
+                
                 type: 'POST',
                 url: app_url+'/jobs/usersforsendmail',
                 data: { job_id:job_id, '_token':token },

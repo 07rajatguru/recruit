@@ -48,7 +48,6 @@
             </div>
         </div>
     </div>
-
     {{--<br/>
 
     <div class="row">
@@ -105,11 +104,15 @@
             </thead>
             <?php $i=0; ?>
             <tbody>
-
                 @foreach($jobList as $key=>$value)
                     <tr>
                         <td>{{ ++$i }}</td>
-                        <td>{{ Form::checkbox('job_ids',$value['id'],null,array('class'=>'multiple_jobs' ,'id'=>$value['id'] )) }}</td>
+
+                        @permission(('update-multiple-jobs-priority'))
+                            <td>{{ Form::checkbox('job_ids',$value['id'],null,array('class'=>'multiple_jobs' ,'id'=>$value['id'] )) }}</td>
+                        @else
+                            <td></td>
+                        @endpermission
 
                         <td>
                             <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
@@ -118,17 +121,21 @@
                                 <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
                             @endif
 
-                            @permission(('change-job-priority'))
-                                @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job Open'])
-                            @endpermission
+                            @if(isset($value['access']) && $value['access']==1)
+                                @permission(('change-job-priority'))
+                                    @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job Open'])
+                                @endpermission
+                            @endif
 
                             @permission(('job-delete'))
                                 @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job Open','title' => 'Job Open'])
                             @endpermission
                             
-                            @permission(('clone-job'))
-                                <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
-                            @endpermission
+                            @if(isset($value['access']) && $value['access']==1)
+                                @permission(('clone-job'))
+                                    <a title="Clone Job"  class="fa fa-clone" href="{{ route('jobopen.clone',$value['id']) }}"></a>
+                                @endpermission
+                            @endif
                         </td>
                         <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['am_name'] or '' }}</td>
                         <td style="background-color: {{ $value['color'] }}">{{ $value['display_name'] or '' }}
@@ -217,12 +224,14 @@
                 new jQuery.fn.dataTable.FixedHeader( table );
             }
 
-            $('#allcb').change(function(){
-                if($(this).prop('checked')){
+            $('#allcb').change(function() {
+
+                if($(this).prop('checked')) {
                     $('tbody tr td input[type="checkbox"]').each(function(){
                         $(this).prop('checked', true);
                     });
-                }else{
+                }
+                else {
                     $('tbody tr td input[type="checkbox"]').each(function(){
                         $(this).prop('checked', false);
                     });
@@ -234,7 +243,7 @@
                         $("#allcb").prop('checked', true);
                     }
                 }
-                else{
+                else {
                     $("#allcb").prop('checked', false);
                 }
             });

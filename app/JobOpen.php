@@ -212,7 +212,8 @@ class JobOpen extends Model
             $job_query = $job_query->offset($offset);
         }
         if (isset($search) && $search != '') {
-            $job_query = $job_query->where(function($job_query) use ($search){
+
+            $job_query = $job_query->where(function($job_query) use ($search) {
 
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
                 $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
@@ -226,7 +227,7 @@ class JobOpen extends Model
         $colors = self::getJobPrioritiesColor();
         $i = 0;
 
-        foreach ($job_response as $key=>$value){
+        foreach ($job_response as $key => $value) {
 
             $jobs_list[$i]['id'] = $value->id;
             if (isset($value->level_name) && $value->level_name != '') {
@@ -1275,7 +1276,8 @@ class JobOpen extends Model
         $job_response = $job_query->get();
 
         $response = array();
-        foreach ($job_response as $k=>$v) {
+        foreach ($job_response as $k => $v) {
+            
             $response['company_name'] = $v->client_name;
             $response['company_url'] = $v->website;
             $response['client_desc'] = $v->client_desc;
