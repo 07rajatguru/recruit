@@ -42,7 +42,7 @@
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
-                                </span>
+                            </span>
                         @endif
                     </div>
 
@@ -81,7 +81,6 @@
                             </span>
                         @endif
                     </div>
-
                     <?php 
                         $str = '';
                         $id = '';
@@ -111,7 +110,7 @@
 
 @section('customscripts')
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
           
             $("#role_form").validate({
                 rules: {
@@ -178,8 +177,8 @@
             $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
         });
 
-        function loadPermissions()
-        {
+        function loadPermissions() {
+
             // for module_ids
             var module_items=document.getElementsByName('module_ids[]');
             var module_selected_items="";
@@ -192,52 +191,49 @@
             var role_id = $("#role_id").val();
 
             $.ajax({
-                    url:'/getPermissionsByRoleID',
-                    method:'GET',
-                    data:{'role_id':role_id,'module_selected_items':module_selected_items},
-                    dataType:'json',
-                    success: function(data)
-                    {
-                        if(data.length > 0)
-                        {
-                            var arr = module_selected_items.split(",");
-                         
-                            for (var i = 0; i < data.length; i++) 
-                            {
-                                var html = '';
 
-                                if(data[i].checked == '1')
-                                {
-                                    html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" checked>';
-                                    html += '&nbsp;&nbsp;';
-                                    html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                    html += '&nbsp;&nbsp;';
-                                }
-                                if(data[i].checked == '0')
-                                {
-                                    html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
-                                    html += '&nbsp;&nbsp;';
-                                    html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                    html += '&nbsp;&nbsp;';
-                                }
+                url:'/getPermissionsByRoleID',
+                method:'GET',
+                data:{'role_id':role_id,'module_selected_items':module_selected_items},
+                dataType:'json',
+                success: function(data) {
+                    if(data.length > 0) {
 
-                                $(".div_"+data[i].module_name).append(html);
-                                $(".div_"+data[i].module_name).show();
+                        var arr = module_selected_items.split(",");
+                        for (var i = 0; i < data.length; i++) {
+
+                            var html = '';
+                            if(data[i].checked == '1') {
+                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
+                                html += '&nbsp;&nbsp;';
                             }
+                            if(data[i].checked == '0') {
+                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
+                                html += '&nbsp;&nbsp;';
+                                html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
+                                html += '&nbsp;&nbsp;';
+                            }
+
+                            $(".div_"+data[i].module_name).append(html);
+                            $(".div_"+data[i].module_name).show();
                         }
                     }
+                }
             });
         }
-        function getModulePermissions(module_id,module_name)
-        {
-            $.ajax(
-            {
+
+        function getModulePermissions(module_id,module_name) {
+
+            $.ajax({
+
                 url:'/getPermissions',
                 method:'GET',
                 data:{'module_id':module_id},
                 dataType:'json',
-                success: function(data)
-                {
+                success: function(data) {
+
                     // for module_ids
                     var module_items=document.getElementsByName('module_ids[]');
                     var module_selected_items="";
@@ -255,16 +251,15 @@
                     var bool_3 = module_selected_items.search(search_str_2) > -1;
 
                     if(bool_1 == true || bool_2 == true || bool_3 == true) {
-                        if(data.length > 0)
-                        {
+                        if(data.length > 0) {
+
                             $(".div_"+module_name).html('');
 
                             var html = '';
                             html += '<div>';
                             html += '<span><b>'+module_name+' : </b></span><br/><br/>';
 
-                            for (var i = 0; i < data.length; i++) 
-                            {
+                            for (var i = 0; i < data.length; i++) {
                                 html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
@@ -275,7 +270,12 @@
 
                             $(".div_"+module_name).append(html);
                             $(".div_"+module_name).show();
-                            $('.permission_class').prop('checked', true);
+
+                            if(module_name == 'Admin' || module_name == 'Dashboard') {
+                            }
+                            else {
+                                $('.permission_class').prop('checked', true);
+                            }
                         }
                     }
                     else {
