@@ -83,12 +83,6 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            /*var table = jQuery('#expense_table').DataTable( {
-                responsive: true,
-                stateSave : true
-            } );
-
-            new jQuery.fn.dataTable.FixedHeader( table );*/
 
             $("#expense_table").DataTable({
                 'bProcessing' : true,
@@ -99,7 +93,6 @@
                     'url' : 'expense/all',
                     'type' : 'get',
                     error: function(){
-
                     }
                 },
                 responsive : true,

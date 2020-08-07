@@ -51,7 +51,7 @@
 
                          <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number:<span class = "required_fields">*</span> </strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' =>'Mobile Number','class' => 'form-control', 'tabindex' => '3'  )) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' =>'Mobile Number','class' => 'form-control', 'tabindex' => '3')) !!}
                             @if ($errors->has('mobile'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('mobile') }}</strong>
@@ -61,7 +61,7 @@
 
                         <div class="form-group {{ $errors->has('landline') ? 'has-error' : '' }}">
                             <strong>Landline Number:</strong>
-                            {!! Form::text('landline', null, array('id'=>'landline','placeholder' => 'Landline Number','class' => 'form-control', 'tabindex' => '5'  )) !!}
+                            {!! Form::number('landline', null, array('id'=>'landline','placeholder' => 'Landline Number','class' => 'form-control', 'tabindex' => '5'  )) !!}
                             @if ($errors->has('landline'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('landline') }}</strong>
@@ -71,7 +71,7 @@
 
                         <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                             <strong>Email:</strong>
-                            {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', '', 'tabindex' => '7' )) !!}
+                            {!! Form::email('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', '', 'tabindex' => '7','onfocusout' => 'checkEmailValidation();')) !!}
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('email') }}</strong>
@@ -116,7 +116,7 @@
 
                         <div class="form-group {{ $errors->has('website') ? 'has-error' : '' }}">
                             <strong>Website:</strong>
-                            {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '8' )) !!}
+                            {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '8','onfocusout' => 'checkWebsiteValidation();')) !!}
                             @if ($errors->has('website'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('website') }}</strong>
@@ -359,6 +359,49 @@
                 }
             });
 
+            $('#mobile').keypress(function (e) {
+
+                var length = jQuery(this).val().length;
+
+                if(length > 9) {
+                    return false;
+                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $('#nicr').keypress(function (e) {
+
+                var length = jQuery(this).val().length;
+
+                if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    return false;
+                } else if((length == 0) && (e.which == 48)) {
+                    return false;
+                }
+            });
+
+            $("#gst_no").change(function () {
+
+                var inputvalues = $(this).val();
+                let regTest = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/.test(inputvalues);
+
+                if(regTest){
+                    let a=65,b=55,c=36;
+                        return Array['from'](g).reduce((i,j,k,g)=>{ 
+                    p=(p=(j.charCodeAt(0)<a?parseInt(j):j.charCodeAt(0)-b)*(k%2+1))>c?1+(p-c):p;
+                        return k<14?i+p:j==((c=(c-(i%c)))<10?c:String.fromCharCode(c+b));
+                    },0); 
+                }
+                else {
+                    alert('Please Enter Valid GSTIN Number');    
+                    document.getElementById("gst_no").value = '';
+                    document.getElementById("gst_no").focus();  
+                }    
+            });
+
             $("#vendor_Form").validate({
                 rules: {
                     "name": {
@@ -408,5 +451,38 @@
                 },
             });
         });
+
+        function checkEmailValidation() {
+
+            var email_value = $("#email").val();
+
+            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+       
+            if(email_value != '') {
+                if (reg.test(email_value) == false) {
+                    
+                    alert('Please Enter Valid Email Address.');
+                    document.getElementById("email").value = '';
+                    document.getElementById("email").focus(); 
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function checkWebsiteValidation() {
+
+            var website = $("#website").val();
+
+            var website_regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+       
+            if(website != '') {
+                if (website_regexp.test(website) == false) {
+                    alert('Please Enter Valid Website URL');
+                    return false;
+                }
+            }
+            return true;
+        }
     </script>
 @endsection
