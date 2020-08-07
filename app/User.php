@@ -52,7 +52,7 @@ class User extends Authenticatable
         'Passport Photo'=>'Passport Photo'
     );
 
-    public static function getUserArray($user_id){
+    public static function getUserArray($user_id) {
         $users = User::select('*')
             ->where('users.id','!=',$user_id)
             ->get();
@@ -63,11 +63,11 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-    public static function getAllUsersExpectSuperAdmin($type=NULL){
+    public static function getAllUsersExpectSuperAdmin($type=NULL) {
+
         $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
 
@@ -91,11 +91,11 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-    public static function getAllUsers($type=NULL,$am=NULL){
+    public static function getAllUsers($type=NULL,$am=NULL) {
+
         $status = 'Inactive';
         $status_array = array($status);
 
@@ -123,11 +123,10 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-    public static function getAllUsersWithInactive($type=NULL){
+    public static function getAllUsersWithInactive($type=NULL) {
 
         $client_type = array('client');
         $user_query = User::query();
@@ -146,12 +145,10 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-
-    public static function getAllUsersEmails($type=NULL,$report=NULL){
+    public static function getAllUsersEmails($type=NULL,$report=NULL) {
 
         $status = 'Inactive';
         $superadmin = getenv('SUPERADMINUSERID');
@@ -179,39 +176,11 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->email;
             }
         }
-
         return $userArr;
     }
 
-    public static function getAllUsersSecondaryEmails($type=NULL)
-    {
-        $status = 'Inactive';
-        $superadmin = getenv('SUPERADMINUSERID');
-        $status_array = array($status);
-        $super_array = array($superadmin);
+    public static function getAllUsersCopy($type=NULL) {
 
-        $user_query = User::query();
-
-        if($type!=NULL){
-            $user_query = $user_query->where('type','=',$type);
-        }
-        $user_query = $user_query->whereNotIn('status',$status_array);
-        $user_query = $user_query->whereNotIn('id',$super_array);
-        $user_query = $user_query->orderBy('name');
-
-        $users = $user_query->get();
-
-        $userArr = array();
-        if(isset($users) && sizeof($users)){
-            foreach ($users as $user) {
-                $userArr[$user->id] = $user->secondary_email;
-            }
-        }
-
-        return $userArr;
-    }
-
-    public static function getAllUsersCopy($type=NULL){
         // $status = 'Inactive';
         // $status_array = array($status);
         
@@ -228,7 +197,8 @@ class User extends Authenticatable
 
         $userArr = array();
         $userArr[0] = '';
-        if(isset($users) && sizeof($users)){
+        if(isset($users) && sizeof($users)) {
+
             foreach ($users as $user) {
                 $userArr[$user->id] = $user->name;
             }
@@ -249,11 +219,10 @@ class User extends Authenticatable
                 }
             }
         }
-
         return $userArr;
     }
 
-    public static function getAllUsersCopyWithInactive($type=NULL){
+    public static function getAllUsersCopyWithInactive($type=NULL) {
         
         $user_query = User::query();
 
@@ -271,11 +240,11 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-    public static function getTypeArray(){
+    public static function getTypeArray() {
+
         $type = array();
         $type['admin'] = 'Admin Team';
         $type['recruiter'] = 'Recruitment Team';
@@ -286,41 +255,23 @@ class User extends Authenticatable
         return $type;
     }
 
-    public static function getAllUsersByCompanyId($company_id){
-        $users = User::select('*')
-            ->where('company_id','=',$company_id)
-            ->get();
+    public static function getInterviewerArray() {
 
-        $userArr = array();
-        if(isset($users) && sizeof($users)){
-            foreach ($users as $user) {
-                $userArr[$user->id] = $user->name;
-            }
-        }
-
-        return $userArr;
-    }
-
-    public static function getInterviewerArray(){
         $interviewerArray = array('' => 'Select Interviewer');
 
         $usersDetails = User::join('role_user','role_user.user_id','=','users.id')
-            ->join('roles','roles.id','=','role_user.role_id')
-            ->where('roles.name','=','Interviewer')
-            ->select('users.id as id', 'users.name as name')
-            ->get();
+            ->join('roles','roles.id','=','role_user.role_id')->where('roles.name','=','Interviewer')
+            ->select('users.id as id', 'users.name as name')->get();
 
         if(isset($usersDetails) && sizeof($usersDetails) > 0){
             foreach ($usersDetails as $usersDetail) {
                 $interviewerArray[$usersDetail->id] = $usersDetail->name;
             }
         }
-
         return $interviewerArray;
     }
 
-    public static function isAdmin($user_role_id)
-    {
+    public static function isAdmin($user_role_id) {
 
         $admin_role_id = env('ADMIN');
         $director_role_id = env('DIRECTOR');
@@ -338,8 +289,8 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isSuperAdmin($user_role_id)
-    {
+    public static function isSuperAdmin($user_role_id) {
+
         $admin_role_id = env('SUPERADMIN');
         if ($admin_role_id == $user_role_id) {
             return true;
@@ -347,8 +298,8 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isAccountant($user_role_id)
-    {
+    public static function isAccountant($user_role_id) {
+
         $admin_role_id = env('ACCOUNTANT');
         if ($admin_role_id == $user_role_id) {
             return true;
@@ -356,8 +307,8 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isOfficeAdmin($user_role_id)
-    {
+    public static function isOfficeAdmin($user_role_id) {
+
         $admin_role_id = env('OFFICEADMIN');
         if ($admin_role_id == $user_role_id) {
             return true;
@@ -365,7 +316,8 @@ class User extends Authenticatable
         return false;
     }
 
-    public  static function isStrategyCoordination($user_role_id){
+    public  static function isStrategyCoordination($user_role_id) {
+
         $admin_role_id = getenv('STRATEGY');
         if ($admin_role_id == $user_role_id) {
             return true;
@@ -373,7 +325,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isClient($user_role_id){
+    public static function isClient($user_role_id) {
 
         $admin_role_id = getenv('CLIENT');
         if ($admin_role_id == $user_role_id) {
@@ -382,7 +334,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isManager($user_role_id){
+    public static function isManager($user_role_id) {
 
         $admin_role_id = getenv('MANAGER');
         if ($admin_role_id == $user_role_id) {
@@ -391,7 +343,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isMarketingIntern($user_role_id){
+    public static function isMarketingIntern($user_role_id) {
 
         $admin_role_id = getenv('MARKETINGINTERN');
         if ($admin_role_id == $user_role_id) {
@@ -400,7 +352,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isAsstManagerMarketing($user_role_id){
+    public static function isAsstManagerMarketing($user_role_id) {
 
         $admin_role_id = getenv('ASSTMANAGERMARKETING');
         if ($admin_role_id == $user_role_id) {
@@ -409,7 +361,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isAllClientVisibleUser($user_id){
+    public static function isAllClientVisibleUser($user_id) {
 
         $loggedin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
         if ($loggedin_user_id == $user_id) {
@@ -418,7 +370,8 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isAccountManager($user_id){
+    public static function isAccountManager($user_id) {
+
         $is_am = false;
 
         $user_query = User::query();
@@ -429,11 +382,20 @@ class User extends Authenticatable
         if(isset($user_query->id) && $user_query->id>0){
             $is_am = true;
         }
-
         return $is_am;
     }
 
-    public static function getUserIdByName($name){
+    public static function isOperationsExecutive($user_role_id) {
+        
+        $admin_role_id = env('OPERATIONSEXECUTIVE');
+        if ($admin_role_id == $user_role_id) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function getUserIdByName($name) {
+
         $user_id = 0;
 
         $user_query = User::query();
@@ -443,12 +405,11 @@ class User extends Authenticatable
         if(isset($user_query)){
             $user_id = $user_query->id;
         }
-
         return $user_id;
-
     }
 
-    public static function getUserNameByEmail($email){
+    public static function getUserNameByEmail($email) {
+
         $user_name = '';
 
         $user_query = User::query();
@@ -458,41 +419,10 @@ class User extends Authenticatable
         if(isset($user_query)){
             $user_name = $user_query->name;
         }
-
         return $user_name;
-
     }
 
-    public static function getLoggedinUserRole($user){
-
-        $roles = $user->roles->toArray();
-
-        $user_role_id = $roles[0]['id'];
-
-        return $user_role_id;
-    }
-
-    public static function getUsers($user_id=0){
-
-        $query = User::query();
-
-        if($user_id>0){
-            $query = $query->where('id','=',$user_id);
-        }
-
-        $user_response = $query->get();
-
-        $list = array();
-        if(sizeof($user_response)>0){
-            foreach ($user_response as $key => $value) {
-                $list[$value->name]= "";
-            }
-        }
-
-        return $list;
-    }
-
-    public static function getOtherUsers($user_id=0){
+    public static function getOtherUsers($user_id=0) {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -505,27 +435,25 @@ class User extends Authenticatable
         $query = $query->whereNotIn('status',$status_array);
         $query = $query->whereNotIn('role_id',$superadmin);
 
-        if($user_id>0){
+        if($user_id>0) {
             $query = $query->where('id','=',$user_id);
         }
 
         $user_response = $query->get();
 
         $list = array();
-        if(sizeof($user_response)>0)
-        {
+        if(sizeof($user_response)>0) {
+
             foreach ($user_response as $key => $value) {
 
                 $full_name = $value->first_name."-".$value->last_name;
                 $list[$full_name]= "";
             }
         }
-
-//        print_r($user_response);exit;
         return $list;
     }
 
-    public static function getUserNameById($user_id){
+    public static function getUserNameById($user_id) {
 
         $user_name = '';
 
@@ -536,11 +464,10 @@ class User extends Authenticatable
         if(isset($user_query)){
             $user_name = $user_query->name;
         }
-
         return $user_name;
     }
 
-    public static function getUserEmailById($user_id){
+    public static function getUserEmailById($user_id) {
 
         $user_email = '';
 
@@ -551,26 +478,10 @@ class User extends Authenticatable
         if(isset($user_query)){
             $user_email = $user_query->email;
         }
-
         return $user_email;
     }
 
-    public static function getUserSecondaryEmailById($user_id)
-    {
-        $user_email = '';
-
-        $user_query = User::query();
-        $user_query = $user_query->where('id','=',$user_id);
-        $user_query = $user_query->first();
-
-        if(isset($user_query)){
-            $user_email = $user_query->secondary_email;
-        }
-
-        return $user_email;
-    }
-
-    public static function getUsersReportToEmail($key){
+    public static function getUsersReportToEmail($key) {
 
         $user_query = User::query();
         $user_query = $user_query->select('users.id','u1.email','u1.secondary_email');
@@ -581,7 +492,7 @@ class User extends Authenticatable
         return $user_report;
     }
 
-    public static function getUsersFloorInchargeEmail($key){
+    public static function getUsersFloorInchargeEmail($key) {
 
         $user_query = User::query();
         $user_query = $user_query->select('users.id','u1.email','u1.secondary_email');
@@ -592,7 +503,7 @@ class User extends Authenticatable
         return $user_floor_incharge;
     }
 
-    public static function getAssignedUsers($user_id,$type){
+    public static function getAssignedUsers($user_id,$type) {
 
         $user_query = User::query();
         if($type!=NULL){
@@ -616,11 +527,10 @@ class User extends Authenticatable
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-    public static function getReportsToUsersEmail($key){
+    public static function getReportsToUsersEmail($key) {
 
         $user_query = User::query();
         $user_query = $user_query->select('users.id','u1.email as remail','u2.email as femail','u1.secondary_email as rsemail','u2.secondary_email as fsemail');
@@ -632,21 +542,19 @@ class User extends Authenticatable
         return $user;
     }
 
-    public static function getRoleIdByUserId($user_id)
-    {
+    public static function getRoleIdByUserId($user_id) {
+
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->select('role_user.role_id as role_id');
-       // $query = $query->whereNotIn('status',$status_array);
         $query = $query->where('users.id',$user_id);
-
         $response = $query->first();
 
         return $response;
     }
 
-    public static function getProfileInfo($user_id)
-    {
+    public static function getProfileInfo($user_id) {
+
         $query = User::query();
         $query = $query->leftjoin('role_user','role_user.user_id','=','users.id');
         $query = $query->leftjoin('roles','roles.id','=','role_user.role_id');
@@ -654,50 +562,43 @@ class User extends Authenticatable
         $query = $query->leftjoin('users_doc','users_doc.user_id','=','users.id');
         $query = $query->select('users.first_name','users.last_name','users.name','users.email','users.secondary_email','roles.display_name as designation','users_otherinfo.*','users_doc.id as doc_id','users_doc.file','users_doc.type');
         $query = $query->where('users.id' ,'=',$user_id);
-       
         $response = $query->first();
 
         return $response;
     }
 
-    public static function getFloorInchargeById($user_id)
-    {
+    public static function getFloorInchargeById($user_id) {
+
         $user_floor_incharge = '';
 
         $query = User::query();
         $query = $query->select('floor_incharge');
-      
         $query = $query->where('users.id',$user_id);
-
         $response = $query->first();
 
-        if(isset($response)){
+        if(isset($response)) {
             $user_floor_incharge = $response->floor_incharge;
         }
-
         return $user_floor_incharge;
     }
 
-    public static function getReportsToById($user_id)
-    {
+    public static function getReportsToById($user_id) {
+
         $user_reports_to = '';
 
         $query = User::query();
         $query = $query->select('reports_to');
-      
         $query = $query->where('users.id',$user_id);
-
         $response = $query->first();
 
-        if(isset($response)){
+        if(isset($response)) {
             $user_reports_to = $response->reports_to;
         }
-
         return $user_reports_to;
     }
 
-    public static function getCompanyDetailsByUserID($user_id)
-    {
+    public static function getCompanyDetailsByUserID($user_id) {
+
         $user_query = User::query();
         $user_query = $user_query->leftjoin('companies','companies.id','=','users.company_id');
         $user_query = $user_query->where('users.id',$user_id);
@@ -708,7 +609,8 @@ class User extends Authenticatable
     }
 
     // function for user remarks dropdown
-    public static function getAllUsersForRemarks($type=NULL){
+    public static function getAllUsersForRemarks($type=NULL) {
+
         $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
 
@@ -716,30 +618,27 @@ class User extends Authenticatable
         $status_array = array($status);
         $user_query = User::query();
 
-        if($type!=NULL){
+        if($type!=NULL) {
             $user_query = $user_query->whereIn('type',$type);
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->orderBy('name');
-
         $users = $user_query->get();
 
         $userArr = array();
-        if(isset($users) && sizeof($users)){
-
+        if(isset($users) && sizeof($users)) {
             $userArr[""] = "Select User";
             foreach ($users as $user) {
                 $userArr[$user->id] = $user->name;
             }
         }
-
         return $userArr;
     }
 
-    public static function getAllDetailsByUserID($user_id)
-    {
+    public static function getAllDetailsByUserID($user_id) {
+
         $user_query = User::query();
         $user_query = $user_query->where('users.id',$user_id);
         $user_query = $user_query->select('users.*');
@@ -748,7 +647,7 @@ class User extends Authenticatable
         return $response;
     }
 
-    public static function getAllFloorInchargeUsers(){
+    public static function getAllFloorInchargeUsers() {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -772,7 +671,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersByJoiningDate(){
+    public static function getAllUsersByJoiningDate() {
 
         $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
@@ -782,22 +681,17 @@ class User extends Authenticatable
 
         $user_query = User::query();
         $user_query = $user_query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
-
         $user_query = $user_query->whereNotIn('users.type',$it_type);
         $user_query = $user_query->whereNotIn('users.type',$client_type);
-
         $user_query = $user_query->whereNotIn('users.id',$super_array);
-        
         $user_query = $user_query->orderBy('users_otherinfo.date_of_joining','ASC');
-
         $user_query = $user_query->select('users.id as id', 'users.name as name','users_otherinfo.date_of_joining as date_of_joining');
-
         $users = $user_query->get();
 
         $userArr = array();
         $i=0;
 
-        if(isset($users) && sizeof($users)){
+        if(isset($users) && sizeof($users)) {
 
             foreach ($users as $user) {
 
@@ -808,13 +702,5 @@ class User extends Authenticatable
             }
         }
         return $userArr;
-    }
-    public static function isOperationsExecutive($user_role_id)
-    {
-        $admin_role_id = env('OPERATIONSEXECUTIVE');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
     }
 }

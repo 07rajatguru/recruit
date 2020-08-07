@@ -752,9 +752,7 @@ class UserController extends Controller
         $loggedin_user_id = $users->id;
         $userRole = $users->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
+        $superadmin_role_id = env('SUPERADMIN');
 
         //  Update in main table
         $user_basic_info = User::find($user_id);
@@ -814,7 +812,7 @@ class UserController extends Controller
             $users_otherinfo_update = new UserOthersInfo();
             $users_otherinfo_update->user_id = $user_id;
 
-            if($isSuperAdmin){
+            if($superadmin_role_id == $role_id){
 
             }
             else {
