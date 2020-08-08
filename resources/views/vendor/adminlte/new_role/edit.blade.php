@@ -143,7 +143,12 @@
                 }
             });
 
-            loadPermissions();
+            var name_string = $("#name_string").val();
+            var name_arr = name_string.split(",");
+
+            for (var i = 1; i < name_arr.length; i++) {
+                loadPermissions(name_arr[i]);
+            }
 
             $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
         });
@@ -177,7 +182,7 @@
             $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
         });
 
-        function loadPermissions() {
+        function loadPermissions(module_name) {
 
             // for module_ids
             var module_items=document.getElementsByName('module_ids[]');
@@ -197,28 +202,41 @@
                 data:{'role_id':role_id,'module_selected_items':module_selected_items},
                 dataType:'json',
                 success: function(data) {
+
                     if(data.length > 0) {
 
-                        var arr = module_selected_items.split(",");
+                        $(".div_"+module_name).html('');
+
+                        var html = '';
+                        html += '<div>';
+                        html += '<span><b>'+module_name+' : </b></span><br/><br/>';
+                        html += '<table class="table table-striped table-bordered nowrap" style="margin-left: 22px;width: 1160px;"><tr>';
+
                         for (var i = 0; i < data.length; i++) {
 
-                            var html = '';
-                            if(data[i].checked == '1') {
-                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" checked>';
-                                html += '&nbsp;&nbsp;';
-                                html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                html += '&nbsp;&nbsp;';
-                            }
-                            if(data[i].checked == '0') {
-                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
-                                html += '&nbsp;&nbsp;';
-                                html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                html += '&nbsp;&nbsp;';
+                            if(i % 3 == 0) {
+                                html += '</tr><tr>';
                             }
 
-                            $(".div_"+data[i].module_name).append(html);
-                            $(".div_"+data[i].module_name).show();
+                            if(data[i].checked == '1') {
+                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
+                                html += '&nbsp;&nbsp;</td>';
+                            }
+                            if(data[i].checked == '0') {
+                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
+                                html += '&nbsp;&nbsp;';
+                                html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
+                                html += '&nbsp;&nbsp;</td>';
+                            }
                         }
+
+                        html += '</tr></table>';
+                        html += '</div>';
+
+                        $(".div_"+module_name).append(html);
+                        $(".div_"+module_name).show();
                     }
                 }
             });
@@ -258,28 +276,29 @@
                             var html = '';
                             html += '<div>';
                             html += '<span><b>'+module_name+' : </b></span><br/><br/>';
+                            html += '<table class="table table-striped table-bordered nowrap" style="margin-left: 22px;width: 1160px;"><tr>';
 
                             for (var i = 0; i < data.length; i++) {
-                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
+
+                                if(i % 3 == 0) {
+                                    html += '</tr><tr>';
+                                }
+
+                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                html += '&nbsp;&nbsp;';
+                                html += '&nbsp;&nbsp;</td>';
                             }
 
+                            html += '</tr></table>';
                             html += '</div>';
 
                             $(".div_"+module_name).append(html);
                             $(".div_"+module_name).show();
-
-                            if(module_name == 'Admin' || module_name == 'Dashboard') {
-                            }
-                            else {
-                                $('.permission_class').prop('checked', true);
-                            }
+                            $('.permission_class').prop('checked', true);
                         }
                     }
                     else {
-
                         $(".div_"+module_name).html('');
                         $(".div_"+module_name).hide();
                     }

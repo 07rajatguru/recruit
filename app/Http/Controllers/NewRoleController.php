@@ -151,23 +151,18 @@ class NewRoleController extends Controller
         foreach ($permissions as $key => $value) {
 
             if(in_array($value['id'], $selected_permissions)) {
-
-                $data[$j]['id'] = $value['id'];
-                $data[$j]['module_id'] = $value['module_id'];
-                $data[$j]['module_name'] = $value['module_name'];
                 $data[$j]['checked'] = '1';
-                $data[$j]['display_name'] = $value['display_name'];
-                $data[$j]['description'] = $value['description'];
             }
             else {
-
-                $data[$j]['id'] = $value['id'];
-                $data[$j]['module_id'] = $value['module_id'];
-                $data[$j]['module_name'] = $value['module_name'];
                 $data[$j]['checked'] = '0';
-                $data[$j]['display_name'] = $value['display_name'];
-                $data[$j]['description'] = $value['description'];
             }
+            
+            $data[$j]['id'] = $value['id'];
+            $data[$j]['module_id'] = $value['module_id'];
+            $data[$j]['module_name'] = $value['module_name'];
+            $data[$j]['display_name'] = $value['display_name'];
+            $data[$j]['description'] = $value['description'];
+
             $j++;
         }
         return $data;exit;

@@ -206,25 +206,25 @@
                             var html = '';
                             html += '<div>';
                             html += '<span><b>'+module_name+' : </b></span><br/><br/>';
+                            html += '<table class="table table-striped table-bordered nowrap" style="margin-left: 22px;width: 1160px;"><tr>';
 
                             for (var i = 0; i < data.length; i++) {
 
-                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
+                                if(i % 3 == 0) {
+                                    html += '</tr><tr>';
+                                }
+                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                html += '&nbsp;&nbsp;';
+                                html += '&nbsp;&nbsp;</td>';   
                             }
 
+                            html += '</tr></table>';
                             html += '</div>';
 
                             $(".div_"+module_name).append(html);
                             $(".div_"+module_name).show();
-
-                            if(module_name == 'Admin' || module_name == 'Dashboard') {
-                            }
-                            else {
-                                $('.permission_class').prop('checked', true);
-                            }
+                            $('.permission_class').prop('checked', true);
                         }
                     }
                     else {
