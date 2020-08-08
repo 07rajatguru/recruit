@@ -806,6 +806,7 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $delete_perm = $user->can('todo-delete');
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
@@ -835,7 +836,15 @@ class ToDosController extends Controller
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
 
             if(($value['task_owner'] == $user_id)) {
+
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            if($delete_perm) {
+
+                $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'todos','display_name'=>'Todo']);
+                $delete = $delete_view->render();
+                $action .= $delete;
             }
 
             $subject = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['subject'].'</a>';
@@ -892,6 +901,7 @@ class ToDosController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $delete_perm = $user->can('todo-delete');
 
         // get assigned to todos
         $assigned_todo_ids = ToDos::getTodoIdsByUserId($user->id);
@@ -921,7 +931,15 @@ class ToDosController extends Controller
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
 
             if(($value['task_owner'] == $user_id)) {
+                
                 $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            if($delete_perm) {
+
+                $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'todos','display_name'=>'Todo']);
+                $delete = $delete_view->render();
+                $action .= $delete;
             }
 
             $subject = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['subject'].'</a>';
