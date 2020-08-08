@@ -50,9 +50,11 @@
                     <td>
                         <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
                        
-                        @if($value['owner_id'] == $user_id)
-                            <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
-                        @endif
+                        @permission(('training-material-edit'))
+                            @if($value['owner_id'] == $user_id)
+                                <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
+                            @endif
+                        @endpermission
 
                         @permission(('training-material-delete'))
                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'training','display_name'=>'Training'])                  
