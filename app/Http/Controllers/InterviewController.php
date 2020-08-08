@@ -86,6 +86,7 @@ class InterviewController extends Controller
         $user = \Auth::user();
         $all_perm = $user->can('display-interviews');
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
+        $send_consolidated_schedule = $user->can('send-consolidated-schedule');
         $delete_perm = $user->can('interview-delete');
 
         if($all_perm) {
@@ -113,7 +114,13 @@ class InterviewController extends Controller
                 $color = '#C4D79B';
 
             $action = '';
-            $checkbox = '<input type=checkbox name=interview_ids value='.$value['id'].' class=interview_ids id='.$value['id'].'/>';
+
+            if($send_consolidated_schedule) {
+                $checkbox = '<input type=checkbox name=interview_ids value='.$value['id'].' class=interview_ids id='.$value['id'].'/>';
+            }
+            else {
+                $checkbox = '';
+            }
 
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
             $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
