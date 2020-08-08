@@ -546,11 +546,11 @@ class ClientController extends Controller
 
         if($all_perm) {
 
-            $count = ClientBasicinfo::getForbidClientsCount(1,$user->id,3);
+            $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,'',3,'');
         }
         else if($userwise_perm) {
 
-            $count = ClientBasicinfo::getForbidClientsCount(0,$user->id,3);
+            $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,'',3,'');
         }
 
         $account_manager = User::getAllUsers('recruiter','Yes');

@@ -973,52 +973,6 @@ class ClientBasicinfo extends Ardent
         return $count;
     }
 
-    // Get Forbid Clients Count
-    public static function getForbidClientsCount($all=0,$user_id,$status) {
-
-        $query = ClientBasicinfo::query();
-        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
-
-        if ($all == 1) {
-
-            $query = $query->leftJoin('client_doc',function($join) {
-                $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
-                $join->where('client_doc.category','=','Client Contract');
-            });
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
-        }
-        else if ($all == 0) {
-
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
-
-            $manager_user_id = env('MANAGERUSERID');
-            $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
-
-            // visible standard and moderate clients to manager
-            if($manager_user_id == $user_id || $marketing_intern_user_id == $user_id) {
-           
-                $query = $query->where(function($query) use ($user_id) {
-                    $query = $query->where('account_manager_id',$user_id);
-                    $query = $query->orwhere('client_basicinfo.category','like',"Moderate");
-                    $query = $query->orwhere('client_basicinfo.category','like',"Standard");
-                });
-            }
-            else {
-                $query = $query->where('account_manager_id',$user_id);
-            }
-        }
-        if (isset($status) && $status >= 0) {
-            $query = $query->where('client_basicinfo.status',$status);
-        }
-
-        $query = $query->groupBy('client_basicinfo.id');
-        $res = $query->get();
-        $count = $query->count();
-
-        return $count;
-    }
-
     public static function getClientIdByName($name) {
 
         $query = ClientBasicinfo::query();
