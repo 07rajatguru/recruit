@@ -1355,7 +1355,7 @@ class JobOpen extends Model
         return $job_res;
     }
 
-    public static function getOpenToAllJobs($all=0,$user_id=0,$limit=0) {
+    public static function getOpenToAllJobs($limit=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1371,11 +1371,11 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
-        // assign jobs to logged in user
+       /* // assign jobs to logged in user
         if($all==0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
-        }
+        }*/
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
@@ -1383,7 +1383,6 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->where('open_to_all','=','1');
         $job_open_query = $job_open_query->having('count','<','5');
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
-        //$job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
 
         if (isset($limit) && $limit > 0) {
             $job_open_query = $job_open_query->limit($limit);

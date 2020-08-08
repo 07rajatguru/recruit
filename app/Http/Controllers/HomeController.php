@@ -459,13 +459,9 @@ class HomeController extends Controller
         $user = \Auth::user();
         $user_id = \Auth::user()->id;
         $display_jobs = $user->can('display-jobs-open-to-all');
-        $display_jobs_by_user = $user->can('display-jobs-open-to-all-by-loggedin-user');
 
         if($display_jobs) {
-            $job_opened = JobOpen::getOpenToAllJobs(1,$user_id,10);
-        }
-        else if($display_jobs_by_user) {
-            $job_opened = JobOpen::getOpenToAllJobs(0,$user_id,10);
+            $job_opened = JobOpen::getOpenToAllJobs(10);
         }
 
         return json_encode($job_opened);

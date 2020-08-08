@@ -113,52 +113,53 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <div class="box box-info">
-                <div class="box-header with-border">
-                    <!-- <h3 class="box-title">Below Jobs open to all</h3> -->
-                    <h3 class="box-title">Jobs open to all</h3>
+    @permission(('display-jobs-open-to-all'))
+        <div class="row">
+            <div class="col-lg-12 col-xs-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <!-- <h3 class="box-title">Below Jobs open to all</h3> -->
+                        <h3 class="box-title">Jobs open to all</h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
                     </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table class="table no-margin" style="border: 1px solid #00c0ef;">
-                            <thead>
-                            <tr>
-                                <th style="border: 1px solid #00c0ef;">Company Name</th>
-                                <th style="border: 1px solid #00c0ef;">Position Title</th>
-                                <th style="border: 1px solid #00c0ef;">Location</th>
-                                <th style="border: 1px solid #00c0ef;">CA</th>
-                                <th style="border: 1px solid #00c0ef;">Min CTC<br/>(in Lacs)</th>
-                                <th style="border: 1px solid #00c0ef;">Max CTC<br/>(in Lacs)</th>
-                                <th style="border: 1px solid #00c0ef;">Added Date</th>
-                                <th style="border: 1px solid #00c0ef;">MB</th>
-                            </tr>
-                            </thead>
-                            <tbody id="job_open_to_all">
-                                
-                            </tbody>
-                        </table>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table no-margin" style="border: 1px solid #00c0ef;">
+                                <thead>
+                                <tr>
+                                    <th style="border: 1px solid #00c0ef;">Company Name</th>
+                                    <th style="border: 1px solid #00c0ef;">Position Title</th>
+                                    <th style="border: 1px solid #00c0ef;">Location</th>
+                                    <th style="border: 1px solid #00c0ef;">CA</th>
+                                    <th style="border: 1px solid #00c0ef;">Min CTC<br/>(in Lacs)</th>
+                                    <th style="border: 1px solid #00c0ef;">Max CTC<br/>(in Lacs)</th>
+                                    <th style="border: 1px solid #00c0ef;">Added Date</th>
+                                    <th style="border: 1px solid #00c0ef;">MB</th>
+                                </tr>
+                                </thead>
+                                <tbody id="job_open_to_all">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
                     </div>
-                    <!-- /.table-responsive -->
+                    <!-- /.box-body -->
+                    <div class="box-footer clearfix">
+                        <a href="jobs/create" class="btn btn-sm btn-info btn-flat pull-left">Add New job</a>
+                        <a href="jobs/opentoall" class="btn btn-sm btn-default btn-flat pull-right">View All Jobs opened</a>
+                    </div>
+                    <!-- /.box-footer -->
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <a href="jobs/create" class="btn btn-sm btn-info btn-flat pull-left">Add New job</a>
-                    <a href="jobs/opentoall" class="btn btn-sm btn-default btn-flat pull-right">View All Jobs opened</a>
-                </div>
-                <!-- /.box-footer -->
             </div>
-
         </div>
-    </div>
+    @endpermission
 
     <div class="row">
         <div class="col-lg-6 col-xs-6">
