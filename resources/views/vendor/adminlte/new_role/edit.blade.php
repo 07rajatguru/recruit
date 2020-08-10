@@ -143,12 +143,7 @@
                 }
             });
 
-            var name_string = $("#name_string").val();
-            var name_arr = name_string.split(",");
-
-            for (var i = 1; i < name_arr.length; i++) {
-                loadPermissions(name_arr[i]);
-            }
+            loadPermissions();
 
             $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
         });
@@ -182,7 +177,7 @@
             $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
         });
 
-        function loadPermissions(module_name) {
+        function loadPermissions() {
 
             // for module_ids
             var module_items=document.getElementsByName('module_ids[]');
@@ -205,38 +200,26 @@
 
                     if(data.length > 0) {
 
-                        $(".div_"+module_name).html('');
-
-                        var html = '';
-                        html += '<div>';
-                        html += '<span><b>'+module_name+' : </b></span><br/><br/>';
-                        html += '<table class="table table-striped table-bordered nowrap" style="margin-left: 22px;width: 1160px;"><tr>';
-
                         for (var i = 0; i < data.length; i++) {
 
-                            if(i % 3 == 0) {
-                                html += '</tr><tr>';
-                            }
+                            var html = '';
 
                             if(data[i].checked == '1') {
-                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'" checked>';
+                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'" checked>';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                html += '&nbsp;&nbsp;</td>';
+                                html += '&nbsp;&nbsp;';
                             }
                             if(data[i].checked == '0') {
-                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
+                                html += '&nbsp;&nbsp;&nbsp;<input type="checkbox"  name="permission[]" value="'+data[i].id+'">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
-                                html += '&nbsp;&nbsp;</td>';
+                                html += '&nbsp;&nbsp;';
                             }
+
+                            $(".div_"+data[i].module_name).append(html);
+                            $(".div_"+data[i].module_name).show();
                         }
-
-                        html += '</tr></table>';
-                        html += '</div>';
-
-                        $(".div_"+module_name).append(html);
-                        $(".div_"+module_name).show();
                     }
                 }
             });
