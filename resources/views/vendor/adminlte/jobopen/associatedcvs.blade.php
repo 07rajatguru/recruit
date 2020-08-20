@@ -37,19 +37,21 @@
             </thead>
             <?php $i=0; ?>
             <tbody>
-                @foreach($response as $key=>$value)
-                    <tr>
-                        <td>{{ ++$i }}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['hm_name'] or '' }}
-                        </td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['company_name'] or '' }}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or '' }}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or '' }}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['candidate_name'] or '' }}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['candidate_owner_name'] or '' }}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['candidate_email'] or '' }}</td>
-                    </tr>
-                @endforeach
+                @if(isset($response) && $response != '')
+                    @foreach($response as $key=>$value)
+                        <tr>
+                            <td>{{ ++$i }}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['hm_name'] or '' }}
+                            </td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['company_name'] or '' }}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or '' }}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or '' }}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['candidate_name'] or '' }}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['candidate_owner_name'] or '' }}</td>
+                            <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['candidate_email'] or '' }}</td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
