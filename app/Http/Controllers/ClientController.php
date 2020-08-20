@@ -973,10 +973,12 @@ class ClientController extends Controller
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
             // Email Notification : data store in datebase
-            $strategyuserid = getenv('STRATEGYUSERID');
+            /*$strategyuserid = getenv('STRATEGYUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
             $strategyemail = User::getUserEmailById($strategyuserid);
-            $cc_users_array = array($superadminemail,$strategyemail);
+            $cc_users_array = array($superadminemail,$strategyemail);*/
+
+            $superadminemail = User::getUserEmailById($super_admin_userid);
 
             $module = "Client";
             $sender_name = $user_id;
@@ -984,7 +986,8 @@ class ClientController extends Controller
             $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
             $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
             $module_id = $client_id;
-            $cc = implode(",",$cc_users_array);
+            //$cc = implode(",",$cc_users_array);
+            $cc = $superadminemail;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
