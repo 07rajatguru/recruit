@@ -2640,6 +2640,10 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:role-delete']
     ]);
 
+    Route::post('/userrolewise/modulevisible',[
+        'as' => 'userrolewise.modulevisible',
+        'uses' => 'NewRoleController@userWiseModuleAjax'
+    ]);
     // User Bench Mark Routes
 
     Route::get('user-bench-mark',[

@@ -32,7 +32,11 @@ class NewRoleController extends Controller
 
     public function store(Request $request) {
 
+        $module_ids = $request->input('module_ids');
+        $module_ids = implode(",", $module_ids);
+
         $role = new Role();
+        $role->module_ids = $module_ids;
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
@@ -86,7 +90,11 @@ class NewRoleController extends Controller
 
     public function update(Request $request,$id) {
 
+        $module_ids = $request->input('module_ids');
+        $module_ids = implode(",", $module_ids);
+
         $role = Role::find($id);
+        $role->module_ids = $module_ids;
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
@@ -166,5 +174,27 @@ class NewRoleController extends Controller
             $j++;
         }
         return $data;exit;
+    }
+
+    public function userWiseModuleAjax() {
+
+        $user_role_id = $_POST['user_role_id'];
+
+        $module_user = Role::getModulesByUserRoleId($user_role_id);
+        $module_total = Module::getAllModulesNameAjax();
+        
+        $module_hide = array();
+
+        foreach ($module_total as $key => $value) {
+            if (!in_array($value, $module_user)) {
+                $module_hide[] = $value;
+            }
+        }
+
+        $msg['module_user'] = $module_user;
+        $msg['module_hide'] = $module_hide;
+        $msg['module_total'] = $module_total;
+
+        return json_encode($msg);exit;
     }
 }

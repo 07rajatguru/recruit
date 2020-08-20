@@ -213,7 +213,7 @@
                                 if(i % 3 == 0) {
                                     html += '</tr><tr>';
                                 }
-                                html += '<td style="border:1px solid black;"><input type="checkbox"  name="permission[]" value="'+data[i].id+'" class="permission_class">';
+                                html += '<td style="border:1px solid black;"><input type="checkbox" name="permission[]" value="'+data[i].id+'" class="permission_class">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<span style="font-size:15px;">'+data[i].display_name+'</span>';
                                 html += '&nbsp;&nbsp;</td>';   

@@ -264,7 +264,13 @@
     </div>
     <!-- ./wrapper -->
 
-<input type="hidden" name="user_id_module" id="user_id_module" value="{{ \Auth::user()->id }}">
+<?php
+    $user_new = \Auth::user();
+    $userRole = $user_new->roles->pluck('id','id')->toArray();
+    $role_id = key($userRole);
+?>
+
+<input type="hidden" name="user_role_id_module" id="user_role_id_module" value="{{ $role_id }}">
 <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
@@ -360,14 +366,15 @@
         }
 
         function userWiseModule(){
-            var user_id = $("#user_id_module").val();
+
+            var user_role_id = $("#user_role_id_module").val();
             var token = $('input[name="csrf_token"]').val();
             
             jQuery.ajax({
                 type: 'POST',
-                url:'/usermodule/visible',
+                url:'/userrolewise/modulevisible',
                 dataType:'json',
-                data: { user_id:user_id, '_token':token },
+                data: { user_role_id:user_role_id, '_token':token },
                 success: function(msg){
                     for (var i = 0; i < msg.module_user.length; i++) {
                         $(msg.module_user[i]).parent('li').show();
