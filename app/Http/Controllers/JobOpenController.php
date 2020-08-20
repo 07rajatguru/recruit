@@ -3249,12 +3249,12 @@ class JobOpenController extends Controller
 
         if($all_jobs_perm) {
             $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year);
+            $count = sizeof($response);
         }
         else if($user_jobs_perm) {
             $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year);
-        }
-
-        $count = sizeof($response);
+            $count = sizeof($response);
+        }        
 
         $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
         return view ('adminlte::jobopen.associatedcvs',compact('response','count','short_month_name','year'));
