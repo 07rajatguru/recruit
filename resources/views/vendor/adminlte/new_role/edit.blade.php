@@ -278,7 +278,11 @@
 
                             $(".div_"+module_name).append(html);
                             $(".div_"+module_name).show();
-                            $('.permission_class').prop('checked', true);
+
+                            var isChecked = $("#all_roles").is(":checked");
+                            if(isChecked == true) {
+                                $('.permission_class').prop('checked', true);
+                            }
                         }
                     }
                     else {
