@@ -147,7 +147,7 @@ class UsersLog extends Model
         return $user_attendance;
     }
 
-    public static function getUserLogsByIdDate($user_id,$date){
+    public static function getUserLogsByIdDate($user_id,$date) {
 
         $query = UsersLog::query();
         $query = $query->select('users_log.*');
@@ -158,4 +158,17 @@ class UsersLog extends Model
         return $count;
     }
 
+    public static function getUserLogsOfWeekById($user_id) {
+
+        $date = date('Y-m-d',strtotime('Monday this week'));
+
+        $query = UsersLog::query();
+        $query = $query->select('users_log.*');
+        $query = $query->where('user_id',$user_id);
+        $query = $query->where('users_log.date','>=',date('Y-m-d',strtotime('Monday this week')));
+            $query = $query->where('users_log.date','<=',date('Y-m-d',strtotime("$date +6days")));
+        $count = $query->count();
+
+        return $count;
+    }
 }

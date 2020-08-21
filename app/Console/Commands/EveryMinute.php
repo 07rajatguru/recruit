@@ -15,6 +15,10 @@ use App\ClientBasicinfo;
 use App\LeaveDoc;
 use App\CandidateBasicInfo;
 use App\BillsDoc;
+use App\Role;
+use App\UserBenchMark;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 class EveryMinute extends Command
 {
@@ -752,6 +756,130 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.userwiseMonthlyReport', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F",strtotime("last month"))." ".date("Y"));
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+            else if ($value['module'] == 'Productivity Report') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $select_user_role_id = User::getRoleIdByUserId($sender_id);
+                $role_name = Role::getUserRoleNameById($select_user_role_id['role_id']);
+
+                // Get user Bench Mark from master
+                $user_bench_mark = UserBenchMark::getBenchMarkByUserID($sender_id);
+
+                $year = date('Y');
+                $month = date('m');
+
+                $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+                $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
+
+                if($selected_month == 'December') {
+
+                    $next_year = $year + 1;
+
+                    $mondays  = new \DatePeriod(
+                        Carbon::parse("first monday of $selected_month $year"),
+                        CarbonInterval::week(),
+                        Carbon::parse("first monday of $next_month $next_year")
+                    );
+                }
+                else {
+
+                    $mondays  = new \DatePeriod(
+                        Carbon::parse("first monday of $selected_month $year"),
+                        CarbonInterval::week(),
+                        Carbon::parse("first monday of $next_month $year")
+                    );
+                }
+
+                // Get no of weeks in month & get from date & to date
+                $i=1;
+                $frm_to_date_array = array();
+
+                if(isset($mondays) && $mondays != '') {
+
+                    foreach ($mondays as $monday) {
+
+                        $no_of_weeks = $i;
+
+                        $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
+                        $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
+
+                        // Get no of cv's associated count in this week
+
+                        $frm_to_date_array[$i]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        // Get no of shortlisted candidate count in this week
+
+                        $frm_to_date_array[$i]['shortlisted_cnt'] = JobAssociateCandidates::getProductivityReportShortlistedCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        // Get no of interview of candidates count in this week
+
+                        $frm_to_date_array[$i]['interview_cnt'] = Interview::getProductivityReportInterviewCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        // Get no of selected candidate count in this week
+
+                        $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        // Get no of offer acceptance count in this week
+
+                        $frm_to_date_array[$i]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        // Get no of joining count in this week
+
+                        $frm_to_date_array[$i]['joining_ratio'] = Bills::getProductivityReportJoiningRatio($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        // Get no of after joining success count in this week
+
+                        $frm_to_date_array[$i]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                        $i++;
+                    }
+                }
+
+                if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
+                    
+                    $user_bench_mark['no_of_resumes_monthly'] = $user_bench_mark['no_of_resumes'];
+                    $user_bench_mark['no_of_resumes_weekly'] = number_format($user_bench_mark['no_of_resumes'] / $no_of_weeks);
+
+                    $user_bench_mark['shortlist_ratio_monthly'] = number_format($user_bench_mark['no_of_resumes'] * $user_bench_mark['shortlist_ratio']/100);
+                    $user_bench_mark['shortlist_ratio_weekly'] = number_format($user_bench_mark['shortlist_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark['interview_ratio_monthly'] = number_format($user_bench_mark['shortlist_ratio_monthly'] * $user_bench_mark['interview_ratio'] / 100);
+                    $user_bench_mark['interview_ratio_weekly'] = number_format($user_bench_mark['interview_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark['selection_ratio_monthly'] = number_format($user_bench_mark['interview_ratio_monthly'] * $user_bench_mark['selection_ratio'] / 100);
+                    $user_bench_mark['selection_ratio_weekly'] = number_format($user_bench_mark['selection_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark['selection_ratio_monthly'] * $user_bench_mark['offer_acceptance_ratio'] / 100);
+                    $user_bench_mark['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark['offer_acceptance_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark['joining_ratio_monthly'] = number_format($user_bench_mark['offer_acceptance_ratio_monthly'] * $user_bench_mark['joining_ratio'] / 100);
+                    $user_bench_mark['joining_ratio_weekly'] = number_format($user_bench_mark['joining_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark['after_joining_success_ratio_monthly'] = number_format($user_bench_mark['joining_ratio_monthly'] * $user_bench_mark['after_joining_success_ratio'] / 100);
+                    $user_bench_mark['after_joining_success_ratio_weekly'] = number_format($user_bench_mark['after_joining_success_ratio_monthly'] / $no_of_weeks);
+                }
+
+                // Get user name
+
+                $user_details = User::getAllDetailsByUserID($sender_id);
+
+                $input['role_name'] = $role_name;
+                $input['user_bench_mark'] = $user_bench_mark;
+                $input['no_of_weeks'] = $no_of_weeks;
+                $input['frm_to_date_array'] = $frm_to_date_array;
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
+                $input['value'] = $user_details->name;
+
+                \Mail::send('adminlte::emails.ProductivityReport', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Productivity Report -'.$input['value']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
