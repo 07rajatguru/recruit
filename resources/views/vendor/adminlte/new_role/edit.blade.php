@@ -26,7 +26,7 @@
 	    </div>
 	</div>
 
-{!! Form::model($role, ['method' => 'PATCH','id' => 'role_form','route' => ['userrole.update', $role->id]]) !!}
+{!! Form::model($role, ['method' => 'PATCH','id' => 'role_form','onsubmit' => "return permissionValidation()",'route' => ['userrole.update', $role->id]]) !!}
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -225,6 +225,25 @@
             });
         }
 
+        function permissionValidation() {
+
+            var permission = document.getElementsByName('permission[]');
+            var permission_selected_items="";
+
+            for(var i=0; i<permission.length; i++) {
+
+                if(permission[i].type == 'checkbox' && permission[i].checked == true) {
+                    permission_selected_items += permission[i].value + "\n";
+                }
+            }
+
+            if(permission_selected_items == '') {
+                alert("Please Select Permissions.");
+                return false;
+            }
+            return true;
+        }
+        
         function getModulePermissions(module_id,module_name) {
 
             $.ajax({

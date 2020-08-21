@@ -26,7 +26,7 @@
 	    </div>
 	</div>
 
-    {!! Form::open(array('route' => 'userrole.store','method'=>'POST','id' => 'role_form')) !!}
+    {!! Form::open(array('route' => 'userrole.store','method'=>'POST','id' => 'role_form','onsubmit' => "return permissionValidation()")) !!}
 
 	<div class="row">
 	    <div class="col-xs-12 col-sm-12 col-md-12">
@@ -170,6 +170,25 @@
         $(".module_ids").click(function () {
             $("#all_roles").prop('checked', ($('.module_ids:checked').length == $('.module_ids').length) ? true : false);
         });
+
+        function permissionValidation() {
+
+            var permission = document.getElementsByName('permission[]');
+            var permission_selected_items="";
+
+            for(var i=0; i<permission.length; i++) {
+
+                if(permission[i].type == 'checkbox' && permission[i].checked == true) {
+                    permission_selected_items += permission[i].value + "\n";
+                }
+            }
+
+            if(permission_selected_items == '') {
+                alert("Please Select Permissions.");
+                return false;
+            }
+            return true;
+        }
 
         function getModulePermissions(module_id,module_name) {
 
