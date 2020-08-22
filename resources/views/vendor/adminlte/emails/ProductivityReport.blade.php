@@ -541,7 +541,7 @@
                             </tr>
                             <tr style="height: 15.75pt;">
                                 <td colspan="5" rowspan="16" valign="bottom" style="border: solid black 1.0pt;border-top: none;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                    <p><b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"><br />Important Notes: </span></u></b>
+                                    <p><b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"><br /><br />Important Notes: </span></u></b>
                                     <b><u><span style="font-family: Arial, sans-serif;color: rgb(17,85,204);"><br /></span></u></b>
                                     <b><u><span style="font-size: 12.0pt;font-family: Arial, sans-serif;color: rgb(116,27,71);"><br /></span></u></b>
                                     <span style="font-size: 12.0pt;color: black;">
@@ -678,6 +678,26 @@
                                 </td>
                             </tr>
                             <tr style="height: 15.75pt;">
+                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                                <td width="161" colspan="2" valign="bottom" style="width: 120.5pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                                <td width="184" colspan="2" valign="bottom" style="width: 137.85pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                                <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                            </tr>
+                            <tr style="height: 15.75pt;">
+                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                                <td width="161" colspan="2" valign="bottom" style="width: 120.5pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                                <td width="184" colspan="2" valign="bottom" style="width: 137.85pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                                <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                            </tr>
+                            <!--<tr style="height: 15.75pt;">
                                 <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid rgb(204,204,204) 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>
                                 <td width="78" valign="bottom" style="width: 58.5pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid rgb(204,204,204) 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
@@ -691,7 +711,7 @@
                                 <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid rgb(204,204,204) 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>
                             </tr>
-                            <!-- <tr style="height: 15.75pt;">
+                            <tr style="height: 15.75pt;">
                                 <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>
                                 <td width="557" colspan="5" rowspan="4" valign="bottom" style="width: 417.8pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
@@ -699,19 +719,19 @@
                                         <b><u><span style="font-size: 10.0pt;font-family: Arial, sans-serif;">Role wise Recommendation:<br /><br /></span></u></b><span style="font-size: 10.0pt;font-family: Arial, sans-serif;">a. Preferably explore positions above 8 lacs within the team or cross functional.<br /></span>
                                     </p>
                                 </td>
+                            </tr>
+                            <tr style="height: 15.75pt;">
+                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                            </tr>
+                            <tr style="height: 15.75pt;">
+                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
+                            </tr>
+                            <tr style="height: 15.75pt;">
+                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                                </td>
                             </tr> -->
-                            <tr style="height: 15.75pt;">
-                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                </td>
-                            </tr>
-                            <tr style="height: 15.75pt;">
-                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                </td>
-                            </tr>
-                            <tr style="height: 15.75pt;">
-                                <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                     </div>
