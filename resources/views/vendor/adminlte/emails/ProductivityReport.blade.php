@@ -10,7 +10,7 @@
 
 <!-- width="600px" -->
 <table align="center" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
-    <tr>
+<!--     <tr>
         <td>
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                 <tr>
@@ -24,7 +24,7 @@
                 </tr>
             </table>
         </td>
-    </tr>
+    </tr> -->
     <tr>
         <td>
             @if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0)
@@ -44,9 +44,9 @@
                                             $month_display = date('F', mktime(0, 0, 0, $month, 10));
                                         ?>
 
-                                        @if(isset($role_name) && $role_name != '')
+                                        @if(isset($user_name) && $user_name != '')
                                             <p align="center" style="text-align: center;">
-                                                <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $role_name }} - {{ $month_display }}' {{ $year_display }}
+                                                <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $user_name }} - {{ $month_display }}' {{ $year_display }}
                                                 </span></b>
                                             </p>
                                         @else
@@ -541,7 +541,7 @@
                             </tr>
                             <tr style="height: 15.75pt;">
                                 <td colspan="5" rowspan="16" valign="bottom" style="border: solid black 1.0pt;border-top: none;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                    <p><b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"><br /><br />Important Notes: </span></u></b>
+                                    <p><b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"><br />Important Notes: </span></u></b>
                                     <b><u><span style="font-family: Arial, sans-serif;color: rgb(17,85,204);"><br /></span></u></b>
                                     <b><u><span style="font-size: 12.0pt;font-family: Arial, sans-serif;color: rgb(116,27,71);"><br /></span></u></b>
                                     <span style="font-size: 12.0pt;color: black;">
@@ -691,7 +691,7 @@
                                 <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid rgb(204,204,204) 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>
                             </tr>
-                            <tr style="height: 15.75pt;">
+                            <!-- <tr style="height: 15.75pt;">
                                 <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>
                                 <td width="557" colspan="5" rowspan="4" valign="bottom" style="width: 417.8pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
@@ -699,7 +699,7 @@
                                         <b><u><span style="font-size: 10.0pt;font-family: Arial, sans-serif;">Role wise Recommendation:<br /><br /></span></u></b><span style="font-size: 10.0pt;font-family: Arial, sans-serif;">a. Preferably explore positions above 8 lacs within the team or cross functional.<br /></span>
                                     </p>
                                 </td>
-                            </tr>
+                            </tr> -->
                             <tr style="height: 15.75pt;">
                                 <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>

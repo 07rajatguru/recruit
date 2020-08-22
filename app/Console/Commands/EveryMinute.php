@@ -875,11 +875,11 @@ class EveryMinute extends Command
                 $input['frm_to_date_array'] = $frm_to_date_array;
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
-                $input['value'] = $user_details->name;
+                $input['user_name'] = $user_details->name;
 
                 \Mail::send('adminlte::emails.ProductivityReport', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Productivity Report -'.$input['value']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Productivity Report -'.$input['user_name']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
