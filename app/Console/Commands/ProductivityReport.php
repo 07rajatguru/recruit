@@ -67,19 +67,13 @@ class ProductivityReport extends Command
                     if(isset($res->femail) && $res->femail!='')
                         $floor_incharge_email = $res->femail;
 
-                    /*$to_array = array();
+                    $to_array = array();
                     $to_array[] = $value;
 
                     $cc_array = array();
                     $cc_array[] = $report_email;
                     $cc_array[] = $floor_incharge_email;
-                    $cc_array[] = 'rajlalwani@adlertalent.com';*/
-
-                    $to_array = array();
-                    $to_array[] = 'saloni@trajinfotech.com';
-
-                    $cc_array = array();
-                    $cc_array[] = 'dhara@trajinfotech.com';
+                    $cc_array[] = 'rajlalwani@adlertalent.com';
 
                     $user_name = User::getUserNameById($key);
 
