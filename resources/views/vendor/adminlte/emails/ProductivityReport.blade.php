@@ -541,7 +541,7 @@
                             </tr>
                             <tr style="height: 15.75pt;">
                                 <td colspan="5" rowspan="16" valign="bottom" style="border: solid black 1.0pt;border-top: none;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                    <p><b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"><br /><br />Important Notes: </span></u></b>
+                                    <p><b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);">Important Notes: </span></u></b>
                                     <b><u><span style="font-family: Arial, sans-serif;color: rgb(17,85,204);"><br /></span></u></b>
                                     <b><u><span style="font-size: 12.0pt;font-family: Arial, sans-serif;color: rgb(116,27,71);"><br /></span></u></b>
                                     <span style="font-size: 12.0pt;color: black;">
