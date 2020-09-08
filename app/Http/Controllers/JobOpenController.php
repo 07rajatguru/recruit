@@ -2355,8 +2355,7 @@ class JobOpenController extends Controller
 
         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));*/
 
-        return redirect()->route('jobopen.associate_candidate_get', [$job_id])->with('success', 'Candidate 
-            Associated Successfully.');
+        return redirect()->route('jobopen.associate_candidate_get', [$job_id])->with('success', 'Candidate Associated Successfully.');
     }
 
     public function associateCandidateCount() {
@@ -2419,15 +2418,17 @@ class JobOpenController extends Controller
         $job_id = $_POST['jobid'];
         $candidate_id = $_POST['candidate_id'];
 
-        JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->forceDelete();
+        JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)
+        ->forceDelete();
 
-        $jobDetail = JobOpen::find($job_id);
+        // TODO :: DeAssociating Candidate : send notification to team/all (except user who deassociate Candidate). default send notificaations to admin user.
+
+        /* $jobDetail = JobOpen::find($job_id);
 
         $hiring_manager_id = $jobDetail->hiring_manager_id;
         $job_show = $jobDetail->job_show;
 
-        // TODO :: DeAssociating Candidate : send notification to team/all (except user who deassociate Candidate). default send notificaations to admin user .
-        /*$authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
+        $authUserTeamId = TeamMates::where('user_id',$hiring_manager_id)->first();
 
         if($job_show == 0){
             $user_details = TeamMates::select('user_id')
@@ -2543,7 +2544,8 @@ class JobOpenController extends Controller
         if ($status_id == '2') {
 
             return redirect()->route('jobopen.associated_candidates_get', [$job_id])
-            ->with('success','Candidates Shortlisted & Scheduled Interview.')->with('candidate_id',$candidate_id);
+            ->with('success','Candidates Shortlisted & Scheduled Interview.')
+            ->with('candidate_id',$candidate_id);
         }
         else {
 
@@ -2908,6 +2910,7 @@ class JobOpenController extends Controller
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
+
             $job_response = JobOpen::getClosedJobsByClient($client_id);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
@@ -2986,16 +2989,19 @@ class JobOpenController extends Controller
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         if($all_jobs_perm) {
+
             $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search,$current_year,$next_year);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
+
             $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type);
             $count = sizeof($job_response);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
         else if ($user_jobs_perm) {
+
             $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search,$current_year,$next_year);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
@@ -3293,6 +3299,7 @@ class JobOpenController extends Controller
         $updated_at = date('Y-m-d H:i:s');
         
         $job_ids_array = explode(",", $job_ids);
+
         foreach ($job_ids_array as $key => $value) {
             DB::statement("UPDATE job_openings SET priority = '$priority', updated_at='$updated_at' where id=$value");
         }
@@ -3434,7 +3441,8 @@ class JobOpenController extends Controller
 
         foreach ($ids as $key => $value) {
             
-            $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
+            $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)
+            ->first();
 
             if($update_status_id == '1') {
 
@@ -3484,10 +3492,9 @@ class JobOpenController extends Controller
 
     public function getAllPositionsJobs() {
 
-        $jobList = JobOpen::getAllJobsPostingTitle();
-        $count = sizeof($jobList);
+        $count = JobOpen::getAllJobsPostingTitleCount();
 
-        return view('adminlte::jobopen.alljobs', compact('jobList','count'));
+        return view('adminlte::jobopen.alljobs', compact('count'));
     }
 
     public function getOrderColumnName($order) {
