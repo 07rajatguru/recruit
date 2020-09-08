@@ -36,38 +36,30 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;" width="75%" id="userwise-monthly-report">
-                <thead>
-                    <tr style="font-weight: bold;">
-                        <td style="background-color: #FA8258">Sr. No.</td>
-                        <td style="background-color: #FA8258;width:70px;">User</td>
-                        @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+            @permission(('display-monthly-report-of-all-users'))
+                <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;" width="75%" id="userwise-monthly-report">
+                    <thead>
+                        <tr style="font-weight: bold;">
+                            <td style="background-color: #FA8258">Sr. No.</td>
+                            <td style="background-color: #FA8258;width:70px;">User</td>
                             <td style="background-color: #F7D358;">No. of Cvs Associated</td>
                             <td style="background-color: #F7D358;">Benchmarks of cvs</td>
                             <td style="background-color: #F7D358;">Benchmarks not achieved in cvs </td>
-                        @endif
-
-                        @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
                             <td style="background-color: #BDBDBD;">No. of Interviews Attended</td>
                             <td style="background-color: #BDBDBD;">Benchmarks of Interviews</td>
                             <td style="background-color: #BDBDBD;">Benchmarks not achieved in Interviews </td>
-                        @endif
-
-                        @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
                             <td style="background-color: #C4D79B;">No. of Leads Added</td>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $i=0; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $i=0; ?>
 
-                    @if(isset($response) && sizeof($response) > 0)
-                        @foreach($response as $k=>$v)
-                        <tr>
-                            <td>{!! ++$i !!}</td>
-                            <td>{!! $v['uname'] !!}</td>
-
-                            @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+                        @if(isset($response) && sizeof($response) > 0)
+                            @foreach($response as $k=>$v)
+                            <tr>
+                                <td>{!! ++$i !!}</td>
+                                <td>{!! $v['uname'] !!}</td>
+                                
                                 <td>{!! $v['cvs'] !!}</td>
                                 <td>150</td>
                                 <?php
@@ -78,9 +70,7 @@
                                 @else
                                     <td style="background-color:green;">{!! $not_ach !!}</td>
                                 @endif
-                            @endif
-
-                            @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+                                
                                 <td>{!! $v['interviews'] !!}</td>
                                 <td>38</td>
                                 <?php
@@ -91,20 +81,89 @@
                                 @else
                                     <td style="background-color:green;">{!! $not_ach_in !!}</td>
                                 @endif
-                            @endif
-
-                            @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+                                
                                 @if(isset($v['lead_count']) && $v['lead_count'] != '')
                                     <td>{!! $v['lead_count'] !!}</td>
                                 @else
                                     <td></td>
                                 @endif
+                            </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            @else
+
+                <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;" width="75%" id="userwise-monthly-report">
+                    <thead>
+                        <tr style="font-weight: bold;">
+                            <td style="background-color: #FA8258">Sr. No.</td>
+                            <td style="background-color: #FA8258;width:70px;">User</td>
+                            @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+                                <td style="background-color: #F7D358;">No. of Cvs Associated</td>
+                                <td style="background-color: #F7D358;">Benchmarks of cvs</td>
+                                <td style="background-color: #F7D358;">Benchmarks not achieved in cvs </td>
+                            @endif
+
+                            @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+                                <td style="background-color: #BDBDBD;">No. of Interviews Attended</td>
+                                <td style="background-color: #BDBDBD;">Benchmarks of Interviews</td>
+                                <td style="background-color: #BDBDBD;">Benchmarks not achieved in Interviews </td>
+                            @endif
+
+                            @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+                                <td style="background-color: #C4D79B;">No. of Leads Added</td>
                             @endif
                         </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php $i=0; ?>
+
+                        @if(isset($response) && sizeof($response) > 0)
+                            @foreach($response as $k=>$v)
+                            <tr>
+                                <td>{!! ++$i !!}</td>
+                                <td>{!! $v['uname'] !!}</td>
+
+                                @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+                                    <td>{!! $v['cvs'] !!}</td>
+                                    <td>150</td>
+                                    <?php
+                                        $not_ach = $v['cvs'] -150
+                                    ?>
+                                    @if($not_ach<0)
+                                        <td style="color:red;">{!! $not_ach !!}</td>
+                                    @else
+                                        <td style="background-color:green;">{!! $not_ach !!}</td>
+                                    @endif
+                                @endif
+
+                                @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+                                    <td>{!! $v['interviews'] !!}</td>
+                                    <td>38</td>
+                                    <?php
+                                        $not_ach_in = $v['interviews'] - 38
+                                    ?>
+                                    @if($not_ach_in<0)
+                                        <td style="color:red;">{!! $not_ach_in !!}</td>
+                                    @else
+                                        <td style="background-color:green;">{!! $not_ach_in !!}</td>
+                                    @endif
+                                @endif
+
+                                @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+                                    @if(isset($v['lead_count']) && $v['lead_count'] != '')
+                                        <td>{!! $v['lead_count'] !!}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
+                                @endif
+                            </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            @endpermission
             @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
                 @permission(('display-monthly-report-of-all-users'))
 
