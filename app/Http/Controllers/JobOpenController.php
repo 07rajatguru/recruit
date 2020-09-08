@@ -359,10 +359,11 @@ class JobOpenController extends Controller
         // Rest other users can only see the jobs assigned to them
 
         $user = \Auth::user();
+        $user_id = \Auth::user()->id;
         $display_jobs = $user->can('display-jobs-open-to-all');
        
         if($display_jobs) {
-            $job_response = JobOpen::getOpenToAllJobs(0);
+            $job_response = JobOpen::getOpenToAllJobs(0,$user_id);
         }
 
         $count = sizeof($job_response);

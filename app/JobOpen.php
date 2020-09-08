@@ -1355,7 +1355,7 @@ class JobOpen extends Model
         return $job_res;
     }
 
-    public static function getOpenToAllJobs($limit=0) {
+    public static function getOpenToAllJobs($limit=0,$user_id) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');

@@ -461,7 +461,7 @@ class HomeController extends Controller
         $display_jobs = $user->can('display-jobs-open-to-all');
 
         if($display_jobs) {
-            $job_opened = JobOpen::getOpenToAllJobs(10);
+            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id);
         }
 
         return json_encode($job_opened);
