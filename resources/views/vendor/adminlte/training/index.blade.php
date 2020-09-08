@@ -51,7 +51,7 @@
                         <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
                        
                         @permission(('training-material-edit'))
-                            @if($value['owner_id'] == $user_id)
+                            @if(isset($value['access']) && $value['access']==1)
                                 <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
                             @endif
                         @endpermission

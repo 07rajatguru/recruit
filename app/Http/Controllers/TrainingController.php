@@ -35,7 +35,7 @@ class TrainingController extends Controller
             $count = Training::getAlltrainingCount(0,$user_id);   
         }
     
-        return view('adminlte::training.index',compact('training','user_id','count'));
+        return view('adminlte::training.index',compact('training','count'));
     }
 
     public function getOrderTrainingColumnName($order) {
