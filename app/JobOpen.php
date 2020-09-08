@@ -1469,21 +1469,15 @@ class JobOpen extends Model
             else
                 $jobs_open_list[$i]['color'] ='';
 
-            if($all==1) {
-
-                $jobs_open_list[$i]['access'] = '1';
+            if(isset($value->hiring_manager_id) && $value->hiring_manager_id == $user_id ) {
                 $jobs_open_list[$i]['coordinator_name'] = $value->coordinator_name;
+                $jobs_open_list[$i]['access'] = '1';
             }
             else {
-                if(isset($value->hiring_manager_id) && $value->hiring_manager_id == $user_id ) {
-                    $jobs_open_list[$i]['coordinator_name'] = $value->coordinator_name;
-                    $jobs_open_list[$i]['access'] = '1';
-                }
-                else {
-                    $jobs_open_list[$i]['coordinator_name'] = '';
-                    $jobs_open_list[$i]['access'] = '0';
-                }
+                $jobs_open_list[$i]['coordinator_name'] = '';
+                $jobs_open_list[$i]['access'] = '0';
             }
+            
             $jobs_open_list[$i]['open_to_all'] = $value->open_to_all;
             $jobs_open_list[$i]['open_to_all_date'] = $value->open_to_all_date;
             

@@ -68,6 +68,10 @@
 
                             @if(isset($value['access']) && $value['access'] == 1)
                                 <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
+                            @else
+                                @permission(('display-jobs'))
+                                    <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
+                                @endpermission
                             @endif
 
                             @permission(('change-job-priority'))
