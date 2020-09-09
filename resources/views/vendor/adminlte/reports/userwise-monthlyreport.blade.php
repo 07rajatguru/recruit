@@ -68,7 +68,11 @@
                                 @if($not_ach < 0)
                                     <td style="color:red;">{!! $not_ach !!}</td>
                                 @else
-                                    <td style="background-color:green;">{!! $not_ach !!}</td>
+                                    @if($not_ach > 0)
+                                        <td style="background-color:#32CD32;">{!! $not_ach !!}</td>
+                                    @else
+                                        <td>{!! $not_ach !!}</td>
+                                    @endif
                                 @endif
                                 
                                 <td>{!! $v['interviews'] !!}</td>
@@ -79,7 +83,11 @@
                                 @if($not_ach_in < 0)
                                     <td style="color:red;">{!! $not_ach_in !!}</td>
                                 @else
-                                    <td style="background-color:green;">{!! $not_ach_in !!}</td>
+                                    @if($not_ach_in > 0)
+                                        <td style="background-color:#32CD32;">{!! $not_ach_in !!}</td>
+                                    @else
+                                        <td>{!! $not_ach_in !!}</td>
+                                    @endif
                                 @endif
                                 
                                 @if(isset($v['lead_count']) && $v['lead_count'] != '')
@@ -134,7 +142,11 @@
                                     @if($not_ach < 0)
                                         <td style="color:red;">{!! $not_ach !!}</td>
                                     @else
-                                        <td style="background-color:green;">{!! $not_ach !!}</td>
+                                        @if($not_ach > 0)
+                                            <td style="background-color:#32CD32;">{!! $not_ach !!}</td>
+                                        @else
+                                            <td>{!! $not_ach !!}</td>
+                                        @endif
                                     @endif
                                 @endif
 
@@ -147,7 +159,11 @@
                                     @if($not_ach_in < 0)
                                         <td style="color:red;">{!! $not_ach_in !!}</td>
                                     @else
-                                        <td style="background-color:green;">{!! $not_ach_in !!}</td>
+                                        @if($not_ach_in > 0)
+                                            <td style="background-color:#32CD32;">{!! $not_ach_in !!}</td>
+                                        @else
+                                            <td>{!! $not_ach_in !!}</td>
+                                        @endif
                                     @endif
                                 @endif
 
