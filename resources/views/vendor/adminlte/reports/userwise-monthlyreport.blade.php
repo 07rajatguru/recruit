@@ -61,22 +61,22 @@
                                 <td>{!! $v['uname'] !!}</td>
                                 
                                 <td>{!! $v['cvs'] !!}</td>
-                                <td>150</td>
+                                <td>{!! $v['no_of_resumes_monthly'] !!}</td>
                                 <?php
-                                    $not_ach = $v['cvs'] -150
+                                    $not_ach = $v['cvs'] - $v['no_of_resumes_monthly'];
                                 ?>
-                                @if($not_ach<0)
+                                @if($not_ach < 0)
                                     <td style="color:red;">{!! $not_ach !!}</td>
                                 @else
                                     <td style="background-color:green;">{!! $not_ach !!}</td>
                                 @endif
                                 
                                 <td>{!! $v['interviews'] !!}</td>
-                                <td>38</td>
+                                <td>{!! $v['interview_ratio_monthly'] !!}</td>
                                 <?php
-                                    $not_ach_in = $v['interviews'] - 38
+                                    $not_ach_in = $v['interviews'] - $v['interview_ratio_monthly'];
                                 ?>
-                                @if($not_ach_in<0)
+                                @if($not_ach_in < 0)
                                     <td style="color:red;">{!! $not_ach_in !!}</td>
                                 @else
                                     <td style="background-color:green;">{!! $not_ach_in !!}</td>

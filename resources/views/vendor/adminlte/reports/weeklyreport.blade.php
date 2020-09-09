@@ -61,13 +61,16 @@
                 	</thead>
                 	<?php $i=0;?>
                 	<tbody>
-                	@foreach($associate_weekly as $key => $value)
-                		<tr style="text-align: center;">
-                			<td>{{ ++$i }}</td>
-                			<td>{{ date('l (jS F,y) ',strtotime($value['associate_date'])) }}</td>
-                			<td>{{ $value['associate_candidate_count'] }}</td>
-                		</tr>
-                	@endforeach
+                        @if(isset($associate_weekly) && sizeof($associate_weekly) > 0)
+                        	@foreach($associate_weekly as $key => $value)
+                        		<tr style="text-align: center;">
+                        			<td>{{ ++$i }}</td>
+                        			<td>{{ date('l (jS F,y) ',strtotime($value['associate_date'])) }}
+                                    </td>
+                        			<td>{{ $value['associate_candidate_count'] }}</td>
+                        		</tr>
+                        	@endforeach
+                        @endif
                 	</tbody>
                 	<tr style="text-align: center;">
                 		<td></td>
@@ -77,12 +80,17 @@
                 	<tr style="text-align: center;">
                 		<td></td>
                 		<td>Benchmark</td>
-                		<td>40</td>
+                		<td>{{ $no_of_resumes_weekly }}</td>
                 	</tr>
                 	<tr style="text-align: center;">
                 		<td></td>
                 		<td>No. of resumes not achieved</td>
-                		<td><?php if($associate_count<40):?>{{	$associate_count-40 }}<?php endif ?></td>
+
+                        @if($associate_count < $no_of_resumes_weekly)
+                            <td>{{ $associate_count - $no_of_resumes_weekly }}</td>
+                        @else
+                            <td>0</td>
+                        @endif
                 	</tr>
                 </table>
             </div>

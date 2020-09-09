@@ -90,16 +90,21 @@ class ReportController extends Controller
             $user_id = $user_id;
         }
 
-        $date = date('l');
+        /*$date = date('l');
+
         if ($date == "Friday" || $date == "Saturday" || $date == "Sunday") {
             $to_date_default = date('Y-m-d',strtotime("$date  thursday next week"));
             $from_date_default = date('Y-m-d',strtotime("$to_date_default -6days"));
         }
-        else{
+        else {
             $from_date_default = date('Y-m-d',strtotime("$date friday last week"));
             $to_date_default = date('Y-m-d',strtotime("$from_date_default +6days"));
-        }
-            //print_r($from_date_default.'  '.$to_date_default);exit;
+        }*/
+
+        $date = date('l');
+
+        $from_date_default = date('Y-m-d',strtotime("$date monday this week"));
+        $to_date_default = date('Y-m-d',strtotime("$from_date_default +6days"));
 
         if (isset($_POST['to_date']) && $_POST['to_date']!=0) {
             $to_date = $_POST['to_date'];
@@ -112,6 +117,54 @@ class ReportController extends Controller
         }
         else{
             $from_date = $from_date_default;
+        }
+
+        // Get user Bench Mark from master
+
+        $month = date('m',strtotime("$from_date"));
+        $year = date('Y',strtotime("$from_date"));
+
+        $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+        $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
+
+        if($selected_month == 'December') {
+
+            $next_year = $year + 1;
+
+            $mondays  = new \DatePeriod(
+                Carbon::parse("first monday of $selected_month $year"),
+                CarbonInterval::week(),
+                Carbon::parse("first monday of $next_month $next_year")
+            );
+        }
+        else {
+
+            $mondays  = new \DatePeriod(
+                Carbon::parse("first monday of $selected_month $year"),
+                CarbonInterval::week(),
+                Carbon::parse("first monday of $next_month $year")
+            );
+        }
+
+        if(isset($mondays) && $mondays != '') {
+
+            $i=1;
+            foreach ($mondays as $monday) {
+
+                $no_of_weeks = $i;
+                $i++;
+            }
+        }
+
+        $user_bench_mark = UserBenchMark::getBenchMarkByUserID($user_id);
+
+        if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
+
+            $no_of_resumes_weekly = number_format($user_bench_mark['no_of_resumes'] / $no_of_weeks);
+        }
+        else {
+
+            $no_of_resumes_weekly = 0;
         }
 
         $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($user_id,$from_date,$to_date);
@@ -130,7 +183,7 @@ class ReportController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($user_id);
 
-        return view('adminlte::reports.weeklyreport',compact('user_id','users','from_date','to_date','associate_weekly','associate_count','leads_weekly','lead_count','interview_weekly','interview_count','user_details'));
+        return view('adminlte::reports.weeklyreport',compact('user_id','users','from_date','to_date','associate_weekly','associate_count','leads_weekly','lead_count','interview_weekly','interview_count','user_details','no_of_resumes_weekly'));
     }
 
     public function userWiseMonthlyReport() {
@@ -184,11 +237,28 @@ class ReportController extends Controller
 
         // set 0 value for all users
         foreach ($users as $k=>$v) {
+
             $response[$k]['cvs'] = 0;
             $response[$k]['interviews'] = 0;
             $response[$k]['lead_count'] = 0;
             $response[$k]['leads_data'] = 0;
             $response[$k]['uname'] = $users[$k];
+
+            // Get Loggedin user Benchmark
+
+            $user_bench_mark = UserBenchMark::getBenchMarkByUserID($k);
+
+            if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
+
+                $response[$k]['no_of_resumes_monthly'] = $user_bench_mark['no_of_resumes'];
+                $response[$k]['shortlist_ratio_monthly'] = number_format($user_bench_mark['no_of_resumes'] * $user_bench_mark['shortlist_ratio']/100);
+                $response[$k]['interview_ratio_monthly'] = number_format($response[$k]['shortlist_ratio_monthly'] * $user_bench_mark['interview_ratio'] / 100);
+            }
+            else {
+
+                $response[$k]['no_of_resumes_monthly'] = 0;
+                $response[$k]['interview_ratio_monthly'] = 0;
+            }
         }
 
         foreach ($associate_monthly_response as $k=>$v) {
@@ -196,21 +266,21 @@ class ReportController extends Controller
         }
 
         $interview_count = Interview::getUserWiseMonthlyReportInterview($users,$month,$year);
-        if(sizeof($interview_count)>0){
+        if(sizeof($interview_count)>0) {
             foreach ($interview_count as $k=>$v) {
                 $response[$k]['interviews'] = $v;
             }
         }
 
        $lead_count = Lead::getUserWiseMonthlyReportLeadCount($users,$month,$year);
-        if(sizeof($lead_count)>0){
+        if(sizeof($lead_count)>0) {
             foreach ($lead_count as $k=>$v) {
                 $response[$k]['lead_count'] = $v;
             }
         }
 
         $leads_details = Lead::getUserWiseMonthlyReportLeads($users,$month,$year);
-        if(sizeof($leads_details)>0){
+        if(sizeof($leads_details)>0) {
             $j=0;
             foreach ($leads_details as $k=>$v) {
                 $response[$k]['leads_data'] = $v;
