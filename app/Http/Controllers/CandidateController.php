@@ -259,15 +259,15 @@ class CandidateController extends Controller
     public function candidatejoin($month,$year) {
 
         $user =  \Auth::user();
-        $all_perm = $user->can('display-candidates');
-        $owner_perm = $user->can('display-candidates-by-loggedin-user');
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
 
-        if($all_perm) {
+        if($display_all_count) {
 
             $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year);
             $count = sizeof($response);
         }
-        else if($owner_perm) {
+        else if($display_userwise_count) {
 
             $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year);
             $count = sizeof($response);
