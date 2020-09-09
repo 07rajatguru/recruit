@@ -127,11 +127,11 @@
 
                                 @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
                                     <td>{!! $v['cvs'] !!}</td>
-                                    <td>150</td>
+                                    <td>{!! $v['no_of_resumes_monthly'] !!}</td>
                                     <?php
-                                        $not_ach = $v['cvs'] -150
+                                        $not_ach = $v['cvs'] -$v['no_of_resumes_monthly'];
                                     ?>
-                                    @if($not_ach<0)
+                                    @if($not_ach < 0)
                                         <td style="color:red;">{!! $not_ach !!}</td>
                                     @else
                                         <td style="background-color:green;">{!! $not_ach !!}</td>
@@ -140,11 +140,11 @@
 
                                 @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
                                     <td>{!! $v['interviews'] !!}</td>
-                                    <td>38</td>
+                                    <td>{!! $v['interview_ratio_monthly'] !!}</td>
                                     <?php
-                                        $not_ach_in = $v['interviews'] - 38
+                                        $not_ach_in = $v['interviews'] - $v['interview_ratio_monthly'];
                                     ?>
-                                    @if($not_ach_in<0)
+                                    @if($not_ach_in < 0)
                                         <td style="color:red;">{!! $not_ach_in !!}</td>
                                     @else
                                         <td style="background-color:green;">{!! $not_ach_in !!}</td>
