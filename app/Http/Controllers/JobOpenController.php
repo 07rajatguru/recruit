@@ -737,7 +737,6 @@ class JobOpenController extends Controller
                     $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
                 }
                 else {
-
                     $checkbox .= '';
                 }
             }
@@ -848,13 +847,13 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array(''=>'Work Experience From');
+        $work_from = array('0'=>'Work Experience From');
         for($i=0;$i<=30;$i++) {
             $work_from[$i] = $i;
         }
 
         //Work experience to dropdown
-        $work_to = array(''=>'Work Experience To');
+        $work_to = array('0'=>'Work Experience To');
         for($i=0;$i<=30;$i++) {
             $work_to[$i] = $i;
         }
@@ -997,6 +996,7 @@ class JobOpenController extends Controller
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
+
         $job_open = new JobOpen();
         $job_open->job_id = $job_unique_id;
         $job_open->job_show = $job_show;
@@ -1031,6 +1031,7 @@ class JobOpenController extends Controller
         }
 
         $job_open->save();
+
         $job_id = $job_open->id;
 
         if (isset($job_id) && $job_id > 0) {
@@ -1038,6 +1039,7 @@ class JobOpenController extends Controller
             if(isset($users) && sizeof($users) > 0) {
 
                 foreach ($users as $key => $value) {
+
                     $job_visible_users = new JobVisibleUsers();
                     $job_visible_users->job_id = $job_id;
                     $job_visible_users->user_id = $value;
@@ -1075,6 +1077,7 @@ class JobOpenController extends Controller
                     return false;
                 }
                 else {
+
                     $job_open_doc = new JobOpenDoc();
                     $job_open_doc->job_id = $job_id;
                     $job_open_doc->category = 'Job Description';
@@ -1108,6 +1111,7 @@ class JobOpenController extends Controller
                             return false;
                         }
                         else {
+
                             $job_open_doc = new JobOpenDoc;
                             $job_open_doc->job_id = $job_id;
                             $job_open_doc->category = 'Others';
@@ -1141,6 +1145,7 @@ class JobOpenController extends Controller
                     return false;
                 }
                 else {
+
                     $job_open_doc = new JobOpenDoc();
                     $job_open_doc->job_id = $job_id;
                     $job_open_doc->category = 'Candidate Tracker';
@@ -1209,8 +1214,6 @@ class JobOpenController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $strategy_role_id = getenv('STRATEGY');
-
         $all_jobs_perm = $user->can('display-jobs');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -1226,13 +1229,12 @@ class JobOpenController extends Controller
         $job_open = array();
 
         $job_open_detail = \DB::table('job_openings')
-            ->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id')
-            ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
-            ->join('client_address','client_address.client_id','=','client_basicinfo.id')
-            ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
-            ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
-            ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name','client_heirarchy.name as level_name')
-            ->where('job_openings.id', '=', $id)->first();
+        ->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id')
+        ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
+        ->join('client_address','client_address.client_id','=','client_basicinfo.id')
+        ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
+        ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
+        ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name','client_heirarchy.name as level_name')->where('job_openings.id', '=', $id)->first();
 
         $job_open['id'] = $id;
 
@@ -1352,6 +1354,7 @@ class JobOpenController extends Controller
         $i = 0;
         $job_open['doc'] = array();
         $utils = new Utils();
+
         $jobopen_doc = \DB::table('job_openings_doc')
         ->join('users', 'users.id', '=', 'job_openings_doc.uploaded_by')
         ->select('job_openings_doc.*', 'users.name as upload_name')->where('job_id', '=', $id)->get();
@@ -1370,6 +1373,7 @@ class JobOpenController extends Controller
                 unset($upload_type[array_search($value->category, $upload_type)]);
             }
         }
+
         $upload_type['Others'] = 'Others';
 
         $posting_status = JobOpen::getJobPostingStatus();
@@ -1391,7 +1395,7 @@ class JobOpenController extends Controller
         }
         $year = $get_current_year."-4, ".$get_next_year."-3";
 
-        return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'role_id' => $role_id, 'isClient' => $isClient,'year' => $year,'strategy_role_id' => $strategy_role_id));   
+        return view('adminlte::jobopen.show', array('jobopen' => $job_open, 'upload_type' => $upload_type,'posting_status'=>$posting_status,'job_search'=>$job_search,'selected_posting'=>$selected_posting,'selected_mass_mail'=>$selected_mass_mail,'selected_job_search'=>$selected_job_search,'job_status'=>$job_status, 'role_id' => $role_id, 'isClient' => $isClient,'year' => $year));   
     }
 
     /*public function edit($id,$year)*/
@@ -1427,13 +1431,13 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array(''=>'Work Experience From');
+        $work_from = array('0'=>'Work Experience From');
         for($i=0;$i<=30;$i++){
             $work_from[$i] = $i;
         }
 
         //Work experience to dropdown
-        $work_to = array(''=>'Work Experience To');
+        $work_to = array('0'=>'Work Experience To');
         for($i=0;$i<=30;$i++){
             $work_to[$i] = $i;
         }
@@ -1551,13 +1555,13 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array(''=>'Work Experience From');
+        $work_from = array('0'=>'Work Experience From');
         for($i=0;$i<=30;$i++){
             $work_from[$i] = $i;
         }
 
         //Work experience to dropdown
-        $work_to = array(''=>'Work Experience To');
+        $work_to = array('0'=>'Work Experience To');
         for($i=0;$i<=30;$i++){
             $work_to[$i] = $i;
         }
@@ -1777,11 +1781,11 @@ class JobOpenController extends Controller
             if (!file_exists($dir_name)) {
                 mkdir("uploads/jobs/$job_id", 0777, true);
             }
-
             if (!$file->move($dir_name, $doc_name)) {
                 return false;
             }
             else {
+
                 $jobopen_doc = new JobOpenDoc();
                 $jobopen_doc->job_id = $job_id;
                 $jobopen_doc->category = $upload_type;
@@ -1837,13 +1841,13 @@ class JobOpenController extends Controller
         }
 
         //Work experience from dropdown
-        $work_from = array(''=>'Work Experience From');
+        $work_from = array('0'=>'Work Experience From');
         for($i=0;$i<=30;$i++){
             $work_from[$i] = $i;
         }
 
         //Work experience to dropdown
-        $work_to = array(''=>'Work Experience To');
+        $work_to = array('0'=>'Work Experience To');
         for($i=0;$i<=30;$i++){
             $work_to[$i] = $i;
         }
@@ -1886,8 +1890,10 @@ class JobOpenController extends Controller
         // Get visible users
         $job_visible_users = JobVisibleUsers::where('job_id',$id)->get();   
         $selected_users = array();
-        if(isset($job_visible_users) && sizeof($job_visible_users)>0){
-            foreach($job_visible_users as $row){
+
+        if(isset($job_visible_users) && sizeof($job_visible_users)>0) {
+
+            foreach($job_visible_users as $row) {
                 $selected_users[] = $row->user_id;
             }
         }
@@ -2007,6 +2013,7 @@ class JobOpenController extends Controller
 
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
+
         $job_open = new JobOpen();
         $job_open->job_id = $job_unique_id;
         $job_open->job_show = $job_show;
@@ -2043,9 +2050,11 @@ class JobOpenController extends Controller
         $job_id = $job_open->id;
 
         if (isset($job_id) && $job_id > 0) {
+
             if(isset($users) && sizeof($users)>0) {
 
                 foreach ($users as $key=>$value) {
+
                     $job_visible_users = new JobVisibleUsers();
                     $job_visible_users->job_id = $job_id;
                     $job_visible_users->user_id = $value;
@@ -2100,6 +2109,7 @@ class JobOpenController extends Controller
                 foreach ($users as $key=> $value) {
 
                     if($user_id != $value) {
+
                         $module_id = $job_id;
                         $module = 'Job Openings';
                         $message = $user_name . " added new job";
@@ -2145,10 +2155,10 @@ class JobOpenController extends Controller
         $year = $request->input('year');
         $title = $request->input('title');
 
-        $job_associate_delete = DB::table('job_associate_candidates')->where('job_id', '=', $id)->delete();
-        $job_open_doc_delete = DB::table('job_openings_doc')->where('job_id', '=', $id)->delete();
-        $job_visible_user_delete = DB::table('job_visible_users')->where('job_id', '=', $id)->delete();
-        $job_joining_date_delete = DB::table('job_candidate_joining_date')->where('job_id', '=', $id)->delete();
+        DB::table('job_associate_candidates')->where('job_id', '=', $id)->delete();
+        DB::table('job_openings_doc')->where('job_id', '=', $id)->delete();
+        DB::table('job_visible_users')->where('job_id', '=', $id)->delete();
+        DB::table('job_candidate_joining_date')->where('job_id', '=', $id)->delete();
 
         // Delete from notifications table
         Notifications::where('module','=','Job Openings')->where('module_id','=',$id)->delete();
@@ -2192,6 +2202,7 @@ class JobOpenController extends Controller
                 return false;
             }
             else {
+
                 $jobopen_doc = new JobOpenDoc();
                 $jobopen_doc->job_id = $job_id;
                 $jobopen_doc->category = $upload_type;
@@ -2216,7 +2227,7 @@ class JobOpenController extends Controller
             unlink("$delete_file_name");
         }
 
-        $jobopenDocDelete = JobOpenDoc::where('id', $docid)->delete();
+        JobOpenDoc::where('id', $docid)->delete();
 
         $id = $_POST['id'];
         $type = $_POST['type'];
@@ -2319,7 +2330,6 @@ class JobOpenController extends Controller
             $job_associate_candidate->save();
 
             // Candidate Vacancy Details email
-
             $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
         }
 
@@ -2385,7 +2395,7 @@ class JobOpenController extends Controller
         $access = false;
         
         if($all_jobs_perm) {
-            $access= true;
+            $access = true;
         }
         else if ($hiring_manager_id == $user->id) {
             $access = true;
@@ -2503,7 +2513,6 @@ class JobOpenController extends Controller
         DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
 
         // Update shortlisted date
-
         DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
         
 
@@ -2557,8 +2566,10 @@ class JobOpenController extends Controller
     public function scheduleInterview(Request $request) {
 
         $user_id = \Auth::user()->id;
+
         $today_date = date('Y-m-d');
         $job_id = $request->get('job_id');
+
         $data = array();
         $dateClass = new Date();
 
@@ -2591,7 +2602,6 @@ class JobOpenController extends Controller
             $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
 
             // Update single candidate status
-
             $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)->first();
 
             if($response->shortlisted == '0') {
@@ -2610,7 +2620,6 @@ class JobOpenController extends Controller
             DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
             
             // Update shortlisted date
-
             DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
         }
         else if($request->get('hid_can') != '') {
@@ -2692,7 +2701,6 @@ class JobOpenController extends Controller
                     DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($value) and job_id = $job_id");
                 
                     // Update shortlisted date
-
                     DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
                 }
             }
@@ -2888,6 +2896,7 @@ class JobOpenController extends Controller
             $year = $_POST['year'];
         }
         else {
+
             $y = date('Y');
             $m = date('m');
             if ($m > 3) {
@@ -3038,7 +3047,7 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 
-            if(isset($value['access']) && $value['access']==1){
+            if(isset($value['access']) && $value['access'] == 1) {
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobclose.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
         
                 if($change_priority_perm) {
@@ -3066,7 +3075,7 @@ class JobOpenController extends Controller
             if ($isClient) {
                 $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
-            else{
+            else {
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
 
@@ -3286,7 +3295,7 @@ class JobOpenController extends Controller
             $msg['success'] = 'success';
             $msg['mail'] = $html;
         }
-        else{
+        else {
             $msg['err'] = '<b>Please select job</b>';
             $msg['msg'] = "fail";
         }
@@ -3302,6 +3311,7 @@ class JobOpenController extends Controller
         $job_ids_array = explode(",", $job_ids);
 
         foreach ($job_ids_array as $key => $value) {
+
             DB::statement("UPDATE job_openings SET priority = '$priority', updated_at='$updated_at' where id=$value");
         }
         return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated Successfully.');
@@ -3392,7 +3402,7 @@ class JobOpenController extends Controller
     public function getCandidateDetailsByJob($id) {
 
         $candidate_details = JobAssociateCandidates::getAssociatedCandidatesDetailsByJobId($id);
-        //print_r($candidate_details);exit;
+        
         return view('adminlte::jobopen.candidatedetails',compact('candidate_details'));
     }
 
@@ -3476,7 +3486,6 @@ class JobOpenController extends Controller
             DB::statement("UPDATE job_associate_candidates SET status_id = $update_status_id where candidate_id in ($value) and job_id = $job_id");
 
             // Update shortlisted date
-
             DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
         }
 
@@ -3515,7 +3524,6 @@ class JobOpenController extends Controller
                 $order_column_name = "count";
             }
         }
-
         return $order_column_name;
     }
 

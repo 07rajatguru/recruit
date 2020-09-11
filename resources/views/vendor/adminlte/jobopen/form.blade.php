@@ -663,6 +663,7 @@
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
             $("#level_id").select2();
+            $("#industry_id").select2();
 
             $("#candidate_tracker").bind('change', function() {
 
