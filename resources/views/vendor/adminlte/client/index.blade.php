@@ -7,7 +7,6 @@
 @stop
 
 @section('content')
-
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
@@ -44,9 +43,7 @@
                 </a>
             </div>
         </div>
-    </div>
-
-    <br/>
+    </div><br/>
     
     <div class="row">
         <div class="col-md-12">
@@ -85,6 +82,7 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="client_table">
         <thead>
             <tr>
+                <th>No</th>
                 <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
                 <th>Client Owner</th>
@@ -178,8 +176,8 @@
 
             'bProcessing' : true,
             'serverSide' : true,
-            "order" : [1,'desc'],
-            "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]} ],
+            "order" : [0,'desc'],
+            "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [2]} ],
             "ajax" : {
                 'url' : 'client/all',
                 'type' : 'get',
@@ -244,13 +242,13 @@
                 if (msg.success == 'Success') {
                     $(".clt_email_cls").show();
                     $(".email_error").empty();
-                    $('#email_submit').removeAttr('disabled');
+                    $('#email_submit').show();
                     setEmailTemplate();
                 }
                 else {
                     $(".clt_email_cls").hide();
                     $(".email_error").empty();
-                    $('#email_submit').attr('disabled','disabled');
+                    $('#email_submit').hide();
                     $(".email_error").append(msg.err);
                 }
             }
@@ -283,12 +281,12 @@
                 if (msg.success == 'Success') {
                     $(".ac_mngr_cls").show();
                     $(".act_mngr_error").empty();
-                    $('#submit').removeAttr('disabled');
+                    $('#submit').show();
                 }
-                else{
+                else {
                     $(".ac_mngr_cls").hide();
                     $(".act_mngr_error").empty();
-                    $('#submit').attr('disabled','disabled');
+                    $('#submit').hide();
                     $(".act_mngr_error").append(msg.err);
                 }
             }

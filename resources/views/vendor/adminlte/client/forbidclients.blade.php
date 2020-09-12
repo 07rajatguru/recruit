@@ -35,6 +35,7 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="clienttype_table">
         <thead>
             <tr>
+                <th>No</th>
                 <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
                 <th>Client Owner</th>
@@ -64,8 +65,8 @@
                 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [1,'desc'],
-                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]} ],
+                "order" : [0,'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [2]} ],
                 "ajax" : {
                     'url' : '/client/allbytype',
                     data : {"source" : source},

@@ -52,13 +52,15 @@
 
             @permission(('display-standard-client-list'))
                 <div class="col-md-2">
-                    <a href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Moderate ({{ $mode_cat }})</div></a>
+                    <a href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Moderate ({{ $mode_cat }})</div>
+                    </a>
                 </div>
             @endpermission
 
             @permission(('display-moderate-client-list'))
                 <div class="col-md-2">
-                    <a href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Standard ({{ $std_cat }})</div></a>
+                    <a href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;">Standard ({{ $std_cat }})</div>
+                    </a>
                 </div>
             @endpermission
         </div>
@@ -79,6 +81,7 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="clienttype_table">
         <thead>
             <tr>
+                <th>No</th>
                 <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
                 <th>Client Owner</th>
@@ -108,8 +111,8 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [1,'desc'],
-                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]} ],
+                "order" : [0,'desc'],
+                "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [2]} ],
                 "ajax" : {
                     'url' : '/client/allbytype',
                     data : {"source" : source},

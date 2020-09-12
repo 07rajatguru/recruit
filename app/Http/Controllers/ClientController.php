@@ -30,7 +30,6 @@ class ClientController extends Controller
 {
     public function index(Request $request) {
 
-        $utils = new Utils();
         $user =  \Auth::user();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
@@ -56,19 +55,19 @@ class ClientController extends Controller
 
         foreach($client_array as $client) {
 
-            if($client['status'] == 'Active' ) {
+            if($client['status'] == 'Active') {
                 $active++;
             }
             else if ($client['status'] == 'Passive') {
                 $passive++;
             }
-            else if($client['status'] == 'Leaders' ) {
+            else if($client['status'] == 'Leaders') {
                 $leaders++;
             }
-            else if($client['status'] == 'Forbid' ) {
+            else if($client['status'] == 'Forbid') {
                 $forbid++;
             }
-            else if($client['status'] == 'Left' ) {
+            else if($client['status'] == 'Left') {
                 $left++;
             }
 
@@ -97,28 +96,28 @@ class ClientController extends Controller
         $order_column_name = '';
         if (isset($order) && $order >= 0) {
 
-            if ($order == 1){
+            if ($order == 0) {
                 $order_column_name = "client_basicinfo.id";
             }
-            else if ($order == 2){
+            else if ($order == 3) {
                 $order_column_name = "users.name";
             }
-            else if ($order == 3){
+            else if ($order == 4) {
                 $order_column_name = "client_basicinfo.name";
             }
-            else if ($order == 4){
+            else if ($order == 5) {
                 $order_column_name = "client_basicinfo.coordinator_prefix";
             }
-            else if ($order == 5){
+            else if ($order == 6) {
                 $order_column_name = "client_basicinfo.category";
             }
-            else if ($order == 6){
+            else if ($order == 7) {
                 $order_column_name = "client_basicinfo.status";
             }
-            else if ($order == 7){
-                $order_column_name = "client_address.billing_street2";
+            else if ($order == 8) {
+                $order_column_name = "client_address.billing_city";
             }
-            else if ($order == 8){
+            else if ($order == 9) {
                 $order_column_name = "client_basicinfo.latest_remarks";
             }
         }
@@ -158,7 +157,8 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();
-        $i = 0;
+        $i = 0;$j = 0;
+
         foreach ($client_res as $key => $value) {
 
             $action = '';
@@ -180,15 +180,13 @@ class ClientController extends Controller
             }
             if($all_perm) {
 
-                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
                 $account = $account_manager_view->render();
                 $action .= $account;
             }
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
-            }
-            if($all_perm || $value['client_owner']) {
 
                 $days_array = ClientTimeline::getDetailsByClientId($value['id']);
 
@@ -216,10 +214,10 @@ class ClientController extends Controller
             $client_category = $value['category'];
 
             if($category_perm) {
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else {
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
             }
 
             $clients[$i] = $data;
@@ -457,7 +455,7 @@ class ClientController extends Controller
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();
-        $i = 0;
+        $i = 0;$j=0;
 
         foreach ($client_res as $key => $value) {
 
@@ -484,12 +482,10 @@ class ClientController extends Controller
                 $account = $account_manager_view->render();
                 $action .= $account;
             }
+
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
-            }
-
-            if($all_perm || $value['client_owner']) {
 
                 $days_array = ClientTimeline::getDetailsByClientId($value['id']);
 
@@ -517,10 +513,10 @@ class ClientController extends Controller
             $client_category = $value['category'];
 
             if($category_perm) {
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else {
-                $data = array($checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
             }
 
             $clients[$i] = $data;
@@ -539,7 +535,6 @@ class ClientController extends Controller
     // Forbid client listing page function
     public function getForbidClient() {
 
-        $utils = new Utils();
         $user =  \Auth::user();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
@@ -585,6 +580,7 @@ class ClientController extends Controller
                 $industry[$r->id] = $r->name;
             }
         }
+        $industry_id = '';
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -599,11 +595,12 @@ class ClientController extends Controller
             return view('errors.clientpermission');
         }
 
-        $industry_id = '';
+        
         $percentage_charged_below = '8.33';
         $percentage_charged_above = '8.33';
 
         $action = "add";
+
         return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status'));
     }
 
@@ -634,17 +631,18 @@ class ClientController extends Controller
         $industry_res = Industry::orderBy('id','DESC')->get();
         $industry = array();
 
-        if(sizeof($industry_res)>0){
-            foreach($industry_res as $r){
-                $industry[$r->id]=$r->name;
+        if(sizeof($industry_res)>0) {
+
+            foreach($industry_res as $r) {
+                $industry[$r->id] = $r->name;
             }
         }
 
         $client = array();
         $client_basicinfo  = \DB::table('client_basicinfo')
-            ->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
-            ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
-            ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','industry.name as ind_name')->where('client_basicinfo.id','=',$id)->first();
+        ->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id')
+        ->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id')
+        ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','industry.name as ind_name')->where('client_basicinfo.id','=',$id)->first();
 
         if(isset($client_basicinfo) && $client_basicinfo != '') {
 
@@ -677,10 +675,10 @@ class ClientController extends Controller
                 $percentage_charged_above = $client_basicinfo->percentage_charged_above;
             }
             else {
-
                 return view('errors.403');
             }
         }
+
         $client['id'] = $id;
 
         $client_address = \DB::table('client_address')->where('client_id','=',$id)->first();
@@ -717,7 +715,8 @@ class ClientController extends Controller
         $i = 0;
         $client['doc'] = array();
         $client_doc = \DB::table('client_doc')
-        ->join('users', 'users.id', '=', 'client_doc.uploaded_by')->select('client_doc.*', 'users.name as upload_name')->where('client_id','=',$id)->get();
+        ->join('users', 'users.id', '=', 'client_doc.uploaded_by')
+        ->select('client_doc.*', 'users.name as upload_name')->where('client_id','=',$id)->get();
 
         $utils = new Utils();
 
@@ -840,6 +839,7 @@ class ClientController extends Controller
             if(isset($input['billing_city']) && $input['billing_city']!=''){
                 $client_address->billing_city = $input['billing_city'];
             }
+
             if(isset($input['shipping_country']) && $input['shipping_country']!=''){
                 $client_address->shipping_country = $input['shipping_country'];
             }
@@ -902,6 +902,7 @@ class ClientController extends Controller
 
                 $dir_name = "uploads/clients/".$client_id."/";
                 $client_logo_key = "uploads/clients/".$client_id."/".$client_logo_name;
+
                 if (!file_exists($dir_name)) {
                     mkdir("uploads/clients/$client_id", 0777,true);
                 }
@@ -1000,7 +1001,7 @@ class ClientController extends Controller
 
             return redirect()->route('client.index')->with('success','Client Added Successfully.');
         }
-        else{
+        else {
             return redirect('client/create')->withInput(Input::all())->withErrors($client_basic_info->errors());
         }
     }

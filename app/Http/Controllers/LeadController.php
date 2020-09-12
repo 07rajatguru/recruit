@@ -164,8 +164,6 @@ class LeadController extends Controller
 
             $count = Lead::getCancelLeadsCount(0,$user->id);
         }
-
-        $lead_count = 0;
         return view('adminlte::lead.cancel',compact('count'));        
     }
 
@@ -520,7 +518,6 @@ class LeadController extends Controller
         }
 
         $user = \Auth::user();
-        $loggedin_user_id = $user->id;
 
         // For account manager
         $users = User::getAllUsers('recruiter','Yes');
@@ -756,34 +753,40 @@ class LeadController extends Controller
                 }
             }
 
-            if (isset($others_doc) && $others_doc->isValid()) {
+            if (isset($others_doc) && $others_doc != '') {
 
-                $others_doc_name = $others_doc->getClientOriginalName();
-                $others_filesize = filesize($others_doc);
+                foreach ($others_doc as $k => $v) {
 
-                $dir_name = "uploads/clients/".$client_id."/";
-                $others_doc_key = "uploads/clients/".$client_id."/".$others_doc_name;
+                    if (isset($v) && $v->isValid()) {
 
-                if (!file_exists($dir_name)) {
-                    mkdir("uploads/clients/$client_id", 0777,true);
-                }
+                        $others_doc_name = $v->getClientOriginalName();
+                        $others_filesize = filesize($v);
 
-                if(!$others_doc->move($dir_name, $others_doc_name)) {
-                    return false;
-                }
-                else {
+                        $dir_name = "uploads/clients/".$client_id."/";
+                        $others_doc_key = "uploads/clients/".$client_id."/".$others_doc_name;
 
-                    $client_doc = new ClientDoc;
-                    $client_doc->client_id = $client_id;
-                    $client_doc->category = 'Others';
-                    $client_doc->name = $others_doc_name;
-                    $client_doc->file = $others_doc_key;
-                    $client_doc->uploaded_by = $user_id;
-                    $client_doc->size = $others_filesize;
-                    $client_doc->created_at = time();
-                    $client_doc->updated_at = time();
-                    $client_doc->save();
-                }
+                        if (!file_exists($dir_name)) {
+                            mkdir("uploads/clients/$client_id", 0777,true);
+                        }
+
+                        if(!$v->move($dir_name, $others_doc_name)) {
+                            return false;
+                        }
+                        else {
+
+                            $client_doc = new ClientDoc;
+                            $client_doc->client_id = $client_id;
+                            $client_doc->category = 'Others';
+                            $client_doc->name = $others_doc_name;
+                            $client_doc->file = $others_doc_key;
+                            $client_doc->uploaded_by = $user_id;
+                            $client_doc->size = $others_filesize;
+                            $client_doc->created_at = time();
+                            $client_doc->updated_at = time();
+                            $client_doc->save();
+                        }
+                    }   
+                } 
             }
 
             // Notifications : On adding new client notify Super Admin via notification
