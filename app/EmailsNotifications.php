@@ -103,6 +103,7 @@ class EmailsNotifications extends Model
 
             $user_id = $job_open['sender_name'];
 
+            $user = \Auth::user();
             $all_jobs_perm = $user->can('display-jobs');
 
             if($all_jobs_perm) {

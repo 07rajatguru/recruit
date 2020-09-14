@@ -463,7 +463,10 @@ class HomeController extends Controller
         if($display_jobs) {
             $job_opened = JobOpen::getOpenToAllJobs(10,$user_id);
         }
+        else {
 
+            $job_opened = array();
+        }
         return json_encode($job_opened);
     }
 

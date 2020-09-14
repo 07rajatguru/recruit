@@ -1043,8 +1043,10 @@ class ClientController extends Controller
                 $client['source'] = $client_basicinfo->source;
                 $client['fax'] = $client_basicinfo->fax;
                 $client['mobile'] = $client_basicinfo->mobile;
+                $client['other_number'] = $client_basicinfo->other_number;
                 $client['am_name'] = $client_basicinfo->am_name;
                 $client['mail'] = $client_basicinfo->mail;
+                $client['s_email'] = $client_basicinfo->s_email;
                 $client['ind_name'] = $client_basicinfo->ind_name;
                 $client['website'] = $client_basicinfo->website;
                 $client['description'] = $client_basicinfo->description;
@@ -1107,10 +1109,12 @@ class ClientController extends Controller
 
         $i = 0;
         $client['doc'] = array();
-        $utils = new Utils();
+        
         $client_doc = \DB::table('client_doc')
         ->join('users', 'users.id', '=', 'client_doc.uploaded_by')
         ->select('client_doc.*', 'users.name as upload_name')->where('client_id','=',$id)->get();
+
+        $utils = new Utils();
         
         foreach ($client_doc as $key => $value) {
 
@@ -1134,7 +1138,9 @@ class ClientController extends Controller
 
     public function attachmentsDestroy(Request $request,$docid) {
 
-        $client_attach = \DB::table('client_doc')->select('client_doc.*')->where('id','=',$docid)->first();
+        $client_attach = \DB::table('client_doc')->select('client_doc.*')->where('id','=',$docid)
+        ->first();
+
         $clientid = $client_attach->client_id;
 
         if(isset($client_attach)) {
@@ -1205,8 +1211,8 @@ class ClientController extends Controller
 
     public function destroy($id) {
 
-        $lead_res = \DB::table('client_basicinfo')
-        ->select('client_basicinfo.lead_id')->where('id','=',$id)->first();
+        $lead_res = \DB::table('client_basicinfo')->select('client_basicinfo.lead_id')
+        ->where('id','=',$id)->first();
 
         if (isset($lead_res) && $lead_res !='') {
             $lead_id = $lead_res->lead_id;
@@ -1268,7 +1274,7 @@ class ClientController extends Controller
             $client_basicinfo->percentage_charged_below = $client_basicinfo->percentage_charged_below;
         }
         else {
-            $client_basicinfo->percentage_charged_below='8.33';
+            $client_basicinfo->percentage_charged_below ='8.33';
         }
         
         if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='') {
@@ -1423,8 +1429,7 @@ class ClientController extends Controller
             else {
 
                 $get_latest_record = \DB::table('client_timeline')
-                ->select('client_timeline.*')->where('client_id','=',$id)->orderBy('client_timeline.id','desc')
-                ->first();
+                ->select('client_timeline.*')->where('client_id','=',$id)->orderBy('client_timeline.id','desc')->first();
 
                 $to_date = date('Y-m-d');
 
@@ -1483,9 +1488,7 @@ class ClientController extends Controller
                 }
 
                 if (!$file->move($dir_name, $doc_name)) {
-
                     return false;
-
                 }
                 else {
 
@@ -1561,17 +1564,17 @@ class ClientController extends Controller
         if (isset($client_ids) && sizeof($client_ids) > 0) {
             $msg['success'] = 'Success';
         }
-        else{
+        else {
             $msg['err'] = '<b>Please Select Client.</b>';
             $msg['msg'] = "Fail";
         }
-
         return $msg;
     }
 
     public function postClientAccountManager() {
 
         $account_manager_id = $_POST['account_manager_id'];
+
         $client_ids = $_POST['client_ids'];
         $client_ids_array = explode(",",$client_ids);
 
@@ -1605,7 +1608,7 @@ class ClientController extends Controller
             // Add Entry in Client Timeline.
 
             $get_latest_record = \DB::table('client_timeline')->select('client_timeline.*')
-                ->where('client_id','=',$value)->orderBy('client_timeline.id','desc')->first();
+            ->where('client_id','=',$value)->orderBy('client_timeline.id','desc')->first();
 
             $to_date = date('Y-m-d');
 
@@ -1675,8 +1678,9 @@ class ClientController extends Controller
 
         $account_manager = $request->get('account_manager');
         $id = $request->get('id');
+
         $act_man = ClientBasicinfo::find($id);
-        $a_m='';
+        $a_m = '';
 
         if(isset($act_man)) {
             $a_m = $account_manager;
@@ -1867,7 +1871,7 @@ class ClientController extends Controller
         $super_admin_userid = $input['super_admin_userid'];
         $manager_user_id = $input['manager_user_id'];
 
-        if(isset($user_id) && $user_id>0) {
+        if(isset($user_id) && $user_id > 0) {
 
             // If remarks not added then add that only by superadmin
             if ($user_id == $super_admin_userid || $user_id == $manager_user_id) {
