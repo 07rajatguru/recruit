@@ -101,7 +101,7 @@ class EmailsNotifications extends Model
             $job_open['education_qualification'] = $value->qualifications;
             $job_open['sender_name'] = $value->sender_name;
 
-            $user_id = $job_open['sender_name'];
+            /*$user_id = $job_open['sender_name'];
 
             $user = \Auth::user();
             $all_jobs_perm = $user->can('display-jobs');
@@ -116,7 +116,7 @@ class EmailsNotifications extends Model
                 else {
                     $job_open['access'] = '0';
                 }
-            }
+            }*/
 
             // already added posting,massmail and job search options
             $selected_posting = array();
