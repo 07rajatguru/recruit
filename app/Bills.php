@@ -253,7 +253,13 @@ class Bills extends Model
             // Generate Excel Invoice URL
 
             $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
-            $excel_url = $bill_invoice['file'];
+
+            if(isset($bill_invoice) && $bill_invoice != '') {
+                $excel_url = $bill_invoice['file'];
+            }
+            else {
+                $excel_url = '';
+            }
 
             if (!file_exists($excel_url) && !is_dir($excel_url)) {
                 $bills[$i]['excel_invoice_url'] = NULL;
@@ -607,7 +613,13 @@ class Bills extends Model
 
             // Generate Excel Invoice URL
             $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
-            $excel_url = $bill_invoice['file'];
+
+            if(isset($bill_invoice) && $bill_invoice != '') {
+                $excel_url = $bill_invoice['file'];
+            }
+            else {
+                $excel_url = '';
+            }
             
             if (!file_exists($excel_url) && !is_dir($excel_url)) {
                 $bills[$i]['excel_invoice_url'] = NULL;
