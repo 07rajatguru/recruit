@@ -120,8 +120,8 @@
 
                 responsive: true,
                 "columnDefs": [
-                    { "width": "10px", "targets": 0, "order": 'desc'},
-                    { "width": "10px", "targets": 1 },
+                    { "width": "10px", "targets": 0},
+                    { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 2 },
                     { "width": "10px", "targets": 3 },
                     { "width": "150px", "targets": 4 },
@@ -129,7 +129,7 @@
                     { "width": "10px", "targets": 6 },
                     { "width": "10px", "targets": 7 },
                     { "width": "10px", "targets": 8 },
-                    { "width": "10px", "targets": 9 },
+                    { "width": "10px", "targets": 9, "order": 'desc'},
                     { "width": "5px", "targets": 10 },
                 ],
                 "pageLength": 100,
