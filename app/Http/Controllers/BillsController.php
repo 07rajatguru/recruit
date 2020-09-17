@@ -630,11 +630,11 @@ class BillsController extends Controller
         $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
 
         if($all_recovery_perm) {
-            $count = Bills::getAllBillsCount(1,1,$user_id,$current_year,$next_year);
+            $count = Bills::getAllBillsCount(1,1,$user_id,0,$current_year,$next_year);
             $access = true;
         }
         else if($loggedin_recovery_perm || $can_owner_recovery_perm) {
-            $count = Bills::getAllBillsCount(1,0,$user_id,$current_year,$next_year);
+            $count = Bills::getAllBillsCount(1,0,$user_id,0,$current_year,$next_year);
             $access = false;
         }
 
