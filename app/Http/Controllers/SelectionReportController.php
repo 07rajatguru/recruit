@@ -437,7 +437,7 @@ class SelectionReportController extends Controller
         
         //echo "<pre>"; print_r($selection);exit;
 
-    	return view('adminlte::reports.selection',compact('select','month_array','year_array','quater','month','year','selection_report','selection','default'));
+    	return view('adminlte::reports.selection',compact('select','month_array','year_array','quater','year','selection_report','selection','default'));
     }
 
     public function export(){
