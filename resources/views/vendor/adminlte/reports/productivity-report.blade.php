@@ -58,9 +58,9 @@
                                 $month_display = date('F', mktime(0, 0, 0, $month, 10));
                             ?>
 
-                            @if(isset($role_name) && $role_name != '')
+                            @if(isset($user_name) && $user_name != '')
                                 <p align="center" style="text-align: center;">
-                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $role_name }} - {{ $month_display }}' {{ $year_display }}
+                                    <b><span style="font-size: 28px;color: black;">Productivity Report - {{ $user_name }} - {{ $month_display }}' {{ $year_display }}
                                     </span></b>
                                 </p>
                             @else
