@@ -96,21 +96,61 @@
                         </td> -->
                     </tr>
                     <tr style="height: 30px;">
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
-                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week1</span></b></p>
-                        </td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
-                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week2</span></b></p>
-                        </td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
-                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week3</span></b></p>
-                        </td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
-                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week4</span></b></p>
-                        </td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
-                            <p align="center" style="text-align: center;"><b><span style="color: black;">Week5</span></b></p>
-                        </td>
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                        <?php $i = 0; ?>
+                            @foreach($frm_to_date_array as $key => $value)
+                                <?php
+                                    $from_date = date('d/m',strtotime($value['from_date']));
+                                    $to_date = date('d/m',strtotime($value['to_date']));
+                                ?>
+
+                                @if($i == 0)
+                                    <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                                        <p align="center" style="text-align: center;"><b><span style="color: black;">Week1</span></b><br/>
+                                            <b>{{ $from_date }} to {{ $to_date }}</b>
+                                        </p>
+                                    </td>
+                                @endif
+
+                                @if($i == 1)
+                                    <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                                        <p align="center" style="text-align: center;"><b><span style="color: black;">Week2</span></b><br/>
+                                            <b>{{ $from_date }} to {{ $to_date }}</b>
+                                        </p>
+                                    </td>
+                                @endif
+
+                                @if($i == 2)
+                                    <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                                        <p align="center" style="text-align: center;"><b><span style="color: black;">Week3</span></b><br/>
+                                            <b>{{ $from_date }} to {{ $to_date }}</b>
+                                        </p>
+                                    </td>
+                                @endif
+
+                                @if($i == 3)
+                                    <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                                        <p align="center" style="text-align: center;"><b><span style="color: black;">Week4</span></b><br/>
+                                            <b>{{ $from_date }} to {{ $to_date }}</b>
+                                        </p>
+                                    </td>
+                                @endif
+
+                                @if($i == 4)
+                                    <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                                        <p align="center" style="text-align: center;"><b><span style="color: black;">Week5</span></b><br/>
+                                            <b>{{ $from_date }} to {{ $to_date }}</b>
+                                        </p>
+                                    </td>
+                                @endif
+                                <?php $i = $i + 1; ?>
+                            @endforeach
+                        @endif
+
+                        @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) == '4')
+                            <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
+                            </td>
+                        @endif
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(191,191,191);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;">
                             <p align="center" style="text-align: center;"><b><span style="color: rgb(153,0,0);">Monthly Achievement</span></b></p>
                         </td>
@@ -588,9 +628,7 @@
                                     <span style="font-size: 12.0pt;color: black;"> <br />
                                         a. Weightage percentage to be given between (80-100%) in case monthly productivity report is meet expectation / exceeds expectation / exceptional.<br />
                                         b. Weightage percentage to be given between (50-80%) in case monthly productivity report is improvements needed.<br />
-                                        c. Weightage percentage to be given between (Less than 50%) in case monthly productivity report is unsa
-                                </span>
-                                <span style="color: black;">tisfactory.</span>
+                                        c. Weightage percentage to be given between (Less than 50%) in case monthly productivity report is unsatisfactory.</span>
                                 <b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"></span></u></b></p>
                         </td>
                         <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;"></td>
