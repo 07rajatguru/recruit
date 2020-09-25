@@ -236,7 +236,8 @@ class HomeController extends Controller
 
             // Interview Count
             $interviews = Interview::getDashboardInterviews(1,$user_id);
-            $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
+            //$interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
+            $interviews_cnt = sizeof($interviews);
         }
         else if($display_userwise_count) {
 
@@ -269,13 +270,14 @@ class HomeController extends Controller
 
             // Interview Count
             $interviews = Interview::getDashboardInterviews(0,$user_id);
-            $interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user_id);
+            //$interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user_id);
+            $interviews_cnt = sizeof($interviews);
         }
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
-        $viewVariable['interviewCount'] = sizeof($interviews_cnt);
+        $viewVariable['interviewCount'] = $interviews_cnt;
         $viewVariable['jobCount'] = $job;
         $viewVariable['clientCount'] = $client;
         $viewVariable['candidatejoinCount'] = $candidatecount;
@@ -289,7 +291,7 @@ class HomeController extends Controller
         return view('dashboard',$viewVariable);
     }
 
-    public function dashboardMonthwise(){
+    public function dashboardMonthwise() {
 
         $user = \Auth::user();
         $user_id =  \Auth::user()->id;
@@ -348,10 +350,6 @@ class HomeController extends Controller
 
                 // Candidate Join this month
                 $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
-
-                // Interview Count
-                /*$interviews = Interview::getTodayTomorrowsInterviews(1,$user_id);
-                $interviewCount = sizeof($interviews);*/
             }
             else if($display_userwise_count) {
 
@@ -377,10 +375,6 @@ class HomeController extends Controller
 
                 // Candidate Join this month
                 $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
-
-                // Interview Count
-                /*$interviews = Interview::getTodayTomorrowsInterviews(0,$user_id);
-                $interviewCount = sizeof($interviews);*/
             }
 
             $viewVariable = array();
@@ -390,7 +384,6 @@ class HomeController extends Controller
             $viewVariable['year_list'] = $year_array;
             $viewVariable['clientCount'] = $clientCount;
             $viewVariable['jobCount'] = $jobCount;
-            //$viewVariable['interviewCount'] = $interviewCount;
             $viewVariable['associatedCount'] = $associatedCount;
             $viewVariable['interviewAttendCount'] = $interviewAttendCount;
             $viewVariable['candidatejoinCount'] = $candidatejoinCount;
