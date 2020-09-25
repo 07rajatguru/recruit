@@ -200,7 +200,8 @@ class HomeController extends Controller
 
         $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
         $toDos = array();
-        if(isset($todo_ids) && sizeof($todo_ids)>0){
+
+        if(isset($todo_ids) && sizeof($todo_ids)>0) {
             $toDos = ToDos::getAllTodosdash($todo_ids,7);
         }
 
@@ -211,74 +212,64 @@ class HomeController extends Controller
         if($display_all_count) {
 
             // Client Count
-
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
             ->whereRaw('YEAR(created_at) = ?',[$year])->count();
 
             // Job Count
-
             $job_response = JobOpen::getAllJobs(1,$user_id);
             $job = sizeof($job_response);
-
-            // Interview Count
-
-            $interviews = Interview::getDashboardInterviews(1,$user_id);
-            $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
 
             // Cvs Associated this month
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
             $associate_count = $associate_monthly_response['cvs_cnt'];
 
+            // Cvs Shortlisted this month
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+
             // Interview Attended this month
-
-            /*$interview_attend = DB::table('interview')
-            ->whereRaw('MONTH(interview_date) = ?',[$month])
-            ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();*/
-
             $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
             $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
-
             $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+
+            // Interview Count
+            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
         }
         else if($display_userwise_count) {
 
             // Client Count
-
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
             ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)->count();
 
             // Job Count
-
             $job_response = JobOpen::getAllJobs(0,$user_id);
             $job = sizeof($job_response);
 
-            // Interview Count
-
-            $interviews = Interview::getDashboardInterviews(0,$user_id);
-            $interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user_id);
-
             // Cvs Associated this month
-
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
             $associate_count = $associate_monthly_response['cvs_cnt'];
 
+            // Cvs Associated this month
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
+
+            // Cvs Shortlisted this month
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+
             // Interview Attended this month
-
-            /*$interview_attend = DB::table('interview')
-            ->whereRaw('MONTH(interview_date) = ?',[$month])
-            ->whereRaw('YEAR(interview_date) = ?',[$year])
-            ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();*/
-
             $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
             $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
-
             $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+
+            // Interview Count
+            $interviews = Interview::getDashboardInterviews(0,$user_id);
+            $interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user_id);
         }
 
         $viewVariable = array();
@@ -290,6 +281,7 @@ class HomeController extends Controller
         $viewVariable['candidatejoinCount'] = $candidatecount;
         $viewVariable['associatedCount'] = $associate_count;
         $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['shortlisted_count'] = $shortlisted_count;
         $viewVariable['date'] = $date;
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
@@ -335,74 +327,60 @@ class HomeController extends Controller
             if($display_all_count) {
 
                 // Client Count
-
-                $clientCount = DB::table('client_basicinfo')->whereRaw('MONTH(created_at) = ?',[$month])
+                $clientCount = DB::table('client_basicinfo')
+                ->whereRaw('MONTH(created_at) = ?',[$month])
                 ->whereRaw('YEAR(created_at) = ?',[$year])->count();
 
                 // Job Count
-
                 $job_response = JobOpen::getAllJobs(1,$user_id);
                 $jobCount = sizeof($job_response);
 
-                // Interview Count
-
-                $interviews = Interview::getTodayTomorrowsInterviews(1,$user_id);
-                $interviewCount = sizeof($interviews);
-
                 // Cvs Associated this month
-
                 $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
                 $associatedCount = $associate_monthly_response['cvs_cnt'];
 
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+
                 // Interview Attended this month
-
-                /*$interviewAttendCount = DB::table('interview')
-                ->whereRaw('MONTH(interview_date) = ?',[$month])
-                ->whereRaw('YEAR(interview_date) = ?',[$year])->where('status','=','Attended')->count();*/
-
                 $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
                 $interviewAttendCount = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-
                 $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+
+                // Interview Count
+                /*$interviews = Interview::getTodayTomorrowsInterviews(1,$user_id);
+                $interviewCount = sizeof($interviews);*/
             }
             else if($display_userwise_count) {
 
                 // Client Count
-
                 $clientCount = DB::table('client_basicinfo')
-                ->whereRaw('MONTH(created_at) = ?',[$month])
-                ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)->count();
+                ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
+                ->where('account_manager_id',$user_id)->count();
 
                 // Job Count
-
                 $job_response = JobOpen::getAllJobs(0,$user_id);
                 $jobCount = sizeof($job_response);
 
-                // Interview Count
-
-                $interviews = Interview::getTodayTomorrowsInterviews(0,$user_id);
-                $interviewCount = sizeof($interviews);
-
                 // Cvs Associated this month
-
                 $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
                 $associatedCount = $associate_monthly_response['cvs_cnt'];
 
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+
                 // Interview Attended this month
-
-                /*$interviewAttendCount = DB::table('interview')
-                ->whereRaw('MONTH(interview_date) = ?',[$month])
-                ->whereRaw('YEAR(interview_date) = ?',[$year])
-                ->where('interview_owner_id',$user_id)->where('status','=','Attended')->count();*/
-
                 $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
                 $interviewAttendCount = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-
                 $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+
+                // Interview Count
+                /*$interviews = Interview::getTodayTomorrowsInterviews(0,$user_id);
+                $interviewCount = sizeof($interviews);*/
             }
 
             $viewVariable = array();
@@ -412,10 +390,11 @@ class HomeController extends Controller
             $viewVariable['year_list'] = $year_array;
             $viewVariable['clientCount'] = $clientCount;
             $viewVariable['jobCount'] = $jobCount;
-            $viewVariable['interviewCount'] = $interviewCount;
+            //$viewVariable['interviewCount'] = $interviewCount;
             $viewVariable['associatedCount'] = $associatedCount;
             $viewVariable['interviewAttendCount'] = $interviewAttendCount;
             $viewVariable['candidatejoinCount'] = $candidatejoinCount;
+            $viewVariable['shortlisted_count'] = $shortlisted_count;
 
             return view('dashboardmonthwise',$viewVariable);
         }

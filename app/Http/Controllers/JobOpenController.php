@@ -3578,4 +3578,29 @@ class JobOpenController extends Controller
 
         return view('adminlte::jobopen.alljobs_associated_candidate',compact('candidateDetails','posting_title','count'));
     }
+
+    public function shortlistedCVS($month,$year) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        if($all_jobs_perm) {
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year);
+            $count = sizeof($response);
+        }
+        else if($user_jobs_perm) {
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise($user_id,$month,$year);
+            $count = sizeof($response);
+        }
+        else {
+            $response = '';
+            $count = '';
+        }  
+
+        $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
+        return view ('adminlte::jobopen.shortlistedcvs',compact('response','count','short_month_name','year'));
+    }
 }

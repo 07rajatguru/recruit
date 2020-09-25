@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="col-lg-2 col-xs-4">
+        {{--<div class="col-lg-2 col-xs-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3> {{ $interviewCount or 0}} </h3>
@@ -87,7 +87,7 @@
                 </div>
                 <a href="/todaytomorrow" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
-        </div>
+        </div>--}}
 
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-maroon">
@@ -99,6 +99,19 @@
                     <i class="ion ion-pie-graph"></i>
                 </div>
                 <a href="/associatedcvs/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-xs-4">
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3> {{ $shortlisted_count or 0}} </h3>
+                    <p>No. of CVS shortlisted this month</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="/shortlistedcvs/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

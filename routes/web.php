@@ -1190,6 +1190,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@associatedCVS',
     ]);
 
+    // Get list of Shortlisted cvs
+    Route::get('shortlistedcvs/{month}/{year}', [
+        'as' => 'jobopen.shortlistedcvs',
+        'uses' => 'JobOpenController@shortlistedCVS',
+    ]);
+
     // Associated candidate mail route
     Route::post('/jobs/checkids',[
         'as' => 'jobs.checkids',

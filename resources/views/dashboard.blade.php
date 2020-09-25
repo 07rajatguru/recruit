@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="col-lg-2 col-xs-4">
+        {{--<div class="col-lg-2 col-xs-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3> {{ $interviewCount or 0}} </h3>
@@ -71,7 +71,7 @@
                 </div>
                 <a href="todaytomorrow" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
-        </div>
+        </div>--}}
 
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-maroon">
@@ -83,6 +83,19 @@
                     <i class="ion ion-pie-graph"></i>
                 </div>
                 <a href="/associatedcvs/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-xs-4">
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3> {{ $shortlisted_count or 0}} </h3>
+                    <p>No. of CVS shortlisted this month</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="/shortlistedcvs/{{ $month }}/{{ $year }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -165,7 +178,7 @@
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Today's and Tomorrow's Interview</h3>
+                    <h3 class="box-title">Today's and Tomorrow's Interview ({{ $interviewCount }})</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -181,7 +194,6 @@
                             <tr>
                                 <th width="180px" style="border: 1px solid #00c0ef;">Posting Title</th>
                                 <th style="border: 1px solid #00c0ef;">Candidate Name</th>
-                                <!-- <th>Candidate Contact No.</th> -->
                                 <th style="border: 1px solid #00c0ef;">Contact No.</th>
                                 <th width="160px" style="border: 1px solid #00c0ef;">Time</th>
                             </tr>
@@ -190,7 +202,6 @@
                             @if(isset($interviews) && sizeof($interviews) > 0)
                                 @foreach($interviews as $interview)
                                     <tr>
-                                        <!-- <td>{{ $interview->client_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td> -->
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}} </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->contact }}</td>
@@ -199,7 +210,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="3">No Interviews for Today</td>
+                                    <td colspan="4">No Interviews for Today</td>
                                 </tr>
                             @endif
                             </tbody>
@@ -210,7 +221,7 @@
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
                     <a href="interview/create" class="btn btn-sm btn-info btn-flat pull-left">Add New Interview</a>
-                    <a href="interview" class="btn btn-sm btn-default btn-flat pull-right">View All Interviews</a>
+                    <a href="todaytomorrow" class="btn btn-sm btn-default btn-flat pull-right">View All Interviews</a>
                 </div>
                 <!-- /.box-footer -->
             </div>
