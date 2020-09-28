@@ -664,10 +664,10 @@
                         <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                         </td>
                         <td width="161" colspan="2" valign="bottom" style="width: 120.5pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                            <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">5 Late In and Early Go</span>
+                            <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">4 Late In and Early Go</span>
                         </td>
                         <td width="184" colspan="2" valign="bottom" style="width: 137.85pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                            <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">Eligible for 1 Late in / Early Go</span>
+                            <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">Eligible for 2 Late in / Early Go</span>
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                             <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">All Saturday 7 PM</span>

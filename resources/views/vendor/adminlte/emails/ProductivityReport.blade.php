@@ -556,9 +556,7 @@
                                     <span style="font-size: 12.0pt;color: black;"> <br />
                                         a. Weightage percentage to be given between (80-100%) in case monthly productivity report is meet expectation / exceeds expectation / exceptional.<br />
                                         b. Weightage percentage to be given between (50-80%) in case monthly productivity report is improvements needed.<br />
-                                        c. Weightage percentage to be given between (Less than 50%) in case monthly productivity report is unsa
-                                    </span>
-                                    <span style="color: black;">tisfactory.</span>
+                                        c. Weightage percentage to be given between (Less than 50%) in case monthly productivity report is unsatisfactory.</span>
                                     <b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"></span></u></b></p>
                                 </td>
                                 <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;"></td>
@@ -594,10 +592,10 @@
                                 <td width="69" valign="bottom" style="width: 51.85pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 </td>
                                 <td width="161" colspan="2" valign="bottom" style="width: 120.5pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                    <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">5 Late In and Early Go</span>
+                                    <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">4 Late In and Early Go</span>
                                 </td>
                                 <td width="184" colspan="2" valign="bottom" style="width: 137.85pt;border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
-                                    <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">Eligible for 1 Late in / Early Go</span>
+                                    <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">Eligible for 2 Late in / Early Go</span>
                                 </td>
                                 <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1.0pt;border-right: solid black 1.0pt;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                     <span style="font-size: 10.0pt;font-family: Arial, sans-serif;">All Saturday 7 PM</span>
