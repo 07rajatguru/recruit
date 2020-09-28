@@ -301,13 +301,16 @@ class JobAssociateCandidates extends Model
         return $job_cvs_res;
     }*/
 
-    public static function getProductivityReportCVCount($user_id,$from_date=NULL,$to_date=NULL) {
+    public static function getProductivityReportCVCount($user_id=0,$from_date=NULL,$to_date=NULL) {
         
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
         $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
        
@@ -321,13 +324,16 @@ class JobAssociateCandidates extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportShortlistedCount($user_id,$from_date=NULL,$to_date=NULL) {
+    public static function getProductivityReportShortlistedCount($user_id=0,$from_date=NULL,$to_date=NULL) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('job_associate_candidates.shortlisted_date','>=',$from_date);
         $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
 
@@ -343,13 +349,16 @@ class JobAssociateCandidates extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportSelectedCount($user_id,$from_date=NULL,$to_date=NULL) {
+    public static function getProductivityReportSelectedCount($user_id=0,$from_date=NULL,$to_date=NULL) {
 
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('job_associate_candidates.selected_date','>=',$from_date);
         $query = $query->where('job_associate_candidates.selected_date','<=',$to_date);
 

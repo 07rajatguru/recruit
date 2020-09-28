@@ -935,13 +935,16 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getProductivityReportInterviewCount($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportInterviewCount($user_id=0,$from_date=NULL,$to_date=NULL){
 
         $query = Interview::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
         $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('interview.interview_date','>=',$from_date);
         $query = $query->where('interview.interview_date','<=',$to_date);
 

@@ -2094,6 +2094,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-productivity-report-of-loggedin-user']
     ]);
 
+    Route::any('master-productivity-report',[
+        'as' => 'master-productivity.report',
+        'uses' => 'ReportController@masterProductivityReport',
+        'middleware' => ['permission:display-productivity-report-of-all-users']
+    ]);
+
     // Report End
 
     // Vendors start

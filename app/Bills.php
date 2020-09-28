@@ -1599,14 +1599,17 @@ class Bills extends Model
         return $res;
     }
 
-    public static function getProductivityReportOfferAcceptanceRatio($user_id,$from_date=NULL,$to_date=NULL) {
+    public static function getProductivityReportOfferAcceptanceRatio($user_id=0,$from_date=NULL,$to_date=NULL) {
 
         $query = Bills::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
         $query = $query->leftjoin('bills_date','bills_date.bills_id','=','bills.id');
         $query = $query->select(\DB::raw("COUNT(bills.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('bills_date.forecasting_date','>=',$from_date);
         $query = $query->where('bills_date.forecasting_date','<=',$to_date);
 
@@ -1621,14 +1624,17 @@ class Bills extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportJoiningRatio($user_id,$from_date=NULL,$to_date=NULL) {
+    public static function getProductivityReportJoiningRatio($user_id=0,$from_date=NULL,$to_date=NULL) {
 
         $query = Bills::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
         $query = $query->leftjoin('bills_date','bills_date.bills_id','=','bills.id');
         $query = $query->select(\DB::raw("COUNT(bills.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('bills_date.recovery_date','>=',$from_date);
         $query = $query->where('bills_date.recovery_date','<=',$to_date);
 
@@ -1643,14 +1649,17 @@ class Bills extends Model
         return $cnt;  
     }
 
-    public static function getProductivityReportJoiningSuccessRatio($user_id,$from_date=NULL,$to_date=NULL) {
+    public static function getProductivityReportJoiningSuccessRatio($user_id=0,$from_date=NULL,$to_date=NULL) {
 
         $query = Bills::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
         $query = $query->leftjoin('bills_date','bills_date.bills_id','=','bills.id');
         $query = $query->select(\DB::raw("COUNT(bills.candidate_id) as count"));
 
-        $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
         $query = $query->where('bills_date.joining_success_date','>=',$from_date);
         $query = $query->where('bills_date.joining_success_date','<=',$to_date);
 

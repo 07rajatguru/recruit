@@ -820,7 +820,7 @@ class ReportController extends Controller
         }
 
         // Get Selected Year
-        $starting_year = '2017';
+        $starting_year = '2020';
         $ending_year = date('Y',strtotime('+5 year'));
 
         $year_array = array();
@@ -934,5 +934,383 @@ class ReportController extends Controller
         }
 
         return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name'));
+    }
+
+    public function masterProductivityReport() {
+
+        // get logged in user
+        $user =  \Auth::user();
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $all_perm = $user->can('display-productivity-report-of-all-users');
+
+        if($all_perm) {
+            $users = User::getAllUsers('recruiter');
+        }
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Get Selected Year
+        $starting_year = '2020';
+        $ending_year = date('Y',strtotime('+5 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
+        $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+        $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
+
+        if($selected_month == 'December') {
+
+            $next_year = $year + 1;
+
+            $mondays  = new \DatePeriod(
+                Carbon::parse("first monday of $selected_month $year"),
+                CarbonInterval::week(),
+                Carbon::parse("first monday of $next_month $next_year")
+            );
+        }
+        else {
+
+            $mondays  = new \DatePeriod(
+                Carbon::parse("first monday of $selected_month $year"),
+                CarbonInterval::week(),
+                Carbon::parse("first monday of $next_month $year")
+            );
+        }
+
+        if(isset($users) && sizeof($users) > 0) {
+
+            $i=0;
+            $users_array = array();
+            foreach ($users as $key => $value) {
+                
+                // Get user Bench Mark from master
+                $bench_mark = UserBenchMark::getBenchMarkByUserID($key);
+                $users_array[$key] = $bench_mark;
+            }
+        }
+
+        // Get no of weeks in month & get from date & to date
+        $i=1;
+        $frm_to_date_array = array();
+
+        if(isset($mondays) && $mondays != '') {
+
+            foreach ($mondays as $monday) {
+
+                $no_of_weeks = $i;
+
+                $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
+                $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
+
+                // Get no of cv's associated count in this week
+
+                $frm_to_date_array[$i]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of shortlisted candidate count in this week
+
+                $frm_to_date_array[$i]['shortlisted_cnt'] = JobAssociateCandidates::getProductivityReportShortlistedCount(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of interview of candidates count in this week
+
+                $frm_to_date_array[$i]['interview_cnt'] = Interview::getProductivityReportInterviewCount(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of selected candidate count in this week
+
+                $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of offer acceptance count in this week
+
+                $frm_to_date_array[$i]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of joining count in this week
+
+                $frm_to_date_array[$i]['joining_ratio'] = Bills::getProductivityReportJoiningRatio(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get no of after joining success count in this week
+
+                $frm_to_date_array[$i]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                $i++;
+            }
+        }
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $i=1;
+
+            foreach ($users_array as $key => $value) {
+                    
+                if(isset($value['no_of_resumes']) && $value['no_of_resumes'] != '') {
+
+                    $user_bench_mark[$i]['shortlist_ratio'] = $value['shortlist_ratio'];
+                    $user_bench_mark[$i]['interview_ratio'] = $value['interview_ratio'];
+                    $user_bench_mark[$i]['selection_ratio'] = $value['selection_ratio'];
+                    $user_bench_mark[$i]['offer_acceptance_ratio'] = $value['offer_acceptance_ratio'];
+                    $user_bench_mark[$i]['joining_ratio'] = $value['joining_ratio'];
+                    $user_bench_mark[$i]['after_joining_success_ratio'] = $value['after_joining_success_ratio'];
+
+                    $user_bench_mark[$i]['no_of_resumes_monthly'] = $value['no_of_resumes'];
+                    $user_bench_mark[$i]['no_of_resumes_weekly'] = number_format($value['no_of_resumes'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * $value['shortlist_ratio']/100);
+                    $user_bench_mark[$i]['shortlist_ratio_weekly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * $value['interview_ratio'] / 100);
+                    $user_bench_mark[$i]['interview_ratio_weekly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['selection_ratio_monthly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] * $value['selection_ratio'] / 100);
+                    $user_bench_mark[$i]['selection_ratio_weekly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] * $value['offer_acceptance_ratio'] / 100);
+                    $user_bench_mark[$i]['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['joining_ratio_monthly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] * $value['joining_ratio'] / 100);
+                    $user_bench_mark[$i]['joining_ratio_weekly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * $value['after_joining_success_ratio'] / 100);
+                    $user_bench_mark[$i]['after_joining_success_ratio_weekly'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_monthly'] / $no_of_weeks);
+
+                    $i++;
+                }
+            }
+        }
+
+        if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
+
+            $bench_mark = array();
+            $i=1;
+
+            $shortlist_ratio = '';
+            $interview_ratio = '';
+            $selection_ratio = '';
+            $offer_acceptance_ratio = '';
+            $joining_ratio = '';
+            $after_joining_success_ratio = '';
+
+            $no_of_resumes_monthly = '';
+            $no_of_resumes_weekly = '';
+            $shortlist_ratio_monthly = '';
+            $shortlist_ratio_weekly = '';
+            $interview_ratio_monthly = '';
+            $interview_ratio_weekly = '';
+            $selection_ratio_monthly = '';
+            $selection_ratio_weekly = '';
+            $offer_acceptance_ratio_monthly = '';
+            $offer_acceptance_ratio_weekly = '';
+            $joining_ratio_monthly = '';
+            $joining_ratio_weekly = '';
+            $after_joining_success_ratio_monthly = '';
+            $after_joining_success_ratio_weekly = '';
+
+            foreach ($user_bench_mark as $key => $value) {
+
+                if($shortlist_ratio == '') {
+                    $shortlist_ratio = $value['shortlist_ratio'];
+                }
+                else {
+                    $shortlist_ratio = $shortlist_ratio + $value['shortlist_ratio'];
+                }
+
+                $bench_mark['shortlist_ratio'] = $shortlist_ratio;
+
+                if($interview_ratio == '') {
+                    $interview_ratio = $value['interview_ratio'];
+                }
+                else {
+                    $interview_ratio = $interview_ratio + $value['interview_ratio'];
+                }
+
+                $bench_mark['interview_ratio'] = $interview_ratio;
+
+                if($selection_ratio == '') {
+                    $selection_ratio = $value['selection_ratio'];
+                }
+                else {
+                    $selection_ratio = $selection_ratio + $value['selection_ratio'];
+                }
+
+                $bench_mark['selection_ratio'] = $selection_ratio;
+
+                if($offer_acceptance_ratio == '') {
+                    $offer_acceptance_ratio = $value['offer_acceptance_ratio'];
+                }
+                else {
+                    $offer_acceptance_ratio = $offer_acceptance_ratio + $value['offer_acceptance_ratio'];
+                }
+
+                $bench_mark['offer_acceptance_ratio'] = $offer_acceptance_ratio;
+
+                if($joining_ratio == '') {
+                    $joining_ratio = $value['joining_ratio'];
+                }
+                else {
+                    $joining_ratio = $joining_ratio + $value['joining_ratio'];
+                }
+
+                $bench_mark['joining_ratio'] = $joining_ratio;
+
+                if($after_joining_success_ratio == '') {
+                    $after_joining_success_ratio = $value['after_joining_success_ratio'];
+                }
+                else {
+                    $after_joining_success_ratio = $after_joining_success_ratio + $value['after_joining_success_ratio'];
+                }
+
+                $bench_mark['after_joining_success_ratio'] = $after_joining_success_ratio;
+
+                if($no_of_resumes_monthly == '') {
+                    $no_of_resumes_monthly = $value['no_of_resumes_monthly'];
+                }
+                else {
+                    $no_of_resumes_monthly = $no_of_resumes_monthly + $value['no_of_resumes_monthly'];
+                }
+
+                $bench_mark['no_of_resumes_monthly'] = $no_of_resumes_monthly;
+
+                if($no_of_resumes_weekly == '') {
+                    $no_of_resumes_weekly = $value['no_of_resumes_weekly'];
+                }
+                else {
+                    $no_of_resumes_weekly = $no_of_resumes_weekly + $value['no_of_resumes_weekly'];
+                }
+
+                $bench_mark['no_of_resumes_weekly'] = $no_of_resumes_weekly;
+
+                if($shortlist_ratio_monthly == '') {
+                    $shortlist_ratio_monthly = $value['shortlist_ratio_monthly'];
+                }
+                else {
+                    $shortlist_ratio_monthly = $shortlist_ratio_monthly + $value['shortlist_ratio_monthly'];
+                }
+
+                $bench_mark['shortlist_ratio_monthly'] = $shortlist_ratio_monthly;
+
+                if($shortlist_ratio_weekly == '') {
+                    $shortlist_ratio_weekly = $value['shortlist_ratio_weekly'];
+                }
+                else {
+                    $shortlist_ratio_weekly = $shortlist_ratio_weekly + $value['shortlist_ratio_weekly'];
+                }
+
+                $bench_mark['shortlist_ratio_weekly'] = $shortlist_ratio_weekly;
+
+                if($interview_ratio_monthly == '') {
+                    $interview_ratio_monthly = $value['interview_ratio_monthly'];
+                }
+                else {
+                    $interview_ratio_monthly = $interview_ratio_monthly + $value['interview_ratio_monthly'];
+                }
+
+                $bench_mark['interview_ratio_monthly'] = $interview_ratio_monthly;
+
+                if($interview_ratio_weekly == '') {
+                    $interview_ratio_weekly = $value['interview_ratio_weekly'];
+                }
+                else {
+                    $interview_ratio_weekly = $interview_ratio_weekly + $value['interview_ratio_weekly'];
+                }
+
+                $bench_mark['interview_ratio_weekly'] = $interview_ratio_weekly;
+
+                if($selection_ratio_monthly == '') {
+                    $selection_ratio_monthly = $value['selection_ratio_monthly'];
+                }
+                else {
+                    $selection_ratio_monthly = $selection_ratio_monthly + $value['selection_ratio_monthly'];
+                }
+
+                $bench_mark['selection_ratio_monthly'] = $selection_ratio_monthly;
+
+                if($selection_ratio_weekly == '') {
+                    $selection_ratio_weekly = $value['selection_ratio_weekly'];
+                }
+                else {
+                    $selection_ratio_weekly = $selection_ratio_weekly + $value['selection_ratio_weekly'];
+                }
+
+                $bench_mark['selection_ratio_weekly'] = $selection_ratio_weekly;
+
+                if($offer_acceptance_ratio_monthly == '') {
+                    $offer_acceptance_ratio_monthly = $value['offer_acceptance_ratio_monthly'];
+                }
+                else {
+                    $offer_acceptance_ratio_monthly = $offer_acceptance_ratio_monthly + $value['offer_acceptance_ratio_monthly'];
+                }
+
+                $bench_mark['offer_acceptance_ratio_monthly'] = $offer_acceptance_ratio_monthly;
+
+                if($offer_acceptance_ratio_weekly == '') {
+                    $offer_acceptance_ratio_weekly = $value['offer_acceptance_ratio_weekly'];
+                }
+                else {
+                    $offer_acceptance_ratio_weekly = $offer_acceptance_ratio_weekly + $value['offer_acceptance_ratio_weekly'];
+                }
+
+                $bench_mark['offer_acceptance_ratio_weekly'] = $offer_acceptance_ratio_weekly;
+
+                if($joining_ratio_monthly == '') {
+                    $joining_ratio_monthly = $value['joining_ratio_monthly'];
+                }
+                else {
+                    $joining_ratio_monthly = $joining_ratio_monthly + $value['joining_ratio_monthly'];
+                }
+
+                $bench_mark['joining_ratio_monthly'] = $joining_ratio_monthly;
+
+                if($joining_ratio_weekly == '') {
+                    $joining_ratio_weekly = $value['joining_ratio_weekly'];
+                }
+                else {
+                    $joining_ratio_weekly = $joining_ratio_weekly + $value['joining_ratio_weekly'];
+                }
+
+                $bench_mark['joining_ratio_weekly'] = $joining_ratio_weekly;
+
+                if($after_joining_success_ratio_monthly == '') {
+                    $after_joining_success_ratio_monthly = $value['after_joining_success_ratio_monthly'];
+                }
+                else {
+                    $after_joining_success_ratio_monthly = $after_joining_success_ratio_monthly + $value['after_joining_success_ratio_monthly'];
+                }
+
+                $bench_mark['after_joining_success_ratio_monthly'] = $after_joining_success_ratio_monthly;
+
+                if($after_joining_success_ratio_weekly == '') {
+                    $after_joining_success_ratio_weekly = $value['after_joining_success_ratio_weekly'];
+                }
+                else {
+                    $after_joining_success_ratio_weekly = $after_joining_success_ratio_weekly + $value['after_joining_success_ratio_weekly'];
+                }
+
+                $bench_mark['after_joining_success_ratio_weekly'] = $after_joining_success_ratio_weekly;
+
+                $i++;
+            }
+        }
+        
+        //print_r($bench_mark);exit;
+
+        return view('adminlte::reports.master-productivity-report',compact('users','bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }
 }

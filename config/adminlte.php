@@ -352,6 +352,11 @@ return [
                    'icon' => 'circle-o',
                ],
                [
+                    'text' => 'Master Productivity Report',
+                    'url'  => 'master-productivity-report',
+                    'icon' => 'circle-o',
+               ],
+               [
                    'text' => 'Person-wise report',
                    'url'  => 'personwise-report',
                    'icon' => 'circle-o',
@@ -527,7 +532,7 @@ return [
                     'text' => 'User Bench Mark',
                     'url'  => 'user-bench-mark',
                     'icon' => 'circle-o',
-                ]
+                ],
                     /* [
                          'text' => 'Permissions',
                          'url'  => 'permissions',
