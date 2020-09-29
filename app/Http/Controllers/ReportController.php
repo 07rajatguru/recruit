@@ -26,7 +26,7 @@ class ReportController extends Controller
         $userwise_perm = $user->can('display-daily-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-daily-report-of-loggedin-user-team');
 
-        if($all_perm){
+        if($all_perm) {
             $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
         else if($userwise_perm || $teamwise_perm) {
@@ -790,7 +790,7 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
 
         if($all_perm) {
-            $users = User::getAllUsers('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id,'recruiter');
@@ -945,7 +945,7 @@ class ReportController extends Controller
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         if($all_perm) {
-            $users = User::getAllUsers('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
         }
         // Get Selected Month
         $month_array = array();

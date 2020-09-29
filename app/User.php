@@ -506,17 +506,21 @@ class User extends Authenticatable
     public static function getAssignedUsers($user_id,$type) {
 
         $user_query = User::query();
-        if($type!=NULL){
+
+        $status = 'Inactive';
+        $status_array = array($status);
+        
+        if($type!=NULL) {
             $user_query = $user_query->where('type','=',$type);
         }
 
-        $user_query = $user_query->where(function($user_query) use ($user_id){
+        $user_query = $user_query->where(function($user_query) use ($user_id) {
             $user_query = $user_query->where('reports_to',$user_id);
             $user_query = $user_query->orwhere('floor_incharge',$user_id);
             $user_query = $user_query->orwhere('id',$user_id);
         });
 
-        $user_query = $user_query->where('status','like','Active');
+        $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
