@@ -73,6 +73,9 @@ class User extends Authenticatable
 
         $status = 'Inactive';
         $status_array = array($status);
+
+        $client_type = array('client');
+        
         $user_query = User::query();
 
         if($type!=NULL){
@@ -81,6 +84,7 @@ class User extends Authenticatable
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();

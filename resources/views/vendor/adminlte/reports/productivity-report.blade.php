@@ -851,8 +851,11 @@
             </table>
         </div>
     </div>
-    {{-- @else
-        <center><h3>Please add User Bench mark for {{ $user_name}}</h3></center> --}}
+    @else
+        @if($user_name == '')
+        @else
+            <center><h4>Please add User Bench Mark.</h4></center>
+        @endif
     @endif
 @stop
 

@@ -790,10 +790,10 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
 
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin();
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -977,7 +977,7 @@ class ReportController extends Controller
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin();
         }
         // Get Selected Month
         $month_array = array();
