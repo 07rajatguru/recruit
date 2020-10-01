@@ -799,14 +799,11 @@ class ReportController extends Controller
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
 
             $user_id = $_POST['users_id'];
-            $select_user_role_id = User::getRoleIdByUserId($user_id);
-            $role_name = Role::getUserRoleNameById($select_user_role_id['role_id']);
             $user_name = User::getUserNameById($user_id);
         }
         else {
             
             $user_id = $user_id;
-            $role_name = '';
             $user_name = '';
         }
 
@@ -838,11 +835,11 @@ class ReportController extends Controller
         if (isset($_POST['year']) && $_POST['year']!=0) {
             $year = $_POST['year'];
         }
-        else{
+        else {
             $year = date('Y');
         }
 
-        $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+        /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
         $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
 
         if($selected_month == 'December') {
@@ -850,7 +847,7 @@ class ReportController extends Controller
             $next_year = $year + 1;
 
             $mondays  = new \DatePeriod(
-                Carbon::parse("first monday of $selected_month $year"),
+                Carbon::parse("first day of $selected_month $year"),
                 CarbonInterval::week(),
                 Carbon::parse("first monday of $next_month $next_year")
             );
@@ -858,24 +855,59 @@ class ReportController extends Controller
         else {
 
             $mondays  = new \DatePeriod(
-                Carbon::parse("first monday of $selected_month $year"),
+                Carbon::parse("first day of $selected_month $year"),
                 CarbonInterval::week(),
                 Carbon::parse("first monday of $next_month $year")
             );
+        }*/
+
+        $dates1 = array();
+        $dates2 = array();
+
+        $week = date("W", strtotime($year . "-" . $month ."-01")); // weeknumber of first day of month
+
+        $a = date("Y-m-d", strtotime($year . "-" . $month ."-01")); // first day of month
+        array_push($dates1,$a);
+
+        $unix = strtotime($year."W".$week ."+1 week");
+
+        While(date("m", $unix) == $month) { // keep looping/output of while it's correct month
+
+            $b = date("Y-m-d", $unix-86400); // Sunday of previous week
+            array_push($dates2,$b);
+
+            $c = date("Y-m-d", $unix); // this week's monday
+            array_push($dates1,$c);
+
+            $unix = $unix + (86400*7);
+        }
+
+        $d = date("Y-m-d", strtotime("last day of ".$year . "-" . $month)); //echo last day of month
+
+        array_push($dates2,$d);
+
+        $dates_array = array();
+
+        foreach ($dates1 as $key => $val) {
+
+            $val2 = $dates2[$key];
+            $dates_array[$key] = $val."--".$val2;
         }
 
         // Get no of weeks in month & get from date & to date
         $i=1;
         $frm_to_date_array = array();
 
-        if(isset($mondays) && $mondays != '') {
+        if(isset($dates_array) && $dates_array != '') {
 
-            foreach ($mondays as $monday) {
+            foreach ($dates_array as $key => $value) {
 
                 $no_of_weeks = $i;
 
-                $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
-                $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
+                $frm_to_array = explode("--", $value);
+
+                $frm_to_date_array[$i]['from_date'] = $frm_to_array[0];
+                $frm_to_date_array[$i]['to_date'] = $frm_to_array[1];
 
                 // Get no of cv's associated count in this week
 
@@ -933,7 +965,7 @@ class ReportController extends Controller
             $user_bench_mark['after_joining_success_ratio_weekly'] = number_format($user_bench_mark['after_joining_success_ratio_monthly'] / $no_of_weeks);
         }
 
-        return view('adminlte::reports.productivity-report',compact('user_id','role_name','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name'));
+        return view('adminlte::reports.productivity-report',compact('user_id','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name'));
     }
 
     public function masterProductivityReport() {
@@ -976,7 +1008,7 @@ class ReportController extends Controller
             $year = date('Y');
         }
 
-        $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+        /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
         $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
 
         if($selected_month == 'December') {
@@ -996,6 +1028,39 @@ class ReportController extends Controller
                 CarbonInterval::week(),
                 Carbon::parse("first monday of $next_month $year")
             );
+        }*/
+
+        $dates1 = array();
+        $dates2 = array();
+
+        $week = date("W", strtotime($year . "-" . $month ."-01")); // weeknumber of first day of month
+
+        $a = date("Y-m-d", strtotime($year . "-" . $month ."-01")); // first day of month
+        array_push($dates1,$a);
+
+        $unix = strtotime($year."W".$week ."+1 week");
+
+        While(date("m", $unix) == $month) { // keep looping/output of while it's correct month
+
+            $b = date("Y-m-d", $unix-86400); // Sunday of previous week
+            array_push($dates2,$b);
+
+            $c = date("Y-m-d", $unix); // this week's monday
+            array_push($dates1,$c);
+
+            $unix = $unix + (86400*7);
+        }
+
+        $d = date("Y-m-d", strtotime("last day of ".$year . "-" . $month)); //echo last day of month
+
+        array_push($dates2,$d);
+
+        $dates_array = array();
+
+        foreach ($dates1 as $key => $val) {
+
+            $val2 = $dates2[$key];
+            $dates_array[$key] = $val."--".$val2;
         }
 
         if(isset($users) && sizeof($users) > 0) {
@@ -1014,14 +1079,16 @@ class ReportController extends Controller
         $i=1;
         $frm_to_date_array = array();
 
-        if(isset($mondays) && $mondays != '') {
+        if(isset($dates_array) && $dates_array != '') {
 
-            foreach ($mondays as $monday) {
+            foreach ($dates_array as $key => $value) {
 
                 $no_of_weeks = $i;
 
-                $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
-                $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
+                $frm_to_array = explode("--", $value);
+
+                $frm_to_date_array[$i]['from_date'] = $frm_to_array[0];
+                $frm_to_date_array[$i]['to_date'] = $frm_to_array[1];
 
                 // Get no of cv's associated count in this week
 
@@ -1308,9 +1375,6 @@ class ReportController extends Controller
                 $i++;
             }
         }
-        
-        //print_r($bench_mark);exit;
-
         return view('adminlte::reports.master-productivity-report',compact('users','bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }
 }

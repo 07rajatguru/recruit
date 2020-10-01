@@ -765,16 +765,13 @@ class EveryMinute extends Command
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
 
-                $select_user_role_id = User::getRoleIdByUserId($sender_id);
-                $role_name = Role::getUserRoleNameById($select_user_role_id['role_id']);
-
                 // Get user Bench Mark from master
                 $user_bench_mark = UserBenchMark::getBenchMarkByUserID($sender_id);
 
                 $year = date('Y');
                 $month = date('m');
 
-                $selected_month = date('F', mktime(0, 0, 0, $month, 10));
+                /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
                 $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
 
                 if($selected_month == 'December') {
@@ -794,47 +791,73 @@ class EveryMinute extends Command
                         CarbonInterval::week(),
                         Carbon::parse("first monday of $next_month $year")
                     );
+                }*/
+
+                $dates1 = array();
+                $dates2 = array();
+
+                $week = date("W", strtotime($year . "-" . $month ."-01"));
+                $a = date("Y-m-d", strtotime($year . "-" . $month ."-01"));
+                array_push($dates1,$a);
+
+                $unix = strtotime($year."W".$week ."+1 week");
+
+                While(date("m", $unix) == $month) {
+
+                    $b = date("Y-m-d", $unix-86400);
+                    array_push($dates2,$b);
+
+                    $c = date("Y-m-d", $unix);
+                    array_push($dates1,$c);
+
+                    $unix = $unix + (86400*7);
+                }
+
+                $d = date("Y-m-d", strtotime("last day of ".$year . "-" . $month));
+                array_push($dates2,$d);
+
+                $dates_array = array();
+
+                foreach ($dates1 as $key => $val) {
+
+                    $val2 = $dates2[$key];
+                    $dates_array[$key] = $val."--".$val2;
                 }
 
                 // Get no of weeks in month & get from date & to date
                 $i=1;
                 $frm_to_date_array = array();
 
-                if(isset($mondays) && $mondays != '') {
+                if(isset($dates_array) && $dates_array != '') {
 
-                    foreach ($mondays as $monday) {
+                    foreach ($dates_array as $key => $value) {
 
                         $no_of_weeks = $i;
 
-                        $frm_to_date_array[$i]['from_date'] = date('Y-m-d',strtotime($monday));
-                        $frm_to_date_array[$i]['to_date'] = date('Y-m-d',strtotime("$monday +6days"));
+                        $frm_to_array = explode("--", $value);
+
+                        $frm_to_date_array[$i]['from_date'] = $frm_to_array[0];
+                        $frm_to_date_array[$i]['to_date'] = $frm_to_array[1];
 
                         // Get no of cv's associated count in this week
-
                         $frm_to_date_array[$i]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         // Get no of shortlisted candidate count in this week
-
                         $frm_to_date_array[$i]['shortlisted_cnt'] = JobAssociateCandidates::getProductivityReportShortlistedCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         // Get no of interview of candidates count in this week
-
                         $frm_to_date_array[$i]['interview_cnt'] = Interview::getProductivityReportInterviewCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         // Get no of selected candidate count in this week
-
                         $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         // Get no of offer acceptance count in this week
-
                         $frm_to_date_array[$i]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         // Get no of joining count in this week
-
                         $frm_to_date_array[$i]['joining_ratio'] = Bills::getProductivityReportJoiningRatio($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         // Get no of after joining success count in this week
-
                         $frm_to_date_array[$i]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                         $i++;
@@ -869,7 +892,6 @@ class EveryMinute extends Command
 
                 $user_details = User::getAllDetailsByUserID($sender_id);
 
-                $input['role_name'] = $role_name;
                 $input['user_bench_mark'] = $user_bench_mark;
                 $input['no_of_weeks'] = $no_of_weeks;
                 $input['frm_to_date_array'] = $frm_to_date_array;
