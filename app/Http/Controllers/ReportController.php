@@ -793,7 +793,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin();
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id);
+            $users = User::getAssignedUsers($user_id,NULL);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {

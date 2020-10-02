@@ -507,7 +507,7 @@ class User extends Authenticatable
         return $user_floor_incharge;
     }
 
-    public static function getAssignedUsers($user_id,$type) {
+    public static function getAssignedUsers($user_id=0,$type=NULL) {
 
         $user_query = User::query();
 
