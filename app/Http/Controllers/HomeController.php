@@ -16,6 +16,7 @@ use Excel;
 use DB;
 use Calendar;
 use App\UserRemarks;
+use App\UserBenchMark;
 
 class HomeController extends Controller
 {
@@ -191,6 +192,59 @@ class HomeController extends Controller
 
         $user = \Auth::user();
         $user_id =  \Auth::user()->id;
+
+        $all_perm = $user->can('display-productivity-report-of-all-users');
+
+        if($all_perm) {
+
+            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                $users_array = array();
+                $i=0;
+
+                foreach ($users as $key => $value) {
+                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($key);
+
+                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                    }
+                    else {
+                        $users_array[$i] = $value;
+                    }
+                    $i++;
+                }   
+
+                if(isset($users_array) && sizeof($users_array) > 0) {
+
+                    $users_name_string = implode(", ", $users_array);
+                    $msg = 'Please Add User Benchmark of users : ' . $users_name_string;
+                }
+                else {
+                    $msg = '';
+                }
+            }
+        }
+        else {
+
+            $user_details = User::getAllDetailsByUserID($user_id);
+
+            if($user_details->type == 'recruiter') {
+
+                $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
+
+                if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                    $msg = '';
+                }
+                else {
+                    $msg = "Please Contact to HR for add your benchmark";
+                }
+            }
+            else {
+                $msg = '';
+            }
+        }
+
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
 
@@ -287,6 +341,7 @@ class HomeController extends Controller
         $viewVariable['date'] = $date;
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
+        $viewVariable['msg'] = $msg;
 
         return view('dashboard',$viewVariable);
     }

@@ -32,6 +32,8 @@
     @endif
     <!-- popup -->
 
+    <input type="hidden" name="msg" id="msg" value="{{ $msg }}">
+
     <div class="row">
 
         <div class="col-lg-2 col-xs-4">
@@ -460,6 +462,12 @@
             }
             
             opentoalljob();
+
+            var msg = $("#msg").val();
+
+            if(msg != ''){
+                alert(msg);
+            }
 
         });
 
