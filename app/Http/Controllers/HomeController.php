@@ -218,7 +218,7 @@ class HomeController extends Controller
                 if(isset($users_array) && sizeof($users_array) > 0) {
 
                     $users_name_string = implode(", ", $users_array);
-                    $msg = 'Please Add User Benchmark of users : ' . $users_name_string;
+                    $msg = 'Please Add User Benchmark of Users : ' . $users_name_string;
                 }
                 else {
                     $msg = '';

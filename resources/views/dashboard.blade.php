@@ -441,6 +441,26 @@
         </div>
 
     </div>--}}
+
+    <div id="benchMarkModal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add User Benchmark</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        @if(isset($msg) && $msg != '')
+                            {!! $msg !!}
+                        @endif
+                    </p><br/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('customscripts')
@@ -465,13 +485,13 @@
 
             var msg = $("#msg").val();
 
-            if(msg != ''){
-                alert(msg);
+            if(msg != '') {
+                jQuery("#benchMarkModal").modal('show');
             }
 
         });
 
-        function opentoalljob(){
+        function opentoalljob() {
             var app_url = "{!! env('APP_URL'); !!}";
             $.ajax({
                 url:app_url+'/dashboard/opentoalljob',
