@@ -50,7 +50,7 @@
                 <thead></thead>
                 <tbody>
                     <tr style="height: 15px;">
-                        <td colspan="12" valign="bottom" style="border: solid black 2px;background: rgb(70,189,198);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                        <td colspan="13" valign="bottom" style="border: solid black 2px;background: rgb(70,189,198);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
 
                             <?php 
                                 $full_year =  $year;
@@ -85,6 +85,9 @@
                         </td>
                         <td width="217" rowspan="2" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><b><span style="color: black;">Standard Numbers / <br/>Weekly</span></b></p>
+                        </td>
+                        <td width="217" rowspan="2" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;"><b><span style="color: black;">Standard Numbers / <br/>Daily</span></b></p>
                         </td>
                         <td width="220" colspan="6" valign="bottom" style="width: 164.7pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 2px;background: rgb(191,191,191);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><b><span style="color: black;">Actual Weekly Numbers</span></b></p>
@@ -193,6 +196,13 @@
                                 </span>
                             </p>
                         </td>
+                        <td width="217" valign="bottom" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;">
+                                <span class="no_of_resumes_daily">
+                                    {{ $user_bench_mark['no_of_resumes_daily'] }}
+                                </span>
+                            </p>
+                        </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
@@ -258,6 +268,13 @@
                             <p align="center" style="text-align: center;">
                                 <span class="shortlist_ratio_weekly">
                                     {{ $user_bench_mark['shortlist_ratio_weekly'] }}
+                                </span>
+                            </p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;">
+                                <span class="shortlist_ratio_daily">
+                                    {{ $user_bench_mark['shortlist_ratio_daily'] }}
                                 </span>
                             </p>
                         </td>
@@ -329,6 +346,13 @@
                                 </span>
                             </p>
                         </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;">
+                                <span class="interview_ratio_daily">
+                                    {{ $user_bench_mark['interview_ratio_daily'] }}
+                                </span>
+                            </p>
+                        </td>
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
@@ -394,6 +418,13 @@
                             <p align="center" style="text-align: center;">
                                 <span class="selection_ratio_weekly">
                                     {{ $user_bench_mark['selection_ratio_weekly'] }}
+                                </span>
+                            </p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height:15px;">
+                            <p align="center" style="text-align: center;">
+                                <span class="selection_ratio_daily">
+                                    {{ $user_bench_mark['selection_ratio_daily'] }}
                                 </span>
                             </p>
                         </td>
@@ -466,6 +497,13 @@
                                 </span>
                             </p>
                         </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;">
+                                <span class="offer_acceptance_ratio_daily">
+                                    {{ $user_bench_mark['offer_acceptance_ratio_daily'] }}
+                                </span>
+                            </p>
+                        </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
@@ -531,6 +569,13 @@
                             <p  align="center" style="text-align: center;">
                                 <span class="joining_ratio_weekly">
                                     {{ $user_bench_mark['joining_ratio_weekly'] }}
+                                </span>
+                            </p>
+                        </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p  align="center" style="text-align: center;">
+                                <span class="joining_ratio_daily">
+                                    {{ $user_bench_mark['joining_ratio_daily'] }}
                                 </span>
                             </p>
                         </td>
@@ -602,6 +647,13 @@
                                 </span>
                             </p>
                         </td>
+                        <td width="217" style="width: 163.05pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
+                            <p align="center" style="text-align: center;">
+                                <span class="after_joining_success_ratio_daily">
+                                    {{ $user_bench_mark['after_joining_success_ratio_daily'] }}
+                                </span>
+                            </p>
+                        </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
@@ -646,7 +698,7 @@
                         <td valign="bottom" style="border: solid rgb(204,204,204) 1px;border-top: none;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
-                        <td width="122" valign="bottom" colspan="2" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: rgb(70,189,198);">
+                        <td width="122" valign="bottom" colspan="3" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: rgb(70,189,198);">
                             <center>
                                 <b>Overall Feedback (Meet Expectation / Improvements Needed)</b>
                             </center>
@@ -673,9 +725,10 @@
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
                     </tr>
                     <tr style="height: 15.75pt;">
-                        <td colspan="5" rowspan="16" valign="bottom" style="border: solid black 1.0pt;border-top: none;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
+                        <td colspan="6" rowspan="16" valign="bottom" style="border: solid black 1.0pt;border-top: none;background: rgb(234,209,220);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15.75pt;">
                                 <p>
                                     <b><u><span style="font-family: Arial, sans-serif;color: rgb(204,65,37);"><br /><br />Important Notes: </span></u></b>
                                     <b><u><span style="font-family: Arial, sans-serif;color: rgb(17,85,204);"><br /></span></u></b>
