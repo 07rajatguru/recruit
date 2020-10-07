@@ -1147,31 +1147,24 @@ class ReportController extends Controller
 
                     $user_bench_mark[$i]['no_of_resumes_monthly'] = $value['no_of_resumes'];
                     $user_bench_mark[$i]['no_of_resumes_weekly'] = number_format($value['no_of_resumes'] / $no_of_weeks);
-                    $user_bench_mark[$i]['no_of_resumes_daily'] = number_format($user_bench_mark[$i]['no_of_resumes_weekly'] / 6);
 
                     $user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * $value['shortlist_ratio']/100);
                     $user_bench_mark[$i]['shortlist_ratio_weekly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] / $no_of_weeks);
-                    $user_bench_mark[$i]['shortlist_ratio_daily'] = number_format($user_bench_mark[$i]['shortlist_ratio_weekly'] / 6);
 
                     $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * $value['interview_ratio'] / 100);
                     $user_bench_mark[$i]['interview_ratio_weekly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] / $no_of_weeks);
-                    $user_bench_mark[$i]['interview_ratio_daily'] = number_format($user_bench_mark[$i]['interview_ratio_weekly'] / 6);
 
                     $user_bench_mark[$i]['selection_ratio_monthly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] * $value['selection_ratio'] / 100);
                     $user_bench_mark[$i]['selection_ratio_weekly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] / $no_of_weeks);
-                    $user_bench_mark[$i]['selection_ratio_daily'] = number_format($user_bench_mark[$i]['selection_ratio_weekly'] / 6);
 
                     $user_bench_mark[$i]['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] * $value['offer_acceptance_ratio'] / 100);
                     $user_bench_mark[$i]['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] / $no_of_weeks);
-                    $user_bench_mark[$i]['offer_acceptance_ratio_daily'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_weekly'] / 6);
 
                     $user_bench_mark[$i]['joining_ratio_monthly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] * $value['joining_ratio'] / 100);
                     $user_bench_mark[$i]['joining_ratio_weekly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] / $no_of_weeks);
-                    $user_bench_mark[$i]['joining_ratio_daily'] = number_format($user_bench_mark[$i]['joining_ratio_weekly'] / 6);
 
                     $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * $value['after_joining_success_ratio'] / 100);
                     $user_bench_mark[$i]['after_joining_success_ratio_weekly'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_monthly'] / $no_of_weeks);
-                    $user_bench_mark[$i]['after_joining_success_ratio_daily'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_weekly'] / 6);
 
                     $i++;
                 }
@@ -1292,15 +1285,6 @@ class ReportController extends Controller
 
                 $bench_mark['no_of_resumes_weekly'] = $no_of_resumes_weekly;
 
-                if($no_of_resumes_daily == '') {
-                    $no_of_resumes_daily = $value['no_of_resumes_daily'];
-                }
-                else {
-                    $no_of_resumes_daily = $no_of_resumes_daily + $value['no_of_resumes_daily'];
-                }
-
-                $bench_mark['no_of_resumes_daily'] = $no_of_resumes_daily;
-
                 if($shortlist_ratio_monthly == '') {
                     $shortlist_ratio_monthly = $value['shortlist_ratio_monthly'];
                 }
@@ -1319,14 +1303,6 @@ class ReportController extends Controller
 
                 $bench_mark['shortlist_ratio_weekly'] = $shortlist_ratio_weekly;
 
-                if($shortlist_ratio_daily == '') {
-                    $shortlist_ratio_daily = $value['shortlist_ratio_daily'];
-                }
-                else {
-                    $shortlist_ratio_daily = $shortlist_ratio_daily + $value['shortlist_ratio_daily'];
-                }
-
-                $bench_mark['shortlist_ratio_daily'] = $shortlist_ratio_daily;
 
                 if($interview_ratio_monthly == '') {
                     $interview_ratio_monthly = $value['interview_ratio_monthly'];
@@ -1346,14 +1322,6 @@ class ReportController extends Controller
 
                 $bench_mark['interview_ratio_weekly'] = $interview_ratio_weekly;
 
-                if($interview_ratio_daily == '') {
-                    $interview_ratio_daily = $value['interview_ratio_daily'];
-                }
-                else {
-                    $interview_ratio_daily = $interview_ratio_daily + $value['interview_ratio_daily'];
-                }
-
-                $bench_mark['interview_ratio_daily'] = $interview_ratio_daily;
 
                 if($selection_ratio_monthly == '') {
                     $selection_ratio_monthly = $value['selection_ratio_monthly'];
@@ -1373,14 +1341,6 @@ class ReportController extends Controller
 
                 $bench_mark['selection_ratio_weekly'] = $selection_ratio_weekly;
 
-                if($selection_ratio_daily == '') {
-                    $selection_ratio_daily = $value['selection_ratio_daily'];
-                }
-                else {
-                    $selection_ratio_daily = $selection_ratio_daily + $value['selection_ratio_daily'];
-                }
-
-                $bench_mark['selection_ratio_daily'] = $selection_ratio_daily;
 
                 if($offer_acceptance_ratio_monthly == '') {
                     $offer_acceptance_ratio_monthly = $value['offer_acceptance_ratio_monthly'];
@@ -1400,15 +1360,6 @@ class ReportController extends Controller
 
                 $bench_mark['offer_acceptance_ratio_weekly'] = $offer_acceptance_ratio_weekly;
 
-                if($offer_acceptance_ratio_daily == '') {
-                    $offer_acceptance_ratio_daily = $value['offer_acceptance_ratio_daily'];
-                }
-                else {
-                    $offer_acceptance_ratio_daily = $offer_acceptance_ratio_daily + $value['offer_acceptance_ratio_daily'];
-                }
-
-                $bench_mark['offer_acceptance_ratio_daily'] = $offer_acceptance_ratio_daily;
-
                 if($joining_ratio_monthly == '') {
                     $joining_ratio_monthly = $value['joining_ratio_monthly'];
                 }
@@ -1426,15 +1377,6 @@ class ReportController extends Controller
                 }
 
                 $bench_mark['joining_ratio_weekly'] = $joining_ratio_weekly;
-
-                if($joining_ratio_daily == '') {
-                    $joining_ratio_daily = $value['joining_ratio_daily'];
-                }
-                else {
-                    $joining_ratio_daily = $joining_ratio_daily + $value['joining_ratio_daily'];
-                }
-
-                $bench_mark['joining_ratio_daily'] = $joining_ratio_daily;
 
                 if($after_joining_success_ratio_monthly == '') {
                     $after_joining_success_ratio_monthly = $value['after_joining_success_ratio_monthly'];
@@ -1454,14 +1396,14 @@ class ReportController extends Controller
 
                 $bench_mark['after_joining_success_ratio_weekly'] = $after_joining_success_ratio_weekly;
 
-                if($after_joining_success_ratio_daily == '') {
-                    $after_joining_success_ratio_daily = $value['after_joining_success_ratio_daily'];
-                }
-                else {
-                    $after_joining_success_ratio_daily = $after_joining_success_ratio_daily + $value['after_joining_success_ratio_daily'];
-                }
 
-                $bench_mark['after_joining_success_ratio_daily'] = $after_joining_success_ratio_daily;
+                $bench_mark['no_of_resumes_daily'] = number_format($bench_mark['no_of_resumes_weekly'] / 6);
+                $bench_mark['shortlist_ratio_daily'] = number_format($bench_mark['shortlist_ratio_weekly'] / 6);
+                $bench_mark['interview_ratio_daily'] = number_format($bench_mark['interview_ratio_weekly'] / 6);
+                $bench_mark['selection_ratio_daily'] = number_format($bench_mark['selection_ratio_weekly'] / 6);
+                $bench_mark['offer_acceptance_ratio_daily'] = number_format($bench_mark['offer_acceptance_ratio_weekly'] / 6);
+                $bench_mark['joining_ratio_daily'] = number_format($bench_mark['joining_ratio_weekly'] / 6);
+                $bench_mark['after_joining_success_ratio_daily'] = number_format($bench_mark['after_joining_success_ratio_weekly'] / 6);
 
                 $i++;
             }
