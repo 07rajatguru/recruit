@@ -992,7 +992,7 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
-        $query = $query->join('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
         $query = $query->select('client_basicinfo.*', 'client_address.*' , 'users.name as am_name', 'industry.name as ind_name');
         $query = $query->where('client_basicinfo.id','=',$id);
         $res = $query->first();
