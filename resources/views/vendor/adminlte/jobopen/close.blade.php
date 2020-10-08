@@ -73,27 +73,27 @@
     <div class = "table-responsive">
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>
-        <tr>
-            <th>No</th>
-            <th>Action</th>
-            <th>Status</th>
-            <th>MB</th>
-            <th>Company Name</th>
-            <th>Position Title</th>
-            <th>CA</th>
-            <th>Location</th>
-            <th>Min CTC<br/>(in Lacs)</th>
-            <th>Max CTC<br/>(in Lacs)</th>
-            <th>Added Date</th>
-            <th>No. Of <br/> Positions</th>
-            <th>Contact <br/> Point</th>
-            <th>Edu Qualifications</th>
-            <th>Target Industries</th>
-            <th>Desired Candidate</th>
-        </tr>
+            <tr>
+                <th>No</th>
+                <th>Action</th>
+                <th>Status</th>
+                <th>MB</th>
+                <th>Company Name</th>
+                <th>Position Title</th>
+                <th>CA</th>
+                <th>Location</th>
+                <th>Min CTC<br/>(in Lacs)</th>
+                <th>Max CTC<br/>(in Lacs)</th>
+                <th>Added Date</th>
+                <th>No. Of <br/> Positions</th>
+                <th>Contact <br/> Point</th>
+                <th>Edu Qualifications</th>
+                <th>Target Industries</th>
+                <th>Desired Candidate</th>
+            </tr>
         </thead>
-        <?php $i=0; ?>
         <tbody>
+            
         </tbody>
     </table>
     </div>
