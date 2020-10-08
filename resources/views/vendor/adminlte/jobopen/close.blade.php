@@ -90,46 +90,8 @@
         </tr>
         </thead>
         <?php $i=0; ?>
-        {{--<tbody>
-
-        @foreach($jobList as $key=>$value)
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td>
-                    <a title="Show"  class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
-
-                    @if(isset($value['access']) && $value['access']==1)
-                        <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
-                    @endif
-
-                    @if(isset($value['access']) && $value['access']==1)
-                    @include('adminlte::partials.jobstatus', ['data' => $value, 'name' => 'jobopen','display_name'=>'More Information'])
-                    @endif
-
-                    @if($isSuperAdmin)
-                    @include('adminlte::partials.jobdelete', ['data' => $value, 'name' => 'jobopen','display_name'=>'Job'])
-                    @endif
-
-                </td>
-                <td>{{ $job_priority[$value['priority']] }}</td>
-                <td>{{ $value['am_name'] or '' }}</td>
-                <td style="background-color: {{ $value['color'] }}">{{ $value['display_name'] or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or ''}}</td>
-                <td><a title="Show Associated Candidates" target="_blank" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a></td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['location'] or ''}}</td>
-                <td>{{ $value['min_ctc'] or ''}}</td>
-                <td>{{ $value['max_ctc'] or ''}}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or '' }}</td>
-                <td>{{ $value['created_date'] or ''}}</td>
-                <td>{{ $value['no_of_positions'] or ''}}</td>
-                <td>{{ $value['qual'] or ''}}</td>
-                <td>{{ $value['industry'] or ''}}</td>
-                <td>{{ $value['desired_candidate'] or ''}}</td>
-
-                <td>{{ $value['close_date'] or ''}}</td>
-            </tr>
-        @endforeach
-        </tbody>--}}
+        <tbody>
+        </tbody>
     </table>
     </div>
 @stop
@@ -207,6 +169,8 @@
             $("#jo_table").dataTable().fnDestroy();
 
             var year = $("#year").val();
+
+            alert(year);
             $("#jo_table").dataTable({
 
                 'bProcessing' : true,

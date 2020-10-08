@@ -462,7 +462,7 @@ class JobOpen extends Model
         return $jobs_list;   
     }
 
-    public static function getClosedJobsByClient($client_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc') {
+    public static function getClosedJobsByClient($client_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -517,6 +517,15 @@ class JobOpen extends Model
                 $job_close_query = $job_close_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $job_close_query = $job_close_query->where('job_openings.created_at','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $job_close_query = $job_close_query->where('job_openings.created_at','<=',$next_year);
+        }
+        
         $job_response = $job_close_query->get();
 
         $jobs_list = array();
@@ -592,6 +601,7 @@ class JobOpen extends Model
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
             $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
+            $jobs_list[$i]['updated_date'] = date('d-m-Y',strtotime($value->updated_at));
 
             if(isset($value->priority) && $value->priority!='') {
                 $jobs_list[$i]['color'] = $colors[$value->priority];
@@ -1173,6 +1183,8 @@ class JobOpen extends Model
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
             $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
+            $jobs_list[$i]['updated_date'] = date('d-m-Y',strtotime($value->updated_at));
+            
             $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
             $jobs_list[$i]['access'] = '0';
             $i++;
@@ -1659,7 +1671,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getPriorityWiseJobsByClient($client_id,$priority,$client_heirarchy=0) {
+    public static function getPriorityWiseJobsByClient($client_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
 
         $job_open_query = JobOpen::query();
         $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at');
@@ -1707,6 +1719,14 @@ class JobOpen extends Model
         // For Client Heirarchy
         if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
         }
 
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);

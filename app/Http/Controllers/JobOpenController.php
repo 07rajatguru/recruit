@@ -282,7 +282,7 @@ class JobOpenController extends Controller
 
             $job_response = JobOpen::getAllJobsByCLient($client_id,0,0,0,NULL,'',$client_heirarchy);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,'','');
         }
         else if ($user_jobs_perm) {
 
@@ -421,7 +421,7 @@ class JobOpenController extends Controller
         }
         else if($isClient) {
 
-            $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority);
+            $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority,$current_year,$next_year);
             //$job_response_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
         }
         else if($user_jobs_perm) {
@@ -548,7 +548,7 @@ class JobOpenController extends Controller
         }
         else if ($isClient) {
 
-            $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority);
+            $job_response = JobOpen::getPriorityWiseJobsByClient($client_id,$priority,$current_year,$next_year);
             //$job_response_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL);
         }
         else if ($user_jobs_perm) {
@@ -684,7 +684,7 @@ class JobOpenController extends Controller
         else if ($isClient) {
             $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type,$client_heirarchy);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$client_heirarchy);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,$client_heirarchy);
         }
         else if ($user_jobs_perm) {
             $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
@@ -2921,8 +2921,8 @@ class JobOpenController extends Controller
         }
         else if ($isClient) {
 
-            $job_response = JobOpen::getClosedJobsByClient($client_id);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
+            $job_response = JobOpen::getClosedJobsByClient($client_id,0,0,0,NULL,'DESC',$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,0);
         }
         else if ($user_jobs_perm) {
             $job_response = JobOpen::getClosedJobs(0,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
@@ -3006,9 +3006,9 @@ class JobOpenController extends Controller
         }
         else if ($isClient) {
 
-            $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type);
+            $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
             $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,0);
         }
         else if ($user_jobs_perm) {
 
