@@ -169,8 +169,6 @@
             $("#jo_table").dataTable().fnDestroy();
 
             var year = $("#year").val();
-
-            alert(year);
             $("#jo_table").dataTable({
 
                 'bProcessing' : true,
