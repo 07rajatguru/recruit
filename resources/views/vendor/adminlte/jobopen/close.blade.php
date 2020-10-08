@@ -20,9 +20,12 @@
                 <h2>Job Closing List <span id="count">({{ $count }})</span></h2>
             </div>
 
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
-            </div>
+            @permission(('job-add'))
+                <div class="pull-right">
+                    <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings
+                    </a>
+                </div>
+            @endpermission
 
             <div class="pull-right">
                 {{--<a class="btn btn-success" href="{{ route('jobopen.create') }}"> Search</a>
