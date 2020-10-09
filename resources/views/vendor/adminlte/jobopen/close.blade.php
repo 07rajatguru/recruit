@@ -70,7 +70,6 @@
     <br/>
     @endpermission
 
-    <div class = "table-responsive">
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
         <thead>
             <tr>
@@ -96,7 +95,6 @@
             
         </tbody>
     </table>
-    </div>
 @stop
 
 @section('customscripts')
