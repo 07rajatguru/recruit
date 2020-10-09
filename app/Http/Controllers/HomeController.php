@@ -192,6 +192,8 @@ class HomeController extends Controller
 
         $user = \Auth::user();
         $user_id =  \Auth::user()->id;
+        $allclient = getenv('ALLCLIENTVISIBLEUSERID');
+        $strtegy = getenv('STRATEGYUSERID');
 
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
@@ -227,21 +229,26 @@ class HomeController extends Controller
         }
         else {
 
-            $user_details = User::getAllDetailsByUserID($user_id);
-
-            if($user_details->type == 'recruiter') {
-
-                $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
-
-                if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
-                    $msg = '';
-                }
-                else {
-                    $msg = "Please Contact to HR for add your benchmark";
-                }
+            if($user_id == $allclient || $user_id == $strtegy) {
+                $msg = '';
             }
             else {
-                $msg = '';
+                $user_details = User::getAllDetailsByUserID($user_id);
+
+                if($user_details->type == 'recruiter') {
+
+                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
+
+                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                        $msg = '';
+                    }
+                    else {
+                        $msg = "Please Contact to HR for add your benchmark";
+                    }
+                }
+                else {
+                    $msg = '';
+                }
             }
         }
 
