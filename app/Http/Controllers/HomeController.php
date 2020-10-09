@@ -197,7 +197,7 @@ class HomeController extends Controller
 
         if($all_perm) {
 
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersForBenchmarkModal('recruiter');
 
             if(isset($users) && sizeof($users) > 0) {
 

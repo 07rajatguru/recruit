@@ -700,4 +700,38 @@ class User extends Authenticatable
         }
         return $userArr;
     }
+
+    public static function getAllUsersForBenchmarkModal($type=NULL) {
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $allclient = getenv('ALLCLIENTVISIBLEUSERID');
+        $strtegy = getenv('STRATEGYUSERID');
+        $super_array = array($superadmin,$allclient,$strtegy);
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client_type = array('client');
+        
+        $user_query = User::query();
+
+        if($type!=NULL){
+            $user_query = $user_query->where('type','=',$type);
+        }
+
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('id',$super_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
+        $user_query = $user_query->orderBy('name');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+        if(isset($users) && sizeof($users)){
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->name;
+            }
+        }
+        return $userArr;
+    }
 }
