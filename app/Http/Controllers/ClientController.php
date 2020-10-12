@@ -1406,7 +1406,7 @@ class ClientController extends Controller
             $module_id = $id;
             $module = 'Client Account Manager';
             $link = route('client.show',$id);
-            $subject = "Client Account Manager changed - " . $input->name . " - " . $input->billing_city;
+            $subject = "Client Account Manager Changed - " . $input->name . " - " . $input->billing_city;
             $message = "<tr><td>" . $input->name . " Change Account Manager </td></tr>";
             $sender_name = $user_id;
 
@@ -1627,33 +1627,30 @@ class ClientController extends Controller
             $client_timeline->save();
 
             \DB::statement("UPDATE client_basicinfo SET `account_manager_id`='$account_manager_id', updated_at = '$updated_at' where `id` = '$value'");
-
-            // Email Notifications : On change account manager of client.
-
-            $client_res = ClientBasicinfo::getClientDetailsById($value);
-            $client_name = $client_res['name'];
-            $billing_city = $client_res['billing_city'];
-            $user_id = \Auth::user()->id;
-                    
-            $module_id = $value;
-            $module = 'Client Account Manager';
-            $link = route('client.show',$value);
-            $subject = "Client Account Manager changed - " . $client_name . " - " . $billing_city;
-            $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
-            $sender_name = $user_id;
-
-            $super_admin_userid = getenv('SUPERADMINUSERID');
-            $superadminemail = User::getUserEmailById($super_admin_userid);
-
-            $strategy_userid = getenv('ALLCLIENTVISIBLEUSERID');
-            $strategy_email = User::getUserEmailById($strategy_userid);
-
-            $to = $superadminemail;
-            $cc = $strategy_email;
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
-        return redirect()->route('client.index')->with('success','Account Manager Changed Successfully.');
+
+        // Email Notifications : On change account manager of client.
+
+        $user_id = \Auth::user()->id;
+        
+        $module = 'Client Account Manager Multiple';
+        $sender_name = $user_id;
+        $subject = "Client Account Manager Changed - Multiple";
+        $message = "<tr><td>Change Account Manager Multiple</td></tr>";
+        $module_id = $client_ids;
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+
+        $to = $superadminemail;
+        $cc = $all_client_user_email;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('client.index')->with('success','Client Account Manager Changed Successfully.');
     }
 
     public function getMonthWiseClient($month,$year) {
@@ -1739,7 +1736,7 @@ class ClientController extends Controller
         $module_id = $id;
         $module = 'Client Account Manager';
         $link = route('client.show',$id);
-        $subject = "Client Account Manager changed - " . $client_name . " - " . $billing_city;
+        $subject = "Client Account Manager Changed - " . $client_name . " - " . $billing_city;
         $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
         $sender_name = $user_id;
 
@@ -1754,7 +1751,7 @@ class ClientController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-       return redirect()->route('client.index')->with('success', 'Client Account Manager updated Successfully.');
+       return redirect()->route('client.index')->with('success', 'Client Account Manager Changed Successfully.');
     }
 
     public function importExport() {
