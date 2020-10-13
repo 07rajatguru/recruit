@@ -88,7 +88,7 @@
 
                         <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '6','maxLength' => '10','minLength' => '10')) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '6','minLength' => '10')) !!}
                             @if ($errors->has('mobile'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('mobile') }}</strong>
@@ -100,7 +100,7 @@
 
                         <div class="form-group">
                             <strong>Other Number :</strong>
-                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8','maxLength' => '10','minLength' => '10')) !!}
+                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8','minLength' => '10')) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
@@ -579,11 +579,10 @@
 
                 var length = jQuery(this).val().length;
 
-                if(length > 9) {
+                if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                     return false;
-                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                    return false;
-                } else if((length == 0) && (e.which == 48)) {
+                }
+                else if((length == 0) && (e.which == 48)) {
                     return false;
                 }
             });
@@ -592,11 +591,10 @@
 
                 var length = jQuery(this).val().length;
 
-                if(length > 9) {
+                if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                     return false;
-                } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                    return false;
-                } else if((length == 0) && (e.which == 48)) {
+                }
+                else if((length == 0) && (e.which == 48)) {
                     return false;
                 }
             });

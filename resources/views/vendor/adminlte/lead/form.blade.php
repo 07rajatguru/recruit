@@ -68,7 +68,7 @@
                        
                         <div class="form-group">
                             <strong>Mobile : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','maxLength' => '10','minLength' => '10')) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile','class' => 'form-control','tabindex' => '5','minLength' => '10')) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
@@ -120,7 +120,7 @@
                         
                             <div class="form-group">
                                 <strong>Other number : </strong>
-                                {!! Form::text('other_number', null, array('id' => 'other_number','placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','maxLength' => '10','minLength' => '10')) !!}
+                                {!! Form::text('other_number', null, array('id' => 'other_number','placeholder' => 'Other Number','class' => 'form-control','tabindex' => '6','minLength' => '10')) !!}
                             </div> 
 
                             <div class="form-group">
@@ -207,11 +207,10 @@
 
             var length = jQuery(this).val().length;
 
-            if(length > 9) {
+            if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                 return false;
-            } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                return false;
-            } else if((length == 0) && (e.which == 48)) {
+            }
+            else if((length == 0) && (e.which == 48)) {
                 return false;
             }
         });
@@ -220,11 +219,10 @@
 
             var length = jQuery(this).val().length;
 
-            if(length > 9) {
+            if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                 return false;
-            } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                return false;
-            } else if((length == 0) && (e.which == 48)) {
+            }
+            else if((length == 0) && (e.which == 48)) {
                 return false;
             }
         });
