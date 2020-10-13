@@ -489,9 +489,22 @@ class ReportController extends Controller
             $next_year = date('Y-m-d',strtotime("last day of $next"));
 
             $users = User::getAllUsers('recruiter');
+
             foreach ($users as $key => $value) {
-                $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+
+                $user_details = User::getAllDetailsByUserID($key);
+                $cr_yr = explode('-', $current);
+                $nt_yr = explode('-', $next);
+
+                $user_created_at_yr = date('Y',strtotime($user_details->created_at));
+
+                if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
+
+                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                }
             }
+
+            //print_r($personwise_data);exit;
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
         }
         else {
@@ -528,7 +541,17 @@ class ReportController extends Controller
 
                 $users = User::getAllUsers('recruiter');
                 foreach ($users as $key => $value) {
-                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+
+                    $user_details = User::getAllDetailsByUserID($key);
+                    $cr_yr = explode('-', $current);
+                    $nt_yr = explode('-', $next);
+
+                    $user_created_at_yr = date('Y',strtotime($user_details->created_at));
+
+                    if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
+
+                        $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                    }
                 }
                 
                 $sheet->loadview('adminlte::reports.personwise-reportexport')->with('personwise_data',$personwise_data);
