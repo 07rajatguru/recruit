@@ -545,7 +545,13 @@ class EveryMinute extends Command
                         $client_info[$i]['transferred_from'] = $client_history[0]['user_name'];
                     }
                     
-                    $client_info[$i]['transferred_to'] = $client['am_name'];
+                    if($client['am_name'] == '') {
+                        $client_info[$i]['transferred_to'] = 'Yet to Assign';
+                    }
+                    else {
+                        $client_info[$i]['transferred_to'] = $client['am_name'];
+                    }
+                    
                     $client_info[$i]['name'] = $client['name'];
                     $client_info[$i]['coordinator_name'] = $client['coordinator_name'];
                     $client_info[$i]['billing_city'] = $client['billing_city'];
