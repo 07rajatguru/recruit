@@ -559,9 +559,13 @@
                     <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
                     <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" id="footer1">
                     <button type="submit" class="btn btn-primary" id="shortlist-btn">Yes</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                <div class="modal-footer" id="footer2" style="display: none;">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
                 {!! Form::close() !!}
             </div><!-- /.modal-content -->
@@ -855,13 +859,20 @@
 
                         $(".shortlist-round").show();
                         $("#update_status_id").val(update_status_id);
-                        document.getElementById("shortlist-btn").disabled = false;
+                        //document.getElementById("shortlist-btn").disabled = false;
+
+                        document.getElementById("footer2").style.display = 'none';
+                        document.getElementById("footer1").style.display = "block";
                     }
                     else{
 
+                        $(".shortlist-round").hide();
                         $(".check-all-candidate-ids").show();
                         $(".check-all-candidate-ids").append(msg.err);
-                        document.getElementById("shortlist-btn").disabled = true;
+                        //document.getElementById("shortlist-btn").disabled = true;
+                        
+                        document.getElementById("footer1").style.display = "none";
+                        document.getElementById("footer2").style.display = 'block';
                     }
                 }
             });
