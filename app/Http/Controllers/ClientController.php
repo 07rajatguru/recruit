@@ -1413,11 +1413,21 @@ class ClientController extends Controller
             $super_admin_userid = getenv('SUPERADMINUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
 
-            $strategy_userid = getenv('ALLCLIENTVISIBLEUSERID');
-            $strategy_email = User::getUserEmailById($strategy_userid);
+            $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+            $all_client_user_email = User::getUserEmailById($all_client_user_id);
 
-            $to = $superadminemail;
-            $cc = $strategy_email;
+            if ($input->account_manager != '0') {
+
+                $to = $superadminemail;
+                $account_manager_email = User::getUserEmailById($input->account_manager);
+                $cc_users_array = array($all_client_user_email,$account_manager_email);
+                $cc = implode(",",$cc_users_array);
+            }
+            else {
+
+                $to = $superadminemail;
+                $cc = $all_client_user_email;
+            }
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
@@ -1461,11 +1471,23 @@ class ClientController extends Controller
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $superadminemail = User::getUserEmailById($super_admin_userid);
 
-                $account_manager_id = $input->account_manager;
-                $account_manager_email = User::getUserEmailById($account_manager_id);
+                $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+                $all_client_user_email = User::getUserEmailById($all_client_user_id);
 
-                $to = $account_manager_email;
-                $cc = $superadminemail;
+                $account_manager_id = $input->account_manager;
+
+                if ($account_manager_id != '0') {
+
+                    $to = $superadminemail;
+                    $account_manager_email = User::getUserEmailById($account_manager_id);
+                    $cc_users_array = array($all_client_user_email,$account_manager_email);
+                    $cc = implode(",",$cc_users_array);
+                }
+                else {
+
+                    $to = $superadminemail;
+                    $cc = $all_client_user_email;
+                }
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
@@ -1633,10 +1655,10 @@ class ClientController extends Controller
 
         $user_id = \Auth::user()->id;
         
-        $module = 'Client Account Manager Multiple';
+        $module = 'List of Clients transferred';
         $sender_name = $user_id;
-        $subject = "Client Account Manager Changed - Multiple";
-        $message = "<tr><td>Change Account Manager Multiple</td></tr>";
+        $subject = "List of Clients transferred";
+        $message = "<tr><td>List of Clients transferred</td></tr>";
         $module_id = $client_ids;
 
         $super_admin_userid = getenv('SUPERADMINUSERID');
@@ -1645,8 +1667,18 @@ class ClientController extends Controller
         $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
         $all_client_user_email = User::getUserEmailById($all_client_user_id);
 
-        $to = $superadminemail;
-        $cc = $all_client_user_email;
+        if ($account_manager_id != '0') {
+
+            $to = $superadminemail;
+            $account_manager_email = User::getUserEmailById($account_manager_id);
+            $cc_users_array = array($all_client_user_email,$account_manager_email);
+            $cc = implode(",",$cc_users_array);
+        }
+        else {
+
+            $to = $superadminemail;
+            $cc = $all_client_user_email;
+        }
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
@@ -1743,11 +1775,21 @@ class ClientController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $strategy_userid = getenv('ALLCLIENTVISIBLEUSERID');
-        $strategy_email = User::getUserEmailById($strategy_userid);
+        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);
 
-        $to = $superadminemail;
-        $cc = $strategy_email;
+        if ($account_manager != '0') {
+
+            $to = $superadminemail;
+            $account_manager_email = User::getUserEmailById($account_manager);
+            $cc_users_array = array($all_client_user_email,$account_manager_email);
+            $cc = implode(",",$cc_users_array);
+        }
+        else {
+
+            $to = $superadminemail;
+            $cc = $all_client_user_email;
+        }
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 

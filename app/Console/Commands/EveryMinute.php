@@ -19,6 +19,7 @@ use App\Role;
 use App\UserBenchMark;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use App\ClientTimeline;
 
 class EveryMinute extends Command
 {
@@ -521,7 +522,7 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
-            else if ($value['module'] == 'Client Account Manager Multiple') {
+            else if ($value['module'] == 'List of Clients transferred') {
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
@@ -533,8 +534,22 @@ class EveryMinute extends Command
                 foreach($client_ids_array as $key => $value) {
 
                     $client = ClientBasicinfo::getClientDetailsById($value);
+                    $client_history = ClientTimeline::getDetailsByClientId($value);
+
+                    if(isset($client_history[1]['user_id']) && $client_history[1]['user_id'] != '') {
+
+                        $client_info[$i]['transferred_from'] = $client_history[1]['user_name'];
+                    }
+                    else {
+
+                        $client_info[$i]['transferred_from'] = $client_history[0]['user_name'];
+                    }
+                    
+                    $client_info[$i]['transferred_to'] = $client['am_name'];
                     $client_info[$i]['name'] = $client['name'];
                     $client_info[$i]['coordinator_name'] = $client['coordinator_name'];
+                    $client_info[$i]['billing_city'] = $client['billing_city'];
+                    
                     $i++;
                 }
 

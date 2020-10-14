@@ -39,7 +39,14 @@ class ClientTimeline extends Model
 
             $client_timeline_array[$i]['id'] = $value->id;
             $client_timeline_array[$i]['user_id'] = $value->user_id;
-            $client_timeline_array[$i]['user_name'] = $value->user_name;
+
+            if($value->user_id != '0') {
+                $client_timeline_array[$i]['user_name'] = $value->user_name;
+            }
+            else {
+                $client_timeline_array[$i]['user_name'] = 'Yet to Assign';
+            }
+            
             $client_timeline_array[$i]['client_id'] = $value->client_id;
             $client_timeline_array[$i]['from_date'] = date("d-m-Y", strtotime($value->created_at));
 

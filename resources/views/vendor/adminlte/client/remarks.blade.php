@@ -40,11 +40,7 @@
         @if(isset($days_array) && sizeof($days_array) > 0)
             @foreach($days_array as $key => $value)
                 <tr>
-                    @if($value['user_id'] == 0)
-                        <td style="text-align: center;">Yet to Assign</td>
-                    @else
-                        <td style="text-align: center;">{{ $value['user_name'] }}</td>
-                    @endif
+                    <td style="text-align: center;">{{ $value['user_name'] }}</td>
 
                     <td style="text-align: center;">{{ $value['from_date'] }}</td>
 
