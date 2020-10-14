@@ -536,7 +536,7 @@ class EveryMinute extends Command
                     $client = ClientBasicinfo::getClientDetailsById($value);
                     $client_history = ClientTimeline::getDetailsByClientId($value);
 
-                    if(isset($client_history[1]['user_id']) && $client_history[1]['user_id'] != '') {
+                    if(isset($client_history[1]['user_id']) && $client_history[1]['user_id'] >= '0') {
 
                         $client_info[$i]['transferred_from'] = $client_history[1]['user_name'];
                     }
