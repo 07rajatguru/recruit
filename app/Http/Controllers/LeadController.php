@@ -801,17 +801,21 @@ class LeadController extends Controller
 
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-            $referredby_id = $input['referredby'];
+            //$referredby_id = $input['referredby'];
+
+            $account_manager_id = $input['account_manager'];
 
             // Email Notification : data store in datebase
             //$strategyuserid = getenv('STRATEGYUSERID');
-            $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+            $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
             
             $superadminemail = User::getUserEmailById($super_admin_userid);
-            $strategyemail = User::getUserEmailById($strategyuserid);
-            $referredby_email = User::getUserEmailById($referredby_id);
+            $all_client_user_email = User::getUserEmailById($all_client_user_id);
+            //$referredby_email = User::getUserEmailById($referredby_id);
+            $account_manager_email = User::getUserEmailById($account_manager_id);
 
-            $cc_users_array = array($superadminemail,$strategyemail,$referredby_email);
+            //$cc_users_array = array($superadminemail,$all_client_user_email,$referredby_email);
+            $cc_users_array = array($superadminemail,$all_client_user_email,$account_manager_email);
 
             $module = "Client";
             $sender_name = $user_id;
