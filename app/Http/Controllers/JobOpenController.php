@@ -2038,6 +2038,7 @@ class JobOpenController extends Controller
         $job_open->thousand_to = $thousand_to;
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
+        $job_open->open_to_all_date = $open_to_all;
         $job_open->level_id = $level_id;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
