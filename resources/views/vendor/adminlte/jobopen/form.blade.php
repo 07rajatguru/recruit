@@ -36,11 +36,11 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm','autocomplete' => 'off','onsubmit' => "return salaryValidation()",'route' => ['jobopen.update', $job_open->id]] ) !!}
+    {!! Form::model($job_open,['method' => 'PATCH','files' => true, 'id' => 'jobsForm','autocomplete' => 'off','route' => ['jobopen.update', $job_open->id]] ) !!}
 @elseif( $action == 'clone')
-    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm','autocomplete' => 'off','onsubmit' => "return salaryValidation()",'route' => ['jobopen.clonestore']] ) !!}
+    {!! Form::model($job_open,['method' => 'POST','files' => true, 'id' => 'jobsForm','autocomplete' => 'off','route' => ['jobopen.clonestore']] ) !!}
 @else
-    {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm','autocomplete' => 'off','onsubmit' => "return salaryValidation()")) !!}
+    {!! Form::open(array('route' => 'jobopen.store','files' => true,'method'=>'POST', 'id' => 'jobsForm','autocomplete' => 'off')) !!}
 @endif
 
 @if(isset($year) && $year != '')
@@ -366,7 +366,7 @@
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
                         <strong>Salary To : <span class = "required_fields"> *</span></strong>
-                        <div class="form-group {{ $errors->has('annual_salary_from') ? 'has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('annual_salary_to') ? 'has-error' : '' }}">
                             <div class="box-body col-xs-6 col-sm-6 col-md-6">
                                 <div class="">
                                     {!! Form::select('lacs_to', $lacs, $lacs_to, array('id'=>'lacs_to','class' => 'form-control', 'tabindex' => '17')) !!}
