@@ -44,7 +44,7 @@ class NotificationMailListener
         $header = '<table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
                <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                        <table cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                             <tr style="background-color:white;">
                                 <td align="center">
                                     <div class="site-branding col-md-2 col-sm-6 col-xs-12" >

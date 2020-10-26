@@ -666,6 +666,15 @@ class EveryMinute extends Command
                 $input['module_id'] = $value['module_id'];
                 $input['bulk_message'] = $value['message'];
 
+                $input['from_name'] = 'Dhara Khandhediya';
+
+                config([
+                    'mail.username' =>  trim('trajinfotech15@gmail.com'),
+                    'mail.password' =>  trim('jarelDa%4021')
+                ]);
+
+                //print_r(config('mail'));exit;
+
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
