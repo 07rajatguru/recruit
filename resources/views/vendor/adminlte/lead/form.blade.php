@@ -160,17 +160,19 @@
                             <strong>Address : </strong>
                             {!! Form::text('address', null, array('id'=>'address','placeholder' => 'Search Address','class' => 'form-control', 'onFocus'=>"geolocate()",'tabindex' => '15')) !!}
                         </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
                             <div class="form-group">
                                 <strong>City : <span class = "required_fields">*</span></strong>
                                 {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '16')) !!}
                             </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
                             <div class="form-group">
                                 <strong>State :</strong>
                                 {!! Form::text('state', null, array('id'=>'state','placeholder' => 'State ','class' => 'form-control','tabindex' => '17')) !!}
                             </div>
                         </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
                             <div class="form-group">
                                 <strong>Country : </strong>
                                 {!! Form::text('country', null, array('id'=>'country','placeholder' => 'Country ','class' => 'form-control','tabindex' => '18')) !!}
@@ -207,7 +209,7 @@
 
             var length = jQuery(this).val().length;
 
-            if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            if(e.which != 8 && e.which != 0 && e.which != 16 && e.which != 43 && (e.which < 48 || e.which > 57)) {
                 return false;
             }
             else if((length == 0) && (e.which == 48)) {
@@ -219,7 +221,7 @@
 
             var length = jQuery(this).val().length;
 
-            if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            if(e.which != 8 && e.which != 0 && e.which != 16 && e.which != 43 && (e.which < 48 || e.which > 57)) {
                 return false;
             }
             else if((length == 0) && (e.which == 48)) {

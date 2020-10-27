@@ -410,7 +410,7 @@
                 <div class="box-body col-xs-4 col-sm-4 col-md-4">
                     <div class="">
                         <div class="form-group">
-                            <strong>City : </strong>
+                            <strong>City : <span class = "required_fields"> *</span></strong>
                             {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '20')) !!}
                         </div>
                     </div>
@@ -598,7 +598,10 @@
                     },
                     "candidate_tracker": {
                         required : true,
-                    }
+                    },
+                    "city": {
+                        required : true,
+                    },
                 },
                 messages: {
                     
@@ -625,7 +628,10 @@
                     },
                     "candidate_tracker": {
                         required : "Please Select Candidate Tracker",
-                    }
+                    },
+                    "city": {
+                        required : "City is Required Field.",
+                    },
                 }
             });
         });
