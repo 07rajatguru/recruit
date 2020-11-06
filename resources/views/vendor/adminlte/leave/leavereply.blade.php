@@ -23,9 +23,9 @@
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             	<br/>
             	<div class="col-xs-12 col-sm-12 col-md-12">
-            		<b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
             		<p><b> Subject : </b> &nbsp;&nbsp;{!! $leave_details['subject'] !!}</p>
                     <br/>
+                    <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
             		<p>{!! $leave_details['message'] !!}</p>
             		<p>Thanks & Regards,</p>
             		<p>{{ $leave_details['uname'] }}</p>
@@ -87,11 +87,14 @@
 <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{$loggedin_user_id}}">
 <input type="hidden" name="user_id" id="user_id" value="{{$leave_details['user_id']}}">
 <input type="hidden" name="subject" id="subject" value="{{$leave_details['subject']}}">
+<input type="hidden" name="approved_by" id="approved_by" value="{{$leave_details['approved_by']}}">
 @stop
 
 @section('customscripts')
 <script type="text/javascript">
-    function permission(check){
+
+    function permission(check) {
+        
         var leave_id = $("#leave_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
@@ -100,11 +103,13 @@
         var loggedin_user_id = $("#loggedin_user_id").val();
         var user_id = $("#user_id").val();
         var subject = $("#subject").val();
+        var approved_by = $("#approved_by").val();
         //alert(loggedin_user_id);
+
         $.ajax({
             type: 'POST',
             url:app_url+'/leave/reply/'+leave_id,
-            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject},
+            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by},
             dataType:'json',
             success: function(data){
                 if (data == 'success') { 

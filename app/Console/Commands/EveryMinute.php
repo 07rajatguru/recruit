@@ -666,11 +666,17 @@ class EveryMinute extends Command
                 $input['module_id'] = $value['module_id'];
                 $input['bulk_message'] = $value['message'];
 
-                $input['from_name'] = 'Dhara Khandhediya';
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
                 config([
-                    'mail.username' =>  trim('trajinfotech15@gmail.com'),
-                    'mail.password' =>  trim('jarelDa%4021')
+                    'mail.driver' => trim('smtp'),
+                    'mail.host' => trim('smtp.googlemail.com'),
+                    'mail.port' => trim('465'),
+                    'mail.username' => trim($user_details->secondary_email),
+                    'mail.password' => trim($user_details->password),
+                    'mail.encryption' => trim('ssl'),
                 ]);
 
                 //print_r(config('mail'));exit;

@@ -32,6 +32,10 @@ class LeaveController extends Controller
         if(!$isSuperAdmin){
             $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
         }
+        else {
+
+            $leave_balance = '';
+        }
 
         if($isSuperAdmin || $isAdmin || $isAccountant || $isOperationsExecutive){
             $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
@@ -191,27 +195,17 @@ class LeaveController extends Controller
             $cc_users_array = array($reports_to_email,$floor_incharge_email);
             $cc_users_array = array_filter($cc_users_array);
         }
-        // print_r($user_name);exit;
-        
+
         if ($reply == 'Approved') {
-            $new_msg = "<p> Hello, </p> <p><b>Your leave has been Approved.</b></p>";
-            $message = "<tr><td><p>" . $new_msg . "</p><p>" . $msg . "</p><p>Thanks & Regards,</p><p>" . $user_name . "</p></td></tr>";
-
-            $module = "Leave Reply";
-            $sender_name = $loggedin_user_id;
-            $to = $user_email;
-            $cc = implode(",",$cc_users_array);
-            $subject = $subject;
-            $body_message = $message;
-            $module_id = $leave_id;
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
             \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id where id = $leave_id");
-        }
-        elseif ($reply == 'Unapproved') {
-            $new_msg = "<p> Hello, </p> <p><b>Your leave has been Unapproved.</b></p>";
-            $message = "<tr><td><p>" . $new_msg . "</p><p>" . $msg . "</p><p>Thanks & Regards,</p><p>" . $user_name . "</p></td></tr>";
+
+            $leave_details = UserLeave::getLeaveDetails($leave_id);
+            $approved_by = $leave_details['approved_by'];
+
+            $new_msg = "<p> Hello " . $user_name . " ,</p><p><b>Your leave has been Approved.</b></p>";
+            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks & Regards,</p><p>" . 
+            $approved_by . "</p></td></tr>";
 
             $module = "Leave Reply";
             $sender_name = $loggedin_user_id;
@@ -222,8 +216,27 @@ class LeaveController extends Controller
             $module_id = $leave_id;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+        }
+        elseif ($reply == 'Unapproved') {
 
             \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id where id = $leave_id");
+
+            $leave_details = UserLeave::getLeaveDetails($leave_id);
+            $approved_by = $leave_details['approved_by'];
+            
+            $new_msg = "<p> Hello " . $user_name . " ,</p><p><b>Your leave has been Unapproved.</b></p>";
+            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks & Regards,</p><p>" . 
+            $approved_by . "</p></td></tr>";
+
+            $module = "Leave Reply";
+            $sender_name = $loggedin_user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            $subject = $subject;
+            $body_message = $message;
+            $module_id = $leave_id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
         }
 
         $data = 'success';

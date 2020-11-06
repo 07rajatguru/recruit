@@ -74,20 +74,22 @@ class UserLeave extends Model
         $query = UserLeave::query();
         $query = $query->join('users as u1','u1.id','user_leave.user_id');
         $query = $query->leftjoin('users as u2','u2.id','user_leave.approved_by');
-        $query = $query->select('user_leave.*','u1.name as uname','u2.name as approved_by');
+        $query = $query->select('user_leave.*','u1.first_name as fname','u1.last_name as lname','u2.first_name as approved_by_first_name','u2.last_name as approved_by_last_name');
         $query = $query->where('user_leave.id',$leave_id);
         $res = $query->first();
 
         $leave_data = array();
+        
         if (isset($res) && $res != '') {
+
             $leave_data['id'] = $res->id;
             $leave_data['user_id'] = $res->user_id;
             $leave_data['subject'] = $res->subject;
             $leave_data['category'] = $res->category;
             $leave_data['message'] = $res->message;
             $leave_data['status'] = $res->status;
-            $leave_data['uname'] = $res->uname;
-            $leave_data['approved_by'] = $res->approved_by;
+            $leave_data['uname'] = $res->fname . " " . $res->lname;
+            $leave_data['approved_by'] = $res->approved_by_first_name . " " . $res->approved_by_last_name;
         }
 
         return $leave_data;
