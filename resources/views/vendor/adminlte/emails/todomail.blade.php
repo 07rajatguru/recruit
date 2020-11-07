@@ -29,10 +29,13 @@
             <table  cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
                 <tr>
                     <td>
-                        <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$uname}},</p></b>
+                        <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Dear {{$uname}} ,</p></b>
 
                         <p><b>Subject : </b>{{ $todo_subject }}</p>
-                        <p><b>Description: </b>{!! $description !!}</p>
+
+                        @if(isset($description) && $description != '')
+                            <p><b>Description: </b>{!! $description !!}</p>
+                        @endif
                     </td>
                 </tr>
             </table>

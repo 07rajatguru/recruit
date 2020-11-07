@@ -26,7 +26,12 @@
                     <td align="center"style="font-family: Cambria;"><b>Interview Location</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Candidate Location</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Mode of Interview</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Video ID</b></td>
+
+                    @if(isset($type_array) && sizeof($type_array) > 0)
+                        @if(in_array("Video Interview",$type_array))
+                            <td align="center"style="font-family: Cambria;"><b>Video ID</b></td>
+                        @endif
+                    @endif
                     <td align="center"style="font-family: Cambria;"><b>Contact No.</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Email ID</b></td>
                     <td align="center"style="font-family: Cambria;"><b>Confirmed</b></td>
@@ -44,7 +49,13 @@
                         <td align="center"style="font-family: Cambria;">{{$value['interview_location']}}</td>
                         <td align="center"style="font-family: Cambria;">{{$value['candidate_location']}}</td>
                         <td align="center"style="font-family: Cambria;">{{$value['interview_type']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['skype_id']}}</td>
+
+                        @if(isset($type_array) && sizeof($type_array) > 0)
+                            @if(in_array("Video Interview",$type_array))
+                                <td align="center"style="font-family: Cambria;">{{$value['skype_id']}}</td>
+                            @endif
+                        @endif
+                        
                         <td align="center"style="font-family: Cambria;">{{$value['cmobile']}}</td>
                         <td align="center"style="font-family: Cambria;">{{$value['cemail']}}</td>
                         <td align="center"style="font-family: Cambria;"><b>{{'Yes'}}</b></td>

@@ -639,10 +639,12 @@ class InterviewController extends Controller
 
             $interview[$i] = Interview::ScheduleMailMultiple($value);
             $to_address_client = array();
+            $type_array = array();
             $j = 0;
 
             foreach ($interview as $key1 => $value1) {
                 $to_address_client[$j] = $value1['client_owner_email'];
+                $type_array[$j] = $value1['interview_type'];
                 $j++;
             }
             $i++;
@@ -660,12 +662,13 @@ class InterviewController extends Controller
         $input['app_url'] = $app_url;
         $input['interview_details'] = $interview;
         $input['subject'] = $subject;
+        $input['type_array'] = $type_array;
 
         \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to_address'])->subject($input['subject']);
         });
 
-        return redirect('/interview');
+        return redirect('/interview')->with('success','Interview Email Sent Successfully.');
     }
 }
