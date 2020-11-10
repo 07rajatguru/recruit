@@ -109,7 +109,8 @@ class ClientBasicinfo extends Ardent
         else if ($all == 0) {
 
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
-            $manager_user_id = env('MANAGERUSERID');
+
+            /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
 
             // visible standard and moderate clients to manager
@@ -124,7 +125,9 @@ class ClientBasicinfo extends Ardent
             }
             else {
                 $query = $query->where('account_manager_id',$user_id);
-            }
+            }*/
+
+            $query = $query->where('account_manager_id',$user_id);
             
             if (isset($search) && $search != '') {
 
@@ -280,7 +283,7 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
-            $manager_user_id = env('MANAGERUSERID');
+            /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
 
             // visible standard and moderate clients to manager
@@ -295,7 +298,9 @@ class ClientBasicinfo extends Ardent
             }
             else {
                 $query = $query->where('account_manager_id',$user_id);
-            }
+            }*/
+
+            $query = $query->where('account_manager_id',$user_id);
         }
 
         // Not display Forbid clients
@@ -699,7 +704,7 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
-            $manager_user_id = env('MANAGERUSERID');
+            /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
 
             // visible standard and moderate clients to manager
@@ -713,7 +718,9 @@ class ClientBasicinfo extends Ardent
             }
             else {
                 $query = $query->where('account_manager_id',$user_id);
-            }
+            }*/
+
+            $query = $query->where('account_manager_id',$user_id);
 
             if (isset($search) && $search != '') {
 
@@ -909,7 +916,7 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
-            $manager_user_id = env('MANAGERUSERID');
+            /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
 
             // visible standard and moderate clients to manager
@@ -923,7 +930,9 @@ class ClientBasicinfo extends Ardent
             }
             else {
                 $query = $query->where('account_manager_id',$user_id);
-            }
+            }*/
+
+            $query = $query->where('account_manager_id',$user_id);
 
             if (isset($search) && $search != '') {
 
