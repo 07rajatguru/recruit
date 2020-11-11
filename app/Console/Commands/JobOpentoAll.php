@@ -69,10 +69,12 @@ class JobOpentoAll extends Command
                             $email = User::getUserEmailById($key1);
                             $user_emails[] = $email;
                         }
-                        $superadminsecondemail=User::getUserEmailById($superadminuserid);
-                        $cc1 = "adler.rgl@gmail.com";
+                        
+                        $superadminsecondemail = User::getUserEmailById($superadminuserid);
+                        //$cc1 = "adler.rgl@gmail.com";
                         //$cc2 = "tarikapanjwani@gmail.com";
-                        $cc_users_array=array($superadminsecondemail,$cc1);
+                        //$cc_users_array = array($superadminsecondemail,$cc1,$cc2);
+                        $cc_user = $superadminsecondemail;
 
                         $job_details = JobOpen::getJobById($job_id);
 
@@ -82,7 +84,7 @@ class JobOpentoAll extends Command
                         $module = "Job Open to All";
                         $sender_name = $superadminuserid;
                         $to = implode(",",$user_emails);
-                        $cc = implode(",",$cc_users_array);
+                        $cc = $cc_user;
                         $subject = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
                         $message = "<tr><th>" . $job_details['posting_title'] . " / " . $job_details['job_unique_id'] . "</th></tr>";
                         $module_id = $job_id;
