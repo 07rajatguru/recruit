@@ -162,7 +162,7 @@
                             @endif
 
                         @endif
-                        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+                        @if($isSuperAdmin || $isAccountant)
                           @if($value['cancel_bill']==1)
                             @include('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Forcasting'])
                           @endif
@@ -178,7 +178,7 @@
                                 @if($value['cancel_bill']==0)
                                   @include('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill'])
                                 @endif
-                                @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+                                @if($isSuperAdmin || $isAccountant)
                                   @if($value['job_confirmation'] == 0 && $value['cancel_bill']==0)
                                     @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?'])
                                   @elseif($value['job_confirmation'] == 1 && $value['cancel_bill']==0)
@@ -193,7 +193,7 @@
                                   @endif
                                 @endif
                         @endif
-                        @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+                        @if($isSuperAdmin || $isAccountant)
                           @if($value['cancel_bill']==1)
                             @include('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery'])
                           @endif
@@ -212,14 +212,14 @@
                    <td>{{ $value['efforts'] }}</td>
                    <td>{{ $value['candidate_contact_number'] }}</td>
                    <td>{{ $value['job_location'] }}</td>
-                   @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+                   @if($isSuperAdmin || $isAccountant)
                       <td>{{ $value['percentage_charged'] }}</td>
                    @endif
                    <td>{{ $value['source'] }}</td>
                    <td>{{ $value['client_name'] }}</td>
                    <td>{{ $value['client_contact_number'] }}</td>
                    <td>{{ $value['client_email_id'] }}</td>
-                   @if($isSuperAdmin || $isAccountant || $isOperationsExecutive)
+                   @if($isSuperAdmin || $isAccountant)
                       <td>{{ $value['lead_efforts'] }}</td>
                    @endif
                </tr>

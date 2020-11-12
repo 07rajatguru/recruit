@@ -15,7 +15,7 @@
 	        </div>
 
 	        <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('holidays.create') }}"> Create New Holiday</a>
+                <a class="btn btn-success" href="{{ route('holidays.create') }}">Add New Holiday</a>
             </div>
 	    </div>
 	</div>

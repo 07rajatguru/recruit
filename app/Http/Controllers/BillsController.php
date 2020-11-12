@@ -973,23 +973,22 @@ class BillsController extends Controller
         $user_email = \Auth::user()->email;
         $superadminuserid = getenv('SUPERADMINUSERID');
         $accountantuserid = getenv('ACCOUNTANTUSERID');
-        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+        //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $accountantemail = User::getUserEmailById($accountantuserid);
-        $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+        //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-        $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+        //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+        $cc_users_array = array($superadminemail,$accountantemail);
+        $cc_users_array = array_filter($cc_users_array);
 
         $c_name = CandidateBasicInfo::getCandidateNameById($candidate_name);
 
         $module = "Forecasting";
         $sender_name = $user_id;
         $to = $user_email;
-
-        $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
-        
         $subject = "Forecasting - " . $c_name;
         $message = "Forecasting - " . $c_name;
         $module_id = $bill_id;
@@ -1325,23 +1324,22 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
-            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+            //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array_filter($cc_users_array);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
 
             $module = "Recovery";
             $sender_name = $user_id;
             $to = $user_email;
-
-            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
-            
             $subject = "Recovery - ". $c_name;
             $message = "Recovery - ". $c_name;
             $module_id = $id;
@@ -1426,23 +1424,22 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
-            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+            //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array_filter($cc_users_array);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
             $module = "Cancel Recovery";
             $sender_name = $user_id;
             $to = $user_email;
-
-            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
-            
             $subject = "Cancel Recovery - ". $c_name;
             $message = "Cancel Recovery - ". $c_name;
             $module_id = $id;
@@ -1459,23 +1456,22 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
-            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+            //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array_filter($cc_users_array);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
             $module = "Cancel Forecasting";
             $sender_name = $user_id;
             $to = $user_email;
-
-            $cc_users_array = array_filter($cc_users_array);
             $cc = implode(",",$cc_users_array);
-            
             $subject = "Cancel Forecasting - ". $c_name;
             $message = "Cancel Forecasting - ". $c_name;
             $module_id = $id;
@@ -1523,23 +1519,22 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
-            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+            //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array_filter($cc_users_array);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
             $module = "Relive Recovery";
             $sender_name = $user_id;
-
-            $cc_users_array = array_filter($cc_users_array);
             $to = $user_email;
             $cc = implode(",",$cc_users_array);
-            
             $subject = "Relive Recovery - ". $c_name;
             $message = "Relive Recovery - ". $c_name;
             $module_id = $id;
@@ -1557,23 +1552,22 @@ class BillsController extends Controller
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');
-            $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+            //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
             $superadminemail = User::getUserEmailById($superadminuserid);
             $accountantemail = User::getUserEmailById($accountantuserid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array_filter($cc_users_array);
 
             $c_name = CandidateBasicInfo::getCandidateNameById($bills['candidate_id']);
 
             $module = "Relive Forecasting";
             $sender_name = $user_id;
-
-            $cc_users_array = array_filter($cc_users_array);
             $to = $user_email;
             $cc = implode(",",$cc_users_array);
-            
             $subject = "Relive Forecasting - ". $c_name;
             $message = "Relive Forecasting - ". $c_name;
             $module_id = $id;
@@ -1785,81 +1779,28 @@ class BillsController extends Controller
     // Joining Confirmation Mail
     public function getSendConfirmationMail($id) {
         
-/*        $user_id = \Auth::user()->id;
-        //Logged in User Email Id
-        $user_email = User::getUserEmailById($user_id);
-
-        $superadmin_userid = getenv('SUPERADMINUSERID');
-        $account_userid = getenv('ACCOUNTANTUSERID');
-        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
-
-        if ($user_id == $superadmin_userid) {
-            $accountantemail = User::getUserEmailById($account_userid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
-            $cc_users_array = array($accountantemail,$operationsexecutivemail);
-        }
-        else if ($user_id == $account_userid) {
-            $superadminemail = User::getUserEmailById($superadmin_userid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
-            $cc_users_array = array($superadminemail,$operationsexecutivemail);
-        }
-        else if ($user_id == $operationsexecutiveuserid) {
-            $superadminemail = User::getUserEmailById($superadmin_userid);
-            $accountantemail = User::getUserEmailById($account_userid);
-            $cc_users_array = array($superadminemail,$accountantemail);
-        }
-        else {
-            $superadminemail = User::getUserEmailById($superadmin_userid);
-            $cc_users_array[] = $superadminemail;   
-        }
-
-        $join_mail = Bills::getJoinConfirmationMail($id);
-        $candidate_name = $join_mail['candidate_name'];
-        $candidate_id = $join_mail['candidate_id'];
-
-        $cc_users_array = array_filter($cc_users_array);
-
-        $module = "Joining Confirmation";
-        $sender_name = $user_id;
-        $to = $user_email;
-        $cc = implode(",",$cc_users_array);
-        $subject = "Joining Confirmation of - ". $candidate_name;
-        $message = "Joining Confirmation of - ". $candidate_name;
-        $module_id = $id;
-
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-        \DB::statement("UPDATE bills SET joining_confirmation_mail = '1' where id=$id");
-
-        // Get Selected Year
-        $year = $_POST['year'];
-
-        return redirect('/recovery')
-        ->with('success','Joining Confirmation Mail Send Successfully.')
-        ->with('selected_year',$year);*/
-
         $user_id = \Auth::user()->id;
 
         $account_userid = getenv('ACCOUNTANTUSERID');
-        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+        //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
         $superadmin_userid = getenv('SUPERADMINUSERID');
 
         $accountantemail = User::getUserEmailById($account_userid);
-        $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+        //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
         $superadminemail = User::getUserEmailById($superadmin_userid);
         
-        $cc_users_array = array($operationsexecutivemail,$superadminemail);
+        /*$cc_users_array = array($operationsexecutivemail,$superadminemail);
+        $cc_users_array = array_filter($cc_users_array);*/
 
         $join_mail = Bills::getJoinConfirmationMail($id);
         $candidate_name = $join_mail['candidate_name'];
         $candidate_id = $join_mail['candidate_id'];
-
-        $cc_users_array = array_filter($cc_users_array);
 
         $module = "Joining Confirmation";
         $sender_name = $user_id;
         $to = $accountantemail;
-        $cc = implode(",",$cc_users_array);
+        //$cc = implode(",",$cc_users_array);
+        $cc = $superadminemail;
         $subject = "Joining Confirmation of - ". $candidate_name;
         $message = "Joining Confirmation of - ". $candidate_name;
         $module_id = $id;
@@ -1954,74 +1895,27 @@ class BillsController extends Controller
         $pdf->setPaper('A4', 'portrait');
         $pdf->save(public_path('uploads/bills/'.$id.'/'.$id.'_Invoice.pdf'));*/
 
-        /*$user_id = \Auth::user()->id;
-        //Logged in User Email Id
-        $user_email = User::getUserEmailById($user_id);
-
-        $superadmin_userid = getenv('SUPERADMINUSERID');
-        $account_userid = getenv('ACCOUNTANTUSERID');
-        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
-
-        if ($user_id == $superadmin_userid) {
-            $accountantemail = User::getUserEmailById($account_userid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
-            $cc_users_array = array($accountantemail,$operationsexecutivemail);
-        }
-        else if ($user_id == $account_userid) {
-            $superadminemail = User::getUserEmailById($superadmin_userid);
-            $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
-            $cc_users_array = array($superadminemail,$operationsexecutivemail);
-        }
-        else if ($user_id == $operationsexecutiveuserid) {
-            $superadminemail = User::getUserEmailById($superadmin_userid);
-            $accountantemail = User::getUserEmailById($account_userid);
-            $cc_users_array = array($superadminemail,$accountantemail);
-        }
-        else {
-            $superadminemail = User::getUserEmailById($superadmin_userid);
-            $cc_users_array[] = $superadminemail;   
-        }
-
-        $join_mail = Bills::getJoinConfirmationMail($id);
-        $candidate_name = $join_mail['candidate_name'];
-        $cc_users_array = array_filter($cc_users_array);
-
-        $module = "Invoice Generate";
-        $sender_name = $user_id;
-        $to = $user_email;
-        $cc = implode(",",$cc_users_array);
-        $subject = "Generated Invoice of - ". $candidate_name;
-        $message = "Generated Invoice of - ". $candidate_name;
-        $module_id = $id;
-
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-        \DB::statement("UPDATE bills SET joining_confirmation_mail = '3' where id=$id");
-
-        return redirect('/recovery')
-        ->with('success','Invoice Generated and Mailed Successfully.')
-        ->with('selected_year',$year);*/
-
         $user_id = \Auth::user()->id;
 
         $account_userid = getenv('ACCOUNTANTUSERID');
-        $operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+        //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
         $superadmin_userid = getenv('SUPERADMINUSERID');
         
         $accountantemail = User::getUserEmailById($account_userid);
-        $operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+        //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
         $superadminemail = User::getUserEmailById($superadmin_userid);
         
-        $cc_users_array = array($operationsexecutivemail,$superadminemail);
-        
+        /*$cc_users_array = array($operationsexecutivemail,$superadminemail);
+        $cc_users_array = array_filter($cc_users_array);*/
+
         $join_mail = Bills::getJoinConfirmationMail($id);
         $candidate_name = $join_mail['candidate_name'];
-        $cc_users_array = array_filter($cc_users_array);
 
         $module = "Invoice Generate";
         $sender_name = $user_id;
         $to = $accountantemail;
-        $cc = implode(",",$cc_users_array);
+        //$cc = implode(",",$cc_users_array);
+        $cc = $superadminemail;
         $subject = "Generated Invoice of - ". $candidate_name;
         $message = "Generated Invoice of - ". $candidate_name;
         $module_id = $id;
