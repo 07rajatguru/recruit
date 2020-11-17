@@ -55,30 +55,27 @@ class CandidateAutoScript extends Command
         $input['company_name'] = 'Adler Talent Solution';
         $input['subject'] = 'Thanks for your application - '.$input['company_name'];
 
-        //echo $input['subject'];exit;
-
-        //print_r($input);exit;
-
         if(isset($candidate_res) && sizeof($candidate_res) > 0) {
 
             foreach ($candidate_res as $key => $value) {
 
-                $input['candidate_name'] = $value['full_name'];
-                $input['to'] = $value['email'];
-                $input['cc'] = 'dhara@trajinfotech.com';
                 $candidate_id = $value['id'];
 
-                //print_r($input);exit;
+                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '2' where id = $candidate_id");
 
-                \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input)
-                {
+                $input['candidate_name'] = $value['full_name'];
+                $input['owner_email'] = $value['owner_email'];
+                $input['to'] = $value['email'];
+
+                \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
+
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                    $message->to($input['to'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
 
-                echo $value['id']." - 1". "\n";
+                echo $candidate_id . " - 1". "\n";
             }
         }
     }

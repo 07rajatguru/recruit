@@ -38,8 +38,7 @@ class ExistCandidateAutoScript extends Command
      */
     public function handle()
     {
-        //$candidate_res = CandidateBasicInfo::getCandidateDetails(25,0,'','');
-        $candidate_res = CandidateBasicInfo::getCandidateDetails(10,0,'','');
+        $candidate_res = CandidateBasicInfo::getCandidateDetails(50,0,'','');
 
         //print_r($candidate_res);exit;
 
@@ -53,46 +52,35 @@ class ExistCandidateAutoScript extends Command
         $input['company_name'] = 'Adler Talent Solution';
         $input['subject'] = 'Thanks for your application - '.$input['company_name'];
 
-        //echo $input['subject'];exit;
-
-        //print_r($input);exit;
-
         if(isset($candidate_res) && sizeof($candidate_res) > 0) {
 
             foreach ($candidate_res as $key => $value) {
 
+                $candidate_id = $value['id'];
+
+                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '2' where id = $candidate_id");
+
                 if(isset($value['email']) && $value['email'] != '') {
 
                     $input['candidate_name'] = $value['full_name'];
-                    /*$input['to'] = $value['email'];
-                    $input['cc'] = 'dhara@trajinfotech.com';*/
-                    /*$input['to'] = 'tarikapanjwani@gmail.com';
-                    $input['cc'] = 'saloni@trajinfotech.com';*/
-                    /*$input['to'] = 'saloni@trajinfotech.com';
-                    $input['cc'] = 'trajinfotech15@gmail.com';*/
-
+                    $input['owner_email'] = $value['owner_email'];
                     $input['to'] = trim($value['email']);
-                    $candidate_id = $value['id'];
 
-                    //print_r($input);exit;
+                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
 
-                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input)
-                    {
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
 
-                    echo $value['id']." - 1". "\n";
+                    echo $candidate_id . " - 1". "\n";
                 }
                 else {
-
-                    $candidate_id = $value['id'];
                     
-                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
+                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '0' where id = '$candidate_id';");
 
-                    echo $value['id']." - 1". "\n";
+                    echo $candidate_id . " - 1". "\n";
                 }
             }
         }

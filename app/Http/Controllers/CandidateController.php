@@ -21,6 +21,7 @@ use App\Bills;
 use App\FunctionalRoles;
 use App\EducationQualification;
 use App\EducationSpecialization;
+use App\Events\NotificationMail;
     
 class CandidateController extends Controller
 {
@@ -323,6 +324,7 @@ class CandidateController extends Controller
     public function store(Request $request) {
 
         $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
 
         $candidateSex = $request->input('candidateSex');
         $candiateMaritalStatus = $request->input('maritalStatus');
@@ -630,6 +632,20 @@ class CandidateController extends Controller
             // Candidate Vacancy Details email
             $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($candidate_id,$user_id,$job_id);
         }
+
+        // Add Entry in email notifications for autoscript email
+
+        $module = "New AutoScript Mail";
+        $sender_name = $user_id;
+        $to = $candidateEmail;
+        $subject = 'Thanks for your application - Adler Talent Solution';
+        $message = "<tr><td>" . $user_name . " added new Candidate </td></tr>";
+        $module_id = $candidate_id;
+
+        $cc = '';
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
         return redirect()->route('candidate.index')->with('success','Candidate Created Successfully');
     }
 

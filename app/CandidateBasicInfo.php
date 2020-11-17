@@ -522,7 +522,7 @@ class CandidateBasicInfo extends Model
         $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary',
             'candidate_otherinfo.expected_salary as expected_salary',
             'candidate_otherinfo.skype_id as skype_id',
-            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization');
+            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization','users.email as owner_email');
 
         $query = $query->where('candidate_basicinfo.id','=',$candidate_id);
         $response = $query->first();
@@ -532,6 +532,7 @@ class CandidateBasicInfo extends Model
 
         $candidate['candidate_id'] = $response->id;
         $candidate['owner'] = $response->owner_name;
+        $candidate['owner_email'] = $response->owner_email;
         $candidate['full_name'] = $response->full_name;
         $candidate['email'] = $response->email;
         $candidate['mobile'] = $response->mobile;
@@ -578,7 +579,10 @@ class CandidateBasicInfo extends Model
     public static function getCandidateDetails($limit=0,$offset=0,$from_date=NULL,$to_date=NULL) {
 
         $query = CandidateBasicInfo::query();
-        $query = $query->select('candidate_basicinfo.*');
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.*', 'users.email as owner_email');
+
 
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
@@ -607,6 +611,7 @@ class CandidateBasicInfo extends Model
             $candidate[$i]['full_name'] = $value->full_name;
             $candidate[$i]['email'] = $value->email;
             $candidate[$i]['mobile'] = $value->mobile;
+            $candidate[$i]['owner_email'] = $value->owner_email;
             
             $i++;
         }

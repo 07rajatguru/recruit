@@ -971,6 +971,26 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+            else if ($value['module'] == 'New AutoScript Mail') {
+
+                // get todos subject and description
+
+                $candidate_details = CandidateBasicInfo::getCandidateDetailsById($module_id);
+
+                $input['candidate_name'] = $candidate_details['full_name'];
+                $input['owner_email'] = $candidate_details['owner_email'];
+
+                \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
+
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->subject($input['subject']);
+                });
+           
+               
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+
+                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
+            }
         }
     }
 }
