@@ -166,7 +166,7 @@ class UsersLog extends Model
         $query = $query->select('users_log.*');
         $query = $query->where('user_id',$user_id);
         $query = $query->where('users_log.date','>=',date('Y-m-d',strtotime('Monday this week')));
-            $query = $query->where('users_log.date','<=',date('Y-m-d',strtotime("$date +6days")));
+        $query = $query->where('users_log.date','<=',date('Y-m-d',strtotime("$date +6days")));
         $count = $query->count();
 
         return $count;

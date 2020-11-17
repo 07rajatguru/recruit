@@ -1556,12 +1556,11 @@ class ClientController extends Controller
             $module = 'Client Bulk Email';
             $sender_name = $user_id;
             $to = $client_email;
-            $subject = $email_subject;           
-            //$cc='rajlalwani@adlertalent.com';
-            $cc = 'saloni@trajinfotech.com';
+            $subject = $email_subject; 
+            $cc = 'rajlalwani@adlertalent.com';
 
-            if(strpos($email_body, 'Clientname') !== false) {
-                $new_email_body = str_replace('Clientname',$client_name,$email_body);
+            if(strpos($email_body, '{Clientname}') !== false) {
+                $new_email_body = str_replace('{Clientname}',$client_name,$email_body);
                 $body_message = "<tr><td style='padding:8px;'>$new_email_body</td></tr>";
             }
             else {
