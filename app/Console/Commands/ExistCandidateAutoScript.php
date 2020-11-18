@@ -38,7 +38,7 @@ class ExistCandidateAutoScript extends Command
      */
     public function handle()
     {
-        $candidate_res = CandidateBasicInfo::getCandidateDetails(50,0,'','');
+        $candidate_res = CandidateBasicInfo::getCandidateDetails(1,0,'','');
 
         //print_r($candidate_res);exit;
 
@@ -78,9 +78,9 @@ class ExistCandidateAutoScript extends Command
                 }
                 else {
                     
-                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '0' where id = '$candidate_id';");
+                    \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$candidate_id';");
 
-                    echo $candidate_id . " - 1". "\n";
+                    echo $candidate_id . " - 0". "\n";
                 }
             }
         }

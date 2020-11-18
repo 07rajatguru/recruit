@@ -635,7 +635,7 @@ class CandidateController extends Controller
 
         // Add Entry in email notifications for autoscript email
 
-        $module = "New AutoScript Mail";
+        $module = "New Candidate AutoScript Mail";
         $sender_name = $user_id;
         $to = $candidateEmail;
         $subject = 'Thanks for your application - Adler Talent Solution';

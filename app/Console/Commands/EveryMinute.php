@@ -971,7 +971,7 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
-            else if ($value['module'] == 'New AutoScript Mail') {
+            else if ($value['module'] == 'New Candidate AutoScript Mail') {
 
                 // get todos subject and description
 
