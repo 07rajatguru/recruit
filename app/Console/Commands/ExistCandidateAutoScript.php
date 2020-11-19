@@ -38,9 +38,9 @@ class ExistCandidateAutoScript extends Command
      */
     public function handle()
     {
-        $candidate_ids = CandidateBasicInfo::getCandidateDetails(1,0);
+        $candidate_res = CandidateBasicInfo::getCandidateDetails(1,0);
 
-        //print_r($candidate_ids);exit;
+        //print_r($candidate_res);exit;
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -51,21 +51,19 @@ class ExistCandidateAutoScript extends Command
         $input['app_url'] = $app_url;
         $input['subject'] = 'Thanks for your application - Adler Talent Solution';
 
-        if(isset($candidate_ids) && sizeof($candidate_ids) > 0) {
+        if(isset($candidate_res) && sizeof($candidate_res) > 0) {
 
-            foreach ($candidate_ids as $key => $value) {
+            foreach ($candidate_res as $key => $value) {
 
                 $candidate_id = $value['id'];
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '2' where id = $candidate_id");
 
-                $candidate_details = CandidateBasicInfo::getCandidateDetailsById($candidate_id);
+                if(isset($value['email']) && $value['email'] != '') {
 
-                if(isset($candidate_details['email']) && $candidate_details['email'] != '') {
-
-                    $input['candidate_name'] = $candidate_details['full_name'];
-                    $input['owner_email'] = $candidate_details['owner_email'];
-                    $input['to'] = trim($candidate_details['email']);
+                    $input['candidate_name'] = $value['full_name'];
+                    $input['owner_email'] = 'info@adlertalent.com';
+                    $input['to'] = trim($value['email']);
 
                     \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
 

@@ -579,7 +579,7 @@ class CandidateBasicInfo extends Model
     public static function getCandidateDetails($limit=0,$offset=0) {
 
         $query = CandidateBasicInfo::query();
-        $query = $query->select('candidate_basicinfo.id','candidate_basicinfo.autoscript_status');
+        $query = $query->select('candidate_basicinfo.*');
 
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
@@ -599,6 +599,8 @@ class CandidateBasicInfo extends Model
         foreach ($res as $key => $value) {
 
             $candidate[$i]['id'] = $value->id;
+            $candidate[$i]['full_name'] = $value->full_name;
+            $candidate[$i]['email'] = $value->email;
             
             $i++;
         }
