@@ -27,6 +27,7 @@ use App\JobVisibleUsers;
 use App\RoleUser;
 use App\ModuleVisibleUser;
 use App\CandidateBasicInfo;
+use App\UsersEmailPwd;
 
 class UserController extends Controller
 {
@@ -216,6 +217,15 @@ class UserController extends Controller
                 }
             }
         }
+
+        // Add entry in email password table
+
+        $users_email_pwd = new UsersEmailPwd();
+        $users_email_pwd->user_id = $user_id;
+        $users_email_pwd->email = $request->input('email');
+        $users_email_pwd->password = $request->input('password');
+        $users_email_pwd->save();
+
         return redirect()->route('users.index')->with('success','User Created Successfully.');
     }
 
@@ -379,6 +389,16 @@ class UserController extends Controller
 
         $users = $user->save();
 
+         // Add entry in email password table
+
+        UsersEmailPwd::where('user_id',$id)->delete();
+
+        $users_email_pwd = new UsersEmailPwd();
+        $users_email_pwd->user_id = $id;
+        $users_email_pwd->email = $request->input('email');
+        $users_email_pwd->password = $request->input('password');
+        $users_email_pwd->save();
+
         //  If status is inactive then delete this user process and training
         if (isset($status) && $status == 'Inactive') {
             ProcessVisibleUser::where('user_id',$id)->delete();
@@ -387,6 +407,7 @@ class UserController extends Controller
         if (isset($status) && $status == 'Active') {
             return redirect()->route('users.index')->with('success','User updated successfully. please add this user manually in training and process module.');
         }
+
         return redirect()->route('users.index')->with('success','User Updated Successfully.');
     }
 
@@ -417,8 +438,8 @@ class UserController extends Controller
 
             rmdir($photo_path);
 
-            $path="uploads/users/" . $user_photo->user_id;
-            $files=glob($path . "/*");
+            $path = "uploads/users/" . $user_photo->user_id;
+            $files = glob($path . "/*");
 
             foreach($files as $file_nm) {
                 if(is_file($file_nm)) {
@@ -427,23 +448,21 @@ class UserController extends Controller
             }
 
             $user_id = $user_photo->user_id;
-            $path1="uploads/users/" . $user_id . "/";
+            $path1 = "uploads/users/" . $user_id . "/";
             rmdir($path1);
 
             $user_doc = UsersDoc::where('user_id','=',$id)->delete();
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
-            ProcessVisibleUser::where('user_id',$id)->delete();
-            TrainingVisibleUser::where('user_id',$id)->delete();
-            UsersFamily::where('user_id',$id)->delete();
-            $user = User::where('id','=',$id)->delete();
         }
         else {
             $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
-            ProcessVisibleUser::where('user_id',$id)->delete();
-            TrainingVisibleUser::where('user_id',$id)->delete();
-            UsersFamily::where('user_id',$id)->delete();
-            $user = User::where('id','=',$id)->delete();
         }
+
+        ProcessVisibleUser::where('user_id',$id)->delete();
+        TrainingVisibleUser::where('user_id',$id)->delete();
+        UsersFamily::where('user_id',$id)->delete();
+        UsersEmailPwd::where('user_id',$id)->delete();
+        User::where('id','=',$id)->delete();
 
         return redirect()->route('users.index')->with('success','User Deleted Successfully.');
     }
@@ -761,6 +780,10 @@ class UserController extends Controller
         $user_basic_info->email = Input::get('email');
         $user_basic_info->secondary_email = Input::get('semail');
         $user_basic_info->save();
+
+        // Update in users email password table
+
+        DB::statement("UPDATE users_email_pwd SET email = '$email' where user_id = $user_id");
 
         // User Otherinfo
         $personal_email = Input::get('personal_email');

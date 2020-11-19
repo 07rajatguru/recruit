@@ -100,13 +100,13 @@
 @section('customscripts')
 <script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script>
-        $(document).ready(function()
-        {
-            var action = $("#action").val();
+        $(document).ready(function() {
+            
+            /*var action = $("#action").val();
 
             if(action == 'add'){    
                 document.getElementById("email_body").defaultValue = "Dear {Clientname}, ";
-            }
+            }*/
 
             CKEDITOR.replace( 'email_body', {
                 filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
