@@ -576,25 +576,16 @@ class CandidateBasicInfo extends Model
         return $candidate;
     }
 
-    public static function getCandidateDetails($limit=0,$offset=0,$from_date=NULL,$to_date=NULL) {
+    public static function getCandidateDetails($limit=0,$offset=0) {
 
         $query = CandidateBasicInfo::query();
-        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
-        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
-        $query = $query->select('candidate_basicinfo.*', 'users.email as owner_email');
-
+        $query = $query->select('candidate_basicinfo.id','candidate_basicinfo.autoscript_status');
 
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
         }
         if (isset($offset) && $offset > 0) {
             $query = $query->offset($offset);
-        }
-
-        if (isset($from_date) && $from_date != NULL && isset($to_date) && $to_date != NULL) {
-
-            $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
-            $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
         }
 
         $query = $query->where('candidate_basicinfo.autoscript_status','=',0);
@@ -608,10 +599,6 @@ class CandidateBasicInfo extends Model
         foreach ($res as $key => $value) {
 
             $candidate[$i]['id'] = $value->id;
-            $candidate[$i]['full_name'] = $value->full_name;
-            $candidate[$i]['email'] = $value->email;
-            $candidate[$i]['mobile'] = $value->mobile;
-            $candidate[$i]['owner_email'] = $value->owner_email;
             
             $i++;
         }

@@ -38,9 +38,9 @@ class ExistCandidateAutoScript extends Command
      */
     public function handle()
     {
-        $candidate_res = CandidateBasicInfo::getCandidateDetails(1,0,'','');
+        $candidate_ids = CandidateBasicInfo::getCandidateDetails(1,0);
 
-        //print_r($candidate_res);exit;
+        //print_r($candidate_ids);exit;
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -49,22 +49,23 @@ class ExistCandidateAutoScript extends Command
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
         $input['app_url'] = $app_url;
-        $input['company_name'] = 'Adler Talent Solution';
-        $input['subject'] = 'Thanks for your application - '.$input['company_name'];
+        $input['subject'] = 'Thanks for your application - Adler Talent Solution';
 
-        if(isset($candidate_res) && sizeof($candidate_res) > 0) {
+        if(isset($candidate_ids) && sizeof($candidate_ids) > 0) {
 
-            foreach ($candidate_res as $key => $value) {
+            foreach ($candidate_ids as $key => $value) {
 
                 $candidate_id = $value['id'];
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '2' where id = $candidate_id");
 
-                if(isset($value['email']) && $value['email'] != '') {
+                $candidate_details = CandidateBasicInfo::getCandidateDetailsById($candidate_id);
 
-                    $input['candidate_name'] = $value['full_name'];
-                    $input['owner_email'] = $value['owner_email'];
-                    $input['to'] = trim($value['email']);
+                if(isset($candidate_details['email']) && $candidate_details['email'] != '') {
+
+                    $input['candidate_name'] = $candidate_details['full_name'];
+                    $input['owner_email'] = $candidate_details['owner_email'];
+                    $input['to'] = trim($candidate_details['email']);
 
                     \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
 
