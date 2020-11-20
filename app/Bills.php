@@ -1465,6 +1465,11 @@ class Bills extends Model
         if (isset($personwise_res) && sizeof($personwise_res)>0) {
             $total_salary_offered = 0;
             $total_billing = 0;
+            $total_monthwise_billing = 0;
+            $total_monthwise_gst = 0;
+            $total_monthwise_invoice_raised = 0;
+            $total_monthwise_payment = 0;
+
             foreach ($personwise_res as $key => $value) {
 
                 //$salary = $value->fixed_salary;
@@ -1523,6 +1528,40 @@ class Bills extends Model
 
                 $person_data[$j]['total_salary_offered'] = Utils::IND_money_format(round($total_salary_offered));
                 $person_data[$j]['total_billing'] = Utils::IND_money_format(round($total_billing));
+
+                // Specially for Montwise Report
+
+                // 1. For Billing
+                $billing = str_replace(",", "", $person_data[$j]['billing']);
+                $billing = (int)$billing;
+
+                $total_monthwise_billing = $total_monthwise_billing + $billing;
+                $person_data[$j]['total_monthwise_billing'] = Utils::IND_money_format(round($total_monthwise_billing));
+
+                // 2. For GST
+
+                $gst = str_replace(",", "", $person_data[$j]['gst']);
+                $gst = (int)$gst;
+
+                $total_monthwise_gst = $total_monthwise_gst + $gst;
+                $person_data[$j]['total_monthwise_gst'] = Utils::IND_money_format(round($total_monthwise_gst));
+
+                // 3. For Invoice Raised
+
+                $invoice_raised = str_replace(",", "", $person_data[$j]['invoice_raised']);
+                $invoice_raised = (int)$invoice_raised;
+
+                $total_monthwise_invoice_raised = $total_monthwise_invoice_raised + $invoice_raised;
+                $person_data[$j]['total_monthwise_invoice_raised'] = Utils::IND_money_format(round($total_monthwise_invoice_raised));
+
+                // 4. For Payment
+
+                $payment = str_replace(",", "", $person_data[$j]['payment']);
+                $payment = (int)$payment;
+
+                $total_monthwise_payment = $total_monthwise_payment + $payment;
+                $person_data[$j]['total_monthwise_payment'] = Utils::IND_money_format(round($total_monthwise_payment));
+
                 $j++;
             }
         }
