@@ -1012,6 +1012,7 @@ class ClientBasicinfo extends Ardent
 
             $client['name'] = $res->name;
             $client['mobile'] = $res->mobile;
+            $client['account_manager_id'] = $res->account_manager_id;
             $client['am_name'] = $res->am_name;
             $client['mail'] = $res->mail;
             $client['ind_name'] = $res->ind_name;

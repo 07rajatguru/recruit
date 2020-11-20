@@ -783,6 +783,7 @@ class UserController extends Controller
 
         // Update in users email password table
 
+        $email = Input::get('email');
         DB::statement("UPDATE users_email_pwd SET email = '$email' where user_id = $user_id");
 
         // User Otherinfo

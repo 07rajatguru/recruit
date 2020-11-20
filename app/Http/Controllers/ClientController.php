@@ -1550,25 +1550,52 @@ class ClientController extends Controller
 
         foreach($client_ids_array as $key => $value) {
 
-            $client_email = ClientBasicinfo::getClientEmailByID($value);
-            $client_name = ClientBasicinfo::getClientNameByID($value);
+            $client_details = ClientBasicinfo::getClientDetailsById($value);
+            $client_email = $client_details['mail'];
 
             $module = 'Client Bulk Email';
             $sender_name = $user_id;
             $to = $client_email;
             $subject = $email_subject; 
             $cc = 'rajlalwani@adlertalent.com';
+            $module_id = $value;
 
             if(strpos($email_body, '{Clientname}') !== false) {
+
+                $client_name = $client_details['coordinator_name'];
                 $new_email_body = str_replace('{Clientname}',$client_name,$email_body);
                 $body_message = "<tr><td style='padding:8px;'>$new_email_body</td></tr>";
             }
             else {
                 $body_message = "<tr><td style='padding:8px;'>$email_body</td></tr>";
             }
-           
-            $module_id = $value;
-            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            if(strpos($body_message, '{Amsignature}') !== false) {
+                
+                $client_am_id = $client_details['account_manager_id'];
+                $user_info = User::getProfileInfo($client_am_id);
+                $am_signature = $user_info->signature;
+
+                $new_email_body_1 = str_replace('{Amsignature}',$am_signature,$body_message);
+                $body_message_1 = "<tr><td style='padding:8px;'>$new_email_body_1</td></tr>";
+            }
+            else {
+                $body_message_1 = "<tr><td style='padding:8px;'>$body_message</td></tr>";
+            }
+
+            if(strpos($body_message_1, '{Lusignature}') !== false) {
+                
+                $user_info = User::getProfileInfo($user_id);
+                $lu_signature = $user_info->signature;
+
+                $new_email_body_2 = str_replace('{Lusignature}',$lu_signature,$body_message_1);
+                $body_message_2 = "<tr><td style='padding:8px;'>$new_email_body_2</td></tr>";
+            }
+            else {
+                $body_message_2 = "<tr><td style='padding:8px;'>$body_message_1</td></tr>";
+            }
+            
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message_2,$module_id,$cc));
         }
 
         \DB::statement("UPDATE email_template SET `name`='$template_nm',`subject`='$email_subject',`email_body`='$email_body',updated_at = '$updated_at' where `id` = '$email_template_id'"); 
