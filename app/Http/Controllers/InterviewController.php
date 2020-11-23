@@ -640,11 +640,13 @@ class InterviewController extends Controller
             $interview[$i] = Interview::ScheduleMailMultiple($value);
             $to_address_client = array();
             $type_array = array();
+            $file_path = array();
             $j = 0;
 
             foreach ($interview as $key1 => $value1) {
                 $to_address_client[$j] = $value1['client_owner_email'];
                 $type_array[$j] = $value1['interview_type'];
+                $file_path[$j] = $value1['file_path'];
                 $j++;
             }
             $i++;
@@ -662,11 +664,18 @@ class InterviewController extends Controller
         $input['app_url'] = $app_url;
         $input['interview_details'] = $interview;
         $input['subject'] = $subject;
-        $input['type_array'] = $type_array;
+        $input['type_string'] = implode(",", $type_array);
 
         \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to_address'])->subject($input['subject']);
+
+            if (isset($file_path) && sizeof($file_path) > 0) {
+
+                foreach ($file_path as $key => $value) {
+                    $message->attach($value);
+                }
+            }
         });
 
         return redirect('/interview')->with('success','Interview Email Sent Successfully.');

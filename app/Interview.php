@@ -56,9 +56,11 @@ class Interview extends Model
 
         $typeArray = array('' => 'Select Interview Type');
         $typeArray['Telephonic Interview'] = 'Telephonic Interview';
-        //$typeArray['General Interview'] = 'Video Interview';
-        $typeArray['Video Interview'] = 'Video Interview';
         $typeArray['Personal Interview'] = 'Personal Interview';
+        $typeArray['Video-G Meet'] = 'Video-G Meet';
+        $typeArray['Video-Zoom'] = 'Video-Zoom';
+        $typeArray['Video-Microsoft Teams'] = 'Video-Microsoft Teams';
+        $typeArray['Video-Others'] = 'Video-Others';
 
         return $typeArray;
     }
@@ -763,11 +765,12 @@ class Interview extends Model
 
         // Candidate Attachment
         $attachment = CandidateUploadedResume::getCandidateAttachment($candidate_id);
-        if (isset($attachment) && $attachment!='') {
-            $file = $attachment->file_name;
+        if (isset($attachment) && $attachment != '') {
+            $file_path = public_path() . "/" . $attachment->file;
         }
-        $file_path = 'uploads/candidate/3/1401306.pdf';
-            //print_r($file_path);exit;
+        else {
+            $file_path = '';
+        }
 
         $interview = Interview::getInterviewsByIds($interview_id);
 
@@ -812,18 +815,19 @@ class Interview extends Model
         $input['company_name'] = $interview->client_name;
         $input['city'] = $interview->job_city;
         $input['interview_location'] = $interview->interview_location;
+        $input['file_path'] = $file_path;
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' position in '. $input['city']);
-           /* $message->attach($input['file'], [
-                        'as' => 'file.pdf',
-                        'mime' => 'application/pdf',
-                    ]);*/
+
+            if (isset($input['file_path']) && $input['file_path'] != '') {
+                $message->attach($input['file_path']);
+            }
         });
     }
 
-    public static function ScheduleMailMultiple($value){
+    public static function ScheduleMailMultiple($value) {
 
         $interview_data = Interview::find($value);
 
@@ -847,6 +851,15 @@ class Interview extends Model
         $cmobile = $candidate_response->mobile;
         $cemail = $candidate_response->email;
 
+        // Candidate Attachment
+        $attachment = CandidateUploadedResume::getCandidateAttachment($interview_data['candidate_id']);
+        if (isset($attachment) && $attachment != '') {
+            $file_path = public_path() . "/" . $attachment->file;
+        }
+        else {
+            $file_path = '';
+        }
+
         $interview = Interview::getInterviewsByIds($value);
 
         $location ='';
@@ -866,6 +879,8 @@ class Interview extends Model
                 $location .= ", ".$interview->job_country;
         }
 
+        $city = $interview->job_city;
+
         $datearray = explode(' ', $interview->interview_date);
         $interview_date = $datearray[0];
         $interview_time = $datearray[1];
@@ -883,7 +898,8 @@ class Interview extends Model
             $interview_details['job_designation'] = $interview->posting_title;
         }
 
-        $interview_details['job_location'] = $location;
+        //$interview_details['job_location'] = $location;
+        $interview_details['job_location'] = $city;
         $interview_details['interview_date'] = $interview_date;
         $interview_details['interview_time'] = $interview_time;
         $interview_details['interview_type'] =$interview->interview_type;
@@ -892,6 +908,7 @@ class Interview extends Model
         $interview_details['skype_id'] = $interview->skype_id;
         $interview_details['candidate_location'] = $interview->candidate_location;
         $interview_details['interview_location'] = $interview->interview_location;
+        $interview_details['file_path'] = $file_path;
 
         return $interview_details;
 

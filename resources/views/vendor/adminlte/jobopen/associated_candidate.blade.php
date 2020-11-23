@@ -745,12 +745,12 @@
         function showHideDiv() {
 
             var type = $("#type").val();
-            
-            if (type == 'Video Interview') {
-                $(".skype").show();
+
+            if (type == 'Personal Interview' || type == 'Telephonic Interview') {
+                $(".skype").hide();
             }
             else {
-                $(".skype").hide();
+                $(".skype").show();
             }
 
             if (type == 'Personal Interview') {
