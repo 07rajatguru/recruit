@@ -708,6 +708,8 @@ class Interview extends Model
         $interview_date = $datearray[0];
         $interview_time = $datearray[1];
 
+        $interview_type = $interview->interview_type;
+
         $input['cname'] = $cname;
         $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
@@ -722,12 +724,12 @@ class Interview extends Model
         $input['interview_time'] = $interview_time;
         $input['interview_location'] = $job_details['interview_location'];
         $input['contact_person'] = $job_details['contact_person'];
+        $input['interview_type'] = $interview_type;
 
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
         });
-
     }
 
     public static function getScheduleEmail($candidate_id,$posting_title,$interview_id){
