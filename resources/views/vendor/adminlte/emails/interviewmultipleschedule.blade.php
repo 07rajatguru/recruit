@@ -1,74 +1,74 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Adler Talent</title>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Adler Talent</title>
+        @yield('style')
+    </head>
 
-    @yield('style')
-</head>
+<body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
+    <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
+        <tr>
+            <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
+                <b><p>Dear Sir,</p></b>
+                <i><p>Greetings from Adler Talent Solutions !</p></i>
+                <p><u>Please find interview schedule as below for your kind reference:</u></p>
+                <p>
+                    <table width="580" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
+                        <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 11.0pt;">
+                            <td align="center"><b>Sr.<br/>No.</b></td>
+                            <td align="center"><b>Position</b></td>
+                            <td align="center"><b>Position Location</b></td>
+                            <td align="center"><b>Name of the Candidate</b></td>
+                            <td align="center"><b>Interview Date</b></td>
+                            <td align="center"><b>Interview Time</b></td>
+                            <td align="center"><b>Interview Location</b></td>
+                            <td align="center"><b>Candidate Location</b></td>
+                            <td align="center"><b>Mode of Interview</b></td>
 
-<body>
-<table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Cambria; border-collapse: collapse; color: #444444;padding: 50px 54px;border:0" align="center">
-    <tr>
-        <td width="600">
-            <b><p>Dear Sir,</p></b>
-            <i><p>Greetings from Adler Talent Solutions !</p></i>
-            <p><u>Please find interview schedule as below for your kind reference:</u></p>
-            <p>
-            <table width="580" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
-                <tr style="background-color: #7598d9">
-                    <td align="center"style="font-family: Cambria;"><b>Sr.<br/>No.</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Position</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Position Location</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Name of the Candidate</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Interview Date</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Interview Time</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Interview Location</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Candidate Location</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Mode of Interview</b></td>
-
-                    @if(isset($type_string) && $type_string != '')
-                        @if(strpos($type_string,"Video") !== false)
-                            <td align="center"style="font-family: Cambria;"><b>Video ID</b></td>
-                        @endif
-                    @endif
-                    <td align="center"style="font-family: Cambria;"><b>Contact No.</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Email ID</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Confirmed</b></td>
-                    <td align="center"style="font-family: Cambria;"><b>Source</b></td>
-                </tr>
-                <?php $i=0; ?>
-                @foreach($interview_details as $key => $value)
-                    <tr>
-                        <td align="center"style="font-family: Cambria;">{{ ++$i }}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['job_designation']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['job_location']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['cname']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
-                        <td align="center"style="font-family: Cambria;">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['interview_location']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['candidate_location']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['interview_type']}}</td>
-
-                        @if(isset($type_string) && $type_string != '')
-                            @if(strpos($type_string,"Video") !== false)
-                                <td align="center"style="font-family: Cambria;">{{$value['skype_id']}}
-                                </td>
+                            @if(isset($type_string) && $type_string != '')
+                                @if(strpos($type_string,"Video") !== false)
+                                    <td align="center"><b>Video ID</b></td>
+                                @endif
                             @endif
-                        @endif
-                        
-                        <td align="center"style="font-family: Cambria;">{{$value['cmobile']}}</td>
-                        <td align="center"style="font-family: Cambria;">{{$value['cemail']}}</td>
-                        <td align="center"style="font-family: Cambria;"><b>{{'Yes'}}</b></td>
-                        <td align="center"style="font-family: Cambria;"><b>{{'Adler'}}</b></td>
-                    </tr>
-                @endforeach
-            </table>
-            </p>
-            <p>Hope this works.</p>
-            <p>Thanks.</p>
-        </td>
-    </tr>
-</table>
+
+                            <td align="center"><b>Contact No.</b></td>
+                            <td align="center"><b>Email ID</b></td>
+                            <td align="center"><b>Confirmed</b></td>
+                            <td align="center"><b>Source</b></td>
+                        </tr>
+
+                        <?php $i=0; ?>
+                        @foreach($interview_details as $key => $value)
+                            <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                <td align="center">{{ ++$i }}</td>
+                                <td align="center">{{$value['job_designation']}}</td>
+                                <td align="center">{{$value['job_location']}}</td>
+                                <td align="center">{{$value['cname']}}</td>
+                                <td align="center">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
+                                <td align="center">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
+                                <td align="center">{{$value['interview_location']}}</td>
+                                <td align="center">{{$value['candidate_location']}}</td>
+                                <td align="center">{{$value['interview_type']}}</td>
+
+                                @if(isset($type_string) && $type_string != '')
+                                    @if(strpos($type_string,"Video") !== false)
+                                        <td align="center">{{$value['skype_id']}}</td>
+                                    @endif
+                                @endif
+                                
+                                <td align="center">{{$value['cmobile']}}</td>
+                                <td align="center">{{$value['cemail']}}</td>
+                                <td align="center"><b>{{'Yes'}}</b></td>
+                                <td align="center"><b>{{'Adler'}}</b></td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </p>
+                <p style="font-family:Cambria, serif;font-size: 11.0pt;">Hope this works.</p>
+                <p style="font-family:Cambria, serif;font-size: 11.0pt;">Thanks.</p>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
