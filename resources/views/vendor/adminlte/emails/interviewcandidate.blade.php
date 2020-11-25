@@ -41,9 +41,9 @@
                                 @endif
                                 <!-- <br/><br/>For more details about our company, please visit : <a href="https://adlertalent.com/">www.adlertalent.com</a> -->
                             </p>
-                            <p><b><u> As per our telephonic conversation, please find the interview Details below:</u></b></p>
+                            <p><b><u> As per our telephonic conversation, please find the interview Details below :</u></b></p>
                             <p><b>Company Name : </b>{{ $company_name }}</p>
-                            <p><b>Company URL: </b><a href="{{ $company_url }}">{{ $company_url }}</a></p>
+                            <p><b>Company URL : </b><a href="{{ $company_url }}">{{ $company_url }}</a></p>
                             <p><b>About Client : </b></p>
                             <p>{!! $client_desc !!}</p>
                             <p><b>Job Designation :</b> {{ $job_designation }}</p>
