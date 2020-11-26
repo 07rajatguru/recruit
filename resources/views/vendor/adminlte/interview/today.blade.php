@@ -13,6 +13,9 @@
                 <h2> {{$source}} Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
+                @permission(('send-consolidated-schedule'))
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()">Send Mail</button>
+                @endpermission
                 <a class="btn btn-success" href="{{ route('interview.create') }}">Create New Interview</a>
                 <a class="btn btn-primary" href="{{ route('interview.index') }}">Back</a>
             </div>
@@ -50,6 +53,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>{{ Form::checkbox('interview[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th width="80px">Action</th>
                 <th>Posting Title</th>
                 <th>Candidate</th>
@@ -76,8 +80,11 @@
                  ?>
                 <tr>
                     <td>{{ ++$i }}</td>
+
+                    <td><input type="checkbox" name="interview_ids" value="{{ $interView['id'] }}" class="interview_ids" id="{{ $interView['id'] }}"/></td>
+
                     <td>
-                        <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
+                        <a title="Show" class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
                         
                         <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($interView['id'],'index')) }}"></a>
 
@@ -96,6 +103,33 @@
             @endforeach
         </tbody>
     </table>
+
+    <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
+                </div>
+
+                {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule']) !!}
+
+                <div class="modal-body check-id"></div>
+
+                <input type="hidden" name="inter_ids" id="inter_ids" value="">
+                <input type="hidden" name="source" id="source" value="{{ $source }}">
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="yes-btn">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
 
 @section('customscripts')
@@ -107,10 +141,37 @@
                 autoclose: true
             });
 
+            $('#allcb').change(function() {
+                if($(this).prop('checked')){
+                    $('tbody tr td input[type="checkbox"]').each(function () {
+                        $(this).prop('checked', true);
+                    });
+                }else{
+                    $('tbody tr td input[type="checkbox"]').each(function () {
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+
+            $('.interview_ids').change(function () {
+                if ($(this).prop('checked')) {
+                    if ($('.interview_ids:checked').length == $('.interview_ids').length) {
+                        $("#allcb").prop('checked', true);
+                    }
+                }
+                else {
+                    $("#allcb").prop('checked', false);
+                }
+            });
+
             var table = jQuery('#interview_table').DataTable({
                 responsive: true,
                 stateSave : true,
                 "pageLength": 50,
+                "columnDefs": [ 
+                    { "targets": 1, "searchable": false, "orderable": false },
+                    { "targets": 2, "searchable": false, "orderable": false },
+                ],
             });
 
             if ( ! table.data().any() ) {
@@ -119,5 +180,41 @@
                 new jQuery.fn.dataTable.FixedHeader( table );
             }
         });
+
+        function checkIdsforMail() {
+
+            var token = $('input[name="csrf_token"]').val();
+            var interview_ids = new Array();
+
+            $("input:checkbox[name=interview_ids]:checked").each(function(){
+                interview_ids.push($(this).val());
+            });
+
+            $("#inter_ids").val(interview_ids);
+            $(".check-id").empty();
+
+            $.ajax({
+
+                type: 'POST',
+                url: '/interview/checkidsmail',
+                data: { interview_ids:interview_ids, '_token':token },
+
+                success: function(msg) {
+
+                    $(".interview-mail").show();
+
+                    if (msg.success == 'success') {
+
+                        $(".check-id").append(msg.mail);
+                        document.getElementById("yes-btn").disabled = false;
+                    }
+                    else {
+
+                        $(".check-id").append(msg.err);
+                        document.getElementById("yes-btn").disabled = true;
+                    }
+                }
+            });
+        }
     </script>
 @endsection

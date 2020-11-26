@@ -632,6 +632,13 @@ class InterviewController extends Controller
         $interview_ids = $_POST['inter_ids'];
         $subject = $_POST['subject'];
 
+        if(isset($_POST['source']) && $_POST['source'] != '') {
+            $source = $_POST['source'];
+        }
+        else {
+            $source = '';
+        }
+
         $interview_id = Interview::getInterviewIdInASCDate($interview_ids);
 
         $i = 0;
@@ -682,6 +689,25 @@ class InterviewController extends Controller
             }
         });
 
-        return redirect('/interview')->with('success','Interview Email Sent Successfully.');
+        if($source == 'Todays') {
+
+            return redirect('/interview/today')->with('success','Interview Email Sent Successfully.');
+        }
+        else if($source == 'Tomorrows') {
+
+            return redirect('/interview/tomorrow')->with('success','Interview Email Sent Successfully.');
+        }
+        else if($source == 'This Week') {
+
+            return redirect('/interview/thisweek')->with('success','Interview Email Sent Successfully.');
+        }
+        else if($source == 'Upcoming & Previous') {
+
+            return redirect('/interview/upcomingprevious')->with('success','Interview Email Sent Successfully.');
+        }
+        else {
+
+            return redirect('/interview')->with('success','Interview Email Sent Successfully.');
+        }
     }
 }
