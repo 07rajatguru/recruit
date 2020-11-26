@@ -1943,4 +1943,14 @@ class UserController extends Controller
 
         return redirect()->route('users.attendance')->with('success','Added Successfully');
     }
+
+    public function setJobOpentoAll() {
+
+        $id = $_POST['id'];
+        $checked = $_POST['checked'];
+
+        \DB::statement("UPDATE users SET job_open_to_all = '$checked' where id = '$id'");
+
+        return json_encode($checked);
+    }
 }

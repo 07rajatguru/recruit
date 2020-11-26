@@ -431,6 +431,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:user-delete']
     ]);
 
+    Route::post('users/jobopentoall',[
+        'as' => 'users.jobopentoall',
+        'uses' => 'UserController@setJobOpentoAll',
+    ]);
+
     // Admin > Roles
     Route::get('roles', [
         'as' => 'roles.index',

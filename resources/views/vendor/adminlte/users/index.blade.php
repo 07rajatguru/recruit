@@ -36,6 +36,7 @@
             <tr>
                 <th>No</th>
                 <th width="80px">Action</th>
+                <th width="5%">Job Open to all</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Roles</th>
@@ -60,6 +61,17 @@
                             <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
                         @endpermission
                     </td>
+
+                    @if($user->job_open_to_all == 1)
+                        <td>
+                            <center><input type="checkbox" checked=true id="{{ $user->id }}" class="check_job"></center>
+                        </td>
+                    @else
+                        <td>
+                            <center><input type="checkbox" id="{{ $user->id }}" class="check_job"><center>
+                        </td>
+                    @endif
+
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
@@ -84,9 +96,38 @@
             var table = jQuery('#users_table').DataTable({
                 responsive: true,
                 stateSave : true,
+                "columnDefs": [ 
+                    { "targets": 1, "searchable": false, "orderable": false },
+                    { "targets": 2, "searchable": false, "orderable": false },
+                ],
             });
 
             new jQuery.fn.dataTable.FixedHeader(table);
+
+            $(document).on('click', '.check_job', function (e) {
+
+                var url = 'users/jobopentoall';
+                var token = $('input[name="csrf_token"]').val();
+                var check = $(this).is(":checked");
+                var id = $(this).attr('id');
+                if (check == true) {
+                    var checked = 1;
+                }
+                else {
+                    var checked = 0;
+                }
+
+                $.ajax({
+                    url : url,
+                    type : "POST",
+                    data : {checked:checked,id:id,'_token':token},
+                    dataType:'json',
+                    success: function(res){
+
+                    }
+                });
+            });
+
         });
     </script>
 @endsection
