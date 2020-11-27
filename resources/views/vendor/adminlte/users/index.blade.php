@@ -34,8 +34,8 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="users_table">
         <thead>
             <tr>
-                <th>No</th>
-                <th width="80px">Action</th>
+                <th width="2%">No</th>
+                <th width="8%">Action</th>
                 <th width="5%">Job Open to all</th>
                 <th>Name</th>
                 <th>Email</th>

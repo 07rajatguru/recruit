@@ -1946,11 +1946,28 @@ class UserController extends Controller
 
     public function setJobOpentoAll() {
 
-        $id = $_POST['id'];
+        $user_id = $_POST['id'];
         $checked = $_POST['checked'];
 
-        \DB::statement("UPDATE users SET job_open_to_all = '$checked' where id = '$id'");
+        \DB::statement("UPDATE users SET job_open_to_all = '$checked' where id = '$user_id'");
 
+        // If job_open_to_all = 1 then new user visible that all jobs
+
+        $job_ids = JobOpen::getAllJobsId(1);
+
+        if (isset($job_ids) && $job_ids != '') {
+
+            foreach ($job_ids as $key => $value){
+
+                // Delete Old Record
+                JobVisibleUsers::where('job_id',$value)->where('user_id','=',$user_id)->delete();
+
+                $job_visible_users = new JobVisibleUsers();
+                $job_visible_users->job_id = $value;
+                $job_visible_users->user_id = $user_id;
+                $job_visible_users->save();
+            }
+        }
         return json_encode($checked);
     }
 }
