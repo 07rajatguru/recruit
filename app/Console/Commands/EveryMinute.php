@@ -331,7 +331,7 @@ class EveryMinute extends Command
                 $input['cc_array'] = $cc_array;
 
                 $lead_details = Lead::getLeadDetailsById($value['module_id']);
-                //print_r($lead_details);exit;
+                
                 $input['lead_details'] = $lead_details;
 
                 \Mail::send('adminlte::emails.leadaddemail', $input, function ($message) use($input) {
@@ -344,20 +344,34 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Forecasting') {
                 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $id = array($value['module_id']);
 
                 $bills_details = Bills::getBillsByIds($id);
-                //print_r($bills_details);exit;
+                
                 $input['bills_details'] = $bills_details;
+
+                $bill_docs = BillsDoc::getBillDocs($value['module_id']);
+
+                $input['bill_docs'] = $bill_docs;
 
                 \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+
+                    if (isset($input['bill_docs']) && sizeof($input['bill_docs']) > 0) {
+
+                        foreach ($input['bill_docs'] as $key => $value) {
+
+                            if(isset($value['file']) && $value['file'] != '') {
+                                $message->attach($value['file']);
+                            }
+                        }
+                    }
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
@@ -365,20 +379,35 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Recovery') {
                 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $id = array($value['module_id']);
 
                 $bills_details = Bills::getBillsByIds($id);
-                //print_r($bills_details);exit;
+
                 $input['bills_details'] = $bills_details;
 
+                $bill_docs = BillsDoc::getBillDocs($value['module_id']);
+
+                $input['bill_docs'] = $bill_docs;
+
                 \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
+
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+
+                    if (isset($input['bill_docs']) && sizeof($input['bill_docs']) > 0) {
+
+                        foreach ($input['bill_docs'] as $key => $value) {
+
+                            if(isset($value['file']) && $value['file'] != '') {
+                                $message->attach($value['file']);
+                            }
+                        }
+                    }
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
@@ -386,15 +415,15 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Cancel Forecasting') {
                 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $id = array($value['module_id']);
 
                 $bills_details = Bills::getBillsByIds($id);
-                //print_r($bills_details);exit;
+
                 $input['bills_details'] = $bills_details;
 
                 \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
@@ -407,15 +436,15 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Cancel Recovery') {
                 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $id = array($value['module_id']);
 
                 $bills_details = Bills::getBillsByIds($id);
-                //print_r($bills_details);exit;
+
                 $input['bills_details'] = $bills_details;
 
                 \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
@@ -428,15 +457,15 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Relive Forecasting') {
                 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $id = array($value['module_id']);
 
                 $bills_details = Bills::getBillsByIds($id);
-                //print_r($bills_details);exit;
+
                 $input['bills_details'] = $bills_details;
 
                 \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
@@ -449,15 +478,15 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Relive Recovery') {
                 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $id = array($value['module_id']);
 
                 $bills_details = Bills::getBillsByIds($id);
-                //print_r($bills_details);exit;
+
                 $input['bills_details'] = $bills_details;
 
                 \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
@@ -675,7 +704,7 @@ class EveryMinute extends Command
                     'mail.host' => trim('smtp.googlemail.com'),
                     'mail.port' => trim('465'),
                     'mail.username' => trim($user_details->secondary_email),
-                    'mail.password' => trim($user_details->password),
+                    'mail.password' => trim('jarelDa%4021'),
                     'mail.encryption' => trim('ssl'),
                 ]);
 

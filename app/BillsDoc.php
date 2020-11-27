@@ -25,4 +25,31 @@ class BillsDoc extends Model
 
         return $response; 
     }
+
+    public static function getBillDocs($bill_id) {
+
+        $bill_docs = BillsDoc::query();
+        $bill_docs = $bill_docs->select('bills_doc.*');
+        $bill_docs = $bill_docs->where('bills_doc.bill_id','=',$bill_id);
+        $bill_docs = $bill_docs->where('bills_doc.category','!=','Invoice');
+        
+        $response = $bill_docs->get();
+        $docs_array = array();
+        $i=0;
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $docs_array[$i]['id'] = $value->id;
+                $docs_array[$i]['bill_id'] = $value->bill_id;
+                $docs_array[$i]['category'] = $value->category;
+                $docs_array[$i]['file'] = public_path() . "/" . $value->file;
+                $docs_array[$i]['name'] = $value->name;
+
+                $i++;
+            }
+        }
+        return $docs_array; 
+    }
 }
