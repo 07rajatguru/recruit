@@ -598,11 +598,11 @@ class ClientBasicinfo extends Ardent
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->where('job_openings.id','=',$job_id);
         $query = $query->select('client_basicinfo.description as cabout');
-        $response = $query->get();
+        $response = $query->first();
 
         $client = array();
-        foreach ($response as $k=>$v) {
-            $client['cabout'] = strip_tags($v->cabout);
+        if(isset($response) && $response != '') {
+            $client['cabout'] = $response->cabout;
         }
         return $client;
     }

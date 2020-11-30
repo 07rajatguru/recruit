@@ -110,15 +110,7 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('about') ? 'has-error' : '' }}">
-                                <strong>About Client :</strong>
-                                {!! Form::textarea('about', null, array('id'=>'about','placeholder' => 'About Client','class' => 'form-control', 'tabindex' => '7', 'rows' => '5' )) !!}
-                                @if ($errors->has('about'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('about') }}</strong>
-                                </span>
-                                @endif
-                            </div>
+                            <div class="form-group add_about_div"></div>
 
                             <div class="form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
                                 <strong>Comments :</strong>
@@ -285,7 +277,7 @@
                 }
             });
 
-            $("#about").wysihtml5();
+            //$("#about").wysihtml5();
 
             $("#from").datetimepicker({
                 format:'DD-MM-YYYY h:mm A'
@@ -349,9 +341,19 @@
                     data:'job_id='+job_id,
                     dataType:'json',
                     success: function(data) {
-                        var cabout = data.cabout;
+
+                        $(".add_about_div").html("");
                         
+                        var cabout = data.cabout;
+                        var html = '';
+
+                        html += '<div class="form-group"><strong>About Client : </strong>';
+                        html += '<textarea placeholder="About Client" class="form-control" name="about" id="about" rows="5"></textarea></div>';
+
+                        $(".add_about_div").append(html);
+
                         $('#about').val(cabout);
+                        $("#about").wysihtml5();
                     }
                 });
             }
