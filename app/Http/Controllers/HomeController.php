@@ -71,6 +71,8 @@ class HomeController extends Controller
         $allclient = getenv('ALLCLIENTVISIBLEUSERID');
         $strtegy = getenv('STRATEGYUSERID');
 
+        $superadmin = getenv('SUPERADMINUSERID');
+
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         if($all_perm) {
@@ -225,6 +227,8 @@ class HomeController extends Controller
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
         $viewVariable['msg'] = $msg;
+        $viewVariable['superadmin'] = $superadmin;
+        $viewVariable['user_id'] = $user_id;
 
         return view('dashboard',$viewVariable);
     }

@@ -463,6 +463,9 @@
     </div>
 @stop
 
+<input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
+<input type="hidden" name="user_id" id="user_id" value="{{ $user_id }}">
+
 @section('customscripts')
 
     <script>
@@ -486,9 +489,27 @@
             var msg = $("#msg").val();
 
             if(msg != '') {
-                jQuery("#benchMarkModal").modal('show');
-            }
 
+                var superadmin = $("#superadmin").val();
+                var user_id = $("#user_id").val();
+
+                if(superadmin == user_id) {
+
+                    var event = new Date();
+                    var options = { weekday: 'long' };
+                    var day = event.toLocaleDateString('en-US', options);
+
+                    var hours = event.getHours();
+                    var minutes = event.getMinutes();
+
+                    if((day == 'Saturday' && hours == '11') || (day == 'Saturday' && hours == '12' && minutes == '0')) {
+                        jQuery("#benchMarkModal").modal('show');
+                    }
+                }
+                else {
+                    jQuery("#benchMarkModal").modal('show');
+                }
+            }
         });
 
         function opentoalljob() {
