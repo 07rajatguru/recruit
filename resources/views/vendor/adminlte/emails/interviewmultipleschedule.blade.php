@@ -7,7 +7,7 @@
     </head>
 
 <body style="margin: 0; padding-top: 30px;">
-    <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="left">
+    <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
         <tr>
             <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
                 <b><p style="text-align: left;">Dear Sir,</p></b>
