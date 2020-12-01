@@ -180,6 +180,10 @@ class ClientBasicinfo extends Ardent
         if (isset($order) && $order !='') {
             $query = $query->orderBy($order,$type);
         }
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
 
@@ -350,6 +354,9 @@ class ClientBasicinfo extends Ardent
             });
         }
 
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');
         $query = $query->get();
@@ -376,8 +383,12 @@ class ClientBasicinfo extends Ardent
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
 
-        if($user_id>0)
+        if($user_id>0) {
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+        }
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
@@ -390,8 +401,12 @@ class ClientBasicinfo extends Ardent
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
 
-        if($user_id>0)
+        if($user_id>0) {
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+        }
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
@@ -490,6 +505,10 @@ class ClientBasicinfo extends Ardent
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
             });
         }
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');
         $response = $query->get();
@@ -773,6 +792,9 @@ class ClientBasicinfo extends Ardent
             $query = $query->orderBy($order,$type);
         }
 
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query = $query->groupBy('client_basicinfo.id');
         $res = $query->get();
 
@@ -974,6 +996,9 @@ class ClientBasicinfo extends Ardent
             $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
         }
 
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query = $query->orderBy('client_basicinfo.id','desc');
         $query = $query->groupBy('client_basicinfo.id');
         $query = $query->get();
@@ -996,7 +1021,7 @@ class ClientBasicinfo extends Ardent
         return $client_id;
      }
 
-     public static function getClientDetailsById($id){
+     public static function getClientDetailsById($id) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
@@ -1085,6 +1110,10 @@ class ClientBasicinfo extends Ardent
         $query = $query->where('client_basicinfo.passive_date','>=',date('Y-m-d',strtotime('last Monday')));
         $query = $query->where('client_basicinfo.passive_date','<=',date('Y-m-d',strtotime("$date +6days")));
         $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query_response = $query->get();
 
         $passive_clients = array();
@@ -1166,6 +1195,10 @@ class ClientBasicinfo extends Ardent
     public static function getAllClientDetails() {
 
         $query = ClientBasicinfo::query();
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query = $query->select('client_basicinfo.*');
         $response = $query->get();
 
@@ -1182,6 +1215,10 @@ class ClientBasicinfo extends Ardent
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->select('client_basicinfo.*','users.name as account_manager','client_address.billing_street2 as area','client_address.billing_city as city');
         $query = $query->whereIn('client_basicinfo.id',$client_ids);
+
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
         $query_response = $query->get();
 
         $expected_client = array();

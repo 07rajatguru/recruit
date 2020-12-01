@@ -1230,7 +1230,30 @@ class ClientController extends Controller
 
         if($res) {
 
-            \DB::table('client_address')->where('client_id', '=', $id)->delete();
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+
+            $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+            $all_client_user_email = User::getUserEmailById($all_client_user_id);
+
+            $user_id = \Auth::user()->id;
+            $user_name = \Auth::user()->name;
+
+            $client = ClientBasicinfo::getClientDetailsById($id);
+
+            $module = "Client Delete";
+            $sender_name = $user_id;
+            $to = $superadminemail;
+            $subject = $client['name'] . " - " . $client['billing_city'] . " - Client Delete - By " . $user_name;
+            $message = "<tr><td>" . $user_name . " Delete Client </td></tr>";
+            $module_id = $id;
+            $cc = $all_client_user_email;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+            \DB::statement("UPDATE client_basicinfo SET `delete_client`='1' where `id` = '$id'");
+
+            /*\DB::table('client_address')->where('client_id', '=', $id)->delete();
             \DB::table('client_doc')->where('client_id', '=', $id)->delete();
             Notifications::where('module','=','Client')->where('module_id','=',$id)->delete();
             ClientBasicinfo::where('id',$id)->delete();
@@ -1243,7 +1266,7 @@ class ClientController extends Controller
             }
 
             // Delete Timeline table entry
-            \DB::table('client_timeline')->where('client_id', '=', $id)->delete();
+            \DB::table('client_timeline')->where('client_id', '=', $id)->delete();*/
 
             return redirect()->route('client.index')->with('success','Client Deleted Successfully.');
         }

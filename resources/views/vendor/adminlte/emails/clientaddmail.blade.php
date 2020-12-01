@@ -101,13 +101,17 @@
                 </tr>
             </table>
 
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
-                <tr>
-                    <td align="center" style="padding: 0px;">
-                        <a style="border: black; background-color: #9c5cac;color: white;padding: 15px 50px 15px 50px; border-radius: 18px;font-size: 15px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/client/'.$module_id}}">Show</a>
-                    </td>
-                </tr>
-            </table>
+            @if(isset($module) && $module == 'Client Delete')
+
+            @else
+                <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+                    <tr>
+                        <td align="center" style="padding: 0px;">
+                            <a style="border: black; background-color: #9c5cac;color: white;padding: 15px 50px 15px 50px; border-radius: 18px;font-size: 15px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/client/'.$module_id}}">Show</a>
+                        </td>
+                    </tr>
+                </table>
+            @endif
         </td>
     </tr>
 
