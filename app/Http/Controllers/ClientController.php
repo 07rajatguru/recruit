@@ -1244,7 +1244,7 @@ class ClientController extends Controller
             $module = "Client Delete";
             $sender_name = $user_id;
             $to = $superadminemail;
-            $subject = $client['name'] . " - " . $client['billing_city'] . " - Client Delete - By " . $user_name;
+            $subject = $client['name'] . " - " . $client['billing_city'] . " - Client Delete By - " . $user_name;
             $message = "<tr><td>" . $user_name . " Delete Client </td></tr>";
             $module_id = $id;
             $cc = $all_client_user_email;
