@@ -264,7 +264,7 @@ class JobOpen extends Model
 
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_close_query = $job_close_query->join('users','users.id','=','job_openings.hiring_manager_id');
+        $job_close_query = $job_close_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
@@ -430,7 +430,7 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            $jobs_list[$i]['am_name'] = $value->am_name;
+            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -457,6 +457,16 @@ class JobOpen extends Model
                     $jobs_list[$i]['access'] = '0';
                 }
             }
+
+            if($value->hiring_manager_id == 0) {
+
+                $jobs_list[$i]['am_name'] = 'Yet to Assign';
+            }
+            else {
+
+                $jobs_list[$i]['am_name'] = $value->am_name;
+            }
+
             $i++;
         }
         return $jobs_list;   
@@ -475,7 +485,7 @@ class JobOpen extends Model
 
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_close_query = $job_close_query->join('users','users.id','=','job_openings.hiring_manager_id');
+        $job_close_query = $job_close_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_close_query = $job_close_query->whereIn('priority',$job_status);
@@ -596,7 +606,7 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            $jobs_list[$i]['am_name'] = $value->am_name;
+            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -611,6 +621,16 @@ class JobOpen extends Model
             }
             $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
             $jobs_list[$i]['access'] = '0';
+
+            if($value->hiring_manager_id == 0) {
+
+                $jobs_list[$i]['am_name'] = 'Yet to Assign';
+            }
+            else {
+
+                $jobs_list[$i]['am_name'] = $value->am_name;
+            }
+
             $i++;
         }
 
@@ -629,7 +649,7 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+        $job_open_query = $job_open_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
@@ -1507,7 +1527,7 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+        $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
@@ -1638,7 +1658,7 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            $jobs_list[$i]['am_name'] = $value->am_name;
+            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -1666,6 +1686,16 @@ class JobOpen extends Model
                     $jobs_list[$i]['access'] = '0';
                 }
             }
+
+            if($value->hiring_manager_id == 0) {
+
+                $jobs_list[$i]['am_name'] = 'Yet to Assign';
+            }
+            else {
+
+                $jobs_list[$i]['am_name'] = $value->am_name;
+            }
+
             $i++;
         }
         return $jobs_list;
@@ -1678,7 +1708,7 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+        $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
@@ -1802,7 +1832,7 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            $jobs_list[$i]['am_name'] = $value->am_name;
+            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -1816,6 +1846,16 @@ class JobOpen extends Model
 
             $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
             $jobs_list[$i]['access'] = '0';
+
+            if($value->hiring_manager_id == 0) {
+
+                $jobs_list[$i]['am_name'] = 'Yet to Assign';
+            }
+            else {
+
+                $jobs_list[$i]['am_name'] = $value->am_name;
+            }
+
             $i++;
         }
         return $jobs_list;
@@ -1831,7 +1871,7 @@ class JobOpen extends Model
         $query = JobOpen::query();
         $query = $query->select('job_openings.id');
         $query = $query->where('job_openings.client_id','=',$client_id);
-        $query = $query->whereNotIn('priority',$job_status);
+        //$query = $query->whereNotIn('priority',$job_status);
         $res = $query->get();
 
         $job_id = array();

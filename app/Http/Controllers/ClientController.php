@@ -1403,16 +1403,24 @@ class ClientController extends Controller
 
             // if account manager change then jobs hiring manager all changes
             $job_ids = JobOpen::getJobIdByClientId($id);
-            if ($input->account_manager == '0') {
+            /*if ($input->account_manager == '0') {
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $a_m = $super_admin_userid;
             }
             else {
                 $a_m = $input->account_manager;
-            }
+            }*/
+
+            $a_m = $input->account_manager;
+
             foreach ($job_ids as $key => $value) {
 
                 \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id = $value");
+
+                if ($a_m == '0') {
+
+                    \DB::statement("UPDATE job_openings SET priority = '4' where id = $value");
+                }
 
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
 
@@ -1511,6 +1519,8 @@ class ClientController extends Controller
                     $to = $superadminemail;
                     $cc = $all_client_user_email;
                 }
+
+                \DB::statement("UPDATE job_openings SET priority = '4' where client_id = $id");
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
@@ -1655,17 +1665,25 @@ class ClientController extends Controller
 
             // If account manager change then jobs hiring manager also change
             $job_ids = JobOpen::getJobIdByClientId($value);
-            if ($account_manager_id == '0') {
+            /*if ($account_manager_id == '0') {
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $a_m = $super_admin_userid;
             }
             else {
                 $a_m = $account_manager_id;
-            }
+            }*/
+
+            $a_m = $account_manager_id;
 
             foreach ($job_ids as $k1 => $v1) {
 
                 \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id = $v1");
+
+                if ($a_m == '0') {
+
+                    \DB::statement("UPDATE job_openings SET priority = '4' where id = $v1");
+                }
+
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($v1,$a_m);
 
                 if ($check_job_user_id == false) {
@@ -1769,14 +1787,19 @@ class ClientController extends Controller
         if ($act_man) {
 
             $job_ids = JobOpen::getJobIdByClientId($id);
-            if ($account_manager == '0') {
+           /* if ($account_manager == '0') {
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $a_m = $super_admin_userid;
-            }
+            }*/
 
             foreach ($job_ids as $key => $value) {
 
-                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$a_m' where id = $value");
+                \DB::statement("UPDATE job_openings SET hiring_manager_id = '$account_manager' where id = $value");
+
+                if ($account_manager == '0') {
+
+                    \DB::statement("UPDATE job_openings SET priority = '4' where id = $value");
+                }
 
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
 
