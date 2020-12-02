@@ -388,7 +388,7 @@ class ClientBasicinfo extends Ardent
         }
 
         // Not Display Delete Client Status '1' Entry
-        $query = $query->where('client_basicinfo.delete_client','=','0');
+        $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
@@ -406,7 +406,7 @@ class ClientBasicinfo extends Ardent
         }
 
         // Not Display Delete Client Status '1' Entry
-        $query = $query->where('client_basicinfo.delete_client','=','0');
+        $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
