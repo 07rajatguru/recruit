@@ -513,7 +513,9 @@ class CandidateController extends Controller
                         chmod($dir, 0777);
                     }
                     $temp_file_name = trim($fileFormattedResumeNameArray[0]);
-                    $fileFormattedResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                    //$fileFormattedResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+
+                    $fileFormattedResumeNewName = $temp_file_name . "_Adler".'.'.$extention;
                     $fileFormattedResume->move($dir,$fileFormattedResumeNewName);
 
                     $fileFormattedResumeNewPath = $dir.$fileFormattedResumeNewName;
@@ -891,7 +893,14 @@ class CandidateController extends Controller
                         }
 
                         $temp_file_name = trim($fileNameArray[0]);
-                        $fileNewName = $temp_file_name.date('ymdhhmss').'.'.$extention;
+
+                        if($candidate_upload_type == 'Candidate Formatted Resume') {
+                            $fileNewName = $temp_file_name . "_Adler".'.'.$extention;
+                        }
+                        else {
+                            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                        }
+
                         $file->move($dir,$fileNewName);
 
                         $fileNewPath = $dir.$fileNewName;
@@ -903,6 +912,7 @@ class CandidateController extends Controller
                         $candidateFileUpload->file_type = $candidate_upload_type;
                         $candidateFileUpload->file = $fileNewPath;
                         $candidateFileUpload->mime = $fileMimeType;
+                        $candidateFileUpload->size = $fileSize;
                         $candidateFileUpload->uploaded_date = date('Y-m-d');
                         $candidateFileUploadUpdated = $candidateFileUpload->save();
 
@@ -1116,6 +1126,7 @@ class CandidateController extends Controller
         $form_name = $request->form_name;
 
         $candidate_upload_type = $request->candidate_upload_type;
+
         $file = $request->file('file');
         $candidate_id = $request->id;
 
@@ -1142,7 +1153,14 @@ class CandidateController extends Controller
             }
 
             $temp_file_name = trim($fileNameArray[0]);
-            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+
+            if($candidate_upload_type == 'Candidate Formatted Resume') {
+                $fileNewName = $temp_file_name . "_Adler".'.'.$extention;
+            }
+            else {
+                $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+            }
+            
             $file->move($dir,$fileNewName);
 
             $fileNewPath = $dir.$fileNewName;
