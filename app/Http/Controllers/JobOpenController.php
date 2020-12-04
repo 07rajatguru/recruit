@@ -2511,7 +2511,7 @@ class JobOpenController extends Controller
             DB::statement("UPDATE job_associate_candidates SET selected_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
         }
         
-        DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where candidate_id in ($candidate_id) and job_id = $job_id");
+        DB::statement("UPDATE job_associate_candidates SET status_id = $status_id where  candidate_id = $candidate_id and job_id = $job_id");
 
         // Update shortlisted date
         DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
@@ -2618,7 +2618,7 @@ class JobOpenController extends Controller
                 DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
             }
               
-            DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id = $candidate_id and job_id = $job_id");
             
             // Update shortlisted date
             DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($candidate_id) and job_id = $job_id");
@@ -2653,7 +2653,7 @@ class JobOpenController extends Controller
                 DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($candidate_id) and job_id = $job_id");
             }
               
-            DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($candidate_id) and job_id = $job_id");
+            DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id = $candidate_id and job_id = $job_id");
             
             // Update shortlisted date
 
@@ -2699,7 +2699,7 @@ class JobOpenController extends Controller
                         DB::statement("UPDATE job_associate_candidates SET shortlisted = '3' where candidate_id in ($value) and job_id = $job_id");
                     }
                       
-                    DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id in ($value) and job_id = $job_id");
+                    DB::statement("UPDATE job_associate_candidates SET status_id = '2' where candidate_id = $value and job_id = $job_id");
                 
                     // Update shortlisted date
                     DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
@@ -3484,7 +3484,7 @@ class JobOpenController extends Controller
                 DB::statement("UPDATE job_associate_candidates SET selected_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
             }
 
-            DB::statement("UPDATE job_associate_candidates SET status_id = $update_status_id where candidate_id in ($value) and job_id = $job_id");
+            DB::statement("UPDATE job_associate_candidates SET status_id = $update_status_id where candidate_id = $value and job_id = $job_id");
 
             // Update shortlisted date
             DB::statement("UPDATE job_associate_candidates SET shortlisted_date = '$today_date' where candidate_id in ($value) and job_id = $job_id");
