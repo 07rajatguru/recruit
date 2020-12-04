@@ -285,7 +285,7 @@ class Interview extends Model
     }
 
     // function for today, tomorrow, this week & Upcoming/Previous interview page
-    public static function getInterviewsByType($all=0,$user_id,$time){
+    public static function getInterviewsByType($all=0,$user_id,$time,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -297,33 +297,88 @@ class Interview extends Model
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
         $query = $query->orderby('interview.interview_date','desc');
 
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+        if($all==0) {
+
+            $query = $query->where(function($query) use ($user_id) {
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
         }
+
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $query = $query->offset($offset);
+        }
+        if (isset($order) && $order != '') {
+            $query = $query->orderBy($order,$type);
+        }
+        if (isset($search) && $search != '') {
+
+            $query = $query->where(function($query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+
+                if(isset($date_array) && sizeof($date_array)>0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)) {
+
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)) {
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('interview.location','like',"%$search%");
+                $query = $query->orwhere('interview.status','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+
+                if($date_search) {
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('interview.interview_date','>=',"$from_date");
+                    $query = $query->Where('interview.interview_date','<=',"$to_date");
+                }
+            });
+        }
+
         if ($time == 'today') {
             $today = date("Y-m-d");
-            $query = $query->where('interview_date','like',"%$today%");
+            $query = $query->where('interview.interview_date','like',"%$today%");
         }
         if ($time == 'tomorrow') {
+
             $tomorrow = date("Y-m-d",strtotime('tomorrow'));
-            $query = $query->where('interview_date','like',"%$tomorrow%");
+            $query = $query->where('interview.interview_date','like',"%$tomorrow%");
         }
-        if ($time == 'thisweek'){
+        if ($time == 'thisweek') {
+
             $from_date = date("Y-m-d", strtotime('this week'));
             $to_date = date("Y-m-d",strtotime("$from_date +6 days"));
-            $query = $query->where('interview_date','>',"$from_date");
-            $query = $query->where('interview_date','<',"$to_date");
+            $query = $query->where('interview.interview_date','>',"$from_date");
+            $query = $query->where('interview.interview_date','<',"$to_date");
         }
         if ($time == 'upcomingprevious') {
+
             $from_date = date("Y-m-d", strtotime('this week'));
             $to_date = date("Y-m-d",strtotime("$from_date +6 days"));
 
-            $query = $query->where('interview_date','<',"$from_date");
-            $query = $query->orwhere('interview_date','>',"$to_date");
+            $query = $query->where('interview.interview_date','<',"$from_date");
+            $query = $query->orwhere('interview.interview_date','>',"$to_date");
         }
 
         $response = $query->get();
@@ -346,6 +401,99 @@ class Interview extends Model
         }
 
         return $interview;
+    }
+
+    public static function getInterviewsCountByType($all=0,$user_id,$time,$search=0) {
+
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+
+        if($all==0) {
+
+            $query = $query->where(function($query) use ($user_id) {
+
+                $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
+                $query = $query->orwhere('interviewer_id',$user_id);
+            });
+        }
+
+        if (isset($search) && $search != '') {
+
+            $query = $query->where(function($query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+
+                if(isset($date_array) && sizeof($date_array)>0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)) {
+
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)) {
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $query = $query->orwhere('interview.location','like',"%$search%");
+                $query = $query->orwhere('interview.status','like',"%$search%");
+                $query = $query->orwhere('users.name','like',"%$search%");
+
+                if($date_search) {
+                   
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('interview.interview_date','>=',"$from_date");
+                    $query = $query->Where('interview.interview_date','<=',"$to_date");
+                }
+            });
+        }
+
+        if ($time == 'today') {
+            
+            $today = date("Y-m-d");
+            $query = $query->where('interview.interview_date','like',"%$today%");
+        }
+        if ($time == 'tomorrow') {
+
+            $tomorrow = date("Y-m-d",strtotime('tomorrow'));
+            $query = $query->where('interview.interview_date','like',"%$tomorrow%");
+        }
+        if ($time == 'thisweek') {
+
+            $from_date = date("Y-m-d", strtotime('this week'));
+            $to_date = date("Y-m-d",strtotime("$from_date +6 days"));
+            $query = $query->where('interview.interview_date','>',"$from_date");
+            $query = $query->where('interview.interview_date','<',"$to_date");
+        }
+        if ($time == 'upcomingprevious') {
+
+            $from_date = date("Y-m-d", strtotime('this week'));
+            $to_date = date("Y-m-d",strtotime("$from_date +6 days"));
+
+            $query = $query->where('interview.interview_date','<',"$from_date");
+            $query = $query->orwhere('interview.interview_date','>',"$to_date");
+        }
+
+        $response = $query->count();
+
+        return $response;
     }
 
     public static function getTodayTomorrowsInterviews($all=0,$user_id){

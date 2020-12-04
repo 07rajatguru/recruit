@@ -22,6 +22,8 @@
         </div>
     </div>
 
+    <input type="hidden" name="source" id="source" value="{{ $source }}">
+
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-2">
@@ -65,43 +67,7 @@
             </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
-            @foreach ($interViews as $interView)
-                <?php
-                $date = date('Y-m-d', strtotime('this week'));
-                    if(date("Y-m-d") == date("Y-m-d",strtotime($interView['interview_date'])))
-                        $color = "#8FB1D5";
-                    elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView['interview_date'])))
-                        $color = '#feb80a';
-                    elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($interView['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($interView['interview_date'])))
-                        $color = '#F08080';
-                    else
-                        $color = '#C4D79B';
-                 ?>
-                <tr>
-                    <td>{{ ++$i }}</td>
-
-                    <td><input type="checkbox" name="interview_ids" value="{{ $interView['id'] }}" class="interview_ids" id="{{ $interView['id'] }}"/></td>
-
-                    <td>
-                        <a title="Show" class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
-                        
-                        <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($interView['id'],'index')) }}"></a>
-
-                        @permission(('interview-delete'))
-                            @include('adminlte::partials.deleteInterview', ['data' => $interView, 'name' => 'interview','display_name'=>'Interview'])
-                        @endpermission
-                    </td>
-                    <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView['client_name'] }} - {{ $interView['posting_title'] }} , {{$interView['city']}}</td>
-                    <td>{{ $interView['candidate_fname'] }}</td>
-                    <td>{{ $interView['contact'] }}</td>
-                    <td data-th="Lastrun" data-order="{{$interView['interview_date_ts']}}">{{ date('d-m-Y h:i A',strtotime($interView['interview_date'])) }}</td>
-                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView['location'] or ''}}</td>
-                    <td>{{ $interView['status'] or '' }}</td>
-                    <td>{{ $interView['candidate_owner'] }}</td>
-                </tr>
-            @endforeach
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
@@ -141,6 +107,51 @@
                 autoclose: true
             });
 
+            /*var table = jQuery('#interview_table').DataTable({
+                responsive: true,
+                stateSave : true,
+                "pageLength": 50,
+                "columnDefs": [ 
+                    { "targets": 1, "searchable": false, "orderable": false },
+                    { "targets": 2, "searchable": false, "orderable": false },
+                ],
+            });
+
+            if ( ! table.data().any() ) {
+            }
+            else{
+                new jQuery.fn.dataTable.FixedHeader( table );
+            }*/
+
+            var source = $("#source").val();
+
+            $("#interview_table").dataTable({
+
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [6,'desc'],
+                "columnDefs": [ 
+                    { "targets": 1, "searchable": false, "orderable": false },
+                    { "targets": 2, "searchable": false, "orderable": false },
+                ],
+
+                "ajax" : {
+                    'url' : '/interview/allbytype',
+                    data : {"source" : source},
+                    'type' : 'get',
+                    error: function() {
+
+                    }
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                "fnRowCallback": function( Row, Data ) {
+                    $('td:eq(3)', Row).css('background-color', Data[10]);
+                }
+            });
+
             $('#allcb').change(function() {
                 if($(this).prop('checked')){
                     $('tbody tr td input[type="checkbox"]').each(function () {
@@ -163,22 +174,6 @@
                     $("#allcb").prop('checked', false);
                 }
             });
-
-            var table = jQuery('#interview_table').DataTable({
-                responsive: true,
-                stateSave : true,
-                "pageLength": 50,
-                "columnDefs": [ 
-                    { "targets": 1, "searchable": false, "orderable": false },
-                    { "targets": 2, "searchable": false, "orderable": false },
-                ],
-            });
-
-            if ( ! table.data().any() ) {
-            }
-            else{
-                new jQuery.fn.dataTable.FixedHeader( table );
-            }
         });
 
         function checkIdsforMail() {

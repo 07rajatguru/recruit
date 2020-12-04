@@ -1270,6 +1270,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
+    Route::get('interview/allbytype', [
+        'as' => 'interview.allbytype',
+        'uses' => 'InterviewController@getAllInterviewsDetailsByType',
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
+    ]);
+
     Route::get('attendedinterview/{month}/{year}',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview',

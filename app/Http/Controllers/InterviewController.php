@@ -159,16 +159,15 @@ class InterviewController extends Controller
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
         if($all_perm) {
-            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(1,$user->id,$time,'');
         }
         else if($userwise_perm) {
-            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(0,$user->id,$time,'');
         }
 
-        $count = sizeof($interViews);
         $source = 'Todays';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source'));
     }
 
     // Tomorrow Interview Page
@@ -181,16 +180,15 @@ class InterviewController extends Controller
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
         
         if($all_perm) {
-            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(1,$user->id,$time,'');
         }
         else if($userwise_perm) {
-            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(0,$user->id,$time,'');
         }
 
-        $count = sizeof($interViews);
         $source = 'Tomorrows';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source'));
     }
 
     // This Week Interview Page
@@ -203,16 +201,15 @@ class InterviewController extends Controller
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
         if($all_perm) {
-            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(1,$user->id,$time,'');
         }
         else if($userwise_perm) {
-            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(0,$user->id,$time,'');
         }
 
-        $count = sizeof($interViews);
         $source = 'This Week';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source'));
     }
 
     // Upcoming/Previous Interview Page
@@ -225,16 +222,137 @@ class InterviewController extends Controller
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
         if($all_perm) {
-            $interViews = Interview::getInterviewsByType(1,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(1,$user->id,$time,'');
         }
         else if($userwise_perm) {
-            $interViews = Interview::getInterviewsByType(0,$user->id,$time);
+            $count = Interview::getInterviewsCountByType(0,$user->id,$time,'');
         }
 
-        $count = sizeof($interViews);
         $source = 'Upcoming & Previous';
 
-        return view('adminlte::interview.today', array('interViews' => $interViews),compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source'));
+    }
+
+    //function for index using ajax call
+    public function getAllInterviewsDetailsByType() {
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        $source = $_GET['source'];
+
+        $order_column_name = self::getInterviewOrderColumnName($order);
+
+        $user = \Auth::user();
+        $all_perm = $user->can('display-interviews');
+        $userwise_perm = $user->can('display-interviews-by-loggedin-user');
+        $send_consolidated_schedule = $user->can('send-consolidated-schedule');
+        $delete_perm = $user->can('interview-delete');
+
+        if($source == 'Todays') {
+
+            if($all_perm) {
+
+                $interViews = Interview::getInterviewsByType(1,$user->id,'today',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(1,$user->id,'today',$search);
+            }
+            else if($userwise_perm) {
+                $interViews = Interview::getInterviewsByType(0,$user->id,'today',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(0,$user->id,'today',$search);
+            }
+        }
+
+        if($source == 'Tomorrows') {
+
+            if($all_perm) {
+
+                $interViews = Interview::getInterviewsByType(1,$user->id,'tomorrow',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(1,$user->id,'tomorrow',$search);
+            }
+            else if($userwise_perm) {
+                $interViews = Interview::getInterviewsByType(0,$user->id,'tomorrow',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(0,$user->id,'tomorrow',$search);
+            }
+        }
+
+        if($source == 'This Week') {
+
+            if($all_perm) {
+
+                $interViews = Interview::getInterviewsByType(1,$user->id,'thisweek',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(1,$user->id,'thisweek',$search);
+            }
+            else if($userwise_perm) {
+                $interViews = Interview::getInterviewsByType(0,$user->id,'thisweek',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(0,$user->id,'thisweek',$search);
+            }
+        }
+
+        if($source == 'Upcoming & Previous') {
+
+            if($all_perm) {
+
+                $interViews = Interview::getInterviewsByType(1,$user->id,'upcomingprevious',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(1,$user->id,'upcomingprevious',$search);
+            }
+            else if($userwise_perm) {
+                $interViews = Interview::getInterviewsByType(0,$user->id,'upcomingprevious',$limit,$offset,$search,$order_column_name,$type);
+                $count = Interview::getInterviewsCountByType(0,$user->id,'upcomingprevious',$search);
+            }
+        }
+        
+        $interview = array();
+        $i = 0;$j = 0;
+
+        foreach ($interViews as $key => $value) {
+
+            $date = date('Y-m-d', strtotime('this week'));
+            if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date'])))
+                $color = "#8FB1D5";
+            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date'])))
+                $color = '#feb80a';
+            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date'])))
+                $color = '#F08080';
+            else
+                $color = '#C4D79B';
+
+            $action = '';
+
+            if($send_consolidated_schedule) {
+                $checkbox = '<input type=checkbox name=interview_ids value='.$value['id'].' class=interview_ids id='.$value['id'].'/>';
+            }
+            else {
+                $checkbox = '';
+            }
+
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
+            $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+            $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
+            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
+
+            if ($delete_perm) {
+                $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$color);
+            $interview[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $interview
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function todaytomorrow() {
