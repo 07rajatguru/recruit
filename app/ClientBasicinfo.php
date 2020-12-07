@@ -519,7 +519,7 @@ class ClientBasicinfo extends Ardent
         foreach ($response as $key => $value) {
 
             $client[$i]['id'] = $value->id;
-            $client[$i]['client_owner'] = $value->am_name;
+            //$client[$i]['client_owner'] = $value->am_name;
             $client[$i]['company_name'] = $value->name;
             $client[$i]['coordinator_name'] = $value->coordinator_prefix . " " . $value->coordinator_name;
             $client[$i]['client_category'] = $value->category;
@@ -545,6 +545,14 @@ class ClientBasicinfo extends Ardent
             }
 
             $client[$i]['client_address'] = $value->city;
+
+            if ($value->account_manager_id == 0) {
+                $client[$i]['client_owner'] = 'Yet to Assign';
+            }
+            else {
+                $client[$i]['client_owner'] = $value->am_name;
+            }
+            
             $i++;
         }
         return $client;   
