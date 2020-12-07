@@ -605,9 +605,9 @@
                     "user_ids[]": {
                         required : true,
                     },
-                    "candidate_tracker": {
+                    /*"candidate_tracker": {
                         required : true,
-                    },
+                    },*/
                     "city": {
                         required : true,
                     },
@@ -635,9 +635,9 @@
                     "user_ids[]": {
                         required : "User is Required Field.",
                     },
-                    "candidate_tracker": {
+                    /*"candidate_tracker": {
                         required : "Please Select Candidate Tracker",
-                    },
+                    },*/
                     "city": {
                         required : "City is Required Field.",
                     },
