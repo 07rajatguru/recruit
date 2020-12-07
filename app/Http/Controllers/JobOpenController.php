@@ -901,7 +901,7 @@ class JobOpenController extends Controller
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
 
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id'));
     }
 
     public function store(Request $request) {
@@ -997,6 +997,15 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
 
+        if(isset($input['job_open_checkbox']) && $input['job_open_checkbox'] != '') {
+
+            $job_open_checkbox = '1';
+        }
+        else {
+
+            $job_open_checkbox = '0';
+        }
+
         $job_open = new JobOpen();
         $job_open->job_id = $job_unique_id;
         $job_open->job_show = $job_show;
@@ -1023,6 +1032,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_to = $work_exp_to;
         $job_open->open_to_all_date = $open_to_all;
         $job_open->level_id = $level_id;
+        $job_open->job_open_checkbox = $job_open_checkbox;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -1519,8 +1529,9 @@ class JobOpenController extends Controller
         }
 
         $action = "edit";
+        $super_admin_user_id = getenv('SUPERADMINUSERID');
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id'));
     }
 
     public function editClosedJob($id,$year) {
@@ -1708,6 +1719,15 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
 
+        if(isset($input['job_open_checkbox']) && $input['job_open_checkbox'] != '') {
+
+            $job_open_checkbox = '1';
+        }
+        else {
+
+            $job_open_checkbox = '0';
+        }
+
         $job_open = JobOpen::find($id);
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
@@ -1731,6 +1751,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
         $job_open->level_id = $level_id;
+        $job_open->job_open_checkbox = $job_open_checkbox;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
