@@ -454,7 +454,7 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Candidate Tracker : <span class = "required_fields"> *</span> [Allow only .doc, .docx, .pdf, .xlsx, .xls extension files.]</strong>
+                        <strong>Candidate Tracker : <!-- <span class = "required_fields"> *</span> --> [Allow only .doc, .docx, .pdf, .xlsx, .xls extension files.]</strong>
                         <input type="file" name="candidate_tracker"  id="candidate_tracker" class="form-control">
                     </div>
                 </div>
@@ -680,7 +680,7 @@
             $("#level_id").select2();
             $("#industry_id").select2();
 
-            $("#candidate_tracker").bind('change', function() {
+            /*$("#candidate_tracker").bind('change', function() {
 
                 var ext = $('#candidate_tracker').val().split('.').pop().toLowerCase();
 
@@ -689,7 +689,7 @@
                     alert('Please Select Document File.');
                     this.value = null;
                 }
-            });
+            });*/
 
             $("#job_summary").bind('change', function() {
 
