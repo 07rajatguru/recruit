@@ -403,6 +403,7 @@ class UserController extends Controller
         if (isset($status) && $status == 'Inactive') {
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
+            JobVisibleUsers::where('user_id',$id)->delete();
         }
         if (isset($status) && $status == 'Active') {
             return redirect()->route('users.index')->with('success','User updated successfully. please add this user manually in training and process module.');
