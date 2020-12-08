@@ -1376,6 +1376,7 @@ class JobOpen extends Model
         $job = $job->where('job_openings.open_to_all_date','<=',"$date_time");
         $job = $job->whereNotIn('priority',$job_status);
         $job = $job->where('open_to_all','=','0');
+        $job = $job->where('job_open_checkbox','=','0');
         $job_res = $job->get();
 
         $job_data = array();

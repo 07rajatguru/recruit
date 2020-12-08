@@ -257,10 +257,10 @@
                         </div>
                     </div>
 
-                    @if($user_id == $super_admin_user_id)
+                    @if($loggedin_user_id == $super_admin_user_id)
                         <div class="">
                             <div class="form-group">
-                                <strong>If you don't open the job after 48 hours please check the checkbox :</strong>
+                                <strong>If you don't want to open the job after 48 hours please check the checkbox :</strong>
                                 {!! Form::checkbox('job_open_checkbox','1', false, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
                             </div>
                         </div>

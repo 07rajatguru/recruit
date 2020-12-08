@@ -816,6 +816,7 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $loggedin_user_id = $user->id;
 
         $all_client_perm = $user->can('display-client');
         $userwise_client_perm = $user->can('display-account-manager-wise-client');
@@ -901,7 +902,7 @@ class JobOpenController extends Controller
         $super_admin_user_id = getenv('SUPERADMINUSERID');
         $selected_users = array($user_id,$super_admin_user_id);
 
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id'));
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id'));
     }
 
     public function store(Request $request) {
@@ -1453,7 +1454,7 @@ class JobOpenController extends Controller
         }
 
         $user = \Auth::user();
-        $user_id = $user->id;
+        $loggedin_user_id = $user->id;
 
         $all_client_perm = $user->can('display-client');
         $userwise_client_perm = $user->can('display-account-manager-wise-client');
@@ -1465,7 +1466,7 @@ class JobOpenController extends Controller
         }
         else if($userwise_client_perm) {
             // get logged in user clients
-            $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+            $client_res = ClientBasicinfo::getLoggedInUserClients($loggedin_user_id);
         }
 
         $client = array();
@@ -1490,7 +1491,7 @@ class JobOpenController extends Controller
 
         $job_open = JobOpen::find($id);
 
-        if($all_jobs_perm || ($job_open->hiring_manager_id == $user_id)) { 
+        if($all_jobs_perm || ($job_open->hiring_manager_id == $loggedin_user_id)) { 
 
             $user_id = $job_open->hiring_manager_id;
             $lacs_from = $job_open->lacs_from;
@@ -1531,7 +1532,7 @@ class JobOpenController extends Controller
         $action = "edit";
         $super_admin_user_id = getenv('SUPERADMINUSERID');
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id'));
     }
 
     public function editClosedJob($id,$year) {
