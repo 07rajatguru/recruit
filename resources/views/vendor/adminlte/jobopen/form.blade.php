@@ -257,14 +257,14 @@
                         </div>
                     </div>
 
-                    @if($loggedin_user_id == $super_admin_user_id)
+                    @permission(('not-open-job-after-48-hours'))
                         <div class="">
                             <div class="form-group">
                                 <strong>If you don't want to open the job after 48 hours please check the checkbox :</strong>
                                 {!! Form::checkbox('job_open_checkbox','1', false, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
                             </div>
                         </div>
-                    @endif
+                    @endpermission
                 </div>
             </div>
         </div>
