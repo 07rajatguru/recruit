@@ -257,7 +257,7 @@
                         </div>
                     </div>
 
-                    @if($loggedin_user_id == $super_admin_user_id)
+                    @if($loggedin_user_id == $super_admin_user_id || $loggedin_user_id == $strategy_user_id || $loggedin_user_id == $bhagyashree_user_id || $loggedin_user_id == $arjun_user_id)
                         <div class="">
                             <div class="form-group">
                                 <strong>If you don't want to open the job after 48 hours please check the checkbox :</strong>
