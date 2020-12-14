@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Interview ({{ $count }})</h2>
+                <h2>Interview <span id="count">({{ $count }})</span></h2>
             </div>
             <div class="pull-right">
                 @permission(('send-consolidated-schedule'))
@@ -47,11 +47,37 @@
     </div>
 
     <br>
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
+
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box-body col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group">
+                <strong>Select Financial Year:</strong>
+                @if($selected_year = Session::get('selected_year'))
+                    {{Form::select('year',$year_array, $selected_year, array('id'=>'year','class'=> 'form-control'))}}
+                @else
+                    {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+                @endif
+            </div>
+        </div>
+
+        <div class="box-body col-xs-12 col-sm-3 col-md-2">
+            <div class="form-group" style="margin-top: 19px;">
+                {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+            </div>
+        </div>
+    </div>
 
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="interview_table">
         <thead>
@@ -152,6 +178,8 @@
                 autoclose: true
             });
 
+            var year = $("#year").val();
+
             $("#interview_table").dataTable({
 
                 'bProcessing' : true,
@@ -162,10 +190,15 @@
                             ],
                 "ajax" : {
                     'url' : 'interview/all',
+                    data : {year:year},
                     'type' : 'get',
                     error: function(){
 
                     }
+                },
+                initComplete:function( settings, json) {
+                    var count = json.recordsTotal;
+                    $("#count").html("(" + count + ")");
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -198,6 +231,42 @@
                 }
             });
         });
+
+        function select_data() {
+
+            $("#interview_table").dataTable().fnDestroy();
+
+            var year = $("#year").val();
+
+            $("#interview_table").dataTable( {
+
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [6,'desc'],
+                "columnDefs": [ 
+                    { "targets": 1, "searchable": false, "orderable": false },
+                    { "targets": 2, "searchable": false, "orderable": false },
+                ],
+                "ajax" : {
+                    'url' : 'interview/all',
+                    data : {year:year},
+                    'type' : 'get',
+                    error: function() {
+                    },
+                },
+                initComplete:function( settings, json){
+                    var count = json.recordsTotal;
+                    $("#count").html("(" + count + ")");
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                stateSave : true,
+                "fnRowCallback": function( Row, Data ) {
+                    $('td:eq(3)', Row).css('background-color', Data[10]);
+                }
+            });
+        }
 
         function checkIdsforMail() {
             var token = $('input[name="csrf_token"]').val();

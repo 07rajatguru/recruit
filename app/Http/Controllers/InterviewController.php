@@ -24,16 +24,50 @@ class InterviewController extends Controller
         $all_perm = $user->can('display-interviews');
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
+        // Year Data
+        $starting_year = '2018';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else {
+
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else {
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(", ", $year);
+        $year1 = $year_data[0];
+        $year2 = $year_data[1];
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+
+
         if($all_perm) {
-            $count = Interview::getAllInterviewsCountByAjax(1,$user->id,'');
+            $count = Interview::getAllInterviewsCountByAjax(1,$user->id,'',$current_year,$next_year);
         }
         else if($userwise_perm) {
-            $count = Interview::getAllInterviewsCountByAjax(0,$user->id,'');
+            $count = Interview::getAllInterviewsCountByAjax(0,$user->id,'',$current_year,$next_year);
         }
 
         $source = 'index';
 
-        return view('adminlte::interview.index', compact('count','source'));
+        return view('adminlte::interview.index', compact('count','source','year_array','year'));
     }
 
     public static function getInterviewOrderColumnName($order) {
@@ -79,6 +113,41 @@ class InterviewController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
 
+        // Year Data
+        $starting_year = '2018';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+        $year_array[0] = "Select Year";
+
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_GET['year']) && $_GET['year'] != '') {
+            
+            $year = $_GET['year'];
+
+            if (isset($year) && $year != 0) {
+
+                $year_data = explode(", ", $year);
+                $year1 = $year_data[0];
+                $year2 = $year_data[1];
+                $current_year = date('Y-m-d',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d',strtotime("last day of $year2"));
+            }
+            else {
+                $year = NULL;
+                $current_year = NULL;
+                $next_year = NULL;    
+            }
+        }
+        else{
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+        }
+
         $order_column_name = self::getInterviewOrderColumnName($order);
 
         $source = 'index';
@@ -90,12 +159,12 @@ class InterviewController extends Controller
         $delete_perm = $user->can('interview-delete');
 
         if($all_perm) {
-            $interViews = Interview::getAllInterviewsByAjax(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
-            $count = Interview::getAllInterviewsCountByAjax(1,$user->id,$search);
+            $interViews = Interview::getAllInterviewsByAjax(1,$user->id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = Interview::getAllInterviewsCountByAjax(1,$user->id,$search,$current_year,$next_year);
         }
         else if($userwise_perm) {
-            $interViews = Interview::getAllInterviewsByAjax(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
-            $count = Interview::getAllInterviewsCountByAjax(0,$user->id,$search);
+            $interViews = Interview::getAllInterviewsByAjax(0,$user->id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = Interview::getAllInterviewsCountByAjax(0,$user->id,$search,$current_year,$next_year);
         }
         
         $interview = array();

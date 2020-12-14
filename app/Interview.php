@@ -141,7 +141,7 @@ class Interview extends Model
     }
 
     //function for indax using ajax call
-    public static function getAllInterviewsByAjax($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+    public static function getAllInterviewsByAjax($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL){
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -150,8 +150,11 @@ class Interview extends Model
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+
+        if($all==0) {
+
+            $query = $query->where(function($query) use ($user_id) {
+
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
@@ -166,6 +169,15 @@ class Interview extends Model
         if (isset($order) && $order != '') {
             $query = $query->orderBy($order,$type);
         }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $query = $query->where('interview.interview_date','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $query = $query->where('interview.interview_date','<=',$next_year);
+        }
+
         if (isset($search) && $search != '') {
             $query = $query->where(function($query) use ($search){
 
@@ -224,7 +236,7 @@ class Interview extends Model
         return $interview;
     }
 
-    public static function getAllInterviewsCountByAjax($all=0,$user_id,$search=0){
+    public static function getAllInterviewsCountByAjax($all=0,$user_id,$search=0,$current_year=NULL,$next_year=NULL){
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -242,13 +254,23 @@ class Interview extends Model
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
         }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $query = $query->where('interview.interview_date','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $query = $query->where('interview.interview_date','<=',$next_year);
+        }
        
         if (isset($search) && $search != '') {
-            $query = $query->where(function($query) use ($search){
+
+            $query = $query->where(function($query) use ($search) {
 
                 $date_search = false;
                 $date_array = explode("-",$search);
-                if(isset($date_array) && sizeof($date_array)>0){
+                if(isset($date_array) && sizeof($date_array)>0) {
+                    
                     $stamp = strtotime($search);
                     if (is_numeric($stamp)){
                         $month = date( 'm', $stamp );
