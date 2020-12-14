@@ -1592,6 +1592,7 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $loggedin_user_id = $user->id;
         
         $all_client_perm = $user->can('display-client');
         $userwise_client_perm = $user->can('display-account-manager-wise-client');
@@ -1665,7 +1666,14 @@ class JobOpenController extends Controller
 
         $action = "edit";
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year'));
+        // For job open or not after 48 hours
+
+        $super_admin_user_id = getenv('SUPERADMINUSERID');
+        $strategy_user_id = getenv('STRATEGYUSERID');
+        $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+        $arjun_user_id = getenv('ARJUNUSERID');
+
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id'));
     }
 
     public function update(Request $request, $id) {
@@ -1846,6 +1854,7 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+        $loggedin_user_id = $user->id;
 
         // get all industry
         $industry_res = Industry::orderBy('name', 'ASC')->get();
@@ -1956,7 +1965,14 @@ class JobOpenController extends Controller
 
         $action = "clone";
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type'));
+        // For job open or not after 48 hours
+
+        $super_admin_user_id = getenv('SUPERADMINUSERID');
+        $strategy_user_id = getenv('STRATEGYUSERID');
+        $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+        $arjun_user_id = getenv('ARJUNUSERID');
+
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id'));
     }
 
     public function clonestore(Request $request) {
