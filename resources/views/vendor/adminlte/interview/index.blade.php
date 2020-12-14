@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Interview')
@@ -104,7 +112,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
                 </div>
-                {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule'])!!}
+                {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule','id'=>'subject_form'])!!}
                 <div class="modal-body check-id">
                     
                 </div>
@@ -124,6 +132,20 @@
 @section('customscripts')
     <script>
         $(document).ready(function() {
+
+            $("#subject_form").validate({
+
+                rules: {
+                    "subject": {
+                        required: true
+                    }
+                },
+                messages: {
+                    "subject": {
+                        required: "Subject is Required Field."
+                    },
+                }
+            });
 
             $(".date").datepicker({
                 format: "dd-mm-yyyy",
