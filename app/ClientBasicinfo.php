@@ -262,6 +262,9 @@ class ClientBasicinfo extends Ardent
             else {
                 $client_array[$i]['url'] = '';
             }
+
+            $client_array[$i]['second_line_am'] = $value->second_line_am;
+
             $i++;
         }
         return $client_array;
@@ -383,12 +386,13 @@ class ClientBasicinfo extends Ardent
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
 
-        if($user_id>0) {
-            $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
-        }
-
         // Not Display Delete Client Status '1' Entry
         $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
+
+        if($user_id>0) {
+            $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+            $client_query = $client_query->orwhere('client_basicinfo.second_line_am','=',$user_id);
+        }        
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
@@ -880,6 +884,9 @@ class ClientBasicinfo extends Ardent
             }
 
             $client_array[$i]['latest_remarks'] = $value->latest_remarks;
+
+            $client_array[$i]['second_line_am'] = $value->second_line_am;
+            
             $i++;
         }
 

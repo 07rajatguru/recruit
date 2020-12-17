@@ -200,8 +200,7 @@ class JobAssociateCandidates extends Model
     public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL) {
 
         $query = JobAssociateCandidates::query();
-        $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name',
-            'job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
+        $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');

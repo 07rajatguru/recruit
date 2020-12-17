@@ -194,10 +194,6 @@ class HomeController extends Controller
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
             $associate_count = $associate_monthly_response['cvs_cnt'];
 
-            // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
-            $associate_count = $associate_monthly_response['cvs_cnt'];
-
             // Cvs Shortlisted this month
             $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
 

@@ -872,7 +872,13 @@ class JobOpenController extends Controller
 
         if (sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
-                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+
+                if($user_id == $r->account_manager_id) {
+                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+                }
+                else {
+                    $client[$r->id] = $r->name." - ".$r->billing_city;
+                }
             }
         }
 

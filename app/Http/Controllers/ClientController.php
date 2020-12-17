@@ -183,6 +183,10 @@ class ClientController extends Controller
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
                 $account = $account_manager_view->render();
                 $action .= $account;
+
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $secondline_account = $secondline_account_manager_view->render();
+                $action .= $secondline_account;
             }
             if($all_perm || $value['client_owner']) {
 
@@ -481,6 +485,10 @@ class ClientController extends Controller
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
                 $account = $account_manager_view->render();
                 $action .= $account;
+
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $secondline_account = $secondline_account_manager_view->render();
+                $action .= $secondline_account;
             }
 
             if($all_perm || $value['client_owner']) {
@@ -1867,6 +1875,18 @@ class ClientController extends Controller
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
        return redirect()->route('client.index')->with('success', 'Client Account Manager Changed Successfully.');
+    }
+
+    public function getSecondlineAccountManager(Request $request) {
+
+        $secondline_account_manager = $request->get('secondline_account_manager');
+        $id = $request->get('id');
+
+        $secondline_act_man = ClientBasicinfo::find($id);
+        $secondline_act_man->second_line_am = $secondline_account_manager;
+        $secondline_act_man->save();
+
+        return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
     }
 
     public function importExport() {
