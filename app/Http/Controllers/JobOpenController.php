@@ -3660,4 +3660,29 @@ class JobOpenController extends Controller
         $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
         return view ('adminlte::jobopen.shortlistedcvs',compact('response','count','short_month_name','year'));
     }
+
+    public function getClientInfos() {
+
+        $client_id = $_GET['client_id'];
+
+        $client = ClientBasicinfo::getClientDetailsById($client_id);
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        if($user_id == $client['account_manager_id']) {
+
+            $answer = "False";
+        }
+        else {
+
+            $answer = "True";
+        }
+
+        $response['answer'] = $answer;
+        $response['am_id'] = $client['account_manager_id'];
+        $response['user_id'] = $user_id;
+
+        echo json_encode($response);exit;
+    }
 }

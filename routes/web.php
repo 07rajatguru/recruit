@@ -789,6 +789,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@getAccountManager',
     ]);
 
+    Route::post('client/secondline_account_manager',[
+        'as' => 'client.secondline_account_manager',
+        'uses' => 'ClientController@getSecondlineAccountManager',
+    ]);
+
     // Candidate
     Route::get('candidate', [
         'as' => 'candidate.index',
@@ -1175,6 +1180,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('job/associatedcandidate', [
         'as' => 'jobopen.associatedcandidate',
         'uses' => 'JobOpenController@getAssociatedcandidates'
+    ]);
+
+    Route::get('job/getClientInfos', [
+        'as' => 'jobopen.getClientInfos',
+        'uses' => 'JobOpenController@getClientInfos'
     ]);
 
     //Candidate Shortlisted

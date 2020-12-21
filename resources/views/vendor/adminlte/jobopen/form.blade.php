@@ -160,7 +160,7 @@
 
                         <div class="form-group {{ $errors->has('client_id') ? 'has-error' : '' }}">
                             <strong>Select Client : <span class = "required_fields">*</span></strong>
-                            {!! Form::select('client_id', $client,null, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '2')) !!}
+                            {!! Form::select('client_id', $client,null, array('id'=>'client_id','class' => 'form-control', 'tabindex' => '2', 'onchange' => 'getClientId()')) !!}
                             @if ($errors->has('client_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('client_id') }}</strong>
@@ -643,6 +643,8 @@
                     },
                 }
             });
+
+            getClientId();
         });
 
         $(function () {
@@ -673,7 +675,6 @@
                 $("#date_opened").focus();
             })
 
-            $("#hiring_manager_id").select2();
             $("#client_id").select2();
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
@@ -725,6 +726,35 @@
                 return false;
             }
             return true;
+        }
+
+        function getClientId() {
+
+            var client_id = $("#client_id").val();
+            var app_url = "{!! env('APP_URL') !!}";
+
+            if(client_id > 0) {
+
+                $.ajax({
+
+                    url:app_url+'/job/getClientInfos',
+                    data:'client_id='+client_id,
+                    dataType:'json',
+                    success: function(response){
+                       if(response.answer == 'True') {
+
+                            document.getElementById("hiring_manager_id").value = response.am_id;
+                       }
+                       else {
+
+                            //document.getElementById("hiring_manager_id").disabled = false;
+                            document.getElementById("hiring_manager_id").value = response.user_id;
+                       }
+
+                       $("#hiring_manager_id").select2();
+                    }
+                });
+            }
         }
 
         var placeSearch, autocomplete;
