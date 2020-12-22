@@ -2070,6 +2070,15 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
 
+        if(isset($input['job_open_checkbox']) && $input['job_open_checkbox'] != '') {
+
+            $job_open_checkbox = '1';
+        }
+        else {
+
+            $job_open_checkbox = '0';
+        }
+
         $job_open = new JobOpen();
         $job_open->job_id = $job_unique_id;
         $job_open->job_show = $job_show;
@@ -2096,6 +2105,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_to = $work_exp_to;
         $job_open->open_to_all_date = $open_to_all;
         $job_open->level_id = $level_id;
+        $job_open->job_open_checkbox = $job_open_checkbox;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
