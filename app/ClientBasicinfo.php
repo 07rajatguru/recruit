@@ -568,7 +568,7 @@ class ClientBasicinfo extends Ardent
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_heirarchy.name as level_name');
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_heirarchy.name as level_name','client_basicinfo.second_line_am');
         $response = $query->get();
 
         $client = array();
@@ -606,8 +606,9 @@ class ClientBasicinfo extends Ardent
             else {
                 $percentage_charged = '';
             }
-
             $client['percentage_charged'] = $percentage_charged;
+            
+            $client['second_line_am'] = $v->second_line_am;
         }
         return $client;
     }

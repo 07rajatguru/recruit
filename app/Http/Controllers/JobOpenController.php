@@ -1482,9 +1482,16 @@ class JobOpenController extends Controller
         }
 
         $client = array();
+
         if (sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
-                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+
+                if($loggedin_user_id == $r->account_manager_id) {
+                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+                }
+                else {
+                    $client[$r->id] = $r->name." - ".$r->billing_city;
+                }
             }
         }
 
@@ -1503,7 +1510,12 @@ class JobOpenController extends Controller
 
         $job_open = JobOpen::find($id);
 
-        if($all_jobs_perm || ($job_open->hiring_manager_id == $loggedin_user_id)) { 
+        // Client Secondline Account Manager
+        $client_info = ClientBasicinfo::getClientInfoByJobId($id);
+        
+        $client_second_line_am = $client_info['second_line_am'];
+
+        if($all_jobs_perm || ($job_open->hiring_manager_id == $loggedin_user_id) || ($loggedin_user_id == $client_second_line_am)) { 
 
             $user_id = $job_open->hiring_manager_id;
             $lacs_from = $job_open->lacs_from;
@@ -1614,9 +1626,16 @@ class JobOpenController extends Controller
         }
 
         $client = array();
+
         if (sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
-                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+
+                if($user_id == $r->account_manager_id) {
+                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+                }
+                else {
+                    $client[$r->id] = $r->name." - ".$r->billing_city;
+                }
             }
         }
 
@@ -1914,9 +1933,16 @@ class JobOpenController extends Controller
         }
 
         $client = array();
+
         if (sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
-                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+
+                if($user_id == $r->account_manager_id) {
+                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
+                }
+                else {
+                    $client[$r->id] = $r->name." - ".$r->billing_city;
+                }
             }
         }
 
