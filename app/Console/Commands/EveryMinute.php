@@ -20,6 +20,7 @@ use App\UserBenchMark;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use App\ClientTimeline;
+use App\UsersEmailPwd;
 
 class EveryMinute extends Command
 {
@@ -700,12 +701,14 @@ class EveryMinute extends Command
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
                 config([
                     'mail.driver' => trim('smtp'),
                     'mail.host' => trim('smtp.googlemail.com'),
                     'mail.port' => trim('465'),
-                    'mail.username' => trim($user_details->secondary_email),
-                    'mail.password' => trim('jarelDa%4021'),
+                    'mail.username' => trim($user_email_details->email),
+                    'mail.password' => trim($user_email_details->password),
                     'mail.encryption' => trim('ssl'),
                 ]);
 
