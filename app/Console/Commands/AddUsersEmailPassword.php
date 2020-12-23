@@ -47,7 +47,7 @@ class AddUsersEmailPassword extends Command
 
                 $users_email_pwd = new UsersEmailPwd();
                 $users_email_pwd->user_id = $value->id;
-                $users_email_pwd->email = $value->email;
+                $users_email_pwd->email = $value->secondary_email;
                 $users_email_pwd->save();
             }
         }
