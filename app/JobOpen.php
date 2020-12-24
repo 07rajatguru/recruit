@@ -886,7 +886,8 @@ class JobOpen extends Model
         // assign jobs to logged in user
         if($all==0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
-            $job_open_query = $job_open_query->where('user_id','=',$user_id);
+            $job_open_query = $job_open_query->where('job_visible_users.user_id','=',$user_id);
+            $job_open_query = $job_open_query->orwhere('client_basicinfo.second_line_am','=',$user_id);
         }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
