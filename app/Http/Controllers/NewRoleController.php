@@ -197,4 +197,13 @@ class NewRoleController extends Controller
 
         return json_encode($msg);exit;
     }
+
+    public function rolewisePermissions() {
+
+        $permissions = Permission::getAllPermissionsDetails();
+
+        $roles = Role::getAllRolesDetails();
+
+        return view('adminlte::new_role.view',compact('permissions','roles'));
+    }
 }

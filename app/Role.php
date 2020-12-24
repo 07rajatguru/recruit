@@ -47,4 +47,26 @@ class Role extends EntrustRole
         }
         return $module_names;
     }
+
+    public static function getAllRolesDetails() {
+
+        $query = Role::query();
+        $query = $query->select('roles.*');
+        $query = $query->orderBy('roles.id','asc');
+        $response = $query->get();
+
+        $roles = array();
+        $i = 0;
+
+        foreach ($response as $key => $value) {
+
+            $roles[$i]['id'] = $value->id;
+            $roles[$i]['name'] = $value->name;
+            $roles[$i]['display_name'] = $value->display_name;
+            $roles[$i]['description'] = $value->description;
+            $i++;
+        }
+
+        return $roles;
+    }
 }

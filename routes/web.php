@@ -2605,6 +2605,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:email-template-delete']
     ]);
 
+    Route::get('rolewise-permissions', [
+        'as' => 'rolewise.permissions',
+        'uses' => 'NewRoleController@rolewisePermissions'
+    ]);
+
     // Admin > New User Permissions
     //Route::group(['middleware' => ['permission:permission-list']], function () {
     Route::group([], function () {
