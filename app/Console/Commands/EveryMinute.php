@@ -703,9 +703,11 @@ class EveryMinute extends Command
 
                 $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
+                $input['from_address'] = trim($user_email_details->email);
+
                 config([
                     'mail.driver' => trim('smtp'),
-                    'mail.host' => trim('smtp.googlemail.com'),
+                    'mail.host' => trim('smtp.zoho.com'),
                     'mail.port' => trim('465'),
                     'mail.username' => trim($user_email_details->email),
                     'mail.password' => trim($user_email_details->password),
