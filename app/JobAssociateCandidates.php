@@ -257,6 +257,7 @@ class JobAssociateCandidates extends Model
 
         $query = JobAssociateCandidates::query();
         $query = $query->where('job_id',$job_id);
+        $query = $query->where('job_associate_candidates.deleted_at',NULL);
         $res = $query->count();
 
         return $res;
