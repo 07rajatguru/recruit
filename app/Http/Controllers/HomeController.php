@@ -157,8 +157,7 @@ class HomeController extends Controller
             ->where('delete_client','=',0)->count();
 
             // Job Count
-            $job_response = JobOpen::getAllJobs(1,$user_id);
-            $job = sizeof($job_response);
+            $job = JobOpen::getAllJobsCount(1,$user_id,0);
 
             // Cvs Associated this month
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
@@ -187,8 +186,7 @@ class HomeController extends Controller
             ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)->count();
 
             // Job Count
-            $job_response = JobOpen::getAllJobs(0,$user_id);
-            $job = sizeof($job_response);
+            $job = JobOpen::getAllJobsCount(0,$user_id,0);
 
             // Cvs Associated this month
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
@@ -274,8 +272,7 @@ class HomeController extends Controller
                 ->where('delete_client','=',0)->count();
 
                 // Job Count
-                $job_response = JobOpen::getAllJobs(1,$user_id);
-                $jobCount = sizeof($job_response);
+                $jobCount = JobOpen::getAllJobsCount(1,$user_id,0);
 
                 // Cvs Associated this month
                 $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
@@ -299,8 +296,7 @@ class HomeController extends Controller
                 ->where('account_manager_id',$user_id)->count();
 
                 // Job Count
-                $job_response = JobOpen::getAllJobs(0,$user_id);
-                $jobCount = sizeof($job_response);
+                $jobCount = JobOpen::getAllJobsCount(0,$user_id,0);
 
                 // Cvs Associated this month
                 $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);

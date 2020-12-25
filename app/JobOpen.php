@@ -1039,7 +1039,7 @@ class JobOpen extends Model
             $jobs_list[$i]['close_date'] = $value->target_date;
             $jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
-            $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
+            $jobs_list[$i]['associate_candidate_cnt'] = JobAssociateCandidates::getJobAssociatedCvsCount($value->id);
             $jobs_list[$i]['priority'] = $value->priority;
             $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
             $jobs_list[$i]['updated_date'] = date('d-m-Y',strtotime($value->updated_at));
@@ -1233,6 +1233,7 @@ class JobOpen extends Model
         if($all==0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
+            $job_open_query = $job_open_query->orwhere('client_basicinfo.second_line_am','=',$user_id);
         }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
