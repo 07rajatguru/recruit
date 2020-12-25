@@ -821,6 +821,7 @@ class ClientController extends Controller
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
         $client_basic_info->delete_client = 0;
+        $client_basic_info->second_line_am = 0;
 
         if($client_basic_info->save()) {
 
