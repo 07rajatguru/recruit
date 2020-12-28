@@ -169,11 +169,20 @@ class JobAssociateCandidates extends Model
 
     public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL) {
 
-        $query = JobAssociateCandidates::query(); 
+        $tanisha_user_id = getenv('TANISHAUSERID');
+        
+        $query = JobAssociateCandidates::query();
+        $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.created_at as created_at');
 
-        if($user_id>0) {
-            $query = $query->where('job_associate_candidates.associate_by',$user_id);
+        if($user_id > 0) {
+
+            if($user_id == $tanisha_user_id) {
+                $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else {
+                $query = $query->where('job_associate_candidates.associate_by',$user_id);
+            }
         }
 
         if ($month != '' && $year != '') {
@@ -199,6 +208,8 @@ class JobAssociateCandidates extends Model
 
     public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL) {
 
+        $tanisha_user_id = getenv('TANISHAUSERID');
+
         $query = JobAssociateCandidates::query();
         $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
@@ -208,8 +219,15 @@ class JobAssociateCandidates extends Model
         $query = $query->join('users as u1','u1.id','=','job_openings.hiring_manager_id');
         $query = $query->join('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
-        if($user_id>0)
-            $query = $query->where('job_associate_candidates.associate_by','=',$user_id);
+        if($user_id > 0) {
+
+            if($user_id == $tanisha_user_id) {
+                $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else {
+                $query = $query->where('job_associate_candidates.associate_by',$user_id);
+            }
+        }
 
         if ($month != '' && $year != '') {
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
@@ -377,11 +395,20 @@ class JobAssociateCandidates extends Model
 
     public static function getMonthlyReprtShortlisted($user_id,$month=NULL,$year=NULL) {
 
+        $tanisha_user_id = getenv('TANISHAUSERID');
+
         $query = JobAssociateCandidates::query(); 
+        $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.shortlisted_date as shortlisted_date');
 
         if($user_id > 0) {
-            $query = $query->where('job_associate_candidates.associate_by',$user_id);
+
+            if($user_id == $tanisha_user_id) {
+                $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else {
+                $query = $query->where('job_associate_candidates.associate_by',$user_id);
+            }
         }
 
         if ($month != '' && $year != '') {
@@ -403,8 +430,9 @@ class JobAssociateCandidates extends Model
 
     public static function getShortlistedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL) {
 
+        $tanisha_user_id = getenv('TANISHAUSERID');
+
         $query = JobAssociateCandidates::query();
-        
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
@@ -413,9 +441,15 @@ class JobAssociateCandidates extends Model
         $query = $query->join('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
         $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
-
+        
         if($user_id > 0) {
-            $query = $query->where('job_associate_candidates.associate_by','=',$user_id);
+
+            if($user_id == $tanisha_user_id) {
+                $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else {
+                $query = $query->where('job_associate_candidates.associate_by',$user_id);
+            }
         }
 
         if ($month != '' && $year != '') {

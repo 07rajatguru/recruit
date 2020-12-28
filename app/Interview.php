@@ -557,6 +557,8 @@ class Interview extends Model
         //$month = date('m');
         //$year = date('Y');
 
+        $tanisha_user_id = getenv('TANISHAUSERID');
+
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
         $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
@@ -571,11 +573,17 @@ class Interview extends Model
         $query = $query->where(\DB::raw('MONTH(interview_date)'),'=',$month);
         $query = $query->where(\DB::raw('YEAR(interview_date)'),'=',$year);
         $query = $query->orderby('interview.interview_date','desc');
-    
-        if($all==0){
-            //$query = $query->where('interview_owner_id',$user_id);
-            $query = $query->where('candidate_otherinfo.owner_id',$user_id);
+
+        if($all == 0) {
+
+            if($user_id == $tanisha_user_id) {
+                $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else {
+                $query = $query->where('candidate_otherinfo.owner_id',$user_id);
+            }
         }
+        
         $response = $query->get();
 
         return $response;

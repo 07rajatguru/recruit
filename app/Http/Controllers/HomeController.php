@@ -175,7 +175,6 @@ class HomeController extends Controller
 
             // Interview Count
             $interviews = Interview::getDashboardInterviews(1,$user_id);
-            //$interviews_cnt = Interview::getTodayTomorrowsInterviews(1,$user_id);
             $interviews_cnt = sizeof($interviews);
         }
         else if($display_userwise_count) {
@@ -188,24 +187,48 @@ class HomeController extends Controller
             // Job Count
             $job = JobOpen::getAllJobsCount(0,$user_id,0);
 
-            // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
-            $associate_count = $associate_monthly_response['cvs_cnt'];
+            $tanisha_user_id = getenv('TANISHAUSERID');
 
-            // Cvs Shortlisted this month
-            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+            if($user_id == $tanisha_user_id) {
 
-            // Interview Attended this month
-            $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
-            $interview_attend = sizeof($interview_attended_list);
+                // Cvs Associated this month
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year);
+                $associate_count = $associate_monthly_response['cvs_cnt'];
 
-            // Candidate Join this month
-            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year);
 
-            // Interview Count
-            $interviews = Interview::getDashboardInterviews(0,$user_id);
-            //$interviews_cnt = Interview::getTodayTomorrowsInterviews(0,$user_id);
-            $interviews_cnt = sizeof($interviews);
+                // Interview Attended this month
+                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year);
+                $interview_attend = sizeof($interview_attended_list);
+
+                // Candidate Join this month
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year);
+
+                // Interview Count
+                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id);
+                $interviews_cnt = sizeof($interviews);
+            }
+            else {
+
+                // Cvs Associated this month
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_count = $associate_monthly_response['cvs_cnt'];
+
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+
+                // Interview Attended this month
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attend = sizeof($interview_attended_list);
+
+                // Candidate Join this month
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+
+                // Interview Count
+                $interviews = Interview::getDashboardInterviews(0,$user_id);
+                $interviews_cnt = sizeof($interviews);
+            }
         }
 
         $viewVariable = array();
