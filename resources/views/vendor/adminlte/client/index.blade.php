@@ -165,7 +165,7 @@
 
 @section('customscripts')
 
-<script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
     jQuery( document ).ready(function() {
 
