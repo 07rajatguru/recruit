@@ -1408,11 +1408,11 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
-       /* // assign jobs to logged in user
-        if($all==0) {
+        // assign jobs to logged in user
+        if($user_id > 0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
-        }*/
+        }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
