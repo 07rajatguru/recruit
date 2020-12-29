@@ -10,9 +10,11 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
-                @permission(('display-client'))
+                @permission(('display-account-manager-wise-client'))
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
+                @endpermission
 
+                @permission(('display-client'))
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager</button>
                 @endpermission
                 <a class="btn btn-success" href="{{ route('client.create') }}">Add New Client</a>
