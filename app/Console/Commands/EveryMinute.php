@@ -708,12 +708,19 @@ class EveryMinute extends Command
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        /*'mail.driver' => trim('smtp'),
                         'mail.host' => trim('smtp.googlemail.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
                         'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('ssl'),
+                        'mail.encryption' => trim('ssl'),*/
+
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
                     ]);
                 }
                 else {
