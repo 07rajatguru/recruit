@@ -705,14 +705,28 @@ class EveryMinute extends Command
 
                 $input['from_address'] = trim($user_email_details->email);
 
-                config([
-                    'mail.driver' => trim('smtp'),
-                    'mail.host' => trim('smtp.zoho.com'),
-                    'mail.port' => trim('465'),
-                    'mail.username' => trim($user_email_details->email),
-                    'mail.password' => trim($user_email_details->password),
-                    'mail.encryption' => trim('ssl'),
-                ]);
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.googlemail.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
 
                 //print_r(config('mail'));exit;
 
