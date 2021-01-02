@@ -1264,7 +1264,7 @@ class JobOpenController extends Controller
         ->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id')
         ->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id')
         ->join('client_address','client_address.client_id','=','client_basicinfo.id')
-        ->join('users', 'users.id', '=', 'job_openings.hiring_manager_id')
+        ->leftjoin('users', 'users.id', '=', 'job_openings.hiring_manager_id')
         ->join('industry', 'industry.id', '=', 'job_openings.industry_id')
         ->select('job_openings.*', 'client_basicinfo.name as client_name','client_basicinfo.coordinator_name as co_nm','client_address.billing_city as bill_city', 'users.name as hiring_manager_name', 'industry.name as industry_name','client_heirarchy.name as level_name')->where('job_openings.id', '=', $id)->first();
 
