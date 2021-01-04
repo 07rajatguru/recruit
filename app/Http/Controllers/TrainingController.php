@@ -397,8 +397,22 @@ class TrainingController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
+
+        $all_perm = $user->can('display-training-material');
         
         $training_material = Training::find($id);
+
+        if($all_perm){
+            $training_material['access'] = '1';
+        }
+        else{
+            if((isset($training_material->owner_id) && $training_material->owner_id == $user_id)) {
+                $training_material['access'] = '1';
+            }
+            else{
+                $training_material['access'] = '0';
+            }
+        }
             
         $trainingModel = new Training();
         $trainingdetails['id'] = $trainingModel->id;           
