@@ -45,6 +45,7 @@ class JobCandidateJoiningdate extends Model
         }
 
         $query = $query->orderBy('job_candidate_joining_date.id','desc');
+        $query = $query->groupBy('candidate_basicinfo.id');
         $response = $query->get();
 
         $candidate_join = array();
@@ -91,18 +92,21 @@ class JobCandidateJoiningdate extends Model
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner',
             'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid', 'job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_candidate_joining_date.fixed_salary as salary','bills.id as bill_id');
         
-        $query =$query->where(\DB::raw('month(joining_date)'),'=',$month);
-        $query =$query->where(\DB::raw('year(joining_date)'),'=',$year);
+        $query = $query->where(\DB::raw('month(joining_date)'),'=',$month);
+        $query = $query->where(\DB::raw('year(joining_date)'),'=',$year);
 
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+        if($all==0) {
+            $query = $query->where(function($query) use ($user_id) {
                 $query = $query->where('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orWhere('job_openings.hiring_manager_id',$user_id);
             });
         }
 
         $query = $query->orderBy('job_candidate_joining_date.id','desc');
-        $response = $query->count();
+        $query = $query->groupBy('candidate_basicinfo.id');
+        $query = $query->get();
+
+        $response = sizeof($query);
 
         return $response;
     }
