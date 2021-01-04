@@ -45,6 +45,10 @@
 			<td>{{ $value['efforts'] }}</td>
 		</tr>
 		<tr style="height: auto;width: auto;">
+			<td>Lead Efforts</td>
+			<td>{{ $value['lead_efforts'] }}</td>
+		</tr>
+		<tr style="height: auto;width: auto;">
 			<td>Source (Naukri/Monster/Referral)</p></td>
 			<td>{{ $value['source'] }}</p></td>
 		</tr>

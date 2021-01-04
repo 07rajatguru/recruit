@@ -63,7 +63,8 @@ class Bills extends Model
 
         $bills = array();
         $i = 0 ;
-        foreach ($bills_res as $key=>$value){
+        foreach ($bills_res as $key=>$value) {
+            
             $bills[$i]['id'] = $value->id;
             $bills[$i]['company_name'] = $value->company_name;
             $bills[$i]['candidate_name'] = $value->c_name;
@@ -100,6 +101,20 @@ class Bills extends Model
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['candidate_other_no'] = '/'. $value->candidate_other_no;
             $bills[$i]['client_other_no'] = '/'. $value->client_other_no;
+
+            // get Lead employee efforts
+            $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);
+            $lead_efforts_str = '';
+            foreach ($lead_efforts as $k1=>$v1) {
+
+                if($lead_efforts_str=='') {
+                    $lead_efforts_str = $k1 .'('.(int)$v1 . '%)';
+                }
+                else{
+                    $lead_efforts_str .= ', '. $k1 .'('.(int)$v1 . '%)';
+                }
+            }
+            $bills[$i]['lead_efforts'] = $lead_efforts_str;
             $i++;
         }
 
