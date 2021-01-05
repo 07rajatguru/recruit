@@ -39,15 +39,15 @@ class AddUsersEmailPassword extends Command
      */
     public function handle()
     {
-        $users = User::all();
+        $users = User::getAllUsersWithEmails();
 
         if(isset($users) && sizeof($users) > 0) {
 
             foreach ($users as $key => $value) {
 
                 $users_email_pwd = new UsersEmailPwd();
-                $users_email_pwd->user_id = $value->id;
-                $users_email_pwd->email = $value->email;
+                $users_email_pwd->user_id = $key;
+                $users_email_pwd->email = $value;
                 $users_email_pwd->save();
             }
         }

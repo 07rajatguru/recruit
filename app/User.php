@@ -734,4 +734,30 @@ class User extends Authenticatable
         }
         return $userArr;
     }
+
+    public static function getAllUsersWithEmails() {
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client_type = array('client');
+
+        $user_query = User::query();
+
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
+        $user_query = $user_query->orderBy('id');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+
+        if(isset($users) && sizeof($users)) {
+            
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->email;
+            }
+        }
+        return $userArr;
+    }
 }
