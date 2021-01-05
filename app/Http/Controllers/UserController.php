@@ -223,7 +223,6 @@ class UserController extends Controller
         $users_email_pwd = new UsersEmailPwd();
         $users_email_pwd->user_id = $user_id;
         $users_email_pwd->email = $request->input('email');
-        $users_email_pwd->password = $request->input('password');
         $users_email_pwd->save();
 
         return redirect()->route('users.index')->with('success','User Created Successfully.');
@@ -388,16 +387,6 @@ class UserController extends Controller
         $user->check_floor_incharge = $check_floor_incharge;
 
         $users = $user->save();
-
-         // Add entry in email password table
-
-        UsersEmailPwd::where('user_id',$id)->delete();
-
-        $users_email_pwd = new UsersEmailPwd();
-        $users_email_pwd->user_id = $id;
-        $users_email_pwd->email = $request->input('email');
-        $users_email_pwd->password = $request->input('password');
-        $users_email_pwd->save();
 
         //  If status is inactive then delete this user process and training
         if (isset($status) && $status == 'Inactive') {
