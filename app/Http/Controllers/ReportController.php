@@ -14,6 +14,7 @@ use App\UserBenchMark;
 use App\Role;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use App\Date;
 
 class ReportController extends Controller
 {  
@@ -884,7 +885,7 @@ class ReportController extends Controller
             );
         }*/
 
-        $dates1 = array();
+        /*$dates1 = array();
         $dates2 = array();
 
         $week = date("W", strtotime($year . "-" . $month ."-01")); // weeknumber of first day of month
@@ -915,6 +916,19 @@ class ReportController extends Controller
 
             $val2 = $dates2[$key];
             $dates_array[$key] = $val."--".$val2;
+        }*/
+
+        $lastDayOfWeek = '7';
+
+        $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+
+        $dates_array = array();
+        $i=0;
+
+        foreach ($weeks as $key => $val) {
+
+            $dates_array[$i] = implode("--",$val);
+            $i++;
         }
 
         // Get no of weeks in month & get from date & to date
@@ -1061,7 +1075,7 @@ class ReportController extends Controller
             );
         }*/
 
-        $dates1 = array();
+        /*$dates1 = array();
         $dates2 = array();
 
         $week = date("W", strtotime($year . "-" . $month ."-01")); // weeknumber of first day of month
@@ -1092,6 +1106,19 @@ class ReportController extends Controller
 
             $val2 = $dates2[$key];
             $dates_array[$key] = $val."--".$val2;
+        }*/
+
+        $lastDayOfWeek = '7';
+
+        $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+
+        $dates_array = array();
+        $i=0;
+
+        foreach ($weeks as $key => $val) {
+
+            $dates_array[$i] = implode("--",$val);
+            $i++;
         }
 
         if(isset($users) && sizeof($users) > 0) {
