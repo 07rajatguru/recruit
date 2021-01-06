@@ -1883,10 +1883,33 @@ class ClientController extends Controller
         $secondline_account_manager = $request->get('secondline_account_manager');
         $id = $request->get('id');
 
-        $secondline_act_man = ClientBasicinfo::find($id);
-        $secondline_act_man->second_line_am = $secondline_account_manager;
-        $secondline_act_man->save();
+        // Get Client Old Secondline AM
+        $client_info = ClientBasicinfo::find($id);
+        $old_sl_am = $client_info->second_line_am;
 
+        // Update New Secondline AM
+        $client_info->second_line_am = $secondline_account_manager;
+        $client_info->save();
+
+        $job_ids_array = JobOpen::getJobIdByClientId($id);
+
+        if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
+
+            foreach ($job_ids_array as $key => $value) {
+
+                if($old_sl_am > 0) {
+
+                    JobVisibleUsers::where('job_id',$value)
+                    ->where('user_id',$old_sl_am)
+                    ->delete();
+                }
+
+                $job_visible_users = new JobVisibleUsers();
+                $job_visible_users->job_id = $value;
+                $job_visible_users->user_id = $secondline_account_manager;
+                $job_visible_users->save();
+            }
+        }
         return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
     }
 
