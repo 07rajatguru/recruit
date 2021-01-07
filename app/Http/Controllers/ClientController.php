@@ -1950,6 +1950,131 @@ class ClientController extends Controller
         return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
     }
 
+    public function getAllClientsByAM() {
+
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+
+        if($all_perm) {
+
+            $count = ClientBasicinfo::getClientsCountByAM(1,$user->id,'');
+        }
+        else if($userwise_perm) {
+
+            $count = ClientBasicinfo::getClientsCountByAM(0,$user->id,'');
+        }
+
+        $account_manager = User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
+
+        return view('adminlte::client.clientlistamwise',compact('count','account_manager'));
+    }
+
+    public function getAllClientsDetailsByAM() {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+        $edit_perm = $user->can('client-edit');
+        $delete_perm = $user->can('client-delete');
+        $category_perm = $user->can('display-client-category-in-client-list');
+
+        if($all_perm) {
+
+            $order_column_name = self::getOrderColumnName($order);
+            $client_res = ClientBasicinfo::getAllClientsByAM(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = ClientBasicinfo::getClientsCountByAM(1,$user->id,$search);
+        }
+        else if($userwise_perm) {
+
+            $order_column_name = self::getOrderColumnName($order);
+            $client_res = ClientBasicinfo::getAllClientsByAM(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = ClientBasicinfo::getClientsCountByAM(0,$user->id,$search);
+        }
+        
+        $account_manager = User::getAllUsers('recruiter','Yes');
+        $account_manager[0] = 'Yet to Assign';
+
+        $clients = array();
+        $i = 0;$j = 0;
+
+        foreach ($client_res as $key => $value) {
+
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+        
+            if($edit_perm || $value['client_owner']) {
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($delete_perm) {
+
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+
+                if(isset($value['url']) && $value['url'] != '') {
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
+            }
+            if($all_perm) {
+
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $account = $account_manager_view->render();
+                $action .= $account;
+
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $secondline_account = $secondline_account_manager_view->render();
+                $action .= $secondline_account;
+            }
+            if($all_perm || $value['client_owner']) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+
+                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+
+                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
+                $timeline = $timeline_view->render();
+                $action .= $timeline;
+            }
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+
+            if($value['status'] == 'Active')
+                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Passive')
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Leaders')
+                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Forbid')
+                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+            else if($value['status'] == 'Left')
+                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
+
+            $client_category = $value['category'];
+
+            if($category_perm) {
+                $data = array(++$j,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+            }
+            else {
+                $data = array(++$j,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+            }
+
+            $clients[$i] = $data;
+            $i++;
+        }
+    }
+
     public function importExport() {
 
         return view('adminlte::client.import');

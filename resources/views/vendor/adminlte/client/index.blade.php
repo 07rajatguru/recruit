@@ -11,6 +11,8 @@
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
                 @permission(('display-account-manager-wise-client'))
+                    <a class="btn btn-primary" href="{{ route('clientlist.amwise') }}">2nd Line AM Client List</a>
+
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
                 @endpermission
 
