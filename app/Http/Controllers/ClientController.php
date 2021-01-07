@@ -295,7 +295,12 @@ class ClientController extends Controller
         $account_manager = User::getAllUsers('recruiter','Yes');
         $account_manager[0] = 'Yet to Assign';
 
-        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','account_manager','count'));
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+
+        $all_account_manager = User::getAllUsers('recruiter','Yes');
+        $all_account_manager[0] = 'Yet to Assign';
+
+        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','account_manager','count','email_template_names','all_account_manager'));
     }
 
     public function getAllClientsDetailsByType() {
