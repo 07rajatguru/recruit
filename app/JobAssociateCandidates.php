@@ -212,12 +212,12 @@ class JobAssociateCandidates extends Model
 
         $query = JobAssociateCandidates::query();
         $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
-        $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
-        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
-        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
-        $query = $query->join('users as u1','u1.id','=','job_openings.hiring_manager_id');
-        $query = $query->join('users as u2','u2.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('users as u1','u1.id','=','job_openings.hiring_manager_id');
+        $query = $query->leftjoin('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
         if($user_id > 0) {
 
@@ -433,12 +433,12 @@ class JobAssociateCandidates extends Model
         $tanisha_user_id = getenv('TANISHAUSERID');
 
         $query = JobAssociateCandidates::query();
-        $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
-        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
-        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
-        $query = $query->join('users as u1','u1.id','=','job_openings.hiring_manager_id');
-        $query = $query->join('users as u2','u2.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('users as u1','u1.id','=','job_openings.hiring_manager_id');
+        $query = $query->leftjoin('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
         $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
         
