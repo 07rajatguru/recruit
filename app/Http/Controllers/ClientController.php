@@ -1880,16 +1880,19 @@ class ClientController extends Controller
 
     public function getSecondlineAccountManager(Request $request) {
 
+        $user_id = \Auth::user()->id;
+
         $secondline_account_manager = $request->get('secondline_account_manager');
         $id = $request->get('id');
 
         // Get Client Old Secondline AM
-        $client_info = ClientBasicinfo::find($id);
-        $old_sl_am = $client_info->second_line_am;
+        $client_info = ClientBasicinfo::getClientDetailsById($id);
+        $old_sl_am = $client_info['second_line_am'];
 
         // Update New Secondline AM
-        $client_info->second_line_am = $secondline_account_manager;
-        $client_info->save();
+        $client = ClientBasicinfo::find($id);
+        $client->second_line_am = $secondline_account_manager;
+        $client->save();
 
         $job_ids_array = JobOpen::getJobIdByClientId($id);
 
@@ -1910,6 +1913,35 @@ class ClientController extends Controller
                 $job_visible_users->save();
             }
         }
+
+        $module_id = $id;
+        $module = 'Client 2nd Line Account Manager';
+
+        $subject = "Client 2nd Line Account Manager Assigned - " . $client_info['name'] . " - " . $client_info['billing_city'];
+        $message = "<tr><td>" . $client_info['name'] . " Client 2nd Line Account Manager </td></tr>";
+        $sender_name = $user_id;
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+
+        if ($secondline_account_manager != '0') {
+
+            $to = $superadminemail;
+            $account_manager_email = User::getUserEmailById($secondline_account_manager);
+            $cc_users_array = array($all_client_user_email,$account_manager_email);
+            $cc = implode(",",$cc_users_array);
+        }
+        else {
+
+            $to = $superadminemail;
+            $cc = $all_client_user_email;
+        }
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
         return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
     }
 

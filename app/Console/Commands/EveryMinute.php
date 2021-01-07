@@ -1047,6 +1047,26 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
             }
+            else if ($value['module'] == 'Client 2nd Line Account Manager') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $client = ClientBasicinfo::getClientDetailsById($module_id);
+
+                $input['module'] = $value['module'];
+                $input['module_id'] = $value['module_id'];
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = $cc_array;
+                $input['client'] = $client;
+
+                \Mail::send('adminlte::emails.clientsecondlineamemail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }

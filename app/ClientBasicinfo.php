@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\User;
 
 use LaravelArdent\Ardent\Ardent;
 
@@ -1094,6 +1095,10 @@ class ClientBasicinfo extends Ardent
             $client['shipping_city'] = $res->shipping_city;
             $client['percentage_charged'] = $res->percentage_charged_above;
             $client['percentage_charged_below'] = $res->percentage_charged_below;
+            $client['second_line_am'] = $res->second_line_am;
+
+            $user_details = User::getAllDetailsByUserID($res->second_line_am);
+            $client['second_line_am_name'] = $user_details->first_name . " " . $user_details->last_name;
         }
         return $client;
      }
