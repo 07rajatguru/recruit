@@ -869,30 +869,16 @@ class JobOpenController extends Controller
 
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
-
-            if (sizeof($client_res) > 0) {
-                foreach ($client_res as $r) {
-                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                }
-            }
         }
-
         else if($userwise_client_perm) {
-
+            
             // get logged in user clients
             $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
 
-            if (sizeof($client_res) > 0) {
-
-                foreach ($client_res as $r) {
-
-                    if($user_id == $r->account_manager_id) {
-                        $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                    }
-                    else {
-                        $client[$r->id] = $r->name." - ".$r->billing_city;
-                    }
-                }
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
 
@@ -1493,30 +1479,16 @@ class JobOpenController extends Controller
             
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
-
-            if (sizeof($client_res) > 0) {
-                foreach ($client_res as $r) {
-                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                }
-            }
         }
-
         else if($userwise_client_perm) {
 
             // get logged in user clients
             $client_res = ClientBasicinfo::getLoggedInUserClients($loggedin_user_id);
+        }
 
-            if (sizeof($client_res) > 0) {
-
-                foreach ($client_res as $r) {
-
-                    if($loggedin_user_id == $r->account_manager_id) {
-                        $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                    }
-                    else {
-                        $client[$r->id] = $r->name." - ".$r->billing_city;
-                    }
-                }
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
 
@@ -1648,28 +1620,16 @@ class JobOpenController extends Controller
 
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
-
-            if (sizeof($client_res) > 0) {
-                foreach ($client_res as $r) {
-                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                }
-            }
         }
         else if($userwise_client_perm) {
 
             // get logged in user clients
             $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
 
-            if (sizeof($client_res) > 0) {
-                foreach ($client_res as $r) {
-
-                    if($user_id == $r->account_manager_id) {
-                        $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                    }
-                    else {
-                        $client[$r->id] = $r->name." - ".$r->billing_city;
-                    }
-                }
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
 
@@ -1964,29 +1924,16 @@ class JobOpenController extends Controller
 
             // get all clients
             $client_res = ClientBasicinfo::getLoggedInUserClients(0);
-
-            if (sizeof($client_res) > 0) {
-                foreach ($client_res as $r) {
-                    $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                }
-            }
         }
         else if($userwise_client_perm) {
 
             // get logged in user clients
             $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
+        }
 
-            if (sizeof($client_res) > 0) {
-                
-                foreach ($client_res as $r) {
-
-                    if($user_id == $r->account_manager_id) {
-                        $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
-                    }
-                    else {
-                        $client[$r->id] = $r->name." - ".$r->billing_city;
-                    }
-                }
+        if (sizeof($client_res) > 0) {
+            foreach ($client_res as $r) {
+                $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }
         }
 

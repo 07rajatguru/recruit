@@ -453,7 +453,7 @@ class JobOpen extends Model
                     $jobs_list[$i]['access'] = '1';
                 }
                 else if(isset($value->second_line_am) && $value->second_line_am == $user_id) {
-                    $jobs_list[$i]['coordinator_name'] = '';
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
                     $jobs_list[$i]['access'] = '1';
                 }
                 else{
@@ -1080,7 +1080,7 @@ class JobOpen extends Model
                     $jobs_list[$i]['access'] = '1';
                 }
                 else if(isset($value->second_line_am) && $value->second_line_am == $user_id) {
-                    $jobs_list[$i]['coordinator_name'] = '';
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
                     $jobs_list[$i]['access'] = '1';
                 }
                 else{
@@ -1554,7 +1554,7 @@ class JobOpen extends Model
                 $jobs_open_list[$i]['access'] = '1';
             }
             else if(isset($value->second_line_am) && $value->second_line_am == $user_id) {
-                $jobs_open_list[$i]['coordinator_name'] = '';
+                $jobs_open_list[$i]['coordinator_name'] = $value->coordinator_name;
                 $jobs_open_list[$i]['access'] = '1';
             }
             else {
@@ -1741,7 +1741,7 @@ class JobOpen extends Model
                     $jobs_list[$i]['access'] = '1';
                 }
                 else if(isset($value->second_line_am) && $value->second_line_am == $user_id) {
-                    $jobs_list[$i]['coordinator_name'] = '';
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
                     $jobs_list[$i]['access'] = '1';
                 }
                 else {
