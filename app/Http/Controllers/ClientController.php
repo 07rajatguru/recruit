@@ -526,10 +526,22 @@ class ClientController extends Controller
             $client_category = $value['category'];
 
             if($category_perm) {
-                $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+
+                if($source == 'Forbid') {
+                    $data = array(++$j,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                }
+                else {
+                    $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                }
             }
             else {
-                $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+
+                if($source == 'Forbid') {
+                    $data = array(++$j,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                }
+                else {
+                    $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                }
             }
 
             $clients[$i] = $data;
@@ -2073,6 +2085,15 @@ class ClientController extends Controller
             $clients[$i] = $data;
             $i++;
         }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $clients
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function importExport() {

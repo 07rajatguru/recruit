@@ -36,7 +36,6 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>   
@@ -66,7 +65,7 @@
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [2]} ],
+                "columnDefs": [ {orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : '/client/allbytype',
                     data : {"source" : source},
@@ -77,31 +76,6 @@
                 responsive: true,
                 "pageLength": 25,
                 "pagingType": "full_numbers",
-            });
-
-            $('#allcb').change(function() {
-
-                if($(this).prop('checked')) {
-                    $('tbody tr td input[type="checkbox"]').each(function() {
-                        $(this).prop('checked', true);
-                    });
-                }
-                else {
-                    $('tbody tr td input[type="checkbox"]').each(function() {
-                        $(this).prop('checked', false);
-                    });
-                }
-            });
-            $('.others_client').change(function() {
-
-                if ($(this).prop('checked')) {
-                    if ($('.others_client:checked').length == $('.others_client').length) {
-                        $("#allcb").prop('checked', true);
-                    }
-                }
-                else {
-                    $("#allcb").prop('checked', false);
-                }
             });
         });
     </script>

@@ -39,16 +39,20 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
                          <tr>
-                            <th scope="row">Contact Point</th>
-                            <td>{{ $client['coordinator_name'] }}</td>
-
                             @permission(('display-client'))
+                                <th scope="row">Contact Point</th>
+                                <td>{{ $client['coordinator_name'] }}</td>
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
                             @else
                                 @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
+                                    <th scope="row">Contact Point</th>
+                                    <td>{{ $client['coordinator_name'] }}</td>
                                     <th>Contact Number</th>
                                     <td colspan="3">{{ $client['mobile'] }}</td>
+                                @else
+                                    <th scope="row">Contact Point</th>
+                                    <td colspan="3">{{ $client['coordinator_name'] }}</td>
                                 @endif
                             @endpermission
                         </tr>
@@ -92,6 +96,7 @@
                             <th> Client Status</th>
                             <td>{{ $client['status'] }}</td>
                         </tr>
+                        
                         @permission(('display-client'))
                         <tr>
                             <th>Percentage Charged Below AM Position</th>
@@ -102,12 +107,14 @@
                         @endpermission
 
                         <tr>
-                            <th>Display Name</th>
-                            <td>{{ $client['display_name'] }}</td>
-
                             @permission(('display-client-category-in-client-list'))
+                                <th>Display Name</th>
+                                <td>{{ $client['display_name'] }}</td>
                                 <th>Client Category</th>
                                 <td>{{ $client['category'] }}</td>
+                            @else
+                                <th>Display Name</th>
+                                <td colspan="3">{{ $client['display_name'] }}</td>
                             @endpermission
                         </tr>
                     </table>

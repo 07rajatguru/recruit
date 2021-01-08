@@ -700,7 +700,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client|']
     ]);
 
-    Route::get('client-list/allbyam', [
+    Route::get('/allbyam', [
         'as' => 'client.allbyam',
         'uses' => 'ClientController@getAllClientsDetailsByAM',
         'middleware' => ['permission:display-client|display-account-manager-wise-client']

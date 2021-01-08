@@ -63,7 +63,7 @@
                 "order" : [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]}],
                 "ajax" : {
-                    'url' : 'client-list/allbyam',
+                    'url' : '/allbyam',
                     'type' : 'get',
                     error: function() {
                     }
