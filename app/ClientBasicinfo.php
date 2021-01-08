@@ -1097,8 +1097,14 @@ class ClientBasicinfo extends Ardent
             $client['percentage_charged_below'] = $res->percentage_charged_below;
             $client['second_line_am'] = $res->second_line_am;
 
-            $user_details = User::getAllDetailsByUserID($res->second_line_am);
-            $client['second_line_am_name'] = $user_details->first_name . " " . $user_details->last_name;
+            if(isset($res->second_line_am) && $res->second_line_am > 0) {
+
+                $user_details = User::getAllDetailsByUserID($res->second_line_am);
+                $client['second_line_am_name'] = $user_details->first_name . " " . $user_details->last_name;
+            }
+            else {
+                $client['second_line_am_name'] = '';
+            }
         }
         return $client;
      }
