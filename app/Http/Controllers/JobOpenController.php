@@ -884,6 +884,7 @@ class JobOpenController extends Controller
 
         // For account manager
         $users = User::getAllUsers(NULL,'Yes');
+        $users[0] = 'Yet to Assign';
         $select_all_users = User::getAllUsers('recruiter');
 
         // job type
