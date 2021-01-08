@@ -2622,6 +2622,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'NewRoleController@rolewisePermissions'
     ]);
 
+    Route::post('rolewise-permissions/add',[
+        'as' => 'rolewise-permissions.add',
+        'uses' => 'NewRoleController@addRolePermissions',
+    ]);
+
     // Admin > New User Permissions
     //Route::group(['middleware' => ['permission:permission-list']], function () {
     Route::group([], function () {

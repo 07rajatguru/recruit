@@ -206,4 +206,15 @@ class NewRoleController extends Controller
 
         return view('adminlte::new_role.view',compact('permissions','roles'));
     }
+
+    public function addRolePermissions() {
+
+        $role_id = $_POST['role_id'];
+        $permission_id = $_POST['permission_id'];
+
+        $permission_role = new PermissionRole();
+        $permission_role->permission_id = $permission_id;
+        $permission_role->role_id = $role_id;
+        $permission_role->save();
+    }
 }
