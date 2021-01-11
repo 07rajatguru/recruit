@@ -11,8 +11,6 @@
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
                 @permission(('display-account-manager-wise-client'))
-                    <a class="btn btn-primary" href="{{ route('clientlist.amwise') }}">2nd Line AM Client List</a>
-
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
                 @endpermission
 
@@ -100,6 +98,7 @@
                 <th>Status</th>
                 <th>City</th>
                 <th>Remarks</th>
+                <th>New AM</th>
             </tr>
         </thead>
     </table>
@@ -191,7 +190,18 @@
             responsive: true,
             "pageLength": 25,
             "pagingType": "full_numbers",
+            "fnRowCallback": function( Row, Data ) {
+                if ( Data[10] == "10" ) {
+                    $('td:eq(3)', Row).css('background-color', 'LimeGreen');
+                }
+                else {
+                    $('td:eq(3)', Row).css('background-color', 'white');
+                }
+            }
         });
+
+        var table = $('#client_table').DataTable();
+        table.columns( [10] ).visible( false );
 
         $('#allcb').change(function() {
 

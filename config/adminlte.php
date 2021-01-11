@@ -159,6 +159,11 @@ return [
                        'icon' => 'list',
                    ],
                    [
+                       'text' => '2nd Line - Clients',
+                       'url'  => 'client-list',
+                       'icon' => 'list',
+                   ],
+                   [
                        'text' => 'Forbidden Clients',
                        'url'  => 'client-list/Forbid',
                        'icon' => 'list',

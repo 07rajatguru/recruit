@@ -685,7 +685,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('client-list/{source}', [
         'as' => 'client.list',
         'uses' => 'ClientController@getAllClientsBySource',
-        'middleware' => ['permission:display-client|display-account-manager-wise-client|']
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
     Route::get('client/allbytype', [
@@ -697,7 +697,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('client-list', [
         'as' => 'clientlist.amwise',
         'uses' => 'ClientController@getAllClientsByAM',
-        'middleware' => ['permission:display-client|display-account-manager-wise-client|']
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
     Route::get('/allbyam', [
