@@ -170,12 +170,12 @@
 
 <script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
-    jQuery( document ).ready(function() {
+    jQuery(document).ready(function() {
 
         $("#account_manager_id").select2({width : '567px'});
         $("#email_template_id").select2({width : "567px"});
 
-        $("#client_table").dataTable({
+        $("#client_table").DataTable({
 
             'bProcessing' : true,
             'serverSide' : true,

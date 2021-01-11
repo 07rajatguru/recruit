@@ -177,7 +177,7 @@
 
             var source = $("#source").val();
 
-            $("#clienttype_table").dataTable({
+            $("#clienttype_table").DataTable({
 
                 'bProcessing' : true,
                 'serverSide' : true,

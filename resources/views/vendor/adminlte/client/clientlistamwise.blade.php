@@ -57,7 +57,7 @@
 
         jQuery( document ).ready(function() {
 
-            $("#client_table").dataTable({
+            $("#client_table").DataTable({
                 
                 'bProcessing' : true,
                 'serverSide' : true,
