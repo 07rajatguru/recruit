@@ -101,6 +101,7 @@
                 <th>Status</th>
                 <th>City</th>
                 <th>Remarks</th>
+                <th>New AM</th>
             </tr>
         </thead>
     </table>
@@ -196,7 +197,18 @@
                 responsive: true,
                 "pageLength": 25,
                 "pagingType": "full_numbers",
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[10] != "0" ) {
+                        $('td:eq(3)', Row).css('background-color', 'LimeGreen');
+                    }
+                    else {
+                        $('td:eq(3)', Row).css('background-color', 'white');
+                    }
+                }
             });
+
+            var table = $('#clienttype_table').DataTable();
+            table.columns( [10] ).visible( false );
 
             $('#allcb').change(function() {
 

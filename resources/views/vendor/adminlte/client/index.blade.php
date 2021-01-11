@@ -191,7 +191,7 @@
             "pageLength": 25,
             "pagingType": "full_numbers",
             "fnRowCallback": function( Row, Data ) {
-                if ( Data[10] == "10" ) {
+                if ( Data[10] != "0" ) {
                     $('td:eq(3)', Row).css('background-color', 'LimeGreen');
                 }
                 else {

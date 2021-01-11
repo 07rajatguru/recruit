@@ -533,22 +533,30 @@ class ClientController extends Controller
 
             $client_category = $value['category'];
 
+            if(isset($value['second_line_am_name']) && $value['second_line_am_name'] != '') {
+
+                $am_name = $value['am_name']." | ".$value['second_line_am_name'];
+            }
+            else {
+                $am_name = $value['am_name'];
+            }
+
             if($category_perm) {
 
                 if($source == 'Forbid') {
-                    $data = array(++$j,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
                 else {
-                    $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
             }
             else {
 
                 if($source == 'Forbid') {
-                    $data = array(++$j,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
                 else {
-                    $data = array(++$j,$checkbox,$action,$value['am_name'],$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
             }
 
