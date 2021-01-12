@@ -65,7 +65,7 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('permission') ? 'has-error' : '' }}" >
+                    <div class="form-group {{ $errors->has('permission') ? 'has-error' : '' }}"  style="display: none;">
                         <strong>Permission <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="all_roles"/> <strong>Select All</strong>
                         <br/>
@@ -89,10 +89,10 @@
 
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                {!! Form::submit(isset($role) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
-            </div>
         </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        {!! Form::submit(isset($role) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
     </div>
 </div>
 

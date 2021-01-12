@@ -34,4 +34,43 @@ class PermissionRole extends Model
 
     	return $module_permissions;
     }
+
+    public static function getPermissionsStringByRoleID($role_id) {
+
+        $query = PermissionRole::query();
+        $query = $query->select('permission_role.*');
+
+        if(isset($role_id) && $role_id > 0) {
+           $query = $query->where('permission_role.role_id','=',$role_id);
+        }
+        
+        $response = $query->get();
+
+        $permissions_string = '';
+
+        foreach ($response as $key => $value) {
+
+            if($permissions_string == '') {
+                $permissions_string = $value->permission_id;
+            }
+            else {
+                $permissions_string = $permissions_string . "," . $value->permission_id;
+            }
+        }
+
+        return $permissions_string;
+    }
+
+    public static function checkExistorNot($role_id,$permission_id) {
+
+        $query = PermissionRole::query();
+        $query = $query->select('permission_role.*');
+
+        $query = $query->where('permission_role.role_id','=',$role_id);
+        $query = $query->where('permission_role.permission_id','=',$permission_id);
+
+        $response = $query->first();
+
+        return $response;
+    }
 }

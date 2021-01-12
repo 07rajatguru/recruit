@@ -25,9 +25,16 @@
 	                <tr id="{{ $value['id'] }}" class="permission_id">
 	                    <td>{{ $value['display_name'] }}</td>
 
-	                    @if(isset($roles) && sizeof($roles) > 0)
-	                    	@foreach($roles as $k => $v)
-				                <td align="center"><input type="checkbox" class="rolecb" id="{{ $v['id'] }}"></td>
+	                    @if(isset($roleswise) && sizeof($roleswise) > 0)
+	                    	@foreach($roleswise as $k => $v)
+                                <?php 
+                                    $v_array = explode(",", $v);
+                                ?>
+                                @if(in_array($value['id'], $v_array))
+				                    <td align="center"><input type="checkbox" class="rolecb" id="{{ $k }}" checked=""></td>
+                                @else
+                                    <td align="center"><input type="checkbox" class="rolecb" id="{{ $k }}"></td>
+                                @endif
 				            @endforeach
 	                    @endif
 	                </tr>
@@ -54,7 +61,7 @@
                 $.ajax({
                     url : url,
                     type : "POST",
-                    data : {role_id:role_id,permission_id:permission_id,'_token':token},
+                    data : {role_id:role_id,permission_id:permission_id,check:check,'_token':token},
                     dataType:'json',
                     success: function(res) {
 

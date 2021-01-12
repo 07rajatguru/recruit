@@ -204,17 +204,37 @@ class NewRoleController extends Controller
 
         $roles = Role::getAllRolesDetails();
 
-        return view('adminlte::new_role.view',compact('permissions','roles'));
+        if(isset($roles) && sizeof($roles) > 0) {
+
+            foreach ($roles as $key => $value) {
+                $roleswise[$value['id']] = PermissionRole::getPermissionsStringByRoleID($value['id']);
+            }
+        }
+
+        return view('adminlte::new_role.view',compact('permissions','roles','roleswise'));
     }
 
     public function addRolePermissions() {
 
         $role_id = $_POST['role_id'];
         $permission_id = $_POST['permission_id'];
+        $check = $_POST['check'];
 
-        $permission_role = new PermissionRole();
-        $permission_role->permission_id = $permission_id;
-        $permission_role->role_id = $role_id;
-        $permission_role->save();
+        if($check == 'true') {
+
+            $response = PermissionRole::checkExistorNot($role_id,$permission_id);
+
+            if($response == '') {
+
+                $permission_role = new PermissionRole();
+                $permission_role->permission_id = $permission_id;
+                $permission_role->role_id = $role_id;
+                $permission_role->save();
+            }
+        }
+        else {
+
+            DB::table("permission_role")->where('permission_id',$permission_id)->where('role_id',$role_id)->delete();
+        }
     }
 }

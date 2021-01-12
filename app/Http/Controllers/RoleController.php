@@ -48,7 +48,7 @@ class RoleController extends Controller
             'name' => 'required|unique:roles,name',
             'display_name' => 'required',
             'description' => 'required',
-            'permission' => 'required',
+            //'permission' => 'required',
         ]);
 
         $role = new Role();
@@ -141,6 +141,7 @@ class RoleController extends Controller
 
     public function destroy($id) {
 
+        DB::table("permission_role")->where('role_id',$id)->delete();
         DB::table("roles")->where('id',$id)->delete();
         return redirect()->route('roles.index')->with('success','Role Deleted Successfully.');
     }
