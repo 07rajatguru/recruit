@@ -113,6 +113,7 @@ class Interview extends Model
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
@@ -156,6 +157,7 @@ class Interview extends Model
             $query = $query->where(function($query) use ($user_id) {
 
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
@@ -250,6 +252,7 @@ class Interview extends Model
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
@@ -323,6 +326,7 @@ class Interview extends Model
 
             $query = $query->where(function($query) use ($user_id) {
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
@@ -441,6 +445,7 @@ class Interview extends Model
             $query = $query->where(function($query) use ($user_id) {
 
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
@@ -538,6 +543,7 @@ class Interview extends Model
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
@@ -609,6 +615,7 @@ class Interview extends Model
         if($all==0){
             $query = $query->where(function($query) use ($user_id){
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
+                $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
