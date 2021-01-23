@@ -46,7 +46,6 @@
                 <th>Status</th>
                 <th>City</th>
                 <th>Remarks</th>
-                <th>New AM</th>
             </tr>
         </thead>
     </table>
@@ -72,19 +71,7 @@
                 responsive: true,
                 "pageLength": 25,
                 "pagingType": "full_numbers",
-                "fnRowCallback": function( Row, Data ) {
-                    if ( Data[9] != "0" ) {
-                        $('td:eq(3)', Row).css('background-color', 'LimeGreen');
-                    }
-                    else {
-                        $('td:eq(3)', Row).css('background-color', 'white');
-                    }
-                }
             });
-
-            var table = $('#client_table').DataTable();
-            table.columns( [9] ).visible( false );
-
         });
     </script>
 @endsection

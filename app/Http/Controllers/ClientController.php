@@ -2100,10 +2100,10 @@ class ClientController extends Controller
             }
 
             if($category_perm) {
-                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
             }
             else {
-                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
             }
 
             $clients[$i] = $data;

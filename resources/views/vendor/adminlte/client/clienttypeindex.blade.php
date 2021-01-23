@@ -176,6 +176,7 @@
         jQuery( document ).ready(function() {
 
             var source = $("#source").val();
+            var numCols = $('#clienttype_table thead th').length;
 
             $("#clienttype_table").DataTable({
 
@@ -198,17 +199,35 @@
                 "pageLength": 25,
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[10] != "0" ) {
-                        $('td:eq(3)', Row).css('background-color', 'LimeGreen');
+                    
+                    if(numCols == 10) {
+
+                        if ( Data[9] != "0" ) {
+                            $('td', Row).css('background-color', '#d0f0c0');
+                        }
+                        else {
+                            $('td', Row).css('background-color', 'white');
+                        }
                     }
                     else {
-                        $('td:eq(3)', Row).css('background-color', 'white');
+                        if ( Data[10] != "0" ) {
+                            $('td', Row).css('background-color', '#d0f0c0');
+                        }
+                        else {
+                            $('td', Row).css('background-color', 'white');
+                        }
                     }
                 }
             });
 
             var table = $('#clienttype_table').DataTable();
-            table.columns( [10] ).visible( false );
+
+            if(numCols == 10) {
+                table.columns( [9] ).visible( false );
+            }
+            else {
+                table.columns( [10] ).visible( false );
+            }
 
             $('#allcb').change(function() {
 

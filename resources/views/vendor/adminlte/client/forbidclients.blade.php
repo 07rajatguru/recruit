@@ -48,6 +48,7 @@
                 <th>Status</th>
                 <th>City</th>
                 <th>Remarks</th>
+                <th>New AM</th>
             </tr>
         </thead>
     </table>
@@ -59,6 +60,7 @@
         jQuery( document ).ready(function() {
 
             var source = $("#source").val();
+            var numCols = $('#clienttype_table thead th').length;
 
             $("#clienttype_table").dataTable({
                 
@@ -76,7 +78,35 @@
                 responsive: true,
                 "pageLength": 25,
                 "pagingType": "full_numbers",
+                "fnRowCallback": function( Row, Data ) {
+                    if(numCols == 9) {
+
+                        if ( Data[8] != "0" ) {
+                            $('td', Row).css('background-color', '#d0f0c0');
+                        }
+                        else {
+                            $('td', Row).css('background-color', 'white');
+                        }
+                    }
+                    else {
+                        if ( Data[9] != "0" ) {
+                            $('td', Row).css('background-color', '#d0f0c0');
+                        }
+                        else {
+                            $('td', Row).css('background-color', 'white');
+                        }
+                    }
+                }
             });
+
+            var table = $('#clienttype_table').DataTable();
+            
+            if(numCols == 9) {
+                table.columns( [8] ).visible( false );
+            }
+            else {
+                table.columns( [9] ).visible( false );
+            }
         });
     </script>
 @endsection
