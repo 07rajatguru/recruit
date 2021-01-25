@@ -33,7 +33,10 @@ class NewRoleController extends Controller
     public function store(Request $request) {
 
         $module_ids = $request->input('module_ids');
-        $module_ids = implode(",", $module_ids);
+
+        if(isset($module_ids) && $module_ids != '') {
+            $module_ids = implode(",", $module_ids);
+        }
 
         $role = new Role();
         $role->module_ids = $module_ids;
@@ -91,7 +94,10 @@ class NewRoleController extends Controller
     public function update(Request $request,$id) {
 
         $module_ids = $request->input('module_ids');
-        $module_ids = implode(",", $module_ids);
+
+        if(isset($module_ids) && $module_ids != '') {
+            $module_ids = implode(",", $module_ids);
+        }
 
         $role = Role::find($id);
         $role->module_ids = $module_ids;

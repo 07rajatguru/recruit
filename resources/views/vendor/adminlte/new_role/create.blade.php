@@ -26,7 +26,7 @@
 	    </div>
 	</div>
 
-    {!! Form::open(array('route' => 'userrole.store','method'=>'POST','id' => 'role_form','onsubmit' => "return permissionValidation()")) !!}
+    {!! Form::open(array('route' => 'userrole.store','method'=>'POST','id' => 'role_form')) !!}
 
 	<div class="row">
 	    <div class="col-xs-12 col-sm-12 col-md-12">
@@ -66,7 +66,7 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}" style="display: none;">
                         <strong>Select Module Permissions : <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="all_roles"/><strong>Select All</strong>
                         <br/><br/>
@@ -122,9 +122,9 @@
                     "description": {
                         required: true
                     },
-                    "module_ids[]": {
+                   /* "module_ids[]": {
                         required: true
-                    }
+                    }*/
                 },
                 messages: {
                     "name": {
@@ -136,9 +136,9 @@
                     "description": {
                         required: "Description is Required."
                     },
-                    "module_ids[]": {
+                    /*"module_ids[]": {
                         required: "Please Select module for Permissions"
-                    }
+                    }*/
                 }
             });
         });

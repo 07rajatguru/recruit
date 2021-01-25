@@ -26,8 +26,9 @@
 	    </div>
 	</div>
 
-{!! Form::model($role, ['method' => 'PATCH','id' => 'role_form','onsubmit' => "return permissionValidation()",'route' => ['userrole.update', $role->id]]) !!}
+{!! Form::model($role, ['method' => 'PATCH','id' => 'role_form','route' => ['userrole.update', $role->id]]) !!}
 
+<!-- 'onsubmit' => "return permissionValidation()", -->
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
@@ -66,7 +67,7 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}" style="display: none;">
                         <strong>Select Module Permissions : <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="all_roles"/><strong>Select All</strong>
                         <br/><br/>
@@ -123,9 +124,9 @@
                     "description": {
                         required: true
                     },
-                    "module_ids[]": {
+                    /*"module_ids[]": {
                         required: true
-                    }
+                    }*/
                 },
                 messages: {
                     "name": {
@@ -137,9 +138,9 @@
                     "description": {
                         required: "Description is Required."
                     },
-                    "module_ids[]": {
+                    /*"module_ids[]": {
                         required: "Please Select module for Permissions"
-                    }
+                    }*/
                 }
             });
 

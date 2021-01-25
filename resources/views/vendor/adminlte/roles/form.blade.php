@@ -109,7 +109,7 @@
                     "display_name": {
                         required: true
                     },
-                    "permission[]": {
+                    "description": {
                         required: true
                     }
                 },
@@ -120,8 +120,8 @@
                     "display_name": {
                         required: "Display Name is Required."
                     },
-                    "permission[]": {
-                        required: "Please Select Permissions"
+                    "description": {
+                        required: "Description is Required."
                     }
                 }
             });
