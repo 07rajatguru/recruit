@@ -11,7 +11,7 @@
 			<th style="border: 3 solid #000000;text-align: center;width: 10;">Billing</th>
 			<th style="border: 3 solid #000000;text-align: center;width: 11;">GST @18%</th>
 			<th style="border: 3 solid #000000;text-align: center;width: 15;">Invoice Raised</th>
-			<th style="border: 3 solid #000000;text-align: center;width: 15;">Payment Expected(Incl. GST)</th>
+			<th style="border: 3 solid #000000;text-align: center;width: 15;">Payment Expected <br/>(Incl. GST)</th>
 			<th style="border: 3 solid #000000;text-align: center;width: 13;">Joining Date</th>
 			<th style="border: 3 solid #000000;text-align: center;width: 20;">Contact Person</th>
 			<th style="border: 3 solid #000000;text-align: center;width: 15;">Location</th>
@@ -42,6 +42,21 @@
 						<td style="border: 1 solid #000000;">{{ $v['efforts'] }}</td>
 					</tr>
 				@endforeach
+				<tr>
+					<td style="border: 1px solid black;text-align: center;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;text-align: center;"><b>Total</b></td>
+					<td style="border: 1px solid black;">{{ $v['total_salary_offered'] }}</td>
+					<td style="border: 1px solid black;">{{ $v['total_monthwise_billing'] }}</td>
+					<td style="border: 1px solid black;">{{ $v['total_monthwise_gst'] }}</td>
+					<td style="border: 1px solid black;">{{  $v['total_monthwise_invoice_raised'] }}</td>
+					<td style="border: 1px solid black;">{{ $v['total_monthwise_payment'] }}</td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+					<td style="border: 1px solid black;"></td>
+				</tr>
 			@else
 			<tr>
 				<td style="border: 1 solid #000000;"></td> <td style="border: 1 solid #000000;"></td>
