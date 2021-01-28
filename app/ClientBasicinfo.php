@@ -566,6 +566,15 @@ class ClientBasicinfo extends Ardent
             else {
                 $client[$i]['client_owner'] = $value->am_name;
             }
+
+            if(isset($value->second_line_am) && $value->second_line_am > 0) {
+
+                $user_details = User::getAllDetailsByUserID($value->second_line_am);
+                $client[$i]['second_line_am_name'] = $user_details->name;
+            }
+            else {
+                $client[$i]['second_line_am_name'] = '';
+            }
             
             $i++;
         }

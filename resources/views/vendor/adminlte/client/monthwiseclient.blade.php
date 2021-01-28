@@ -52,7 +52,15 @@
         @foreach ($clients as $client)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $client['client_owner'] or ''}}</td>
+
+                @if(isset($client['second_line_am_name']) && $client['second_line_am_name'] != '')
+
+                    <td>{{ $client['client_owner'] }} | {{ $client['second_line_am_name'] }}</td>
+                @else
+
+                    <td>{{ $client['client_owner'] }}</td>
+                @endif
+
                 <td>{{ $client['company_name'] or ''}}</td>
                 <td>{{ $client['coordinator_name'] or ''}}</td>
                 
