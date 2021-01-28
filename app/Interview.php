@@ -1027,14 +1027,6 @@ class Interview extends Model
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($interview_data['candidate_id']);
         $cname = $candidate_response->full_name;
-
-        /*$to_address = array();
-        $to_address[] = $candidate_owner_email;
-        $to_address[] = $client_owner_email;*/
-
-        $candidate_response  = CandidateBasicInfo::find($interview_data['candidate_id']);
-        $cname = $candidate_response->full_name;
-        //$ccity = $candidate_response->city;
         $cmobile = $candidate_response->mobile;
         $cemail = $candidate_response->email;
 
@@ -1090,7 +1082,6 @@ class Interview extends Model
         $interview_details['interview_date'] = $interview_date;
         $interview_details['interview_time'] = $interview_time;
         $interview_details['interview_type'] =$interview->interview_type;
-        //$interview_details['candidate_owner_email'] = $candidate_owner_email;
         $interview_details['client_owner_email'] = $client_owner_email;
         $interview_details['skype_id'] = $interview->skype_id;
         $interview_details['candidate_location'] = $interview->candidate_location;

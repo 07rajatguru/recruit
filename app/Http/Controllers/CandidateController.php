@@ -515,7 +515,8 @@ class CandidateController extends Controller
                     $temp_file_name = trim($fileFormattedResumeNameArray[0]);
                     //$fileFormattedResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
 
-                    $fileFormattedResumeNewName = $temp_file_name . "_Adler".'.'.$extention;
+                    //$fileFormattedResumeNewName = $temp_file_name . "_Adler".'.'.$extention;
+                    $fileFormattedResumeNewName = $temp_file_name .'.'.$extention;
                     $fileFormattedResume->move($dir,$fileFormattedResumeNewName);
 
                     $fileFormattedResumeNewPath = $dir.$fileFormattedResumeNewName;
@@ -895,7 +896,8 @@ class CandidateController extends Controller
                         $temp_file_name = trim($fileNameArray[0]);
 
                         if($candidate_upload_type == 'Candidate Formatted Resume') {
-                            $fileNewName = $temp_file_name . "_Adler".'.'.$extention;
+                            //$fileNewName = $temp_file_name . "_Adler".'.'.$extention;
+                            $fileNewName = $temp_file_name .'.'.$extention;
                         }
                         else {
                             $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
@@ -1155,7 +1157,8 @@ class CandidateController extends Controller
             $temp_file_name = trim($fileNameArray[0]);
 
             if($candidate_upload_type == 'Candidate Formatted Resume') {
-                $fileNewName = $temp_file_name . "_Adler".'.'.$extention;
+                //$fileNewName = $temp_file_name . "_Adler".'.'.$extention;
+                $fileNewName = $temp_file_name .'.'.$extention;
             }
             else {
                 $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;

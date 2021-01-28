@@ -227,6 +227,8 @@
                 {!! Form::submit(isset($interview) ? 'Update' : 'Submit', ['class' => 'btn btn-primary', 'novalidate' => 'novalidate' ]) !!}
             </div>
         </div>
+
+        <input type="hidden" id="action" name="action" value="{!! $action !!}">
     </div>
 
     {!! Form::close() !!}
@@ -292,13 +294,18 @@
             $("#interviewer_id").select2();
 
             getCandidate();
-            showHideDiv();
+
+            var action = $("#action").val();
+
+            if(action == "edit") {
+                showHideDiv();
+            }
         });
 
         function showHideDiv() {
             var type = $("#type").val();
             
-            if (type == 'Personal Interview' || type == 'Telephonic Interview') {
+            if (type == 'Personal Interview' || type == 'Telephonic Interview' || type == '') {
                 $(".skype").hide();
             }
             else{
