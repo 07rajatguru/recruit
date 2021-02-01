@@ -845,12 +845,21 @@ class InterviewController extends Controller
 
             $interview[$i] = Interview::ScheduleMailMultiple($value);
             $to_address_client = array();
+            $to_address_secondline_client = array();
             $type_array = array();
             $file_path = array();
             $j = 0;
 
             foreach ($interview as $key1 => $value1) {
-                $to_address_client[$j] = $value1['client_owner_email'];
+
+                if($value1['client_owner_email'] != '') {
+                    $to_address_client[$j] = $value1['client_owner_email'];
+                }
+
+                if($value1['secondline_client_owner_email'] != '') {
+                    $to_address_secondline_client[$j] = $value1['secondline_client_owner_email'];
+                }
+
                 $type_array[$j] = $value1['interview_type'];
                 $file_path[$j] = $value1['file_path'];
                 $j++;
@@ -858,7 +867,9 @@ class InterviewController extends Controller
             $i++;
         }
 
-        $to_address = array_merge($to_address_client);
+        $to_address = array_merge($to_address_client,$to_address_secondline_client);
+        $to_address = array_unique($to_address);
+
         $to = implode(' ',$to_address);
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');

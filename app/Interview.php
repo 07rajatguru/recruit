@@ -843,9 +843,22 @@ class Interview extends Model
         $query = Interview::query();
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->join('users','users.id','=','client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users','users.id','=','client_basicinfo.account_manager_id');
         $query = $query->where('interview.id','=',$interview_id);
         $query = $query->select('users.email as clientowneremail','users.secondary_email as clientownersemail');
+        $response = $query->first();
+
+        return $response;
+    }
+
+    public static function getSecondlineClientOwnerEmail($interview_id){
+
+        $query = Interview::query();
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('users','users.id','=','client_basicinfo.second_line_am');
+        $query = $query->where('interview.id','=',$interview_id);
+        $query = $query->select('users.email as secondlineclientowneremail','users.secondary_email as secondlineclientownersemail');
         $response = $query->first();
 
         return $response;
@@ -871,6 +884,9 @@ class Interview extends Model
         $client_email = Interview::getClientOwnerEmail($interview_id);
         $client_owner_email = $client_email->clientowneremail;
 
+        $secondline_client_email = Interview::getSecondlineClientOwnerEmail($interview_id);
+        $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
         $cname = $candidate_response->full_name;
@@ -878,9 +894,7 @@ class Interview extends Model
         $to_address = array();
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
-
-        //$to_address[] = 'tarikapanjwani@gmail.com';
-       // $to_address[] = 'rajlalwani@adlertalent.com';
+        $to_address[] = $secondline_client_owner_email;
 
         $input['to'] = $to_address;
 
@@ -929,6 +943,9 @@ class Interview extends Model
         $client_email = Interview::getClientOwnerEmail($interview_id);
         $client_owner_email = $client_email->clientowneremail;
 
+        $secondline_client_email = Interview::getSecondlineClientOwnerEmail($interview_id);
+        $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
         $cname = $candidate_response->full_name;
@@ -936,7 +953,7 @@ class Interview extends Model
         $to_address = array();
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
-        //$to_address[] = 'tarikapanjwani@gmail.com';
+        $to_address[] = $secondline_client_owner_email;
         
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
@@ -1024,6 +1041,9 @@ class Interview extends Model
         $client_email = Interview::getClientOwnerEmail($value);
         $client_owner_email = $client_email->clientowneremail;
 
+        $secondline_client_email = Interview::getSecondlineClientOwnerEmail($value);
+        $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($interview_data['candidate_id']);
         $cname = $candidate_response->full_name;
@@ -1087,6 +1107,7 @@ class Interview extends Model
         $interview_details['candidate_location'] = $interview->candidate_location;
         $interview_details['interview_location'] = $interview->interview_location;
         $interview_details['file_path'] = $file_path;
+        $interview_details['secondline_client_owner_email'] = $secondline_client_owner_email;
 
         return $interview_details;
 
