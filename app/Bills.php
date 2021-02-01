@@ -141,7 +141,7 @@ class Bills extends Model
             $bills_query = $bills_query->where(function($bills_query) use ($user_id){
 
                 $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
-                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                //$bills_query = $bills_query->orwhere('uploaded_by',$user_id);
                 $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
             });
         }
@@ -425,7 +425,7 @@ class Bills extends Model
             $bills_query = $bills_query->where(function($bills_query) use ($user_id){
 
                 $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
-                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
+                //$bills_query = $bills_query->orwhere('uploaded_by',$user_id);
                 $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
             });
         }

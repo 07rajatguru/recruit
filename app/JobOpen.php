@@ -814,6 +814,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             //$job_open_query = $job_open_query->where('user_id','=',$user_id);
             $job_open_query = $job_open_query->where('client_basicinfo.account_manager_id','=',$user_id);
+            $job_open_query = $job_open_query->orWhere('client_basicinfo.second_line_am','=',$user_id);
         }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
