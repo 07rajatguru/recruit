@@ -15,6 +15,7 @@ use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\Notifications;
+use App\JobAssociateCandidates;
 
 class InterviewController extends Controller
 {
@@ -561,6 +562,17 @@ class InterviewController extends Controller
 
         // Interview Schedule Mail
         $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$interview_id);
+
+        // Add in associated candidate table
+
+        $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$posting_title)->first();
+
+        if(isset($response) && $response != '') {
+
+            $today_date = date('Y-m-d');
+
+            DB::statement("UPDATE job_associate_candidates SET status_id = '2',shortlisted = '2',shortlisted_date = '$today_date' where candidate_id = $candidate_id and job_id = $posting_title");
+        }
 
         return redirect()->route('interview.index')->with('success','Interview Scheduled Successfully.');
     }
