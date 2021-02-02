@@ -885,7 +885,10 @@ class Interview extends Model
         $client_owner_email = $client_email->clientowneremail;
 
         $secondline_client_email = Interview::getSecondlineClientOwnerEmail($interview_id);
-        $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+
+        if(isset($secondline_client_email->secondlineclientowneremail) && $secondline_client_email->secondlineclientowneremail != '') {
+            $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+        }
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
@@ -894,7 +897,10 @@ class Interview extends Model
         $to_address = array();
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
-        $to_address[] = $secondline_client_owner_email;
+
+        if(isset($secondline_client_owner_email) && $secondline_client_owner_email != '') {
+            $to_address[] = $secondline_client_owner_email;
+        }
 
         $input['to'] = $to_address;
 
@@ -944,7 +950,10 @@ class Interview extends Model
         $client_owner_email = $client_email->clientowneremail;
 
         $secondline_client_email = Interview::getSecondlineClientOwnerEmail($interview_id);
-        $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+
+        if(isset($secondline_client_email->secondlineclientowneremail) && $secondline_client_email->secondlineclientowneremail != '') {
+            $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+        }
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($candidate_id);
@@ -953,7 +962,10 @@ class Interview extends Model
         $to_address = array();
         $to_address[] = $candidate_owner_email;
         $to_address[] = $client_owner_email;
-        $to_address[] = $secondline_client_owner_email;
+
+        if(isset($secondline_client_owner_email) && $secondline_client_owner_email != '') {
+            $to_address[] = $secondline_client_owner_email;
+        }
         
         $input['from_name'] = $from_name;
         $input['from_address'] = $from_address;
@@ -1042,7 +1054,10 @@ class Interview extends Model
         $client_owner_email = $client_email->clientowneremail;
 
         $secondline_client_email = Interview::getSecondlineClientOwnerEmail($value);
-        $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+
+        if(isset($secondline_client_email->secondlineclientowneremail) && $secondline_client_email->secondlineclientowneremail != '') {
+            $secondline_client_owner_email = $secondline_client_email->secondlineclientowneremail;
+        }
 
         // Candidate details
         $candidate_response  = CandidateBasicInfo::find($interview_data['candidate_id']);
@@ -1107,10 +1122,12 @@ class Interview extends Model
         $interview_details['candidate_location'] = $interview->candidate_location;
         $interview_details['interview_location'] = $interview->interview_location;
         $interview_details['file_path'] = $file_path;
-        $interview_details['secondline_client_owner_email'] = $secondline_client_owner_email;
 
+        if(isset($secondline_client_owner_email) && $secondline_client_owner_email != '') {
+            $interview_details['secondline_client_owner_email'] = $secondline_client_owner_email;
+        }
+        
         return $interview_details;
-
     }
 
     public static function getInterviewIdInASCDate($ids){
