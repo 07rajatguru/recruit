@@ -852,11 +852,11 @@ class InterviewController extends Controller
 
             foreach ($interview as $key1 => $value1) {
 
-                if($value1['client_owner_email'] != '') {
+                if(isset($value1['client_owner_email']) && $value1['client_owner_email'] != '') {
                     $to_address_client[$j] = $value1['client_owner_email'];
                 }
 
-                if($value1['secondline_client_owner_email'] != '') {
+                if(isset($value1['secondline_client_owner_email']) && $value1['secondline_client_owner_email'] != '') {
                     $to_address_secondline_client[$j] = $value1['secondline_client_owner_email'];
                 }
 
