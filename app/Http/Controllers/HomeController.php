@@ -182,7 +182,8 @@ class HomeController extends Controller
             // Client Count
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)->count();
+            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
+            ->where('delete_client','=',0)->count();
 
             // Job Count
             $job = JobOpen::getAllJobsCount(0,$user_id,0);
@@ -316,7 +317,8 @@ class HomeController extends Controller
                 // Client Count
                 $clientCount = DB::table('client_basicinfo')
                 ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
-                ->where('account_manager_id',$user_id)->count();
+                ->where('account_manager_id',$user_id)
+                ->where('delete_client','=',0)->count();
 
                 // Job Count
                 $jobCount = JobOpen::getAllJobsCount(0,$user_id,0);
