@@ -1112,14 +1112,30 @@ class ClientBasicinfo extends Ardent
 
             $client['billing_country'] = $res->billing_country;
             $client['billing_state'] = $res->billing_state;
-            $client['billing_street'] = $res->billing_street1.", ".$res->billing_street2;
+
+            if(isset($res->billing_street2) && $res->billing_street2 != '') {
+                $client['billing_street'] = $res->billing_street1.", ".$res->billing_street2;
+            }
+            else {
+                $client['billing_street'] = $res->billing_street1;
+            }
+
             $client['billing_code'] = $res->billing_code;
             $client['billing_city'] = $res->billing_city;
+
             $client['shipping_country'] = $res->shipping_country;
             $client['shipping_state'] = $res->shipping_state;
-            $client['shipping_street'] = $res->shipping_street1.", ".$res->shipping_street2;
+
+            if(isset($res->shipping_street2) && $res->shipping_street2 != '') {
+                $client['shipping_street'] = $res->shipping_street1.", ".$res->shipping_street2;
+            }
+            else {
+                $client['shipping_street'] = $res->shipping_street1;
+            }
+
             $client['shipping_code'] = $res->shipping_code;
             $client['shipping_city'] = $res->shipping_city;
+
             $client['percentage_charged'] = $res->percentage_charged_above;
             $client['percentage_charged_below'] = $res->percentage_charged_below;
             $client['second_line_am'] = $res->second_line_am;
@@ -1145,7 +1161,7 @@ class ClientBasicinfo extends Ardent
         $res = $query->first();
         
         $client_id = 0;
-        if(isset($res)){
+        if(isset($res)) {
             $client_id = $res->id;
         }
         return $client_id;
@@ -1296,6 +1312,7 @@ class ClientBasicinfo extends Ardent
                 else
                     $address .= ", ".$value->city;
             }
+            
             $expected_client[$i]['address'] = $address;
             $i++;
         }
