@@ -329,8 +329,11 @@ class JobAssociateCandidates extends Model
             $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
         }
 
-        $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
-        $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
+        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+
+        $query = $query->orwhere('job_associate_candidates.created_at','>=',"$from_date");
+        $query = $query->Where('job_associate_candidates.created_at','<=',"$to_date");
        
         $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
         $query_response = $query->get();
@@ -352,8 +355,11 @@ class JobAssociateCandidates extends Model
             $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
         }
 
-        $query = $query->where('job_associate_candidates.shortlisted_date','>=',$from_date);
-        $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
+        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        
+        $query = $query->orwhere('job_associate_candidates.shortlisted_date','>=',"$from_date");
+        $query = $query->Where('job_associate_candidates.shortlisted_date','<=',"$to_date");
 
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');
        
@@ -377,8 +383,11 @@ class JobAssociateCandidates extends Model
             $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
         }
 
-        $query = $query->where('job_associate_candidates.selected_date','>=',$from_date);
-        $query = $query->where('job_associate_candidates.selected_date','<=',$to_date);
+        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        
+        $query = $query->orwhere('job_associate_candidates.selected_date','>=',"$from_date");
+        $query = $query->Where('job_associate_candidates.selected_date','<=',"$to_date");
 
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');
         $query = $query->where('job_associate_candidates.status_id','=','3');
