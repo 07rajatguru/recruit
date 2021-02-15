@@ -1664,11 +1664,14 @@ class Bills extends Model
             $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
         }
 
-        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
+        $query = $query->where('bills_date.forecasting_date','>=',$from_date);
+        $query = $query->where('bills_date.forecasting_date','<=',$to_date);
+
+        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         
         $query = $query->orwhere('bills_date.forecasting_date','>=',"$from_date");
-        $query = $query->Where('bills_date.forecasting_date','<=',"$to_date");
+        $query = $query->Where('bills_date.forecasting_date','<=',"$to_date");*/
 
         $query = $query->groupBy(\DB::raw('Date(bills_date.forecasting_date)'));
         $query_response = $query->get();
@@ -1692,11 +1695,14 @@ class Bills extends Model
             $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
         }
 
-        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
+        $query = $query->where('bills_date.recovery_date','>=',$from_date);
+        $query = $query->where('bills_date.recovery_date','<=',$to_date);
+
+        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         
         $query = $query->orwhere('bills_date.recovery_date','>=',"$from_date");
-        $query = $query->Where('bills_date.recovery_date','<=',"$to_date");
+        $query = $query->Where('bills_date.recovery_date','<=',"$to_date");*/
 
         $query = $query->groupBy(\DB::raw('Date(bills_date.recovery_date)'));
         $query_response = $query->get();
@@ -1720,12 +1726,15 @@ class Bills extends Model
             $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
         }
 
-        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
+        $query = $query->where('bills_date.joining_success_date','>=',$from_date);
+        $query = $query->where('bills_date.joining_success_date','<=',$to_date);
+        
+/*        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         
         $query = $query->orwhere('bills_date.joining_success_date','>=',"$from_date");
         $query = $query->Where('bills_date.joining_success_date','<=',"$to_date");
-
+*/
         $query = $query->groupBy(\DB::raw('Date(bills_date.joining_success_date)'));
         $query_response = $query->get();
 

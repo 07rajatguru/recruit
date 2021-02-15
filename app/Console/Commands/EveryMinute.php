@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use App\ClientTimeline;
 use App\UsersEmailPwd;
+use App\Date;
 
 class EveryMinute extends Command
 {
@@ -883,15 +884,6 @@ class EveryMinute extends Command
             }
             else if ($value['module'] == 'Productivity Report') {
 
-                $to_array = explode(",",$input['to']);
-                $cc_array = explode(",",$input['cc']);
-
-                // Get user Bench Mark from master
-                $user_bench_mark = UserBenchMark::getBenchMarkByUserID($sender_id);
-
-                $year = date('Y');
-                $month = date('m');
-
                 /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
                 $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
 
@@ -914,7 +906,7 @@ class EveryMinute extends Command
                     );
                 }*/
 
-                $dates1 = array();
+                /*$dates1 = array();
                 $dates2 = array();
 
                 $week = date("W", strtotime($year . "-" . $month ."-01"));
@@ -943,6 +935,27 @@ class EveryMinute extends Command
 
                     $val2 = $dates2[$key];
                     $dates_array[$key] = $val."--".$val2;
+                }*/
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                // Get user Bench Mark from master
+                $user_bench_mark = UserBenchMark::getBenchMarkByUserID($sender_id);
+
+                $year = date('Y');
+                $month = date('m');
+                $lastDayOfWeek = '7';
+
+                $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+
+                $dates_array = array();
+                $i=0;
+
+                foreach ($weeks as $key => $val) {
+
+                    $dates_array[$i] = implode("--",$val);
+                    $i++;
                 }
 
                 // Get no of weeks in month & get from date & to date
