@@ -82,44 +82,56 @@
                                 @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                                 <?php $i = 0; ?>
                                     @foreach($frm_to_date_array as $key => $value)
+
+                                        <?php
+                                            $from_date = date('d/m',strtotime($value['from_date']));
+                                            $to_date = date('d/m',strtotime($value['to_date']));
+                                        ?>
+
                                         @if($i == 0)
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;width: 65px;">
-                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week1</span></b>
+                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week1</span></b><br/>
+                                                    <b>{{ $from_date }} to {{ $to_date }}</b>
                                                 </p>
                                             </td>
                                         @endif
 
                                         @if($i == 1)
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;width: 65px;">
-                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week2</span></b>
+                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week2</span></b><br/>
+                                                    <b>{{ $from_date }} to {{ $to_date }}</b>
                                                 </p>
                                             </td>
                                         @endif
 
                                         @if($i == 2)
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;width: 65px;">
-                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week3</span></b>
+                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week3</span></b><br/>
+                                                    <b>{{ $from_date }} to {{ $to_date }}</b>
                                                 </p>
                                             </td>
                                         @endif
 
                                         @if($i == 3)
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;width: 65px;">
-                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week4</span></b>
+                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week4</span></b><br/>
+                                                    <b>{{ $from_date }} to {{ $to_date }}</b>
                                                 </p>
                                             </td>
                                         @endif
 
                                         @if($i == 4)
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;width: 65px;">
-                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week5</span></b>
+                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week5</span></b><br/>
+                                                    <b>{{ $from_date }} to {{ $to_date }}</b>
                                                 </p>
                                             </td>
                                         @endif
 
                                         @if($i == 5)
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 2px;background: rgb(241,194,50);padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 29px;width: 65px;">
-                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week6</span></b>
+                                                <p align="center" style="text-align: center;"><b><span style="color: black;">Week6</span></b><br/>
+                                                    <b>{{ $from_date }} to {{ $to_date }}</b>
                                                 </p>
                                             </td>
                                         @endif
