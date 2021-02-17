@@ -774,9 +774,12 @@ class BillsController extends Controller
 
         foreach ($employee_name as $k => $v) {
             if ($v != '' && $v!=0) {
-                $employee_final[$v] = $employee_percentage[$k];
-                $total += $employee_percentage[$k];
-            }
+
+                if($employee_percentage[$k] > 0) {
+                    $employee_final[$v] = $employee_percentage[$k];
+                    $total += $employee_percentage[$k];
+                }
+            }   
         }
 
         if($total>100) {
@@ -1170,8 +1173,11 @@ class BillsController extends Controller
 
         foreach ($employee_name as $k => $v) {
             if ($v != '') {
-                $employee_final[$v] = $employee_percentage[$k];
-                $total += (int)$employee_percentage[$k];
+
+                if($employee_percentage[$k] > 0) {
+                    $employee_final[$v] = $employee_percentage[$k];
+                    $total += (int)$employee_percentage[$k];
+                }
             }
         }
 
