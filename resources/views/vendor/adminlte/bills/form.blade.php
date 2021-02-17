@@ -230,10 +230,10 @@
                             <div class="form-group">
                                 <strong>Employee Name :  </strong>
                                 {!! Form::select('employee_name_1', $users,$employee_name[0], array('id'=>'employee_name_1','class' => 'form-control', 'tabindex' => '15')) !!}
-                                {!! Form::select('employee_name_2', $users,$employee_name[1], array('id'=>'employee_name_2','class' => 'form-control', 'tabindex' => '17' )) !!}
-                                {!! Form::select('employee_name_3', $users,$employee_name[2], array('id'=>'employee_name_3','class' => 'form-control', 'tabindex' => '19' )) !!}
-                                {!! Form::select('employee_name_4', $users,$employee_name[3], array('id'=>'employee_name_4','class' => 'form-control', 'tabindex' => '21' )) !!}
-                                {!! Form::select('employee_name_5', $users,$employee_name[4], array('id'=>'employee_name_5','class' => 'form-control', 'tabindex' => '23' )) !!}
+                                {!! Form::select('employee_name_2', $users,$employee_name[1], array('id'=>'employee_name_2','class' => 'form-control', 'tabindex' => '17','placeholder' => '')) !!}
+                                {!! Form::select('employee_name_3', $users,$employee_name[2], array('id'=>'employee_name_3','class' => 'form-control', 'tabindex' => '19','placeholder' => '')) !!}
+                                {!! Form::select('employee_name_4', $users,$employee_name[3], array('id'=>'employee_name_4','class' => 'form-control', 'tabindex' => '21','placeholder' => '')) !!}
+                                {!! Form::select('employee_name_5', $users,$employee_name[4], array('id'=>'employee_name_5','class' => 'form-control', 'tabindex' => '23','placeholder' => '')) !!}
                             </div>
                         </div>
                     </div>

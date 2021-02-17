@@ -759,11 +759,25 @@ class BillsController extends Controller
         $employee_final = array();
         $employee_percentage = array();
 
-        $employee_name[] = $input['employee_name_1'];
-        $employee_name[] = $input['employee_name_2'];
-        $employee_name[] = $input['employee_name_3'];
-        $employee_name[] = $input['employee_name_4'];
-        $employee_name[] = $input['employee_name_5'];
+        if(isset($input['employee_name_1']) && $input['employee_name_1'] != '') {
+            $employee_name[] = $input['employee_name_1'];
+        }
+
+        if(isset($input['employee_name_2']) && $input['employee_name_2'] != '') {
+            $employee_name[] = $input['employee_name_2'];
+        }
+
+        if(isset($input['employee_name_3']) && $input['employee_name_3'] != '') {
+            $employee_name[] = $input['employee_name_3'];
+        }
+
+        if(isset($input['employee_name_4']) && $input['employee_name_4'] != '') {
+            $employee_name[] = $input['employee_name_4'];
+        }
+
+        if(isset($input['employee_name_5']) && $input['employee_name_5'] != '') {
+            $employee_name[] = $input['employee_name_5'];
+        }
 
         $employee_percentage[] = $input['employee_percentage_1'];
         $employee_percentage[] = $input['employee_percentage_2'];
@@ -1158,11 +1172,25 @@ class BillsController extends Controller
         $employee_final = array();
         $employee_percentage = array();
 
-        $employee_name[] = $input['employee_name_1'];
-        $employee_name[] = $input['employee_name_2'];
-        $employee_name[] = $input['employee_name_3'];
-        $employee_name[] = $input['employee_name_4'];
-        $employee_name[] = $input['employee_name_5'];
+        if(isset($input['employee_name_1']) && $input['employee_name_1'] != '') {
+            $employee_name[] = $input['employee_name_1'];
+        }
+
+        if(isset($input['employee_name_2']) && $input['employee_name_2'] != '') {
+            $employee_name[] = $input['employee_name_2'];
+        }
+
+        if(isset($input['employee_name_3']) && $input['employee_name_3'] != '') {
+            $employee_name[] = $input['employee_name_3'];
+        }
+
+        if(isset($input['employee_name_4']) && $input['employee_name_4'] != '') {
+            $employee_name[] = $input['employee_name_4'];
+        }
+
+        if(isset($input['employee_name_5']) && $input['employee_name_5'] != '') {
+            $employee_name[] = $input['employee_name_5'];
+        }
 
         $employee_percentage[] = $input['employee_percentage_1'];
         $employee_percentage[] = $input['employee_percentage_2'];
