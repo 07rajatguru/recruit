@@ -705,7 +705,8 @@ class BillsController extends Controller
 
         $job_id = 0;
 
-        $users = User::getAllUsersCopy('recruiter');
+        //$users = User::getAllUsersCopy('recruiter');
+        $users = User::getAllUsers('recruiter');
 
         $employee_name = array();
         $employee_percentage = array();
@@ -1072,7 +1073,9 @@ class BillsController extends Controller
 
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
-        $users = User::getAllUsersCopy('recruiter');
+        //$users = User::getAllUsersCopy('recruiter');
+        $users = User::getAllUsers('recruiter');
+
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
         $billModel = new Bills();
@@ -1692,7 +1695,9 @@ class BillsController extends Controller
 
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
-        $users = User::getAllUsersCopyWithInactive('recruiter');
+        //$users = User::getAllUsersCopyWithInactive('recruiter');
+        $users = User::getAllUsers('recruiter');
+
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
         $billModel = new Bills();
