@@ -456,38 +456,43 @@ class ReportController extends Controller
         $user =  \Auth::user();
         $user_id = \Auth::user()->id;
         $all_perm = $user->can('display-person-wise-report-of-all-users');
+        $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
+
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+
+        else {
+            $y = date('Y');
+            $m = date('m');
+
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else {
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(',', $year);
+        $current = $year_data[0];
+        $next = $year_data[1];
+        $current_year = date('Y-m-d',strtotime("first day of $current"));
+        $next_year = date('Y-m-d',strtotime("last day of $next"));
 
         if ($all_perm) {
-            // Year Data
-            $starting_year = '2017';
-            $ending_year = date('Y',strtotime('+1 year'));
-            $year_array = array();
-            for ($y=$starting_year; $y < $ending_year ; $y++) {
-                $next = $y+1;
-                $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
-            }
-
-            if (isset($_POST['year']) && $_POST['year'] != '') {
-                $year = $_POST['year'];
-            }
-            else{
-                $y = date('Y');
-                $m = date('m');
-                if ($m > 3) {
-                    $n = $y + 1;
-                    $year = $y.'-4, '.$n.'-3';
-                }
-                else{
-                    $n = $y-1;
-                    $year = $n.'-4, '.$y.'-3';
-                }
-            }
-
-            $year_data = explode(',', $year);
-            $current = $year_data[0];
-            $next = $year_data[1];
-            $current_year = date('Y-m-d',strtotime("first day of $current"));
-            $next_year = date('Y-m-d',strtotime("last day of $next"));
 
             $users = User::getAllUsers('recruiter');
 
@@ -505,7 +510,26 @@ class ReportController extends Controller
                 }
             }
 
-            //print_r($personwise_data);exit;
+            return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
+        }
+        else if($teamwise_perm) {
+
+            $users = User::getAssignedUsers($user_id,'recruiter');
+
+            foreach ($users as $key => $value) {
+
+                $user_details = User::getAllDetailsByUserID($key);
+                $cr_yr = explode('-', $current);
+                $nt_yr = explode('-', $next);
+
+                $user_created_at_yr = date('Y',strtotime($user_details->created_at));
+
+                if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
+
+                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                }
+            }
+
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
         }
         else {

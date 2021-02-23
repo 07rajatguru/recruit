@@ -2065,13 +2065,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('personwise-report',[
         'as' => 'report.personwisereportindex',
         'uses' => 'ReportController@personWiseReportIndex',
-        'middleware' => ['permission:display-person-wise-report-of-all-users']
+        'middleware' => ['permission:display-person-wise-report-of-all-users|display-person-wise-report-of-loggedin-user-team']
     ]);
 
     Route::post('personwise-report/export',[
         'as' => 'report.personwisereportexport',
         'uses' => 'ReportController@personWiseReportExport',
-        'middleware' => ['permission:display-person-wise-report-of-all-users']
+        'middleware' => ['permission:display-person-wise-report-of-all-users|display-person-wise-report-of-loggedin-user-team']
     ]);
 
     Route::any('monthwise-report',[
