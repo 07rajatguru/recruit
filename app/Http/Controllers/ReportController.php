@@ -508,6 +508,9 @@ class ReportController extends Controller
 
                     $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
                 }
+                else {
+                    $personwise_data[$value] = array();
+                }
             }
 
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
@@ -527,6 +530,9 @@ class ReportController extends Controller
                 if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
 
                     $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                }
+                else {
+                    $personwise_data[$value] = array();
                 }
             }
 
