@@ -346,11 +346,11 @@ return [
                    'url'  => 'weekly-report',
                    'icon' => 'circle-o',
                ],
-               [
+               /*[
                    'text' => 'Monthly report',
                    'url'  => 'userwise-monthly-report',
                    'icon' => 'circle-o',
-               ],
+               ],*/
                [
                    'text' => 'Productivity Report',
                    'url'  => 'productivity-report',
