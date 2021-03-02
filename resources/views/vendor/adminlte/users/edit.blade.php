@@ -103,7 +103,8 @@
                             </div>
 
                             <div class="form-group">
-                                <strong>Select Company :</strong>
+                                <strong>Select Company : <span class = "required_fields">*</span> 
+                                </strong>
                                 {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '10')) !!}
                             </div>
       
@@ -145,6 +146,14 @@
                                     {!! Form::checkbox('lead_report','Yes') !!}
                                     {!! Form::label('Leads Added') !!}
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <strong> Eligibility Report : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('eligibility_report','Yes', '') !!}
+                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                                {!! Form::radio('eligibility_report','No','') !!}
+                                {!! Form::label('No') !!}
                             </div>
        
                             <div class="form-group">

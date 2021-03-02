@@ -129,7 +129,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
-                                <strong>Select Compnay :</strong>
+                                <strong>Select Compnay : <span class = "required_fields">*</span> 
+                                </strong>
                                 {!! Form::select('company_id', $companies,null, array('id'=>'company_id','class' => 'form-control','tabindex' => '10' )) !!}
                                 @if ($errors->has('company_id'))
                                     <span class="help-block">
@@ -184,6 +185,14 @@
                                     {!! Form::checkbox('lead_report','Yes',true, array('id' => 'lead_report')) !!}
                                     {!! Form::label('Leads Added') !!}
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <strong> Eligibility Report : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('eligibility_report','Yes', true) !!}
+                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                                {!! Form::radio('eligibility_report','No',false) !!}
+                                {!! Form::label('No') !!}
                             </div>
                           
                             <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">

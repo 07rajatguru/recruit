@@ -41,9 +41,10 @@ class EligibilityWorkingReport extends Command
      */
     public function handle()
     {
-        $users = User::getAllUsersExpectSuperAdmin('recruiter');
+        $users = User::getAllUsersForEligibilityReport('recruiter');
 
         foreach ($users as $key => $value) {
+
             $user_data = UserOthersInfo::getUserOtherInfo($key);
             $user_salary = $user_data['fixed_salary'];
 
@@ -55,10 +56,11 @@ class EligibilityWorkingReport extends Command
 
             // get user billing amount
             $user_bill_data = Bills::getPersonwiseReportData($key,$start_month,$last_month);
-            //print_r($user_bill_data);exit;
+           
             foreach ($user_bill_data as $key1 => $value1) {
                 $achieved = $achieved + $value1['person_billing'];
             }
+
             // Check Eligibility
             if ($achieved == 0) {
                 $eligibility = 'false';
@@ -75,7 +77,9 @@ class EligibilityWorkingReport extends Command
 
             // Add data in eligibility table
             $eligibility_data_id = Eligibilityworking::getCheckuserworkingreport($key,$month,$year);
+
             if (isset($eligibility_data_id) && $eligibility_data_id != '') {
+
                 $eligible = Eligibilityworking::find($eligibility_data_id);
                 $eligible->user_id = $key;
                 $eligible->target = $target;
@@ -85,6 +89,7 @@ class EligibilityWorkingReport extends Command
                 $eligible->save();
             }
             else {
+                
                 $eligible = new Eligibilityworking();
                 $eligible->user_id = $key;
                 $eligible->target = $target;
@@ -93,8 +98,6 @@ class EligibilityWorkingReport extends Command
                 $eligible->date = $start_month;
                 $eligible->save();
             }
-
-        //print_r($eligibility_data_id);exit;
         }
     }
 }
