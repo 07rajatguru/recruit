@@ -189,6 +189,8 @@ class ReportController extends Controller
 
     public function userWiseMonthlyReport() {
 
+        return view('errors.403');
+
         // Month data
         $month_array = array();
         for ($i=1; $i <=12 ; $i++) {
@@ -303,6 +305,8 @@ class ReportController extends Controller
     }
 
     public function monthlyreportIndex() {
+
+        return view('errors.403');
 
         // get logged in user
         $user =  \Auth::user();
