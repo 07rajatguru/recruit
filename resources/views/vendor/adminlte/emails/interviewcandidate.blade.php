@@ -64,6 +64,32 @@
                                 5. Copy of Appointment / Increment letter whichever has latest salary breakup.<br/></p>
                             @endif
 
+                            @if((isset($interview_type) && $interview_type == 'Personal Interview') || (isset($interview_type) && $interview_type == 'Telephonic Interview'))
+
+                            @else
+
+                                <p style="color:black;">
+                                    <u><b>Important Notes for Video Interview:</b></u><br/><br/>
+
+                                    <ul style="list-style-type: square;">
+                                        
+                                        <li>Must attend through laptop ensuring proper background and lighting <b>(Attending interview through Mobile must be avoided).</b></li>
+
+                                        <li>Test your technology - Check one day prior that your webcam, audio and video application is working properly.</li>
+
+                                        <li>Set your phone to silent.</li>
+
+                                        <li>Set up your camera so that your face is nicely framed.</li>
+
+                                        <li>Maintain good eye contact and body language.</li>
+
+                                        <li>Find a quiet, private, well-lit place, free from possible interruptions with high speed internet connectivity.</li>
+
+                                        <li>Dress for Success - Be absolutely well-dressed in business formals for your own confidence and to impress the interviewer.</li>
+                                    </ul>
+                                </p>
+                            @endif
+
                             <p style="color:red;">Request you to acknowledge the receipt of this mail.</u></p>
                             <p>For any query/discussion, feel free to connect with me anytime.</p>
                             <p>Thanks.</p>
