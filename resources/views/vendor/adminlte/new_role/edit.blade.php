@@ -67,7 +67,7 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}" style="display: none;">
+                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}">
                         <strong>Select Module Permissions : <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="all_roles"/><strong>Select All</strong>
                         <br/><br/>
@@ -124,9 +124,9 @@
                     "description": {
                         required: true
                     },
-                    /*"module_ids[]": {
+                    "module_ids[]": {
                         required: true
-                    }*/
+                    }
                 },
                 messages: {
                     "name": {
@@ -138,9 +138,9 @@
                     "description": {
                         required: "Description is Required."
                     },
-                    /*"module_ids[]": {
+                    "module_ids[]": {
                         required: "Please Select module for Permissions"
-                    }*/
+                    }
                 }
             });
 
