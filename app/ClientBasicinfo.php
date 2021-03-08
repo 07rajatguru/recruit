@@ -24,7 +24,7 @@ class ClientBasicinfo extends Ardent
     public static $rules = array(
 
         'name' => 'required',
-        'mail' => 'unique:client_basicinfo,mail,{id}',
+        //'mail' => 'unique:client_basicinfo,mail,{id}',
         'mobile'  => 'required',
         'display_name' => 'required'
     );

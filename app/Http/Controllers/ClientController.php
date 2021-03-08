@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Comments;
 use App\Utils;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\ClientBasicinfo;
 use App\ClientAddress;
 use App\ClientDoc;
@@ -25,6 +26,8 @@ use App\EmailTemplate;
 use App\ClientRemarks;
 use App\ClientTimeline;
 use App\Notifications;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class ClientController extends Controller
 {
@@ -783,6 +786,15 @@ class ClientController extends Controller
 
     public function store(Request $request) {
 
+        $this->validate($request, [
+            'name' => 'required',
+            'mail' => [
+                'required','email',Rule::unique('client_basicinfo')->where(function($query) {
+                  $query->where('delete_client', '=', '0');
+              })
+            ],
+        ]);
+
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
@@ -1319,6 +1331,15 @@ class ClientController extends Controller
     }
 
     public function update(Request $request, $id) {
+
+         $this->validate($request, [
+            'name' => 'required',
+            'mail' => [
+                'required','email',Rule::unique('client_basicinfo')->where(function($query) {
+                  $query->where('delete_client', '=', '0');
+              })
+            ],
+        ]);
 
         $user_id = \Auth::user()->id;
         $input = $request->all();
