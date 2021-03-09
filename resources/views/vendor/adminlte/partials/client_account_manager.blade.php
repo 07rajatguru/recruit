@@ -15,6 +15,7 @@
                 {!! Form::select('account_manager', $account_manager,$data['account_mangr_id'], array('id'=>'account_manager','class' => 'form-control account_manager')) !!}
             </div>
 
+            <input type="hidden" name="source" id="source" value="{{ $source }}">
 
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>

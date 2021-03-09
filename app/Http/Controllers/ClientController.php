@@ -183,11 +183,11 @@ class ClientController extends Controller
             }
             if($all_perm) {
 
-                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
                 $account = $account_manager_view->render();
                 $action .= $account;
 
-                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
                 $secondline_account = $secondline_account_manager_view->render();
                 $action .= $secondline_account;
             }
@@ -498,11 +498,11 @@ class ClientController extends Controller
             }
             if($all_perm) {
 
-                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager]);
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager, 'source' => $source]);
                 $account = $account_manager_view->render();
                 $action .= $account;
 
-                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => $source]);
                 $secondline_account = $secondline_account_manager_view->render();
                 $action .= $secondline_account;
             }
@@ -1725,6 +1725,8 @@ class ClientController extends Controller
 
         $updated_at = date('Y-m-d H:i:s');
 
+        $source = $_POST['am_source'];
+
         foreach($client_ids_array as $key => $value) {
 
             // If account manager change then jobs hiring manager also change
@@ -1813,7 +1815,98 @@ class ClientController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('client.index')->with('success','Client Account Manager Changed Successfully.');
+        if(isset($source) && $source != '') {
+
+            return redirect('/client-list/'.$source)->with('success', 'Client Account Manager Changed Successfully.');
+        }
+        else {
+            return redirect()->route('client.index')->with('success','Client Account Manager Changed Successfully.');
+        }
+    }
+
+    public function postSecondlineClientAccountManager() {
+
+        $second_line_am_id = $_POST['second_line_am_id'];
+
+        $client_ids = $_POST['second_line_am_client_ids'];
+        $client_ids_array = explode(",",$client_ids);
+
+        $source = $_POST['second_line_am_source'];
+
+        foreach($client_ids_array as $key => $value) {
+
+            // Get Client Old Secondline AM
+            $client_info = ClientBasicinfo::getClientDetailsById($value);
+            $old_sl_am = $client_info['second_line_am'];
+
+            // Update New Secondline AM
+            $client = ClientBasicinfo::find($value);
+            $client->second_line_am = $second_line_am_id;
+            $client->save();
+
+            // If account manager change then jobs hiring manager also change
+            $job_ids = JobOpen::getJobIdByClientId($value);
+
+            if(isset($job_ids) && sizeof($job_ids) > 0) {
+
+                foreach ($job_ids as $k1 => $v1) {
+
+                    if($old_sl_am > 0) {
+
+                        JobVisibleUsers::where('job_id',$value)->where('user_id',$old_sl_am)->delete();
+                    }
+
+                   
+                    $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($v1,$second_line_am_id);
+
+                    if ($check_job_user_id == false) {
+                        $job_visible_users = new JobVisibleUsers();
+                        $job_visible_users->job_id = $v1;
+                        $job_visible_users->user_id = $second_line_am_id;
+                        $job_visible_users->save();
+                    }
+                }
+            }
+        }
+
+        // Email Notifications : On change 2nd line account manager of client.
+
+        $user_id = \Auth::user()->id;
+
+        $module = '2nd Line of Multiple Clients';
+        $sender_name = $user_id;
+        $subject = "2nd Line of Multiple Clients";
+        $message = "<tr><td>2nd Line of Multiple Clients</td></tr>";
+        $module_id = $client_ids;
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+
+        if ($second_line_am_id != '0') {
+
+            $to = $superadminemail;
+            $account_manager_email = User::getUserEmailById($second_line_am_id);
+            $cc_users_array = array($all_client_user_email,$account_manager_email);
+            $cc = implode(",",$cc_users_array);
+        }
+        else {
+
+            $to = $superadminemail;
+            $cc = $all_client_user_email;
+        }
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        if(isset($source) && $source != '') {
+
+            return redirect('/client-list/'.$source)->with('success', 'Second-line Account Manager Changed Successfully.');
+        }
+        else {
+            return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
+        }
     }
 
     public function getMonthWiseClient($month,$year) {
@@ -1838,6 +1931,7 @@ class ClientController extends Controller
 
         $account_manager = $request->get('account_manager');
         $id = $request->get('id');
+        $source = $request->get('source');
 
         $act_man = ClientBasicinfo::find($id);
         $a_m = '';
@@ -1929,7 +2023,13 @@ class ClientController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-       return redirect()->route('client.index')->with('success', 'Client Account Manager Changed Successfully.');
+        if(isset($source) && $source != '') {
+
+            return redirect('/client-list/'.$source)->with('success', 'Client Account Manager Changed Successfully.');
+        }
+        else {
+            return redirect()->route('client.index')->with('success','Client Account Manager Changed Successfully.');
+        }
     }
 
     public function getSecondlineAccountManager(Request $request) {
@@ -1938,6 +2038,7 @@ class ClientController extends Controller
 
         $secondline_account_manager = $request->get('secondline_account_manager');
         $id = $request->get('id');
+        $source = $request->get('source');
 
         // Get Client Old Secondline AM
         $client_info = ClientBasicinfo::getClientDetailsById($id);
@@ -1996,7 +2097,13 @@ class ClientController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
+        if(isset($source) && $source != '') {
+
+            return redirect('/client-list/'.$source)->with('success', 'Second-line Account Manager Changed Successfully.');
+        }
+        else {
+            return redirect()->route('client.index')->with('success', 'Second-line Account Manager Changed Successfully.');
+        }
     }
 
     public function getAllClientsByAM() {

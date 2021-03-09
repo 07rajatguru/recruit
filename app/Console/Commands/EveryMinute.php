@@ -1080,6 +1080,41 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == '2nd Line of Multiple Clients') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $client_ids_array = explode(",",$module_id);
+                $client_info = array();
+                $i=0;
+
+                foreach($client_ids_array as $key => $value) {
+
+                    $client = ClientBasicinfo::getClientDetailsById($value);
+                    
+                    $client_info[$i]['am_name'] = $client['am_name'];
+                    $client_info[$i]['name'] = $client['name'];
+                    $client_info[$i]['coordinator_name'] = $client['coordinator_name'];
+                    $client_info[$i]['second_line_am_name'] = $client['second_line_am_name'];
+                    
+                    $i++;
+                }
+
+                $input['second_line_am_name'] = $client['second_line_am_name'];
+                $input['client_info'] = $client_info;
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = $cc_array;
+
+                \Mail::send('adminlte::emails.multipleclientsecondlineamemail', $input, function ($message) use($input) {
+                    
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }

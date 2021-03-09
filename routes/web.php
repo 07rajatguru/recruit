@@ -663,6 +663,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'client.accountmanager',
         'uses' => 'ClientController@postClientAccountManager'
     ]);
+
+    Route::post('client/secondlineam', [
+        'as' => 'client.secondlineam',
+        'uses' => 'ClientController@postSecondlineClientAccountManager'
+    ]);
      
     Route::get('client', [
         'as' => 'client.index',

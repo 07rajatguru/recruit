@@ -15,7 +15,10 @@
                 @endpermission
 
                 @permission(('display-client'))
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager</button>
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
+                    </button>
+
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
                 @endpermission
                 <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
             </div>
@@ -158,8 +161,43 @@
 
                     <input type="hidden" name="client_ids" id="client_ids" value="">
 
+                    <input type="hidden" name="am_source" id="am_source" value="{{ $source }}">
+
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- 2nd Line Account Manager Modal Popup -->
+
+    <div id="secondlineammodal" class="modal text-left fade second_line_am_modal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Change 2nd Line Account Manager</h4>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'client.secondlineam']) !!}
+                    <div class="modal-body">
+                        <div class="second_line_ac_mngr_cls">
+                            <div class="form-group">
+                                <strong>Select Account Manager : <span class = "required_fields">*</span></strong><br/><br/>
+                                {!! Form::select('second_line_am_id',$all_account_manager,null, array('id'=>'second_line_am_id','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        <div class="second_line_am_error"></div>
+                    </div>
+
+                    <input type="hidden" name="second_line_am_client_ids" id="second_line_am_client_ids" value="">
+
+                    <input type="hidden" name="second_line_am_source" id="second_line_am_source" value="{{ $source }}">
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="second_line_am_submit">Submit</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 {!! Form::close() !!}
@@ -203,7 +241,7 @@
                     if(numCols == 10) {
 
                         if ( Data[9] != "0" ) {
-                            $('td', Row).css('background-color', '#d0f0c0');
+                            $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
                             $('td', Row).css('background-color', 'white');
@@ -211,7 +249,7 @@
                     }
                     else {
                         if ( Data[10] != "0" ) {
-                            $('td', Row).css('background-color', '#d0f0c0');
+                            $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
                             $('td', Row).css('background-color', 'white');
@@ -396,5 +434,44 @@
                 }
             });
         }
+
+        function second_line_client_am() {
+
+        var token = $('input[name="csrf_token"]').val();
+        var app_url = "{!! env('APP_URL'); !!}";
+        var client_ids = new Array();
+
+        var table = $("#clienttype_table").dataTable();
+
+        table.$("input:checkbox[name=client]:checked").each(function(){
+            client_ids.push($(this).val());
+        });
+
+        $("#second_line_am_client_ids").val(client_ids);
+
+        $.ajax({
+
+            type : 'POST',
+            url : app_url+'/client/checkClientId',
+            data : {client_ids : client_ids, '_token':token},
+            dataType : 'json',
+            success: function(msg) {
+
+                $(".second_line_am_modal").show();
+                
+                if (msg.success == 'Success') {
+                    $(".second_line_ac_mngr_cls").show();
+                    $(".second_line_am_error").empty();
+                    $('#second_line_am_submit').show();
+                }
+                else {
+                    $(".second_line_ac_mngr_cls").hide();
+                    $(".second_line_am_error").empty();
+                    $('#second_line_am_submit').hide();
+                    $(".second_line_am_error").append(msg.err);
+                }
+            }
+        });
+    }
     </script>
 @endsection

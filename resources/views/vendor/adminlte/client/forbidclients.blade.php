@@ -82,7 +82,7 @@
                     if(numCols == 9) {
 
                         if ( Data[8] != "0" ) {
-                            $('td', Row).css('background-color', '#d0f0c0');
+                            $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
                             $('td', Row).css('background-color', 'white');
@@ -90,7 +90,7 @@
                     }
                     else {
                         if ( Data[9] != "0" ) {
-                            $('td', Row).css('background-color', '#d0f0c0');
+                            $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
                             $('td', Row).css('background-color', 'white');
