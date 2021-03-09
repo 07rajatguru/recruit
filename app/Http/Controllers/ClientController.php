@@ -2183,11 +2183,11 @@ class ClientController extends Controller
             }
             if($all_perm) {
 
-                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager,'source' => '']);
                 $account = $account_manager_view->render();
                 $action .= $account;
 
-                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager]);
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager,'source' => '']);
                 $secondline_account = $secondline_account_manager_view->render();
                 $action .= $secondline_account;
             }
