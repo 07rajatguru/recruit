@@ -1335,8 +1335,9 @@ class ClientController extends Controller
          $this->validate($request, [
             'name' => 'required',
             'mail' => [
-                'required','email',Rule::unique('client_basicinfo')->where(function($query) {
+                'required','email',Rule::unique('client_basicinfo')->where(function($query) use ($id){
                   $query->where('delete_client', '=', '0');
+                  $query->where('id', '!=', $id);
               })
             ],
         ]);
