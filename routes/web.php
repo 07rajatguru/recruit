@@ -2582,6 +2582,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:email-template-add']
     ]);
 
+    Route::post('email-template/store',[
+        'as' => 'new-email-template.store',
+        'uses' => 'EmailTemplateController@storeNewEmailTemplate',
+    ]);
+
     Route::post('email-template/create',[
         'as' => 'emailtemplate.store',
         'uses' => 'EmailTemplateController@store',

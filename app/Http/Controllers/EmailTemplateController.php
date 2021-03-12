@@ -106,8 +106,30 @@ class EmailTemplateController extends Controller
     public function getEmailTemplateById() {
         
         $template_id = $_GET['email_template_id'];
-        $template_details = EmailTemplate::getEmailTemplateDetailsById($template_id);
+
+        if($template_id > 0) {
+            $template_details = EmailTemplate::getEmailTemplateDetailsById($template_id);
+        }
+        else {
+            $template_details = array();
+        }
 
         return json_encode($template_details);exit;
+    }
+
+    public function storeNewEmailTemplate() {
+
+        $template_nm = $_POST['template_nm'];
+        $email_subject = $_POST['email_subject'];
+        $email_body = $_POST['email_body'];
+
+        $email_template = new EmailTemplate();
+        $email_template->name = $template_nm;
+        $email_template->subject = $email_subject;
+        $email_template->email_body = $email_body;
+        $email_template->save();
+
+        $data = "Success";
+        return json_encode($data);
     }
 }

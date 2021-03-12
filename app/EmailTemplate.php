@@ -27,13 +27,20 @@ class EmailTemplate extends Model
     	return $email_template;
     }
 
-    public static function getAllEmailTemplateNames(){
+    public static function getAllEmailTemplateNames() {
+
+        $query = EmailTemplate::query();
+        $query = $query->select('email_template.*');
+        $query = $query->orderBy('id','desc');
+        $response = $query->get();
+
         $template_array = array();
-        $template_query = EmailTemplate::all();
-        if(isset($template_query) && sizeof($template_query) > 0)
-        {
-            foreach ($template_query as $templates)
-            {
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            $template_array[0] = 'Select Template';
+
+            foreach ($response as $templates) {
                 $template_array[$templates->id] = $templates->name;
             }
         }

@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Client')
@@ -114,19 +122,42 @@
                 </div>
                 {!! Form::open(['method' => 'POST', 'route' => 'client.emailnotification']) !!}
                     <div class="modal-body">
-                        <div class="clt_email_cls">
+
+                        <div class="form-group">
+                            <strong>Select Saved Email Template : </strong><br/><br/>
+                            {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setExistEmailTemplate()')) !!}
+                        </div>
+                        <div class="body_class" style="display: none;">
+
                             <div class="form-group">
-                                <strong>Select Email Template : <span class = "required_fields">*</span></strong><br/><br/>
-                                {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setEmailTemplate()')) !!}
+                                <strong>Template Name : <span class = "required_fields">*</span>
+                                </strong>
+                                {!! Form::text('template_nm', null, array('id'=>'template_nm','placeholder' => 'Template Name','tabindex' => '1','class' => 'form-control','required')) !!}
                             </div>
+
+                            <label id="template_nm_error" style="color:#f56954;display:none;"></label>
+
+                            <div class="form-group">
+                                <strong>Subject : <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('email_subject', null, array('id'=>'email_subject','placeholder' => 'Subject','tabindex' => '2','class' => 'form-control','required')) !!}
+                            </div>
+
+                            <label id="email_subject_error" style="color:#f56954;display:none;"></label>
+
+                            <div class="form-group">
+                                <strong>Message : <span class = "required_fields">*</span> </strong>
+                                {!! Form::textarea('email_body', null, array('id'=>'email_body','placeholder' => 'Message','class' => 'form-control', 'tabindex' => '3','required')) !!}
+                            </div>
+
+                            <label id="email_body_error" style="color:#f56954;display:none;"></label>
                         </div>
                         <div class="email_error"></div>
-                        <div class="body_class" style="display:none;"></div>
                     </div>
 
                     <input type="hidden" name="email_client_ids" id="email_client_ids" value="">
 
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="email_temp_submit_id" onclick="saveTemplate();">Save as Template</button>
                         <button type="submit" class="btn btn-primary" id="email_submit">Submit</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
@@ -210,8 +241,8 @@
     jQuery(document).ready(function() {
 
         $("#account_manager_id").select2({width : '567px'});
-        $("#email_template_id").select2({width : "567px"});
-
+        $("#email_template_id").select2({width : '567px'});
+        
         var numCols = $('#client_table thead th').length;
 
         $("#client_table").DataTable({
@@ -314,12 +345,14 @@
                     $(".clt_email_cls").show();
                     $(".email_error").empty();
                     $('#email_submit').show();
+                    $('#email_temp_submit_id').show();
                     setEmailTemplate();
                 }
                 else {
                     $(".clt_email_cls").hide();
                     $(".email_error").empty();
                     $('#email_submit').hide();
+                    $('#email_temp_submit_id').hide();
                     $(".email_error").append(msg.err);
                 }
             }
@@ -366,11 +399,89 @@
 
     function setEmailTemplate() {
 
+        $(".body_class").show();
+
+        CKEDITOR.replace( 'email_body', {
+
+            filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
+            customConfig: '/js/ckeditor_config.js',
+            height: '100px',
+        });
+
+        CKEDITOR.on('dialogDefinition', function( ev ) {
+
+            var dialogName = ev.data.name;  
+            var dialogDefinition = ev.data.definition;
+                         
+            switch (dialogName) { 
+
+                case 'image': //Image Properties dialog      
+                dialogDefinition.removeContents('Link');
+                dialogDefinition.removeContents('advanced');
+                break;
+
+                case 'link': //image Properties dialog          
+                dialogDefinition.removeContents('advanced');   
+                break;
+            }
+        });
+    }
+
+    function saveTemplate() {
+        
+        var token = $('input[name="csrf_token"]').val();
+
+        var template_nm = $("#template_nm").val();
+
+        if(template_nm == '') {
+            $("#template_nm_error").show();
+            $("#template_nm_error").text("Template Name is Required Field.");
+        }
+        else {
+            $("#template_nm_error").hide();
+        }
+
+        var email_subject = $("#email_subject").val();
+
+        if(email_subject == '') {
+            $("#email_subject_error").show();
+            $("#email_subject_error").text("Subject is Required Field.");
+        }
+        else {
+            $("#email_subject_error").hide();
+        }
+
+        var email_body = CKEDITOR.instances.email_body.getData();
+
+        if(email_body == '') {
+            $("#email_body_error").show();
+            $("#email_body_error").text("Message is Required Field.");
+        }
+        else {
+            $("#email_body_error").hide();
+        }
+
+        if(template_nm != '' && email_subject != '' && email_body != '') {
+
+            $.ajax({
+
+                type: 'POST',
+                url: '/email-template/store',
+                data:{'template_nm': template_nm,'email_subject': email_subject,'email_body': email_body,'_token':token},
+                dataType: 'json',
+                success: function (data) {
+
+                    alert("Email Template Saved Successfully.");
+                },
+            });
+        }
+    }
+
+    function setExistEmailTemplate() {
+       
         var token = $('input[name="csrf_token"]').val();
         var app_url = "{!! env('APP_URL'); !!}";
         var email_template_id = $("#email_template_id").val();
-
-        $(".body_class").html('');
 
         $.ajax({
 
@@ -381,51 +492,18 @@
 
             success: function(data) {
 
-               $(".body_class").html('');
+                if(email_template_id == 0) {
 
-                var html = '';
-                html += '<br/><div>';
-                html += '<table class="table table-bordered">';
-                html += '<tr>';
-                html += '<td><b>&nbsp;Template &nbsp;&nbsp; Name</b></td>';
-                html += '<td><input type="text" class="form-control" name="template_nm" id="template_nm" value="'+data.name+'" style="width:460px;"/></td>';
-                html += '</tr>';
-                html += '<tr>';
-                html += '<td><b>&nbsp;Subject</b></td>';
-                html += '<td><input type="text" class="form-control" name="email_subject" id="email_subject" value="'+data.subject+'" style="width:460px;"/></td>';
-                html += '</tr>';
-                html += '<tr>';
-                html += '<td><b>&nbsp;&nbsp; Body &nbsp; &nbsp; &nbsp; Message</b></td>';
-                html += '<td><textarea name="email_body" id="email_body" style="width:460px;">'+data.email_body+'</textarea></td>';
-                html += '</tr>';
-                html += '</table>';
-                html += '</div>';
+                    $("#template_nm").val("");
+                    $("#email_subject").val("");
+                    CKEDITOR.instances.email_body.setData("");
+                }
+                else {
 
-                $(".body_class").show();
-                $(".body_class").append(html);
-
-                CKEDITOR.replace( 'email_body', {
-
-                    filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
-                    customConfig: '/js/ckeditor_config.js',
-                    height: '100px',
-                });
-
-                CKEDITOR.on('dialogDefinition', function( ev ) {
-
-                   var dialogName = ev.data.name;  
-                   var dialogDefinition = ev.data.definition;
-                         
-                   switch (dialogName) {  
-                       case 'image': //Image Properties dialog      
-                       dialogDefinition.removeContents('Link');
-                       dialogDefinition.removeContents('advanced');
-                       break;      
-                       case 'link': //image Properties dialog          
-                       dialogDefinition.removeContents('advanced');   
-                       break;
-                   }
-                });
+                    $("#template_nm").val(data.name);
+                    $("#email_subject").val(data.subject);
+                    CKEDITOR.instances.email_body.setData(data.email_body);
+                }
             }
         });
     }

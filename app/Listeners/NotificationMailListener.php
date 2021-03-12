@@ -40,6 +40,7 @@ class NotificationMailListener
         $module_id = $event->module_id;
         
         $app_url = getenv('APP_URL');
+        $yr = date('Y');
      
         $header = '<table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
                <tr>
@@ -60,7 +61,7 @@ class NotificationMailListener
 
 
         $footer = '<tr style="height: 45px; background-color: #dddddd;">
-                    <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent. All rights reserved</td>
+                    <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent '.$yr.'. All rights reserved</td>
                     </tr>
                 </table>';
 
