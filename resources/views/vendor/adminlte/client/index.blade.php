@@ -123,10 +123,13 @@
                 {!! Form::open(['method' => 'POST', 'route' => 'client.emailnotification']) !!}
                     <div class="modal-body">
 
-                        <div class="form-group">
-                            <strong>Select Saved Email Template : </strong><br/><br/>
-                            {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setExistEmailTemplate()')) !!}
+                        <div class="email_temp_class" style="display: none;">
+                            <div class="form-group">
+                                <strong>Select Saved Email Template : </strong><br/><br/>
+                                {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setExistEmailTemplate()')) !!}
+                            </div>
                         </div>
+
                         <div class="body_class" style="display: none;">
 
                             <div class="form-group">
@@ -157,7 +160,7 @@
                     <input type="hidden" name="email_client_ids" id="email_client_ids" value="">
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="email_temp_submit_id" onclick="saveTemplate();">Save as Template</button>
+                        <button type="button" class="btn btn-primary" id="email_temp_submit_id" onclick="saveTemplate();">Save as New Template</button>
                         <button type="submit" class="btn btn-primary" id="email_submit">Submit</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
@@ -346,6 +349,7 @@
                     $(".email_error").empty();
                     $('#email_submit').show();
                     $('#email_temp_submit_id').show();
+                    $('.email_temp_class').show();
                     setEmailTemplate();
                 }
                 else {
@@ -354,6 +358,7 @@
                     $('#email_submit').hide();
                     $('#email_temp_submit_id').hide();
                     $(".email_error").append(msg.err);
+                    $('.email_temp_class').hide();
                 }
             }
         });
