@@ -630,16 +630,42 @@ class BillsController extends Controller
         $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
 
         if($all_recovery_perm) {
+
+            $recovery_bills = Bills::getAllBills(1,1,$user_id,0,0,0,0,'',$current_year,$next_year);
             $count = Bills::getAllBillsCount(1,1,$user_id,0,$current_year,$next_year);
             $access = true;
         }
+
         else if($loggedin_recovery_perm || $can_owner_recovery_perm) {
+
+            $recovery_bills = Bills::getAllBills(1,0,$user_id,0,0,0,0,'',$current_year,$next_year);
             $count = Bills::getAllBillsCount(1,0,$user_id,0,$current_year,$next_year);
             $access = false;
         }
 
+        $jc_sent = 0;
+        $got_con = 0;
+        $invoice_gen = 0;
+        $pymnt_rcv = 0;
+
+        foreach($recovery_bills as $bills) {
+
+            if($bills['job_confirmation'] == '1') {
+                $jc_sent++;
+            }
+            else if ($bills['job_confirmation'] == '2') {
+                $got_con++;
+            }
+            else if($bills['job_confirmation'] == '3') {
+                $invoice_gen++;
+            }
+            else if($bills['job_confirmation'] == '4') {
+                $pymnt_rcv++;
+            }
+        }
+
         $title = "Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year','jc_sent','got_con','invoice_gen','pymnt_rcv'));
     }
 
     public function billsMade2() {
