@@ -519,18 +519,29 @@
                 dataType:'json',
                 success: function(job_opened){
                     if (job_opened.length > 0) {
-                        for (var i = 0; i <= job_opened.length; i++){
+                        for (var i = 0; i <= job_opened.length; i++) {
+
                             var link = /jobs/+job_opened[i].id+/associated_candidates/;
                             var html = '';
+                            var job_edit_link = /jobs/+job_opened[i].id+/edit/;
+
                             html += '<tr>';
                             html += '<td style="background-color: '+job_opened[i].color+';border: 1px solid #00c0ef;">'+job_opened[i].display_name+'</td>';
-                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;">'+job_opened[i].posting_title+'</td>';
+
+                            html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;"><a href="'+job_edit_link+'" target="_blank">'+job_opened[i].posting_title+'</a></td>';
+
                             html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;">'+job_opened[i].location+'</td>';
-                            html += '<td style="border: 1px solid #00c0ef;"><a title="Show Associated Candidates" href="'+link+'">'+job_opened[i].associate_candidate_cnt+'</td>';
+
+                            html += '<td style="border: 1px solid #00c0ef;"><a title="Show Associated Candidates" href="'+link+'" target="_blank">'+job_opened[i].associate_candidate_cnt+'</td>';
+
                             html += '<td style="border: 1px solid #00c0ef;">'+job_opened[i].min_ctc+'</td>';
+
                             html += '<td style="border: 1px solid #00c0ef;">'+job_opened[i].max_ctc+'</td>';
+
                             html += '<td style="border: 1px solid #00c0ef;">'+job_opened[i].created_date+'</td>';
+
                             html += '<td style="white-space: pre-wrap; word-wrap: break-word;border: 1px solid #00c0ef;">'+job_opened[i].am_name+'</td>';
+
                             html += '</tr>';
 
                             $("#job_open_to_all").append(html);
