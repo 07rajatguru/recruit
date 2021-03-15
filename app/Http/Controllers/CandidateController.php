@@ -248,6 +248,8 @@ class CandidateController extends Controller
 
             $email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['email'].'</a>';
 
+            $mobile = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['mobile'].'</a>';
+
             $functional_roles_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['functional_roles_name'].'</a>';
 
             $current_employer = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['current_employer'].'</a>';
@@ -258,7 +260,7 @@ class CandidateController extends Controller
 
             $expected_salary = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['expected_salary'].'</a>';
 
-            $data = array(++$j,$action,$value['applicant_date'],$full_name,$email,$value['mobile'],$functional_roles_name,$current_employer,$current_job_title,$current_salary,$expected_salary);
+            $data = array(++$j,$action,$value['applicant_date'],$full_name,$email,$mobile,$functional_roles_name,$current_employer,$current_job_title,$current_salary,$expected_salary);
             $candidate_details[$i] = $data;
             $i++;
         }
