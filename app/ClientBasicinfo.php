@@ -585,41 +585,42 @@ class ClientBasicinfo extends Ardent
 
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_heirarchy.name as level_name','client_basicinfo.second_line_am');
-        $response = $query->get();
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_heirarchy.name as level_name','client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code');
+        $response = $query->first();
 
         $client = array();
 
-        foreach ($response as $k=>$v) {
+        if(isset($response) && $response != '') {
 
-            $client['client_id'] = $v->client_id;
-            $client['cname'] = $v->cname;
-            $client['coordinator_name'] = $v->coordinator_name;
-            $client['mail'] = $v->mail;
-            $client['mobile'] = $v->mobile;
-            $client['account_manager'] = $v->account_manager;
+            $client['client_id'] = $response->client_id;
+            $client['cname'] = $response->cname;
+            $client['coordinator_name'] = $response->coordinator_name;
+            $client['mail'] = $response->mail;
+            $client['mobile'] = $response->mobile;
+            $client['account_manager'] = $response->account_manager;
 
-            if (isset($v->level_name) && $v->level_name != '') {
-                $client['designation'] = $v->level_name." - ".$v->posting_title;
+            if (isset($response->level_name) && $response->level_name != '') {
+                $client['designation'] = $response->level_name." - ".$response->posting_title;
             }
             else {
-                $client['designation'] = $v->posting_title;
+                $client['designation'] = $response->posting_title;
             }
 
-            $client['job_location'] = $v->city;
+            $client['job_location'] = $response->city;
             
             // Get Percentage charged
-            $position = ClientHeirarchy::getClientHeirarchyPositionById($v->level_id);
+            $position = ClientHeirarchy::getClientHeirarchyPositionById($response->level_id);
 
             if(isset($position) && $position != '') {
 
                 if($position == 'Above AM') {
-                    $percentage_charged = $v->percentage_charged_above;
+                    $percentage_charged = $response->percentage_charged_above;
                 }
                 if($position == 'Below AM') {
-                    $percentage_charged = $v->percentage_charged_below;
+                    $percentage_charged = $response->percentage_charged_below;
                 }
             }
             else {
@@ -627,8 +628,28 @@ class ClientBasicinfo extends Ardent
             }
             $client['percentage_charged'] = $percentage_charged;
             
-            $client['second_line_am'] = $v->second_line_am;
+            $client['second_line_am'] = $response->second_line_am;
+
+            $address ='';
+            if($response->area != '') {
+                $address .= $response->area;
+            }
+            if($response->billing_city != '') {
+                if($address == '')
+                    $address .= $response->billing_city;
+                else
+                    $address .= ", ".$response->billing_city;
+            }
+            if($response->billing_code != '') {
+                if($address == '')
+                    $address .= $response->billing_code;
+                else
+                    $address .= ", ".$response->billing_code;
+            }
+
+            $client['address'] = $address;
         }
+
         return $client;
     }
 
