@@ -359,6 +359,7 @@
                     $('#email_temp_submit_id').hide();
                     $(".email_error").append(msg.err);
                     $('.email_temp_class').hide();
+                    $('.body_class').hide();
                 }
             }
         });
