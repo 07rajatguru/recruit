@@ -129,28 +129,31 @@ class CandidateController extends Controller
                 $order_column_name = "candidate_basicinfo.id";
             }
             else if ($order == 2) {
-                $order_column_name = "candidate_basicinfo.full_name";
+                $order_column_name = "candidate_basicinfo.created_at";
             }
             else if ($order == 3) {
-                $order_column_name = "candidate_basicinfo.email";
+                $order_column_name = "candidate_basicinfo.full_name";
             }
             else if ($order == 4) {
-                $order_column_name = "candidate_basicinfo.mobile";
+                $order_column_name = "candidate_basicinfo.email";
             }
             else if ($order == 5) {
-                $order_column_name = "candidate_otherinfo.current_employer";
+                $order_column_name = "candidate_basicinfo.mobile";
             }
             else if ($order == 6) {
-                $order_column_name = "candidate_otherinfo.current_job_title";
+                $order_column_name = "functional_roles.name";
             }
             else if ($order == 7) {
-                $order_column_name = "candidate_otherinfo.current_salary";
+                $order_column_name = "candidate_otherinfo.current_employer";
             }
             else if ($order == 8) {
-                $order_column_name = "candidate_otherinfo.expected_salary";
+                $order_column_name = "candidate_otherinfo.current_job_title";
             }
             else if ($order == 9) {
-                $order_column_name = "functional_roles.name";
+                $order_column_name = "candidate_otherinfo.current_salary";
+            }
+            else if ($order == 10) {
+                $order_column_name = "candidate_otherinfo.expected_salary";
             }
         }
         return $order_column_name;
@@ -241,9 +244,21 @@ class CandidateController extends Controller
                 $action .= $owner;
             }
 
+            $full_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['full_name'].'</a>';
+
+            $email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['email'].'</a>';
+
             $functional_roles_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['functional_roles_name'].'</a>';
 
-            $data = array(++$j,$action,$value['full_name'],$value['email'],$value['mobile'],$value['current_employer'],$value['current_job_title'],$value['current_salary'],$value['expected_salary'],$functional_roles_name);
+            $current_employer = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['current_employer'].'</a>';
+
+            $current_job_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['current_job_title'].'</a>';
+
+            $current_salary = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['current_salary'].'</a>';
+
+            $expected_salary = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['expected_salary'].'</a>';
+
+            $data = array(++$j,$action,$value['applicant_date'],$full_name,$email,$value['mobile'],$functional_roles_name,$current_employer,$current_job_title,$current_salary,$expected_salary);
             $candidate_details[$i] = $data;
             $i++;
         }

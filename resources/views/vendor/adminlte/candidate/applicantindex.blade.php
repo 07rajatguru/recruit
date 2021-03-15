@@ -35,20 +35,19 @@
             <tr>
                 <th width="2%">No</th>
                 <th>Action</th>
-                <th>Candidate Name</th>
-                <th>Candidate Email</th>
+                <th>Applicant<br/>Date</th>
+                <th>Candidate<br/>Name</th>
+                <th>Candidate<br/>Email</th>
                 <th width="10%">Mobile<br/>Number</th>
-                <th>Last Employer</th>
-                <th>Last Job Title</th>
+                <th>Functional<br/>Roles</th>
+                <th>Last<br/>Employer</th>
+                <th>Last<br/>Job Title</th>
                 <th width="7%">Current<br/>Salary</th>
                 <th width="7%">Expected<br/>Salary</th>
-                <th>Functional Roles</th>
             </tr>
         </thead>
         <?php $i=0; ?>
-        <tbody>
-       
-        </tbody>
+        <tbody></tbody>
     </table>
 @stop
 

@@ -426,13 +426,30 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
 
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name','candidate_basicinfo.created_at as applicant_date');
 
         $query = $query->where('candidate_otherinfo.login_candidate','=',"1");
         
         if(isset($search) && ($search) != '') {
 
             $query = $query->where(function($query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+
+                if(isset($date_array) && sizeof($date_array)>0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
 
                 $query = $query->where('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.email','like',"%$search%");
@@ -442,6 +459,16 @@ class CandidateBasicInfo extends Model
                 $query = $query->orwhere('candidate_otherinfo.current_salary','like',"%$search%");
                 $query = $query->orwhere('candidate_otherinfo.expected_salary','like',"%$search%");
                 $query = $query->orwhere('functional_roles.name','like',"%$search%");
+
+                if($date_search) {
+                       
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+                    $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+                }
             });
         }
      
@@ -457,7 +484,7 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
         
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name','candidate_basicinfo.created_at as applicant_date');
 
         if (isset($order) && $order >= 0) {
            $query = $query->orderBy($order,$type);
@@ -503,6 +530,7 @@ class CandidateBasicInfo extends Model
             $candidate[$i]['current_salary'] = $value->current_salary;
             $candidate[$i]['expected_salary'] = $value->expected_salary;
             $candidate[$i]['functional_roles_name'] = $value->functional_roles_name;
+            $candidate[$i]['applicant_date'] = date('d-m-Y',strtotime($value->applicant_date));
             $i++;
         }
         return $candidate;

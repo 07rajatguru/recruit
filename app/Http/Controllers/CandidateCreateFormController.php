@@ -173,9 +173,6 @@ class CandidateCreateFormController extends Controller
 
                 // Save Candidate Documentes
                 $fileResume = $request->file('resume');
-                $fileFormattedResume = $request->file('formatted_resume');
-                $fileCoverLatter = $request->file('cover_latter');
-                $fileOthers = $request->file('others');
 
                 if(isset($fileResume) && $fileResume->isValid()) {
 
@@ -196,6 +193,7 @@ class CandidateCreateFormController extends Controller
                         mkdir($dir, 0777, true);
                         chmod($dir, 0777);
                     }
+                    
                     $temp_file_name = trim($fileResumeNameArray[0]);
                     $fileResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
                     $fileResume->move($dir,$fileResumeNewName);
@@ -212,117 +210,6 @@ class CandidateCreateFormController extends Controller
                     $candidateFileUpload->size = $fileResumeSize;
                     $candidateFileUpload->uploaded_date = date('Y-m-d');
                     $candidateFileUploadStored = $candidateFileUpload->save();
-                }
-
-                if(isset($fileFormattedResume) && $fileFormattedResume->isValid()) {
-
-                    $fileFormattedResumeName = $fileFormattedResume->getClientOriginalName();
-                    $fileFormattedResumeExtention = $fileFormattedResume->getClientOriginalExtension();
-                    $fileFormattedResumeRealPath = $fileFormattedResume->getRealPath();
-                    $fileFormattedResumeSize = $fileFormattedResume->getSize();
-                    $fileFormattedResumeMimeType = $fileFormattedResume->getMimeType();
-
-                    $extention = File::extension($fileFormattedResumeName);
-
-                    $fileFormattedResumeNameArray = explode('.',$fileFormattedResumeName);
-
-                    $dir = 'uploads/candidate/'.$candidate_id.'/';
-
-                    if (!file_exists($dir) && !is_dir($dir)) {
-
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-                    $temp_file_name = trim($fileFormattedResumeNameArray[0]);
-                    $fileFormattedResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-                    $fileFormattedResume->move($dir,$fileFormattedResumeNewName);
-
-                    $fileFormattedResumeNewPath = $dir.$fileFormattedResumeNewName;
-
-                    $candidateFormattedFileUpload = new CandidateUploadedResume();
-                    $candidateFormattedFileUpload->candidate_id = $candidate_id;
-                    $candidateFormattedFileUpload->uploaded_by = $owner_id;
-                    $candidateFormattedFileUpload->file_name = $fileFormattedResumeNewName;
-                    $candidateFormattedFileUpload->file_type = 'Candidate Formatted Resume';
-                    $candidateFormattedFileUpload->file = $fileFormattedResumeNewPath;
-                    $candidateFormattedFileUpload->mime = $fileFormattedResumeMimeType;
-                    $candidateFormattedFileUpload->size = $fileFormattedResumeSize;
-                    $candidateFormattedFileUpload->uploaded_date = date('Y-m-d');
-                    $candidateFormattedFileUploadStored = $candidateFormattedFileUpload->save();
-                }
-
-                if(isset($fileCoverLatter) && $fileCoverLatter->isValid()) {
-
-                    $fileCoverLatterName = $fileCoverLatter->getClientOriginalName();
-                    $fileCoverLatterExtention = $fileCoverLatter->getClientOriginalExtension();
-                    $fileCoverLatterRealPath = $fileCoverLatter->getRealPath();
-                    $fileCoverLatterSize = $fileCoverLatter->getSize();
-                    $fileCoverLatterMimeType = $fileCoverLatter->getMimeType();
-
-                    $extention = File::extension($fileCoverLatterName);
-
-                    $fileCoverLatterNameArray = explode('.',$fileCoverLatterName);
-
-                    $dir = 'uploads/candidate/'.$candidate_id.'/';
-
-                    if (!file_exists($dir) && !is_dir($dir)) {
-
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-                    $temp_file_name = trim($fileCoverLatterNameArray[0]);
-                    $fileCoverLatterNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-                    $fileCoverLatter->move($dir,$fileCoverLatterNewName);
-
-                    $fileCoverLatterNewPath = $dir.$fileCoverLatterNewName;
-
-                    $candidateCoverLatterUpload = new CandidateUploadedResume();
-                    $candidateCoverLatterUpload->candidate_id = $candidate_id;
-                    $candidateCoverLatterUpload->uploaded_by = $owner_id;
-                    $candidateCoverLatterUpload->file_name = $fileCoverLatterNewName;
-                    $candidateCoverLatterUpload->file_type = 'Candidate Cover Latter';
-                    $candidateCoverLatterUpload->file = $fileCoverLatterNewPath;
-                    $candidateCoverLatterUpload->mime = $fileCoverLatterMimeType;
-                    $candidateCoverLatterUpload->size = $fileCoverLatterSize;
-                    $candidateCoverLatterUpload->uploaded_date = date('Y-m-d');
-                    $candidateCoverLatterUploadStored = $candidateCoverLatterUpload->save();
-                }
-
-                if(isset($fileOthers) && $fileOthers->isValid()) {
-
-                    $fileOthersName = $fileOthers->getClientOriginalName();
-                    $fileOthersExtention = $fileOthers->getClientOriginalExtension();
-                    $fileOthersRealPath = $fileOthers->getRealPath();
-                    $fileOthersSize = $fileOthers->getSize();
-                    $fileOthersMimeType = $fileOthers->getMimeType();
-
-                    $extention = File::extension($fileOthersName);
-
-                    $fileOthersNameArray = explode('.',$fileOthersName);
-
-                    $dir = 'uploads/candidate/'.$candidate_id.'/';
-
-                    if (!file_exists($dir) && !is_dir($dir)) {
-
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-                    $temp_file_name = trim($fileOthersNameArray[0]);
-                    $fileOthersNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-                    $fileOthers->move($dir,$fileOthersNewName);
-
-                    $fileOthersNewPath = $dir.$fileOthersNewName;
-
-                    $candidateOthersUpload = new CandidateUploadedResume();
-                    $candidateOthersUpload->candidate_id = $candidate_id;
-                    $candidateOthersUpload->uploaded_by = $owner_id;
-                    $candidateOthersUpload->file_name = $fileOthersNewName;
-                    $candidateOthersUpload->file_type = 'Others';
-                    $candidateOthersUpload->file = $fileOthersNewPath;
-                    $candidateOthersUpload->mime = $fileOthersMimeType;
-                    $candidateOthersUpload->size = $fileOthersSize;
-                    $candidateOthersUpload->uploaded_date = date('Y-m-d');
-                    $candidateOthersUploadStored = $candidateOthersUpload->save();
                 }
             }
 
