@@ -70,6 +70,8 @@ class ReportController extends Controller
 
     public function weeklyreportIndex() {
 
+        return view('errors.403');
+
         // get logged in user
         $user =  \Auth::user();
         $user_id = \Auth::user()->id;
