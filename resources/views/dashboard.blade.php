@@ -523,7 +523,7 @@
 
                             var link = /jobs/+job_opened[i].id+/associated_candidates/;
                             var html = '';
-                            var job_edit_link = /jobs/+job_opened[i].id+/edit/;
+                            var job_edit_link = /jobs/+job_opened[i].id+'/';
 
                             html += '<tr>';
                             html += '<td style="background-color: '+job_opened[i].color+';border: 1px solid #00c0ef;">'+job_opened[i].display_name+'</td>';
