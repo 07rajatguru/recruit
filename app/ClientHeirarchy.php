@@ -50,7 +50,8 @@ class ClientHeirarchy extends Model
         $query = $query->orderBy('order','asc');
         $res = $query->get();
 
-        $client_heirarchy_name = array('0' => 'Select Position');
+        $client_heirarchy_name = array('' => 'Select Position');
+        
         foreach ($res as $key => $value) {
             $client_heirarchy_name[$value->id] = $value->name;
         }

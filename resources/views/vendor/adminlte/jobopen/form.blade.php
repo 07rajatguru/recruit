@@ -60,7 +60,7 @@
                         <div class="col-md-4" style="margin-left: -15px;">
                             <div class="form-group {{ $errors->has('level_id') ? 'has-error' : '' }}">
                                 <strong>Posting Title : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('level_id', $client_hierarchy_name, null, array('id'=>'level_id','class' => 'form-control', 'tabindex' => '1')) !!}
+                                {!! Form::select('level_id', $client_hierarchy_name, null, array('id'=>'level_id','class' => 'form-control', 'tabindex' => '1','onchange' => 'removeError();')) !!}
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('level_id') }}</strong>
@@ -611,6 +611,9 @@
                     "city": {
                         required : true,
                     },
+                    "level_id": {
+                        required : true,
+                    },
                 },
                 messages: {
                     
@@ -640,6 +643,9 @@
                     },*/
                     "city": {
                         required : "City is Required Field.",
+                    },
+                    "level_id": {
+                        required : "Please Select Position.",
                     },
                 }
             });
@@ -704,6 +710,18 @@
             });
         });
 
+        function removeError() {
+
+            var level_id = $("#level_id");
+
+            if(level_id == '') {
+
+            }
+            else {
+                document.getElementById("level_id-error").style.display = "none";
+            }
+        }
+        
         function validPostingTitleText() {
 
             var txt = document.getElementById("posting_title").value ;
