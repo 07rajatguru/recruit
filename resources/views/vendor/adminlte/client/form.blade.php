@@ -338,19 +338,12 @@
                             {!! Form::text('billing_street2', null, array('id'=>'billing_street2','placeholder' => 'Address Line 2','class' => 'form-control', 'tabindex' => '23')) !!}
                         </div>
 
-                        <div class="form-group {{ $errors->has('billing_city') ? 'has-error' : '' }}">
-                            <strong>City :  <span class = "required_fields">*</span> </strong>
-
+                        <div class="form-group">
+                            <strong>City : </strong>
                             @if($action == 'copy')
                                 {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
                             @else
                                 {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '25')) !!}
-                            @endif
-
-                            @if ($errors->has('billing_city'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('billing_city') }}</strong>
-                                </span>
                             @endif
                         </div>
 
@@ -539,10 +532,7 @@
                         },
                         "client_category" : {
                             required: true,
-                        },
-                        "billing_city" : {
-                            required: true,
-                        },
+                        }
                 },
                 messages: {
                         "name": {
@@ -568,10 +558,7 @@
                         },
                         "client_category" : {
                             required: "Client Category is Required.",
-                        },
-                        "billing_city" : {
-                            required: "City is Required.",
-                        },
+                        }
                 }
             });
 

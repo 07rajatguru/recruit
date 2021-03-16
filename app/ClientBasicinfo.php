@@ -1645,4 +1645,38 @@ class ClientBasicinfo extends Ardent
         }
         return $client_array;
     }
+
+    public static function getBefore7daysClientDetails($user_id) {
+
+        $status_id = '3';
+        $status_id_array = array($status_id);
+        $date = date('Y-m-d h:m:s', strtotime('-7 days'));
+
+        $query = ClientBasicinfo::query();
+        $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
+        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+
+        // Not display Forbid clients
+        $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
+        
+        // Not Display Delete Client Status '1' Entry
+        $query = $query->where('client_basicinfo.delete_client','=','0');
+
+        // Display only second line am list
+        $query = $query->where('client_basicinfo.second_line_am','!=','0');
+
+        // Get before 7 days client list
+        $query = $query->where('client_basicinfo.created_at','>=',$date);
+
+        $query = $query->where('client_basicinfo.description','=','');
+        $query = $query->orwhere('client_address.billing_city','=',NULL);
+
+        $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+
+        $query = $query->groupBy('client_basicinfo.id');
+        $query = $query->orderBy('client_basicinfo.id','desc');
+        $response = $query->get();
+        
+        return $response;
+    }
 }
