@@ -190,6 +190,7 @@ class BillsController extends Controller
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
                 $count = Bills::getAllBillsCount(1,1,$user_id,$search,$current_year,$next_year);
+                $recovery_bills = Bills::getAllBills(1,1,$user_id,0,0,0,0,'',$current_year,$next_year);
                 $access = true;
             }
             else if($loggedin_recovery_perm || $can_owner_recovery_perm) {
@@ -197,6 +198,7 @@ class BillsController extends Controller
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getAllBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
                 $count = Bills::getAllBillsCount(1,0,$user_id,$search,$current_year,$next_year);
+                $recovery_bills = Bills::getAllBills(1,0,$user_id,0,0,0,0,'',$current_year,$next_year);
                 $access = false;
             }
         }
@@ -338,18 +340,51 @@ class BillsController extends Controller
             }
             else {
 
-                $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id']);
+                $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$value['job_confirmation']);
             }
 
             $forecasting[$i] = $data;
             $i++;
         }
 
+        if(isset($recovery_bills) && sizeof($recovery_bills) > 0) {
+
+            $jc_sent = 0;
+            $got_con = 0;
+            $invoice_gen = 0;
+            $pymnt_rcv = 0;
+
+            foreach($recovery_bills as $bills) {
+
+                if($bills['job_confirmation'] == '1') {
+                    $jc_sent++;
+                }
+                else if ($bills['job_confirmation'] == '2') {
+                    $got_con++;
+                }
+                else if($bills['job_confirmation'] == '3') {
+                    $invoice_gen++;
+                }
+                else if($bills['job_confirmation'] == '4') {
+                    $pymnt_rcv++;
+                }
+            }
+            $bills = array();
+            $bills['jc_sent'] = $jc_sent;
+            $bills['got_con'] = $got_con;
+            $bills['invoice_gen'] = $invoice_gen;
+            $bills['pymnt_rcv'] = $pymnt_rcv;
+        }
+        else {
+            $bills = array();
+        }
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $forecasting
+            "data" => $forecasting,
+            "bills" => $bills,
         );
 
         echo json_encode($json_data);exit;
@@ -571,7 +606,7 @@ class BillsController extends Controller
             }
             else {
 
-                $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id']);
+                $data = array($checkbox,$action,++$j,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$value['job_confirmation']);
             }
 
             $forecasting[$i] = $data;
@@ -690,16 +725,41 @@ class BillsController extends Controller
         $cancel_bill_perm = $user->can('cancel-bill');
 
         if($all_recovery_perm && $cancel_bill_perm) {
+
             $count = Bills::getAllCancelBillsCount(1,1,$user_id);
+            $bnm = Bills::getCancelBills(1,1,$user_id,0,0,0,0,'');
+
             $access = true;
         }
         else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
+
             $count = Bills::getAllCancelBillsCount(1,0,$user_id);
+            $bnm = Bills::getCancelBills(1,0,$user_id,0,0,0,0,'');
             $access = false;
         }
 
+        $jc_sent = 0;
+        $got_con = 0;
+        $invoice_gen = 0;
+        $pymnt_rcv = 0;
+
+        foreach($bnm as $bills) {
+
+            if($bills['job_confirmation'] == '1') {
+                $jc_sent++;
+            }
+            else if ($bills['job_confirmation'] == '2') {
+                $got_con++;
+            }
+            else if($bills['job_confirmation'] == '3') {
+                $invoice_gen++;
+            }
+            else if($bills['job_confirmation'] == '4') {
+                $pymnt_rcv++;
+            }
+        }
         $title = "Cancel Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn','jc_sent','got_con','invoice_gen','pymnt_rcv'));
 
     }
 

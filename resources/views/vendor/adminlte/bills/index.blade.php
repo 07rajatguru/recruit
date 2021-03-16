@@ -29,21 +29,21 @@
         </div>
     </div>
 
-    @if($title == "Recovery")
+    @if($title == "Recovery" || $title == "Cancel Recovery")
       @permission(('display-recovery-by-loggedin-user'))
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-2 col-sm-4">
-                  <div style="margin:5px;height:35px;width:250px;background-color:#00B0F0;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;"><b>Joining Confirmation Sent({{ $jc_sent }})</b></div>
+                  <div style="margin:5px;height:35px;width:250px;background-color:#00B0F0;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;"><b>Joining Confirmation Sent <span id="jc_sent">({{ $jc_sent }})</span></b></div>
               </div>
               <div class="col-md-2 col-sm-4">
-                  <div style="margin:5px;height:35px;width:250px;background-color:#FFA500;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;margin-left: 50px;"><b>Got Confirmation({{ $got_con }})</b></div>
+                  <div style="margin:5px;height:35px;width:250px;background-color:#FFA500;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;margin-left: 50px;"><b>Got Confirmation <span id="got_con">({{ $got_con }})</span></b></div>
               </div>
               <div class="col-md-2 col-sm-4">
-                  <div style="margin:5px;height:35px;width:250px;background-color:#FFC0CB;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;margin-left: 95px;"><b>Invoice Generated({{ $invoice_gen }})</b></div>
+                  <div style="margin:5px;height:35px;width:250px;background-color:#FFC0CB;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;margin-left: 95px;"><b>Invoice Generated <span id="invoice_gen">({{ $invoice_gen }})</span></b></div>
               </div>
               <div class="col-md-2 col-sm-4">
-                  <div style="margin:5px;height:35px;width:250px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;margin-left: 140px;"><b>Payment Received({{ $pymnt_rcv }})</b></div>
+                  <div style="margin:5px;height:35px;width:250px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;margin-left: 140px;"><b>Payment Received <span id="pymnt_rcv">({{ $pymnt_rcv }})</span></b></div>
               </div>
             </div>
           </div><br/>
@@ -261,61 +261,113 @@
            new jQuery.fn.dataTable.FixedHeader( table );*/
             var title = $("#title").val();
             var year = $("#year").val();
+            var numCols = $('#bill_table thead th').length;
 
             if (title == 'Forecasting' || title == 'Recovery') {
+
               $("#bill_table").dataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [2,'desc'],
-                "columnDefs": [ {orderable: false, targets: [0]},
-                                {orderable: false, targets: [1]},
-                            ],
+                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : 'bills/all',
                     'type' : 'get',
                     "data": {year:year,title:title},
-                    error: function(){
-
+                    error: function() {
                     }
                 },
-                initComplete:function( settings, json){
+                initComplete:function( settings, json) {
                     var count = json.recordsTotal;
                     $("#count").html("(" + count + ")");
+
+                    var jc_sent = json.bills['jc_sent'];
+                    var got_con = json.bills['got_con'];
+                    var invoice_gen = json.bills['invoice_gen'];
+                    var pymnt_rcv = json.bills['pymnt_rcv'];
+
+                    if(typeof(jc_sent)!="undefined") {
+                      $("#jc_sent").html("(" + jc_sent + ")");
+                    }
+                    else {
+                      $("#jc_sent").html("(" + 0 + ")");
+                    }
+
+                    if(typeof(got_con)!="undefined") {
+                      $("#got_con").html("(" + got_con + ")");
+                    }
+                    else {
+                      $("#got_con").html("(" + 0 + ")");
+                    }
+
+                    if(typeof(invoice_gen)!="undefined") {
+                      $("#invoice_gen").html("(" + invoice_gen + ")");
+                    }
+                    else {
+                      $("#invoice_gen").html("(" + 0 + ")");
+                    }
+
+                    if(typeof(pymnt_rcv)!="undefined") {
+                      $("#pymnt_rcv").html("(" + pymnt_rcv + ")");
+                    }
+                    else {
+                      $("#pymnt_rcv").html("(" + 0 + ")");
+                    }
                 },
                 responsive: true,
                 "pageLength": 25,
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[17] == "1" ){
-                        $('td:eq(5)', Row).css('background-color', '#00B0F0');
+
+                    if(numCols == 17) {
+
+                      if ( Data[17] == "1" ) {
+                          $('td:eq(5)', Row).css('background-color', '#00B0F0');
+                      }
+                      else if ( Data[17] == "2" ) {
+                          $('td:eq(5)', Row).css('background-color', '#FFA500');
+                      }
+                      else if ( Data[17] == "3" ) {
+                          $('td:eq(5)', Row).css('background-color', '#FFC0CB');
+                      }
+                      else if ( Data[17] == "4" ) {
+                          $('td:eq(5)', Row).css('background-color', '#32CD32');
+                      }
                     }
-                    else if ( Data[17] == "2" ){
-                        $('td:eq(5)', Row).css('background-color', '#FFA500');
-                    }
-                    else if ( Data[17] == "3" ){
-                        $('td:eq(5)', Row).css('background-color', '#FFC0CB');
-                    }
-                    else if ( Data[17] == "4" ){
-                        $('td:eq(5)', Row).css('background-color', '#32CD32');
+                    else {
+
+                      if ( Data[14] == "1" ) {
+                          $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                      }
+                      else if ( Data[14] == "2" ) {
+                          $('td:eq(4)', Row).css('background-color', '#FFA500');
+                      }
+                      else if ( Data[14] == "3" ) {
+                          $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                      }
+                      else if ( Data[14] == "4" ) {
+                          $('td:eq(4)', Row).css('background-color', '#32CD32');
+                      }
                     }
                   }
               });
             }
+
             else if (title == 'Cancel Forecasting' || title == 'Cancel Recovery') {
+
               $("#bill_table").dataTable({
+
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [2,'desc'],
-                "columnDefs": [ {orderable: false, targets: [0]},
-                                {orderable: false, targets: [1]},
-                            ],
+                "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : '/bills/cancel/all',
                     'type' : 'get',
                     "data": {title:title},
-                    error: function(){
-
+                    error: function() {
                     }
                 },
                 responsive: true,
@@ -323,17 +375,36 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[17] == "1" ){
-                        $('td:eq(5)', Row).css('background-color', '#00B0F0');
+
+                    if(numCols == 17) {
+
+                      if ( Data[17] == "1" ) {
+                          $('td:eq(5)', Row).css('background-color', '#00B0F0');
+                      }
+                      else if ( Data[17] == "2" ) {
+                          $('td:eq(5)', Row).css('background-color', '#FFA500');
+                      }
+                      else if ( Data[17] == "3" ) {
+                          $('td:eq(5)', Row).css('background-color', '#FFC0CB');
+                      }
+                      else if ( Data[17] == "4" ) {
+                          $('td:eq(5)', Row).css('background-color', '#32CD32');
+                      }
                     }
-                    else if ( Data[17] == "2" ){
-                        $('td:eq(5)', Row).css('background-color', '#FFA500');
-                    }
-                    else if ( Data[17] == "3" ){
-                        $('td:eq(5)', Row).css('background-color', '#FFC0CB');
-                    }
-                    else if ( Data[17] == "4" ){
-                        $('td:eq(5)', Row).css('background-color', '#32CD32');
+                    else {
+
+                      if ( Data[14] == "1" ) {
+                          $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                      }
+                      else if ( Data[14] == "2" ) {
+                          $('td:eq(4)', Row).css('background-color', '#FFA500');
+                      }
+                      else if ( Data[14] == "3" ) {
+                          $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                      }
+                      else if ( Data[14] == "4" ) {
+                          $('td:eq(4)', Row).css('background-color', '#32CD32');
+                      }
                     }
                   }
               });
@@ -390,45 +461,98 @@
 
           var year = $("#year").val();
           var title = $("#title").val();
+          var numCols = $('#bill_table thead th').length;
 
-          $("#bill_table").dataTable(
-          {
+          $("#bill_table").dataTable({
+
             'bProcessing' : true,
             'serverSide' : true,
             'order' : [2,'desc'],
-            "columnDefs": [ {orderable: false, targets: [0]},
-                            {orderable: false, targets: [1]},
-                          ],
+            "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
             "ajax" : {
                 'url' : 'bills/all',
                 data : {year:year,title:title},
                 'type' : 'get',
-                error: function(){
-
+                error: function() {
                 },
             },
-            initComplete:function( settings, json){
+            initComplete:function( settings, json) {
+
               var count = json.recordsTotal;
               $("#count").html("(" + count + ")");
+
+              var jc_sent = json.bills['jc_sent'];
+              var got_con = json.bills['got_con'];
+              var invoice_gen = json.bills['invoice_gen'];
+              var pymnt_rcv = json.bills['pymnt_rcv'];
+
+              if(typeof(jc_sent)!="undefined") {
+                $("#jc_sent").html("(" + jc_sent + ")");
+              }
+              else {
+                $("#jc_sent").html("(" + 0 + ")");
+              }
+
+              if(typeof(got_con)!="undefined") {
+                $("#got_con").html("(" + got_con + ")");
+              }
+              else {
+                $("#got_con").html("(" + 0 + ")");
+              }
+
+              if(typeof(invoice_gen)!="undefined") {
+                $("#invoice_gen").html("(" + invoice_gen + ")");
+              }
+              else {
+                $("#invoice_gen").html("(" + 0 + ")");
+              }
+
+              if(typeof(pymnt_rcv)!="undefined") {
+                $("#pymnt_rcv").html("(" + pymnt_rcv + ")");
+              }
+              else {
+                $("#pymnt_rcv").html("(" + 0 + ")");
+              }
+
             },
             responsive: true,
             "pageLength": 25,
             "pagingType": "full_numbers",
             stateSave : true,
             "fnRowCallback": function( Row, Data ) {
-                if ( Data[17] == "1" ){
-                  $('td:eq(5)', Row).css('background-color', '#00B0F0');
+
+                if(numCols == 17) {
+
+                  if ( Data[17] == "1" ) {
+                    $('td:eq(5)', Row).css('background-color', '#00B0F0');
+                  }
+                  else if ( Data[17] == "2" ) {
+                    $('td:eq(5)', Row).css('background-color', '#FFA500');
+                  }
+                  else if ( Data[17] == "3" ) {
+                    $('td:eq(5)', Row).css('background-color', '#FFC0CB');
+                  }
+                  else if ( Data[17] == "4" ) {
+                    $('td:eq(5)', Row).css('background-color', '#32CD32');
+                  }
                 }
-                else if ( Data[17] == "2" ){
-                  $('td:eq(5)', Row).css('background-color', '#FFA500');
+
+                else {
+
+                  if ( Data[14] == "1" ) {
+                    $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                  }
+                  else if ( Data[14] == "2" ) {
+                    $('td:eq(4)', Row).css('background-color', '#FFA500');
+                  }
+                  else if ( Data[14] == "3" ) {
+                    $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                  }
+                  else if ( Data[14] == "4" ) {
+                    $('td:eq(4)', Row).css('background-color', '#32CD32');
+                  }
                 }
-                else if ( Data[17] == "3" ){
-                  $('td:eq(5)', Row).css('background-color', '#FFC0CB');
-                }
-                else if ( Data[17] == "4" ){
-                  $('td:eq(5)', Row).css('background-color', '#32CD32');
-                }
-            }
+              }
           });
         }
    </script>
