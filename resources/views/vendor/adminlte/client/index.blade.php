@@ -117,6 +117,7 @@
                                         echo ".    ";
                                         echo $value;
                                     ?>
+                                <br/><?php $i++ ?>
                                 @endforeach
                             @endif
                         @endif

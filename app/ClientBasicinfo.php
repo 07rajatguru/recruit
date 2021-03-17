@@ -1678,20 +1678,25 @@ class ClientBasicinfo extends Ardent
         $query = $query->orderBy('client_basicinfo.id','desc');
         $response = $query->get();
 
+        $i=0;
+
         if(isset($response) && sizeof($response) > 0) {
+
+            $client_name_string = '';
+
             foreach ($response as $key => $value) {
 
                 $full_name = $value->name." - ".$value->coordinator_prefix . " "  . $value->coordinator_name;
 
-                $client_name_string = '';
-
                 if($full_name != '') {
 
-                    if($client_name_string=='')
+                    if($client_name_string =='')
                         $client_name_string .= $full_name;
                     else
                         $client_name_string .= ", ".$full_name;
                 }
+
+                $i++;
             }
         }
         else {
