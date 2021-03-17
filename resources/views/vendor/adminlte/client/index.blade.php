@@ -90,6 +90,46 @@
             <p>{{ $message }}</p>
         </div>
     @endif
+
+    <!-- For client others information popup-->
+
+    <input type="hidden" name="client_name_string" id="client_name_string" value="{{ $client_name_string }}">
+
+    <div id="clientModal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Information</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Please fill up remaining details of following clients : <br/><br/>
+                        @if(isset($client_name_string) && $client_name_string != '')
+                            <?php
+                                $client_name_array = explode(",", $client_name_string);
+                            ?>
+
+                            @if(isset($client_name_array) && sizeof($client_name_array) > 0)
+                                <?php $i=1; ?>
+                                @foreach($client_name_array as $key => $value)
+                                    <?php
+                                        echo $i;
+                                        echo ".    ";
+                                        echo $value;
+                                    ?>
+                                @endforeach
+                            @endif
+                        @endif
+                    </p><br/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End client others information popup-->
  
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="client_table">
         <thead>
@@ -319,6 +359,12 @@
                 $("#allcb").prop('checked', false);
             }
         });
+
+        var client_name_string = $("#client_name_string").val();
+
+        if(client_name_string != '') {
+            jQuery("#clientModal").modal('show');
+        }
     });
 
     function client_emails_notification() {

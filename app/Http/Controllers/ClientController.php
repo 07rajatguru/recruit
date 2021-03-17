@@ -92,9 +92,9 @@ class ClientController extends Controller
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
         // Get clients for popup of add information
-        $client_res = ClientBasicinfo::getBefore7daysClientDetails($user->id);
+        $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user->id);
 
-        return view('adminlte::client.index',compact('count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names'));
+        return view('adminlte::client.index',compact('count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string'));
     }
 
     public static function getOrderColumnName($order) {
