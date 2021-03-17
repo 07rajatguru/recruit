@@ -266,7 +266,7 @@
                             <div class="">
                                 <div class="form-group">
                                     <strong>Employee Name : </strong>
-                                    {!! Form::select('lead_name', $users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25' )) !!}
+                                    {!! Form::select('lead_name', $users,null, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
                                 </div>
                             </div>
                         </div>
@@ -462,12 +462,6 @@
                     "address_of_communication": {
                         required: true
                     },
-                    "lead_name":{
-                        required: true
-                    },
-                    "lead_percentage": {
-                        required: true
-                    },
                     "unedited_resume": {
                         required: true
                     },
@@ -508,12 +502,6 @@
                     },
                     "address_of_communication":{
                         required: "Address of Communication is Required Field."
-                    },
-                    "lead_name":{
-                        required: "Lead Efforts is Required Field."
-                    },
-                    "lead_percentage": {
-                        required: "Lead Percentage is Required Field."
                     },
                     "unedited_resume": {
                         required: "Please Select File."
