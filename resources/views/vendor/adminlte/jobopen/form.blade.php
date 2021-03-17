@@ -610,10 +610,7 @@
                     },*/
                     "city": {
                         required : true,
-                    },
-                    "level_id": {
-                        required : true,
-                    },
+                    }
                 },
                 messages: {
                     
@@ -643,10 +640,7 @@
                     },*/
                     "city": {
                         required : "City is Required Field.",
-                    },
-                    "level_id": {
-                        required : "Please Select Position.",
-                    },
+                    }
                 }
             });
 
