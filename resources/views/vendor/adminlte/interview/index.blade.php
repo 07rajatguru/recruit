@@ -163,6 +163,7 @@
                 </div>
 
                 <input type="hidden" name="multi_inter_ids" id="multi_inter_ids" value="">
+                <input type="hidden" name="multi_inter_year" id="multi_inter_year" value="">
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="submit">Submit</button>
@@ -322,6 +323,8 @@
         function multipleInterviewStatus() {
 
             var token = $('input[name="csrf_token"]').val();
+            var year = $("#year").val();
+            
             var interview_ids = new Array();
 
             $("input:checkbox[name=interview_ids]:checked").each(function(){
@@ -329,6 +332,7 @@
             });
 
             $("#multi_inter_ids").val(interview_ids);
+            $("#multi_inter_year").val(year);
 
             $.ajax({
 

@@ -950,25 +950,36 @@ class InterviewController extends Controller
             $source = '';
         }
 
+        // Get Year
+        $year = $_POST['multi_inter_year'];
+
         foreach ($inter_ids_array as $key => $value) {
 
             DB::statement("UPDATE interview SET status = '$status', updated_at='$updated_at' where id=$value");
         }
 
-        if($source == 'Todays') {
-            return redirect('/interview/today')->with('success','Interview Status Updated Successfully.');
-        }
-        else if($source == 'Tomorrows') {
-            return redirect('/interview/tomorrow')->with('success','Interview Status Updated Successfully.');
-        }
-        else if($source == 'This Week') {
-            return redirect('/interview/thisweek')->with('success','Interview Status Updated Successfully.');
-        }
-        else if($source == 'Upcoming & Previous') {
-            return redirect('/interview/upcomingprevious')->with('success','Interview Status Updated Successfully.');
+        if(isset($year) && $year != '') {
+
+           return redirect('/interview')->with('success', 'Interview Status Updated Successfully.')
+           ->with('selected_year',$year);
         }
         else {
-            return redirect('/interview')->with('success','Interview Status Updated Successfully.');
+
+            if($source == 'Todays') {
+                return redirect('/interview/today')->with('success','Interview Status Updated Successfully.');
+            }
+            else if($source == 'Tomorrows') {
+                return redirect('/interview/tomorrow')->with('success','Interview Status Updated Successfully.');
+            }
+            else if($source == 'This Week') {
+                return redirect('/interview/thisweek')->with('success','Interview Status Updated Successfully.');
+            }
+            else if($source == 'Upcoming & Previous') {
+                return redirect('/interview/upcomingprevious')->with('success','Interview Status Updated Successfully.');
+            }
+            else {
+                return redirect('/interview')->with('success','Interview Status Updated Successfully.');
+            }
         }
     }
 
