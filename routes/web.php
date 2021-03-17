@@ -1309,6 +1309,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
+    Route::post('interview/multistatus', [
+        'as' => 'interview.multistatus',
+        'uses' => 'InterviewController@multipleInterviewStatus',
+        'middleware' => ['permission:send-consolidated-schedule']
+    ]);
+
     Route::get('interview/create', [
         'as' => 'interview.create',
         'uses' => 'InterviewController@create',
@@ -1354,6 +1360,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'interview.checkidsmail',
         'uses' => 'InterviewController@CheckIdsforMail',
         'middleware' => ['permission:send-consolidated-schedule']
+    ]);
+
+    Route::post('interview/status', [
+        'as' => 'interview.status',
+        'uses' => 'InterviewController@status'
     ]);
 
     Route::post('interview/multipleinterviewschedule',[

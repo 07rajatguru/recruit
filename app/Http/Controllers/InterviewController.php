@@ -68,7 +68,9 @@ class InterviewController extends Controller
 
         $source = 'index';
 
-        return view('adminlte::interview.index', compact('count','source','year_array','year'));
+        $interview_status = Interview::getEditInterviewStatus();
+
+        return view('adminlte::interview.index', compact('count','source','year_array','year','interview_status'));
     }
 
     public static function getInterviewOrderColumnName($order) {
@@ -170,6 +172,7 @@ class InterviewController extends Controller
         
         $interview = array();
         $i = 0;$j = 0;
+        $interview_status = Interview::getEditInterviewStatus();
 
         foreach ($interViews as $key => $value) {
 
@@ -194,9 +197,14 @@ class InterviewController extends Controller
 
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
             $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
             $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
+
+            $status_view = \View::make('adminlte::partials.interviewtatus',['data' => $value, 'name' => 'interview','interview_status' => $interview_status,'year' => $year]);
+            $status = $status_view->render();
+            $action .= $status;
 
             if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
@@ -236,8 +244,9 @@ class InterviewController extends Controller
         }
 
         $source = 'Todays';
+        $interview_status = Interview::getEditInterviewStatus();
 
-        return view('adminlte::interview.today',compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source','interview_status'));
     }
 
     // Tomorrow Interview Page
@@ -257,8 +266,9 @@ class InterviewController extends Controller
         }
 
         $source = 'Tomorrows';
+        $interview_status = Interview::getEditInterviewStatus();
 
-        return view('adminlte::interview.today',compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source','interview_status'));
     }
 
     // This Week Interview Page
@@ -278,8 +288,9 @@ class InterviewController extends Controller
         }
 
         $source = 'This Week';
+        $interview_status = Interview::getEditInterviewStatus();
 
-        return view('adminlte::interview.today',compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source','interview_status'));
     }
 
     // Upcoming/Previous Interview Page
@@ -299,8 +310,9 @@ class InterviewController extends Controller
         }
 
         $source = 'Upcoming & Previous';
+        $interview_status = Interview::getEditInterviewStatus();
 
-        return view('adminlte::interview.today',compact('count','source'));
+        return view('adminlte::interview.today',compact('count','source','interview_status'));
     }
 
     //function for index using ajax call
@@ -376,6 +388,7 @@ class InterviewController extends Controller
         
         $interview = array();
         $i = 0;$j = 0;
+        $interview_status = Interview::getEditInterviewStatus();
 
         foreach ($interViews as $key => $value) {
 
@@ -403,6 +416,10 @@ class InterviewController extends Controller
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
             $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
+
+            $status_view = \View::make('adminlte::partials.interviewtatus',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','interview_status' => $interview_status,'source' => $source]);
+            $status = $status_view->render();
+            $action .= $status;
 
             if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
@@ -900,24 +917,99 @@ class InterviewController extends Controller
         });
 
         if($source == 'Todays') {
-
             return redirect('/interview/today')->with('success','Interview Email Sent Successfully.');
         }
         else if($source == 'Tomorrows') {
-
             return redirect('/interview/tomorrow')->with('success','Interview Email Sent Successfully.');
         }
         else if($source == 'This Week') {
-
             return redirect('/interview/thisweek')->with('success','Interview Email Sent Successfully.');
         }
         else if($source == 'Upcoming & Previous') {
-
             return redirect('/interview/upcomingprevious')->with('success','Interview Email Sent Successfully.');
         }
         else {
-
             return redirect('/interview')->with('success','Interview Email Sent Successfully.');
+        }
+    }
+
+    public  function multipleInterviewStatus() {
+
+        $inter_ids = $_POST['multi_inter_ids'];
+
+        $status = $_POST['status'];
+        $updated_at = date('Y-m-d H:i:s');
+        
+        $inter_ids_array = explode(",", $inter_ids);
+
+        // Get Source
+        if(isset($_POST['source']) && $_POST['source'] != '') {
+            $source = $_POST['source'];
+        }
+        else {
+            $source = '';
+        }
+
+        foreach ($inter_ids_array as $key => $value) {
+
+            DB::statement("UPDATE interview SET status = '$status', updated_at='$updated_at' where id=$value");
+        }
+
+        if($source == 'Todays') {
+            return redirect('/interview/today')->with('success','Interview Status Updated Successfully.');
+        }
+        else if($source == 'Tomorrows') {
+            return redirect('/interview/tomorrow')->with('success','Interview Status Updated Successfully.');
+        }
+        else if($source == 'This Week') {
+            return redirect('/interview/thisweek')->with('success','Interview Status Updated Successfully.');
+        }
+        else if($source == 'Upcoming & Previous') {
+            return redirect('/interview/upcomingprevious')->with('success','Interview Status Updated Successfully.');
+        }
+        else {
+            return redirect('/interview')->with('success','Interview Status Updated Successfully.');
+        }
+    }
+
+    public function status(Request $request) {
+
+        $status = $request->get('status');
+        $interview_id = $request->get('interview_id');
+
+        // Get Selected Year
+        $year = $request->get('year');
+        $source = $request->get('source');
+
+        $interview = Interview::find($interview_id);
+
+        if (isset($status) && $status != '') {
+            $interview->status = $status;
+            $interview->save();
+        }
+
+        if(isset($year) && $year != '') {
+
+           return redirect('/interview')->with('success', 'Interview Status Updated Successfully.')
+           ->with('selected_year',$year);
+        }
+        else {
+
+            if($source == 'Todays') {
+                return redirect('/interview/today')->with('success','Interview Status Updated Successfully.');
+            }
+            else if($source == 'Tomorrows') {
+                return redirect('/interview/tomorrow')->with('success','Interview Status Updated Successfully.');
+            }
+            else if($source == 'This Week') {
+                return redirect('/interview/thisweek')->with('success','Interview Status Updated Successfully.');
+            }
+            else if($source == 'Upcoming & Previous') {
+                return redirect('/interview/upcomingprevious')->with('success','Interview Status Updated Successfully.');
+            }
+            else {
+                return redirect('/interview')->with('success','Interview Status Updated Successfully.');
+            }
         }
     }
 }

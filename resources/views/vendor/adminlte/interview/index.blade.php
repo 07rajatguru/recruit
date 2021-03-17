@@ -1,11 +1,3 @@
-@section('customs_css')
-    <style>
-        .error{
-            color:#f56954 !important;
-        }
-    </style>
-@endsection
-
 @extends('adminlte::page')
 
 @section('title', 'Interview')
@@ -22,9 +14,11 @@
             </div>
             <div class="pull-right">
                 @permission(('send-consolidated-schedule'))
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()">Send Mail</button>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()">Send Mail</button>
+
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleInterviewStatus()">Update Status</button>
                 @endpermission
-                <a class="btn btn-success" href="{{ route('interview.create') }}">Create New Interview</a>
+                <a class="btn btn-success" href="{{ route('interview.create') }}">Add New Interview</a>
             </div>
         </div>
     </div>
@@ -145,6 +139,33 @@
                 <input type="hidden" name="inter_ids" id="inter_ids" value="">
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="yes-btn">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="modal-status" class="modal text-left fade interview_status" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Change Interview Status</h1>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'interview.multistatus']) !!}
+                <div class="modal-body">
+                    <div class="status">
+                        <strong>Select Interview Status :</strong> <br>
+                        {!! Form::select('status', $interview_status,null, array('id'=>'status','class' => 'form-control')) !!}
+                    </div>
+                    <div class="error"></div>
+                </div>
+
+                <input type="hidden" name="multi_inter_ids" id="multi_inter_ids" value="">
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
                 {!! Form::close() !!}
@@ -278,7 +299,9 @@
 
             $("#inter_ids").val(interview_ids);
             $(".check-id").empty();
+
             $.ajax({
+
                 type: 'POST',
                 url: 'interview/checkidsmail',
                 data: { interview_ids:interview_ids, '_token':token },
@@ -291,6 +314,43 @@
                     else{
                         $(".check-id").append(msg.err);
                         document.getElementById("yes-btn").disabled = true;
+                    }
+                }
+            });
+        }
+
+        function multipleInterviewStatus() {
+
+            var token = $('input[name="csrf_token"]').val();
+            var interview_ids = new Array();
+
+            $("input:checkbox[name=interview_ids]:checked").each(function(){
+                interview_ids.push($(this).val());
+            });
+
+            $("#multi_inter_ids").val(interview_ids);
+
+            $.ajax({
+
+                type: 'POST',
+                url: 'interview/checkidsmail',
+                data: { interview_ids:interview_ids, '_token':token },
+                success: function(msg) {
+                    
+                    $(".interview_status").show();
+
+                    if (msg.success == 'success') {
+
+                        $(".status").show();
+                        $(".error").empty();
+                        $('#submit').show();
+                    }
+                    else {
+
+                        $(".status").hide();
+                        $(".error").empty();
+                        $('#submit').hide();
+                        $(".error").append(msg.err);
                     }
                 }
             });
