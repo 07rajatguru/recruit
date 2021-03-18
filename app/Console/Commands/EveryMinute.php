@@ -1052,7 +1052,7 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
 
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->subject($input['subject']);
+                    $message->to($input['to'])->bcc($input['owner_email'])->subject($input['subject']);
                 });
            
                
