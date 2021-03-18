@@ -513,4 +513,59 @@ class JobAssociateCandidates extends Model
         }
         return $result;
     }
+
+    public static function getAllJobsByCandidateId($candidate_id) {
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
+
+        $query = $query->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date');
+
+        $query = $query->where('job_associate_candidates.candidate_id',$candidate_id);
+        $response = $query->get();
+
+        $candidate_jobs = array();
+        $i = 0;
+
+        if (isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $candidateJobs) {
+
+                $candidate_jobs[$i]['posting_title'] = $candidateJobs->posting_title;
+                $candidate_jobs[$i]['company_name'] = $candidateJobs->company_name;
+
+                $location ='';
+
+                if($candidateJobs->city!='') {
+                    $location .= $candidateJobs->city;
+                }
+
+                if($candidateJobs->state!='') {
+                    if($location=='')
+                        $location .= $candidateJobs->state;
+                    else
+                        $location .= ", ".$candidateJobs->state;
+                }
+
+                if($candidateJobs->country!='') {
+                    if($location=='')
+                        $location .= $candidateJobs->country;
+                    else
+                        $location .= ", ".$candidateJobs->country;
+                }
+
+                $date_time = strtotime($candidateJobs->date);
+                date_default_timezone_set("Asia/kolkata");
+                $candidate_jobs[$i]['location'] = $location;
+                $candidate_jobs[$i]['managed_by'] = $candidateJobs->managed_by;
+                $candidate_jobs[$i]['datetime'] = date('d-m-Y h:i A',$date_time);
+
+                $i++; 
+            }
+        }
+
+        return $candidate_jobs;
+    }
 }

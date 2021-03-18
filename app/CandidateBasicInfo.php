@@ -29,6 +29,19 @@ class CandidateBasicInfo extends Model
         'Candidate Cover Latter' => 'Candidate Cover Latter',
         'Others' => 'Others');
 
+    public static function getFieldsList() {
+
+        $field_list = array();
+        
+        $field_list[''] = 'Select Field';
+        $field_list['Candidate Name'] = 'Candidate Name';
+        $field_list['Candidate Email'] = 'Candidate Email';
+        $field_list['Candidate Mobile No.'] = 'Candidate Mobile No.';
+        $field_list['Posting Title'] = 'Posting Title';
+
+        return $field_list;
+    }
+
     public static function getTypeArray() {
 
         $type = array();
@@ -118,6 +131,28 @@ class CandidateBasicInfo extends Model
             $candidate[$i]['email'] = $value->email;
             $candidate[$i]['mobile'] = $value->mobile;
             $candidate[$i]['created_at'] = date('d-m-Y',strtotime($value->created_at));
+            $candidate_jobs = JobAssociateCandidates::getAllJobsByCandidateId($value->id);
+
+            if(isset($candidate_jobs) && sizeof($candidate_jobs) > 0) {
+
+                $job_string = '';
+
+                foreach ($candidate_jobs as $key => $value) {
+
+                    if($value['posting_title'] != '') {
+
+                        if($job_string == '')
+                            $job_string .= $value['posting_title'] . " - " . $value['company_name'];
+                        else
+                            $job_string .= ", ".$value['posting_title'] . " - " . $value['company_name'];
+                    }
+                }
+            }
+            else {
+                $job_string = '';
+            }
+
+            $candidate[$i]['job_string'] = $job_string;
             
             $i++;
         }

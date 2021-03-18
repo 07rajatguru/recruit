@@ -81,8 +81,10 @@ class CandidateController extends Controller
 
         $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
         $total_count = CandidateBasicInfo::getAllCandidatesCount('','');
+
+        $field_list = CandidateBasicInfo::getFieldsList();
         
-        return view('adminlte::candidate.index',compact('count','letter','letter_array','total_count'));
+        return view('adminlte::candidate.index',compact('count','letter','letter_array','total_count','field_list'));
     }
 
     public function applicantIndex() {
@@ -192,7 +194,9 @@ class CandidateController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$value['created_at']);
+            $job_string = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['job_string'].'</a>';
+
+            $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$job_string,$value['created_at']);
             $candidate_details[$i] = $data;
             $i++;
         }
@@ -973,27 +977,29 @@ class CandidateController extends Controller
     public function show($id) {
 
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
-            ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
-            ->leftjoin('candidate_source','candidate_source.id','=','candidate_otherinfo.source_id')
-            ->leftjoin('candidate_status','candidate_status.id','=','candidate_otherinfo.status_id')
-            ->leftjoin('users','users.id','=','candidate_uploaded_resume.uploaded_by')
-            ->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.highest_qualification')
-            ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
-                'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
-                'candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone',
-                'candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email',
-                'candidate_basicinfo.country as country', 'candidate_basicinfo.state as state',
-                'candidate_basicinfo.city as city', 'candidate_basicinfo.street1 as street1',
-                'candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode', 'candidate_otherinfo.experience_years as experience_years',
-                'candidate_otherinfo.experience_months as experience_months', 'candidate_otherinfo.current_job_title as current_job_title',
-                'candidate_otherinfo.current_employer as current_employer', 'candidate_otherinfo.expected_salary as expected_salary',
-                'candidate_otherinfo.current_salary as current_salary', 'candidate_otherinfo.skill as skill',
-                'candidate_otherinfo.skype_id as skype_id', 'candidate_otherinfo.status_id as candidateStatus',
-                'candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume',
-                'candidate_uploaded_resume.file as file', 'users.name as uploaded_by',
-                'candidate_status.name as candidate_status_name', 'candidate_source.name as candidate_source_name','eduction_qualification.name as eduction_qualification_value')
-            ->where('candidate_basicinfo.id',$id)->where('candidate_otherinfo.deleted_at',null)
-            ->where('candidate_uploaded_resume.deleted_at',null)->first();
+
+        ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
+        ->leftjoin('candidate_source','candidate_source.id','=','candidate_otherinfo.source_id')
+        ->leftjoin('candidate_status','candidate_status.id','=','candidate_otherinfo.status_id')
+        ->leftjoin('users','users.id','=','candidate_uploaded_resume.uploaded_by')
+        ->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.highest_qualification')
+
+        ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus',
+        'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname',
+        'candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone',
+        'candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email',
+        'candidate_basicinfo.country as country', 'candidate_basicinfo.state as state',
+        'candidate_basicinfo.city as city', 'candidate_basicinfo.street1 as street1',
+        'candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode', 'candidate_otherinfo.experience_years as experience_years',
+        'candidate_otherinfo.experience_months as experience_months', 'candidate_otherinfo.current_job_title as current_job_title',
+        'candidate_otherinfo.current_employer as current_employer', 'candidate_otherinfo.expected_salary as expected_salary',
+        'candidate_otherinfo.current_salary as current_salary', 'candidate_otherinfo.skill as skill',
+        'candidate_otherinfo.skype_id as skype_id', 'candidate_otherinfo.status_id as candidateStatus',
+        'candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume','candidate_uploaded_resume.file as file', 'users.name as uploaded_by',
+        'candidate_status.name as candidate_status_name', 'candidate_source.name as candidate_source_name','eduction_qualification.name as eduction_qualification_value')
+
+        ->where('candidate_basicinfo.id',$id)->where('candidate_otherinfo.deleted_at',null)
+        ->where('candidate_uploaded_resume.deleted_at',null)->first();
 
         $candidateDetails = array();
 
@@ -1059,49 +1065,7 @@ class CandidateController extends Controller
                 }
             }
 
-            $candidateDetails['job'] = array();
-            $i = 0;
-
-            $candidateJob = JobAssociateCandidates::join('job_openings','job_openings.id','=','job_associate_candidates.job_id')
-            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
-            ->join('users','users.id','=','job_openings.hiring_manager_id')
-            ->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date')
-            ->where('job_associate_candidates.candidate_id',$id)->get();
-
-            if (isset($candidateJob) && sizeof($candidateJob) > 0) {
-
-                foreach ($candidateJob as $candidateJobs) {
-
-                    $candidateDetails['job'][$i]['posting_title'] = $candidateJobs->posting_title;
-                    $candidateDetails['job'][$i]['company_name'] = $candidateJobs->company_name;
-
-                    $location ='';
-
-                    if($candidateJobs->city!='') {
-                        $location .= $candidateJobs->city;
-                    }
-                    if($candidateJobs->state!='') {
-                        if($location=='')
-                            $location .= $candidateJobs->state;
-                        else
-                            $location .= ", ".$candidateJobs->state;
-                    }
-                    if($candidateJobs->country!='') {
-                        if($location=='')
-                            $location .= $candidateJobs->country;
-                        else
-                            $location .= ", ".$candidateJobs->country;
-                    }
-
-                    $date_time = strtotime($candidateJobs->date);
-                    date_default_timezone_set("Asia/kolkata");
-                    $candidateDetails['job'][$i]['location'] = $location;
-                    $candidateDetails['job'][$i]['managed_by'] = $candidateJobs->managed_by;
-                    $candidateDetails['job'][$i]['datetime'] = date('d-m-Y h:i A',$date_time);
-
-                   $i++; 
-                }
-            }
+            $candidateDetails['job'] = JobAssociateCandidates::getAllJobsByCandidateId($id);
         }
 
         $candidate_upload_type['Others'] = 'Others';

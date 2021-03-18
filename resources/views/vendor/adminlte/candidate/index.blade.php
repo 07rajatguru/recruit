@@ -14,6 +14,7 @@
                 <h4><span>Total No. of Candidates - {{ $total_count }}</span></h4>
             </div>
             <div class="pull-right">
+                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal">Master Search</button>
                 <a class="btn btn-primary" href="{{ route('all.jobs') }}"> Advanced Search</a>
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
@@ -53,6 +54,7 @@
                 <th>Candidate Owner</th>
                 <th>Candidate Email</th>
                 <th>Mobile Number</th>
+                <th>Jobs associated to candidate</th>
                 <th>Added Date</th>
             </tr>
         </thead>
@@ -74,6 +76,68 @@
         @endforeach
         </tbody>--}}
     </table>
+
+    <div class="modal fade searchmodal" id="searchmodal" aria-labelledby="searchmodal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Options</h4>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Select filed Which you want to search : </strong>
+                            {!! Form::select('selected_field', $field_list,null, array('id'=>'selected_field', 'class' => 'form-control','tabindex' => '1','onchange' => 'displayField()')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 candidate_nm_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Candidate Name : </strong>
+                            {!! Form::text('cname', null, array('id'=>'cname','placeholder' => 'Candidate Name','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 candidate_email_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Candidate Email : </strong>
+                            {!! Form::text('cemail', null, array('id'=>'cemail','placeholder' => 'Candidate Email','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 candidate_mno_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Candidate Mobile No. : </strong>
+                            {!! Form::text('cmno', null, array('id'=>'cmno','placeholder' => 'Candidate Mobile No.','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 candidate_title_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Posting Title : </strong>
+                            {!! Form::text('job_title', null, array('id'=>'job_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+         
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="displayresults()">Search
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 @stop
 
 @section('customscripts')
@@ -82,7 +146,7 @@
 
             var initial_letter = $("#letter").val();
 
-            $("#candidate_table").dataTable({
+            var table = $("#candidate_table").dataTable({
 
                 "bProcessing": true,
                 "serverSide": true,
@@ -154,6 +218,55 @@
                 "pagingType": "full_numbers",
                 "stateSave" : true,
             });
+        }
+
+        function displayField() {
+
+            var selected_field = $("#selected_field").val();
+
+            if(selected_field == 'Candidate Name') {
+
+                $(".candidate_nm_cls").show();
+                $(".candidate_email_cls").hide();
+                $(".candidate_mno_cls").hide();
+                $(".candidate_title_cls").hide();
+            }
+            if(selected_field == 'Candidate Email') {
+
+                $(".candidate_email_cls").show();
+                $(".candidate_nm_cls").hide();
+                $(".candidate_mno_cls").hide();
+                $(".candidate_title_cls").hide();
+            }
+            if(selected_field == 'Candidate Mobile No.') {
+
+                $(".candidate_mno_cls").show();
+                $(".candidate_nm_cls").hide();
+                $(".candidate_email_cls").hide();
+                $(".candidate_title_cls").hide();
+            }
+            if(selected_field == 'Posting Title') {
+
+                $(".candidate_title_cls").show();
+                $(".candidate_nm_cls").hide();
+                $(".candidate_email_cls").hide();
+                $(".candidate_mno_cls").hide();
+            }
+        }
+
+        function displayresults() {
+
+            var cname = $("#cname").val();
+            var cemail = $("#cemail").val();
+            var cmno = $("#cmno").val();
+            var job_title = $("#job_title").val();
+
+            var url = '/candidate';
+
+            if(cname != '') {
+
+                
+            }
         }
     </script>
 @endsection
