@@ -24,7 +24,7 @@
             <div class="box-body col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group select-initial-letter">
                     <strong>Select initial letter:</strong>
-                    {{Form::select('letter',$letter_array, $letter, array('id'=>'letter','class'=>'form-control'))}}
+                    {{Form::select('letter',$letter_array, $letter, array('id'=>'letter','class'=> 'form-control'))}}
                 </div>
                 <div class="form-group select-initial-letter" style="margin-top: 19px;">
                     {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()','id' => 'select_btn']) !!}
@@ -58,23 +58,6 @@
                 <th>Added Date</th>
             </tr>
         </thead>
-        <?php $i=0; ?>
-        {{--<tbody>
-        @foreach ($candidates as $candidate)
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td>
-                    <a class="fa fa-circle" href="{{ route('candidate.show',$candidate->id) }}" title="Show"></a>
-                    <a class="fa fa-edit" href="{{ route('candidate.edit',$candidate->id) }}" title="Edit"></a>
-                    @include('adminlte::partials.deleteModal', ['data' => $candidate, 'name' => 'candidate','display_name'=>'Candidate'])
-                </td>
-                <td>{{ $candidate->fname or '' }}</td>
-                <td>{{ $candidate->owner or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate->email or ''}}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate->mobile or ''}}</td>
-            </tr>
-        @endforeach
-        </tbody>--}}
     </table>
 
     <div class="modal fade searchmodal" id="searchmodal" aria-labelledby="searchmodal" role="dialog">
@@ -144,7 +127,13 @@
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
+            $("#letter").select2();
+
             var initial_letter = $("#letter").val();
+            var cname = $("#cname").val();
+            var cemail = $("#cemail").val();
+            var cmno = $("#cmno").val();
+            var job_title = $("#job_title").val();
 
             var table = $("#candidate_table").dataTable({
 
@@ -154,8 +143,14 @@
                 "columnDefs": [ {orderable: false, targets: [1]},],
                 "ajax":{
 
-                    url :"candidate/all", // json datasource
-                    data: {initial_letter:initial_letter},
+                    url :"/candidate/all", // json datasource
+                    "data" : {
+                        "initial_letter": $("#letter").val(),
+                        "cname"  : $("#cname").val(),
+                        "cemail"  : $("#cemail").val(),
+                        "cmno"  : $("#cmno").val(),
+                        "job_title"  : $("#job_title").val(),
+                    },
                     type: "get",  // type of method  , by default would be get
                     beforeSend: function() {
                         document.getElementById("select_btn").value="Loading...";
@@ -171,12 +166,9 @@
                 },
                 "pageLength": 50,
                 "responsive": true,
-                "autoWidth": false,
                 "pagingType": "full_numbers",
-                "stateSave" : true,
+                "responsive": true,
             });
-
-            $("#letter").select2();
         });
 
         function select_data() {
@@ -184,6 +176,10 @@
             $("#candidate_table").dataTable().fnDestroy();
 
             var initial_letter = $("#letter").val();
+            var cname = $("#cname").val();
+            var cemail = $("#cemail").val();
+            var cmno = $("#cmno").val();
+            var job_title = $("#job_title").val();
 
             $("#candidate_table").dataTable({
 
@@ -192,8 +188,14 @@
                 "order": [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]},],
                "ajax":{
-                    url :"candidate/all", // json datasource
-                    data: {initial_letter:initial_letter},
+                    url :"/candidate/all", // json datasource
+                    "data" : {
+                        "initial_letter": $("#letter").val(),
+                        "cname"  : $("#cname").val(),
+                        "cemail"  : $("#cemail").val(),
+                        "cmno"  : $("#cmno").val(),
+                        "job_title"  : $("#job_title").val(),
+                    },
                     type: "get",  // type of method  , by default would be get
                     beforeSend: function() {
                         document.getElementById("select_btn").value="Loading...";
@@ -261,11 +263,18 @@
             var cmno = $("#cmno").val();
             var job_title = $("#job_title").val();
 
-            var url = '/candidate';
+            var url = 'candidate/';
 
             if(cname != '') {
 
+                var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 
+                '<input type="text" name="cname" value="'+cname+'" />' +
+                '</form>');
+
+                $('body').append(form);
+                form.submit();
             }
         }
     </script>

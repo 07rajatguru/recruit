@@ -173,9 +173,13 @@ class CandidateController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
         $initial_letter = $_GET['initial_letter'];
+        $cname = $_GET['cname'];
+        $cemail = $_GET['cemail'];
+        $cmno = $_GET['cmno'];
+        $job_title = $_GET['job_title'];
 
         $order_column_name = self::getCandidateOrderColumnName($order);
-        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter);
+        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter,$cname,$cemail,$cmno,$job_title);
 
         $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter);
 

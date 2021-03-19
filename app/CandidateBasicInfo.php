@@ -63,7 +63,7 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL) {
+    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL,$cname,$cemail,$cmno,$job_title) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
@@ -78,6 +78,12 @@ class CandidateBasicInfo extends Model
         }
         if (isset($offset) && $offset > 0) {
             $query = $query->offset($offset);
+        }
+
+        if($cname != '') {
+
+            echo $cname;exit;
+            $query = $query->where('candidate_basicinfo.full_name','like',"%$cname%");
         }
 
         $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
