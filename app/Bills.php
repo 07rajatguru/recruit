@@ -490,7 +490,8 @@ class Bills extends Model
         return $bills_count;
     }
 
-    public static function getCancelBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc'){
+    public static function getCancelBills($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL) {
+
         $date_class = new Date();
 
         $cancel_bill = 1;
@@ -564,6 +565,14 @@ class Bills extends Model
                     $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
                 }
             });
+        }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
         }
 
         $bills_query = $bills_query->where('bills.status',$status);
@@ -672,7 +681,7 @@ class Bills extends Model
         return $bills;
     }
 
-    public static function getAllCancelBillsCount($status=0,$all=0,$user_id=0,$search=0) {
+    public static function getAllCancelBillsCount($status=0,$all=0,$user_id=0,$search=0,$current_year=NULL,$next_year=NULL) {
 
         $cancel_bill = 1;
         $cancel = array($cancel_bill);
@@ -734,6 +743,14 @@ class Bills extends Model
                     $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
                 }
             });
+        }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
         }
 
         $bills_query = $bills_query->where('bills.status',$status);

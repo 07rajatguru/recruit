@@ -396,22 +396,54 @@ class BillsController extends Controller
         $cancel_bnm = 1;
         $user = \Auth::user();
         $user_id = $user->id;
+
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else{
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else{
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(", ", $year);
+        $year1 = $year_data[0];
+        $year2 = $year_data[1];
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+
         $all_forecasting_perm = $user->can('display-forecasting');
         $loggedin_forecasting_perm = $user->can('display-forecasting-by-loggedin-user');
         $can_owner_forecasting_perm = $user->can('display-forecasting-by-candidate-owner');
         $cancel_bill_perm = $user->can('cancel-bill');
         
         if($all_forecasting_perm && $cancel_bill_perm) {
-            $count = Bills::getAllCancelBillsCount(0,1,$user_id);
+            $count = Bills::getAllCancelBillsCount(0,1,$user_id,0,$current_year,$next_year);
             $access = true;
         }
         else if(($loggedin_forecasting_perm && $cancel_bill_perm) || ($can_owner_forecasting_perm && $cancel_bill_perm)) {
-            $count = Bills::getAllCancelBillsCount(0,0,$user_id);
+            $count = Bills::getAllCancelBillsCount(0,0,$user_id,0,$current_year,$next_year);
             $access = false;
         }
 
         $title = "Cancel Forecasting";
-        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','year','year_array'));
     }
     // for cancel bills get using ajax
     public function getAllCancelBillsDetails() {
@@ -425,6 +457,40 @@ class BillsController extends Controller
         $title = $_GET['title'];
 
         $cancel_bill = 0;
+
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        $year_array[0] = "Select Year";
+
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_GET['year']) && $_GET['year'] != '') {
+            
+            $year = $_GET['year'];
+
+            if (isset($year) && $year != 0) {
+                $year_data = explode(", ", $year);
+                $year1 = $year_data[0];
+                $year2 = $year_data[1];
+                $current_year = date('Y-m-d',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d',strtotime("last day of $year2"));
+            }
+            else {
+                $year = NULL;
+                $current_year = NULL;
+                $next_year = NULL;    
+            }
+        }
+        else{
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+        }
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -447,14 +513,14 @@ class BillsController extends Controller
 
             if($all_forecasting_perm && $cancel_bill_perm) {
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
-                $bnm = Bills::getCancelBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
-                $count = Bills::getAllCancelBillsCount(0,1,$user_id,$search);
+                $bnm = Bills::getCancelBills(0,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+                $count = Bills::getAllCancelBillsCount(0,1,$user_id,$search,$current_year,$next_year);
                 $access = true;
             }
             else if(($loggedin_forecasting_perm && $cancel_bill_perm) || ($can_owner_forecasting_perm && $cancel_bill_perm)) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
-                $bnm = Bills::getCancelBills(0,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
-                $count = Bills::getAllCancelBillsCount(0,0,$user_id,$search);
+                $bnm = Bills::getCancelBills(0,0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+                $count = Bills::getAllCancelBillsCount(0,0,$user_id,$search,$current_year,$next_year);
                 $access = false;
             }
         }
@@ -462,14 +528,14 @@ class BillsController extends Controller
 
             if($all_recovery_perm && $cancel_bill_perm) {
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
-                $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type);
-                $count = Bills::getAllCancelBillsCount(1,1,$user_id,$search);
+                $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+                $count = Bills::getAllCancelBillsCount(1,1,$user_id,$search,$current_year,$next_year);
                 $access = true;
             }
             else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
-                $bnm = Bills::getCancelBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type);
-                $count = Bills::getAllCancelBillsCount(1,0,$user_id,$search);
+                $bnm = Bills::getCancelBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+                $count = Bills::getAllCancelBillsCount(1,0,$user_id,$search,$current_year,$next_year);
                 $access = false;
             }
         }
@@ -718,6 +784,37 @@ class BillsController extends Controller
         $cancel_bn = 1;
         $user = \Auth::user();
         $user_id = $user->id;
+
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+1 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $next = $y+1;
+            $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != '') {
+            $year = $_POST['year'];
+        }
+        else{
+            $y = date('Y');
+            $m = date('m');
+            if ($m > 3) {
+                $n = $y + 1;
+                $year = $y.'-4, '.$n.'-3';
+            }
+            else{
+                $n = $y-1;
+                $year = $n.'-4, '.$y.'-3';
+            }
+        }
+
+        $year_data = explode(", ", $year);
+        $year1 = $year_data[0];
+        $year2 = $year_data[1];
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
         
         $all_recovery_perm = $user->can('display-recovery');
         $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
@@ -726,15 +823,15 @@ class BillsController extends Controller
 
         if($all_recovery_perm && $cancel_bill_perm) {
 
-            $count = Bills::getAllCancelBillsCount(1,1,$user_id);
-            $bnm = Bills::getCancelBills(1,1,$user_id,0,0,0,0,'');
+            $count = Bills::getAllCancelBillsCount(1,1,$user_id,0,$current_year,$next_year);
+            $bnm = Bills::getCancelBills(1,1,$user_id,0,0,0,0,'',$current_year,$next_year);
 
             $access = true;
         }
         else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
 
-            $count = Bills::getAllCancelBillsCount(1,0,$user_id);
-            $bnm = Bills::getCancelBills(1,0,$user_id,0,0,0,0,'');
+            $count = Bills::getAllCancelBillsCount(1,0,$user_id,0,$current_year,$next_year);
+            $bnm = Bills::getCancelBills(1,0,$user_id,0,0,0,0,'',$current_year,$next_year);
             $access = false;
         }
 
@@ -759,7 +856,7 @@ class BillsController extends Controller
             }
         }
         $title = "Cancel Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn','jc_sent','got_con','invoice_gen','pymnt_rcv'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn','jc_sent','got_con','invoice_gen','pymnt_rcv','year_array','year'));
 
     }
 

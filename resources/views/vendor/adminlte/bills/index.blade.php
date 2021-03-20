@@ -62,7 +62,7 @@
         </div>
     @endif
 
-    @if($title == "Recovery")
+    @if($title == "Recovery" || $title == "Cancel Forecasting" || $title == "Cancel Recovery")
       <div class="col-xs-12 col-sm-12 col-md-12">
           <div class="box-body col-xs-12 col-sm-6 col-md-3">
               <div class="form-group">
