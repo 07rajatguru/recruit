@@ -2076,7 +2076,7 @@ class ClientController extends Controller
         $module_id = $id;
         $module = 'Client 2nd Line Account Manager';
 
-        $subject = "Client 2nd Line Account Manager Assigned - " . $client_info['name'] . " - " . $client_info['billing_city'];
+        $subject = "Client 2nd Line Account Manager Assigned - " . $client_info['name'] .  " - " . $client_info['coordinator_name'] . " - " . $client_info['billing_city'];
         $message = "<tr><td>" . $client_info['name'] . " Client 2nd Line Account Manager </td></tr>";
         $sender_name = $user_id;
 
