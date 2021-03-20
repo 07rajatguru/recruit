@@ -812,7 +812,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Candidate
-    Route::get('candidate', [
+    Route::any('candidate', [
         'as' => 'candidate.index',
         'uses' => 'CandidateController@index',
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
