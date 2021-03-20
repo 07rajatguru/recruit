@@ -145,11 +145,11 @@
 
                     url :"/candidate/all", // json datasource
                     "data" : {
-                        "initial_letter": $("#letter").val(),
-                        "cname"  : $("#cname").val(),
-                        "cemail"  : $("#cemail").val(),
-                        "cmno"  : $("#cmno").val(),
-                        "job_title"  : $("#job_title").val(),
+                        "initial_letter": initial_letter,
+                        "cname"  : cname,
+                        "cemail"  : cemail,
+                        "cmno"  : cmno,
+                        "job_title"  : job_title,
                     },
                     type: "get",  // type of method  , by default would be get
                     beforeSend: function() {
@@ -190,11 +190,11 @@
                "ajax":{
                     url :"/candidate/all", // json datasource
                     "data" : {
-                        "initial_letter": $("#letter").val(),
-                        "cname"  : $("#cname").val(),
-                        "cemail"  : $("#cemail").val(),
-                        "cmno"  : $("#cmno").val(),
-                        "job_title"  : $("#job_title").val(),
+                        "initial_letter": initial_letter,
+                        "cname"  : cname,
+                        "cemail"  : cemail,
+                        "cmno"  : cmno,
+                        "job_title"  : job_title,
                     },
                     type: "get",  // type of method  , by default would be get
                     beforeSend: function() {
@@ -269,7 +269,6 @@
 
                 var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                
                 '<input type="text" name="cname" value="'+cname+'" />' +
                 '</form>');
 
