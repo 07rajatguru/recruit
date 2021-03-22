@@ -190,6 +190,8 @@ class BillsController extends Controller
                 $order_column_name = self::getForecastingOrderColumnName($order,1);
                 $bnm = Bills::getAllBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
                 $count = Bills::getAllBillsCount(1,1,$user_id,$search,$current_year,$next_year);
+
+                // For display count in recovery header
                 $recovery_bills = Bills::getAllBills(1,1,$user_id,0,0,0,0,'',$current_year,$next_year);
                 $access = true;
             }
@@ -198,6 +200,8 @@ class BillsController extends Controller
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getAllBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
                 $count = Bills::getAllBillsCount(1,0,$user_id,$search,$current_year,$next_year);
+
+                // For display count in recovery header
                 $recovery_bills = Bills::getAllBills(1,0,$user_id,0,0,0,0,'',$current_year,$next_year);
                 $access = false;
             }
@@ -445,6 +449,7 @@ class BillsController extends Controller
         $title = "Cancel Forecasting";
         return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','year','year_array'));
     }
+
     // for cancel bills get using ajax
     public function getAllCancelBillsDetails() {
 
@@ -531,12 +536,18 @@ class BillsController extends Controller
                 $bnm = Bills::getCancelBills(1,1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
                 $count = Bills::getAllCancelBillsCount(1,1,$user_id,$search,$current_year,$next_year);
                 $access = true;
+
+                // For display count in recovery header
+                $cancel_recovery_bills = Bills::getCancelBills(1,1,$user_id,0,0,0,0,'',$current_year,$next_year);
             }
             else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
                 $order_column_name = self::getForecastingOrderColumnName($order,0);
                 $bnm = Bills::getCancelBills(1,0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
                 $count = Bills::getAllCancelBillsCount(1,0,$user_id,$search,$current_year,$next_year);
                 $access = false;
+
+                // For display count in recovery header
+                $cancel_recovery_bills = Bills::getCancelBills(1,0,$user_id,0,0,0,0,'',$current_year,$next_year);
             }
         }
 
@@ -679,11 +690,45 @@ class BillsController extends Controller
             $i++;
         }
 
+        if(isset($cancel_recovery_bills) && sizeof($cancel_recovery_bills) > 0) {
+
+            $jc_sent = 0;
+            $got_con = 0;
+            $invoice_gen = 0;
+            $pymnt_rcv = 0;
+
+            foreach($cancel_recovery_bills as $bills) {
+
+                if($bills['job_confirmation'] == '1') {
+                    $jc_sent++;
+                }
+                else if ($bills['job_confirmation'] == '2') {
+                    $got_con++;
+                }
+                else if($bills['job_confirmation'] == '3') {
+                    $invoice_gen++;
+                }
+                else if($bills['job_confirmation'] == '4') {
+                    $pymnt_rcv++;
+                }
+            }
+
+            $bills = array();
+            $bills['jc_sent'] = $jc_sent;
+            $bills['got_con'] = $got_con;
+            $bills['invoice_gen'] = $invoice_gen;
+            $bills['pymnt_rcv'] = $pymnt_rcv;
+        }
+        else {
+            $bills = array();
+        }
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $forecasting
+            "data" => $forecasting,
+            "bills" => $bills,
         );
 
         echo json_encode($json_data);exit;
