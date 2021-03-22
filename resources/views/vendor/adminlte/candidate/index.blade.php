@@ -14,7 +14,6 @@
                 <h4><span>Total No. of Candidates - {{ $total_count }}</span></h4>
             </div>
             <div class="pull-right">
-                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal">Master Search</button>
                 <a class="btn btn-primary" href="{{ route('all.jobs') }}"> Advanced Search</a>
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>

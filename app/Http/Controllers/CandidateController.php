@@ -198,7 +198,28 @@ class CandidateController extends Controller
                 $action .= $delete;
             }
 
-            $job_string = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['job_string'].'</a>';
+            $job_string_array = explode(",", $value['job_string']);
+
+            if(isset($job_string_array) && sizeof($job_string_array) > 0) {
+
+                $incr = 1;
+                $aa = '';
+
+                foreach ($job_string_array as $kk => $vv) {
+
+                    if($vv != '') {
+                        if($aa == '') {
+                            $aa = $incr . " . " . $vv . " ";
+                        }
+                        else {
+                            $aa .= $incr . ". " . $vv . " ";
+                        }
+                        $incr++;
+                    }
+                }
+            }
+
+            $job_string = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$aa.'</a>';
 
             $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$job_string,$value['created_at']);
             $candidate_details[$i] = $data;
