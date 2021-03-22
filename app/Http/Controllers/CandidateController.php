@@ -209,10 +209,10 @@ class CandidateController extends Controller
 
                     if($vv != '') {
                         if($aa == '') {
-                            $aa = $incr . " . " . $vv . " ";
+                            $aa = $incr . " . " . $vv . " " . "<br/>";
                         }
                         else {
-                            $aa .= $incr . ". " . $vv . " ";
+                            $aa .= $incr . ". " . $vv . " " . "<br/>";
                         }
                         $incr++;
                     }
