@@ -594,7 +594,7 @@ class Interview extends Model
 
     public static function getDashboardInterviews($all=0,$user_id){
 
-        date_default_timezone_set("Asia/kolkata");
+        //date_default_timezone_set("Asia/kolkata");
         $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
@@ -609,8 +609,10 @@ class Interview extends Model
             'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
             'job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact');
 
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+        if($all==0) {
+            
+            $query = $query->where(function($query) use ($user_id) {
+
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
@@ -623,7 +625,8 @@ class Interview extends Model
         $query = $query->orderby('interview.interview_date','asc');
 
         $response = $query->get();
-//print_r($response);exit;
+        //print_r($response);exit;
+
         return $response;
     }
     public static function getTodaysInterviews($all=0,$user_id){

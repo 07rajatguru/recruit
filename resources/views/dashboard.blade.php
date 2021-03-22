@@ -203,8 +203,15 @@
                             <tbody>
                             @if(isset($interviews) && sizeof($interviews) > 0)
                                 @foreach($interviews as $interview)
+                                    <?php
+                                        $link = 'interview/' . $interview->id . "/show";
+                                    ?>
                                     <tr>
-                                        <td style="border: 1px solid #00c0ef;">{{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}</td>
+                                        <td style="border: 1px solid #00c0ef;">
+                                            <a href="{{ $link }}" target="_blank">
+                                            {{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}
+                                            </a>
+                                        </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}} </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->contact }}</td>
                                         <td style="font-size:13px;border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
@@ -257,9 +264,15 @@
                             @if(isset($toDos) && sizeof($toDos)>0)
                                 <?php $i =1; ?>
                                 @foreach($toDos as $toDo)
+                                    <?php 
+                                        $todo_link = 'todos/' . $toDo['id'];
+                                    ?>
                                     <tr>
                                         <td style="border: 1px solid #00c0ef;">{{ $i }}</td>
-                                        <td style="border: 1px solid #00c0ef;">{{ $toDo['subject'] }}</td>
+                                        <td style="border: 1px solid #00c0ef;">
+                                            <a href="{{ $todo_link }}" target="_blank">
+                                                {{ $toDo['subject'] }}</a>
+                                        </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $toDo['am_name'] }}</td>
                                         <!-- <td>{{ $toDo['assigned_to'] }}</td> -->
                                         <td style="font-size:13px;border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
