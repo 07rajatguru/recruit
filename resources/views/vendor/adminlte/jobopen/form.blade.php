@@ -261,10 +261,17 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>If you don't want to open the job after 48 hours please check the checkbox :</strong>
-                                {!! Form::checkbox('job_open_checkbox','1', false, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
+                                {!! Form::checkbox('job_open_checkbox','1', $job_open_checkbox, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
                             </div>
                         </div>
                     @endif
+
+                    <div class="">
+                        <div class="form-group">
+                            <strong>If you want to display job in Adler Website Career page please check the checkbox :</strong>
+                            {!! Form::checkbox('adler_career_checkbox','1', $adler_career_checkbox, array('id' => 'adler_career_checkbox','tabindex' => '14')) !!}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

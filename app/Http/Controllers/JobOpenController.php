@@ -916,7 +916,10 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id'));
+        $job_open_checkbox = '0';
+        $adler_career_checkbox = '0';
+
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox'));
     }
 
     public function store(Request $request) {
@@ -1012,13 +1015,20 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
 
+        // For not open job afer 48 hours
         if(isset($input['job_open_checkbox']) && $input['job_open_checkbox'] != '') {
-
             $job_open_checkbox = '1';
         }
         else {
-
             $job_open_checkbox = '0';
+        }
+
+        // For display job in career page of adler website
+        if(isset($input['adler_career_checkbox']) && $input['adler_career_checkbox'] != '') {
+            $adler_career_checkbox = '1';
+        }
+        else {
+            $adler_career_checkbox = '0';
         }
 
         $job_open = new JobOpen();
@@ -1048,6 +1058,7 @@ class JobOpenController extends Controller
         $job_open->open_to_all_date = $open_to_all;
         $job_open->level_id = $level_id;
         $job_open->job_open_checkbox = $job_open_checkbox;
+        $job_open->adler_career_checkbox = $adler_career_checkbox;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -1546,6 +1557,9 @@ class JobOpenController extends Controller
                 }
             }
             $upload_type['Others'] = 'Others';
+
+            $job_open_checkbox = $job_open->job_open_checkbox;
+            $adler_career_checkbox = $job_open->adler_career_checkbox;
         }
         else {
             return view('errors.403');
@@ -1561,7 +1575,7 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox'));
     }
 
     public function editClosedJob($id,$year) {
@@ -1761,13 +1775,20 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
 
+        // For not open job afer 48 hours
         if(isset($input['job_open_checkbox']) && $input['job_open_checkbox'] != '') {
-
             $job_open_checkbox = '1';
         }
         else {
-
             $job_open_checkbox = '0';
+        }
+
+        // For display job in career page of adler website
+        if(isset($input['adler_career_checkbox']) && $input['adler_career_checkbox'] != '') {
+            $adler_career_checkbox = '1';
+        }
+        else {
+            $adler_career_checkbox = '0';
         }
 
         $job_open = JobOpen::find($id);
@@ -1794,6 +1815,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_to = $work_exp_to;
         $job_open->level_id = $level_id;
         $job_open->job_open_checkbox = $job_open_checkbox;
+        $job_open->adler_career_checkbox = $adler_career_checkbox;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -1978,6 +2000,9 @@ class JobOpenController extends Controller
         }
         $upload_type['Others'] = 'Others';
 
+        $job_open_checkbox = $job_open->job_open_checkbox;
+        $adler_career_checkbox = $job_open->adler_career_checkbox;
+
         // job type
         $job_type = JobOpen::getJobTypes();
 
@@ -1997,7 +2022,7 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox'));
     }
 
     public function clonestore(Request $request) {
@@ -2089,13 +2114,20 @@ class JobOpenController extends Controller
         $increment_id = $max_id + 1;
         $job_unique_id = "TT-JO-$increment_id";
 
+        // For not open job afer 48 hours
         if(isset($input['job_open_checkbox']) && $input['job_open_checkbox'] != '') {
-
             $job_open_checkbox = '1';
         }
         else {
-
             $job_open_checkbox = '0';
+        }
+
+        // For display job in career page of adler website
+        if(isset($input['adler_career_checkbox']) && $input['adler_career_checkbox'] != '') {
+            $adler_career_checkbox = '1';
+        }
+        else {
+            $adler_career_checkbox = '0';
         }
 
         $job_open = new JobOpen();
@@ -2125,6 +2157,7 @@ class JobOpenController extends Controller
         $job_open->open_to_all_date = $open_to_all;
         $job_open->level_id = $level_id;
         $job_open->job_open_checkbox = $job_open_checkbox;
+        $job_open->adler_career_checkbox = $adler_career_checkbox;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
