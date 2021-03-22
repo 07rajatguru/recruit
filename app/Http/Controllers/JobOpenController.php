@@ -3751,6 +3751,6 @@ class JobOpenController extends Controller
     public function getAllAPIJobs() {
 
         $jobs = JobOpen::getAllAPIJobsDetails();
-        return response($jobs, 200);
+        return json_encode($jobs);
     }
 }
