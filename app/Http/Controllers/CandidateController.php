@@ -198,7 +198,7 @@ class CandidateController extends Controller
                 $action .= $delete;
             }
 
-            $job_string_array = explode(",", $value['job_string']);
+            $job_string_array = explode(",,,", $value['job_string']);
 
             if(isset($job_string_array) && sizeof($job_string_array) > 0) {
 

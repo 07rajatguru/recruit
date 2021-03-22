@@ -150,7 +150,7 @@ class CandidateBasicInfo extends Model
                         if($job_string == '')
                             $job_string .= $value['posting_title'] . " - " . $value['company_name'];
                         else
-                            $job_string .= ", ".$value['posting_title'] . " - " . $value['company_name'];
+                            $job_string .= ",,, ".$value['posting_title'] . " - " . $value['company_name'];
                     }
                 }
             }
