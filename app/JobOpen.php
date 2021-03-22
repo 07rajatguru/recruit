@@ -1993,4 +1993,29 @@ class JobOpen extends Model
 
         return $job_res;
     }*/
+
+    public static function getAllAPIJobsDetails() {
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+
+        $job_open_query = $job_open_query->select('job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','client_basicinfo.coordinator_name as coordinator_name');
+        
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+        $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+        
+        $job_response = $job_open_query->get()->toJson(JSON_PRETTY_PRINT);
+
+        return $job_response;
+    }
 }

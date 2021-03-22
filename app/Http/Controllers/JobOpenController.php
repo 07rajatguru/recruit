@@ -3747,4 +3747,10 @@ class JobOpenController extends Controller
 
         echo json_encode($response);exit;
     }
+
+    public function getAllAPIJobs() {
+
+        $jobs = JobOpen::getAllAPIJobsDetails();
+        return response($jobs, 200);
+    }
 }
