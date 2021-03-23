@@ -2003,7 +2003,7 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
 
@@ -2016,6 +2016,66 @@ class JobOpen extends Model
         
         $job_response = $job_open_query->get();
 
-        return $job_response;
+        $jobs_list = array();
+        $i=0;
+
+        foreach ($job_response as $key => $value) {
+
+            // value get in 2 decimal point
+            if ($value->lacs_from >= '100') {
+                $min_ctc = '100+';
+            }
+            else {
+                $lacs_from = $value->lacs_from*100000;
+                $thousand_from = $value->thousand_from*1000;
+                $mictc = $lacs_from+$thousand_from;
+                $minctc = $mictc/100000;
+                $min_ctc = number_format($minctc,2);
+            }
+
+            if ($value->lacs_to >= '100') {
+                $max_ctc = '100+';
+            }
+            else {
+                $lacs_to = $value->lacs_to*100000;
+                $thousand_to = $value->thousand_to*1000;
+                $mactc = $lacs_to+$thousand_to;
+                $maxctc = $mactc/100000;
+                $max_ctc = number_format($maxctc,2);
+            }
+
+            $jobs_list[$i]['id'] = $value->id;
+            $jobs_list[$i]['cpnyname'] = $value->company_name;
+            $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
+            $jobs_list[$i]['positions'] = $value->no_of_positions;
+            $jobs_list[$i]['posting'] = $value->posting_title;
+
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
+            $jobs_list[$i]['city'] = $value->city;
+            $jobs_list[$i]['location'] = $location;
+            $jobs_list[$i]['qual'] = $value->qualifications;
+            $jobs_list[$i]['min'] = $min_ctc;
+            $jobs_list[$i]['max'] = $max_ctc;
+            $jobs_list[$i]['industry'] = $value->industry_name;
+            $jobs_list[$i]['desiredcan'] = $value->desired_candidate;
+
+            $i++;
+        }
+        return $jobs_list;
     }
 }
