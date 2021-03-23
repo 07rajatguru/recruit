@@ -951,7 +951,12 @@ class InterviewController extends Controller
         }
 
         // Get Year
-        $year = $_POST['multi_inter_year'];
+        if(isset($_POST['multi_inter_year']) && $_POST['multi_inter_year'] != '') {
+            $year = $_POST['multi_inter_year'];
+        }
+        else {
+            $year = '';
+        }
 
         foreach ($inter_ids_array as $key => $value) {
 
