@@ -2003,7 +2003,7 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
 
@@ -2072,7 +2072,8 @@ class JobOpen extends Model
             $jobs_list[$i]['min'] = $min_ctc;
             $jobs_list[$i]['max'] = $max_ctc;
             $jobs_list[$i]['industry'] = $value->industry_name;
-            $jobs_list[$i]['desiredcan'] = $value->desired_candidate;
+            $jobs_list[$i]['desiredcan'] = strip_tags($value->desired_candidate);
+            $jobs_list[$i]['job_description'] = strip_tags($value->job_description);
 
             $i++;
         }
