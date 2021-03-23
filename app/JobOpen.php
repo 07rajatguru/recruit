@@ -2073,7 +2073,7 @@ class JobOpen extends Model
             $jobs_list[$i]['max'] = $max_ctc;
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['desiredcan'] = strip_tags($value->desired_candidate);
-            $jobs_list[$i]['job_description'] = strip_tags($value->job_description);
+            $jobs_list[$i]['desc'] = strip_tags($value->job_description);
 
             $i++;
         }
