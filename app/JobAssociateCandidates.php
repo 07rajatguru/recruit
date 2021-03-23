@@ -29,7 +29,7 @@ class JobAssociateCandidates extends Model
         $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
         $query = $query->leftjoin('candidate_status','candidate_status.id', '=' , 'candidate_otherinfo.status_id');
         $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid','job_associate_candidates.date as job_associate_candidates_date','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid','job_associate_candidates.date as job_associate_candidates_date','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at','job_associate_candidates.selected_date as selected_date');
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
         $query = $query->orderBy('job_associate_candidates.shortlisted','3');
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
@@ -398,7 +398,7 @@ class JobAssociateCandidates extends Model
         $query = $query->orwhere('job_associate_candidates.selected_date','>=',"$from_date");
         $query = $query->Where('job_associate_candidates.selected_date','<=',"$to_date");
 */
-        $query = $query->where('job_associate_candidates.shortlisted','>=','1');
+        $query = $query->where('job_associate_candidates.shortlisted','=','3');
         $query = $query->where('job_associate_candidates.status_id','=','3');
        
         $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.selected_date)'));

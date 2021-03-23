@@ -429,11 +429,19 @@
                     $associated_date = $dt->format('Y-m-d H:i:s');
                     $month = date('m',strtotime($associated_date));
                 ?>
-                @if($candidate->shortlisted == 1 || $candidate->shortlisted == 2)
+                @if($candidate->shortlisted == 1)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
 
-                @elseif($candidate->shortlisted == 3)
-                <td style="background:#32CD32"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color:blue;">
+                @elseif($candidate->shortlisted == 2)
+                <td style="background:#FF99FF;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
+                   {{ $candidate->fname or '' }}</a></td>
+
+                @elseif($candidate->shortlisted == 3 && $candidate->selected_date != '')
+                <td style="background:#32CD32;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color: blue;">
+                   {{ $candidate->fname or '' }}</a></td>
+
+                @elseif($candidate->shortlisted == 3 && $candidate->selected_date == '')
+                <td style="background:#66FFFF;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
                    {{ $candidate->fname or '' }}</a></td>
 
                 @else

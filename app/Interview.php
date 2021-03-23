@@ -93,7 +93,7 @@ class Interview extends Model
 
         $interviewround['1'] = 'Round 1';
         $interviewround['2'] = 'Round 2';
-        $interviewround['3'] = 'Final Round';
+        $interviewround['3'] = 'Round 3';
 
         return $interviewround;
     }
