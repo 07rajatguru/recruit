@@ -2014,7 +2014,7 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         
-        $job_response = $job_open_query->get()->toJson(JSON_PRETTY_PRINT);
+        $job_response = $job_open_query->get();
 
         return $job_response;
     }
