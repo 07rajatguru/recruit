@@ -331,15 +331,16 @@ class JobOpenController extends Controller
         }
 
         // Get All Client Heirarchy
-        $client_heirarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
-
+        //$client_heirarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
+        
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
-        $viewVariable['client_heirarchy_name'] = $client_heirarchy_name;
+        $viewVariable['client_hierarchy_name'] = $client_hierarchy_name;
         $viewVariable['priority_0'] = $priority_0;
         $viewVariable['priority_1'] = $priority_1;
         $viewVariable['priority_2'] = $priority_2;
@@ -902,7 +903,8 @@ class JobOpenController extends Controller
         $work_exp_from = '';
         $work_exp_to = '';
 
-        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        //$client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
         $action = "add";
 
@@ -1515,7 +1517,8 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         // get Client hierarchy names
-        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        //$client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
         $job_open = JobOpen::find($id);
 
@@ -1659,7 +1662,8 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         // get Client hierarchy names
-        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        //$client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
         $job_open = JobOpen::find($id);
 
@@ -2010,7 +2014,8 @@ class JobOpenController extends Controller
         $job_priorities = JobOpen::getJobPriorities();
 
         // get Client hierarchy names
-        $client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        //$client_hierarchy_name = ClientHeirarchy::getAllClientHeirarchyName();
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
         $action = "clone";
 

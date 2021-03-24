@@ -617,7 +617,10 @@
                     },*/
                     "city": {
                         required : true,
-                    }
+                    },
+                    "level_id": {
+                        required : true,
+                    },
                 },
                 messages: {
                     
@@ -647,7 +650,10 @@
                     },*/
                     "city": {
                         required : "City is Required Field.",
-                    }
+                    },
+                    "level_id": {
+                        required : "Please Select Position",
+                    },
                 }
             });
 
@@ -685,7 +691,7 @@
             $("#client_id").select2();
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
-            $("#level_id").select2();
+            //$("#level_id").select2();
             $("#industry_id").select2();
 
             /*$("#candidate_tracker").bind('change', function() {

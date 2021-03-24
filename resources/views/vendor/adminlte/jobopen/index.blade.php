@@ -224,7 +224,7 @@
                     <div class="">
                         <div class="form-group"><br>
                             <strong>Select Job Position :</strong> <br><br>
-                            {!! Form::select('client_heirarchy', $client_heirarchy_name,null, array('id'=>'client_heirarchy','class' => 'form-control')) !!}
+                            {!! Form::select('client_heirarchy', $client_hierarchy_name,null, array('id'=>'client_heirarchy','class' => 'form-control')) !!}
                         </div>
                     </div>
                 </div>
