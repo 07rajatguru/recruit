@@ -813,7 +813,7 @@ class ClientController extends Controller
         $client_basic_info->other_number = $input['other_number'];
         $client_basic_info->website = $input['website'];
 
-        if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '' ) {
+        if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '') {
             $client_basic_info->percentage_charged_below = $input['percentage_charged_below'];
         }
         else {
@@ -1032,10 +1032,6 @@ class ClientController extends Controller
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
             // Email Notification : data store in datebase
-            /*$strategyuserid = getenv('STRATEGYUSERID');
-            $superadminemail = User::getUserEmailById($super_admin_userid);
-            $strategyemail = User::getUserEmailById($strategyuserid);
-            $cc_users_array = array($superadminemail,$strategyemail);*/
 
             $superadminemail = User::getUserEmailById($super_admin_userid);
 
@@ -1045,7 +1041,6 @@ class ClientController extends Controller
             $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
             $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
             $module_id = $client_id;
-            //$cc = implode(",",$cc_users_array);
             $cc = $superadminemail;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -1084,18 +1079,7 @@ class ClientController extends Controller
    
         if(isset($client_basicinfo) && $client_basicinfo != '') {
 
-            $client_category = $client_basicinfo->category;
-
-            if ($client_category == 'Moderate' || $client_category == 'Standard') {
-                $manager_user_id = env('MANAGERUSERID');
-                $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
-            }
-            else {
-                $manager_user_id = 0;
-                $marketing_intern_user_id = 0;
-            }
-
-            if($all_perm || $userwise_perm || ($manager_user_id == $user_id) || ($marketing_intern_user_id == $user_id)) {   
+            if($all_perm || $userwise_perm ) {   
 
                 $client['name'] = $client_basicinfo->name;
                 $client['source'] = $client_basicinfo->source;
@@ -1358,24 +1342,24 @@ class ClientController extends Controller
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
 
-        if(isset($input->percentage_charged_below) && $input->percentage_charged_below!= '') {
+        if(isset($input->percentage_charged_below) && $input->percentage_charged_below != '') {
             $client_basicinfo->percentage_charged_below = $input->percentage_charged_below;
         }
         else if (isset($client_basicinfo->percentage_charged_below) && $client_basicinfo->percentage_charged_below != '') {
             $client_basicinfo->percentage_charged_below = $client_basicinfo->percentage_charged_below;
         }
         else {
-            $client_basicinfo->percentage_charged_below ='8.33';
+            $client_basicinfo->percentage_charged_below = '8.33';
         }
         
-        if(isset($input->percentage_charged_above) && $input->percentage_charged_above!='') {
+        if(isset($input->percentage_charged_above) && $input->percentage_charged_above !='') {
             $client_basicinfo->percentage_charged_above = $input->percentage_charged_above;
         }
         else if (isset($client_basicinfo->percentage_charged_above) && $client_basicinfo->percentage_charged_above != '') {
             $client_basicinfo->percentage_charged_above = $client_basicinfo->percentage_charged_above;
         }
         else {
-            $client_basicinfo->percentage_charged_above='8.33';
+            $client_basicinfo->percentage_charged_above = '8.33';
         }
 
         $client_basicinfo->industry_id = $input->industry_id;
@@ -1859,7 +1843,6 @@ class ClientController extends Controller
 
                         JobVisibleUsers::where('job_id',$value)->where('user_id',$old_sl_am)->delete();
                     }
-
                    
                     $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($v1,$second_line_am_id);
 
@@ -1966,6 +1949,7 @@ class ClientController extends Controller
                 $check_job_user_id = JobVisibleUsers::getCheckJobUserIdAdded($value,$a_m);
 
                 if ($check_job_user_id == false) {
+
                     $job_visible_users = new JobVisibleUsers();
                     $job_visible_users->job_id = $value;
                     $job_visible_users->user_id = $a_m;
@@ -2061,8 +2045,7 @@ class ClientController extends Controller
 
                 if($old_sl_am > 0) {
 
-                    JobVisibleUsers::where('job_id',$value)
-                    ->where('user_id',$old_sl_am)
+                    JobVisibleUsers::where('job_id',$value)->where('user_id',$old_sl_am)
                     ->delete();
                 }
 

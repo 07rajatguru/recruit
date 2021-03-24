@@ -399,7 +399,7 @@ class ClientBasicinfo extends Ardent
         // Not Display Delete Client Status '1' Entry
         $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
 
-        if($user_id>0) {
+        if($user_id > 0) {
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
             $client_query = $client_query->orwhere('client_basicinfo.second_line_am','=',$user_id);
         }        
@@ -415,7 +415,7 @@ class ClientBasicinfo extends Ardent
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
 
-        if($user_id>0) {
+        if($user_id > 0) {
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
         }
 
@@ -425,8 +425,8 @@ class ClientBasicinfo extends Ardent
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
         $client_query = $client_query->whereIn('client_basicinfo.id',$ids);
-
         $client_response = $client_query->get();
+
         return $client_response;
     }
 
@@ -858,9 +858,9 @@ class ClientBasicinfo extends Ardent
 
             $client_array[$i]['id'] = $value->id;
             $client_array[$i]['name'] = $value->name;
-            $client_array[$i]['category']=$value->category;
-            $client_array[$i]['status']=$value->status;
-            $client_array[$i]['account_mangr_id']=$value->account_manager_id;
+            $client_array[$i]['category'] = $value->category;
+            $client_array[$i]['status'] = $value->status;
+            $client_array[$i]['account_mangr_id'] = $value->account_manager_id;
 
             if ($value->account_manager_id == 0) {
                 $client_array[$i]['am_name'] = 'Yet to Assign';
