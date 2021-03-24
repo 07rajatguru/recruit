@@ -148,6 +148,15 @@ class JobOpen extends Model
         return $candidate_short;
     }
 
+    public static function getAllHierarchyName() {
+
+        $client_hierarchy_name = array('' => 'Select Position');
+        $client_hierarchy_name['1'] = 'Below AM';
+        $client_hierarchy_name['2'] = 'Above AM';
+
+        return $client_hierarchy_name;
+    }
+
     public static function getJobOpeningId() {
 
         $jobOpenDetails = JobOpen::all();
