@@ -1115,6 +1115,63 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == 'Lead Bulk Email') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = $cc_array;
+              
+                $input['module_id'] = $value['module_id'];
+                $input['bulk_message'] = $value['message'];
+
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        /*'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.googlemail.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),*/
+
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }

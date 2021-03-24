@@ -211,6 +211,16 @@ Route::group(['middleware' => ['auth']], function () {
 
     //lead management route
 
+    Route::post('lead/checkLeadId',[
+        'as' => 'lead.checkLeadId',
+        'uses' => 'LeadController@checkLeadId'
+    ]);
+
+    Route::post('lead/emailnotification', [
+        'as' => 'lead.emailnotification',
+        'uses' => 'LeadController@postLeadEmails'
+    ]);
+
     Route::get('lead/create',[
         'as'=>'lead.create',
         'uses'=>'LeadController@create',

@@ -131,10 +131,21 @@ class LeadController extends Controller
                 }
             }
 
+            $checkbox = '<input type=checkbox name=lead value='.$value['id'].' class=other_leads id='.$value['id'].'/>';
+
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+
             $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
 
-            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
+            if($value['convert_client'] == '1') {
+
+                $checkbox = '';
+
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
+            }
+            else {
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
+            }
             $lead[$i] = $data;
             $i++;
         }
@@ -849,5 +860,51 @@ class LeadController extends Controller
         else {
             return redirect()->route('lead.leadcancel')->with('success','Lead Deleted Successfully.');
         }
+    }
+
+    public function checkLeadId() {
+
+        if (isset($_POST['leads_ids']) && $_POST['leads_ids'] != '') {
+            $leads_ids = $_POST['leads_ids'];
+        }
+
+        if (isset($leads_ids) && sizeof($leads_ids) > 0) {
+            $msg['success'] = 'Success';
+        }
+        else {
+            $msg['err'] = '<b>Please Select Lead.</b>';
+            $msg['msg'] = "Fail";
+        }
+        return $msg;
+    }
+
+    public function postLeadEmails(Request $request) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $leads_ids = $request->input('email_leads_ids');
+        $lead_ids_array = explode(",",$leads_ids);
+
+        $email_subject = $request->input('email_subject');
+        $email_body = $request->input('email_body');
+        $updated_at = date('Y-m-d H:i:s');
+
+        foreach($lead_ids_array as $key => $value) {
+
+            $client_details = Lead::getLeadDetailsById($value);
+            $client_email = $client_details['mail'];
+
+            $module = 'Lead Bulk Email';
+            $sender_name = $user_id;
+            $to = $client_email;
+            $subject = $email_subject; 
+            $cc = 'rajlalwani@adlertalent.com';
+            $module_id = $value;
+            
+            event(new NotificationMail($module,$sender_name,$to,$subject,$email_body,$module_id,$cc));
+        }
+
+        return redirect()->route('lead.index')->with('success','Email Sent Successfully.');
     }
 }
