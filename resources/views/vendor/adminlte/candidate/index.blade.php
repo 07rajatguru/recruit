@@ -14,7 +14,10 @@
                 <h4><span>Total No. of Candidates - {{ $total_count }}</span></h4>
             </div>
             <div class="pull-right">
+                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal">Master Search</button>
+
                 <a class="btn btn-primary" href="{{ route('all.jobs') }}"> Advanced Search</a>
+
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
         </div>
@@ -113,7 +116,7 @@
                 </div>
          
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="displayresults()">Search
+                    <button type="submit" class="btn btn-primary" onclick="displayresults();">Search
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
@@ -262,7 +265,7 @@
             var cmno = $("#cmno").val();
             var job_title = $("#job_title").val();
 
-            var url = 'candidate/';
+            var url = 'candidate';
 
             if(cname != '') {
 
