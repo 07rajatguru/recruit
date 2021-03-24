@@ -45,7 +45,7 @@
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
                             @else
-                                @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
+                                @if($client['client_owner'])
                                     <th scope="row">Contact Point</th>
                                     <td>{{ $client['coordinator_name'] }}</td>
                                     <th>Contact Number</th>
@@ -64,7 +64,7 @@
                                 <th>Source</th>
                                 <td>{{ $client['source'] }}</td>
                             @else
-                                @if($client['client_owner'] || $user_id == $marketing_intern_user_id)
+                                @if($client['client_owner'])
                                     <th>Email</th>
                                     <td colspan="3">{{ $client['mail'] }}</td>
                                 @endif

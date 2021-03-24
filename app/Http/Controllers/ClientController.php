@@ -1175,7 +1175,7 @@ class ClientController extends Controller
 
         $client_upload_type['Others'] = 'Others';
     
-        return view('adminlte::client.show',compact('client','client_upload_type','user_id','marketing_intern_user_id'));
+        return view('adminlte::client.show',compact('client','client_upload_type','user_id'));
     }
 
     public function attachmentsDestroy(Request $request,$docid) {
