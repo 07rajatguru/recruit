@@ -1,5 +1,6 @@
 .login-page, .register-page{
-    background : #e6f2ff
+    /*background : #e6f2ff*/
+    background-color: white;
 }
 
 .ui-menu.srch-remarks .ui-menu-item-wrapper{padding:0;}

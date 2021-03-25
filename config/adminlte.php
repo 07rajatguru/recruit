@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => 'HRM',
+    'title' => 'Easy2hire',
 
     'title_prefix' => '',
 
