@@ -44,32 +44,29 @@ class LeadController extends Controller
             if ($order == 0) {
                 $order_column_name = "lead_management.id";
             }
-            else if ($order == 2) {
+            else if ($order == 3) {
                 $order_column_name = "lead_management.name";
             }
-            else if ($order == 3) {
+            else if ($order == 4) {
                 $order_column_name = "lead_management.coordinator_name";
             }
-            else if ($order == 4) {
+            else if ($order == 5) {
                 $order_column_name = "lead_management.mail";
             }
-            else if ($order == 5) {
+            else if ($order == 6) {
                 $order_column_name = "lead_management.mobile";
             }
-            else if ($order == 6) {
+            else if ($order == 7) {
                 $order_column_name = "lead_management.city";
             }
-            else if ($order == 7) {
+            else if ($order == 8) {
                 $order_column_name = "users.name";
             }
-            else if ($order == 8) {
+            else if ($order == 9) {
                 $order_column_name = "lead_management.website";
             }
-            else if ($order == 9) {
-                $order_column_name = "lead_management.source";
-            }
             else if ($order == 10) {
-                $order_column_name = "lead_management.designation";
+                $order_column_name = "lead_management.lead_status";
             }
         }
         return $order_column_name;
@@ -111,7 +108,9 @@ class LeadController extends Controller
 
             $action = '';
 
-            if($value['access']) {
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',$value['id']).'" style="margin:2px;"></a>';
+
+            if($all_perm || $value['access']) {
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($delete_perm) {
@@ -141,10 +140,10 @@ class LeadController extends Controller
 
                 $checkbox = '';
 
-                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
             }
             else {
-                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
             }
             $lead[$i] = $data;
             $i++;
@@ -213,7 +212,9 @@ class LeadController extends Controller
 
             $action = '';
 
-            if($value['access']) {
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',$value['id']).'" style="margin:2px;"></a>';
+
+            if($all_perm || $value['access']) {
                 $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
             if ($delete_perm) {
@@ -225,7 +226,7 @@ class LeadController extends Controller
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
             $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
 
-            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['designation'],$value['s_email'],$value['other_number'],$value['service'],$value['city'],$value['state'],$value['country'],$value['remarks'],$value['source'],$value['convert_client']);
+            $data = array(++$j,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
             $lead[$i] = $data;
             $i++;
         }
@@ -383,6 +384,13 @@ class LeadController extends Controller
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
 	}
+
+    public function show($id) {
+
+        $lead_details = Lead::getLeadDetailsById($id);
+
+        return view('adminlte::lead.show',compact('lead_details'));
+    }
 
 	public function edit($id) {
 
@@ -892,8 +900,8 @@ class LeadController extends Controller
 
         foreach($lead_ids_array as $key => $value) {
 
-            $client_details = Lead::getLeadDetailsById($value);
-            $client_email = $client_details['mail'];
+            $lead_details = Lead::getLeadDetailsById($value);
+            $client_email = $lead_details['mail'];
 
             $module = 'Lead Bulk Email';
             $sender_name = $user_id;

@@ -251,10 +251,16 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-cancel-lead'],
     ]);
     
-   Route::post('lead/store', [
+    Route::post('lead/store', [
         'as' => 'lead.store',
         'uses' => 'LeadController@store',
         'middleware' => ['permission:lead-add'],
+    ]);
+
+    Route::get('lead/{id}/show', [
+        'as' => 'lead.show',
+        'uses' => 'LeadController@show',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
     ]);
      
     Route::get('lead/{id}/edit', [

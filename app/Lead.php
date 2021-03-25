@@ -614,7 +614,14 @@ class Lead extends Model
             $lead['service'] = $res->service;
             $lead['status'] = $res->status;
             $lead['remarks'] = $res->remarks;
-            $lead['coordinator_name'] = $res->coordinator_name;
+
+            if($res->coordinator_prefix == '') {
+                $lead['coordinator_name'] = $res->coordinator_name;
+            }
+            else {
+                $lead['coordinator_name'] = $res->coordinator_prefix . " " . $res->coordinator_name;
+            }
+            
             $lead['website'] = $res->website;
             $lead['source'] = $res->source;
             $lead['designation'] = $res->designation;

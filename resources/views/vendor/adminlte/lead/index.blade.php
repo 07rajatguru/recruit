@@ -49,15 +49,6 @@
                     <th>Referred By</th>
                     <th>Website</th>
                     <th>Lead Status</th>
-                    <th>Designation</th>
-                    <th>Secondary email</th>
-                    <th>Other number</th>
-                    <th>service</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>Country</th>
-                    <th>Remarks</th>
-                    <th>Source</th>
                     <th>Convert Client</th>
                 </tr>
             </thead>
@@ -117,7 +108,7 @@
                 "bProcessing": true,
                 "serverSide": true,
                 "order" : [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]}],
+                "columnDefs": [{orderable: false, targets: [1]},{orderable: false, targets: [2]}],
                 "ajax":{
                     url :"lead/all",
                     type: "get",
@@ -129,7 +120,7 @@
                 "pagingType": "full_numbers",
                 "stateSave" : true,
                 "fnRowCallback": function( Row, Data ) {
-                    if ( Data[20] == "1" ) {
+                    if ( Data[11] == "1" ) {
                         $('td:eq(3)', Row).css('background-color', 'LimeGreen');
                     }
                     else {
@@ -139,7 +130,7 @@
             });
             
             var table = $('#lead_table').DataTable();
-            table.columns( [20] ).visible( false );
+            table.columns( [11] ).visible( false );
         });
 
         function leads_emails_notification() {
@@ -203,8 +194,6 @@
                         $(".email_error").empty();
                         $('#email_submit').hide();
                         $(".email_error").append(msg.err);
-                        $("#email_subject").val("");
-                        CKEDITOR.instances.email_body.setData("");
                         $('.body_class').hide();
                     }
                 }
