@@ -909,8 +909,9 @@ class LeadController extends Controller
             $subject = $email_subject; 
             $cc = 'rajlalwani@adlertalent.com';
             $module_id = $value;
+            $new_email_body = "<tr><td style='padding:8px;'>$email_body</td></tr>";
             
-            event(new NotificationMail($module,$sender_name,$to,$subject,$email_body,$module_id,$cc));
+            event(new NotificationMail($module,$sender_name,$to,$subject,$new_email_body,$module_id,$cc));
         }
 
         return redirect()->route('lead.index')->with('success','Email Sent Successfully.');
