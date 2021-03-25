@@ -203,6 +203,8 @@
                         $(".email_error").empty();
                         $('#email_submit').hide();
                         $(".email_error").append(msg.err);
+                        $("#email_subject").val("");
+                        CKEDITOR.instances.email_body.setData("");
                         $('.body_class').hide();
                     }
                 }
