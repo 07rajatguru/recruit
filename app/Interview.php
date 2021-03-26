@@ -98,7 +98,7 @@ class Interview extends Model
         return $interviewround;
     }
 
-    public static function getAllInterviews($all=0,$user_id){
+    public static function getAllInterviews($all=0,$user_id,$from_date='',$to_date=''){
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -106,12 +106,16 @@ class Interview extends Model
         $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        //$query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        $query = $query->leftJoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+
+        $query = $query->select('interview.id as id','interview.interview_date','client_basicinfo.name as client_name','candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as candidate_email','job_openings.posting_title as posting_title','job_openings.city as job_city','candidate_basicinfo.mobile as candidate_mobile','users.name as candidate_owner','interview.type as interview_type','client_heirarchy.name as level_name','interview.interview_location as interview_location','interview.candidate_location as candidate_location','interview.skype_id as skype_id','interview.candidate_id as candidate_id');
+
         $query = $query->orderby('interview.interview_date','desc');
 
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+        if($all == 0) {
+
+            $query = $query->where(function($query) use ($user_id) {
+
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
@@ -119,22 +123,49 @@ class Interview extends Model
             });
         }
 
+        if(isset($from_date) && $from_date != '' && isset($to_date) && $to_date != '') {
+
+            $query = $query->where('interview_date','>=',"$from_date");
+            $query = $query->where('interview_date','<=',"$to_date");
+        }
+
         $response = $query->get();
 
         $interview = array();
         $i=0;
+
         foreach ($response as $key => $value) {
+
             $interview[$i]['id'] = $value->id;
             $interview[$i]['client_name'] = $value->client_name;
             $interview[$i]['posting_title'] = $value->posting_title;
-            $interview[$i]['city'] = $value->city;
-            $interview[$i]['candidate_fname'] = $value->candidate_fname;
-            $interview[$i]['contact'] = $value->contact;
-            $interview[$i]['interview_date'] = $value->interview_date;
-            $interview[$i]['interview_date_ts'] = strtotime($value->interview_date);
-            $interview[$i]['location'] = $value->location;
-            $interview[$i]['status'] = $value->status;
+            $interview[$i]['city'] = $value->job_city;
+            $interview[$i]['interview_type'] = $value->interview_type;
+            $interview[$i]['interview_location'] = $value->interview_location;
+            
+            $interview[$i]['candidate_id'] = $value->candidate_id;
             $interview[$i]['candidate_owner'] = $value->candidate_owner;
+            $interview[$i]['cname'] = $value->full_name;
+            $interview[$i]['cemail'] = $value->candidate_email;
+            $interview[$i]['cmobile'] = $value->candidate_mobile;
+            $interview[$i]['candidate_location'] = $value->candidate_location;
+            $interview[$i]['skype_id'] = $value->skype_id;
+
+            $datearray = explode(' ', $value->interview_date);
+            $interview_date = $datearray[0];
+            $interview_time = $datearray[1];
+            $interview[$i]['interview_date'] = $interview_date;
+            $interview[$i]['interview_time'] = $interview_time;
+
+            if(isset($value->level_name) && $value->level_name != '') {
+                $interview[$i]['job_designation'] = $value->level_name ." - ". $value->posting_title;
+            }
+            else {
+                $interview[$i]['job_designation'] = $value->posting_title;
+            }
+
+            $interview[$i]['job_location'] = $value->job_city;
+            
             $i++;
         }
 
