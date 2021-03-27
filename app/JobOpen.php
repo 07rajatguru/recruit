@@ -2012,7 +2012,7 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
 
@@ -2054,10 +2054,9 @@ class JobOpen extends Model
             }
 
             $jobs_list[$i]['id'] = $value->id;
-            $jobs_list[$i]['cpnyname'] = $value->company_name;
             $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
-            $jobs_list[$i]['positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting'] = $value->posting_title;
+            $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
+            $jobs_list[$i]['posting_title'] = $value->posting_title;
 
             $location ='';
             if($value->city!=''){
@@ -2077,12 +2076,17 @@ class JobOpen extends Model
             }
             $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['location'] = $location;
-            $jobs_list[$i]['qual'] = $value->qualifications;
-            $jobs_list[$i]['min'] = $min_ctc;
-            $jobs_list[$i]['max'] = $max_ctc;
+            
+            $jobs_list[$i]['min_ctc'] = $min_ctc;
+            $jobs_list[$i]['max_ctc'] = $max_ctc;
+
+            $jobs_list[$i]['work_exp_from'] = $value->work_exp_from;
+            $jobs_list[$i]['work_exp_to'] = $value->work_exp_to;
+
             $jobs_list[$i]['industry'] = $value->industry_name;
-            $jobs_list[$i]['desiredcan'] = strip_tags($value->desired_candidate);
-            $jobs_list[$i]['desc'] = strip_tags($value->job_description);
+            $jobs_list[$i]['qualifications'] = $value->qualifications;
+            $jobs_list[$i]['desired_candidate'] = strip_tags($value->desired_candidate);
+            $jobs_list[$i]['job_description'] = strip_tags($value->job_description);
 
             $i++;
         }
