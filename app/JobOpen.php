@@ -2085,8 +2085,8 @@ class JobOpen extends Model
 
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['qualifications'] = $value->qualifications;
-            $jobs_list[$i]['desired_candidate'] = strip_tags($value->desired_candidate);
-            $jobs_list[$i]['job_description'] = strip_tags($value->job_description);
+            $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
+            $jobs_list[$i]['job_description'] = $value->job_description;
 
             $i++;
         }
