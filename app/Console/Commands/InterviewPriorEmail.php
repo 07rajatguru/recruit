@@ -71,7 +71,7 @@ class InterviewPriorEmail extends Command
                             }
 
                             $candidate_email = Interview::getCandidateOwnerEmail($value1['id']);
-                            $candidate_owner_email = $candidate_email->candidateownersemail;
+                            $candidate_owner_email = $candidate_email->candidateowneremail;
 
                             if(isset($candidate_owner_email) && $candidate_owner_email != '') {
                                 $to_address_candidate_owner[$j] = $candidate_owner_email;

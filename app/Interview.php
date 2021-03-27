@@ -110,7 +110,7 @@ class Interview extends Model
 
         $query = $query->select('interview.id as id','interview.interview_date','client_basicinfo.name as client_name','candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as candidate_email','job_openings.posting_title as posting_title','job_openings.city as job_city','candidate_basicinfo.mobile as candidate_mobile','users.name as candidate_owner','interview.type as interview_type','client_heirarchy.name as level_name','interview.interview_location as interview_location','interview.candidate_location as candidate_location','interview.skype_id as skype_id','interview.candidate_id as candidate_id');
 
-        $query = $query->orderby('interview.interview_date','desc');
+        $query = $query->orderby('interview.interview_date','asc');
 
         if($all == 0) {
 
