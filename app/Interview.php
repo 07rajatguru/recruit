@@ -205,18 +205,11 @@ class Interview extends Model
 
         // Get data by financial year
         if (isset($current_year) && $current_year != NULL) {
-
-            $from_current_year_date = date("Y-m-d 00:00:00",strtotime($current_year));
-            $to_current_year_date = date("Y-m-d 23:59:59",strtotime($current_year));
-            $query = $query->Where('interview.interview_date','<=',"$to_current_year_date");
-            $query = $query->orwhere('interview.interview_date','>=',"$from_current_year_date");
+            $query = $query->where('interview.interview_date','>=',$current_year);
         }
         if (isset($next_year) && $next_year != NULL) {
-
-            $from_next_year_date = date("Y-m-d 00:00:00",strtotime($next_year));
-            $to_next_year_date = date("Y-m-d 23:59:59",strtotime($next_year));
-            $query = $query->Where('interview.interview_date','<=',"$to_next_year_date");
-            $query = $query->orwhere('interview.interview_date','>=',"$from_next_year_date");
+            $next_year = date("Y-m-d 23:59:59",strtotime($next_year));
+            $query = $query->where('interview.interview_date','<=',$next_year);
         }
 
         if (isset($search) && $search != '') {
@@ -299,18 +292,11 @@ class Interview extends Model
 
         // Get data by financial year
         if (isset($current_year) && $current_year != NULL) {
-
-            $from_current_year_date = date("Y-m-d 00:00:00",strtotime($current_year));
-            $to_current_year_date = date("Y-m-d 23:59:59",strtotime($current_year));
-            $query = $query->Where('interview.interview_date','<=',"$to_current_year_date");
-            $query = $query->orwhere('interview.interview_date','>=',"$from_current_year_date");
+            $query = $query->where('interview.interview_date','>=',$current_year);
         }
         if (isset($next_year) && $next_year != NULL) {
-
-            $from_next_year_date = date("Y-m-d 00:00:00",strtotime($next_year));
-            $to_next_year_date = date("Y-m-d 23:59:59",strtotime($next_year));
-            $query = $query->Where('interview.interview_date','<=',"$to_next_year_date");
-            $query = $query->orwhere('interview.interview_date','>=',"$from_next_year_date");
+            $next_year = date("Y-m-d 23:59:59",strtotime($next_year));
+            $query = $query->where('interview.interview_date','<=',$next_year);
         }
        
         if (isset($search) && $search != '') {
