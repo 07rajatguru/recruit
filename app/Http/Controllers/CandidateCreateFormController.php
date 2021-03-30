@@ -91,6 +91,8 @@ class CandidateCreateFormController extends Controller
         $educational_qualification_id = $request->input('educational_qualification_id');
         $specialization = $request->input('specialization');
 
+        $applicant_job_id = $request->input('job_id');
+
         // Save Candidate Basic Info
         $candidate = new CandidateBasicInfo();
 
@@ -189,6 +191,7 @@ class CandidateCreateFormController extends Controller
             }
 
             $candidateOtherInfo->login_candidate = '1';
+            $candidateOtherInfo->applicant_job_id = $applicant_job_id;
             $candidateOtherInfoStored = $candidateOtherInfo->save();
 
             if($candidateOtherInfoStored) {
@@ -243,7 +246,7 @@ class CandidateCreateFormController extends Controller
             $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate.</td></tr>";
             $module_id = $candidate_id;
             $cc = '';
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
         return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');

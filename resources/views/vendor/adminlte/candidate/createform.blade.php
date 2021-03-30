@@ -374,7 +374,7 @@
                 {!! Form::submit(isset($candidate) ? 'Update' : 'SUBMIT', ['class' => 'btn btn-primary','style="font-size:18px;"' ]) !!}
             </div>
 
-            <input type="text" name="job_id" id="job_id" value="{{ $job_id }}">
+            <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
         </div>
     </div>
 
