@@ -38,6 +38,28 @@ class CandidateCreateFormController extends Controller
         return view('adminlte::candidate.createform',$viewVariable);
     }
 
+    public function createfJobId($job_id) {
+
+        echo $job_id;exit;
+
+        $candidateSex = CandidateBasicInfo::getTypeArray();
+        $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
+        $functionalRoles = FunctionalRoles::getAllFunctionalRoles();
+        $educationqualification = EducationQualification::getAllEducationQualifications();
+        $specializations = EducationSpecialization::getAllSpecializations();
+
+        $viewVariable = array();
+        $viewVariable['candidateSex'] = $candidateSex;
+        $viewVariable['maritalStatus'] = $maritalStatus;
+        $viewVariable['emailDisabled'] = '';
+        $viewVariable['action'] = 'add';
+        $viewVariable['functionalRoles'] = $functionalRoles;
+        $viewVariable['educationqualification'] = $educationqualification;
+        $viewVariable['specializations'] = $specializations;
+
+        return view('adminlte::candidate.createform',$viewVariable);
+    }
+
     public function storef(Request $request) {
 
         $owner_id = getenv('RECRUITMENTCONSULTANTUSERID');

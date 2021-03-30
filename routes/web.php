@@ -137,6 +137,11 @@ Route::get('candidate/add',[
     'uses'=>'CandidateCreateFormController@createf'
 ]);
 
+Route::get('candidate/add/{job_id}',[
+    'as'=>'candidate.createfjob_id',
+    'uses'=>'CandidateCreateFormController@createfJobId'
+]);
+
 //Store Form
 Route::post('candidate/add',[
     'as'=>'candidate.storef',
