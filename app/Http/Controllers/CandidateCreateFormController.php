@@ -34,13 +34,12 @@ class CandidateCreateFormController extends Controller
         $viewVariable['functionalRoles'] = $functionalRoles;
         $viewVariable['educationqualification'] = $educationqualification;
         $viewVariable['specializations'] = $specializations;
+        $viewVariable['job_id'] = '0';
 
         return view('adminlte::candidate.createform',$viewVariable);
     }
 
     public function createfJobId($job_id) {
-
-        echo $job_id;exit;
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
@@ -56,6 +55,7 @@ class CandidateCreateFormController extends Controller
         $viewVariable['functionalRoles'] = $functionalRoles;
         $viewVariable['educationqualification'] = $educationqualification;
         $viewVariable['specializations'] = $specializations;
+        $viewVariable['job_id'] = $job_id;
 
         return view('adminlte::candidate.createform',$viewVariable);
     }
