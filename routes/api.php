@@ -18,3 +18,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('jobs', 'JobOpenController@getAllAPIJobs');
+
+Route::get('job-details/{id}', [
+    'uses' => 'JobOpenController@getJobDetailsById'
+]);

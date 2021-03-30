@@ -3761,4 +3761,11 @@ class JobOpenController extends Controller
 
         //return json_encode($jobs_list);
     }
+
+    public function getJobDetailsById($id) {
+
+        $job_details = JobOpen::getAPIJobDetailsById($id);
+
+        return response()->json(['data'=>$job_details]);
+    }
 }

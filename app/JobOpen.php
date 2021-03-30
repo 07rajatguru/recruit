@@ -2012,11 +2012,9 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.posting_title','job_openings.city');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-
-        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
@@ -2030,65 +2028,101 @@ class JobOpen extends Model
 
         foreach ($job_response as $key => $value) {
 
+            $jobs_list[$i]['id'] = $value->id;
+            $jobs_list[$i]['company_name'] = $value->company_name;
+            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            $jobs_list[$i]['city'] = $value->city;
+
+            $i++;
+        }
+        return $jobs_list;
+    }
+
+    public static function getAPIJobDetailsById($job_id) {
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to');
+        
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+        $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
+        $job_open_query = $job_open_query->where('job_openings.id','=',$job_id);
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+        
+        $job_response = $job_open_query->get();
+
+        $jobs_list = array();
+
+        if(isset($response) && $response != '') {
+
             // value get in 2 decimal point
-            if ($value->lacs_from >= '100') {
+            if ($response->lacs_from >= '100') {
                 $min_ctc = '100+';
             }
             else {
-                $lacs_from = $value->lacs_from*100000;
-                $thousand_from = $value->thousand_from*1000;
+                $lacs_from = $response->lacs_from*100000;
+                $thousand_from = $response->thousand_from*1000;
                 $mictc = $lacs_from+$thousand_from;
                 $minctc = $mictc/100000;
                 $min_ctc = number_format($minctc,2);
             }
 
-            if ($value->lacs_to >= '100') {
+            if ($response->lacs_to >= '100') {
                 $max_ctc = '100+';
             }
             else {
-                $lacs_to = $value->lacs_to*100000;
-                $thousand_to = $value->thousand_to*1000;
+                $lacs_to = $response->lacs_to*100000;
+                $thousand_to = $response->thousand_to*1000;
                 $mactc = $lacs_to+$thousand_to;
                 $maxctc = $mactc/100000;
                 $max_ctc = number_format($maxctc,2);
             }
 
-            $jobs_list[$i]['id'] = $value->id;
-            $jobs_list[$i]['company_name'] = $value->company_name;
-            $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
-            $jobs_list[$i]['posting_title'] = $value->posting_title;
+            $jobs_list['id'] = $response->id;
+            $jobs_list['company_name'] = $response->company_name;
+            $jobs_list['no_of_positions'] = $response->no_of_positions;
+            $jobs_list['posting_title'] = $response->posting_title;
 
             $location ='';
-            if($value->city!=''){
-                $location .= $value->city;
+            if($response->city!=''){
+                $location .= $response->city;
             }
-            if($value->state!=''){
+            if($response->state!=''){
                 if($location=='')
-                    $location .= $value->state;
+                    $location .= $response->state;
                 else
-                    $location .= ", ".$value->state;
+                    $location .= ", ".$response->state;
             }
-            if($value->country!=''){
+            if($response->country!=''){
                 if($location=='')
-                    $location .= $value->country;
+                    $location .= $response->country;
                 else
-                    $location .= ", ".$value->country;
+                    $location .= ", ".$response->country;
             }
-            $jobs_list[$i]['city'] = $value->city;
-            $jobs_list[$i]['location'] = $location;
+            $jobs_list['city'] = $response->city;
+            $jobs_list['location'] = $location;
             
-            $jobs_list[$i]['min_ctc'] = $min_ctc;
-            $jobs_list[$i]['max_ctc'] = $max_ctc;
+            $jobs_list['min_ctc'] = $min_ctc;
+            $jobs_list['max_ctc'] = $max_ctc;
 
-            $jobs_list[$i]['work_exp_from'] = $value->work_exp_from;
-            $jobs_list[$i]['work_exp_to'] = $value->work_exp_to;
+            $jobs_list['work_exp_from'] = $response->work_exp_from;
+            $jobs_list['work_exp_to'] = $response->work_exp_to;
 
-            $jobs_list[$i]['industry'] = $value->industry_name;
-            $jobs_list[$i]['qualifications'] = $value->qualifications;
-            $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
-            $jobs_list[$i]['job_description'] = $value->job_description;
+            $jobs_list['industry'] = $response->industry_name;
+            $jobs_list['qualifications'] = $response->qualifications;
+            $jobs_list['desired_candidate'] = $response->desired_candidate;
+            $jobs_list['job_description'] = $response->job_description;
 
-            $i++;
         }
         return $jobs_list;
     }
