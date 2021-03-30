@@ -246,7 +246,7 @@ class CandidateCreateFormController extends Controller
             $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate.</td></tr>";
             $module_id = $candidate_id;
             $cc = '';
-            //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
         return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');
