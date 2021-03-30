@@ -29,6 +29,7 @@ use App\Holidays;
 use App\ClientHeirarchy;
 use App\Notifications;
 use Illuminate\Support\Facades\File;
+use App\CandidateOtherInfo;
 
 class JobOpenController extends Controller
 {
@@ -753,6 +754,7 @@ class JobOpenController extends Controller
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
 
             if ($isClient) {
+
                 $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
             else {
@@ -3767,5 +3769,21 @@ class JobOpenController extends Controller
         $job_details = JobOpen::getAPIJobDetailsById($id);
 
         return response()->json(['data'=>$job_details]);
+    }
+
+    public function applicantCandidates($id) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        // get job name from id
+        $jobopen_response = JobOpen::where('id', $id)->first();
+
+        $client_id = $jobopen_response->client_id;
+        $posting_title = $jobopen_response->posting_title;
+
+        $candidateDetails = CandidateOtherInfo::getApplicantCandidatesByJobId($id);
+
+        return view('adminlte::jobopen.applicant_candidate', array('job_id' => $id, 'posting_title' => $posting_title,'candidates'=>$candidateDetails ,'client_id'=>$client_id,'user_id'=>$user_id));
     }
 }

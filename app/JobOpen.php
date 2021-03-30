@@ -1109,6 +1109,8 @@ class JobOpen extends Model
                 $jobs_list[$i]['am_name'] = $value->am_name;
             }
 
+            $jobs_list[$i]['applicant_count'] = CandidateOtherInfo::getApplicantJobCvsCount($value->id);
+
             $i++;
         }
         return $jobs_list;

@@ -1154,6 +1154,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
+    Route::get('jobs/{id}/applicant_candidates', [
+        'as' => 'jobopen.applicant_candidates_get',
+        'uses' => 'JobOpenController@applicantCandidates',
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
+    ]);
+
     Route::post('jobs/deassociate_candidate', [
         'as' => 'jobopen.deassociate_candidate',
         'uses' => 'JobOpenController@deAssociateCandidates',

@@ -194,6 +194,11 @@ return [
                         'text' => 'List of Closed Job',
                         'url'  => 'job/close',
                         'icon' => 'list',
+                    ],
+                    [
+                        'text' => 'Applicant Jobs',
+                        'url'  => 'job/applicant',
+                        'icon' => 'list',
                     ]
                 ],
             ],
