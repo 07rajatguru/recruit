@@ -1064,6 +1064,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
+    Route::get('jobs-applicant/priority/{priority}',[
+        'as' => 'applicantjobopen.priority',
+        'uses' => 'JobOpenController@priorityWiseApplicant',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
     Route::post('jobs/create', [
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',
@@ -1170,6 +1176,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'jobopen.candidates_details_get',
         'uses' => 'JobOpenController@getCandidateDetailsByJob'
     ]);
+
+    Route::get('applicant-jobs/{id}/candidates_details', [
+        'as' => 'applicantjobopen.candidates_details_get',
+        'uses' => 'JobOpenController@getCandidateDetailsByApplicantJob'
+    ]);
     
     Route::post('jobs/updatecandidatestatus', [
         'as' => 'jobopen.updatecandidatestatus',
@@ -1215,10 +1226,22 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
+    Route::get('job/applicant', [
+        'as' => 'jobopen.applicant',
+        'uses' => 'JobOpenController@applicant',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
     Route::get('job/allclose', [
         'as' => 'jobopen.allclose',
         'uses' => 'JobOpenController@getAllCloseJobDetails',
         'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
+    ]);
+
+    Route::get('job/allapplicant', [
+        'as' => 'jobopen.allapplicant',
+        'uses' => 'JobOpenController@getAllApplicantJobsDetails',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
     Route::get('job/associatedcandidate', [

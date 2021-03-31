@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h3>Associated Candidates</h3>
+                <h3>{{ $name }} Candidates</h3>
                 <span> </span>
             </div>
             <div class="pull-right">
@@ -30,13 +30,17 @@
     <table class="table table-bordered" id="candidate_details">
         <tr>
             <th style="width: 50%;">Candidate Name</th>
-            <th>Action</th>
+            @if($name == 'Associated')
+                <th>Action</th>
+            @endif
         </tr>
         <?php $i = 0; ?>
         @foreach ($candidate_details as $key => $value)
         	<tr>
         		<td>{{ $value->fname }}</td>
-        		<td><a target="_blank" href="../../{{ $value->file }}"><i  class="fa fa-fw fa-download"></i></a></td>
+                @if($name == 'Associated')
+        		  <td><a target="_blank" href="../../{{ $value->file }}"><i  class="fa fa-fw fa-download"></i></a></td>
+                @endif
         	</tr>
         @endforeach
     </table>

@@ -142,12 +142,14 @@
 
                 var url = app_url+'/jobs/associate_candidate';
 
-                if(candidate_ids.length > 0){
+                if(candidate_ids.length > 0) {
+
                     var form = $('<form action="' + url + '" method="post">' +
-                            '<input type="hidden" name="_token" value="'+token+'" />' +
-                            '<input type="text" name="jobid" value="'+jobid+'" />' +
-                            '<input type="text" name="candidate_ids" value="'+candidate_ids+'" />' +
-                            '</form>');
+                    '<input type="hidden" name="_token" value="'+token+'" />' +
+                    '<input type="text" name="jobid" value="'+jobid+'" />' +
+                    '<input type="text" name="candidate_ids" value="'+candidate_ids+'" />' +
+                    '<input type="text" name="title" value="Associate" />' +
+                    '</form>');
 
                     $('body').append(form);
                     form.submit();
