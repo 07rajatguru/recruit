@@ -275,7 +275,10 @@
             </div>
         </div>
     </div>
+    
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
+    <input type="hidden" name="user_id" id="user_id" value="{{ $user_id }}">
 @stop
 
 @section('customscripts')
@@ -364,7 +367,26 @@
         var client_name_string = $("#client_name_string").val();
 
         if(client_name_string != '') {
-            jQuery("#clientModal").modal('show');
+
+            var superadmin = $("#superadmin").val();
+            var user_id = $("#user_id").val();
+
+            if(superadmin == user_id) {
+
+                var event = new Date();
+                var options = { weekday: 'long' };
+                var day = event.toLocaleDateString('en-US', options);
+
+                var hours = event.getHours();
+                var minutes = event.getMinutes();
+
+                if((day == 'Saturday' && hours == '11') || (day == 'Saturday' && hours == '12' && minutes == '0')) {
+                    jQuery("#clientModal").modal('show');
+                }
+            }
+            else {
+                jQuery("#clientModal").modal('show');
+            }
         }
     });
 

@@ -94,7 +94,13 @@ class ClientController extends Controller
         // Get clients for popup of add information
         $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user->id);
 
-        return view('adminlte::client.index',compact('count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string'));
+        // For not display superadmin popup
+
+        $user_id =  \Auth::user()->id;
+
+        $superadmin = getenv('SUPERADMINUSERID');
+
+        return view('adminlte::client.index',compact('count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin'));
     }
 
     public static function getOrderColumnName($order) {
