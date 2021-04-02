@@ -330,6 +330,8 @@ class JobAssociateCandidates extends Model
         }
 
         $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
 
         /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
@@ -359,6 +361,8 @@ class JobAssociateCandidates extends Model
         }
 
         $query = $query->where('job_associate_candidates.shortlisted_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
 
         /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
@@ -390,6 +394,8 @@ class JobAssociateCandidates extends Model
         }
 
         $query = $query->where('job_associate_candidates.selected_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('job_associate_candidates.selected_date','<=',$to_date);
         
         /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
