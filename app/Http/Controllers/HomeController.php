@@ -259,6 +259,7 @@ class HomeController extends Controller
         $display_monthwise = $user->can('display-month-wise-dashboard');
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
+        $manager_user_id = getenv('MANAGERUSERID');
         
         if(isset($_POST['month']) && $_POST['month']!='') {
             $month = $_POST['month'];
@@ -287,7 +288,7 @@ class HomeController extends Controller
 
         if($display_monthwise) {
 
-            if($display_all_count) {
+            if($display_all_count || $user_id == $manager_user_id) {
 
                 // Client Count
                 $clientCount = DB::table('client_basicinfo')
