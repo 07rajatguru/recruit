@@ -112,7 +112,7 @@ class OpenJobOfCheckbox extends Command
                     }
                     
                     $open_to_all = 1;
-                    $job_open_checkbox = 1;
+                    $job_open_checkbox = 0;
                     \DB::statement("UPDATE job_openings SET open_to_all = $open_to_all AND job_open_checkbox = $job_open_checkbox where id = $job_id");
                 }
                 $i++;
