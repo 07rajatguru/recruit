@@ -1417,7 +1417,7 @@ class JobOpen extends Model
 
     public static function getJobforOpentoAll() {
 
-        $date = $days_ago = date('Y-m-d', strtotime('-5 days'));
+        $date = date('Y-m-d', strtotime('-5 days'));
         $date_time = date('Y-m-d H');
         //print_r($date);exit;
         $job_onhold = getenv('ONHOLD');
@@ -2878,5 +2878,35 @@ class JobOpen extends Model
             $i++;
         }
         return $jobs_list;
+    }
+
+    public static function getJobforOpentoAllOneTime() {
+
+        $date = date('Y-m-d', strtotime('-150 days'));
+        $date_time = date('Y-m-d H');
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job = JobOpen::query();
+        $job = $job->select('job_openings.id','job_openings.created_at');
+        $job = $job->where('job_openings.open_to_all_date','>=',"$date");
+        $job = $job->where('job_openings.open_to_all_date','<=',"$date_time");
+        $job = $job->whereNotIn('priority',$job_status);
+        $job = $job->where('open_to_all','=','0');
+        $job = $job->where('job_open_checkbox','=','1');
+        $job_res = $job->get();
+
+        $job_data = array();
+        $i = 0;
+
+        foreach ($job_res as $key => $value) {
+            $job_data[$i]['id'] = $value->id;
+            $job_data[$i]['created_at'] = $value->created_at;
+            $i++;
+        }
+        return $job_res;
     }
 }
