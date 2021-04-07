@@ -632,15 +632,15 @@ class Interview extends Model
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
         $query = Interview::query();
+
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
         $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
-            'client_basicinfo.name as client_name','client_basicinfo.display_name as display_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
-            'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact');
+        $query = $query->leftJoin('users as u1','u1.id','=','interview.interviewer_id');
+        $query = $query->leftJoin('users as u2','u2.id','=','candidate_otherinfo.owner_id');
+
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','client_basicinfo.name as client_name','client_basicinfo.display_name as display_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact','u2.name as candidate_owner_name');
 
         if($all==0) {
             
