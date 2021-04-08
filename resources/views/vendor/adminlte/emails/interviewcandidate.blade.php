@@ -52,7 +52,11 @@
                             <p> {!! $job_description !!}</p>
                             <p><b>Interview Date/Day : </b> {{date('jS F,y (l)',strtotime($interview_date)) }}</p>
                             <p><b>Interview Time : </b> {{date('h:i A',strtotime($interview_time))  }}</p>
-                            <p><b>Interview Venue : </b> {{ $interview_location }}</p>
+
+                            @if(isset($interview_type) && $interview_type == 'Personal Interview')
+                                <p><b>Interview Venue : </b> {{ $interview_location }}</p>
+                            @endif
+                            
                             <p><b>Contact Person : </b>{{$contact_person}}</p>
 
                             @if(isset($interview_type) && $interview_type == 'Personal Interview')

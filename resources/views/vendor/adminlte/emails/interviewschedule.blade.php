@@ -21,7 +21,11 @@
                             <td align="left"><b>Name of the Candidate</b></td>
                             <td align="left"><b>Interview Date</b></td>
                             <td align="left"><b>Interview Time</b></td>
-                            <td align="left"><b>Interview Location</b></td>
+
+                            @if(isset($interview_type) && $interview_type == 'Personal Interview')
+                                <td align="left"><b>Interview Location</b></td>
+                            @endif
+                            
                             <td align="left"><b>Candidate Location</b></td>
                             <td align="left"><b>Mode of Interview</b></td>
 
@@ -44,7 +48,11 @@
                             <td align="left">{{$cname}}</td>
                             <td align="left">{{date('d/m/Y',strtotime($interview_date)) }}</td>
                             <td align="left">{{date('h:i A',strtotime($interview_time))  }}</td>
-                            <td align="left">{{$interview_location}}</td>
+
+                            @if(isset($interview_type) && $interview_type == 'Personal Interview')
+                                <td align="left">{{$interview_location}}</td>
+                            @endif
+
                             <td align="left">{{$candidate_location}}</td>
                             <td align="left">{{$interview_type}}</td>
                             

@@ -196,7 +196,7 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('location') ? 'has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('interview_location') ? 'has-error' : '' }}">
                                 <strong>Interview Location :</strong>
                                 {!! Form::textarea('interview_location', null, array('id'=>'interview_location','placeholder' => 'Interview Location','class' => 'form-control', 'tabindex' => '9' , 'rows' => '3')) !!}
                                 @if ($errors->has('interview_location'))
