@@ -2090,9 +2090,9 @@ class JobOpen extends Model
 
             $desc_len = strlen($value->job_description);
 
-            if ($desc_len >= 150) {
+            if ($desc_len >= 100) {
 
-                $desc = substr(strip_tags($value->job_description),0,150);
+                $desc = substr($value->job_description,0,100);
                 //$desc .= ' <a href="/blog-post/'. $value->slug .'"> [...] </a>';
                 $desc .= '[...]';
             }
