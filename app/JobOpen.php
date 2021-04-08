@@ -2012,9 +2012,11 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.posting_title','job_openings.city');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to','job_openings.adler_job_disclosed_checkbox','job_openings.created_at as added_date');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+
+        $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
@@ -2028,10 +2030,68 @@ class JobOpen extends Model
 
         foreach ($job_response as $key => $value) {
 
+            // value get in 2 decimal point
+            if ($value->lacs_from >= '100') {
+                $min_ctc = '100+';
+            }
+            else {
+                $lacs_from = $value->lacs_from*100000;
+                $thousand_from = $value->thousand_from*1000;
+                $mictc = $lacs_from+$thousand_from;
+                $minctc = $mictc/100000;
+                $min_ctc = number_format($minctc,2);
+            }
+
+            if ($value->lacs_to >= '100') {
+                $max_ctc = '100+';
+            }
+            else {
+                $lacs_to = $value->lacs_to*100000;
+                $thousand_to = $value->thousand_to*1000;
+                $mactc = $lacs_to+$thousand_to;
+                $maxctc = $mactc/100000;
+                $max_ctc = number_format($maxctc,2);
+            }
+
+            $jobs_list[$i]['min_ctc'] = $min_ctc;
+            $jobs_list[$i]['max_ctc'] = $max_ctc;
+
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['company_name'] = $value->company_name;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
+
+            $jobs_list[$i]['work_exp_from'] = $value->work_exp_from;
+            $jobs_list[$i]['work_exp_to'] = $value->work_exp_to;
+
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
             $jobs_list[$i]['city'] = $value->city;
+            $jobs_list[$i]['location'] = $location;
+
+            $jobs_list[$i]['job_description'] = $value->job_description;
+            $jobs_list[$i]['added_date'] = date('d-m-Y',strtotime($value->added_date));
+
+            $to_date = date('Y-m-d');
+
+            $to = strtotime($to_date);
+            $from = strtotime($value->added_date);
+            $diff_in_days = ($to - $from)/60/60/24;
+
+            $jobs_list[$i]['diff_in_days'] = $diff_in_days;
 
             $i++;
         }
@@ -2047,7 +2107,7 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to','job_openings.adler_job_disclosed_checkbox');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
 
@@ -2122,6 +2182,7 @@ class JobOpen extends Model
             $jobs_list['qualifications'] = $response->qualifications;
             $jobs_list['desired_candidate'] = $response->desired_candidate;
             $jobs_list['job_description'] = $response->job_description;
+            $jobs_list['adler_job_disclosed_checkbox'] = $response->adler_job_disclosed_checkbox;
 
         }
         return $jobs_list;

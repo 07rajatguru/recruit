@@ -268,8 +268,15 @@
 
                     <div class="">
                         <div class="form-group">
-                            <strong>If you want to display job in Adler Website Career page please check the checkbox :</strong>
+                            <strong>Post job to adler's career page ? :</strong>
                             {!! Form::checkbox('adler_career_checkbox','1', $adler_career_checkbox, array('id' => 'adler_career_checkbox','tabindex' => '14')) !!}
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="form-group">
+                            <strong>If you want to disclosed salary please Uncheck :</strong>
+                            {!! Form::checkbox('adler_job_disclosed_checkbox','1', $adler_job_disclosed_checkbox, array('id' => 'adler_job_disclosed_checkbox','tabindex' => '15')) !!}
                         </div>
                     </div>
                 </div>
