@@ -2087,9 +2087,22 @@ class JobOpen extends Model
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['qualifications'] = $value->qualifications;
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
-            $jobs_list[$i]['job_description'] = $value->job_description;
+
+            $desc_len = strlen($value->job_description);
+
+            if ($desc_len >= 150) {
+
+                $desc = substr(strip_tags($value->job_description),0,150);
+                //$desc .= ' <a href="/blog-post/'. $value->slug .'"> [...] </a>';
+                $desc .= '[...]';
+            }
+            else {
+                $desc = strip_tags($value->job_description);
+            }
+
+            $jobs_list[$i]['job_description'] = $desc;
             $jobs_list[$i]['adler_job_disclosed_checkbox'] = $value->adler_job_disclosed_checkbox;
-            
+
             $jobs_list[$i]['added_date'] = date('d-m-Y',strtotime($value->added_date));
 
             $to_date = date('Y-m-d');
