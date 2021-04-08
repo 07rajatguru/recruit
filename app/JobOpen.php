@@ -2058,7 +2058,7 @@ class JobOpen extends Model
 
             $jobs_list[$i]['id'] = $value->id;
             $jobs_list[$i]['company_name'] = $value->company_name;
-            $jobs_list[$i]['no_of_positions'] = $response->no_of_positions;
+            $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
             $jobs_list[$i]['posting_title'] = $value->posting_title;
 
             $jobs_list[$i]['work_exp_from'] = $value->work_exp_from;
@@ -2084,11 +2084,11 @@ class JobOpen extends Model
             $jobs_list[$i]['location'] = $location;
 
             
-            $jobs_list[$i]['industry'] = $response->industry_name;
-            $jobs_list[$i]['qualifications'] = $response->qualifications;
-            $jobs_list[$i]['desired_candidate'] = $response->desired_candidate;
+            $jobs_list[$i]['industry'] = $value->industry_name;
+            $jobs_list[$i]['qualifications'] = $value->qualifications;
+            $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['job_description'] = $value->job_description;
-            $jobs_list[$i]['adler_job_disclosed_checkbox'] = $response->adler_job_disclosed_checkbox;
+            $jobs_list[$i]['adler_job_disclosed_checkbox'] = $value->adler_job_disclosed_checkbox;
             
             $jobs_list[$i]['added_date'] = date('d-m-Y',strtotime($value->added_date));
 
