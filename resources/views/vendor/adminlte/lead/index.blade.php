@@ -35,11 +35,11 @@
     @endif
 
    <div class = "table-responsive">
-        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%"" id="lead_table">
+        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="lead_table">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th></th>
+                    <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                     <th>Action</th>
                     <th>Company Name</th>
                     <th>Contact Point</th>
@@ -131,6 +131,32 @@
             
             var table = $('#lead_table').DataTable();
             table.columns( [11] ).visible( false );
+
+            $('#allcb').change(function() {
+
+                if($(this).prop('checked')) {
+                    $('tbody tr td input[type="checkbox"]').each(function() {
+                        $(this).prop('checked', true);
+                    });
+                }
+                else {
+                    $('tbody tr td input[type="checkbox"]').each(function() {
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+
+            $('.other_leads').change(function() {
+
+                if ($(this).prop('checked')) {
+                    if ($('.other_leads:checked').length == $('.other_leads').length) {
+                        $("#allcb").prop('checked', true);
+                    }
+                }
+                else {
+                    $("#allcb").prop('checked', false);
+                }
+            });
         });
 
         function leads_emails_notification() {
