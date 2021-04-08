@@ -194,11 +194,11 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th width="180px" style="border: 1px solid #00c0ef;">Posting Title</th>
-                                <th style="border: 1px solid #00c0ef;">Candidate Name</th>
-                                <th style="border: 1px solid #00c0ef;">Contact No.</th>
-                                <th width="160px" style="border: 1px solid #00c0ef;">Time</th>
-                                <th width="160px" style="border: 1px solid #00c0ef;">Candidate Owner</th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Posting Title</th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Candidate Name</th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Contact No.</th>
+                                <th width="700px" style="border: 1px solid #00c0ef;">Time</th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Candidate Owner</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -215,7 +215,7 @@
                                         </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}} </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->contact }}</td>
-                                        <td style="font-size:13px;border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
+                                        <td style="border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_owner_name}} </td>
                                     </tr>
                                 @endforeach
