@@ -58,7 +58,9 @@
                         @endpermission
                         
                         @permission(('edit-user-profile'))
-                            <a class="fa fa-user" title="Edit Profile" href="{{ route('users.editprofile',$user->id) }}"></a>
+
+                            <a class="fa fa-user" title="View Profile" href="{{ route('users.myprofile',$user->id) }}" target="_blank"></a>
+
                         @endpermission
                     </td>
 
