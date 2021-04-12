@@ -6,16 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientHeirarchy extends Model
 {
-
 	public $table = "client_heirarchy";
-    /*public function index(){
 
-        $modules = Module::getAllModules();
-
-        return view('adminlte::module.index',compact('modules'));
-    }*/
-
-    public static function getAllClientHeirarchy(){
+    public static function getAllClientHeirarchy() {
 
     	$query = ClientHeirarchy::query();
     	$query = $query->select('client_heirarchy.*');
@@ -29,11 +22,11 @@ class ClientHeirarchy extends Model
     		$client_heirarchy[$i]['name'] = $value->name;
     		$client_heirarchy[$i]['order'] = $value->order;
 
-            if($value->position == '0'){
+            if($value->position == '0') {
 
                 $client_heirarchy[$i]['position'] = 'Below AM';
             }
-            else{
+            else {
 
                 $client_heirarchy[$i]['position'] = 'Above AM';
             }
@@ -43,7 +36,7 @@ class ClientHeirarchy extends Model
     	return $client_heirarchy;
     }
 
-    public static function getAllClientHeirarchyName(){
+    public static function getAllClientHeirarchyName() {
 
         $query = ClientHeirarchy::query();
         $query = $query->select('client_heirarchy.*');
@@ -59,7 +52,7 @@ class ClientHeirarchy extends Model
         return $client_heirarchy_name;
     }
 
-    public static function getClientHeirarchyPositionById($position_id){
+    public static function getClientHeirarchyPositionById($position_id) {
 
         $query = ClientHeirarchy::query();
         $query = $query->where('id','=',$position_id);
@@ -84,7 +77,7 @@ class ClientHeirarchy extends Model
 
         return $position;
     }
-    public static function getClientHeirarchyNameById($level_id){
+    public static function getClientHeirarchyNameById($level_id) {
 
         $query = ClientHeirarchy::query();
         $query = $query->where('id','=',$level_id);

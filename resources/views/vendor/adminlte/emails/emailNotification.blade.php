@@ -37,7 +37,7 @@
                 <tr>
                 	<th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Posting Title</th>
                     <td align="center" colspan="3" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;">
-                        {!! $job['new_posting_title'] !!}</td>
+                        {!! $job['posting_title'] !!}</td>
 			    </tr>
                 <tr>
                     <th align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;">Client Name</th>

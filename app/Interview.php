@@ -106,9 +106,9 @@ class Interview extends Model
         $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->leftJoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$query = $query->leftJoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-        $query = $query->select('interview.id as id','interview.interview_date','client_basicinfo.name as client_name','candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as candidate_email','job_openings.posting_title as posting_title','job_openings.city as job_city','candidate_basicinfo.mobile as candidate_mobile','users.name as candidate_owner','interview.type as interview_type','client_heirarchy.name as level_name','interview.interview_location as interview_location','interview.candidate_location as candidate_location','interview.skype_id as skype_id','interview.candidate_id as candidate_id');
+        $query = $query->select('interview.id as id','interview.interview_date','client_basicinfo.name as client_name','candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as candidate_email','job_openings.posting_title as posting_title','job_openings.city as job_city','candidate_basicinfo.mobile as candidate_mobile','users.name as candidate_owner','interview.type as interview_type'/*,'client_heirarchy.name as level_name'*/,'interview.interview_location as interview_location','interview.candidate_location as candidate_location','interview.skype_id as skype_id','interview.candidate_id as candidate_id');
 
         $query = $query->orderby('interview.interview_date','asc');
 
@@ -157,13 +157,7 @@ class Interview extends Model
             $interview[$i]['interview_date'] = $interview_date;
             $interview[$i]['interview_time'] = $interview_time;
 
-            if(isset($value->level_name) && $value->level_name != '') {
-                $interview[$i]['job_designation'] = $value->level_name ." - ". $value->posting_title;
-            }
-            else {
-                $interview[$i]['job_designation'] = $value->posting_title;
-            }
-
+            $interview[$i]['job_designation'] = $value->posting_title;
             $interview[$i]['job_location'] = $value->job_city;
             
             $i++;
@@ -694,11 +688,11 @@ class Interview extends Model
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->leftJoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$query = $query->leftJoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
             'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location','interview.interview_location as interview_location','client_heirarchy.name as level_name');
+            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location','interview.interview_location as interview_location'/*,'client_heirarchy.name as level_name'*/);
         $query = $query->where('interview.id',$ids);
         $query = $query->orderBy('interview.interview_date','asc');
         $response = $query->first();
@@ -1046,12 +1040,8 @@ class Interview extends Model
         $input['cmobile'] = $cmobile;
         $input['cemail'] = $cemail;
 
-        if(isset($interview->level_name) && $interview->level_name != '') {
-            $input['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
-        }
-        else {
-            $input['job_designation'] = $interview->posting_title;
-        }
+
+        $input['job_designation'] = $interview->posting_title;
         $input['job_location'] = $location;
         $input['interview_date'] = $interview_date;
         $input['interview_time'] = $interview_time;
@@ -1131,13 +1121,7 @@ class Interview extends Model
         $interview_details['ccity'] = '';
         $interview_details['cmobile'] = $cmobile;
         $interview_details['cemail'] = $cemail;
-
-        if(isset($interview->level_name) && $interview->level_name != '') {
-            $interview_details['job_designation'] = $interview->level_name ." - ". $interview->posting_title;
-        }
-        else {
-            $interview_details['job_designation'] = $interview->posting_title;
-        }
+        $interview_details['job_designation'] = $interview->posting_title;
 
         //$interview_details['job_location'] = $location;
         $interview_details['job_location'] = $city;

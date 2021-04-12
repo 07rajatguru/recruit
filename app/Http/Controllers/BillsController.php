@@ -331,7 +331,9 @@ class BillsController extends Controller
                 $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
             }
             
-            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+            /*$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';*/
+
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
 
@@ -670,7 +672,9 @@ class BillsController extends Controller
             }
             //$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
-            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+            /*$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';*/
+
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
             $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
 
