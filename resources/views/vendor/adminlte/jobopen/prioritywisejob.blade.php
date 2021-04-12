@@ -96,8 +96,8 @@
                     <th>Max CTC<br/>(in Lacs)</th>
                     <th>Added Date</th>
                     <th>No. Of <br/> Positions</th>
-                    <th>Contact <br/> Point</th>
                     <th>Edu Qualifications</th>
+                    <th>Contact <br/> Point</th>
                     <th>Target Industries</th>
                     <th>Desired Candidate</th>
                 </tr>
@@ -152,8 +152,8 @@
                         <td>{{ $value['created_date'] or ''}}</td>
 
                         <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['no_of_positions'] or ''}}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or '' }}</td>
                         <td>{{ $value['qual'] or ''}}</td>
+                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or '' }}</td>
                         <td>{{ $value['industry'] or ''}}</td>
                         <td>{!! $value['desired_candidate'] or ''!!}</td>
                     </tr>

@@ -761,7 +761,7 @@ class JobOpenController extends Controller
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
 
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$value['qual'],$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
@@ -1247,9 +1247,9 @@ class JobOpenController extends Controller
 
                 $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
                 $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
-                $level_nm = ClientHeirarchy::getClientHeirarchyNameById($level_id);
+                //$level_nm = ClientHeirarchy::getClientHeirarchyNameById($level_id);
                         
-                $subject = "Job Opening - " . $level_nm. " - ". $posting_title . "@" .$client_name . "-" . $client_city;
+                $subject = "Job Opening - " . $posting_title . "@" .$client_name . " - " . $client_city;
                 $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                 $module_id = $job_id;
 
@@ -1713,6 +1713,10 @@ class JobOpenController extends Controller
                 }
             }
             $upload_type['Others'] = 'Others';
+
+            $job_open_checkbox = $job_open->job_open_checkbox;
+            $adler_career_checkbox = $job_open->adler_career_checkbox;
+            $adler_job_disclosed_checkbox = $job_open->adler_job_disclosed_checkbox;
         }
         else {
             return view('errors.403');
@@ -1728,7 +1732,7 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox'));
     }
 
     public function update(Request $request, $id) {
@@ -2296,9 +2300,9 @@ class JobOpenController extends Controller
 
                 $client_name = ClientBasicinfo::getCompanyOfClientByID($client_id);
                 $client_city = ClientBasicinfo::getBillingCityOfClientByID($client_id);
-                $level_nm = ClientHeirarchy::getClientHeirarchyNameById($level_id);
+                //$level_nm = ClientHeirarchy::getClientHeirarchyNameById($level_id);
                         
-                $subject = "Job Opening - " . $level_nm. " - ". $posting_title . "@" . $client_name . "-" . $client_city;
+                $subject = "Job Opening - " . $posting_title . "@" . $client_name . " - " . $client_city;
 
                 $message = "<tr><th>" . $posting_title . "/" . $job_unique_id . "</th></tr>";
                 $module_id = $job_id;
@@ -3262,7 +3266,7 @@ class JobOpenController extends Controller
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
 
-            $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$value['qual'],$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
@@ -4095,7 +4099,7 @@ class JobOpenController extends Controller
                 $applicant_count = '<a title="Show Applicant Candidates" href="'.route('jobopen.applicant_candidates_get',$value['id']).'">'.$value['applicant_count'].'</a>';
             }
 
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$applicant_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$value['coordinator_name'],$value['qual'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$applicant_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$value['qual'],$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }

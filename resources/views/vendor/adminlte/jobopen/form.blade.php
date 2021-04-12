@@ -257,7 +257,7 @@
                         </div>
                     </div>
 
-                    @if($loggedin_user_id == $super_admin_user_id || $loggedin_user_id == $strategy_user_id || $loggedin_user_id == $bhagyashree_user_id || $loggedin_user_id == $arjun_user_id || $loggedin_user_id == $tanisha_user_id)
+                    @if($loggedin_user_id == $super_admin_user_id)
                         <div class="">
                             <div class="form-group">
                                 <strong>If you don't want to open the job after 48 hours please check the checkbox :</strong>
@@ -268,14 +268,14 @@
 
                     <div class="">
                         <div class="form-group">
-                            <strong>Post job to adler's career page ? :</strong>
+                            <strong>Do you wish to post this job on our Adler’s Current Openings Page? :</strong>
                             {!! Form::checkbox('adler_career_checkbox','1', $adler_career_checkbox, array('id' => 'adler_career_checkbox','tabindex' => '14')) !!}
                         </div>
                     </div>
 
                     <div class="">
                         <div class="form-group">
-                            <strong>If you want to disclosed salary please Uncheck :</strong>
+                            <strong>If you wish to disclose the salary on Adler’s Current Openings Page, please uncheck the checkbox. :</strong>
                             {!! Form::checkbox('adler_job_disclosed_checkbox','1', $adler_job_disclosed_checkbox, array('id' => 'adler_job_disclosed_checkbox','tabindex' => '15')) !!}
                         </div>
                     </div>

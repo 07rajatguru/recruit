@@ -176,19 +176,18 @@ class JobOpen extends Model
         $job_query = JobOpen::query();
         
         $job_query = $job_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name','job_openings.city as city');
+        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority',/*'client_heirarchy.name as level_name',*/'job_openings.city as city');
 
         $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
         $job_query = $job_query->groupBy('job_openings.id');
-        //$job_query = $job_query->orderBy('job_openings.id','desc');
 
         if (isset($search) && $search != '') {
             $job_query = $job_query->where(function($job_query) use ($search){
 
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
-                $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_query = $job_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
@@ -203,13 +202,12 @@ class JobOpen extends Model
         $job_query = JobOpen::query();
         
         $job_query = $job_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority','client_heirarchy.name as level_name','job_openings.city as city');
+        $job_query = $job_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.posting_title','job_openings.priority',/*'client_heirarchy.name as level_name',*/'job_openings.city as city','job_openings.level_id as level_id');
 
         $job_query = $job_query->where('job_associate_candidates.deleted_at',NULL);
         $job_query = $job_query->groupBy('job_openings.id');
-        //$job_query = $job_query->orderBy('job_openings.id','desc');
 
         if (isset($order) && $order != '') {
             $job_query = $job_query->orderBy($order,$type);
@@ -225,7 +223,7 @@ class JobOpen extends Model
             $job_query = $job_query->where(function($job_query) use ($search) {
 
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
-                $job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_query = $job_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_query = $job_query->orwhere('job_openings.city','like',"%$search%");
             });
         }
@@ -255,6 +253,7 @@ class JobOpen extends Model
 
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['city'] = $value->city;
+            $jobs_list[$i]['level_id'] = $value->level_id;
             $i++;
         }
         return $jobs_list;
@@ -269,12 +268,12 @@ class JobOpen extends Model
 
         $job_close_query = JobOpen::query();
 
-        $job_close_query = $job_close_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am');
+        $job_close_query = $job_close_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am');
 
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_close_query = $job_close_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -290,8 +289,6 @@ class JobOpen extends Model
         // Get data by financial year
         $job_close_query = $job_close_query->where('job_openings.created_at','>=',$current_year);
         $job_close_query = $job_close_query->where('job_openings.created_at','<=',$next_year);
-
-        //$job_close_query = $job_close_query->orderBy('job_openings.updated_at','desc');
 
         if (isset($order) && $order != '') {
             if ($order == 'job_openings.lacs_from') {
@@ -332,7 +329,7 @@ class JobOpen extends Model
                 }
 
                 $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$search%");
-                $job_close_query = $job_close_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_close_query = $job_close_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('users.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -439,7 +436,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -494,12 +490,12 @@ class JobOpen extends Model
 
         $job_close_query = JobOpen::query();
 
-        $job_close_query = $job_close_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name');
+        $job_close_query = $job_close_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/);
 
         $job_close_query = $job_close_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_close_query = $job_close_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_close_query = $job_close_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_close_query = $job_close_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_close_query = $job_close_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_close_query = $job_close_query->whereIn('priority',$job_status);
         $job_close_query = $job_close_query->where('job_associate_candidates.deleted_at',NULL);
@@ -532,7 +528,7 @@ class JobOpen extends Model
             $job_close_query = $job_close_query->where(function($job_close_query) use ($search) {
 
                 $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$search%");
-                $job_close_query = $job_close_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_close_query = $job_close_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('users.name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -619,7 +615,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -658,12 +653,12 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','client_heirarchy.name as level_name');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'/*,'client_heirarchy.name as level_name'*/);
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -683,7 +678,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -763,7 +758,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->desired_candidate;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
 
@@ -810,10 +804,10 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','client_heirarchy.name as level_name');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'/*,'client_heirarchy.name as level_name'*/);
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
@@ -853,7 +847,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->desired_candidate;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
 
@@ -906,10 +899,10 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am');
         
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
 
@@ -924,8 +917,6 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
-
-        //$job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
 
         if (isset($order) && $order != '') {
             if ($order == 'job_openings.lacs_from') {
@@ -974,15 +965,15 @@ class JobOpen extends Model
                     }
                 }
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
-                //$job_open_query = $job_open_query->orwhere('job_openings.created_at','like',"%$new_date%");
 
                 if($date_search) {
+
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
                     $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
@@ -1122,12 +1113,12 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/);
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
@@ -1161,7 +1152,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -1244,7 +1235,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -1275,12 +1265,12 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at as updated_at');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at as updated_at');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -1301,7 +1291,6 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
         }
 
-        //$job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         if (isset($search) && $search != '') {
 
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
@@ -1323,15 +1312,15 @@ class JobOpen extends Model
                 }
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
-                //$job_open_query = $job_open_query->orwhere('job_openings.created_at','like',"%$new_date%");
 
                 if($date_search) {
+
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
                     $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
@@ -1355,11 +1344,11 @@ class JobOpen extends Model
     public static function getJobById($job_id) {
 
         $job_query = JobOpen::query();
-        $job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_query = $job_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_query = $job_query->leftjoin('interview', 'interview.posting_title','=', 'job_openings.id');
         $job_query = $job_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id','interview.candidate_location as candidate_location','client_heirarchy.name as level_name');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id','interview.candidate_location as candidate_location'/*,'client_heirarchy.name as level_name'*/);
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
 
@@ -1453,12 +1442,12 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client,7,8);
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.open_to_all as open_to_all','job_openings.open_to_all_date as open_to_all_date','client_heirarchy.name as level_name','client_basicinfo.second_line_am as second_line_am');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.open_to_all as open_to_all','job_openings.open_to_all_date as open_to_all_date'/*,'client_heirarchy.name as level_name'*/,'client_basicinfo.second_line_am as second_line_am');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -1592,12 +1581,12 @@ class JobOpen extends Model
     public static function getPriorityWiseJobs($all=0,$user_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at','client_basicinfo.second_line_am as second_line_am');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at','client_basicinfo.second_line_am as second_line_am');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -1727,7 +1716,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -1777,12 +1765,12 @@ class JobOpen extends Model
     public static function getPriorityWiseJobsByClient($client_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         if ($priority == '-None-') {
@@ -2216,12 +2204,12 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at as updated_at');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at as updated_at');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -2256,7 +2244,7 @@ class JobOpen extends Model
                 }
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -2288,10 +2276,10 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am');
         
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
 
@@ -2348,7 +2336,7 @@ class JobOpen extends Model
                     }
                 }
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
@@ -2438,7 +2426,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = JobAssociateCandidates::getJobAssociatedCvsCount($value->id);
             $jobs_list[$i]['priority'] = $value->priority;
@@ -2489,12 +2476,12 @@ class JobOpen extends Model
     public static function getPriorityWiseApplicantJobs($all=0,$user_id,$priority) {
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at','client_basicinfo.second_line_am as second_line_am');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at','client_basicinfo.second_line_am as second_line_am');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         // assign jobs to logged in user
@@ -2611,7 +2598,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -2663,12 +2649,12 @@ class JobOpen extends Model
     public static function getPriorityWiseApplicantJobsByClient($client_id,$priority) {
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name','job_openings.updated_at');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/,'job_openings.updated_at');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         if ($priority == '-None-') {
@@ -2779,7 +2765,6 @@ class JobOpen extends Model
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
             $jobs_list[$i]['open_date'] = $value->date_opened;
             $jobs_list[$i]['close_date'] = $value->target_date;
-            //$jobs_list[$i]['am_name'] = $value->am_name;
             $jobs_list[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $jobs_list[$i]['associate_candidate_cnt'] = $value->count;
             $jobs_list[$i]['priority'] = $value->priority;
@@ -2818,12 +2803,12 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job_open_query = JobOpen::query();
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','client_heirarchy.name as level_name');
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at'/*,'client_heirarchy.name as level_name'*/);
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
-        $job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
@@ -2858,7 +2843,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
 
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
-                $job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
+                //$job_open_query = $job_open_query->orwhere('client_heirarchy.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");

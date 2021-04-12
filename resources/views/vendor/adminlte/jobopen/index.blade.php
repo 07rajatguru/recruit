@@ -200,8 +200,8 @@
                     <th>Added Date</th>
                     <th>Updated Date</th>
                     <th>No. Of <br/> Positions</th>
-                    <th>Contact <br/> Point</th>
                     <th>Edu Qualifications</th>
+                    <th>Contact <br/> Point</th>
                     <th>Target Industries</th>
                     <th>Desired Candidate</th>
                 </tr>
