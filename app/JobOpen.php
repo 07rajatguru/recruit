@@ -3078,7 +3078,6 @@ class JobOpen extends Model
             $jobs_list[$i]['city'] = $value->city;
             $jobs_list[$i]['location'] = $location;
 
-            
             $jobs_list[$i]['industry'] = $value->industry_name;
             $jobs_list[$i]['qualifications'] = $value->qualifications;
             $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
