@@ -23,6 +23,6 @@ Route::get('job-details/{id}', [
     'uses' => 'JobOpenController@getJobDetailsById'
 ]);
 
-Route::get('alljob-details/{key_skill}/{desired_location}/{experience}/{min_ctc}/{max_ctc}', [
+Route::get('alljob-details', [
     'uses' => 'JobOpenController@getJobDetailsBySearch'
 ]);

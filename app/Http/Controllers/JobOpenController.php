@@ -4214,7 +4214,13 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
 
-    public function getJobDetailsBySearch($key_skill,$desired_location,$experience,$min_ctc,$max_ctc) {
+    public function getJobDetailsBySearch() {
+
+        $key_skill = $_GET['key_skill'];
+        $desired_location = $_GET['desired_location'];
+        $experience = $_GET['experience'];
+        $min_ctc = $_GET['min_ctc'];
+        $max_ctc = $_GET['max_ctc'];
 
         $search_job_details = JobOpen::getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc);
 
