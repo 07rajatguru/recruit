@@ -2990,8 +2990,8 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
-        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
