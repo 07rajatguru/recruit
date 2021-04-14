@@ -2990,11 +2990,6 @@ class JobOpen extends Model
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
-        $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
-        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
-        $job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
-        $job_open_query = $job_open_query->groupBy('job_openings.id');
-
 
         if (isset($key_skill) && $key_skill != '') {
 
@@ -3018,6 +3013,10 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.lacs_to','=',"$max_ctc");
         }
 
+        $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+        $job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_response = $job_open_query->get();
 
         $jobs_list = array();
