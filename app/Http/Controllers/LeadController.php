@@ -643,11 +643,17 @@ class LeadController extends Controller
         else {
             $client_basic_info->percentage_charged_above='8.33';
         }
-         
+        
+        if(isset($input['second_line_am'])) {
+            $client_basic_info->second_line_am = $input['second_line_am'];
+        }
+        else {
+            $client_basic_info->second_line_am = 0;
+        }
+
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
         $client_basic_info->delete_client = 0;
-        $client_basic_info->second_line_am = 0;
 
         if($client_basic_info->save()) {
 

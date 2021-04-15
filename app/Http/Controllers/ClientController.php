@@ -726,6 +726,7 @@ class ClientController extends Controller
                 $industry_id = $client_basicinfo->industry_id;
                 $percentage_charged_below = $client_basicinfo->percentage_charged_below;
                 $percentage_charged_above = $client_basicinfo->percentage_charged_above;
+                $second_line_am = $client_basicinfo->second_line_am;
             }
             else {
                 return view('errors.403');
@@ -790,7 +791,7 @@ class ClientController extends Controller
 
         $client_upload_type['Others'] = 'Others';
 
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','client_upload_type'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','client_upload_type','second_line_am'));
     }
 
     public function store(Request $request) {
@@ -872,10 +873,16 @@ class ClientController extends Controller
             $client_basic_info->category = '';
         }
 
+        if(isset($input['second_line_am'])) {
+            $client_basic_info->second_line_am = $input['second_line_am'];
+        }
+        else {
+            $client_basic_info->second_line_am = '0';
+        }
+
         $client_basic_info->created_at = time();
         $client_basic_info->updated_at = time();
         $client_basic_info->delete_client = 0;
-        $client_basic_info->second_line_am = 0;
 
         if($client_basic_info->save()) {
 
@@ -1408,6 +1415,13 @@ class ClientController extends Controller
         }
         else {
             $client_basicinfo->category = '';
+        }
+
+        if(isset($input->second_line_am)) {
+            $client_basicinfo->second_line_am = $input->second_line_am;
+        }
+        else {
+            $client_basicinfo->second_line_am = '0';
         }
 
         if($client_basicinfo->save()) {

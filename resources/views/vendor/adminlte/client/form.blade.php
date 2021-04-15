@@ -289,6 +289,26 @@
                                 @endif
                             </div>
 
+                            @if($action == 'add' || $action == 'copy')
+                                <div class="form-group">
+                                    <strong>Second-line Account Manager :</strong>
+
+                                    @permission(('display-client'))
+                                        {!! Form::select('second_line_am', $users, null, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '10','placeholder' => '---None---')) !!}
+                                    @endpermission
+                                </div>
+                            @endif
+
+                            @if($action == 'edit')
+                                <div class="form-group">
+                                    <strong>Second-line Account Manager :</strong>
+
+                                    @permission(('display-client'))
+                                        {!! Form::select('second_line_am', $users, $second_line_am, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '10','placeholder' => '---None---')) !!}
+                                    @endpermission
+                                </div>
+                            @endif
+
                             <div class="form-group">
                                 <strong>Website :</strong>
                                 {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
@@ -500,6 +520,8 @@
             });
 
             $("#account_manager_id").select2();
+            $("#second_line_am").select2();
+            
             //$("#yet_to_assign_id").select2();
             $("#industry_id").select2();
 
