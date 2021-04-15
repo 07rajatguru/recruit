@@ -1315,7 +1315,7 @@ class BillsController extends Controller
             }
         }
         else {
-            $lead_name = $user_id;
+            $lead_name = '';
             $lead_percentage = 0;
         }
 

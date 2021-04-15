@@ -255,33 +255,64 @@
         </div>
 
         @permission(('display-forecasting-by-loggedin-user'))
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="box-header with-border col-md-6 ">
-                        <h3 class="box-title">Lead Efforts</h3>
-                    </div>
-
+            @if( $action == 'add')
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                            <div class="">
-                                <div class="form-group">
-                                    <strong>Employee Name : </strong>
-                                    {!! Form::select('lead_name', $users,null, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
-                                </div>
-                            </div>
+                        <div class="box-header with-border col-md-6 ">
+                            <h3 class="box-title">Lead Efforts</h3>
                         </div>
 
-                        <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                            <div class="">
-                                <div class="form-group">
-                                    <strong>Employee Percentage : </strong>
-                                    {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26','onfocusout' => 'checkLeadPercentage();')) !!}
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    <div class="form-group">
+                                        <strong>Employee Name : </strong>
+                                        {!! Form::select('lead_name', $users,null, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    <div class="form-group">
+                                        <strong>Employee Percentage : </strong>
+                                        {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26','onfocusout' => 'checkLeadPercentage();')) !!}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
+            @if( $action == 'edit')
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="box-header with-border col-md-6 ">
+                            <h3 class="box-title">Lead Efforts</h3>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    <div class="form-group">
+                                        <strong>Employee Name : </strong>
+                                        {!! Form::select('lead_name', $users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                                <div class="">
+                                    <div class="form-group">
+                                        <strong>Employee Percentage : </strong>
+                                        {!! Form::number('lead_percentage', $lead_percentage, array('id'=>'lead_percentage','class' => 'form-control employee_perce','tabindex' => '26','onfocusout' => 'checkLeadPercentage();')) !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endpermission
 
         <div class="col-xs-12 col-sm-12 col-md-12">
