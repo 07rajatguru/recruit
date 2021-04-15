@@ -698,6 +698,10 @@ class EveryMinute extends Command
                 $input['module_id'] = $value['module_id'];
                 $input['bulk_message'] = $value['message'];
 
+                $client = ClientBasicinfo::getClientDetailsById($module_id);
+
+                $input['owner_email'] = $client['am_email'];
+
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
@@ -736,11 +740,9 @@ class EveryMinute extends Command
                     ]);
                 }
 
-                //print_r(config('mail'));exit;
-
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
