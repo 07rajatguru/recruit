@@ -289,25 +289,21 @@
                                 @endif
                             </div>
 
-                            @if($action == 'add' || $action == 'copy')
-                                <div class="form-group">
-                                    <strong>Second-line Account Manager :</strong>
-
-                                    @permission(('display-client'))
+                            @permission(('display-client'))
+                                @if($action == 'add' || $action == 'copy')
+                                    <div class="form-group">
+                                        <strong>Second-line Account Manager :</strong>
                                         {!! Form::select('second_line_am', $users, null, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '10','placeholder' => '---None---')) !!}
-                                    @endpermission
-                                </div>
-                            @endif
+                                    </div>
+                                @endif
 
-                            @if($action == 'edit')
-                                <div class="form-group">
-                                    <strong>Second-line Account Manager :</strong>
-
-                                    @permission(('display-client'))
+                                @if($action == 'edit')
+                                    <div class="form-group">
+                                        <strong>Second-line Account Manager :</strong>
                                         {!! Form::select('second_line_am', $users, $second_line_am, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '10','placeholder' => '---None---')) !!}
-                                    @endpermission
-                                </div>
-                            @endif
+                                    </div>
+                                @endif
+                            @endpermission
 
                             <div class="form-group">
                                 <strong>Website :</strong>
