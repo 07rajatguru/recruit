@@ -275,6 +275,27 @@
             </div>
         </div>
     </div>
+
+    <!-- If Leaders Client Selected Display Modal Popup -->
+
+    <div id="leaderclientmodal" class="modal text-left fade leader_client_modal_cls">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Send Mail To Clients</h4>
+                </div>
+                <div class="modal-body">
+                    In your selected clients list there is also Leaders client, Do you still send the emails?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="leader_client_submit" onclick="setEmailModalPopup();">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
@@ -412,8 +433,9 @@
             dataType : 'json',
             success: function(msg) {
 
-                $(".email_modal").show();
                 if (msg.success == 'Success') {
+
+                    $(".email_modal").show();
                     $(".clt_email_cls").show();
                     $(".email_error").empty();
                     $('#email_submit').show();
@@ -421,7 +443,14 @@
                     $('.email_temp_class').show();
                     setEmailTemplate();
                 }
+                else if (msg.success == 'Leaders Clients') {
+
+                    $(".email_modal").hide();
+                    $(".leader_client_modal_cls").show();
+                }
                 else {
+
+                    $(".email_modal").show();
                     $(".clt_email_cls").hide();
                     $(".email_error").empty();
                     $('#email_submit').hide();

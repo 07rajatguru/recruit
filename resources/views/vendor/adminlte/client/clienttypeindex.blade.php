@@ -91,7 +91,13 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
+
+                @if($source == 'Left')
+                    <th></th>
+                @else
+                    <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
+                @endif
+
                 <th>Action</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>

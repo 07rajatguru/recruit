@@ -238,10 +238,26 @@ class ClientController extends Controller
             }
 
             if($category_perm) {
-                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+
+                if($value['status'] == 'Left') {
+
+                    $data = array(++$j,'',$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+                else {
+
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
             }
             else {
-                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+
+                if($value['status'] == 'Left') {
+
+                    $data = array(++$j,'',$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+                else {
+
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
             }
 
             $clients[$i] = $data;
@@ -558,6 +574,9 @@ class ClientController extends Controller
                 if($source == 'Forbid') {
                     $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
+                else if($value['status'] == 'Left') {
+                    $data = array(++$j,'',$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
                 else {
                     $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
@@ -566,6 +585,9 @@ class ClientController extends Controller
 
                 if($source == 'Forbid') {
                     $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+                else if($value['status'] == 'Left') {
+                    $data = array(++$j,'',$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
                 }
                 else {
                     $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
@@ -1715,7 +1737,17 @@ class ClientController extends Controller
         }
 
         if (isset($client_ids) && sizeof($client_ids) > 0) {
-            $msg['success'] = 'Success';
+
+            $status_array = ClientBasicinfo::getClientStatusArrayByIds($client_ids);
+
+            if(in_array('2', $status_array)) {
+
+                $msg['success'] = 'Leaders Clients';
+            }
+            else {
+
+                $msg['success'] = 'Success';
+            }
         }
         else {
             $msg['err'] = '<b>Please Select Client.</b>';

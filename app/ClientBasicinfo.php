@@ -1720,4 +1720,30 @@ class ClientBasicinfo extends Ardent
         }
         return $client_name_string;
     }
+
+    public static function getClientStatusArrayByIds($ids) {
+
+        $client_query = ClientBasicinfo::query();
+
+        $client_query = $client_query->select('client_basicinfo.id','client_basicinfo.status');
+
+        $client_query = $client_query->whereIn('client_basicinfo.id',$ids);
+        $client_response = $client_query->get();
+
+        $status_array = array();
+        $i=0;
+
+        if(isset($client_response) && sizeof($client_response) > 0){
+
+            foreach ($client_response as $key => $value) {
+                
+                $status_array[$i] = $value->status;
+                $i++;
+            }
+        }
+
+        $status_array = array_unique($status_array);
+
+        return $status_array;
+    }
 }
