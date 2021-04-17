@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Client')
@@ -8,21 +16,27 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-12 margin-tb">
+        <div class="col-md-12 margin-tb">
             <div class="pull-right">
-                @permission(('display-account-manager-wise-client'))
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
-                @endpermission
+
+                @if($source == 'Left')
+
+                @else
+                    @permission(('display-account-manager-wise-client'))
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
+                    @endpermission
+                @endif
 
                 @permission(('display-client'))
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
                     </button>
 
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
                 @endpermission
                 <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
             </div>
-            <div  class="pull-left">
+
+            <div class="pull-left">
                 <h2> {{ $source }} Clients <span id="count">({{ $count or 0 }})</span></h2>
             </div>
         </div>
@@ -91,13 +105,7 @@
         <thead>
             <tr>
                 <th>No</th>
-
-                @if($source == 'Left')
-                    <th></th>
-                @else
-                    <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
-                @endif
-
+                <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                 <th>Action</th>
                 <th>Client Owner</th>
                 <th>Company Name</th>
@@ -124,19 +132,45 @@
                 </div>
                 {!! Form::open(['method' => 'POST', 'route' => 'client.emailnotification']) !!}
                     <div class="modal-body">
-                        <div class="clt_email_cls">
+
+                        <div class="email_temp_class" style="display: none;">
                             <div class="form-group">
-                                <strong>Select Email Template : <span class = "required_fields">*</span></strong><br/><br/>
-                                {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setEmailTemplate()')) !!}
+                                <strong>Select Saved Email Template : </strong><br/><br/>
+                                {!! Form::select('email_template_id',$email_template_names,null, array('id'=> 'email_template_id','class' => 'form-control','onchange' => 'setExistEmailTemplate()')) !!}
                             </div>
                         </div>
+
+                        <div class="body_class" style="display: none;">
+
+                            <div class="form-group">
+                                <strong>Template Name : <span class = "required_fields">*</span>
+                                </strong>
+                                {!! Form::text('template_nm', null, array('id'=>'template_nm','placeholder' => 'Template Name','tabindex' => '1','class' => 'form-control','required')) !!}
+                            </div>
+
+                            <label id="template_nm_error" style="color:#f56954;display:none;"></label>
+
+                            <div class="form-group">
+                                <strong>Subject : <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('email_subject', null, array('id'=>'email_subject','placeholder' => 'Subject','tabindex' => '2','class' => 'form-control','required')) !!}
+                            </div>
+
+                            <label id="email_subject_error" style="color:#f56954;display:none;"></label>
+
+                            <div class="form-group">
+                                <strong>Message : <span class = "required_fields">*</span> </strong>
+                                {!! Form::textarea('email_body', null, array('id'=>'email_body','placeholder' => 'Message','class' => 'form-control', 'tabindex' => '3','required')) !!}
+                            </div>
+
+                            <label id="email_body_error" style="color:#f56954;display:none;"></label>
+                        </div>
                         <div class="email_error"></div>
-                        <div class="body_class" style="display:none;"></div>
                     </div>
 
                     <input type="hidden" name="email_client_ids" id="email_client_ids" value="">
 
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="email_temp_submit_id" onclick="saveTemplate();">Save as New Template</button>
                         <button type="submit" class="btn btn-primary" id="email_submit">Submit</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
@@ -218,6 +252,10 @@
     <script type="text/javascript">
 
         jQuery( document ).ready(function() {
+
+            $("#account_manager_id").select2({width : '567px'});
+            $("#second_line_am_id").select2({width : '567px'});
+            $("#email_template_id").select2({width : '567px'});
 
             var source = $("#source").val();
             var numCols = $('#clienttype_table thead th').length;
@@ -320,18 +358,40 @@
                 dataType : 'json',
                 success: function(msg) {
 
-                    $(".email_modal").show();
                     if (msg.success == 'Success') {
-                        $(".clt_email_cls").show();
+
+                        $(".email_modal").show();
                         $(".email_error").empty();
                         $('#email_submit').show();
+                        $('#email_temp_submit_id').show();
+                        $('.email_temp_class').show();
                         setEmailTemplate();
                     }
+                    else if (msg.success == 'Leaders Clients') {
+
+                        if(confirm("In your selected clients list there is also Leaders client, Do you still send the emails?")) {
+
+                            $(".email_error").empty();
+                            $('#email_submit').show();
+                            $('#email_temp_submit_id').show();
+                            $('.email_temp_class').show();
+                            $(".email_modal").show();
+                            setEmailTemplate();
+                        }
+                        else {
+
+                            $("#searchmodal").modal('hide');
+                        }
+                    }
                     else {
-                        $(".clt_email_cls").hide();
+
+                        $(".email_modal").show();
                         $(".email_error").empty();
                         $('#email_submit').hide();
+                        $('#email_temp_submit_id').hide();
                         $(".email_error").append(msg.err);
+                        $('.email_temp_class').hide();
+                        $('.body_class').hide();
                     }
                 }
             });
@@ -359,13 +419,19 @@
                 dataType : 'json',
                 success: function(msg) {
 
-                    $(".acc_mngr_modal").show();
                     if (msg.success == 'Success') {
+
+                        $(".acc_mngr_modal").show();
                         $(".ac_mngr_cls").show();
                         $(".act_mngr_error").empty();
                         $('#submit').show();
                     }
+                    else if (msg.success == 'Leaders Clients') {
+
+                    }
                     else {
+
+                        $(".acc_mngr_modal").show();
                         $(".ac_mngr_cls").hide();
                         $(".act_mngr_error").empty();
                         $('#submit').hide();
@@ -377,11 +443,89 @@
 
         function setEmailTemplate() {
 
+            $(".body_class").show();
+
+            CKEDITOR.replace( 'email_body', {
+
+                filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
+                customConfig: '/js/ckeditor_config.js',
+                height: '100px',
+            });
+
+            CKEDITOR.on('dialogDefinition', function( ev ) {
+
+                var dialogName = ev.data.name;  
+                var dialogDefinition = ev.data.definition;
+                             
+                switch (dialogName) { 
+
+                    case 'image': //Image Properties dialog      
+                    dialogDefinition.removeContents('Link');
+                    dialogDefinition.removeContents('advanced');
+                    break;
+
+                    case 'link': //image Properties dialog          
+                    dialogDefinition.removeContents('advanced');   
+                    break;
+                }
+            });
+        }
+
+        function saveTemplate() {
+        
+            var token = $('input[name="csrf_token"]').val();
+
+            var template_nm = $("#template_nm").val();
+
+            if(template_nm == '') {
+                $("#template_nm_error").show();
+                $("#template_nm_error").text("Template Name is Required Field.");
+            }
+            else {
+                $("#template_nm_error").hide();
+            }
+
+            var email_subject = $("#email_subject").val();
+
+            if(email_subject == '') {
+                $("#email_subject_error").show();
+                $("#email_subject_error").text("Subject is Required Field.");
+            }
+            else {
+                $("#email_subject_error").hide();
+            }
+
+            var email_body = CKEDITOR.instances.email_body.getData();
+
+            if(email_body == '') {
+                $("#email_body_error").show();
+                $("#email_body_error").text("Message is Required Field.");
+            }
+            else {
+                $("#email_body_error").hide();
+            }
+
+            if(template_nm != '' && email_subject != '' && email_body != '') {
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: '/email-template/store',
+                    data:{'template_nm': template_nm,'email_subject': email_subject,'email_body': email_body,'_token':token},
+                    dataType: 'json',
+                    success: function (data) {
+
+                        alert("Email Template Saved Successfully.");
+                    },
+                });
+            }
+        }
+
+        function setExistEmailTemplate() {
+       
             var token = $('input[name="csrf_token"]').val();
             var app_url = "{!! env('APP_URL'); !!}";
             var email_template_id = $("#email_template_id").val();
-
-            $(".body_class").html('');
 
             $.ajax({
 
@@ -392,92 +536,64 @@
 
                 success: function(data) {
 
-                   $(".body_class").html('');
+                    if(email_template_id == 0) {
 
-                    var html = '';
-                    html += '<br/><div>';
-                    html += '<table class="table table-bordered">';
-                    html += '<tr>';
-                    html += '<td><b>&nbsp;Template &nbsp;&nbsp; Name</b></td>';
-                    html += '<td><input type="text" class="form-control" name="template_nm" id="template_nm" value="'+data.name+'" style="width:460px;"/></td>';
-                    html += '</tr>';
-                    html += '<tr>';
-                    html += '<td><b>&nbsp;Subject</b></td>';
-                    html += '<td><input type="text" class="form-control" name="email_subject" id="email_subject" value="'+data.subject+'" style="width:460px;"/></td>';
-                    html += '</tr>';
-                    html += '<tr>';
-                    html += '<td><b>&nbsp;&nbsp; Body &nbsp; &nbsp; &nbsp; Message</b></td>';
-                    html += '<td><textarea name="email_body" id="email_body" style="width:460px;">'+data.email_body+'</textarea></td>';
-                    html += '</tr>';
-                    html += '</table>';
-                    html += '</div>';
+                        $("#template_nm").val("");
+                        $("#email_subject").val("");
+                        CKEDITOR.instances.email_body.setData("");
+                    }
+                    else {
 
-                    $(".body_class").show();
-                    $(".body_class").append(html);
-
-                    CKEDITOR.replace( 'email_body', {
-
-                        filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
-                        customConfig: '/js/ckeditor_config.js',
-                        height: '100px',
-                    });
-
-                    CKEDITOR.on('dialogDefinition', function( ev ) {
-
-                       var dialogName = ev.data.name;  
-                       var dialogDefinition = ev.data.definition;
-                             
-                       switch (dialogName) {  
-                           case 'image': //Image Properties dialog      
-                           dialogDefinition.removeContents('Link');
-                           dialogDefinition.removeContents('advanced');
-                           break;      
-                           case 'link': //image Properties dialog          
-                           dialogDefinition.removeContents('advanced');   
-                           break;
-                       }
-                    });
+                        $("#template_nm").val(data.name);
+                        $("#email_subject").val(data.subject);
+                        CKEDITOR.instances.email_body.setData(data.email_body);
+                    }
                 }
             });
         }
 
         function second_line_client_am() {
 
-        var token = $('input[name="csrf_token"]').val();
-        var app_url = "{!! env('APP_URL'); !!}";
-        var client_ids = new Array();
+            var token = $('input[name="csrf_token"]').val();
+            var app_url = "{!! env('APP_URL'); !!}";
+            var client_ids = new Array();
 
-        var table = $("#clienttype_table").dataTable();
+            var table = $("#clienttype_table").dataTable();
 
-        table.$("input:checkbox[name=client]:checked").each(function(){
-            client_ids.push($(this).val());
-        });
+            table.$("input:checkbox[name=client]:checked").each(function(){
+                client_ids.push($(this).val());
+            });
 
-        $("#second_line_am_client_ids").val(client_ids);
+            $("#second_line_am_client_ids").val(client_ids);
 
-        $.ajax({
+            $.ajax({
 
-            type : 'POST',
-            url : app_url+'/client/checkClientId',
-            data : {client_ids : client_ids, '_token':token},
-            dataType : 'json',
-            success: function(msg) {
+                type : 'POST',
+                url : app_url+'/client/checkClientId',
+                data : {client_ids : client_ids, '_token':token},
+                dataType : 'json',
+                success: function(msg) {
+                    
+                    if (msg.success == 'Success') {
 
-                $(".second_line_am_modal").show();
-                
-                if (msg.success == 'Success') {
-                    $(".second_line_ac_mngr_cls").show();
-                    $(".second_line_am_error").empty();
-                    $('#second_line_am_submit').show();
+                        $(".second_line_am_modal").show();
+                        $(".second_line_ac_mngr_cls").show();
+                        $(".second_line_am_error").empty();
+                        $('#second_line_am_submit').show();
+                    }
+                    else if (msg.success == 'Leaders Clients') {
+
+                    }
+                    else {
+
+                        $(".second_line_am_modal").show();
+                        $(".second_line_ac_mngr_cls").hide();
+                        $(".second_line_am_error").empty();
+                        $('#second_line_am_submit').hide();
+                        $(".second_line_am_error").append(msg.err);
+                    }
                 }
-                else {
-                    $(".second_line_ac_mngr_cls").hide();
-                    $(".second_line_am_error").empty();
-                    $('#second_line_am_submit').hide();
-                    $(".second_line_am_error").append(msg.err);
-                }
-            }
-        });
-    }
+            });
+        }
     </script>
 @endsection

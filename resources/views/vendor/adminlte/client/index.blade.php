@@ -23,15 +23,16 @@
                 @endpermission
 
                 @permission(('display-client'))
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager</button>
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
+                    </button>
 
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
                 @endpermission
                 <a class="btn btn-success" href="{{ route('client.create') }}">Add New Client</a>
             </div>
-            <div></div>
+            
             <div class="pull-left">
-                <h2>Clients List ({{ $count or 0 }}) </h2>
+                <h2>Clients List ({{ $count or 0 }})</h2>
             </div>
         </div>
     </div>
@@ -275,27 +276,6 @@
             </div>
         </div>
     </div>
-
-    <!-- If Leaders Client Selected Display Modal Popup -->
-
-    <div id="leaderclientmodal" class="modal text-left fade leader_client_modal_cls">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Send Mail To Clients</h4>
-                </div>
-                <div class="modal-body">
-                    In your selected clients list there is also Leaders client, Do you still send the emails?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="leader_client_submit" onclick="setEmailModalPopup();">Yes</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
@@ -309,6 +289,7 @@
     jQuery(document).ready(function() {
 
         $("#account_manager_id").select2({width : '567px'});
+        $("#second_line_am_id").select2({width : '567px'});
         $("#email_template_id").select2({width : '567px'});
         
         var numCols = $('#client_table thead th').length;
@@ -436,7 +417,6 @@
                 if (msg.success == 'Success') {
 
                     $(".email_modal").show();
-                    $(".clt_email_cls").show();
                     $(".email_error").empty();
                     $('#email_submit').show();
                     $('#email_temp_submit_id').show();
@@ -444,14 +424,24 @@
                     setEmailTemplate();
                 }
                 else if (msg.success == 'Leaders Clients') {
+                    
+                    if(confirm("In your selected clients list there is also Leaders client, Do you still send the emails?")) {
 
-                    $(".email_modal").hide();
-                    $(".leader_client_modal_cls").show();
+                        $(".email_error").empty();
+                        $('#email_submit').show();
+                        $('#email_temp_submit_id').show();
+                        $('.email_temp_class').show();
+                        $(".email_modal").show();
+                        setEmailTemplate();
+                    }
+                    else {
+
+                        $("#searchmodal").modal('hide');
+                    }
                 }
                 else {
 
                     $(".email_modal").show();
-                    $(".clt_email_cls").hide();
                     $(".email_error").empty();
                     $('#email_submit').hide();
                     $('#email_temp_submit_id').hide();
@@ -485,13 +475,19 @@
             dataType : 'json',
             success: function(msg) {
 
-                $(".acc_mngr_modal").show();
                 if (msg.success == 'Success') {
+
+                    $(".acc_mngr_modal").show();
                     $(".ac_mngr_cls").show();
                     $(".act_mngr_error").empty();
                     $('#submit').show();
                 }
+                else if (msg.success == 'Leaders Clients') {
+
+                }
                 else {
+
+                    $(".acc_mngr_modal").show();
                     $(".ac_mngr_cls").hide();
                     $(".act_mngr_error").empty();
                     $('#submit').hide();
@@ -633,15 +629,20 @@
             data : {client_ids : client_ids, '_token':token},
             dataType : 'json',
             success: function(msg) {
-
-                $(".second_line_am_modal").show();
                 
                 if (msg.success == 'Success') {
+
+                    $(".second_line_am_modal").show();
                     $(".second_line_ac_mngr_cls").show();
                     $(".second_line_am_error").empty();
                     $('#second_line_am_submit').show();
                 }
+                else if (msg.success == 'Leaders Clients') {
+
+                }
                 else {
+
+                    $(".second_line_am_modal").show();
                     $(".second_line_ac_mngr_cls").hide();
                     $(".second_line_am_error").empty();
                     $('#second_line_am_submit').hide();
