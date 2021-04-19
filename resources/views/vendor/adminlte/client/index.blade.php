@@ -425,7 +425,7 @@
                 }
                 else if (msg.success == 'Leaders Clients') {
                     
-                    if(confirm("In your selected clients list there is also Leaders client, Do you still send the emails?")) {
+                    if(confirm("The selected client is in the Leaders list. Do you still wish to continue?")) {
 
                         $(".email_error").empty();
                         $('#email_submit').show();
