@@ -7,21 +7,21 @@ use App\User;
 use App\Interview;
 use App\CandidateUploadedResume;
 
-class InterviewOneHourPriorEmail extends Command
+class AfterIntrviewReminder extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'onehourpriorinterview:reminder';
+    protected $signature = 'afterinterview:reminder';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command for send one hour prior interview email notifications';
+    protected $description = 'Command for send after interview email notifications';
 
     /**
      * Create a new command instance.
@@ -40,7 +40,8 @@ class InterviewOneHourPriorEmail extends Command
      */
     public function handle()
     {
-        $curr_date_time = date('Y-m-d H:i:00', time() + 19800);
+        $from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
+        $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
 
         $users = User::getAllUsers('recruiter');
 
@@ -48,7 +49,7 @@ class InterviewOneHourPriorEmail extends Command
 
             foreach ($users as $key => $value) {
                 
-                $interviews = Interview::getAllInterviews(0,$key,'','');
+                $interviews = Interview::getAllInterviews(0,$key,$from_date,$to_date);
 
                 $to_address_client_owner = array();
                 $to_address_candidate_owner = array();
@@ -61,44 +62,35 @@ class InterviewOneHourPriorEmail extends Command
                     foreach ($interviews as $key1 => $value1) {
 
                         if(isset($value1) && $value1 != '') {
-
-                            $get_interview_date = $value1['interview_date_actual'];
-
-                            $one_hour_ago_interview_date = date("Y-m-d H:i:00",strtotime($get_interview_date . " - 1 hour"));
                                
-                            if($one_hour_ago_interview_date == $curr_date_time) {
+                            $client_email = Interview::getClientOwnerEmail($value1['id']);
+                            $client_owner_email = $client_email->clientowneremail;
 
-                                $client_email = Interview::getClientOwnerEmail($value1['id']);
-                                $client_owner_email = $client_email->clientowneremail;
-
-                                if(isset($client_owner_email) && $client_owner_email != '') {
-                                    $to_address_client_owner[$j] = $client_owner_email;
-                                }
-
-                                $candidate_email = Interview::getCandidateOwnerEmail($value1['id']);
-                                $candidate_owner_email = $candidate_email->candidateowneremail;
-
-                                if(isset($candidate_owner_email) && $candidate_owner_email != '') {
-                                    $to_address_candidate_owner[$j] = $candidate_owner_email;
-                                }
-
-                                $type_array[$j] = $value1['interview_type'];
-
-                                // Candidate Attachment
-                                $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
-
-                                if (isset($attachment) && $attachment != '') {
-                                    $file_path = public_path() . "/" . $attachment->file;
-                                }
-                                else {
-                                    $file_path = '';
-                                }
-                                $file_path_array[$j] = $file_path;
-
-                                $interview_details[$j] = $value1;
-
-                                $j++;
+                            if(isset($client_owner_email) && $client_owner_email != '') {
+                                $to_address_client_owner[$j] = $client_owner_email;
                             }
+
+                            $candidate_email = Interview::getCandidateOwnerEmail($value1['id']);
+                            $candidate_owner_email = $candidate_email->candidateowneremail;
+
+                            if(isset($candidate_owner_email) && $candidate_owner_email != '') {
+                                $to_address_candidate_owner[$j] = $candidate_owner_email;
+                            }
+
+                            $type_array[$j] = $value1['interview_type'];
+
+                            // Candidate Attachment
+                            $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
+
+                            if (isset($attachment) && $attachment != '') {
+                                $file_path = public_path() . "/" . $attachment->file;
+                            }
+                            else {
+                                $file_path = '';
+                            }
+                            $file_path_array[$j] = $file_path;
+
+                            $j++;
                         }
                     }
 
@@ -114,8 +106,8 @@ class InterviewOneHourPriorEmail extends Command
                     $input['from_address'] = $from_address;
                     $input['to_address'] = $to_address;
                     $input['app_url'] = $app_url;
-                    $input['interview_details'] = $interview_details;
-                    $input['subject'] = 'Interview Reminder';
+                    $input['interview_details'] = $interviews;
+                    $input['subject'] = "Yesterday's Interviews";
                     $input['type_string'] = implode(",", $type_array);
                     $input['file_path'] = $file_path_array;
 

@@ -13,7 +13,7 @@
                 <b><p style="text-align: left;">Dear Sir,</p></b>
                 <i><p style="text-align: left;">Greetings from Adler Talent Solutions !</p></i>
                 <p style="text-align: left;"><u>Please find interview schedule as below for your kind reference:</u></p>
-                    <table width="580" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
+                    <table width="600" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                         <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 11.0pt;">
                             <td align="left"><b>Sr. No.</b></td>
                             <td align="left"><b>Position</b></td>
@@ -35,6 +35,10 @@
                             <td align="left"><b>Email ID</b></td>
                             <td align="left"><b>Confirmed</b></td>
                             <td align="left"><b>Source</b></td>
+
+                            @if(isset($subject) && $subject == "Yesterday's Interviews")
+                                <td align="left"><b>Action</b></td>
+                            @endif
                         </tr>
 
                         <?php $i=0; ?>
@@ -60,6 +64,12 @@
                                 <td align="left">{{$value['cemail']}}</td>
                                 <td align="left"><b>{{'Yes'}}</b></td>
                                 <td align="left"><b>{{'Adler'}}</b></td>
+
+                                @if(isset($subject) && $subject == "Yesterday's Interviews")
+                                    <td align="left">
+                                        <a formtarget="_blank" href="{{getenv('APP_URL').'/interview/'.$value['id'].'/edit/index'}}">Edit</a>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </table>

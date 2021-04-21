@@ -159,6 +159,8 @@ class Interview extends Model
 
             $interview[$i]['job_designation'] = $value->posting_title;
             $interview[$i]['job_location'] = $value->job_city;
+
+            $interview[$i]['interview_date_actual'] = $value->interview_date;
             
             $i++;
         }

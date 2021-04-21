@@ -14,14 +14,14 @@ class InterviewPriorEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'interview:email';
+    protected $signature = 'priorinterview:reminder';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command for send interview email notifications';
+    protected $description = 'Command for send prior interview email notifications';
 
     /**
      * Create a new command instance.
@@ -107,7 +107,7 @@ class InterviewPriorEmail extends Command
                     $input['to_address'] = $to_address;
                     $input['app_url'] = $app_url;
                     $input['interview_details'] = $interviews;
-                    $input['subject'] = 'Todays Interviews';
+                    $input['subject'] = "Today's Interviews";
                     $input['type_string'] = implode(",", $type_array);
                     $input['file_path'] = $file_path_array;
 
