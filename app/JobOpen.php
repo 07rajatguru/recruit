@@ -2078,9 +2078,9 @@ class JobOpen extends Model
 
             $desc_len = strlen($value->job_description);
 
-            if ($desc_len >= 100) {
+            if ($desc_len >= 50) {
 
-                $desc = substr($value->job_description,0,100);
+                $desc = substr($value->job_description,0,50);
                 $desc .= '[...]';
             }
             else {
@@ -3083,9 +3083,9 @@ class JobOpen extends Model
 
             $desc_len = strlen($value->job_description);
 
-            if ($desc_len >= 100) {
+            if ($desc_len >= 50) {
 
-                $desc = substr($value->job_description,0,100);
+                $desc = substr($value->job_description,0,50);
                 $desc .= '[...]';
             }
             else {
