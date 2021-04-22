@@ -3001,8 +3001,8 @@ class JobOpen extends Model
         }
         if (isset($experience) && $experience != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.work_exp_from','>=',"$experience");
-            $job_open_query = $job_open_query->orwhere('job_openings.work_exp_to','<=',"$experience");
+            $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',"$experience");
+            $job_open_query = $job_open_query->orwhere('job_openings.work_exp_to','=',"$experience");
         }
         if (isset($min_ctc) && $min_ctc != '') {
 
