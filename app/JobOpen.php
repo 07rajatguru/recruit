@@ -2984,12 +2984,14 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to','job_openings.adler_job_disclosed_checkbox','job_openings.created_at as added_date');
+        $job_open_query = $job_open_query->select('job_openings.id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','client_basicinfo.coordinator_name as coordinator_name','job_openings.job_description as job_description','job_openings.work_exp_from','job_openings.work_exp_to','job_openings.adler_job_disclosed_checkbox','job_openings.created_at as added_date','job_openings.priority','job_openings.adler_career_checkbox');
         
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
+        $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
+        $job_open_query = $job_open_query->where('adler_career_checkbox','=','1');
 
         if (isset($key_skill) && $key_skill != '') {
 
@@ -3001,20 +3003,18 @@ class JobOpen extends Model
         }
         if (isset($experience) && $experience != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',"$experience");
-            $job_open_query = $job_open_query->orwhere('job_openings.work_exp_to','=',"$experience");
+            $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',$experience);
+            $job_open_query = $job_open_query->orwhere('job_openings.work_exp_to','=',$experience);
         }
         if (isset($min_ctc) && $min_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_from','=',"$min_ctc");
+            $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',"$max_ctc");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
 
-        $job_open_query = $job_open_query->where('job_openings.adler_career_checkbox','=','1');
-        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_response = $job_open_query->get();
