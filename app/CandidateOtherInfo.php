@@ -41,7 +41,32 @@ class CandidateOtherInfo extends Model
         $query = $query->where('candidate_otherinfo.applicant_job_id','=',$job_id);
 
         $response = $query->get();
-        return $response;
+        
+        $i=0;
+        $candidate_array = array();
+
+        if(isset($response) && sizeof($response) > 0){
+
+            foreach ($response as $key => $value) {
+                
+                $candidate_array[$i]['id'] = $value->id;
+                $candidate_array[$i]['full_name'] = $value->full_name;
+                $candidate_array[$i]['lname'] = $value->lname;
+                $candidate_array[$i]['email'] = $value->email;
+                $candidate_array[$i]['mobile'] = $value->mobile;
+                $candidate_array[$i]['current_employer'] = $value->current_employer;
+                $candidate_array[$i]['current_job_title'] = $value->current_job_title;
+                $candidate_array[$i]['current_salary'] = $value->current_salary;
+                $candidate_array[$i]['expected_salary'] = $value->expected_salary;
+                $candidate_array[$i]['functional_roles_name'] = $value->functional_roles_name;
+                $candidate_array[$i]['applicant_date_time'] = $value->applicant_date;
+                $candidate_array[$i]['applicant_date'] = date('Y-m-d',strtotime($value->applicant_date));
+                $candidate_array[$i]['shortlisted'] = $value->shortlisted;
+                $i++;
+            }
+        }
+
+        return $candidate_array;
     }
 
     public static function getAssociatedCandidatesDetailsByApplicantJobId($job_id) {

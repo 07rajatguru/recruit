@@ -55,28 +55,28 @@
         @foreach ($candidates as $candidate)
             <tr>
                 <td>{{ ++$i }}</td>
-                @if(isset($candidate-> shortlisted) && $candidate->shortlisted >= 0)
+                @if(isset($candidate['shortlisted']) && $candidate['shortlisted'] >= 0)
                     <td></td>
                 @else
                     <td>
-                        <a data-toggle="modal" href="#modal-candidate-{{ $candidate->id }}" class="fa fa-star-o" title="Associate Candidate"></a>
+                        <a data-toggle="modal" href="#modal-candidate-{{ $candidate['id'] }}" class="fa fa-star-o" title="Associate Candidate"></a>
                     </td>
                 @endif
                 
-                <td>{{ $candidate->applicant_date }}</td>
+                <td>{{ $candidate['applicant_date_time'] }}</td>
 
-                @if(isset($candidate-> shortlisted) && $candidate->shortlisted >= 0)
-                    <td style="background-color: yellow;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->id) }}">{{ $candidate->full_name }}</a></td>
+                @if(isset($candidate['shortlisted']) && $candidate['shortlisted'] >= 0)
+                    <td style="background-color: yellow;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate['id']) }}">{{ $candidate['full_name'] }}</a></td>
                 @else
-                    <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->id) }}">{{ $candidate->full_name }}</a></td>
+                    <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate['id']) }}">{{ $candidate['full_name'] }}</a></td>
                 @endif
-                <td>{{ $candidate->email }}</td>
-                <td>{{ $candidate->mobile }}</td>
-                <td>{{ $candidate->functional_roles_name }}</td>
-                <td>{{ $candidate->current_employer }}</td>
-                <td>{{ $candidate->current_job_title }}</td>
-                <td>{{ $candidate->current_salary }}</td>
-                <td>{{ $candidate->expected_salary }}</td>
+                <td>{{ $candidate['email'] }}</td>
+                <td>{{ $candidate['mobile'] }}</td>
+                <td>{{ $candidate['functional_roles_name'] }}</td>
+                <td>{{ $candidate['current_employer'] }}</td>
+                <td>{{ $candidate['current_job_title'] }}</td>
+                <td>{{ $candidate['current_salary'] }}</td>
+                <td>{{ $candidate['expected_salary'] }}</td>
             </tr>
         @endforeach
     </table>
@@ -84,7 +84,7 @@
     <input type="hidden" name="token" id="token" value="{{ csrf_token() }}">
 
     @foreach ($candidates as $candidate)
-        <div id="modal-candidate-{{ $candidate->id }}" class="modal text-left fade">
+        <div id="modal-candidate-{{ $candidate['id'] }}" class="modal text-left fade">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -100,7 +100,7 @@
                     </div>
 
                     <input type="hidden" name="jobid" id="jobid" value="{{ $job_id }}">
-                    <input type="hidden" name="candidate_ids" id="candidate_ids" value="{{ $candidate->id }}">
+                    <input type="hidden" name="candidate_ids" id="candidate_ids" value="{{ $candidate['id'] }}">
                     <input type="hidden" name="title" id="title" value="Applicant">
 
                     <div class="modal-footer">
