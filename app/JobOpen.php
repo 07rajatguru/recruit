@@ -3001,11 +3001,21 @@ class JobOpen extends Model
 
             $job_open_query = $job_open_query->where('job_openings.city','=',"$desired_location");
         }
+
         if (isset($experience) && $experience != '') {
+
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($experience) {
+
+                $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',$experience);
+                $job_open_query = $job_open_query->orWhere('job_openings.work_exp_to','=',$experience);
+            });
+        }
+
+/*        if (isset($experience) && $experience != '') {
 
             $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',$experience);
             $job_open_query = $job_open_query->orwhere('job_openings.work_exp_to','=',$experience);
-        }
+        }*/
         if (isset($min_ctc) && $min_ctc != '') {
 
             $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
