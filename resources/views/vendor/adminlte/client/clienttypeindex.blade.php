@@ -428,6 +428,10 @@
                     }
                     else if (msg.success == 'Leaders Clients') {
 
+                        $(".acc_mngr_modal").show();
+                        $(".ac_mngr_cls").show();
+                        $(".act_mngr_error").empty();
+                        $('#submit').show();
                     }
                     else {
 
@@ -583,6 +587,10 @@
                     }
                     else if (msg.success == 'Leaders Clients') {
 
+                        $(".second_line_am_modal").show();
+                        $(".second_line_ac_mngr_cls").show();
+                        $(".second_line_am_error").empty();
+                        $('#second_line_am_submit').show();
                     }
                     else {
 

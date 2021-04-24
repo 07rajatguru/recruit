@@ -289,7 +289,7 @@
                                 @endif
                             </div>
 
-                            @permission(('display-client'))
+                            @permission(('display-account-manager-wise-client'))
                                 @if($action == 'add' || $action == 'copy')
                                     <div class="form-group">
                                         <strong>Second-line Account Manager :</strong>

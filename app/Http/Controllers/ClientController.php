@@ -195,10 +195,14 @@ class ClientController extends Controller
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
                 $account = $account_manager_view->render();
                 $action .= $account;
+            }
+
+            if($userwise_perm) {
 
                 $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
                 $secondline_account = $secondline_account_manager_view->render();
                 $action .= $secondline_account;
+
             }
             if($all_perm || $value['client_owner']) {
 
@@ -512,10 +516,14 @@ class ClientController extends Controller
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager, 'source' => $source]);
                 $account = $account_manager_view->render();
                 $action .= $account;
+            }
+
+            if($userwise_perm) {
 
                 $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => $source]);
                 $secondline_account = $secondline_account_manager_view->render();
                 $action .= $secondline_account;
+
             }
 
             if($all_perm || $value['client_owner']) {
@@ -2205,10 +2213,13 @@ class ClientController extends Controller
                 $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager,'source' => '']);
                 $account = $account_manager_view->render();
                 $action .= $account;
+            }
+            if($userwise_perm) {
 
                 $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager,'source' => '']);
                 $secondline_account = $secondline_account_manager_view->render();
                 $action .= $secondline_account;
+
             }
             if($all_perm || $value['client_owner']) {
 

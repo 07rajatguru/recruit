@@ -25,7 +25,9 @@
                 @permission(('display-client'))
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
                     </button>
-
+                @endpermission
+                
+                @permission(('display-account-manager-wise-client'))
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
                 @endpermission
                 <a class="btn btn-success" href="{{ route('client.create') }}">Add New Client</a>
@@ -484,6 +486,10 @@
                 }
                 else if (msg.success == 'Leaders Clients') {
 
+                    $(".acc_mngr_modal").show();
+                    $(".ac_mngr_cls").show();
+                    $(".act_mngr_error").empty();
+                    $('#submit').show();
                 }
                 else {
 
@@ -639,6 +645,10 @@
                 }
                 else if (msg.success == 'Leaders Clients') {
 
+                    $(".second_line_am_modal").show();
+                    $(".second_line_ac_mngr_cls").show();
+                    $(".second_line_am_error").empty();
+                    $('#second_line_am_submit').show();
                 }
                 else {
 
