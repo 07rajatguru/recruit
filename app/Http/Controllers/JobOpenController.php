@@ -3824,10 +3824,8 @@ class JobOpenController extends Controller
 
         $limit = $_GET['limit'];
         $offset = $_GET['offset'];
-        $searchedTitle = $_GET['searchedTitle'];
-        $searchedLocation = $_GET['searchedLocation'];
 
-        $jobs_list = JobOpen::getAllAPIJobsDetails($limit,$offset,$searchedTitle,$searchedLocation);
+        $jobs_list = JobOpen::getAllAPIJobsDetails($limit,$offset);
 
         return response()->json(['data'=>$jobs_list]);
 

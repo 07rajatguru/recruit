@@ -1991,7 +1991,7 @@ class JobOpen extends Model
         return $job_res;
     }*/
 
-    public static function getAllAPIJobsDetails($limit=0,$offset=0,$searchedTitle='',$searchedLocation='') {
+    public static function getAllAPIJobsDetails($limit=0,$offset=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -2011,13 +2011,6 @@ class JobOpen extends Model
         }
         if (isset($offset) && $offset > 0) {
             $job_open_query = $job_open_query->offset($offset);
-        }
-
-        if (isset($searchedTitle) && $searchedTitle != '') {
-            $job_open_query = $job_open_query->where('job_openings.posting_title','=',"$searchedTitle");
-        }
-        if (isset($searchedLocation) && $searchedLocation != '') {
-            $job_open_query = $job_open_query->where('job_openings.city','=',"$searchedLocation");
         }
 
         $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
