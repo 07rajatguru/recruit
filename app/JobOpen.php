@@ -2982,7 +2982,7 @@ class JobOpen extends Model
         return $job_res;
     }
 
-    public static function getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc) {
+    public static function getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc,$limit=0,$offset=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -2996,6 +2996,13 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
 
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
+
+        if (isset($limit) && $limit > 0) {
+            $job_open_query = $job_open_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $job_open_query = $job_open_query->offset($offset);
+        }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
         $job_open_query = $job_open_query->where('adler_career_checkbox','=','1');

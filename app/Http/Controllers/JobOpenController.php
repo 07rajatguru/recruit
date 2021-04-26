@@ -4224,8 +4224,10 @@ class JobOpenController extends Controller
         $experience = $_GET['experience'];
         $min_ctc = $_GET['min_ctc'];
         $max_ctc = $_GET['max_ctc'];
+        $limit = $_GET['limit'];
+        $offset = $_GET['offset'];
 
-        $search_job_details = JobOpen::getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc);
+        $search_job_details = JobOpen::getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc,$limit,$offset);
 
         return response()->json(['data'=>$search_job_details]);
     }
