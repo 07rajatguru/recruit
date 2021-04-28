@@ -87,6 +87,26 @@ class CandidateController extends Controller
         return view('adminlte::candidate.index',compact('count','letter','letter_array','total_count','field_list'));
     }
 
+    public function masterSearch() {
+
+        $letter = '';
+        $letter_array = array();
+        $letter_array[''] = 'Select Letter';
+
+        $range = range("A", "Z");
+
+        foreach ($range as $key => $value) {
+            $letter_array[$value] = $value;
+        }
+
+        $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
+        $total_count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
+
+        $field_list = CandidateBasicInfo::getFieldsList();
+        
+        return view('adminlte::candidate.index',compact('count','letter','letter_array','total_count','field_list'));
+    }
+
     public function applicantIndex() {
 
         $count = CandidateBasicInfo::getApplicantCandidatesCount('');

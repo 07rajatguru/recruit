@@ -80,13 +80,26 @@ class CandidateBasicInfo extends Model
             $query = $query->offset($offset);
         }
 
-        if($cname != '') {
-
-            echo $cname;exit;
-            $query = $query->where('candidate_basicinfo.full_name','like',"%$cname%");
+        if(isset($initial_letter) && $initial_letter != '') {
+            $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         }
 
-        $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        else {
+            if(isset($cname) && $cname != '') {
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$cname%");
+            }
+            else if(isset($cemail) && $cemail != '') {
+                $query = $query->where('candidate_basicinfo.email','like',"%$cemail%");
+            }
+            else if(isset($cmno) && $cmno != '') {
+                $query = $query->where('candidate_basicinfo.mobile','like',"%$cmno%");
+            }
+            else if(isset($job_title) && $job_title != '') {
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$job_title%");
+            }
+        }
+
+        
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
 
         if (isset($search) && $search != '') {

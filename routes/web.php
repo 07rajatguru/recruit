@@ -833,9 +833,15 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Candidate
-    Route::any('candidate', [
+    Route::get('candidate', [
         'as' => 'candidate.index',
         'uses' => 'CandidateController@index',
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
+    ]);
+
+    Route::post('candidate-search', [
+        'as' => 'candidate.mastersearch',
+        'uses' => 'CandidateController@masterSearch',
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 

@@ -234,6 +234,11 @@
                 $(".candidate_email_cls").hide();
                 $(".candidate_mno_cls").hide();
                 $(".candidate_title_cls").hide();
+
+                $("#cname").val("");
+                $("#cemail").val("");
+                $("#cmno").val("");
+                $("#job_title").val("");
             }
             if(selected_field == 'Candidate Email') {
 
@@ -241,6 +246,11 @@
                 $(".candidate_nm_cls").hide();
                 $(".candidate_mno_cls").hide();
                 $(".candidate_title_cls").hide();
+
+                $("#cname").val("");
+                $("#cemail").val("");
+                $("#cmno").val("");
+                $("#job_title").val("");
             }
             if(selected_field == 'Candidate Mobile No.') {
 
@@ -248,6 +258,11 @@
                 $(".candidate_nm_cls").hide();
                 $(".candidate_email_cls").hide();
                 $(".candidate_title_cls").hide();
+
+                $("#cname").val("");
+                $("#cemail").val("");
+                $("#cmno").val("");
+                $("#job_title").val("");
             }
             if(selected_field == 'Posting Title') {
 
@@ -255,6 +270,11 @@
                 $(".candidate_nm_cls").hide();
                 $(".candidate_email_cls").hide();
                 $(".candidate_mno_cls").hide();
+
+                $("#cname").val("");
+                $("#cemail").val("");
+                $("#cmno").val("");
+                $("#job_title").val("");
             }
         }
 
@@ -265,13 +285,26 @@
             var cmno = $("#cmno").val();
             var job_title = $("#job_title").val();
 
-            var url = 'candidate';
+            if(cname == '' & cemail == '' && cmno == '' && job_title == '') {
 
-            if(cname != '') {
+                alert("Please enter any one field value.");
+                return false;
+            }
+            else {
+
+                $("#cname").val("");
+                $("#cemail").val("");
+                $("#cmno").val("");
+                $("#job_title").val("");
+
+                var url = '/candidate-search';
 
                 var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="text" name="cname" value="'+cname+'" />' +
+                '<input type="text" name="cemail" value="'+cemail+'" />' +
+                '<input type="text" name="cmno" value="'+cmno+'" />' +
+                '<input type="text" name="job_title" value="'+job_title+'" />' +
                 '</form>');
 
                 $('body').append(form);
