@@ -291,7 +291,7 @@
 
             if(cname == '' & cemail == '' && cmno == '' && job_title == '') {
 
-                alert("Please enter any one field value.");
+                alert("Please enter field value.");
                 return false;
             }
             else {
