@@ -201,7 +201,14 @@ class CandidateController extends Controller
         $order_column_name = self::getCandidateOrderColumnName($order);
         $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter,$cname,$cemail,$cmno,$job_title);
 
-        $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter);
+        if(isset($initial_letter) && $initial_letter != '') {
+
+            $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter);
+        }
+        else {
+
+            $count = sizeof($response);
+        }
 
         $candidate_details = array();
         $i = 0;$j = 0;

@@ -166,6 +166,10 @@
                       //  $("#employee_grid_processing").css("display","none");
                     },
                 },
+                initComplete:function( settings, json) {
+                    var count = json.recordsTotal;
+                    $("#candidate_count").html("(" + count + ")");
+                },
                 "pageLength": 50,
                 "responsive": true,
                 "pagingType": "full_numbers",

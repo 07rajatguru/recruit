@@ -95,7 +95,12 @@ class CandidateBasicInfo extends Model
                 $query = $query->where('candidate_basicinfo.mobile','like',"%$cmno%");
             }
             else if(isset($job_title) && $job_title != '') {
-                $query = $query->where('candidate_basicinfo.full_name','like',"%$job_title%");
+
+                $query = $query->leftjoin('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
+
+                $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+
+                $query = $query->where('job_openings.posting_title','like',"%$job_title%");
             }
         }
 
