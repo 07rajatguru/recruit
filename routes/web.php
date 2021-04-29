@@ -500,6 +500,44 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:role-delete']
     ]);
 
+    // Admin > Departments
+    Route::get('departments', [
+        'as' => 'departments.index',
+        'uses' => 'DepartmentController@index',
+        'middleware' => ['permission:display-roles|role-add|role-edit|role-delete']
+    ]);
+
+    Route::get('departments/create', [
+        'as' => 'departments.create',
+        'uses' => 'DepartmentController@create',
+        'middleware' => ['permission:role-add']
+    ]);
+
+    Route::post('departments/create', [
+        'as' => 'departments.store',
+        'uses' => 'DepartmentController@store',
+        'middleware' => ['permission:role-add']
+    ]);
+
+    Route::get('departments/{id}/edit', [
+        'as' => 'departments.edit',
+        'uses' => 'DepartmentController@edit',
+        'middleware' => ['permission:role-edit']
+    ]);
+
+    Route::patch('departments/{id}', [
+        'as' => 'departments.update',
+        'uses' => 'DepartmentController@update',
+        'middleware' => ['permission:role-edit']
+    ]);
+    
+    Route::delete('departments/{id}', [
+        'as' => 'departments.destroy',
+        'uses' => 'DepartmentController@destroy',
+        'middleware' => ['permission:role-delete']
+    ]);
+
+
     Route::resource('documents', 'DocumentController');
 
     // Admin > Industry

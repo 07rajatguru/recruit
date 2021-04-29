@@ -479,6 +479,11 @@ return [
                     'icon' => 'circle-o',
                 ],
                 [
+                    'text' => 'Department',
+                    'url'  => 'departments',
+                    'icon' => 'circle-o',
+                ],
+                [
                     'text' => 'Users',
                     'url'  => 'users',
                     'icon' => 'circle-o',

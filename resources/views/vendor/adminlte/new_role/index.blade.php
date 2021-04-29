@@ -37,6 +37,7 @@
             <th>No</th>
             <th>Name</th>
             <th>Description</th>
+            <th>Department</th>
             <th width="280px">Action</th>
         </tr>
     </thead>
@@ -48,6 +49,7 @@
                     <td>{{ ++$i }}</td>
                     <td>{{ $role->display_name }}</td>
                     <td>{{ $role->description }}</td>
+                    <td>{{ $role->department }}</td>
                     <td>
                         <a class="fa fa-circle" title="Show" href="{{ route('userrole.show',$role->id) }}"></a>
 

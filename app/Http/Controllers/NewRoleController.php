@@ -10,6 +10,7 @@ use App\PermissionRole;
 use App\User;
 use App\Module;
 use DB;
+use App\Department;
 
 class NewRoleController extends Controller
 {
@@ -26,8 +27,9 @@ class NewRoleController extends Controller
         $permissions = Permission::getAllPermissionsDetails();
         $modules = Module::getModules();
         $module_ids_array = array();
+        $departments = Department::get();
        
-        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array'));
+        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments'));
     }
 
     public function store(Request $request) {
@@ -43,17 +45,18 @@ class NewRoleController extends Controller
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
+        $role->department = $request->input('department');
         $role->save();
 
-        if($role->save())
-        {
+        if($role->save()) {
+
             $role_id = $role->id;
 
             $permissions = $request->input('permission');
-            if(isset($permissions) && sizeof($permissions)>0)
-            {
-                foreach ($permissions as $key => $value)
-                {
+            if(isset($permissions) && sizeof($permissions)>0) {
+
+                foreach ($permissions as $key => $value) {
+
                     $permissions_role = new PermissionRole();
                     $permissions_role->permission_id = $value;
                     $permissions_role->role_id = $role_id;
@@ -88,7 +91,9 @@ class NewRoleController extends Controller
         }
 
         $module_ids_array = array_unique($module_ids_array);
-        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array'));
+
+        $departments = Department::get();
+        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments'));
     }
 
     public function update(Request $request,$id) {
@@ -104,19 +109,20 @@ class NewRoleController extends Controller
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
+        $role->department = $request->input('department');
         $role->save();
 
-        if($role->save())
-        {
-            $role_id = $role->id;
+        if($role->save()) {
 
+            $role_id = $role->id;
             $permissions = $request->input('permission');
-            if(isset($permissions) && sizeof($permissions)>0)
-            {
+
+            if(isset($permissions) && sizeof($permissions)>0) {
+
                 DB::table("permission_role")->where("permission_role.role_id",$id)->delete();
 
-                foreach ($permissions as $key => $value)
-                {
+                foreach ($permissions as $key => $value) {
+                    
                     $permissions_role = new PermissionRole();
                     $permissions_role->permission_id = $value;
                     $permissions_role->role_id = $role_id;

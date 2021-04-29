@@ -36,6 +36,13 @@
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
+                <strong>Department : </strong>
+                {{ $role->department }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
                 <strong>Permissions : </strong>
                 @if(!empty($rolePermissions))
                     @foreach($rolePermissions as $v)

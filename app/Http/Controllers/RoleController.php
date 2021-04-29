@@ -8,6 +8,7 @@ use App\Role;
 use App\Permission;
 use DB;
 use App\User;
+use App\Department;
 
 class RoleController extends Controller
 {
@@ -32,7 +33,8 @@ class RoleController extends Controller
 
         $action = 'add';
         $permission = Permission::get();
-        return view('adminlte::roles.create',compact('permission','action'));
+        $departments = Department::get();
+        return view('adminlte::roles.create',compact('permission','action','departments'));
     }
 
     /**
@@ -48,13 +50,13 @@ class RoleController extends Controller
             'name' => 'required|unique:roles,name',
             'display_name' => 'required',
             'description' => 'required',
-            //'permission' => 'required',
         ]);
 
         $role = new Role();
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
+        $role->department = $request->input('department');
         $role->save();
 
         $permissions = $request->input('permission');
@@ -96,7 +98,9 @@ class RoleController extends Controller
         $rolePermissions = DB::table("permission_role")->where("permission_role.role_id",$id)
         ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action'));
+        $departments = Department::get();
+
+        return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action','departments'));
     }
 
     /**
@@ -112,12 +116,12 @@ class RoleController extends Controller
         $this->validate($request, [
             'display_name' => 'required',
             'description' => 'required',
-            //'permission' => 'required',
         ]);
 
         $role = Role::find($id);
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
+        $role->department = $request->input('department');
         $role->save();
 
         DB::table("permission_role")->where("permission_role.role_id",$id)->delete();

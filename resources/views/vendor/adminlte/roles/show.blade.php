@@ -31,7 +31,12 @@
                 <strong>Description:</strong>
                 {{ $role->description }}
             </div>
-        
+
+            <div class="form-group">
+                <strong>Department:</strong>
+                {{ $role->department }}
+            </div>
+
             <div class="form-group">
                 <strong>Permissions:</strong>
                 @if(!empty($rolePermissions))
