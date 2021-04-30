@@ -102,27 +102,31 @@ class InterviewOneHourPriorEmail extends Command
                         }
                     }
 
-                    $to_address = array_merge($to_address_client_owner,$to_address_candidate_owner);
-                    $to_address = array_unique($to_address);
-
-                    $to = implode(' ',$to_address);
-                    $from_name = getenv('FROM_NAME');
-                    $from_address = getenv('FROM_ADDRESS');
-                    $app_url = getenv('APP_URL');
-
-                    $input['from_name'] = $from_name;
-                    $input['from_address'] = $from_address;
-                    $input['to_address'] = $to_address;
-                    $input['app_url'] = $app_url;
-
                     if(isset($interview_details) && sizeof($interview_details) > 0) {
+
+                        $from_name = getenv('FROM_NAME');
+                        $from_address = getenv('FROM_ADDRESS');
+                        $app_url = getenv('APP_URL');
+
+                        if(isset($to_address_client_owner) && $to_address_client_owner != '' && isset($to_address_candidate_owner) && $to_address_candidate_owner != '') {
+
+                            $to_address = array_merge($to_address_client_owner,$to_address_candidate_owner);
+                            $to_address = array_unique($to_address);
+                        }
+                        else {
+
+                            $to_address = array();
+                        }
+
+                        $input['from_name'] = $from_name;
+                        $input['from_address'] = $from_address;
+                        $input['app_url'] = $app_url;
+                        $input['to_address'] = $to_address;
+                        $input['subject'] = 'Interview Reminder';
+                        $input['type_string'] = implode(",", $type_array);
+                        $input['file_path'] = $file_path_array;
                         $input['interview_details'] = $interview_details;
-                    }
-                    $input['subject'] = 'Interview Reminder';
-                    $input['type_string'] = implode(",", $type_array);
-                    $input['file_path'] = $file_path_array;
 
-                    if(isset($interview_details) && sizeof($interview_details) > 0) {
                         \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
                             $message->from($input['from_address'], $input['from_name']);
                             $message->to($input['to_address'])->subject($input['subject']);
