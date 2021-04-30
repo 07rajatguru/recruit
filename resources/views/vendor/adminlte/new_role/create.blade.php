@@ -36,80 +36,87 @@
 	            </div>
 	            <div class="col-xs-12 col-sm-12 col-md-12">
 	                <div class="">
-                    <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                        <strong>Name: <span class = "required_fields">*</span></strong>
-                        {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '1')) !!}
-                        @if ($errors->has('name'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('name') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
-                        <strong>Display Name: <span class = "required_fields">*</span></strong>
-                        {!! Form::text('display_name', null, array('placeholder' => 'Display Name','class' => 'form-control','tabindex' => '2')) !!}
-                        @if ($errors->has('display_name'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('display_name') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
-                        <strong>Description: <span class = "required_fields">*</span></strong>
-                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '3')) !!}
-                        @if ($errors->has('description'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('description') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}">
-                        <strong>Select Module Permissions : <span class = "required_fields">*</span></strong>
-                        <input type="checkbox" id="all_roles"/><strong>Select All</strong>
-                        <br/><br/>
-                        @foreach($modules as $k=>$v) &nbsp;&nbsp;
-                            {!! Form::checkbox('module_ids[]', $k, in_array($k,$module_ids_array), array('id'=>'module_ids','class' => 'module_ids','onclick' => 'getModulePermissions("'.$k.'","'.$v.'")')) !!}
-                            {!! Form::label ($v) !!}
-                        @endforeach
-                        <br/><br/>
-                        @if ($errors->has('module_ids'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('module_ids') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <?php 
-                        $str = '';
-                        $id = '';
-                    ?>
-                    @foreach($modules as $k=>$v)
-                        <div class="div_{{ $v }}" style="border:1px dotted black;display:none;">
-                            <span><b>{{ $v }} : </b></span><br/><br/>
+                        <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                            <strong>Name: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control','tabindex' => '1')) !!}
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <?php
-                            $id = $id . "," . $k;
-                            $str = $str . "," . $v;
+
+                        <div class="form-group {{ $errors->has('display_name') ? 'has-error' : '' }}">
+                            <strong>Display Name: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('display_name', null, array('placeholder' => 'Display Name','class' => 'form-control','tabindex' => '2')) !!}
+                            @if ($errors->has('display_name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('display_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Department : <span class = "required_fields">*</span> </strong>
+                            {!! Form::select('department', $departments,$department_name, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
+                        </div>
+
+                        <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
+                            <strong>Description: <span class = "required_fields">*</span></strong>
+                            {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '4')) !!}
+                            @if ($errors->has('description'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('description') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('module_ids') ? 'has-error' : '' }}">
+                            <strong>Select Module Permissions : <span class = "required_fields">*</span></strong>
+                            <input type="checkbox" id="all_roles"/><strong>Select All</strong>
+                            <br/><br/>
+                            @foreach($modules as $k=>$v) &nbsp;&nbsp;
+                                {!! Form::checkbox('module_ids[]', $k, in_array($k,$module_ids_array), array('id'=>'module_ids','class' => 'module_ids','onclick' => 'getModulePermissions("'.$k.'","'.$v.'")')) !!}
+                                {!! Form::label ($v) !!}
+                            @endforeach
+                            <br/><br/>
+                            @if ($errors->has('module_ids'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('module_ids') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <?php 
+                            $str = '';
+                            $id = '';
                         ?>
-                    @endforeach
-                    <input type="hidden" name="name_string" id="name_string" value="{{ $str }}">
-                    <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
+                        @foreach($modules as $k=>$v)
+                            <div class="div_{{ $v }}" style="border:1px dotted black;display:none;">
+                                <span><b>{{ $v }} : </b></span><br/><br/>
+                            </div>
+                            <?php
+                                $id = $id . "," . $k;
+                                $str = $str . "," . $v;
+                            ?>
+                        @endforeach
+                        <input type="hidden" name="name_string" id="name_string" value="{{ $str }}">
+                        <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
    
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
     </div>
-</div>
 
 @section('customscripts')
     <script>
         $(document).ready(function() {
+
+            $("#department").select2();
 
             $("#role_form").validate({
                 rules: {

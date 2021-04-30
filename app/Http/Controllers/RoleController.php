@@ -33,8 +33,18 @@ class RoleController extends Controller
 
         $action = 'add';
         $permission = Permission::get();
-        $departments = Department::get();
-        return view('adminlte::roles.create',compact('permission','action','departments'));
+
+        $department_res = Department::orderBy('name','DESC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->name] = $r->name;
+            }
+        }
+        $department_name = '';
+
+        return view('adminlte::roles.create',compact('permission','action','departments','department_name'));
     }
 
     /**
@@ -98,9 +108,17 @@ class RoleController extends Controller
         $rolePermissions = DB::table("permission_role")->where("permission_role.role_id",$id)
         ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
 
-        $departments = Department::get();
+        $department_res = Department::orderBy('name','DESC')->get();
+        $departments = array();
 
-        return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action','departments'));
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->name] = $r->name;
+            }
+        }
+        $department_name = $role->department;
+
+        return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action','departments','department_name'));
     }
 
     /**

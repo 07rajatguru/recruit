@@ -36,11 +36,12 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="roles_table">
         <thead>
         <tr>
-            <th>No</th>
+            <th width="40px">No</th>
+            <th width="100px">Action</th>
             <th>Name</th>
             <th>Description</th>
             <th>Department</th>
-            <th width="280px">Action</th>
+            
         </tr>
     </thead>
         <tbody>
@@ -48,9 +49,6 @@
         @foreach ($roles as $key => $role)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $role->display_name }}</td>
-                <td>{{ $role->description }}</td>
-                <td>{{ $role->department }}</td>
                 <td>
                     <a class="fa fa-circle" title="Show" href="{{ route('roles.show',$role->id) }}"></a>
 
@@ -62,6 +60,9 @@
                         @include('adminlte::partials.deleteModalUser', ['data' => $role, 'name' => 'roles','display_name'=>'Role'])
                     @endpermission
                 </td>
+                <td>{{ $role->display_name }}</td>
+                <td>{{ $role->description }}</td>
+                <td>{{ $role->department }}</td>
             </tr>
         @endforeach
         </tbody>
@@ -75,6 +76,7 @@
             var table = jQuery('#roles_table').DataTable({
                 responsive: true,
                 stateSave : true,
+                "columnDefs": [ {orderable: false, targets: [1]}],
             });
 
             new jQuery.fn.dataTable.FixedHeader( table );

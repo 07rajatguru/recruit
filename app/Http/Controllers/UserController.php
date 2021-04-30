@@ -31,23 +31,11 @@ use App\UsersEmailPwd;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function index(Request $request) {
 
         $users = User::orderBy('status','ASC')->get();
         return view('adminlte::users.index',compact('users'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
     public function create() {
 
@@ -57,7 +45,6 @@ class UserController extends Controller
         $reports_to = User::getUserArray($user_id);
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
-        //$floor_incharge = User::getAllUsers();
         $floor_incharge = User::getAllFloorInchargeUsers();
         $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
 
@@ -67,7 +54,19 @@ class UserController extends Controller
         $type  = User::getTypeArray();
         $type = array_fill_keys(array(''),'Select type')+$type;
 
-        return view('adminlte::users.create',compact('roles', 'reports_to','companies','type','floor_incharge'));
+        // Replace Type with Department
+
+        $department_res = Department::orderBy('name','DESC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->name] = $r->name;
+            }
+        }
+        $department_name = '';
+
+        return view('adminlte::users.create',compact('roles', 'reports_to','companies','type','floor_incharge','departments','department_name'));
     }
 
     /**

@@ -34,9 +34,9 @@
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="department_table">
         <thead>
             <tr>
-                <th>No</th>
+                <th width="50px">No</th>
+                <th width="50px">Action</th>
                 <th>Name</th>
-                <th width="280px">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -44,14 +44,13 @@
         @foreach ($departments as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $value->name }}</td>
                 <td>
-
                     <a class="fa fa-edit" href="{{ route('departments.edit',$value->id) }}"></a>
 
                     @include('adminlte::partials.deleteModalNew', ['data' => $value, 
                         'name' => 'departments','display_name'=>'Department'])
                 </td>
+                <td>{{ $value->name }}</td>
             </tr>
         @endforeach
         </tbody>
@@ -65,7 +64,8 @@
 
             var table = jQuery('#department_table').DataTable({
                 responsive: true,
-                stateSave : true
+                stateSave : true,
+                "columnDefs": [ {orderable: false, targets: [1]}],
             });
 
             if ( ! table.data().any() ) {

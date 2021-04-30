@@ -55,9 +55,14 @@
                         @endif
                     </div>
 
+                    <div class="form-group">
+                        <strong>Department : <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('department', $departments,$department_name, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
+                    </div>
+
                     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                         <strong>Description: <span class = "required_fields">*</span></strong>
-                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '3')) !!}
+                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '4')) !!}
                         @if ($errors->has('description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('description') }}</strong>
@@ -100,6 +105,8 @@
 @section('customscripts')
     <script>
         $(document).ready(function(){
+
+            $("#department").select2();
 
             $("#role_form").validate({
                 rules: {

@@ -27,9 +27,18 @@ class NewRoleController extends Controller
         $permissions = Permission::getAllPermissionsDetails();
         $modules = Module::getModules();
         $module_ids_array = array();
-        $departments = Department::get();
+        
+        $department_res = Department::orderBy('name','DESC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->name] = $r->name;
+            }
+        }
+        $department_name = '';
        
-        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments'));
+        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments','department_name'));
     }
 
     public function store(Request $request) {
@@ -92,8 +101,17 @@ class NewRoleController extends Controller
 
         $module_ids_array = array_unique($module_ids_array);
 
-        $departments = Department::get();
-        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments'));
+        $department_res = Department::orderBy('name','DESC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->name] = $r->name;
+            }
+        }
+        $department_name = $role->department;
+
+        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments','department_name'));
     }
 
     public function update(Request $request,$id) {
