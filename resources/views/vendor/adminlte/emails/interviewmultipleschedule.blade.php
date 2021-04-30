@@ -36,7 +36,7 @@
                             <td align="left"><b>Confirmed</b></td>
                             <td align="left"><b>Source</b></td>
 
-                            @if(isset($subject) && $subject == "Yesterday's Interviews")
+                            @if(isset($yesterday_date) && $yesterday_date != '')
                                 <td align="left"><b>Action</b></td>
                             @endif
                         </tr>
@@ -65,7 +65,7 @@
                                 <td align="left"><b>{{'Yes'}}</b></td>
                                 <td align="left"><b>{{'Adler'}}</b></td>
 
-                                @if(isset($subject) && $subject == "Yesterday's Interviews")
+                                @if(isset($yesterday_date) && $yesterday_date != '')
                                     <td align="left">
                                         <a formtarget="_blank" href="{{getenv('APP_URL').'/interview/'.$value['id'].'/edit/index'}}">Edit</a>
                                     </td>

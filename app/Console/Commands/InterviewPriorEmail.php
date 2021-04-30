@@ -106,25 +106,32 @@ class InterviewPriorEmail extends Command
                     $input['from_address'] = $from_address;
                     $input['to_address'] = $to_address;
                     $input['app_url'] = $app_url;
-                    $input['interview_details'] = $interviews;
+
+                    if(isset($interviews) && sizeof($interviews) > 0) {
+                        $input['interview_details'] = $interviews;
+                    }
+
                     $input['subject'] = "Today's Interviews";
                     $input['type_string'] = implode(",", $type_array);
                     $input['file_path'] = $file_path_array;
 
-                    \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
-                        $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to_address'])->subject($input['subject']);
+                    if(isset($interviews) && sizeof($interviews) > 0) {
+                        
+                        \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+                            $message->from($input['from_address'], $input['from_name']);
+                            $message->to($input['to_address'])->subject($input['subject']);
 
-                        if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+                            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
 
-                            foreach ($input['file_path'] as $key => $value) {
+                                foreach ($input['file_path'] as $key => $value) {
 
-                                if(isset($value) && $value != '') {
-                                    $message->attach($value);
+                                    if(isset($value) && $value != '') {
+                                        $message->attach($value);
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
