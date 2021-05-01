@@ -28,20 +28,28 @@ use App\RoleUser;
 use App\ModuleVisibleUser;
 use App\CandidateBasicInfo;
 use App\UsersEmailPwd;
+use App\Department;
 
 class UserController extends Controller
 {
     public function index(Request $request) {
 
-        $users = User::orderBy('status','ASC')->get();
-        return view('adminlte::users.index',compact('users'));
+        $users = User::orderBy('status','ASC')
+        ->leftjoin('department','department.id','=','users.type')
+        ->select('users.*','department.name as department')->get();
+
+        $count = sizeof($users);
+
+        return view('adminlte::users.index',compact('users','count'));
     }
 
     public function create() {
 
         $user_id = \Auth::user()->id;
 
-        $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id')->toArray();
+        $roles = array();
+        $roles_id = '';
+
         $reports_to = User::getUserArray($user_id);
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
@@ -61,12 +69,14 @@ class UserController extends Controller
 
         if(sizeof($department_res) > 0) {
             foreach($department_res as $r) {
-                $departments[$r->name] = $r->name;
+                $departments[$r->id] = $r->name;
             }
         }
-        $department_name = '';
+        $department_id = '';
 
-        return view('adminlte::users.create',compact('roles', 'reports_to','companies','type','floor_incharge','departments','department_name'));
+        $departments = array_fill_keys(array(''),'Select Department')+$departments;
+
+        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','type','floor_incharge','departments','department_id'));
     }
 
     /**
@@ -238,7 +248,12 @@ class UserController extends Controller
 
     public function show($id) {
 
-        $user = User::find($id);
+        $user = \DB::table('users')
+        ->leftjoin('department','department.id','=','users.type')
+        ->leftjoin('role_user','role_user.user_id','=','users.id')
+        ->leftjoin('roles','roles.id','=','role_user.role_id')
+        ->select('users.*','department.name as department','roles.display_name as display_name')->where('users.id','=',$id)->first();
+
         return view('adminlte::users.show',compact('user'));
     }
 
@@ -261,7 +276,7 @@ class UserController extends Controller
         $floor_incharge = User::getAllFloorInchargeUsers();
         $floor_incharge = array_fill_keys(array(0),'Select Floor Incharge')+$floor_incharge;
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
+        $roles_id = $user->roles->pluck('id','id')->toArray();
         $userReportsTo = $user->reports_to;
         $userFloorIncharge = $user->floor_incharge;
         $semail=$user->secondary_email;
@@ -272,7 +287,19 @@ class UserController extends Controller
         $type  = User::getTypeArray();
         $type = array_fill_keys(array(''),'Select type')+$type;
       
-        return view('adminlte::users.edit',compact('user','roles','userRole', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail'));
+        // Replace Type with Department
+
+        $department_res = Department::orderBy('name','DESC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        $department_id = $user->type;
+
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id'));
     }
 
     /**
@@ -317,9 +344,11 @@ class UserController extends Controller
         $user->update($input);
         DB::table('role_user')->where('user_id',$id)->delete();
 
-        foreach ($request->input('roles') as $key => $value) {
+        /*foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
-        }
+        }*/
+
+        $user->attachRole($request->input('roles'));
 
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');

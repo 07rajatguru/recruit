@@ -33,16 +33,12 @@
         
             <div class="form-group">
                 <strong>Role:</strong>
-                @if(!empty($user->roles))
-                    @foreach($user->roles as $v)
-                        <label class="label label-success">{{ $v->display_name }}</label>
-                    @endforeach
-                @endif
+                <label class="label label-success">{{ $user->display_name }}</label>
             </div>
         
             <div class="form-group">
                 <strong>Type:</strong>
-                    {{ $user->type }}
+                {{ $user->department }}
             </div>
         </div>
     </div>

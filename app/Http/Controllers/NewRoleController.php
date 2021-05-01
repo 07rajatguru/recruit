@@ -16,7 +16,10 @@ class NewRoleController extends Controller
 {
     public function index() {
 
-    	$roles = Role::orderBy('id','ASC')->get();
+    	$roles = Role::orderBy('id','ASC')
+        ->leftjoin('department','department.id','=','roles.department')
+        ->select('roles.*','department.name as department')->get();
+
     	$count = sizeof($roles);
 
         return view('adminlte::new_role.index',compact('roles','count'));
@@ -33,12 +36,12 @@ class NewRoleController extends Controller
 
         if(sizeof($department_res) > 0) {
             foreach($department_res as $r) {
-                $departments[$r->name] = $r->name;
+                $departments[$r->id] = $r->name;
             }
         }
-        $department_name = '';
+        $department_id = '';
        
-        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments','department_name'));
+        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments','department_id'));
     }
 
     public function store(Request $request) {
@@ -78,7 +81,10 @@ class NewRoleController extends Controller
 
     public function show($id) {
 
-        $role = Role::find($id);
+        $role = \DB::table('roles')
+        ->leftjoin('department','department.id','=','roles.department')
+        ->select('roles.*','department.name as department')->where('roles.id','=',$id)->first();
+        
         $rolePermissions = Permission::join("permission_role","permission_role.permission_id","=","permissions.id")->where("permission_role.role_id",$id)->get();
 
         return view('adminlte::new_role.show',compact('role','rolePermissions'));
@@ -106,12 +112,12 @@ class NewRoleController extends Controller
 
         if(sizeof($department_res) > 0) {
             foreach($department_res as $r) {
-                $departments[$r->name] = $r->name;
+                $departments[$r->id] = $r->name;
             }
         }
-        $department_name = $role->department;
+        $department_id = $role->department;
 
-        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments','department_name'));
+        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments','department_id'));
     }
 
     public function update(Request $request,$id) {

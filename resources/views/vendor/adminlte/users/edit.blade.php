@@ -3,25 +3,25 @@
 @section('title', 'Users')
 
 @section('content_header')
-    <h1>Edit user details</h1>
 @stop
 
 @section('content')
+
     @section('customs_css')
-    <style>
-        .error{
-            color:#f56954 !important;
-        }
-    </style>
+        <style>
+            .error{
+                color:#f56954 !important;
+            }
+        </style>
     @endsection
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
+                <h2>Edit user details</h2>
             </div>
-
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('users.index') }}">Back</a>
             </div>
         </div>
     </div>
@@ -42,18 +42,19 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6 "></div>
+                <div class="box-header col-md-6"></div>
                 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="">
+
                             <div class="form-group {{ $errors->has('first_name') ? 'has-error' : '' }}">
                                 <strong>First Name: <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('first_name', null, array('id'=>'first_name','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1','onfocusout' => 'getFullName();')) !!}
                                 @if ($errors->has('first_name'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('first_name') }}</strong>
-                                </span>
+                                        <strong>{{ $errors->first('first_name') }}</strong>
+                                    </span>
                                 @endif
                             </div>
 
@@ -62,61 +63,121 @@
                                 {!! Form::text('last_name', null, array('id'=>'last_name','placeholder' => 'Last Name','class' => 'form-control', 'tabindex' => '2','onfocusout' => 'getFullName();')) !!}
                                 @if ($errors->has('last_name'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('last_name') }}</strong>
-                                </span>
+                                        <strong>{{ $errors->first('last_name') }}</strong>
+                                    </span>
                                 @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Full Name:</strong>
-                                {!! Form::text('name', null, array('placeholder' => 'Full Name','class' => 'form-control','tabindex' => '3', 'readonly' => 'true','id'=>'name')) !!}
+                            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                                <strong>Full Name: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '3', 'readonly' => 'true')) !!}
+                                @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Email:</strong>
-                                {!! Form::text('email', null, array('placeholder' => 'Email','class' => 'form-control','tabindex' => '4','id'=>'email')) !!}
+                            <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
+                                <strong>Email: <span class = "required_fields">*</span> </strong>
+                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '4')) !!}
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Secondary Gmail:</strong>
-                                {!! Form::text('semail', $semail, array('placeholder' => 'Secondary Email','class' => 'form-control','tabindex' => '5','id'=>'semail')) !!}
+                            <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
+                                <strong>Secondary Gmail: </strong>
+                                {!! Form::text('semail',$semail, array('id'=>'semail','placeholder' => 'Secondary Email','class' => 'form-control', 'tabindex' => '5')) !!}
+                                @if ($errors->has('semail'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('semail') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Password:</strong>
-                                {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control','tabindex' => '6','id'=>'password')) !!}
+                            <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
+                                <strong>Password: <span class = "required_fields">*</span> </strong>
+                                {!! Form::password('password', array('id'=>'password','placeholder' => 'Password','class' => 'form-control','tabindex' => '6')) !!}
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Confirm Password:</strong>
-                                {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control','tabindex' => '7','id'=>'confirm-password')) !!}
+                            <div class="form-group {{ $errors->has('confirm-password') ? 'has-error' : '' }}">
+                                <strong>Confirm Password: </strong>
+                                {!! Form::password('confirm-password', array('id'=>'confirm-password', 'placeholder' => 'Confirm Password','class' => 'form-control','tabindex' => '7')) !!}
+                                @if ($errors->has('confirm-password'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('confirm-password') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->has('reports_to') ? 'has-error' : '' }}">
                                 <strong>Reports To :</strong>
                                 {!! Form::select('reports_to', $reports_to,isset($userReportsTo) ? $userReportsTo : null, array('id'=>'reports_to','class' => 'form-control','tabindex' => '8')) !!}
+                                @if ($errors->has('reports_to'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('reports_to') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->has('floor_incharge') ? 'has-error' : '' }}">
                                 <strong>Floor Incharge :</strong>
-                                {!! Form::select('floor_incharge', $floor_incharge,isset($userFloorIncharge) ? $userFloorIncharge : 0, array('id'=>'floor_incharge','class' => 'form-control','tabindex' => '9')) !!}
+                                {!! Form::select('floor_incharge', $floor_incharge, isset($userFloorIncharge) ? $userFloorIncharge : 0, array('id'=>'floor_incharge','class' => 'form-control','tabindex' => '9' )) !!}
+                                @if ($errors->has('floor_incharge'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('floor_incharge') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Select Company : <span class = "required_fields">*</span> 
+                            <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
+                                <strong>Select Compnay : <span class = "required_fields">*</span> 
                                 </strong>
                                 {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '10')) !!}
-                            </div>
-      
-                            <div class="form-group">
-                                <strong>Role:</strong>
-                                {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','tabindex' => '11','id'=>'roles')) !!}
+                                @if ($errors->has('company_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('company_id') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
-                                <strong>Type:</strong>
-                                {!! Form::select('type', $type, null, array('class' => 'form-control','tabindex' => '12')) !!}
+                            <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                <strong>Department : <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('type', $departments,null, array('id'=>'type','class' => 'form-control','tabindex' => '11','onchange' => 'getRoles()')) !!}
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
                             </div>
+
+                            <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
+                                <strong> Role : <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('roles',$roles,$roles_id, array('id'=>'roles','class' => 'form-control', 'tabindex' => '12')) !!}
+                                @if ($errors->has('roles'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('roles') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <!-- <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                <strong> Type : <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('type', $type,null, array('class' => 'form-control','tabindex' => '12' )) !!}
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
+                            </div> -->
 
                             <div class="form-group">
                                 <strong> Floor Incharge : </strong> &nbsp;&nbsp;
@@ -176,9 +237,12 @@
                 </div>
             </div>
         </div>
+
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary">Update</button>
         </div>
+
+        <input type="hidden" id="user_id" name="user_id" value="{{ $id }}">
     </div>
 
     {!! Form::close() !!}
@@ -190,7 +254,15 @@
 
         $(document).ready(function() {
 
-            $("#roles").select2();
+            getRoles();
+
+            $("#type").select2();
+            $("#roles").select2({placeholder: 'Select Role'});
+
+            // automaticaly open the select2 when it gets focus
+            jQuery(document).on('focus', '.select2', function() {
+                jQuery(this).siblings('select').select2('open');
+            });
 
             $("#users_form").validate({
                 rules: {
@@ -212,70 +284,114 @@
                     "type": {
                         required: true
                     },
+                    "roles": {
+                        required: true
+                    },
                 },
                 messages: {
                     "first_name": {
-                        required: "First Name is required field."
+                        required: "First Name is Required Field."
                     },
                     "last_name": {
-                        required: "Last Name is required field."
+                        required: "Last Name is Required Field."
                     },
                     "email": {
-                        required: "Email is required field."
+                        required: "Email is Required Field."
                     },
                     "password": {
-                        required: "Password is required field."
+                        required: "Password is Required Field."
                     },
                     "company_id": {
-                        required: "Please Select Company"
+                        required: "Please Select Company."
                     },
                     "type": {
-                        required: "Please Select Type"
+                        required: "Please Select Department."
                     },
+                    "roles": {
+                        required: "Please Select Role."
+                    }
                 }
             });
 
             reportSelection();
         });
 
-        function getFullName()
-        {
+        function getRoles() {
+
+            var department_id = $("#type").val();
+            var user_id = $("#user_id").val();
+
+            if(department_id > 0) {
+
+                $.ajax({
+
+                    url:'/departments/getroles',
+                    data:{department_id:department_id,user_id:user_id},
+                    dataType:'json',
+
+                    success: function(data) {
+
+                        if(data.roles_res) {
+
+                            $("#roles").empty();
+
+                            $("#roles").append('<option value=""> Select Role </option>');
+                            
+                            $.each(data.roles_res,function(key, value) {
+
+                                if (data.pre_role_id == key) {
+
+                                    $('select[id="roles"]').append('<option selected="selected" value="'+ key +'">' + value + '</option>');        
+                                }
+                                else {
+
+                                    $('select[id="roles"]').append('<option value="'+ key +'">' + value + '</option>');
+                                }
+                            }); 
+                            $("#roles").select2();
+                        }
+                        else{
+                            $("#roles").empty();
+                        }
+                    }
+                });
+            }
+        }
+
+        function getFullName() {
+
             // Get Display Name
 
             var first_name = $("#first_name").val();
             var last_name = $("#last_name").val();
             var display_name = '';
 
-            if(first_name != '' && last_name != '')
-            {
+            if(first_name != '' && last_name != '') {
                 display_name = first_name + " " + last_name.charAt(0) + ".";
             }
-            else
-            {
+            else {
                 display_name = '';
             }
 
             $("#name").val(display_name);
         }
 
-        function reportSelection()
-        {
+        function reportSelection() {
+
             var report_value = document.getElementsByName('daily_report');
             var report_item_value="";
-            for(var i=0; i<report_value.length; i++)
-            {
-                if(report_value[i].type=='radio' && report_value[i].checked==true)
-                {
+
+            for(var i=0; i<report_value.length; i++) {
+
+                if(report_value[i].type=='radio' && report_value[i].checked==true) {
                     report_item_value += report_value[i].value;
                 }
             }
 
-            if(report_item_value == 'Yes')
-            {
+            if(report_item_value == 'Yes') {
                 $(".report_class").show();
             }
-            else
-            {
+            else {
                 $(".report_class").hide();
             }
         }

@@ -484,13 +484,13 @@ return [
                     'icon' => 'circle-o',
                 ],
                 [
-                    'text' => 'Users',
-                    'url'  => 'users',
+                    'text' => 'Roles',
+                    'url'  => 'roles',
                     'icon' => 'circle-o',
                 ],
                 [
-                    'text' => 'Roles',
-                    'url'  => 'roles',
+                    'text' => 'Users',
+                    'url'  => 'users',
                     'icon' => 'circle-o',
                 ],
                 [

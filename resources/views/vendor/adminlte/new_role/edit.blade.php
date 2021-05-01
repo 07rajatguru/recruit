@@ -59,7 +59,7 @@
 
                     <div class="form-group">
                         <strong>Department : <span class = "required_fields">*</span> </strong>
-                        {!! Form::select('department', $departments,$department_name, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
+                        {!! Form::select('department', $departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
                     </div>
 
                     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">

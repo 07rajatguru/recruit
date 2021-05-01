@@ -19,7 +19,10 @@ class RoleController extends Controller
 
     public function index(Request $request) {
 
-        $roles = Role::orderBy('id','ASC')->get();
+        $roles = Role::orderBy('id','ASC')
+        ->leftjoin('department','department.id','=','roles.department')
+        ->select('roles.*','department.name as department')->get();
+
         return view('adminlte::roles.index',compact('roles'));
     }
 
@@ -39,12 +42,12 @@ class RoleController extends Controller
 
         if(sizeof($department_res) > 0) {
             foreach($department_res as $r) {
-                $departments[$r->name] = $r->name;
+                $departments[$r->id] = $r->name;
             }
         }
-        $department_name = '';
+        $department_id = '';
 
-        return view('adminlte::roles.create',compact('permission','action','departments','department_name'));
+        return view('adminlte::roles.create',compact('permission','action','departments','department_id'));
     }
 
     /**
@@ -87,7 +90,10 @@ class RoleController extends Controller
 
     public function show($id) {
 
-        $role = Role::find($id);
+        $role = \DB::table('roles')
+        ->leftjoin('department','department.id','=','roles.department')
+        ->select('roles.*','department.name as department')->where('roles.id','=',$id)->first();
+
         $rolePermissions = Permission::join("permission_role","permission_role.permission_id","=","permissions.id")->where("permission_role.role_id",$id)->get();
 
         return view('adminlte::roles.show',compact('role','rolePermissions'));
@@ -113,12 +119,12 @@ class RoleController extends Controller
 
         if(sizeof($department_res) > 0) {
             foreach($department_res as $r) {
-                $departments[$r->name] = $r->name;
+                $departments[$r->id] = $r->name;
             }
         }
-        $department_name = $role->department;
+        $department_id = $role->department;
 
-        return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action','departments','department_name'));
+        return view('adminlte::roles.edit',compact('role','permission','rolePermissions','action','departments','department_id'));
     }
 
     /**
@@ -166,5 +172,32 @@ class RoleController extends Controller
         DB::table("permission_role")->where('role_id',$id)->delete();
         DB::table("roles")->where('id',$id)->delete();
         return redirect()->route('roles.index')->with('success','Role Deleted Successfully.');
+    }
+
+    public function getRoles() {
+
+        $department_id = $_GET['department_id'];
+        $user_id = $_GET['user_id'];
+
+        if (isset($user_id) && $user_id > 0) {
+            $user = User::find($user_id);
+
+            $user = \DB::table('users')
+            ->leftjoin('role_user','role_user.user_id','=','users.id')
+            ->select('role_user.role_id as role_id')
+            ->where('users.id','=',$user_id)->first();
+
+            $pre_role_id = $user->role_id;
+        }
+        else {
+            $pre_role_id = 0;
+        }
+
+        $roles_res = Role::getRolesByDepartmentId($department_id);
+
+        $data['pre_role_id'] = $pre_role_id;
+        $data['roles_res'] = $roles_res;
+
+        return json_encode($data);
     }
 }

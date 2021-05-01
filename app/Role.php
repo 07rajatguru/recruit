@@ -69,4 +69,21 @@ class Role extends EntrustRole
 
         return $roles;
     }
+
+    public static function getRolesByDepartmentId($department_id) {
+
+        $query = Role::query();
+        $query = $query->where('roles.department','=',$department_id);
+        $query = $query->select('roles.*');
+
+        $response = $query->get();
+
+        $roles = array();
+
+        foreach ($response as $k=>$v) {
+
+            $roles[$v->id] = $v->display_name;
+        }
+        return $roles;
+    }
 }
