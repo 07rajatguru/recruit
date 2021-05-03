@@ -104,7 +104,6 @@ class CandidateBasicInfo extends Model
             }
         }
 
-        
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
 
         if (isset($search) && $search != '') {
@@ -183,14 +182,38 @@ class CandidateBasicInfo extends Model
         return $candidate;
     }
 
-    public static function getAllCandidatesCount($search,$initial_letter) {
+    public static function getAllCandidatesCount($search,$initial_letter,$cname,$cemail,$cmno,$job_title) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
+
+        if(isset($initial_letter) && $initial_letter != '') {
+            $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
+        }
+
+        else {
+            
+            if(isset($cname) && $cname != '') {
+                $query = $query->where('candidate_basicinfo.full_name','like',"%$cname%");
+            }
+            else if(isset($cemail) && $cemail != '') {
+                $query = $query->where('candidate_basicinfo.email','like',"%$cemail%");
+            }
+            else if(isset($cmno) && $cmno != '') {
+                $query = $query->where('candidate_basicinfo.mobile','like',"%$cmno%");
+            }
+            else if(isset($job_title) && $job_title != '') {
+
+                $query = $query->leftjoin('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
+
+                $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+
+                $query = $query->where('job_openings.posting_title','like',"%$job_title%");
+            }
+        }
         
-        $query = $query->where('candidate_basicinfo.full_name','like',"$initial_letter%");
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
 
         if (isset($search) && $search != '') {

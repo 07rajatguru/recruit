@@ -79,8 +79,8 @@ class CandidateController extends Controller
             $letter_array[$value] = $value;
         }
 
-        $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
-        $total_count = CandidateBasicInfo::getAllCandidatesCount('','');
+        $count = CandidateBasicInfo::getAllCandidatesCount('',$letter,'','','','');
+        $total_count = CandidateBasicInfo::getAllCandidatesCount('','','','','','');
 
         $field_list = CandidateBasicInfo::getFieldsList();
         
@@ -99,8 +99,8 @@ class CandidateController extends Controller
             $letter_array[$value] = $value;
         }
 
-        $count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
-        $total_count = CandidateBasicInfo::getAllCandidatesCount('',$letter);
+        $count = CandidateBasicInfo::getAllCandidatesCount('',$letter,'','','','');
+        $total_count = CandidateBasicInfo::getAllCandidatesCount('',$letter,'','','','');
 
         $field_list = CandidateBasicInfo::getFieldsList();
         
@@ -203,11 +203,11 @@ class CandidateController extends Controller
 
         if(isset($initial_letter) && $initial_letter != '') {
 
-            $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter);
+            $count = CandidateBasicInfo::getAllCandidatesCount($search,$initial_letter,$cname,$cemail,$cmno,$job_title);
         }
         else {
 
-            $count = sizeof($response);
+            $count = CandidateBasicInfo::getAllCandidatesCount($search,'',$cname,$cemail,$cmno,$job_title);
         }
 
         $candidate_details = array();
