@@ -281,7 +281,9 @@ class CandidateController extends Controller
 
         $candidate_details = array();
         $i = 0;$j = 0;
-        $all_users = User::getAllUsers('recruiter');
+
+        $recruitment = getenv('RECRUITMENT');
+        $all_users = User::getAllUsers($recruitment);
 
         foreach ($response as $key => $value) {
 

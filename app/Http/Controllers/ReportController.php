@@ -27,11 +27,13 @@ class ReportController extends Controller
         $userwise_perm = $user->can('display-daily-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-daily-report-of-loggedin-user-team');
 
+        $recruitment = getenv('RECRUITMENT');
+
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id,$recruitment);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -79,11 +81,13 @@ class ReportController extends Controller
         $userwise_perm = $user->can('display-weekly-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-weekly-report-of-loggedin-user-team');
 
+        $recruitment = getenv('RECRUITMENT');
+
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id,$recruitment);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -229,11 +233,13 @@ class ReportController extends Controller
         $userwise_perm = $user->can('display-monthly-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-monthly-report-of-loggedin-user-team');
 
+        $recruitment = getenv('RECRUITMENT');
+
         if($all_perm){
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id,$recruitment);
         }
 
         $associate_monthly_response = JobAssociateCandidates::getUserWiseAssociatedCVS($users,$month,$year);
@@ -317,11 +323,13 @@ class ReportController extends Controller
         $userwise_perm = $user->can('display-monthly-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-monthly-report-of-loggedin-user-team');
 
+        $recruitment = getenv('RECRUITMENT');
+
         if($all_perm){
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm){
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id,$recruitment);
         }
 
         // Month data
@@ -849,11 +857,13 @@ class ReportController extends Controller
         $userwise_perm = $user->can('display-productivity-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
 
+        $recruitment = getenv('RECRUITMENT');
+
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id,$recruitment);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -1057,8 +1067,10 @@ class ReportController extends Controller
         $role_id = key($userRole);
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
+        $recruitment = getenv('RECRUITMENT');
+
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         // Get Selected Month
         $month_array = array();

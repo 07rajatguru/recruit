@@ -53,7 +53,8 @@ class EligibilityReportController extends Controller
             $next_year = $year_data[2]; // [result : 2019]
             $next_month = $year_data[3]; // [result : 3]
 
-            $users = User::getAllUsersExpectSuperAdmin('recruiter');
+            $recruitment = getenv('RECRUITMENT');
+            $users = User::getAllUsersExpectSuperAdmin($recruitment);
 
             // For Quater wise[Q1, Q2, Q3, Q4]
             for ($m=$current_month; $m <= 15 ; $m=$m+3) {
@@ -177,7 +178,8 @@ class EligibilityReportController extends Controller
                 $next_year = $year_data[2];
                 $next_month = $year_data[3];
 
-                $users = User::getAllUsersExpectSuperAdmin('recruiter');
+                $recruitment = getenv('RECRUITMENT');
+                $users = User::getAllUsersExpectSuperAdmin($recruitment);
 
                 // For Quater wise[Q1, Q2, Q3, Q4]
                 for ($m=$current_month; $m <= 15 ; $m=$m+3) {
@@ -307,7 +309,8 @@ class EligibilityReportController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
 
-        $users = User::getAllUsersExpectSuperAdmin('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersExpectSuperAdmin($recruitment);
         
         foreach ($users as $key => $value) {
             $user_data = UserOthersInfo::getUserOtherInfo($key);

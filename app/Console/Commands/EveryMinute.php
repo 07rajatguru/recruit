@@ -804,11 +804,13 @@ class EveryMinute extends Command
 
                 $access_roles_id = array($superAdminUserID,$managerUserID);
 
+                $recruitment = getenv('RECRUITMENT');
+
                 if(in_array($value['sender_name'],$access_roles_id)) {
-                    $users = User::getAllUsersExpectSuperAdmin('recruiter');
+                    $users = User::getAllUsersExpectSuperAdmin($recruitment);
                 }
                 else {
-                    $users = User::getAssignedUsers($value['sender_name'],'recruiter');
+                    $users = User::getAssignedUsers($value['sender_name'],$recruitment);
                 }
 
                 $response = array();

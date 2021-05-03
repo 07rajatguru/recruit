@@ -42,7 +42,9 @@ class ApplicantCandidatesReport extends Command
         $from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
         $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
 
-        $users = User::getAllUsers('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+
+        $users = User::getAllUsers($recruitment);
 
         if(isset($users) && sizeof($users) > 0) {
 

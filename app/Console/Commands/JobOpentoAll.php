@@ -45,6 +45,7 @@ class JobOpentoAll extends Command
     public function handle()
     {
         $superadminuserid = getenv('SUPERADMINUSERID');
+        $recruitment = getenv('RECRUITMENT');
 
         $job_data = JobOpen::getJobforOpentoAll();
         $job = array();
@@ -56,7 +57,7 @@ class JobOpentoAll extends Command
                 $cv_count = JobAssociateCandidates::getJobAssociatedCvsCount($job_id);
                 //print_r($cv_count);exit;
                 if ($cv_count < 5) {
-                    $users = User::getAllUsers('recruiter');
+                    $users = User::getAllUsers($recruitment);
                     if(isset($users) && sizeof($users)>0){
                         $user_emails = array();
                         JobVisibleUsers::where('job_id',$job_id)->delete();

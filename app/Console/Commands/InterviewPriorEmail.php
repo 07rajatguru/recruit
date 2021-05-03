@@ -43,7 +43,9 @@ class InterviewPriorEmail extends Command
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
-        $users = User::getAllUsers('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+
+        $users = User::getAllUsers($recruitment);
 
         if(isset($users) && sizeof($users) > 0) {
 

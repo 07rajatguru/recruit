@@ -45,6 +45,7 @@ class OpenJobOfCheckbox extends Command
     public function handle()
     {
         $superadminuserid = getenv('SUPERADMINUSERID');
+        $recruitment = getenv('RECRUITMENT');
 
         $job_data = JobOpen::getJobforOpentoAllOneTime();
         $job = array();
@@ -61,7 +62,7 @@ class OpenJobOfCheckbox extends Command
                 
                 if ($cv_count < 5) {
 
-                    $users = User::getAllUsers('recruiter');
+                    $users = User::getAllUsers($recruitment);
 
                     if(isset($users) && sizeof($users)>0) {
 

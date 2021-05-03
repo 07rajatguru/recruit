@@ -40,7 +40,9 @@ class TrainingSelectAllUser extends Command
      */
     public function handle()
     {
-        $users = User::getAllUsers('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+        
+        $users = User::getAllUsers($recruitment);
         $user_count = sizeof($users);
 
         $training_id = Training::getAlltrainingIds();

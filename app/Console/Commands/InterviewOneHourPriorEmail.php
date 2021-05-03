@@ -42,7 +42,9 @@ class InterviewOneHourPriorEmail extends Command
     {
         $curr_date_time = date('Y-m-d H:i:00', time() + 19800);
 
-        $users = User::getAllUsers('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+
+        $users = User::getAllUsers($recruitment);
 
         if(isset($users) && sizeof($users) > 0) {
 
