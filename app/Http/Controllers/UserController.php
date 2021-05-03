@@ -40,7 +40,15 @@ class UserController extends Controller
 
         $count = sizeof($users);
 
-        return view('adminlte::users.index',compact('users','count'));
+        // Get users for popup of add information
+
+        $user_id =  \Auth::user()->id;
+        $users_string = User::getBefore7daysUsersDetails();
+
+        // For not display superadmin popup
+        $superadmin = getenv('SUPERADMINUSERID');
+
+        return view('adminlte::users.index',compact('users','count','users_string','user_id','superadmin'));
     }
 
     public function create() {
@@ -100,9 +108,15 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
 
         $user = User::create($input);
-        foreach ($request->input('roles') as $key => $value) {
+
+        // Attach Role of user
+        /*foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
-        }
+        }*/
+
+        $role = $request->input('roles');
+        $user->attachRole($role);
+        
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');
         $type = $request->input('type');
@@ -344,11 +358,13 @@ class UserController extends Controller
         $user->update($input);
         DB::table('role_user')->where('user_id',$id)->delete();
 
+        // Attach Role of user
         /*foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
         }*/
 
-        $user->attachRole($request->input('roles'));
+        $role = $request->input('roles');
+        $user->attachRole($role);
 
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');

@@ -31,6 +31,47 @@
         </div>
     @endif
 
+    <!-- For Users others information popup-->
+
+    <input type="hidden" name="users_string" id="users_string" value="{{ $users_string }}">
+
+    <div id="usersModal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Information</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Please fill up remaining details of following Users : <br/><br/>
+                        @if(isset($users_string) && $users_string != '')
+                            <?php
+                                $users_name_array = explode(",", $users_string);
+                            ?>
+
+                            @if(isset($users_name_array) && sizeof($users_name_array) > 0)
+                                <?php $i=1; ?>
+                                @foreach($users_name_array as $key => $value)
+                                    <?php
+                                        echo $i;
+                                        echo ".    ";
+                                        echo $value;
+                                    ?>
+                                <br/><?php $i++ ?>
+                                @endforeach
+                            @endif
+                        @endif
+                    </p><br/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Users others information popup-->
+
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="users_table">
         <thead>
             <tr>
@@ -89,6 +130,10 @@
             @endforeach
         </tbody>
     </table>
+
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
+    <input type="hidden" name="user_id" id="user_id" value="{{ $user_id }}">
 @endsection
 
 @section('customscripts')
@@ -105,6 +150,28 @@
             });
 
             new jQuery.fn.dataTable.FixedHeader(table);
+
+            var users_string = $("#users_string").val();
+
+            if(users_string != '') {
+
+                var superadmin = $("#superadmin").val();
+                var user_id = $("#user_id").val();
+
+                if(superadmin == user_id) {
+
+                    var event = new Date();
+                    var options = { weekday: 'long' };
+                    var day = event.toLocaleDateString('en-US', options);
+
+                    var hours = event.getHours();
+                    var minutes = event.getMinutes();
+
+                    if((day == 'Saturday' && hours == '10') || (day == 'Saturday' && hours == '17' && minutes == '0')) {
+                        jQuery("#usersModal").modal('show');
+                    }
+                }
+            }
 
             $(document).on('click', '.check_job', function (e) {
 

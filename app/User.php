@@ -66,7 +66,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersExpectSuperAdmin($type=NULL) {
+    public static function getAllUsersExpectSuperAdmin($type='') {
 
         $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
@@ -78,7 +78,7 @@ class User extends Authenticatable
         
         $user_query = User::query();
 
-        if($type!=NULL){
+        if($type != ''){
             $user_query = $user_query->where('type','=',$type);
         }
 
@@ -792,5 +792,62 @@ class User extends Authenticatable
             }
         }
         return $userArr;
+    }
+
+    public static function getBefore7daysUsersDetails() {
+
+        $date = date('Y-m-d h:m:s', strtotime('-7 days'));
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $recruitment = getenv('RECRUITMENT');
+
+        $query = User::query();
+
+        // Get before 7 days users list
+        $query = $query->where('users.created_at','<=',$date);
+        $query = $query->where('users.type',$recruitment);
+        $query = $query->whereNotIn('users.status',$status_array);
+        
+        $query = $query->select('users.id','users.first_name','users.last_name');
+
+        $query = $query->groupBy('users.id');
+        $query = $query->orderBy('users.id','ASC');
+        $response = $query->get();
+
+        $i=0;
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            $users_string = '';
+
+            foreach ($response as $key => $value) {
+
+                $users_otherinfo = UserOthersInfo::getUserOtherInfo($value->id);
+
+                if(isset($users_otherinfo) && $users_otherinfo != '') {
+
+                }
+                else {
+
+                    $full_name = $value->first_name." - ".$value->last_name;
+
+                    if($full_name != '') {
+
+                        if($users_string =='')
+                            $users_string .= $full_name;
+                        else
+                            $users_string .= ", ".$full_name;
+                    }
+                }
+                $i++;
+            }
+        }
+        else {
+            $users_string = '';
+        }
+
+        return $users_string;
     }
 }

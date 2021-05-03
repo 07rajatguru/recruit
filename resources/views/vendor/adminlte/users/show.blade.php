@@ -32,13 +32,13 @@
             </div>
         
             <div class="form-group">
+                <strong>Department:</strong>
+                {{ $user->department }}
+            </div>
+
+            <div class="form-group">
                 <strong>Role:</strong>
                 <label class="label label-success">{{ $user->display_name }}</label>
-            </div>
-        
-            <div class="form-group">
-                <strong>Type:</strong>
-                {{ $user->department }}
             </div>
         </div>
     </div>
