@@ -136,7 +136,8 @@ class MonthlyReport extends Command
             });
         }*/
 
-        $users_all = User::getAllUsersEmails('recruiter','Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $users_all = User::getAllUsersEmails($recruitment,'Yes');
 
         foreach ($users_all as $k1 => $v1) {
 

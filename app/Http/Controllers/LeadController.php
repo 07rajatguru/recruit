@@ -290,7 +290,10 @@ class LeadController extends Controller
         $generate_lead = '0';
         $cancel_lead = '0';
         $leadservices_status = Lead::getLeadService();
-        $users = User::getAllUsers();
+
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsers($recruitment);
+
         $status = Lead::getLeadStatus();
         $service ='';
         $lead_status ='Active';
@@ -416,8 +419,8 @@ class LeadController extends Controller
             $referredby = $lead->referredby;
             $lead_status = $lead->lead_status;
 
-            // in refered by all users with inactive if inactive user added lead so
-            $users = User::getAllUsersWithInactive();
+            $recruitment = getenv('RECRUITMENT');
+            $users = User::getAllUsers($recruitment);
         }
         else {
             return view('errors.403');
@@ -539,7 +542,9 @@ class LeadController extends Controller
         $user = \Auth::user();
 
         // For account manager
-        $users = User::getAllUsers('recruiter','Yes');
+
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsers($recruitment,'Yes');
         $users[0] = 'Yet to Assign';
 
         $lead = Lead::find($id);

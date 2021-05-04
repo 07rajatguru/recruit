@@ -40,8 +40,8 @@ class PassiveClientList extends Command
      */
     public function handle()
     {
-
-        $users = User::getAllUsersEmails('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersEmails($recruitment);
     
         foreach ($users as $k1 => $v1) {
 

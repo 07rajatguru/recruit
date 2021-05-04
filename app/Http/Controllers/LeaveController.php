@@ -257,7 +257,8 @@ class LeaveController extends Controller
 
     public function userWiseLeavaAdd(){
 
-        $users = User::getAllUsers();
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsers($recruitment);
 
         return view('adminlte::leave.userwiseleaveadd',compact('users'));
     }
@@ -281,7 +282,9 @@ class LeaveController extends Controller
 
     public function userWiseLeaveEdit($id){
 
-        $users = User::getAllUsers();
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsers($recruitment);
+
         $leave_data = LeaveBalance::find($id);
         $user_id = $leave_data->user_id;
 

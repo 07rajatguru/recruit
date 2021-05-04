@@ -54,7 +54,9 @@ class DailyReport extends Command
 
         else {
 
-            $users = User::getAllUsersEmails('recruiter','Yes');
+            $recruitment = getenv('RECRUITMENT');
+            $users = User::getAllUsersEmails($recruitment,'Yes');
+            
             $fixed_date = Holidays::getFixedLeaveDate();
 
             if (!in_array($date, $fixed_date)) {

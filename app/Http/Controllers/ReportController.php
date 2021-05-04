@@ -389,7 +389,8 @@ class ReportController extends Controller
         $cc_address = 'rajlalwani@adlertalent.com';
         $app_url = getenv('APP_URL');
 
-        $users = User::getAllUsersEmails('recruiter','Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersEmails($recruitment,'Yes');
 
         $input = array();
         $input['from_name'] = $from_name;
@@ -436,7 +437,8 @@ class ReportController extends Controller
         $input['cc'] = $cc_address;
         $input['app_url'] = $app_url;
 
-        $users = User::getAllUsersEmails('recruiter','Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersEmails($recruitment,'Yes');
 
         foreach ($users as $key => $value) {
 
@@ -508,7 +510,8 @@ class ReportController extends Controller
 
         if ($all_perm) {
 
-            $users = User::getAllUsers('recruiter');
+            $recruitment = getenv('RECRUITMENT');
+            $users = User::getAllUsers($recruitment);
 
             foreach ($users as $key => $value) {
 
@@ -584,7 +587,9 @@ class ReportController extends Controller
                 $current_year = date('Y-m-d',strtotime("first day of $current"));
                 $next_year = date('Y-m-d',strtotime("last day of $next"));
 
-                $users = User::getAllUsers('recruiter');
+                $recruitment = getenv('RECRUITMENT');
+                $users = User::getAllUsers($recruitment);
+
                 foreach ($users as $key => $value) {
 
                     $user_details = User::getAllDetailsByUserID($key);

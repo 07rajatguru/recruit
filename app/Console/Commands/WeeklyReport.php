@@ -44,11 +44,9 @@ class WeeklyReport extends Command
      */
     public function handle()
     {
-        /*$from_name = getenv('FROM_NAME');
-        $from_address = getenv('FROM_ADDRESS');
-        $app_url = getenv('APP_URL');*/
-
-        $users = User::getAllUsersEmails('recruiter','Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersEmails($recruitment,'Yes');
+        
         $date = date('Y-m-d');
         $fixed_date = Holidays::getFixedLeaveDate();
 

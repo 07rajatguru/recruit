@@ -21,7 +21,10 @@ class UserBenchMarkController extends Controller
     public function create() {
 
     	$action = 'add';
-    	$all_users = User::getAllUsers('recruiter');
+
+    	$recruitment = getenv('RECRUITMENT');
+        $all_users = User::getAllUsers($recruitment);
+
     	$select_user_id = '';
 
     	return view('adminlte::userbenchmark.create',compact('action','all_users','select_user_id'));
@@ -57,7 +60,9 @@ class UserBenchMarkController extends Controller
     	$user_bench_mark = UserBenchMark::find($id);
     	$action = 'edit';
 
-    	$all_users = User::getAllUsers('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+        $all_users = User::getAllUsers($recruitment);
+
     	$select_user_id = $user_bench_mark->user_id;
 
     	return view('adminlte::userbenchmark.edit',compact('user_bench_mark','action','all_users','select_user_id'));

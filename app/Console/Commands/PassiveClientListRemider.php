@@ -42,7 +42,8 @@ class PassiveClientListRemider extends Command
      */
     public function handle()
     {
-        $users = User::getAllUsersEmails('recruiter');
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersEmails($recruitment);
     
         foreach ($users as $k1 => $v1) {
             $passiveClients = array();

@@ -1005,7 +1005,9 @@ class ToDosController extends Controller
                 $i++;
             }
 
-            $job_user = User::getAllUsers('recruiter');
+            $recruitment = getenv('RECRUITMENT');
+            $job_user = User::getAllUsers($recruitment);
+
             $j=0;
             foreach ($job_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
@@ -1157,7 +1159,9 @@ class ToDosController extends Controller
                 $i++;
             }
 
-            $job_user = User::getAllUsers('recruiter');
+            $recruitment = getenv('RECRUITMENT');
+            $job_user = User::getAllUsers($recruitment);
+
             $j=0;
             foreach ($job_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;

@@ -42,10 +42,8 @@ class ProductivityReport extends Command
      */
     public function handle() {
 
-        $users = User::getAllUsersEmails('recruiter','Yes');
-        /*$date = date('Y-m-d');
-        $fixed_date = Holidays::getFixedLeaveDate();
-        if (!in_array($date, $fixed_date)) {*/
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsersEmails($recruitment,'Yes');
 
         foreach ($users as $key => $value) {
 

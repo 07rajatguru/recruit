@@ -510,10 +510,16 @@ class InterviewController extends Controller
         $viewVariable['postingArray'] = $jobopen;
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getCreateInterviewStatus();
-        $viewVariable['users'] = User::getAllUsers();
+
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsers($recruitment);
+
+        $viewVariable['users'] = $users;
         $viewVariable['round'] = Interview::getSelectRound();
         $viewVariable['interview_round'] = '';
         $viewVariable['action'] = 'add';
+
+
 
         return view('adminlte::interview.create', $viewVariable,compact('user_id'));
     }
@@ -642,7 +648,11 @@ class InterviewController extends Controller
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getEditInterviewStatus();
         $viewVariable['round'] = Interview::getSelectRound();
-        $viewVariable['users'] = User::getAllUsers();
+
+        $recruitment = getenv('RECRUITMENT');
+        $users = User::getAllUsers($recruitment);
+
+        $viewVariable['users'] = $users;
         $viewVariable['about'] = $interview->about;
         $viewVariable['action'] = 'edit';
         $viewVariable['fromDateTime'] = $dateClass->changeYMDHMStoDMYHMS($interview->interview_date);

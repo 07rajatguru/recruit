@@ -74,7 +74,8 @@ class User extends Authenticatable
         $status = 'Inactive';
         $status_array = array($status);
 
-        $client_type = array('client');
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
         
         $user_query = User::query();
 
@@ -103,7 +104,8 @@ class User extends Authenticatable
         $status = 'Inactive';
         $status_array = array($status);
 
-        $client_type = array('client');
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
 
         $user_query = User::query();
 
@@ -130,33 +132,12 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersWithInactive($type=NULL) {
-
-        $client_type = array('client');
-        $user_query = User::query();
-
-        if($type!=NULL){
-            $user_query = $user_query->where('type','=',$type);
-        }
-
-        $user_query = $user_query->orderBy('name');
-        $user_query = $user_query->whereNotIn('type',$client_type);
-        $users = $user_query->get();
-
-        $userArr = array();
-        if(isset($users) && sizeof($users)){
-            foreach ($users as $user) {
-                $userArr[$user->id] = $user->name;
-            }
-        }
-        return $userArr;
-    }
-
     public static function getAllUsersEmails($type=NULL,$report=NULL) {
 
         $status = 'Inactive';
-        $superadmin = getenv('SUPERADMINUSERID');
         $status_array = array($status);
+
+        $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
 
         $user_query = User::query();
@@ -175,73 +156,9 @@ class User extends Authenticatable
         $users = $user_query->get();
 
         $userArr = array();
-        if(isset($users) && sizeof($users)){
+        if(isset($users) && sizeof($users)) {
             foreach ($users as $user) {
                 $userArr[$user->id] = $user->email;
-            }
-        }
-        return $userArr;
-    }
-
-    public static function getAllUsersCopy($type=NULL) {
-
-        // $status = 'Inactive';
-        // $status_array = array($status);
-        
-        $user_query = User::query();
-        if($type!=NULL){
-            $user_query = $user_query->where('type','=',$type);
-        }
-        // $user_query = $user_query->whereNotIn('status',$status_array);
-        $user_query = $user_query->orderBy('name');
-        $users = $user_query->get();
-
-        /*$users = User::select('*')
-            ->get();*/
-
-        $userArr = array();
-        $userArr[0] = '';
-        if(isset($users) && sizeof($users)) {
-
-            foreach ($users as $user) {
-                $userArr[$user->id] = $user->name;
-            }
-            // available inactive users for 6 months from the date of inactive
-            foreach ($users as $user) {
-                $user_status[$user->id] = $user->status;
-                $user_updated_at[$user->id] = $user->updated_at;
-
-                $user_date = $user_updated_at[$user->id];
-                $after_six[$user->id] = date('Y-m-d',strtotime("$user_date +6 months"));
-                $today = date('Y-m-d');
-                if ($user_status[$user->id] == 'Inactive') {
-                    if ($after_six[$user->id] < $today ) {
-                        if (array_search($user->name,$userArr)) {
-                            unset($userArr[array_search($user->name,$userArr)]);
-                        }
-                    }
-                }
-            }
-        }
-        return $userArr;
-    }
-
-    public static function getAllUsersCopyWithInactive($type=NULL) {
-        
-        $user_query = User::query();
-
-        if($type!=NULL){
-            $user_query = $user_query->where('type','=',$type);
-        }
-
-        $user_query = $user_query->orderBy('name');
-        $users = $user_query->get();
-
-        $userArr = array();
-        $userArr[0] = '';
-        if(isset($users) && sizeof($users)){
-            foreach ($users as $user) {
-                $userArr[$user->id] = $user->name;
             }
         }
         return $userArr;
@@ -311,87 +228,9 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function isOfficeAdmin($user_role_id) {
-
-        $admin_role_id = env('OFFICEADMIN');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public  static function isStrategyCoordination($user_role_id) {
-
-        $admin_role_id = getenv('STRATEGY');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
     public static function isClient($user_role_id) {
 
         $admin_role_id = getenv('CLIENT');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function isManager($user_role_id) {
-
-        $admin_role_id = getenv('MANAGER');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function isMarketingIntern($user_role_id) {
-
-        $admin_role_id = getenv('MARKETINGINTERN');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function isAsstManagerMarketing($user_role_id) {
-
-        $admin_role_id = getenv('ASSTMANAGERMARKETING');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function isAllClientVisibleUser($user_id) {
-
-        $loggedin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        if ($loggedin_user_id == $user_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function isAccountManager($user_id) {
-
-        $is_am = false;
-
-        $user_query = User::query();
-        $user_query = $user_query->where('id',$user_id);
-        $user_query = $user_query->where('account_manager','Yes');
-        $user_query = $user_query->first();
-
-        if(isset($user_query->id) && $user_query->id>0){
-            $is_am = true;
-        }
-        return $is_am;
-    }
-
-    public static function isOperationsExecutive($user_role_id) {
-        
-        $admin_role_id = env('OPERATIONSEXECUTIVE');
         if ($admin_role_id == $user_role_id) {
             return true;
         }
@@ -431,8 +270,10 @@ class User extends Authenticatable
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
         $superadmin = array($superadmin_role_id,$client_role_id);
+
         $status = 'Inactive';
         $status_array = array($status);
+        
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->select('users.*','role_user.role_id as role_id');
