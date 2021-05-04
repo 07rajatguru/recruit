@@ -526,7 +526,7 @@ class LeadController extends Controller
         $client_all_status = 1;
 
         $generate_lead = '0';
-        $industry_res = Industry::orderBy('id','DESC')->get();
+        $industry_res = Industry::orderBy('name','ASC')->get();
         $industry = array();
         $industry_id = '';
 

@@ -698,7 +698,7 @@ class ClientController extends Controller
         $user_id = $user->id;
         $all_perm = $user->can('display-client');
 
-        $industry_res = Industry::orderBy('id','DESC')->get();
+        $industry_res = Industry::orderBy('name','ASC')->get();
         $industry = array();
 
         if(sizeof($industry_res)>0) {
