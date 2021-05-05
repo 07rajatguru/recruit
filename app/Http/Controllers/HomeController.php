@@ -70,14 +70,14 @@ class HomeController extends Controller
         $user_id =  \Auth::user()->id;
         $allclient = getenv('ALLCLIENTVISIBLEUSERID');
         $strtegy = getenv('STRATEGYUSERID');
-
         $superadmin = getenv('SUPERADMINUSERID');
+        $recruitment = getenv('RECRUITMENT');
 
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         if($all_perm) {
 
-            $users = User::getAllUsersForBenchmarkModal('recruiter');
+            $users = User::getAllUsersForBenchmarkModal($recruitment);
 
             if(isset($users) && sizeof($users) > 0) {
 
@@ -526,7 +526,8 @@ class HomeController extends Controller
             }
         }
 
-        $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
+        $recruitment = getenv('RECRUITMENT');
+        $users_name = User::getAllUsersForRemarks([$recruitment,'admin']);
 
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
     }
@@ -616,7 +617,9 @@ class HomeController extends Controller
         }
 
         $calendar = Calendar::addEvents($events);
-        $users_name = User::getAllUsersForRemarks(['Recruiter','admin']);
+
+        $recruitment = getenv('RECRUITMENT');
+        $users_name = User::getAllUsersForRemarks([$recruitment,'admin']);
         
         return view('userattendance', compact('calendar','users_name'));
     }

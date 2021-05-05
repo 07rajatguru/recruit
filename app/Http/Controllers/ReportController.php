@@ -474,6 +474,8 @@ class ReportController extends Controller
         $all_perm = $user->can('display-person-wise-report-of-all-users');
         $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
 
+        $recruitment = getenv('RECRUITMENT');
+
         // Year Data
         $starting_year = '2017';
         $ending_year = date('Y',strtotime('+1 year'));
@@ -510,7 +512,6 @@ class ReportController extends Controller
 
         if ($all_perm) {
 
-            $recruitment = getenv('RECRUITMENT');
             $users = User::getAllUsers($recruitment);
 
             foreach ($users as $key => $value) {
@@ -534,7 +535,7 @@ class ReportController extends Controller
         }
         else if($teamwise_perm) {
 
-            $users = User::getAssignedUsers($user_id,'recruiter');
+            $users = User::getAssignedUsers($user_id,$recruitment);
 
             foreach ($users as $key => $value) {
 
