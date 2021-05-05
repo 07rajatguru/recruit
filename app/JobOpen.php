@@ -3029,7 +3029,11 @@ class JobOpen extends Model
 
             if($min_ctc == '30') {
 
-                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',$min_ctc);
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
             }
             else {
                 $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
@@ -3038,7 +3042,11 @@ class JobOpen extends Model
         if (isset($max_ctc) && $max_ctc != '') {
 
             if($max_ctc == '30') {
-                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',$max_ctc);
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
             }
             else {
                 $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
