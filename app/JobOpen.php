@@ -2982,7 +2982,7 @@ class JobOpen extends Model
         return $job_res;
     }
 
-    public static function getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc,$limit=0,$offset=0) {
+    public static function getJobDetailsBySearchArea($key_skill,$desired_location,$min_experience,$max_experience,$min_ctc,$max_ctc,$limit=0,$offset=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -3016,27 +3016,33 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.city','=',"$desired_location");
         }
 
-        if (isset($experience) && $experience != '') {
+        if (isset($min_experience) && $min_experience != '') {
 
-            $job_open_query = $job_open_query->where(function($job_open_query) use ($experience) {
+            $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',$min_experience);
+        }
+        if (isset($max_experience) && $max_experience != '') {
 
-                $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',$experience);
-                $job_open_query = $job_open_query->orWhere('job_openings.work_exp_to','=',$experience);
-            });
+            $job_open_query = $job_open_query->where('job_openings.work_exp_to','=',$max_experience);
         }
 
-/*        if (isset($experience) && $experience != '') {
-
-            $job_open_query = $job_open_query->where('job_openings.work_exp_from','=',$experience);
-            $job_open_query = $job_open_query->orwhere('job_openings.work_exp_to','=',$experience);
-        }*/
         if (isset($min_ctc) && $min_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',$min_ctc);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
         if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',$max_ctc);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
 
         $job_open_query = $job_open_query->orderBy('job_openings.created_at','desc');
