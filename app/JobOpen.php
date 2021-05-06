@@ -2982,7 +2982,7 @@ class JobOpen extends Model
         return $job_res;
     }
 
-    public static function getJobDetailsBySearchArea($key_skill,$desired_location,$experience,$min_ctc,$max_ctc,$limit=0,$offset=0) {
+    public static function getJobDetailsBySearchArea($key_skill,$desired_location,$min_experience,$max_experience,$min_ctc,$max_ctc,$limit=0,$offset=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -3016,23 +3016,25 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.city','=',"$desired_location");
         }
 
-        if (isset($experience) && $experience != '') {
+        if (isset($min_experience) && $min_experience != '') {
 
-            if($experience == '21') {
+            if($min_experience == '21') {
 
                 $job_open_query = $job_open_query->where('job_openings.work_exp_from','>=',21);
             }
             else {
+                $job_open_query = $job_open_query->where('job_openings.work_exp_from','>=',$min_experience);
+            }
+        }
 
-                $job_open_query = $job_open_query->where(function($job_open_query) use ($experience) {
+        if (isset($max_experience) && $max_experience != '') {
 
-                    $exp_array = explode("-", $experience);
-                    $exp_from = $exp_array[0];
-                    $exp_to = $exp_array[1];
+            if($max_experience == 'Year') {
 
-                    $job_open_query = $job_open_query->where('job_openings.work_exp_from','>=',$exp_from);
-                    $job_open_query = $job_open_query->orWhere('job_openings.work_exp_to','<=',$exp_to);
-                });
+                $job_open_query = $job_open_query->where('job_openings.work_exp_to','>=',21);   
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.work_exp_to','<=',$max_experience);
             }
         }
 
