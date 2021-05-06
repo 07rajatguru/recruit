@@ -890,9 +890,8 @@ class JobOpenController extends Controller
         // For account manager
         $users = User::getAllUsers(NULL,'Yes');
         $users[0] = 'Yet to Assign';
-
-        $recruitment = getenv('RECRUITMENT');
-        $select_all_users = User::getAllUsers($recruitment);
+        
+        $select_all_users = User::getAllUsers(NULL);
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1101,19 +1100,7 @@ class JobOpenController extends Controller
                 }
             }
 
-            // Get job_visible_user count and check to all users then update open_to_all field
-
-            $recruitment = getenv('RECRUITMENT');
-            $users_id = User::getAllUsers($recruitment);
-            $user_count = sizeof($users_id);
-
-            $job_users = sizeof($users);
-            if ($job_users == $user_count) {
-                //\DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
-            }
-            else {
-                \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
-            }
+            \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
 
             $job_summary = $request->file('job_summary');
             $others_doc = $request->file('others_doc');
@@ -1525,10 +1512,8 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-
-        $recruitment = getenv('RECRUITMENT');
         $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers($recruitment);
+        $select_all_users = User::getAllUsers(NULL);
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1676,10 +1661,8 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-
-        $recruitment = getenv('RECRUITMENT');
         $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers($recruitment);
+        $select_all_users = User::getAllUsers(NULL);
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -2006,10 +1989,8 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        
-        $recruitment = getenv('RECRUITMENT');
         $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers($recruitment);
+        $select_all_users = User::getAllUsers(NULL);
 
         $job_open = JobOpen::find($id);
         $posting_title = $job_open->posting_title;
@@ -2238,19 +2219,7 @@ class JobOpenController extends Controller
                 }
             }
 
-            // Get job_visible_user count and check to all users then update open_to_all field
-
-            $recruitment = getenv('RECRUITMENT');
-            $users_id = User::getAllUsers($recruitment);
-            $user_count = sizeof($users_id);
-
-            $job_users = sizeof($users);
-            if ($job_users == $user_count) {
-                //\DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
-            }
-            else {
-                \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
-            }
+            \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
 
             // Attched Documents from old job
 

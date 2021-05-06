@@ -79,7 +79,7 @@ class User extends Authenticatable
         
         $user_query = User::query();
 
-        if($type != ''){
+        if($type != '') {
             $user_query = $user_query->where('type','=',$type);
         }
 
@@ -354,6 +354,9 @@ class User extends Authenticatable
 
         $status = 'Inactive';
         $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
         
         if($type!=NULL) {
             $user_query = $user_query->where('type','=',$type);
@@ -366,6 +369,7 @@ class User extends Authenticatable
         });
 
         $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -454,6 +458,10 @@ class User extends Authenticatable
 
         $status = 'Inactive';
         $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
         $user_query = User::query();
 
         if($type!=NULL) {
@@ -462,6 +470,7 @@ class User extends Authenticatable
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->orderBy('name');
         $users = $user_query->get();
 
@@ -490,11 +499,8 @@ class User extends Authenticatable
         $status = 'Inactive';
         $status_array = array($status);
 
-        $client_type = array('client');
-
         $user_query = User::query();
         $user_query = $user_query->whereNotIn('status',$status_array);
-        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->where('check_floor_incharge','Yes');
         $user_query = $user_query->orderBy('name');
 
@@ -511,17 +517,14 @@ class User extends Authenticatable
 
     public static function getAllUsersByJoiningDate() {
 
-        $superadmin = getenv('SUPERADMINUSERID');
-        $super_array = array($superadmin);
-
-        $it_type = array('it');
-        $client_type = array('client');
+        $superadmin_role_id =  getenv('SUPERADMIN');
+        $client_role_id =  getenv('CLIENT');
+        $superadmin = array($superadmin_role_id,$client_role_id);
 
         $user_query = User::query();
         $user_query = $user_query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
-        $user_query = $user_query->whereNotIn('users.type',$it_type);
-        $user_query = $user_query->whereNotIn('users.type',$client_type);
-        $user_query = $user_query->whereNotIn('users.id',$super_array);
+        $user_query = $user_query->join('role_user','role_user.user_id','=','users.id');
+        $user_query = $user_query->whereNotIn('role_id',$superadmin);
         $user_query = $user_query->orderBy('users_otherinfo.date_of_joining','ASC');
         $user_query = $user_query->select('users.id as id', 'users.name as name','users_otherinfo.date_of_joining as date_of_joining');
         $users = $user_query->get();
@@ -551,8 +554,6 @@ class User extends Authenticatable
 
         $status = 'Inactive';
         $status_array = array($status);
-
-        $client_type = array('client');
         
         $user_query = User::query();
 
@@ -562,7 +563,6 @@ class User extends Authenticatable
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
-        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -581,7 +581,8 @@ class User extends Authenticatable
         $status = 'Inactive';
         $status_array = array($status);
 
-        $client_type = array('client');
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
 
         $user_query = User::query();
 
@@ -609,8 +610,6 @@ class User extends Authenticatable
 
         $status = 'Inactive';
         $status_array = array($status);
-
-        $client_type = array('client');
         
         $user_query = User::query();
 
@@ -620,7 +619,6 @@ class User extends Authenticatable
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
-        $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->where('eligibility_report','=','Yes');
         $user_query = $user_query->orderBy('name');
 
@@ -642,22 +640,20 @@ class User extends Authenticatable
         $status = 'Inactive';
         $status_array = array($status);
 
-        $recruitment = getenv('RECRUITMENT');
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
 
         $query = User::query();
 
         // Get before 7 days users list
         $query = $query->where('users.created_at','<=',$date);
-        $query = $query->where('users.type',$recruitment);
         $query = $query->whereNotIn('users.status',$status_array);
-        
+        $query = $query->whereNotIn('type',$client_type);
         $query = $query->select('users.id','users.first_name','users.last_name');
 
         $query = $query->groupBy('users.id');
         $query = $query->orderBy('users.id','ASC');
         $response = $query->get();
-
-        $i=0;
 
         if(isset($response) && sizeof($response) > 0) {
 
@@ -668,7 +664,6 @@ class User extends Authenticatable
                 $users_otherinfo = UserOthersInfo::getUserOtherInfo($value->id);
 
                 if(isset($users_otherinfo) && $users_otherinfo != '') {
-
                 }
                 else {
 
@@ -682,13 +677,11 @@ class User extends Authenticatable
                             $users_string .= ", ".$full_name;
                     }
                 }
-                $i++;
             }
         }
         else {
             $users_string = '';
         }
-
         return $users_string;
     }
 }

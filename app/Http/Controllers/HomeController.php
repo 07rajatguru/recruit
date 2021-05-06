@@ -526,8 +526,7 @@ class HomeController extends Controller
             }
         }
 
-        $recruitment = getenv('RECRUITMENT');
-        $users_name = User::getAllUsersForRemarks([$recruitment,'admin']);
+        $users_name = User::getAllUsersForRemarks(NULL);
 
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
     }
@@ -618,8 +617,7 @@ class HomeController extends Controller
 
         $calendar = Calendar::addEvents($events);
 
-        $recruitment = getenv('RECRUITMENT');
-        $users_name = User::getAllUsersForRemarks([$recruitment,'admin']);
+        $users_name = User::getAllUsersForRemarks(NULL);
         
         return view('userattendance', compact('calendar','users_name'));
     }

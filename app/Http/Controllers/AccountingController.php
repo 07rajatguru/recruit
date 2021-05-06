@@ -38,12 +38,10 @@ class AccountingController extends Controller
 
     public function edit($id) {
 
-    	$users = User::getAllUsers();
      	$accounting = AccountingHeads::find($id);
+        $action = "edit";
 
-        $action = "edit" ;
-
-        return view('adminlte::accounting.edit',compact('users','accounting','action'));
+        return view('adminlte::accounting.edit',compact('accounting','action'));
     }
 
     public function update(Request $request,$id) {
