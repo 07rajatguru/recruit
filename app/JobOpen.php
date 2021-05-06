@@ -3018,6 +3018,8 @@ class JobOpen extends Model
 
         if (isset($min_experience) && $min_experience != '') {
 
+            $min_experience = (int)$min_experience;
+
             if($min_experience == '21') {
 
                 $job_open_query = $job_open_query->where('job_openings.work_exp_from','>=',21);
@@ -3029,7 +3031,9 @@ class JobOpen extends Model
 
         if (isset($max_experience) && $max_experience != '') {
 
-            if($max_experience == 'Year') {
+            $max_experience = (int)$max_experience;
+            
+            if($max_experience == '21') {
 
                 $job_open_query = $job_open_query->where('job_openings.work_exp_to','>=',21);   
             }
