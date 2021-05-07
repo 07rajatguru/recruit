@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\PermissionSeederEvent;
 use App\Permission;
 use Illuminate\Http\Request;
-use App\User;
+
 class PermissionsController extends Controller
 {
     public function index(Request $request) {

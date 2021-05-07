@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Input;
 use App\Expense;
 use App\AccountingHeads;
 use App\Date;
-use App\User;
 use App\ExpenseDoc;
 use App\VendorBasicInfo;
 use Excel;

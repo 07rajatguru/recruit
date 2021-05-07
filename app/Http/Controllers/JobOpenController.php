@@ -891,7 +891,7 @@ class JobOpenController extends Controller
         $users = User::getAllUsers(NULL,'Yes');
         $users[0] = 'Yet to Assign';
         
-        $select_all_users = User::getAllUsers(NULL);
+        $select_all_users = User::getAllUsers(NULL,'Yes');
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1513,7 +1513,7 @@ class JobOpenController extends Controller
 
         // For account manager
         $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers(NULL);
+        $select_all_users = User::getAllUsers(NULL,'Yes');
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1662,7 +1662,7 @@ class JobOpenController extends Controller
 
         // For account manager
         $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers(NULL);
+        $select_all_users = User::getAllUsers(NULL,'Yes');
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1868,8 +1868,7 @@ class JobOpenController extends Controller
 
         // Get job_visible_user count and check to all users then update open_to_all field
 
-        $recruitment = getenv('RECRUITMENT');
-        $users_id = User::getAllUsers($recruitment);
+        $users_id = User::getAllUsers(NULL,'Yes');
         $user_count = sizeof($users_id);
 
         $job_users = sizeof($users);
@@ -1990,7 +1989,7 @@ class JobOpenController extends Controller
 
         // For account manager
         $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers(NULL);
+        $select_all_users = User::getAllUsers(NULL,'Yes');
 
         $job_open = JobOpen::find($id);
         $posting_title = $job_open->posting_title;

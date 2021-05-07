@@ -13,18 +13,18 @@ use Illuminate\Support\Facades\Input;
 use DB;
 use Excel;
 use App\Utils;
-use App\User;
 
 class VendorController extends Controller
 {
     public function index() {
 
         $vendor_array = array();
-        $vendors=VendorBasicInfo::select('id','name','mobile','mail','contact_point');
+        $vendors=  VendorBasicInfo::select('id','name','mobile','mail','contact_point');
 
-        $vendors=$vendors->orderBy('id','DESC')->get();
+        $vendors = $vendors->orderBy('id','DESC')->get();
         $i = 0;
-        foreach($vendors as $vendor){
+
+        foreach($vendors as $vendor) {
 
             $vendor_array[$i]['id'] = $vendor->id;
             $vendor_array[$i]['name'] = $vendor->name;
@@ -35,12 +35,7 @@ class VendorController extends Controller
             $i++;
         }
 
-        $count=sizeof($vendors);
-
-        $user = \Auth::user();
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-        $user_obj = new User();
+        $count = sizeof($vendors);
 
         return view('adminlte::vendor.index',compact('vendor_array','count'));
     }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Module;
 use App\ModuleVisibleUser;
-use App\User;
 
 class ModuleController extends Controller
 {

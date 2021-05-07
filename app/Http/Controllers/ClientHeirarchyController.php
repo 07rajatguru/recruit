@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ClientHeirarchy;
-use App\User;
 
 class ClientHeirarchyController extends Controller
 {

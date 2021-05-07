@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EmailTemplate;
 use Illuminate\Support\Facades\Input;
-use App\User;
 
 class EmailTemplateController extends Controller
 {
