@@ -129,20 +129,23 @@ class InterviewOneHourPriorEmail extends Command
                         $input['file_path'] = $file_path_array;
                         $input['interview_details'] = $interview_details;
 
-                        \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
-                            $message->from($input['from_address'], $input['from_name']);
-                            $message->to($input['to_address'])->subject($input['subject']);
+                        if(isset($to_address) && $to_address != '') {
 
-                            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+                            \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+                                $message->from($input['from_address'], $input['from_name']);
+                                $message->to($input['to_address'])->subject($input['subject']);
 
-                                foreach ($input['file_path'] as $key => $value) {
+                                if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
 
-                                    if(isset($value) && $value != '') {
-                                        $message->attach($value);
+                                    foreach ($input['file_path'] as $key => $value) {
+
+                                        if(isset($value) && $value != '') {
+                                            $message->attach($value);
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
             }
