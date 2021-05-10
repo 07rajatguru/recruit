@@ -938,7 +938,10 @@ class BillsController extends Controller
         $job_id = 0;
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         $employee_name = array();
         $employee_percentage = array();
@@ -1323,7 +1326,10 @@ class BillsController extends Controller
         $candidate_id = $bnm->candidate_id;
         
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
@@ -1962,7 +1968,10 @@ class BillsController extends Controller
         $candidate_id = $bnm->candidate_id;
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 

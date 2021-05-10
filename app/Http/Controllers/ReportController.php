@@ -33,7 +33,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,$recruitment);
+            $users = User::getAssignedUsers($user_id,NULL);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -87,7 +87,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,$recruitment);
+            $users = User::getAssignedUsers($user_id,NULL);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -239,7 +239,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,$recruitment);
+            $users = User::getAssignedUsers($user_id,NULL);
         }
 
         $associate_monthly_response = JobAssociateCandidates::getUserWiseAssociatedCVS($users,$month,$year);
@@ -329,7 +329,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm){
-            $users = User::getAssignedUsers($user_id,$recruitment);
+            $users = User::getAssignedUsers($user_id,NULL);
         }
 
         // Month data
@@ -475,6 +475,8 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
         // Year Data
         $starting_year = '2017';
@@ -512,7 +514,7 @@ class ReportController extends Controller
 
         if ($all_perm) {
 
-            $users = User::getAllUsers($recruitment);
+            $users = User::getAllUsers($type_array);
 
             foreach ($users as $key => $value) {
 
@@ -535,7 +537,7 @@ class ReportController extends Controller
         }
         else if($teamwise_perm) {
 
-            $users = User::getAssignedUsers($user_id,$recruitment);
+            $users = User::getAssignedUsers($user_id,NULL);
 
             foreach ($users as $key => $value) {
 
@@ -589,7 +591,10 @@ class ReportController extends Controller
                 $next_year = date('Y-m-d',strtotime("last day of $next"));
 
                 $recruitment = getenv('RECRUITMENT');
-                $users = User::getAllUsers($recruitment);
+                $hr_advisory = getenv('HRADVISORY');
+                $type_array = array($recruitment,$hr_advisory);
+
+                $users = User::getAllUsers($type_array);
 
                 foreach ($users as $key => $value) {
 
@@ -869,7 +874,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,$recruitment);
+            $users = User::getAssignedUsers($user_id,NULL);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {

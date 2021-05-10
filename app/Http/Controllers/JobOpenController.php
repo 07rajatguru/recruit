@@ -888,10 +888,14 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $users = User::getAllUsers(NULL,'Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
         $users[0] = 'Yet to Assign';
         
-        $select_all_users = User::getAllUsers(NULL,'Yes');
+        $select_all_users = User::getAllUsers($type_array);
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1512,8 +1516,12 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers(NULL,'Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
+        $select_all_users = User::getAllUsers($type_array);
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1661,8 +1669,12 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers(NULL,'Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
+        $select_all_users = User::getAllUsers($type_array);
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1868,7 +1880,11 @@ class JobOpenController extends Controller
 
         // Get job_visible_user count and check to all users then update open_to_all field
 
-        $users_id = User::getAllUsers(NULL,'Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users_id = User::getAllUsers($type_array,'Yes');
         $user_count = sizeof($users_id);
 
         $job_users = sizeof($users);
@@ -1988,8 +2004,12 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $users = User::getAllUsers(NULL,'Yes');
-        $select_all_users = User::getAllUsers(NULL,'Yes');
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
+        $select_all_users = User::getAllUsers($type_array);
 
         $job_open = JobOpen::find($id);
         $posting_title = $job_open->posting_title;
@@ -2580,7 +2600,12 @@ class JobOpenController extends Controller
 
         $type = Interview::getTypeArray();
         $status = Interview::getCreateInterviewStatus();
-        $users = User::getAllUsers();
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         return view('adminlte::jobopen.associated_candidate', array('job_id' => $id, 'posting_title' => $posting_title,'message' => '','candidates'=>$candidateDetails ,'candidatestatus'=>$candidateStatus,'type'=>$type,'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type,'access'=>$access,'user_id'=>$user_id));
     }

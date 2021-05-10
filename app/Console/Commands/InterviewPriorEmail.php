@@ -44,8 +44,10 @@ class InterviewPriorEmail extends Command
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers($type_array);
 
         if(isset($users) && sizeof($users) > 0) {
 

@@ -18,7 +18,10 @@ class UserwiseReportController extends Controller
         $user_id = $user->id;
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
     	$select = array('0'=>'Custom','1'=>'Monthly','2'=>'Quarterly');
 

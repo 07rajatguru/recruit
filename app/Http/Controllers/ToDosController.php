@@ -1006,7 +1006,10 @@ class ToDosController extends Controller
             }
 
             $recruitment = getenv('RECRUITMENT');
-            $job_user = User::getAllUsers($recruitment);
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $job_user = User::getAllUsers($type_array);
 
             $j=0;
             foreach ($job_user as $key => $value) {
@@ -1040,7 +1043,11 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
 
-            $interview_user = User::getAllUsers();
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $interview_user = User::getAllUsers($type_array);
             $j=0;
             foreach ($interview_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
@@ -1081,7 +1088,11 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
             
-            $client_user = User::getAllUsers();
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $client_user = User::getAllUsers($type_array);
             $j=0;
             foreach ($client_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
@@ -1107,7 +1118,11 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }
 
-            $candidate_user = User::getAllUsers();
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $candidate_user = User::getAllUsers($type_array);
             $j=0;
             foreach ($candidate_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
@@ -1160,7 +1175,10 @@ class ToDosController extends Controller
             }
 
             $recruitment = getenv('RECRUITMENT');
-            $job_user = User::getAllUsers($recruitment);
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $job_user = User::getAllUsers($type_array);
 
             $j=0;
             foreach ($job_user as $key => $value) {
@@ -1188,7 +1206,11 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }*/
 
-            $interview_user = User::getAllUsers();
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $interview_user = User::getAllUsers($type_array);
             $j=0;
             foreach ($interview_user as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
@@ -1224,7 +1246,12 @@ class ToDosController extends Controller
             /*else {
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }*/
-            $client_user = User::getAllUsers();
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $client_user = User::getAllUsers($type_array);
             $j=0;
 
             foreach ($client_user as $key => $value) {
@@ -1251,7 +1278,11 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }*/
 
-            $candidate_user = User::getAllUsers();
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+
+            $candidate_user = User::getAllUsers($type_array);
             $j=0;
 
             foreach ($candidate_user as $key => $value) {

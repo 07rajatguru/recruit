@@ -86,8 +86,11 @@ class ClientController extends Controller
         }
 
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment);
-        $all_account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
+        $all_account_manager = User::getAllUsers($type_array,'Yes');
         $all_account_manager[0] = 'Yet to Assign';
 
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
@@ -167,7 +170,10 @@ class ClientController extends Controller
         }
         
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();
@@ -321,12 +327,15 @@ class ClientController extends Controller
         }
 
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
         $account_manager[0] = 'Yet to Assign';
 
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
-        $all_account_manager = User::getAllUsers($recruitment,'Yes');
+        $all_account_manager = User::getAllUsers($type_array,'Yes');
         $all_account_manager[0] = 'Yet to Assign';
 
         return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','account_manager','count','email_template_names','all_account_manager'));
@@ -490,7 +499,10 @@ class ClientController extends Controller
         }
 
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();
@@ -616,7 +628,10 @@ class ClientController extends Controller
         }
 
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
         $account_manager[0] = 'Yet to Assign';
 
         $source = 'Forbid';
@@ -656,7 +671,10 @@ class ClientController extends Controller
         // For account manager
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
         $users[0] = 'Yet to Assign';
         
         // User Account Manager access check
@@ -774,10 +792,13 @@ class ClientController extends Controller
         // For account manager
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
         $users[0] = 'Yet to Assign';
 
-        $yet_to_assign_users = User::getAllUsers($recruitment,'Yes');
+        $yet_to_assign_users = User::getAllUsers($type_array,'Yes');
         $yet_to_assign_users[0] = '--Select User--';
 
         $action = "edit";
@@ -2158,7 +2179,10 @@ class ClientController extends Controller
         }
 
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
         $account_manager[0] = 'Yet to Assign';
 
         return view('adminlte::client.clientlistamwise',compact('count','account_manager'));
@@ -2194,7 +2218,10 @@ class ClientController extends Controller
         }
         
         $recruitment = getenv('RECRUITMENT');
-        $account_manager = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $account_manager = User::getAllUsers($type_array,'Yes');
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();

@@ -110,7 +110,7 @@ class User extends Authenticatable
         $user_query = User::query();
 
         if($type!=NULL){
-            $user_query = $user_query->where('type','=',$type);
+            $user_query = $user_query->whereIn('type',$type);
         }
 
         if($am!=NULL){
@@ -451,7 +451,7 @@ class User extends Authenticatable
     }
 
     // function for user remarks dropdown
-    public static function getAllUsersForRemarks($type=NULL) {
+    public static function getAllUsersForRemarks() {
 
         $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
@@ -463,10 +463,6 @@ class User extends Authenticatable
         $client_type = array($client);
 
         $user_query = User::query();
-
-        if($type!=NULL) {
-            $user_query = $user_query->whereIn('type',$type);
-        }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);

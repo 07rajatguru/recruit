@@ -43,8 +43,10 @@ class InterviewOneHourPriorEmail extends Command
         $curr_date_time = date('Y-m-d H:i:00', time() + 19800);
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers($type_array);
 
         if(isset($users) && sizeof($users) > 0) {
 

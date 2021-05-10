@@ -248,22 +248,21 @@ class LeaveController extends Controller
     // End function for single user apply for leave & leave data
 
     // Starts All User Leave Balance Module function
-    public function userWiseLeave(){
+    public function userWiseLeave() {
 
         $user_leave_data = LeaveBalance::getAllUserWiseLeave();
 
         return view('adminlte::leave.userwiseleave',compact('user_leave_data'));
     }
 
-    public function userWiseLeavaAdd(){
+    public function userWiseLeavaAdd() {
 
-        $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers();
 
         return view('adminlte::leave.userwiseleaveadd',compact('users'));
     }
 
-    public function userWiseLeaveStore(Request $request){
+    public function userWiseLeaveStore(Request $request) {
 
         $user_id = $request->get('user_id');
         $leave_total = $request->get('leave_total');
@@ -280,10 +279,9 @@ class LeaveController extends Controller
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Added Successfully');
     }
 
-    public function userWiseLeaveEdit($id){
+    public function userWiseLeaveEdit($id) {
 
-        $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers();
 
         $leave_data = LeaveBalance::find($id);
         $user_id = $leave_data->user_id;
@@ -291,7 +289,7 @@ class LeaveController extends Controller
         return view('adminlte::leave.userwiseleaveedit',compact('users','leave_data','user_id'));
     }
 
-    public function userWiseLeaveUpdate(Request $request,$id){
+    public function userWiseLeaveUpdate(Request $request,$id) {
 
         $user_id = $request->get('user_id');
         $leave_total = $request->get('leave_total');
@@ -308,7 +306,7 @@ class LeaveController extends Controller
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Updated Successfully');
     }
 
-    public function userWiseLeaveDestroy($id){
+    public function userWiseLeaveDestroy($id) {
 
         $user_leave_delete = LeaveBalance::where('id',$id)->delete();
 

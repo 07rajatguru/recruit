@@ -199,9 +199,7 @@ class TrainingController extends Controller
         }
 
         // Check training material for all users or not and update select_all field in daatabase
-
-        $recruitment = getenv('RECRUITMENT');
-        $users_id = User::getAllUsers($recruitment);
+        $users_id = User::getAllUsers();
         $user_count = sizeof($users_id);
 
         if(isset($users)){
@@ -346,8 +344,7 @@ class TrainingController extends Controller
         }
 
         // Check training material for all users or not and update select_all field in daatabase
-        $recruitment = getenv('RECRUITMENT');
-        $users_id = User::getAllUsers($recruitment);
+        $users_id = User::getAllUsers();
         $user_count = sizeof($users_id);
 
         $training_users = sizeof($users);

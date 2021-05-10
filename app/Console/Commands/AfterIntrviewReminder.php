@@ -44,7 +44,10 @@ class AfterIntrviewReminder extends Command
         $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         if(isset($users) && sizeof($users) > 0) {
 

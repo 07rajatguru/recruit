@@ -526,7 +526,7 @@ class HomeController extends Controller
             }
         }
 
-        $users_name = User::getAllUsersForRemarks(NULL);
+        $users_name = User::getAllUsersForRemarks();
 
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
     }
@@ -617,7 +617,7 @@ class HomeController extends Controller
 
         $calendar = Calendar::addEvents($events);
 
-        $users_name = User::getAllUsersForRemarks(NULL);
+        $users_name = User::getAllUsersForRemarks();
         
         return view('userattendance', compact('calendar','users_name'));
     }

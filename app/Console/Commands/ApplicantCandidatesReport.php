@@ -43,8 +43,10 @@ class ApplicantCandidatesReport extends Command
         $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers($type_array);
 
         if(isset($users) && sizeof($users) > 0) {
 

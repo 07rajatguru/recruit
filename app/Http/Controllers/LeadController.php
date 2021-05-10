@@ -291,8 +291,7 @@ class LeadController extends Controller
         $cancel_lead = '0';
         $leadservices_status = Lead::getLeadService();
 
-        $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers();
 
         $status = Lead::getLeadStatus();
         $service ='';
@@ -419,8 +418,7 @@ class LeadController extends Controller
             $referredby = $lead->referredby;
             $lead_status = $lead->lead_status;
 
-            $recruitment = getenv('RECRUITMENT');
-            $users = User::getAllUsers($recruitment);
+            $users = User::getAllUsers();
         }
         else {
             return view('errors.403');
@@ -544,7 +542,10 @@ class LeadController extends Controller
         // For account manager
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment,'Yes');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array,'Yes');
         $users[0] = 'Yet to Assign';
 
         $lead = Lead::find($id);

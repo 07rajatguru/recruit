@@ -41,8 +41,10 @@ class TrainingSelectAllUser extends Command
     public function handle()
     {
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
         
-        $users = User::getAllUsers($recruitment);
+        $users = User::getAllUsers($type_array);
         $user_count = sizeof($users);
 
         $training_id = Training::getAlltrainingIds();

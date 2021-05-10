@@ -512,7 +512,10 @@ class InterviewController extends Controller
         $viewVariable['status'] = Interview::getCreateInterviewStatus();
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         $viewVariable['users'] = $users;
         $viewVariable['round'] = Interview::getSelectRound();
@@ -650,7 +653,10 @@ class InterviewController extends Controller
         $viewVariable['round'] = Interview::getSelectRound();
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsers($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users = User::getAllUsers($type_array);
 
         $viewVariable['users'] = $users;
         $viewVariable['about'] = $interview->about;
