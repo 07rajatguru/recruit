@@ -82,7 +82,7 @@
                             </th>
                             
                             @foreach($value as $key1=>$value1)
-                                @if($value1['remarks'] != '')
+                                @if(isset($value1['remarks']) && $value1['remarks'] != '')
                                     <td style="border: 1px solid black;background-color:#B0E0E6;" data-toggle="modal" data-target="#remarksModel-{{ str_replace(' ','',$key) }}{{ str_replace(' ','',$key1) }}">
                                         {{ $value1['login'] }}<hr style="border-top: 1px solid #B0E0E6;">
                                         {{ $value1['logout'] }}<hr style="border-top: 1px solid #B0E0E6;">

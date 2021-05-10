@@ -107,6 +107,8 @@ class User extends Authenticatable
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
+        $saloni_user_id = getenv('SALONIUSERID');
+
         $user_query = User::query();
 
         if($type!=NULL){
@@ -119,6 +121,7 @@ class User extends Authenticatable
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('type',$client_type);
+        $user_query = $user_query->where('id','!=',$saloni_user_id);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -269,7 +272,8 @@ class User extends Authenticatable
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
-        $superadmin = array($superadmin_role_id,$client_role_id);
+        $it_role_id =  getenv('IT');
+        $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -454,7 +458,8 @@ class User extends Authenticatable
     public static function getAllUsersForRemarks() {
 
         $superadmin = getenv('SUPERADMINUSERID');
-        $super_array = array($superadmin);
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);

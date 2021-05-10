@@ -808,7 +808,7 @@ class EveryMinute extends Command
                     $users = User::getAllUsersExpectSuperAdmin($recruitment);
                 }
                 else {
-                    $users = User::getAssignedUsers($value['sender_name'],,NULL);
+                    $users = User::getAssignedUsers($value['sender_name'],NULL);
                 }
 
                 $response = array();
