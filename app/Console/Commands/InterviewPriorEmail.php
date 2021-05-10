@@ -41,7 +41,7 @@ class InterviewPriorEmail extends Command
     public function handle()
     {
         $from_date = date("Y-m-d 00:00:00");
-        $to_date = date("Y-m-d 23:59:59", time() + 86400);
+        $to_date = date("Y-m-d 23:59:59");
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
