@@ -14,7 +14,9 @@ class UsersLog extends Model
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
-        $superadmin = array($superadmin_role_id,$client_role_id);
+        $it_role_id =  getenv('IT');
+        $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
+        
         $status = 'Inactive';
         $status_array = array($status);
 
