@@ -244,6 +244,18 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-lead|display-user-wise-lead']
     ]);
 
+    Route::get('lead-list/{service}', [
+        'as' => 'lead.list',
+        'uses' => 'LeadController@getAllLeadsByService',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
+    ]);
+
+    Route::get('lead/allbyservice', [
+        'as' => 'lead.allbyservice',
+        'uses' => 'LeadController@getAllLeadsDetailsByService',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
+    ]);
+
     Route::get('lead/cancel', [
         'as' => 'lead.leadcancel',
         'uses' => 'LeadController@cancellead',

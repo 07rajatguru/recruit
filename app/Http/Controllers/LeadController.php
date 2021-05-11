@@ -25,15 +25,41 @@ class LeadController extends Controller
 
         if($all_perm) {
         
-            $count = Lead::getAllLeadsCount(1,$user->id);
+            $all_leads = Lead::getAllLeads(1,$user->id);
+            $count = sizeof($all_leads);
+
             $convert_client_count = Lead::getConvertedClient(1,$user->id);
         }
         else if($userwise_perm) {
 
-            $count = Lead::getAllLeadsCount(0,$user->id);
+            $all_leads = Lead::getAllLeads(0,$user->id);
+            $count = sizeof($all_leads);
+
             $convert_client_count = Lead::getConvertedClient(0,$user->id);
         }
-        return view('adminlte::lead.index',compact('count','convert_client_count'));
+
+        $recruitment = 0;
+        $contract_staffing = 0;
+        $payroll = 0;
+        $hr_advisory = 0;
+
+        foreach($all_leads as $lead) {
+
+            if($lead['service'] == 'Recruitment') {
+                $recruitment++;
+            }
+            else if ($lead['service'] == 'Contract Staffing') {
+                $contract_staffing++;
+            }
+            else if($lead['service'] == 'Payroll') {
+                $payroll++;
+            }
+            else if($lead['service'] == 'HR Advisory') {
+                $hr_advisory++;
+            }
+        }
+
+        return view('adminlte::lead.index',compact('count','convert_client_count','recruitment','contract_staffing','payroll','hr_advisory'));
     }
 
     public static function getLeadOrderColumnName($order) {
@@ -158,6 +184,233 @@ class LeadController extends Controller
 
         echo json_encode($json_data);exit;
     }
+
+    public function getAllLeadsByService($service) {
+
+        $user =  \Auth::user();
+
+        $all_perm = $user->can('display-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
+
+        if($all_perm) {
+            $all_leads = Lead::getAllLeads(1,$user->id);
+        }
+        else if($userwise_perm) {
+            $all_leads = Lead::getAllLeads(0,$user->id);
+        }
+
+        $count = '0';
+
+        $recruitment = 0;
+        $contract_staffing = 0;
+        $payroll = 0;
+        $hr_advisory = 0;
+
+        foreach($all_leads as $lead) {
+
+            if($lead['service'] == 'Recruitment') {
+                $recruitment++;
+            }
+            else if ($lead['service'] == 'Contract Staffing') {
+                $contract_staffing++;
+            }
+            else if($lead['service'] == 'Payroll') {
+                $payroll++;
+            }
+            else if($lead['service'] == 'HR Advisory') {
+                $hr_advisory++;
+            }
+        }
+
+        return view('adminlte::lead.leadserviceindex',compact('count','recruitment','contract_staffing','payroll','hr_advisory'));
+    }
+
+    public function getAllLeadsDetailsByService() {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        $service = $_GET['service'];
+
+        $order_column_name = self::getLeadOrderColumnName($order);
+
+        $user =  \Auth::user();
+
+        $all_perm = $user->can('display-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
+        $cancel_perm = $user->can('cancel-lead');
+        $lead_to_client_perm = $user->can('lead-to-client');
+        $delete_perm = $user->can('lead-delete');
+
+        // Get recruitment leads
+        if($service == 'recruitment') {
+
+            if($all_perm) {
+
+                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'Recruitment');
+                $count = Lead::getAllLeadsCount(1,$user->id,$search,'Recruitment');
+            }
+            else if($userwise_perm) {
+
+                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'Recruitment');
+                $count = Lead::getAllLeadsCount(0,$user->id,$search,'Recruitment');
+            }
+        }
+
+        // Get contract-staffing leads
+        if($service == 'contract-staffing') {
+
+            if($all_perm) {
+
+                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'Contract Staffing');
+                $count = Lead::getAllLeadsCount(1,$user->id,$search,'Contract Staffing');
+            }
+            else if($userwise_perm) {
+                
+                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'Contract Staffing');
+                $count = Lead::getAllLeadsCount(0,$user->id,$search,'Contract Staffing');
+            }
+        }
+
+        // Get payroll leads
+        if($service == 'payroll') {
+
+            if($all_perm) {
+
+                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
+                $count = Lead::getAllLeadsCount(1,$user->id,$search,'');
+            }
+            else if($userwise_perm) {
+
+                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
+                $count = Lead::getAllLeadsCount(0,$user->id,$search,'');
+            }
+        }
+
+        // Get hr-advisory leads
+        if($service == 'hr-advisory') {
+
+            if($all_perm) {
+
+                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
+                $count = Lead::getAllLeadsCount(1,$user->id,$search,'');
+            }
+            else if($userwise_perm) {
+
+                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
+                $count = Lead::getAllLeadsCount(0,$user->id,$search,'');
+            }
+        }
+
+        $clients = array();
+        $i = 0;$j=0;
+
+        foreach ($client_res as $key => $value) {
+
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+           
+            if($all_perm || $value['client_owner']) {
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($delete_perm) {
+
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+
+                if(isset($value['url']) && $value['url'] != '') {
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
+            }
+            if($all_perm) {
+
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager, 'source' => $source]);
+                $account = $account_manager_view->render();
+                $action .= $account;
+            }
+
+            if($userwise_perm) {
+
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => $source]);
+                $secondline_account = $secondline_account_manager_view->render();
+                $action .= $secondline_account;
+
+            }
+
+            if($all_perm || $value['client_owner']) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+
+                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+
+                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
+                $timeline = $timeline_view->render();
+                $action .= $timeline;
+            }
+
+            $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+
+            if($value['status'] == 'Active')
+                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Passive')
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Leaders')
+                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Forbid')
+                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+            else if($value['status'] == 'Left')
+                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
+
+            $client_category = $value['category'];
+
+            if(isset($value['second_line_am_name']) && $value['second_line_am_name'] != '') {
+
+                $am_name = $value['am_name']." | ".$value['second_line_am_name'];
+            }
+            else {
+                $am_name = $value['am_name'];
+            }
+
+            if($category_perm) {
+
+                if($source == 'Forbid') {
+                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+                else {
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+            }
+            else {
+
+                if($source == 'Forbid') {
+                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+                else {
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                }
+            }
+
+            $clients[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $clients
+        );
+        echo json_encode($json_data);exit;
+    }
+
 
     public function cancellead() {
 

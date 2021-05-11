@@ -12,7 +12,6 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Total Leads({{ $count or '0' }})</h2>
-                <h4><span>Leads converted to client - {{ $convert_client_count }}</span></h4>
             </div>
 
             <div class="pull-right">
@@ -85,9 +84,7 @@
                 </div>
                 {!! Form::open(['method' => 'POST', 'route' => 'lead.emailnotification','onsubmit' => "return sendEmails()"]) !!}
                     <div class="modal-body">
-
                         <div class="body_class">
-
                             <div class="form-group">
                                 <strong>Subject : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('email_subject', null, array('id'=>'email_subject','placeholder' => 'Subject','tabindex' => '1','class' => 'form-control')) !!}
@@ -131,7 +128,7 @@
                 "order" : [0,'desc'],
                 "columnDefs": [{orderable: false, targets: [1]},{orderable: false, targets: [2]}],
                 "ajax":{
-                    url :"lead/all",
+                    url :"lead/allbyservice",
                     type: "get",
                     error: function() {
                     }
