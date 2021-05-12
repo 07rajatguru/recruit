@@ -22,6 +22,7 @@ use Carbon\CarbonInterval;
 use App\ClientTimeline;
 use App\UsersEmailPwd;
 use App\Date;
+use App\CandidateUploadedResume;
 
 class EveryMinute extends Command
 {
@@ -1170,6 +1171,221 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == "Today's Interviews") {
+
+                $from_date = date("Y-m-d 00:00:00");
+                $to_date = date("Y-m-d 23:59:59");
+
+                $type_array = array();
+                $file_path_array = array();
+                $j=0;
+
+                $interviews = Interview::getAllInterviewsByReminders($value['sender_name'],$from_date,$to_date);
+
+                if(isset($interviews) && sizeof($interviews) > 0) {
+
+                    foreach ($interviews as $key1 => $value1) {
+
+                        if(isset($value1) && $value1 != '') {
+
+                            $type_array[$j] = $value1['interview_type'];
+
+                            // Candidate Attachment
+                            $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
+
+                            if (isset($attachment) && $attachment != '') {
+                                $file_path = public_path() . "/" . $attachment->file;
+                            }
+                            else {
+                                $file_path = '';
+                            }
+                            $file_path_array[$j] = $file_path;
+
+                            $j++;
+                        }
+                    }
+                }
+
+                $to_array = explode(",",$input['to']);
+                $input['to_array'] = $to_array;
+                $input['type_string'] = implode(",", $type_array);
+                $input['file_path'] = $file_path_array;
+                $input['interview_details'] = $interviews;
+
+                \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->subject($input['subject']);
+
+                    if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                        foreach ($input['file_path'] as $key => $value) {
+
+                            if(isset($value) && $value != '') {
+                                $message->attach($value);
+                            }
+                        }
+                    }
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == "Yesterday's Interviews") {
+
+                $from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
+                $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
+
+                $type_array = array();
+                $file_path_array = array();
+                $j=0;
+
+                $interviews = Interview::getAllInterviewsByReminders($value['sender_name'],$from_date,$to_date);
+
+                if(isset($interviews) && sizeof($interviews) > 0) {
+
+                    foreach ($interviews as $key1 => $value1) {
+
+                        if(isset($value1) && $value1 != '') {
+
+                            $type_array[$j] = $value1['interview_type'];
+
+                            // Candidate Attachment
+                            $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
+
+                            if (isset($attachment) && $attachment != '') {
+                                $file_path = public_path() . "/" . $attachment->file;
+                            }
+                            else {
+                                $file_path = '';
+                            }
+                            $file_path_array[$j] = $file_path;
+
+                            $j++;
+                        }
+                    }
+                }
+
+                $to_array = explode(",",$input['to']);
+                $input['to_array'] = $to_array;
+                $input['type_string'] = implode(",", $type_array);
+                $input['file_path'] = $file_path_array;
+                $input['interview_details'] = $interviews;
+                $input['yesterday_date'] = date('Y-m-d',strtotime("-1 days"));
+
+                \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->subject($input['subject']);
+
+                    if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                        foreach ($input['file_path'] as $key => $value) {
+
+                            if(isset($value) && $value != '') {
+                                $message->attach($value);
+                            }
+                        }
+                    }
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == "Interview Reminder") {
+
+                $interview_ids_array = explode(",",$module_id);
+
+                if(isset($interview_ids_array) && sizeof($interview_ids_array) > 0) {
+
+                    foreach ($interview_ids_array as $k1 => $v1) {
+
+                        $type_array = array();
+                        $file_path_array = array();
+                        $j=0;
+                        $interviews = array();
+
+                        if(isset($v1) && $v1 != '') {
+
+                            $get_interview_by_id = Interview::getInterviewById($v1);
+
+                            $type_array[$j] = $get_interview_by_id->interview_type;
+
+                            // Candidate Attachment
+                            $attachment = CandidateUploadedResume::getCandidateAttachment($get_interview_by_id->candidate_id);
+
+                            if (isset($attachment) && $attachment != '') {
+                                    $file_path = public_path() . "/" . $attachment->file;
+                            }
+                            else {
+                                    $file_path = '';
+                            }
+
+                            $file_path_array[$j] = $file_path;
+
+                            $interviews[$j] = $get_interview_by_id;
+                        }
+
+                        $j++;
+                    }
+                }
+
+                if(isset($interviews) && sizeof($interviews) > 0) {
+
+                    $interview_details = array();
+                    $i=0;
+
+                    foreach ($interviews as $k2 => $v2) {
+
+                        $interview_details[$i]['id'] = $v2['id'];
+                        $interview_details[$i]['client_name'] = $v2['client_name'];
+                        $interview_details[$i]['job_designation'] = $v2['posting_title'];
+                        $interview_details[$i]['job_location'] = $v2['job_city'];
+
+                        $interview_details[$i]['interview_type'] = $v2['interview_type'];
+                        $interview_details[$i]['interview_location'] = $v2['interview_location'];
+                        
+                        $interview_details[$i]['cname'] = $v2['full_name'];
+                        $interview_details[$i]['cemail'] = $v2['candidate_email'];
+                        $interview_details[$i]['cmobile'] = $v2['candidate_mobile'];
+                        $interview_details[$i]['candidate_location'] = $v2['candidate_location'];
+                        $interview_details[$i]['skype_id'] = $v2['skype_id'];
+
+                        $datearray = explode(' ', $v2['interview_date']);
+                        $interview_date = $datearray[0];
+                        $interview_time = $datearray[1];
+                        $interview_details[$i]['interview_date'] = $interview_date;
+                        $interview_details[$i]['interview_time'] = $interview_time;
+
+                        $i++;   
+                    }
+                }
+
+                $to_array = explode(",",$input['to']);
+                $input['to_array'] = $to_array;
+                $input['type_string'] = implode(",", $type_array);
+                $input['file_path'] = $file_path_array;
+                $input['interview_details'] = $interview_details;
+
+                \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->subject($input['subject']);
+
+                    if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                        foreach ($input['file_path'] as $key => $value) {
+
+                            if(isset($value) && $value != '') {
+                                $message->attach($value);
+                            }
+                        }
+                    }
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");

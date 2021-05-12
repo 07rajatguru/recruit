@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\User;
 use App\Interview;
-use App\CandidateUploadedResume;
+use App\Events\NotificationMail;
 
 class AfterIntrviewReminder extends Command
 {
@@ -21,7 +21,7 @@ class AfterIntrviewReminder extends Command
      *
      * @var string
      */
-    protected $description = 'Command for send after interview email notifications';
+    protected $description = 'Command for send after interview email notifications.';
 
     /**
      * Create a new command instance.
@@ -53,91 +53,45 @@ class AfterIntrviewReminder extends Command
 
             foreach ($users as $key => $value) {
                 
-                $interviews = Interview::getAllInterviews(0,$key,$from_date,$to_date);
-
-                $to_address_client_owner = array();
-                $to_address_candidate_owner = array();
-                $type_array = array();
-                $file_path_array = array();
-                $j = 0;
+                $interviews = Interview::getAllInterviewsByReminders($key,$from_date,$to_date);
 
                 if(isset($interviews) && sizeof($interviews) > 0) {
+
+                    $to_address = array();
+                    $j = 0;
 
                     foreach ($interviews as $key1 => $value1) {
 
                         if(isset($value1) && $value1 != '') {
                                
-                            $client_email = Interview::getClientOwnerEmail($value1['id']);
-                            $client_owner_email = $client_email->clientowneremail;
+                            if($key == $value1['am_id']) {
 
-                            if(isset($client_owner_email) && $client_owner_email != '') {
-                                $to_address_client_owner[$j] = $client_owner_email;
+                                $client_email = Interview::getClientOwnerEmail($value1['id']);
+                                $client_owner_email = $client_email->clientowneremail;
+
+                                if(isset($client_owner_email) && $client_owner_email != '') {
+                                    $to_address[$j] = $client_owner_email;
+                                }
                             }
-
-                            $candidate_email = Interview::getCandidateOwnerEmail($value1['id']);
-                            $candidate_owner_email = $candidate_email->candidateowneremail;
-
-                            if(isset($candidate_owner_email) && $candidate_owner_email != '') {
-                                $to_address_candidate_owner[$j] = $candidate_owner_email;
-                            }
-
-                            $type_array[$j] = $value1['interview_type'];
-
-                            // Candidate Attachment
-                            $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
-
-                            if (isset($attachment) && $attachment != '') {
-                                $file_path = public_path() . "/" . $attachment->file;
-                            }
-                            else {
-                                $file_path = '';
-                            }
-                            $file_path_array[$j] = $file_path;
 
                             $j++;
                         }
                     }
 
-                    if(isset($interviews) && sizeof($interviews) > 0) {
+                    if(isset($to_address) && sizeof($to_address) > 0) {
+                        
+                        $to_address = array_unique($to_address);
 
-                        $from_name = getenv('FROM_NAME');
-                        $from_address = getenv('FROM_ADDRESS');
-                        $app_url = getenv('APP_URL');
+                        $module = "Yesterday's Interviews";
+                        $sender_name = $key;
+                        $to = implode(",", $to_address);
+                        $yesterday_date = date('Y-m-d',strtotime("-1 days"));
+                        $subject = "Yesterday's Interviews" . " - " . $yesterday_date;
+                        $message = "";
+                        $module_id = 0;
+                        $cc = "";
 
-                        if(isset($to_address_client_owner) && $to_address_client_owner != '' && isset($to_address_candidate_owner) && $to_address_candidate_owner != '') {
-
-                            $to_address = array_merge($to_address_client_owner,$to_address_candidate_owner);
-                            $to_address = array_unique($to_address);
-                        }
-                        else {
-
-                            $to_address = array();
-                        }
-
-                        $input['from_name'] = $from_name;
-                        $input['from_address'] = $from_address;
-                        $input['app_url'] = $app_url;
-                        $input['to_address'] = $to_address;
-                        $input['yesterday_date'] = date('Y-m-d',strtotime("-1 days"));
-                        $input['subject'] = "Yesterday's Interviews" . " - " . $input['yesterday_date'];
-                        $input['type_string'] = implode(",", $type_array);
-                        $input['file_path'] = $file_path_array;
-                        $input['interview_details'] = $interviews;
-
-                        \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
-                            $message->from($input['from_address'], $input['from_name']);
-                            $message->to($input['to_address'])->subject($input['subject']);
-
-                            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
-
-                                foreach ($input['file_path'] as $key => $value) {
-
-                                    if(isset($value) && $value != '') {
-                                        $message->attach($value);
-                                    }
-                                }
-                            }
-                        });
+                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                     }
                 }
             }
