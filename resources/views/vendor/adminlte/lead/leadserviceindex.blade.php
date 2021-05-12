@@ -11,7 +11,7 @@
    <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Total Leads({{ $count or '0' }})</h2>
+                <h2>{{ $service }} <span id="count">({{ $count or 0 }})</span></h2>
             </div>
 
             <div class="pull-right">
@@ -20,6 +20,8 @@
             </div>
         </div>
     </div>
+
+    <input type="hidden" name="service" id="service" value="{{ $service }}">
 
     <div class="row">
         <div class="col-md-12">
@@ -120,6 +122,8 @@
 <script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
+
+            var service = $("#service").val();
             
             $("#lead_table").DataTable({
 
@@ -128,10 +132,15 @@
                 "order" : [0,'desc'],
                 "columnDefs": [{orderable: false, targets: [1]},{orderable: false, targets: [2]}],
                 "ajax":{
-                    url :"lead/allbyservice",
+                    url :"/lead/allbyservice",
+                    data : {"service" : service},
                     type: "get",
                     error: function() {
                     }
+                },
+                initComplete:function( settings, json) {
+                    var count = json.recordsTotal;
+                    $("#count").html("(" + count + ")");
                 },
                 "pageLength": 50,
                 "responsive": true,

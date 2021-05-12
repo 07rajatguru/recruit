@@ -118,13 +118,13 @@ class LeadController extends Controller
 
         if($all_perm) {
 
-            $count = Lead::getAllLeadsCount(1,$user->id,$search);
-            $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Lead::getAllLeadsCount(1,$user->id,$search,'');
+            $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
         }
         else if($userwise_perm) {
 
-            $count = Lead::getAllLeadsCount(0,$user->id,$search);
-            $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
+            $count = Lead::getAllLeadsCount(0,$user->id,$search,'');
+            $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
         }
 
         $lead = array();
@@ -222,7 +222,24 @@ class LeadController extends Controller
             }
         }
 
-        return view('adminlte::lead.leadserviceindex',compact('count','recruitment','contract_staffing','payroll','hr_advisory'));
+        if($service == 'recruitment') {
+
+            $service = 'Recruitment';
+        }
+        else if($service == 'contract_staffing') {
+
+            $service = 'Recruitment';
+        }
+        else if($service == 'payroll') {
+
+            $service = 'Recruitment';
+        }
+        else if($service == 'hr_advisory') {
+            
+            $service = 'Recruitment';
+        }
+
+        return view('adminlte::lead.leadserviceindex',compact('service','count','recruitment','contract_staffing','payroll','hr_advisory'));
     }
 
     public function getAllLeadsDetailsByService() {
@@ -245,7 +262,7 @@ class LeadController extends Controller
         $lead_to_client_perm = $user->can('lead-to-client');
         $delete_perm = $user->can('lead-delete');
 
-        // Get recruitment leads
+        // Get Recruitment Leads
         if($service == 'recruitment') {
 
             if($all_perm) {
@@ -260,7 +277,7 @@ class LeadController extends Controller
             }
         }
 
-        // Get contract-staffing leads
+        // Get Contract Staffing Leads
         if($service == 'contract-staffing') {
 
             if($all_perm) {
@@ -275,130 +292,89 @@ class LeadController extends Controller
             }
         }
 
-        // Get payroll leads
+        // Get Payroll Leads
         if($service == 'payroll') {
 
             if($all_perm) {
 
-                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
-                $count = Lead::getAllLeadsCount(1,$user->id,$search,'');
+                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'Payroll');
+                $count = Lead::getAllLeadsCount(1,$user->id,$search,'Payroll');
             }
             else if($userwise_perm) {
 
-                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
-                $count = Lead::getAllLeadsCount(0,$user->id,$search,'');
+                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'Payroll');
+                $count = Lead::getAllLeadsCount(0,$user->id,$search,'Payroll');
             }
         }
 
-        // Get hr-advisory leads
+        // Get HR Advisory Leads
         if($service == 'hr-advisory') {
 
             if($all_perm) {
 
-                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
-                $count = Lead::getAllLeadsCount(1,$user->id,$search,'');
+                $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'HR Advisory');
+                $count = Lead::getAllLeadsCount(1,$user->id,$search,'HR Advisory');
             }
             else if($userwise_perm) {
 
-                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'');
-                $count = Lead::getAllLeadsCount(0,$user->id,$search,'');
+                $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'HR Advisory');
+                $count = Lead::getAllLeadsCount(0,$user->id,$search,'HR Advisory');
             }
         }
 
-        $clients = array();
+        $lead = array();
         $i = 0;$j=0;
 
-        foreach ($client_res as $key => $value) {
+        foreach ($leads_res as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
-           
-            if($all_perm || $value['client_owner']) {
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',$value['id']).'" style="margin:2px;"></a>';
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+            if($all_perm || $value['access']) {
+
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
             }
+
             if($delete_perm) {
 
-                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Index']);
                 $delete = $delete_view->render();
                 $action .= $delete;
+            }
 
-                if(isset($value['url']) && $value['url'] != '') {
-                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+            if($cancel_perm) {
+
+                $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $cancel = $cancel_view->render();
+                $action .= $cancel;
+            }
+
+            if ($value['convert_client'] == 0) {
+
+                if($lead_to_client_perm) {
+                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
                 }
-            }
-            if($all_perm) {
-
-                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client','display_name'=>'More Information', 'account_manager' => $account_manager, 'source' => $source]);
-                $account = $account_manager_view->render();
-                $action .= $account;
-            }
-
-            if($userwise_perm) {
-
-                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => $source]);
-                $secondline_account = $secondline_account_manager_view->render();
-                $action .= $secondline_account;
 
             }
 
-            if($all_perm || $value['client_owner']) {
+            $checkbox = '<input type=checkbox name=lead value='.$value['id'].' class=other_leads id='.$value['id'].'/>';
 
-                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
-
-                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
-
-                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
-                $timeline = $timeline_view->render();
-                $action .= $timeline;
-            }
-
-            $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
-            $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
-            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
 
-            if($value['status'] == 'Active')
-                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
-            else if($value['status'] == 'Passive')
-                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
-            else if($value['status'] == 'Leaders')
-                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
-            else if($value['status'] == 'Forbid')
-                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
-            else if($value['status'] == 'Left')
-                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
+            $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['coordinator_name'].'</a>';
 
-            $client_category = $value['category'];
+            if($value['convert_client'] == '1') {
 
-            if(isset($value['second_line_am_name']) && $value['second_line_am_name'] != '') {
+                $checkbox = '';
 
-                $am_name = $value['am_name']." | ".$value['second_line_am_name'];
-            }
-            else {
-                $am_name = $value['am_name'];
-            }
-
-            if($category_perm) {
-
-                if($source == 'Forbid') {
-                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
-                }
-                else {
-                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
-                }
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
             }
             else {
 
-                if($source == 'Forbid') {
-                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
-                }
-                else {
-                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
-                }
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
             }
-
-            $clients[$i] = $data;
+            
+            $lead[$i] = $data;
             $i++;
         }
 
@@ -406,7 +382,7 @@ class LeadController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $clients
+            "data" => $lead
         );
         echo json_encode($json_data);exit;
     }

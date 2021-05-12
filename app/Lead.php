@@ -53,7 +53,7 @@ class Lead extends Model
         return $statusArray;
     }
 
-    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc') {
+    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc',$service='') {
 
         $superadmin_user_id = env('SUPERADMINUSERID');
         $strategy_user_id = env('STRATEGYUSERID');
@@ -75,6 +75,10 @@ class Lead extends Model
         }
         if($all==0) {
             $query = $query->where('account_manager_id',$user_id);
+        }
+
+        if(isset($service) && $service != '') {
+            $query = $query->where('service','=',$service);
         }
 
         if (isset($search) && $search != '') {
@@ -141,7 +145,7 @@ class Lead extends Model
         return $leads_array;
     }
 
-    public static function getAllLeadsCount($all=0,$user_id,$search=NULL) {
+    public static function getAllLeadsCount($all=0,$user_id,$search=NULL,$service='') {
 
         $cancel_lead = 0;
         $query = Lead::query();
@@ -153,6 +157,10 @@ class Lead extends Model
             $query = $query->where('account_manager_id',$user_id);
         }
 
+        if(isset($service) && $service != '') {
+            $query = $query->where('service','=',$service);
+        }
+        
         if (isset($search) && $search != '') {
 
             $query = $query->where(function($query) use ($search) {
