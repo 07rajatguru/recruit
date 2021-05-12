@@ -72,33 +72,21 @@ class InterviewOneHourPriorEmail extends Command
                                
                             if($one_hour_ago_interview_date == $curr_date_time) {
 
-                                $client_email = Interview::getClientOwnerEmail($value1['id']);
-                                $client_owner_email = $client_email->clientowneremail;
-
-                                if(isset($client_owner_email) && $client_owner_email != '') {
-                                    $to_address[$j] = $client_owner_email;
-                                }
-
                                 $module_ids_array[$j] = $value1['id'];
                                 $j++;
                             }
                         }
                     }
 
-                    if(isset($to_address) && sizeof($to_address) > 0) {
-                        
-                        $to_address = array_unique($to_address);
+                    $module = "Interview Reminder";
+                    $sender_name = $key;
+                    $to = User::getUserEmailById($key);
+                    $subject = "Interview Reminder";
+                    $message = "";
+                    $module_id = implode(",", $module_ids_array);
+                    $cc = "";
 
-                        $module = "Interview Reminder";
-                        $sender_name = $key;
-                        $to = implode(",", $to_address);
-                        $subject = "Interview Reminder";
-                        $message = "";
-                        $module_id = implode(",", $module_ids_array);
-                        $cc = "";
-
-                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-                    }
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                 }
             }
         }

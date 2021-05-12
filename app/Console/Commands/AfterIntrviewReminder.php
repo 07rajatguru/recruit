@@ -57,42 +57,16 @@ class AfterIntrviewReminder extends Command
 
                 if(isset($interviews) && sizeof($interviews) > 0) {
 
-                    $to_address = array();
-                    $j = 0;
+                    $module = "Yesterday's Interviews";
+                    $sender_name = $key;
+                    $to = User::getUserEmailById($key);
+                    $yesterday_date = date('Y-m-d',strtotime("-1 days"));
+                    $subject = "Yesterday's Interviews" . " - " . $yesterday_date;
+                    $message = "";
+                    $module_id = 0;
+                    $cc = "";
 
-                    foreach ($interviews as $key1 => $value1) {
-
-                        if(isset($value1) && $value1 != '') {
-                               
-                            if($key == $value1['am_id']) {
-
-                                $client_email = Interview::getClientOwnerEmail($value1['id']);
-                                $client_owner_email = $client_email->clientowneremail;
-
-                                if(isset($client_owner_email) && $client_owner_email != '') {
-                                    $to_address[$j] = $client_owner_email;
-                                }
-                            }
-
-                            $j++;
-                        }
-                    }
-
-                    if(isset($to_address) && sizeof($to_address) > 0) {
-                        
-                        $to_address = array_unique($to_address);
-
-                        $module = "Yesterday's Interviews";
-                        $sender_name = $key;
-                        $to = implode(",", $to_address);
-                        $yesterday_date = date('Y-m-d',strtotime("-1 days"));
-                        $subject = "Yesterday's Interviews" . " - " . $yesterday_date;
-                        $message = "";
-                        $module_id = 0;
-                        $cc = "";
-
-                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-                    }
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                 }
             }
         }

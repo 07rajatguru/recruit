@@ -1303,12 +1303,12 @@ class EveryMinute extends Command
 
                 if(isset($interview_ids_array) && sizeof($interview_ids_array) > 0) {
 
-                    foreach ($interview_ids_array as $k1 => $v1) {
+                    $type_array = array();
+                    $file_path_array = array();
+                    $j=0;
+                    $interviews = array();
 
-                        $type_array = array();
-                        $file_path_array = array();
-                        $j=0;
-                        $interviews = array();
+                    foreach ($interview_ids_array as $k1 => $v1) {
 
                         if(isset($v1) && $v1 != '') {
 
@@ -1330,7 +1330,6 @@ class EveryMinute extends Command
 
                             $interviews[$j] = $get_interview_by_id;
                         }
-
                         $j++;
                     }
                 }
