@@ -45,7 +45,7 @@
                         @foreach($interview_details as $key => $value)
                             <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                 <td align="left">{{ ++$i }}</td>
-                                <td align="left">{{$value['job_designation']}}</td>
+                                <td align="left">{{$value['client_name']}} - {{$value['job_designation']}}</td>
                                 <td align="left">{{$value['job_location']}}</td>
                                 <td align="left">{{$value['cname']}}</td>
                                 <td align="left">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>

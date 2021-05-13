@@ -1115,6 +1115,8 @@ class Interview extends Model
         $interview_details['cmobile'] = $cmobile;
         $interview_details['cemail'] = $cemail;
         $interview_details['job_designation'] = $interview->posting_title;
+        $interview_details['client_name'] = $interview->client_name;
+        
 
         //$interview_details['job_location'] = $location;
         $interview_details['job_location'] = $city;
