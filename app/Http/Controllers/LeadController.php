@@ -28,14 +28,14 @@ class LeadController extends Controller
             $all_leads = Lead::getAllLeads(1,$user->id);
             $count = sizeof($all_leads);
 
-            $convert_client_count = Lead::getConvertedClient(1,$user->id);
+            $convert_client_count = Lead::getConvertedClient(1,$user->id,'');
         }
         else if($userwise_perm) {
 
             $all_leads = Lead::getAllLeads(0,$user->id);
             $count = sizeof($all_leads);
 
-            $convert_client_count = Lead::getConvertedClient(0,$user->id);
+            $convert_client_count = Lead::getConvertedClient(0,$user->id,'');
         }
 
         $recruitment = 0;
@@ -224,22 +224,29 @@ class LeadController extends Controller
 
         if($service == 'recruitment') {
 
-            $service = 'Recruitment';
+            $service_name = 'Recruitment';
         }
-        else if($service == 'contract_staffing') {
+        else if($service == 'contract-staffing') {
 
-            $service = 'Recruitment';
+            $service_name = 'Contract Staffing';
         }
         else if($service == 'payroll') {
 
-            $service = 'Recruitment';
+            $service_name = 'Payroll';
         }
-        else if($service == 'hr_advisory') {
+        else if($service == 'hr-advisory') {
             
-            $service = 'Recruitment';
+            $service_name = 'Hr Advisory';
         }
 
-        return view('adminlte::lead.leadserviceindex',compact('service','count','recruitment','contract_staffing','payroll','hr_advisory'));
+        if($all_perm) {
+            $convert_client_count = Lead::getConvertedClient(1,$user->id,$service_name);
+        }
+        else if($userwise_perm) {
+            $convert_client_count = Lead::getConvertedClient(1,$user->id,$service_name);
+        }
+
+        return view('adminlte::lead.leadserviceindex',compact('service','count','recruitment','contract_staffing','payroll','hr_advisory','service_name','convert_client_count'));
     }
 
     public function getAllLeadsDetailsByService() {

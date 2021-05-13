@@ -93,8 +93,7 @@ class Lead extends Model
                 $query = $query->orwhere('lead_management.city','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('lead_management.website','like',"%$search%");
-                $query = $query->orwhere('lead_management.source','like',"%$search%");
-                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                $query = $query->orwhere('lead_management.lead_status','like',"%$search%");
             });
         }
         $response = $query->get();
@@ -173,8 +172,7 @@ class Lead extends Model
                 $query = $query->orwhere('lead_management.city','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('lead_management.website','like',"%$search%");
-                $query = $query->orwhere('lead_management.source','like',"%$search%");
-                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                $query = $query->orwhere('lead_management.lead_status','like',"%$search%");
             });
         }
         $count = $query->count();
@@ -208,8 +206,7 @@ class Lead extends Model
                 $query = $query->orwhere('lead_management.city','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('lead_management.website','like',"%$search%");
-                $query = $query->orwhere('lead_management.source','like',"%$search%");
-                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                $query = $query->orwhere('lead_management.lead_status','like',"%$search%");
             });
         }
 
@@ -294,8 +291,7 @@ class Lead extends Model
                 $query = $query->orwhere('lead_management.city','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('lead_management.website','like',"%$search%");
-                $query = $query->orwhere('lead_management.source','like',"%$search%");
-                $query = $query->orwhere('lead_management.designation','like',"%$search%");
+                $query = $query->orwhere('lead_management.lead_status','like',"%$search%");
             });
         }
 
@@ -303,7 +299,7 @@ class Lead extends Model
         return $count;
     }
 
-    public static function getConvertedClient($all=0,$user_id) {
+    public static function getConvertedClient($all=0,$user_id,$service='') {
 
         $convert_client = '1';
         $query = Lead::query();
@@ -311,7 +307,13 @@ class Lead extends Model
         $query = $query->where('convert_client',$convert_client);
 
         if($all==0) {
+
             $query = $query->where('account_manager_id',$user_id);
+        }
+
+        if(isset($service) && $service != '') {
+
+            $query = $query->where('service',$service);
         }
 
         $count = $query->count();
