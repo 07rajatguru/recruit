@@ -1365,27 +1365,30 @@ class EveryMinute extends Command
                     }
                 }
 
-                $to_array = explode(",",$input['to']);
-                $input['to_array'] = $to_array;
-                $input['type_string'] = implode(",", $type_array);
-                $input['file_path'] = $file_path_array;
-                $input['interview_details'] = $interview_details;
+                if(isset($interview_details) && sizeof($interview_details) > 0) {
+                    
+                    $to_array = explode(",",$input['to']);
+                    $input['to_array'] = $to_array;
+                    $input['type_string'] = implode(",", $type_array);
+                    $input['file_path'] = $file_path_array;
+                    $input['interview_details'] = $interview_details;
 
-                \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+                    \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
 
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->subject($input['subject']);
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->subject($input['subject']);
 
-                    if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+                        if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
 
-                        foreach ($input['file_path'] as $key => $value) {
+                            foreach ($input['file_path'] as $key => $value) {
 
-                            if(isset($value) && $value != '') {
-                                $message->attach($value);
+                                if(isset($value) && $value != '') {
+                                    $message->attach($value);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
