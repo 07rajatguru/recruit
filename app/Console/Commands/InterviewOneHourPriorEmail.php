@@ -78,15 +78,18 @@ class InterviewOneHourPriorEmail extends Command
                         }
                     }
 
-                    $module = "Interview Reminder";
-                    $sender_name = $key;
-                    $to = User::getUserEmailById($key);
-                    $subject = "Interview Reminder";
-                    $message = "";
-                    $module_id = implode(",", $module_ids_array);
-                    $cc = "";
+                    if(isset($module_ids_array) && sizeof($module_ids_array) > 0) {
+                        
+                        $module = "Interview Reminder";
+                        $sender_name = $key;
+                        $to = User::getUserEmailById($key);
+                        $subject = "Interview Reminder";
+                        $message = "";
+                        $module_id = implode(",", $module_ids_array);
+                        $cc = "";
 
-                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                    }
                 }
             }
         }
