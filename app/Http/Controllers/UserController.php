@@ -119,12 +119,14 @@ class UserController extends Controller
         
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');
-        $type = $request->input('type');
         $check_report = $request->input('daily_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
         $role_id = $request->input('roles');
         $eligibility_report = $request->input('eligibility_report');
+
+        $type = $request->input('type');
+        $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
 
         // Start Report Status
 
@@ -176,13 +178,15 @@ class UserController extends Controller
         $user->last_name = $last_name;
         $user->check_floor_incharge = $check_floor_incharge;
         $user->eligibility_report = $eligibility_report;
+        $user->type = $type;
+        $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
 
         $users = $user->save();
 
         $user_id = $user->id;
 
         // Add new User to training & process manual if it is for all users and entry in database
-        if ($type == 'recruiter' && $status == 'Active') {
+        if ($type == '1' && $status == 'Active') {
             $training_id = Training::getAlltrainingIds(1);
             if (isset($training_id) && $training_id != '') {
                 foreach ($training_id as $key => $value) {
@@ -207,7 +211,7 @@ class UserController extends Controller
         }
 
         // If job_open_to_all = 1 then new user visible that all jobs
-        if ($type == 'recruiter' && $status == 'Active') {
+        if ($type == '1' && $status == 'Active') {
             $job_id = JobOpen::getAllJobsId(1);
             if (isset($job_id) && $job_id != '') {
                 foreach ($job_id as $key => $value){
@@ -312,8 +316,9 @@ class UserController extends Controller
             }
         }
         $department_id = $user->type;
+        $hr_adv_recruitemnt = $user->hr_adv_recruitemnt;
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id'));
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt'));
     }
 
     /**
@@ -368,11 +373,13 @@ class UserController extends Controller
 
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');
-        $type = $request->input('type');
         $check_report = $request->input('daily_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
         $eligibility_report = $request->input('eligibility_report');
+
+        $type = $request->input('type');
+        $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
 
         $user->secondary_email = $request->input('semail');
         $user->daily_report = $check_report;
@@ -381,6 +388,8 @@ class UserController extends Controller
         $user->status = $status;
         $user->account_manager = $account_manager;
         $user->eligibility_report = $eligibility_report;
+        $user->type = $type;
+        $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
 
         // Start Report Status
 

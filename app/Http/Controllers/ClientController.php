@@ -89,9 +89,29 @@ class ClientController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $account_manager = User::getAllUsers($type_array,'Yes');
-        $all_account_manager = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $account_manager = array();
+        $all_account_manager = array();
         $all_account_manager[0] = 'Yet to Assign';
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $account_manager[$k1] = $v1;
+                        $all_account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $account_manager[$k1] = $v1;
+                    $all_account_manager[$k1] = $v1;
+                }    
+            }
+        }
 
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
@@ -173,7 +193,26 @@ class ClientController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $account_manager = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $account_manager = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();

@@ -941,7 +941,25 @@ class BillsController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $key => $value) {
+               
+               $user_details = User::getAllDetailsByUserID($key);
+
+               if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$key] = $value;
+                    }
+               }
+               else {
+                    $users[$key] = $value;
+               }    
+            }
+        }
 
         $employee_name = array();
         $employee_percentage = array();
@@ -1329,7 +1347,25 @@ class BillsController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $key => $value) {
+               
+               $user_details = User::getAllDetailsByUserID($key);
+
+               if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$key] = $value;
+                    }
+               }
+               else {
+                    $users[$key] = $value;
+               }    
+            }
+        }
 
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
@@ -1971,7 +2007,25 @@ class BillsController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $key => $value) {
+               
+               $user_details = User::getAllDetailsByUserID($key);
+
+               if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$key] = $value;
+                    }
+               }
+               else {
+                    $users[$key] = $value;
+               }    
+            }
+        }
 
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 

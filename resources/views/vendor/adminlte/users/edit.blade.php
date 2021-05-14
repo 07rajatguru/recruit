@@ -159,6 +159,14 @@
                                 @endif
                             </div>
 
+                            <div class="form-group hr_adv" style="display: none;">
+                                <strong> HR Advisory With or Without Recruitemnt : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('hr_adv_recruitemnt','Yes', $hr_adv_recruitemnt) !!}
+                                {!! Form::label('With Recruitemnt') !!} &nbsp;&nbsp;
+                                {!! Form::radio('hr_adv_recruitemnt','No',$hr_adv_recruitemnt) !!}
+                                {!! Form::label('Without Recruitemnt') !!}
+                            </div>
+
                             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
                                 <strong> Role : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('roles',$roles,$roles_id, array('id'=>'roles','class' => 'form-control', 'tabindex' => '12')) !!}
@@ -320,6 +328,15 @@
 
             var department_id = $("#type").val();
             var user_id = $("#user_id").val();
+
+            if(department_id == 2) {
+
+                $(".hr_adv").show();
+            }
+            else {
+
+                $(".hr_adv").hide();
+            }
 
             if(department_id > 0) {
 

@@ -514,7 +514,25 @@ class ReportController extends Controller
 
         if ($all_perm) {
 
-            $users = User::getAllUsers($type_array);
+            $users_array = User::getAllUsers($type_array);
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
 
             foreach ($users as $key => $value) {
 
@@ -594,7 +612,25 @@ class ReportController extends Controller
                 $hr_advisory = getenv('HRADVISORY');
                 $type_array = array($recruitment,$hr_advisory);
 
-                $users = User::getAllUsers($type_array);
+                $users_array = User::getAllUsers($type_array);
+                $users = array();
+
+                if(isset($users_array) && sizeof($users_array) > 0) {
+
+                    foreach ($users_array as $k1 => $v1) {
+                                   
+                        $user_details = User::getAllDetailsByUserID($k1);
+
+                        if($user_details->type == '2') {
+                            if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                $users[$k1] = $v1;
+                            }
+                        }
+                        else {
+                            $users[$k1] = $v1;
+                        }    
+                    }
+                }
 
                 foreach ($users as $key => $value) {
 

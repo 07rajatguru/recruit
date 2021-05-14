@@ -781,9 +781,27 @@ class LeadController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
         $users[0] = 'Yet to Assign';
 
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+        
         $lead = Lead::find($id);
         $name = $lead->name;
         $website = $lead->website;

@@ -797,6 +797,8 @@ class EveryMinute extends Command
             }
             else if ($value['module'] == 'Monthly Report') {
 
+                $recruitment = getenv('RECRUITMENT');
+
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
 

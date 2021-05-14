@@ -53,18 +53,44 @@ class JobOpentoAll extends Command
         $job_data = JobOpen::getJobforOpentoAll();
         $job = array();
         $i = 0;
+
         if (isset($job_data) && $job_data != '') {
+
             foreach ($job_data as $key => $value) {
+
                 $job[$i]['id'] = $value['id'];
                 $job_id = $job[$i]['id'];
                 $cv_count = JobAssociateCandidates::getJobAssociatedCvsCount($job_id);
-                //print_r($cv_count);exit;
+
                 if ($cv_count < 5) {
-                    $users = User::getAllUsers($type_array);
-                    if(isset($users) && sizeof($users)>0){
+
+                    $users_array = User::getAllUsers($type_array);
+                    $users = array();
+
+                    if(isset($users_array) && sizeof($users_array) > 0) {
+
+                        foreach ($users_array as $k1 => $v1) {
+                           
+                           $user_details = User::getAllDetailsByUserID($k1);
+
+                           if($user_details->type == '2') {
+                                if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                    $users[$k1] = $v1;
+                                }
+                           }
+                           else {
+                                $users[$k1] = $v1;
+                           }    
+                        }
+                    }
+
+                    if(isset($users) && sizeof($users)>0) {
+
                         $user_emails = array();
                         JobVisibleUsers::where('job_id',$job_id)->delete();
-                        foreach ($users as $key1=>$value1){
+
+                        foreach ($users as $key1=>$value1) {
+
                             $job_visible_users = new JobVisibleUsers();
                             $job_visible_users->job_id = $value['id'];
                             $job_visible_users->user_id = $key1;
@@ -75,9 +101,6 @@ class JobOpentoAll extends Command
                         }
                         
                         $superadminsecondemail = User::getUserEmailById($superadminuserid);
-                        //$cc1 = "adler.rgl@gmail.com";
-                        //$cc2 = "tarikapanjwani@gmail.com";
-                        //$cc_users_array = array($superadminsecondemail,$cc1,$cc2);
                         $cc_user = $superadminsecondemail;
 
                         $job_details = JobOpen::getJobById($job_id);
@@ -94,9 +117,9 @@ class JobOpentoAll extends Command
                         $module_id = $job_id;
 
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-                        //print_r($message);exit;
 
-                        foreach ($users as $key2=>$value2){
+                        foreach ($users as $key2=>$value2) {
+
                             $module_id = $job_id;
                             $module = 'Job Open to All';
                             $message = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
@@ -106,6 +129,7 @@ class JobOpentoAll extends Command
                             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
                         }
                     }
+
                     $open_to_all = 1;
                     \DB::statement("UPDATE job_openings SET open_to_all = $open_to_all where id = $job_id");
                 }

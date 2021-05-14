@@ -269,7 +269,13 @@ class ClientBasicinfo extends Ardent
             if(isset($value->second_line_am) && $value->second_line_am > 0) {
 
                 $user_details = User::getAllDetailsByUserID($value->second_line_am);
-                $client_array[$i]['second_line_am_name'] = $user_details->name;
+
+                if(isset($user_details) && $user_details != '') {
+                    $client_array[$i]['second_line_am_name'] = $user_details->name;
+                }
+                else {
+                    $client_array[$i]['second_line_am_name'] = '';
+                }
             }
             else {
                 $client_array[$i]['second_line_am_name'] = '';
@@ -570,7 +576,13 @@ class ClientBasicinfo extends Ardent
             if(isset($value->second_line_am) && $value->second_line_am > 0) {
 
                 $user_details = User::getAllDetailsByUserID($value->second_line_am);
-                $client[$i]['second_line_am_name'] = $user_details->name;
+
+                if(isset($user_details) && $user_details != '') {
+                    $client[$i]['second_line_am_name'] = $user_details->name;
+                }
+                else {
+                    $client[$i]['second_line_am_name'] = '';
+                }
             }
             else {
                 $client[$i]['second_line_am_name'] = '';
@@ -946,7 +958,13 @@ class ClientBasicinfo extends Ardent
             if(isset($value->second_line_am) && $value->second_line_am > 0) {
 
                 $user_details = User::getAllDetailsByUserID($value->second_line_am);
-                $client_array[$i]['second_line_am_name'] = $user_details->name;
+
+                if(isset($user_details) && $user_details != '') {
+                    $client_array[$i]['second_line_am_name'] = $user_details->name;
+                }
+                else {
+                    $client_array[$i]['second_line_am_name'] = '';
+                }
             }
             else {
                 $client_array[$i]['second_line_am_name'] = '';
@@ -1179,8 +1197,14 @@ class ClientBasicinfo extends Ardent
 
             if(isset($res->second_line_am) && $res->second_line_am > 0) {
 
-                $user_details = User::getAllDetailsByUserID($res->second_line_am);
-                $client['second_line_am_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $user_details = User::getAllDetailsByUserID($value->second_line_am);
+
+                if(isset($user_details) && $user_details != '') {
+                    $client['second_line_am_name'] = $user_details->first_name . " " . $user_details->last_name;
+                }
+                else {
+                    $client['second_line_am_name'] = '';
+                }
             }
             else {
                 $client['second_line_am_name'] = '';
@@ -1651,7 +1675,13 @@ class ClientBasicinfo extends Ardent
             if(isset($value->second_line_am) && $value->second_line_am > 0) {
 
                 $user_details = User::getAllDetailsByUserID($value->second_line_am);
-                $client_array[$i]['second_line_am_name'] = $user_details->name;
+
+                if(isset($user_details) && $user_details != '') {
+                    $client_array[$i]['second_line_am_name'] = $user_details->name;
+                }
+                else {
+                    $client_array[$i]['second_line_am_name'] = '';
+                }
             }
             else {
                 $client_array[$i]['second_line_am_name'] = '';
