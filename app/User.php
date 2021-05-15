@@ -53,13 +53,32 @@ class User extends Authenticatable
     );
 
     public static function getUserArray($user_id) {
-        $users = User::select('*')
-            ->where('users.id','!=',$user_id)
-            ->get();
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+        
+        $user_query = User::query();
+
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
+        $user_query = $user_query->whereIn('type',$type_array);
+        $user_query = $user_query->where('id','!=',$user_id);
+        $user_query = $user_query->orderBy('name');
+        $users = $user_query->get();
 
         $userArr = array();
-        if(isset($users) && sizeof($users)){
+
+        if(isset($users) && sizeof($users) > 0) {
+
             foreach ($users as $user) {
+
                 $userArr[$user->id] = $user->name;
             }
         }
