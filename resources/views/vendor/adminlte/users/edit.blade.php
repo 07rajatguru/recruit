@@ -118,30 +118,10 @@
                                 @endif
                             </div>
 
-                            <div class="form-group {{ $errors->has('reports_to') ? 'has-error' : '' }}">
-                                <strong>Reports To :</strong>
-                                {!! Form::select('reports_to', $reports_to,isset($userReportsTo) ? $userReportsTo : null, array('id'=>'reports_to','class' => 'form-control','tabindex' => '8')) !!}
-                                @if ($errors->has('reports_to'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('reports_to') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group {{ $errors->has('floor_incharge') ? 'has-error' : '' }}">
-                                <strong>Floor Incharge :</strong>
-                                {!! Form::select('floor_incharge', $floor_incharge, isset($userFloorIncharge) ? $userFloorIncharge : 0, array('id'=>'floor_incharge','class' => 'form-control','tabindex' => '9' )) !!}
-                                @if ($errors->has('floor_incharge'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('floor_incharge') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
                                 <strong>Select Compnay : <span class = "required_fields">*</span> 
                                 </strong>
-                                {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '10')) !!}
+                                {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
                                 @if ($errors->has('company_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('company_id') }}</strong>
@@ -149,9 +129,20 @@
                                 @endif
                             </div>
 
+                            <!-- <div class="form-group {{ $errors->has('floor_incharge') ? 'has-error' : '' }}">
+                                <strong>Floor Incharge :</strong>
+                                {!! Form::select('floor_incharge', $floor_incharge, isset($userFloorIncharge) ? $userFloorIncharge : 0, array('id'=>'floor_incharge','class' => 'form-control','tabindex' => '9' )) !!}
+                                @if ($errors->has('floor_incharge'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('floor_incharge') }}</strong>
+                                    </span>
+                                @endif
+                            </div> -->
+
+                            
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong>Department : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('type', $departments,null, array('id'=>'type','class' => 'form-control','tabindex' => '11','onchange' => 'getRoles()')) !!}
+                                {!! Form::select('type', $departments,null, array('id'=>'type','class' => 'form-control','tabindex' => '9','onchange' => 'getRoles()')) !!}
                                 @if ($errors->has('type'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('type') }}</strong>
@@ -169,10 +160,21 @@
 
                             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
                                 <strong> Role : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('roles',$roles,$roles_id, array('id'=>'roles','class' => 'form-control', 'tabindex' => '12')) !!}
+                                {!! Form::select('roles',$roles,$roles_id, array('id'=>'roles','class' => 'form-control', 'tabindex' => '10')) !!}
                                 @if ($errors->has('roles'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('roles') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+
+                            <div class="form-group {{ $errors->has('reports_to') ? 'has-error' : '' }}">
+                                <strong>Reports To :</strong>
+                                {!! Form::select('reports_to', $reports_to,isset($userReportsTo) ? $userReportsTo : null, array('id'=>'reports_to','class' => 'form-control','tabindex' => '11')) !!}
+                                @if ($errors->has('reports_to'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('reports_to') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -187,14 +189,14 @@
                                 @endif
                             </div> -->
 
-                            <div class="form-group">
+<!--                             <div class="form-group">
                                 <strong> Floor Incharge : </strong> &nbsp;&nbsp;
                                 {!! Form::radio('check_floor_incharge','Yes', true) !!}
                                 {!! Form::label('Yes') !!} &nbsp;&nbsp;
                                 {!! Form::radio('check_floor_incharge','No',false) !!}
                                 {!! Form::label('No') !!}
                             </div>
-
+ -->
                             <div class="form-group">
                                 <strong> Generate Report : </strong> &nbsp;&nbsp;
                                 {!! Form::radio('daily_report','Yes', true, array('onclick' => 'reportSelection();')) !!}
@@ -266,6 +268,7 @@
 
             $("#type").select2();
             $("#roles").select2({placeholder: 'Select Role'});
+            $("#reports_to").select2();
 
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {
