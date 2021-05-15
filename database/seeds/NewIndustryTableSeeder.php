@@ -48,7 +48,7 @@ class NewIndustryTableSeeder extends Seeder
             array('id' => 31, 'name' => 'IOT - Internet of Things'),
             array('id' => 32, 'name' => 'IT - Hardware'),
             array('id' => 33, 'name' => 'IT - Software'),
-            array('id' => 34, 'name' => 'Hospital / Laboratory'),
+            array('id' => 34, 'name' => 'Hospital / Laboratory / Medical'),
             array('id' => 35, 'name' => 'Logistics'),
             array('id' => 36, 'name' => 'Metal'),
             array('id' => 37, 'name' => 'Oil & Gas'),
