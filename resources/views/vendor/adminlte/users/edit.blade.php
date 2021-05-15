@@ -119,7 +119,7 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
-                                <strong>Select Compnay : <span class = "required_fields">*</span> 
+                                <strong>Select Company : <span class = "required_fields">*</span> 
                                 </strong>
                                 {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
                                 @if ($errors->has('company_id'))
