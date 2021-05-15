@@ -783,8 +783,7 @@ class LeadController extends Controller
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
-        $users[0] = 'Yet to Assign';
-
+        
         if(isset($users_array) && sizeof($users_array) > 0) {
 
             foreach ($users_array as $k1 => $v1) {
@@ -801,6 +800,7 @@ class LeadController extends Controller
                 }    
             }
         }
+        $users[0] = 'Yet to Assign';
         
         $lead = Lead::find($id);
         $name = $lead->name;

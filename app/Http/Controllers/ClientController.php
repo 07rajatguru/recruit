@@ -90,10 +90,8 @@ class ClientController extends Controller
         $type_array = array($recruitment,$hr_advisory);
 
         $users_array = User::getAllUsers($type_array,'Yes');
-        $account_manager = array();
         $all_account_manager = array();
-        $all_account_manager[0] = 'Yet to Assign';
-
+        
         if(isset($users_array) && sizeof($users_array) > 0) {
 
             foreach ($users_array as $k1 => $v1) {
@@ -102,16 +100,16 @@ class ClientController extends Controller
 
                 if($user_details->type == '2') {
                     if($user_details->hr_adv_recruitemnt == 'Yes') {
-                        $account_manager[$k1] = $v1;
                         $all_account_manager[$k1] = $v1;
                     }
                 }
                 else {
-                    $account_manager[$k1] = $v1;
                     $all_account_manager[$k1] = $v1;
                 }    
             }
         }
+
+        $all_account_manager[0] = 'Yet to Assign';
 
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
@@ -124,7 +122,7 @@ class ClientController extends Controller
 
         $superadmin = getenv('SUPERADMINUSERID');
 
-        return view('adminlte::client.index',compact('count','active','passive','account_manager','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin'));
+        return view('adminlte::client.index',compact('count','active','passive','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin'));
     }
 
     public static function getOrderColumnName($order) {
@@ -365,19 +363,35 @@ class ClientController extends Controller
             }
         }
 
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $account_manager = User::getAllUsers($type_array,'Yes');
-        $account_manager[0] = 'Yet to Assign';
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $all_account_manager = array();
 
-        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+        if(isset($users_array) && sizeof($users_array) > 0) {
 
-        $all_account_manager = User::getAllUsers($type_array,'Yes');
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $all_account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $all_account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
         $all_account_manager[0] = 'Yet to Assign';
 
-        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','account_manager','count','email_template_names','all_account_manager'));
+        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager'));
     }
 
     public function getAllClientsDetailsByType() {
@@ -541,7 +555,26 @@ class ClientController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $account_manager = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $account_manager = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();
@@ -666,15 +699,8 @@ class ClientController extends Controller
             $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,'',3,'');
         }
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
-
-        $account_manager = User::getAllUsers($type_array,'Yes');
-        $account_manager[0] = 'Yet to Assign';
-
         $source = 'Forbid';
-        return view('adminlte::client.forbidclients',compact('count','source','account_manager'));
+        return view('adminlte::client.forbidclients',compact('count','source'));
     }
 
     public function create() {
@@ -713,7 +739,26 @@ class ClientController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
         $users[0] = 'Yet to Assign';
         
         // User Account Manager access check
@@ -834,11 +879,26 @@ class ClientController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
-        $users[0] = 'Yet to Assign';
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
 
-        $yet_to_assign_users = User::getAllUsers($type_array,'Yes');
-        $yet_to_assign_users[0] = '--Select User--';
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+        $users[0] = 'Yet to Assign';
 
         $action = "edit";
 
@@ -870,7 +930,7 @@ class ClientController extends Controller
 
         $client_upload_type['Others'] = 'Others';
 
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','yet_to_assign_users','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','client_upload_type','second_line_am'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','client_upload_type','second_line_am'));
     }
 
     public function store(Request $request) {
@@ -2217,14 +2277,7 @@ class ClientController extends Controller
             $count = ClientBasicinfo::getClientsCountByAM(0,$user->id,'');
         }
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
-
-        $account_manager = User::getAllUsers($type_array,'Yes');
-        $account_manager[0] = 'Yet to Assign';
-
-        return view('adminlte::client.clientlistamwise',compact('count','account_manager'));
+        return view('adminlte::client.clientlistamwise',compact('count'));
     }
 
     public function getAllClientsDetailsByAM() {
@@ -2260,7 +2313,25 @@ class ClientController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $account_manager = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $account_manager = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $account_manager[$k1] = $v1;
+                }    
+            }
+        }
         $account_manager[0] = 'Yet to Assign';
 
         $clients = array();

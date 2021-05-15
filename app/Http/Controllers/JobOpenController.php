@@ -892,10 +892,46 @@ class JobOpenController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
-        $users[0] = 'Yet to Assign';
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
         
-        $select_all_users = User::getAllUsers($type_array);
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+        $users[0] = 'Yet to Assign';
+
+        $users_array_new = User::getAllUsers($type_array);
+        $select_all_users = array();
+        
+        if(isset($users_array_new) && sizeof($users_array_new) > 0) {
+
+            foreach ($users_array_new as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $select_all_users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $select_all_users[$k1] = $v1;
+                }    
+            }
+        }
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1520,8 +1556,46 @@ class JobOpenController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
-        $select_all_users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+        $users[0] = 'Yet to Assign';
+
+        $users_array_new = User::getAllUsers($type_array);
+        $select_all_users = array();
+        
+        if(isset($users_array_new) && sizeof($users_array_new) > 0) {
+
+            foreach ($users_array_new as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $select_all_users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $select_all_users[$k1] = $v1;
+                }    
+            }
+        }
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1673,8 +1747,46 @@ class JobOpenController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
-        $select_all_users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+        $users[0] = 'Yet to Assign';
+
+        $users_array_new = User::getAllUsers($type_array);
+        $select_all_users = array();
+        
+        if(isset($users_array_new) && sizeof($users_array_new) > 0) {
+
+            foreach ($users_array_new as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $select_all_users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $select_all_users[$k1] = $v1;
+                }    
+            }
+        }
 
         // job type
         $job_type = JobOpen::getJobTypes();
@@ -1884,7 +1996,26 @@ class JobOpenController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users_id = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_id = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users_id[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users_id[$k1] = $v1;
+                }    
+            }
+        }
+
         $user_count = sizeof($users_id);
 
         $job_users = sizeof($users);
@@ -2008,8 +2139,46 @@ class JobOpenController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array,'Yes');
-        $select_all_users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+        $users[0] = 'Yet to Assign';
+
+        $users_array_new = User::getAllUsers($type_array);
+        $select_all_users = array();
+        
+        if(isset($users_array_new) && sizeof($users_array_new) > 0) {
+
+            foreach ($users_array_new as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $select_all_users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $select_all_users[$k1] = $v1;
+                }    
+            }
+        }
 
         $job_open = JobOpen::find($id);
         $posting_title = $job_open->posting_title;
@@ -2605,7 +2774,25 @@ class JobOpenController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
-        $users = User::getAllUsers($type_array);
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
 
         return view('adminlte::jobopen.associated_candidate', array('job_id' => $id, 'posting_title' => $posting_title,'message' => '','candidates'=>$candidateDetails ,'candidatestatus'=>$candidateStatus,'type'=>$type,'status' => $status,'users' => $users,'client_id'=>$client_id, 'shortlist_type'=>$shortlist_type,'access'=>$access,'user_id'=>$user_id));
     }

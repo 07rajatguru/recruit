@@ -983,6 +983,30 @@ class ToDosController extends Controller
 
         $selectedType = Input::get('selectedType');
 
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
         // For Job Opening Details
         if($selectedType == 1){
            
@@ -1005,14 +1029,8 @@ class ToDosController extends Controller
                 $i++;
             }
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $job_user = User::getAllUsers($type_array);
-
             $j=0;
-            foreach ($job_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1043,13 +1061,8 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $interview_user = User::getAllUsers($type_array);
             $j=0;
-            foreach ($interview_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1088,13 +1101,8 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type' );
             }
             
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $client_user = User::getAllUsers($type_array);
             $j=0;
-            foreach ($client_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1118,13 +1126,8 @@ class ToDosController extends Controller
                 $typeArr[0] = array('id' => '','value'=>'Select Type');
             }
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $candidate_user = User::getAllUsers($type_array);
             $j=0;
-            foreach ($candidate_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1151,6 +1154,30 @@ class ToDosController extends Controller
         $selected_typeList = AssociatedTypeList::getAssociatedListByTodoId($toDoId);
         $selected_userArr = TodoAssignedUsers::getUserListByTodoId($toDoId);
 
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
+
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
         // For Job Opening Details
         $typeArr = array();
         if($selectedType == 1) {
@@ -1174,14 +1201,8 @@ class ToDosController extends Controller
                 $i++;
             }
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $job_user = User::getAllUsers($type_array);
-
             $j=0;
-            foreach ($job_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1202,17 +1223,9 @@ class ToDosController extends Controller
                     $i++;
                 }
             } 
-            /*else {
-                $typeArr[0] = array('id' => '','value'=>'Select Type' );
-            }*/
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $interview_user = User::getAllUsers($type_array);
             $j=0;
-            foreach ($interview_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1242,19 +1255,10 @@ class ToDosController extends Controller
                     $typeArr[$i]['value'] = $typeDetail->name."-".$typeDetail->coordinator_name;
                     $i++;
                 }
-            } 
-            /*else {
-                $typeArr[0] = array('id' => '','value'=>'Select Type' );
-            }*/
+            }
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $client_user = User::getAllUsers($type_array);
             $j=0;
-
-            foreach ($client_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1274,18 +1278,9 @@ class ToDosController extends Controller
                     $i++;
                 }
             }
-            /* else{
-                $typeArr[0] = array('id' => '','value'=>'Select Type');
-            }*/
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-
-            $candidate_user = User::getAllUsers($type_array);
+            
             $j=0;
-
-            foreach ($candidate_user as $key => $value) {
+            foreach ($users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;

@@ -123,18 +123,6 @@
                             @endif
                         </div>
 
-                        {{--@if($isSuperAdmin || $isStrategy)
-                            <div class="form-group {{ $errors->has('yet_to_assign_id') ? 'has-error' : '' }}">
-                                <strong>Yet to Assign : </strong>
-                                {!! Form::select('yet_to_assign_id', $yet_to_assign_users, $yet_to_assign_users_id, array('id'=>'yet_to_assign_id','class' => 'form-control', 'tabindex' => '10' )) !!}
-                                @if ($errors->has('yet_to_assign_id'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('yet_to_assign_id') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        @endif--}}
-
                         <input type="hidden" name="account_manager" id="account_manager" value="{{$user_id}}" />
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
@@ -159,24 +147,12 @@
                             </div>
                         @endpermission
 
-                        {{--<div class="form-group">
-                            <strong>Fax : </strong>
-                            {!! Form::text('fax', null, array('id'=>'fax','placeholder' => 'Fax','class' => 'form-control')) !!}
-                        </div>--}}
-
                         @permission(('display-client'))
                             <div class="form-group">
                                 <strong>GST Number : </strong>
                                 {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control','tabindex' => '16')) !!}
                             </div>
                         @endpermission
-                        
-                        {{-- @if($isSuperAdmin || $isAdmin)
-                        <div class="form-group">
-                            <strong>TDS </strong>
-                            {!! Form::text('tds', null, array('id'=>'tds','placeholder' => 'TDS','class' => 'form-control', 'tabindex' => '20' )) !!}
-                        </div>
-                        @endif --}}
 
                         @permission(('display-client'))
                             <div class="form-group">
@@ -206,18 +182,6 @@
                                             unset($client_status_key[array_search('Active',$client_status_key)]);
                                         }
                                     }
-                                    /*if($client_all_status == '1') {
-
-                                        if (in_array('Passive', $client_all_status_key)) {
-                                            unset($client_all_status_key[array_search('Passive',$client_all_status_key)]);
-                                        }
-                                    }
-                                    if($client_all_status == '0') {
-
-                                        if (in_array('Active', $client_all_status_key)) {
-                                            unset($client_all_status_key[array_search('Active',$client_all_status_key)]);
-                                        }
-                                    }*/
                                 ?>
                             @endif
 
@@ -309,13 +273,6 @@
                                 <strong>Website :</strong>
                                 {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
                             </div>
-
-                            {{-- @if($isSuperAdmin || $isAdmin)
-                            <div class="form-group">
-                                <strong>TAN:</strong>
-                                {!! Form::text('tan', null, array('id'=>'tan','placeholder' => 'TAN','class' => 'form-control', 'tabindex' => '13' )) !!}
-                            </div>
-                            @endif --}}
 
                             <div class="form-group">
                                 <strong>About :</strong>
@@ -518,7 +475,6 @@
             $("#account_manager_id").select2();
             $("#second_line_am").select2();
             
-            //$("#yet_to_assign_id").select2();
             $("#industry_id").select2();
 
             $("#description").wysihtml5();
