@@ -489,7 +489,8 @@ class UserController extends Controller
 
     public function destroy($id) {
 
-
+        return redirect()->route('users.index')->with('error','User can not be delete because associated with other modules.');
+        
         $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
         if(isset($user_photo)) {
