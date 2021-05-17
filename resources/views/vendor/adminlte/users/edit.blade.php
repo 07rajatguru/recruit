@@ -287,9 +287,6 @@
                     "email": {
                         required: true
                     },
-                    "password": {
-                        required: true
-                    },
                     "company_id": {
                         required: true
                     },
@@ -309,9 +306,6 @@
                     },
                     "email": {
                         required: "Email is Required Field."
-                    },
-                    "password": {
-                        required: "Password is Required Field."
                     },
                     "company_id": {
                         required: "Please Select Company."
