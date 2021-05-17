@@ -250,17 +250,20 @@ class UserController extends Controller
                 if (isset($module_arr) && sizeof($module_arr)>0) {
 
                     foreach ($module_arr as $key => $value) {
-                        $module_id[$i] = $key;
-                        $i++;
+
+                        if(isset($key) && $key > 0) {
+                            $module_id[$i] = $key;
+                            $i++;
+                        }
                     }
 
                     if (isset($module_id) && sizeof($module_id)>0) {
                         
-                        foreach ($module_id as $key => $value) {
+                        foreach ($module_id as $key1 => $value1) {
 
                             $module_user_add = new ModuleVisibleUser();
                             $module_user_add->user_id = $user_id;
-                            $module_user_add->module_id = $value;
+                            $module_user_add->module_id = $value1;
                             $module_user_add->save();
                         }
                     }
@@ -490,7 +493,7 @@ class UserController extends Controller
     public function destroy($id) {
 
         return redirect()->route('users.index')->with('error','User can not be delete because associated with other modules.');
-        
+
         $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
         if(isset($user_photo)) {
