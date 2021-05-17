@@ -50,10 +50,9 @@ class ModuleVisibleUser extends Model
         $res = $query->get();
 
         $module_arr = array();
-        $i = 0;
+
         foreach ($res as $key => $value) {
             $module_arr[$value->module_id] = $value->module_name;
-            $i++;
         }
 
         return $module_arr;

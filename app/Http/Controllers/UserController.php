@@ -189,21 +189,27 @@ class UserController extends Controller
 
         // Add new User to training & process manual if it is for all users and entry in database
         if ($type == '1' && $status == 'Active') {
+
             $training_id = Training::getAlltrainingIds(1);
+
             if (isset($training_id) && $training_id != '') {
+
                 foreach ($training_id as $key => $value) {
+
                     $training_visible_users = new TrainingVisibleUser;
                     $training_visible_users->training_id = $value;
                     $training_visible_users->user_id = $user_id;
                     $training_visible_users->save();
                 }
             }
-            //print_r($training_id);exit;
         }
         if ($status == 'Active') {
+
             $process_id = ProcessManual::getAllprocessmanualIds(1);
             if (isset($process_id) && $process_id != '') {
+
                 foreach ($process_id as $key => $value) {
+
                     $process_visible_users = new ProcessVisibleUser();
                     $process_visible_users->process_id = $value;
                     $process_visible_users->user_id = $user_id;
@@ -214,9 +220,13 @@ class UserController extends Controller
 
         // If job_open_to_all = 1 then new user visible that all jobs
         if ($type == '1' && $status == 'Active') {
+
             $job_id = JobOpen::getAllJobsId(1);
+
             if (isset($job_id) && $job_id != '') {
-                foreach ($job_id as $key => $value){
+
+                foreach ($job_id as $key => $value) {
+                    
                     $job_visible_users = new JobVisibleUsers();
                     $job_visible_users->job_id = $value;
                     $job_visible_users->user_id = $user_id;
@@ -227,18 +237,27 @@ class UserController extends Controller
 
          // Add new user module visibility by it's role id
         if (isset($role_id) && $role_id > 0) {
+
             $other_user_id = RoleUser::getUserIdByRoleId($role_id);
+
             if (isset($other_user_id) && $other_user_id > 0) {
+
                 $module_arr = ModuleVisibleUser::getModuleByUserId($other_user_id);
+
                 $module_id = array();
                 $i = 0;
+
                 if (isset($module_arr) && sizeof($module_arr)>0) {
+
                     foreach ($module_arr as $key => $value) {
                         $module_id[$i] = $key;
                         $i++;
                     }
+
                     if (isset($module_id) && sizeof($module_id)>0) {
+                        
                         foreach ($module_id as $key => $value) {
+
                             $module_user_add = new ModuleVisibleUser();
                             $module_user_add->user_id = $user_id;
                             $module_user_add->module_id = $value;
@@ -470,7 +489,6 @@ class UserController extends Controller
 
     public function destroy($id) {
 
-        return redirect()->route('users.index')->with('error','User can not be delete because associated with other modules.');
 
         $user_photo = \DB::table('users_doc')->select('file','user_id')->where('user_id','=',$id)->first();
 
