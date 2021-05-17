@@ -33,7 +33,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,NULL);
+            $users = User::getAssignedUsers($user_id);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -87,7 +87,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,NULL);
+            $users = User::getAssignedUsers($user_id);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -96,17 +96,6 @@ class ReportController extends Controller
         else{
             $user_id = $user_id;
         }
-
-        /*$date = date('l');
-
-        if ($date == "Friday" || $date == "Saturday" || $date == "Sunday") {
-            $to_date_default = date('Y-m-d',strtotime("$date  thursday next week"));
-            $from_date_default = date('Y-m-d',strtotime("$to_date_default -6days"));
-        }
-        else {
-            $from_date_default = date('Y-m-d',strtotime("$date friday last week"));
-            $to_date_default = date('Y-m-d',strtotime("$from_date_default +6days"));
-        }*/
 
         $date = date('l');
 
@@ -239,7 +228,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,NULL);
+            $users = User::getAssignedUsers($user_id);
         }
 
         $associate_monthly_response = JobAssociateCandidates::getUserWiseAssociatedCVS($users,$month,$year);
@@ -329,7 +318,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm){
-            $users = User::getAssignedUsers($user_id,NULL);
+            $users = User::getAssignedUsers($user_id);
         }
 
         // Month data
@@ -555,7 +544,7 @@ class ReportController extends Controller
         }
         else if($teamwise_perm) {
 
-            $users = User::getAssignedUsers($user_id,NULL);
+            $users = User::getAssignedUsers($user_id);
 
             foreach ($users as $key => $value) {
 
@@ -910,7 +899,7 @@ class ReportController extends Controller
             $users = User::getAllUsersExpectSuperAdmin($recruitment);
         }
         else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id,NULL);
+            $users = User::getAssignedUsers($user_id);
         }
 
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
@@ -956,60 +945,7 @@ class ReportController extends Controller
             $year = date('Y');
         }
 
-        /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
-        $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
-
-        if($selected_month == 'December') {
-
-            $next_year = $year + 1;
-
-            $mondays  = new \DatePeriod(
-                Carbon::parse("first day of $selected_month $year"),
-                CarbonInterval::week(),
-                Carbon::parse("first monday of $next_month $next_year")
-            );
-        }
-        else {
-
-            $mondays  = new \DatePeriod(
-                Carbon::parse("first day of $selected_month $year"),
-                CarbonInterval::week(),
-                Carbon::parse("first monday of $next_month $year")
-            );
-        }*/
-
-        /*$dates1 = array();
-        $dates2 = array();
-
-        $week = date("W", strtotime($year . "-" . $month ."-01")); // weeknumber of first day of month
-
-        $a = date("Y-m-d", strtotime($year . "-" . $month ."-01")); // first day of month
-        array_push($dates1,$a);
-
-        $unix = strtotime($year."W".$week ."+1 week");
-
-        While(date("m", $unix) == $month) { // keep looping/output of while it's correct month
-
-            $b = date("Y-m-d", $unix-86400); // Sunday of previous week
-            array_push($dates2,$b);
-
-            $c = date("Y-m-d", $unix); // this week's monday
-            array_push($dates1,$c);
-
-            $unix = $unix + (86400*7);
-        }
-
-        $d = date("Y-m-d", strtotime("last day of ".$year . "-" . $month)); //echo last day of month
-
-        array_push($dates2,$d);
-
-        $dates_array = array();
-
-        foreach ($dates1 as $key => $val) {
-
-            $val2 = $dates2[$key];
-            $dates_array[$key] = $val."--".$val2;
-        }*/
+        // Set Week wise Date Array
 
         $lastDayOfWeek = '7';
 
@@ -1148,61 +1084,8 @@ class ReportController extends Controller
             $year = date('Y');
         }
 
-        /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
-        $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
-
-        if($selected_month == 'December') {
-
-            $next_year = $year + 1;
-
-            $mondays  = new \DatePeriod(
-                Carbon::parse("first monday of $selected_month $year"),
-                CarbonInterval::week(),
-                Carbon::parse("first monday of $next_month $next_year")
-            );
-        }
-        else {
-
-            $mondays  = new \DatePeriod(
-                Carbon::parse("first monday of $selected_month $year"),
-                CarbonInterval::week(),
-                Carbon::parse("first monday of $next_month $year")
-            );
-        }*/
-
-        /*$dates1 = array();
-        $dates2 = array();
-
-        $week = date("W", strtotime($year . "-" . $month ."-01")); // weeknumber of first day of month
-
-        $a = date("Y-m-d", strtotime($year . "-" . $month ."-01")); // first day of month
-        array_push($dates1,$a);
-
-        $unix = strtotime($year."W".$week ."+1 week");
-
-        While(date("m", $unix) == $month) { // keep looping/output of while it's correct month
-
-            $b = date("Y-m-d", $unix-86400); // Sunday of previous week
-            array_push($dates2,$b);
-
-            $c = date("Y-m-d", $unix); // this week's monday
-            array_push($dates1,$c);
-
-            $unix = $unix + (86400*7);
-        }
-
-        $d = date("Y-m-d", strtotime("last day of ".$year . "-" . $month)); //echo last day of month
-
-        array_push($dates2,$d);
-
-        $dates_array = array();
-
-        foreach ($dates1 as $key => $val) {
-
-            $val2 = $dates2[$key];
-            $dates_array[$key] = $val."--".$val2;
-        }*/
-
+        // Set Week wise Date Array
+        
         $lastDayOfWeek = '7';
 
         $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);

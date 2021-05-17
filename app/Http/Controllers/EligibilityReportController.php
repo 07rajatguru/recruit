@@ -42,9 +42,6 @@ class EligibilityReportController extends Controller
                     $n = $y-1;
                     $year = $n.'-4-'.$y.'-3';
                 }
-            	// $y = date('Y');
-             //    $n = $y-1;
-             //    $year = $n.'-4-'.$y.'-3';
             }
 
             $year_data = explode('-', $year); // [result : Array ( [0] => 2018 [1] => 4 [2] => 2019 [3] => 3 )] by default
@@ -53,8 +50,7 @@ class EligibilityReportController extends Controller
             $next_year = $year_data[2]; // [result : 2019]
             $next_month = $year_data[3]; // [result : 3]
 
-            $recruitment = getenv('RECRUITMENT');
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+            $users = User::getAllUsersForEligibilityReport();
 
             // For Quater wise[Q1, Q2, Q3, Q4]
             for ($m=$current_month; $m <= 15 ; $m=$m+3) {
@@ -78,6 +74,7 @@ class EligibilityReportController extends Controller
                 }
                 // For Quater 1, 2, 3
                 else{
+
                     $next_month_three = $m+2;
                     $month_name = date("M", mktime(0, 0, 0, $m, 1));
                     $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
@@ -139,7 +136,6 @@ class EligibilityReportController extends Controller
             foreach ($users as $key => $value) {
                 $eligible_detail[$value][$year] = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
             }
-            //print_r($eligible_detail);exit();
 
         	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail'));
         }
@@ -148,12 +144,14 @@ class EligibilityReportController extends Controller
         }
     }
 
-    public function export(){
+    public function export() {
 
-        Excel::create('Eligibility Working Report',function($excel){
-            $excel->sheet('sheet 1',function($sheet){
+        Excel::create('Eligibility Working Report',function($excel) {
+
+            $excel->sheet('sheet 1',function($sheet) {
                 
-                if(isset($_POST['year']) && $_POST['year'] != ''){
+                if(isset($_POST['year']) && $_POST['year'] != '') {
+
                     $year = $_POST['year'];
                 }
                 else{
@@ -167,9 +165,6 @@ class EligibilityReportController extends Controller
                         $n = $y-1;
                         $year = $n.'-4-'.$y.'-3';
                     }
-                    // $y = date('Y');
-                    // $n = $y-1;
-                    // $year = $n.'-4-'.$y.'-3';
                 }
 
                 $year_data = explode('-', $year);
@@ -178,8 +173,7 @@ class EligibilityReportController extends Controller
                 $next_year = $year_data[2];
                 $next_month = $year_data[3];
 
-                $recruitment = getenv('RECRUITMENT');
-                $users = User::getAllUsersExpectSuperAdmin($recruitment);
+                $users = User::getAllUsersForEligibilityReport();
 
                 // For Quater wise[Q1, Q2, Q3, Q4]
                 for ($m=$current_month; $m <= 15 ; $m=$m+3) {
@@ -279,14 +273,14 @@ class EligibilityReportController extends Controller
         $all_perm = $user->can('display-eligibility-report-of-all-users');
 
         if ($all_perm) {
-            // Month data
+
             $month_array = array();
             for ($i=1; $i <=12 ; $i++) { 
                 $month_array[$i] = date('M',mktime(0,0,0,$i));
             }
 
             // Year Data
-            $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
+            $starting_year = '2017';
             $ending_year = date('Y',strtotime('+3 year'));
             $default = date('Y');
 
@@ -309,10 +303,10 @@ class EligibilityReportController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
 
-        $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsersExpectSuperAdmin($recruitment);
+        $users = User::getAllUsersForEligibilityReport();
         
         foreach ($users as $key => $value) {
+
             $user_data = UserOthersInfo::getUserOtherInfo($key);
             $user_salary = $user_data['fixed_salary'];
 
@@ -326,7 +320,7 @@ class EligibilityReportController extends Controller
             
             // get user billing amount
             $user_bill_data = Bills::getPersonwiseReportData($key,$start_month,$last_month);
-            //print_r($user_bill_data);exit;
+
             foreach ($user_bill_data as $key1 => $value1) {
                 $achieved = $achieved + $value1['person_billing'];
             }
@@ -342,9 +336,12 @@ class EligibilityReportController extends Controller
             }
 
             $date = date('Y-m-d',strtotime("first day of $month_data"));
+
             // Add data in eligibility table
             $eligibility_data_id = Eligibilityworking::getCheckuserworkingreport($key,$month,$year);
+
             if (isset($eligibility_data_id) && $eligibility_data_id != '') {
+
                 $eligible = Eligibilityworking::find($eligibility_data_id);
                 $eligible->user_id = $key;
                 $eligible->target = $target;
@@ -354,6 +351,7 @@ class EligibilityReportController extends Controller
                 $eligible->save();
             }
             else {
+
                 $eligible = new Eligibilityworking();
                 $eligible->user_id = $key;
                 $eligible->target = $target;
@@ -363,7 +361,6 @@ class EligibilityReportController extends Controller
                 $eligible->save();
             }
         }
-
         return redirect('/eligibility-report');
     }
 }

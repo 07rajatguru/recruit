@@ -51,11 +51,9 @@ class DailyReport extends Command
         if ($dayOfWeek == 'Sunday') {
            
         }
-
         else {
 
-            $recruitment = getenv('RECRUITMENT');
-            $users = User::getAllUsersEmails($recruitment,'Yes');
+            $users = User::getAllUsersEmails(NULL,'Yes');
             
             $fixed_date = Holidays::getFixedLeaveDate();
 
@@ -68,27 +66,17 @@ class DailyReport extends Command
                     if(isset($check_users_log_count) && $check_users_log_count > 0) {
 
                         //Get Reports to Email
-                        $report_res = User::getUsersReportToEmail($key);
-                        $report_email = $report_res->email;
+                        $report_res = User::getReportsToUsersEmail($key);
 
-                        //Get Floor Incharge Email
-                        $floor_res = User::getUsersFloorInchargeEmail($key);
-
-                        if(isset($floor_res) && $floor_res != '') {
-                                $floor_incharge_email = $floor_res->email;
-                        }
-                        else {
-                                $floor_incharge_email = '';
-                        }
+                        if(isset($report_res->remail) && $report_res->remail!='')
+                            $report_email = $report_res->remail;
 
                         $to_array = array();
                         $to_array[] = $value;
 
                         $cc_array = array();
                         $cc_array[] = $report_email;
-                        $cc_array[] = $floor_incharge_email;
                         $cc_array[] = 'rajlalwani@adlertalent.com';
-                        //$cc_array[] = 'saloni@trajinfotech.com';
 
                         $user_name = User::getUserNameById($key);
 

@@ -578,9 +578,6 @@ class Interview extends Model
 
     public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL) {
 
-        //$month = date('m');
-        //$year = date('Y');
-
         $tanisha_user_id = getenv('TANISHAUSERID');
 
         $query = Interview::query();
@@ -613,9 +610,8 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getDashboardInterviews($all=0,$user_id){
+    public static function getDashboardInterviews($all=0,$user_id) {
 
-        //date_default_timezone_set("Asia/kolkata");
         $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
@@ -646,11 +642,11 @@ class Interview extends Model
         $query = $query->orderby('interview.interview_date','asc');
 
         $response = $query->get();
-        //print_r($response);exit;
 
         return $response;
     }
-    public static function getTodaysInterviews($all=0,$user_id){
+
+    public static function getTodaysInterviews($all=0,$user_id) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
@@ -677,7 +673,8 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getInterviewById($id){
+    public static function getInterviewById($id) {
+
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
@@ -693,7 +690,8 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getDailyReportInterview($user_id,$date=NULL){
+    public static function getDailyReportInterview($user_id,$date=NULL) {
+
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
 
@@ -716,7 +714,9 @@ class Interview extends Model
 
         $response = array();
         $i = 0;
+
         foreach ($interview_res as $key => $value) {
+
             $response[$i]['posting_title'] = $value->posting_title;
             $response[$i]['location'] = $value->location;
             $datearray = explode(' ', $value->date);
@@ -730,14 +730,10 @@ class Interview extends Model
             $response[$i]['cemail'] = $value->cemail;
             $i++;
         }
-
-       // print_r($response);exit;
         return $response;
-
-
     }
 
-    public static function getWeeklyReportInterview($user_id,$from_date=NULL,$to_date=NULL){
+    public static function getWeeklyReportInterview($user_id,$from_date=NULL,$to_date=NULL) {
 
         $date = date('Y-m-d',strtotime('Monday this week'));
 
@@ -761,19 +757,21 @@ class Interview extends Model
         $response['interview_data'] = array();
         $i = 0;
         $cnt= 0;
+
         foreach ($query_response as $key => $value) {
+
             $cnt += $value->count;
             $datearry = explode(' ', $value->interview_date);
             $response['interview_data'][$i]['interview_date'] = $datearry[0];
             $response['interview_data'][$i]['interview_daily_count'] = $value->count;
             $i++;
         }
+
         $response['interview_cnt'] = $cnt;
-        //print_r($response);exit;
         return $response;
     }
 
-    public static function getUserWiseMonthlyReportInterview($users,$month,$year){
+    public static function getUserWiseMonthlyReportInterview($users,$month,$year) {
 
         $u_keys = array_keys($users);
 
@@ -792,16 +790,17 @@ class Interview extends Model
         $query_response = $query->get();
 
         $interview_count = array();
-        if($query_response->count()>0){
-            foreach ($query_response  as $k=>$v){
+
+        if($query_response->count()>0) {
+
+            foreach ($query_response  as $k=>$v) {
                 $interview_count[$v->interview_owner_id] = $v->count;
             }
         }
-
         return $interview_count;
     }
 
-    public static function getMonthlyReportInterview($user_id,$month,$year){
+    public static function getMonthlyReportInterview($user_id,$month,$year) {
 
         $query = Interview::query();
         $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'interview.interview_date as interview_date');
@@ -831,20 +830,14 @@ class Interview extends Model
         return $response;  
     }
 
-    public static function getInterviewids($interview_id){
+    public static function getInterviewids($interview_id) {
 
-        $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
-            ->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
-            ->join('job_openings','job_openings.id','=','interview.posting_title')
-            ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
-            ->select('candidate_otherinfo.owner_id as candidate_owner_id','client_basicinfo.account_manager_id as client_owner_id')
-            ->where('interview.id','=',$interview_id)
-            ->first();
+        $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')->join('job_openings','job_openings.id','=','interview.posting_title')->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')->select('candidate_otherinfo.owner_id as candidate_owner_id','client_basicinfo.account_manager_id as client_owner_id')->where('interview.id','=',$interview_id)->first();
 
             return $interviewDetails;
     }
 
-    public static function getCandidateOwnerEmail($interview_id){
+    public static function getCandidateOwnerEmail($interview_id) {
 
         $query = Interview::query();
         $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
@@ -856,7 +849,7 @@ class Interview extends Model
         return $res;
     }
 
-    public static function getClientOwnerEmail($interview_id){
+    public static function getClientOwnerEmail($interview_id) {
 
         $query = Interview::query();
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
@@ -869,7 +862,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getSecondlineClientOwnerEmail($interview_id){
+    public static function getSecondlineClientOwnerEmail($interview_id) {
 
         $query = Interview::query();
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
@@ -882,7 +875,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id){
+    public static function getCandidateEmail($user_id,$candidate_id,$posting_title,$interview_id) {
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -954,7 +947,7 @@ class Interview extends Model
         });
     }
 
-    public static function getScheduleEmail($candidate_id,$posting_title,$interview_id){
+    public static function getScheduleEmail($candidate_id,$posting_title,$interview_id) {
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -1117,8 +1110,6 @@ class Interview extends Model
         $interview_details['job_designation'] = $interview->posting_title;
         $interview_details['client_name'] = $interview->client_name;
         
-
-        //$interview_details['job_location'] = $location;
         $interview_details['job_location'] = $city;
         $interview_details['interview_date'] = $interview_date;
         $interview_details['interview_time'] = $interview_time;
@@ -1136,7 +1127,7 @@ class Interview extends Model
         return $interview_details;
     }
 
-    public static function getInterviewIdInASCDate($ids){
+    public static function getInterviewIdInASCDate($ids) {
 
         $interview_ids = explode(',', $ids);
 
@@ -1156,7 +1147,7 @@ class Interview extends Model
     }
 
     // function for get interview by ids for todos edit,show page
-    public static function getTodosInterviewsByIds($ids){
+    public static function getTodosInterviewsByIds($ids) {
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -1164,8 +1155,7 @@ class Interview extends Model
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
-            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
+            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
         $query = $query->whereIn('interview.id',$ids);
         $query = $query->orderBy('interview.interview_date','asc');
         $response = $query->get();
@@ -1173,7 +1163,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getProductivityReportInterviewCount($user_id=0,$from_date=NULL,$to_date=NULL){
+    public static function getProductivityReportInterviewCount($user_id=0,$from_date=NULL,$to_date=NULL) {
 
         $query = Interview::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
@@ -1187,13 +1177,6 @@ class Interview extends Model
 
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('interview.interview_date','<=',$to_date);
-        
-        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        
-        $query = $query->orwhere('interview.interview_date','>=',"$from_date");
-        $query = $query->Where('interview.interview_date','<=',"$to_date");*/
-
         $query = $query->where('interview.status','=','Attended');
      
         $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
@@ -1267,7 +1250,6 @@ class Interview extends Model
             
             $i++;
         }
-
         return $interview;
     }
 }

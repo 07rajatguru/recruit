@@ -41,8 +41,7 @@ class EligibilityWorkingReport extends Command
      */
     public function handle()
     {
-        $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsersForEligibilityReport($recruitment);
+        $users = User::getAllUsersForEligibilityReport();
 
         foreach ($users as $key => $value) {
 

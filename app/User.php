@@ -349,29 +349,7 @@ class User extends Authenticatable
         return $user_email;
     }
 
-    public static function getUsersReportToEmail($key) {
-
-        $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email','u1.secondary_email');
-        $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
-        $user_query = $user_query->where('users.id','=',$key);
-        $user_report = $user_query->first();
-
-        return $user_report;
-    }
-
-    public static function getUsersFloorInchargeEmail($key) {
-
-        $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email','u1.secondary_email');
-        $user_query = $user_query->join('users as u1','u1.id','=','users.floor_incharge');
-        $user_query = $user_query->where('users.id','=',$key);
-        $user_floor_incharge = $user_query->first();
-
-        return $user_floor_incharge;
-    }
-
-    public static function getAssignedUsers($user_id=0,$type=NULL) {
+    public static function getAssignedUsers() {
 
         $user_query = User::query();
 
@@ -380,14 +358,9 @@ class User extends Authenticatable
 
         $client = getenv('EXTERNAL');
         $client_type = array($client);
-        
-        if($type!=NULL) {
-            $user_query = $user_query->where('type','=',$type);
-        }
 
         $user_query = $user_query->where(function($user_query) use ($user_id) {
             $user_query = $user_query->where('reports_to',$user_id);
-            $user_query = $user_query->orwhere('floor_incharge',$user_id);
             $user_query = $user_query->orwhere('id',$user_id);
         });
 
@@ -406,18 +379,6 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getReportsToUsersEmail($key) {
-
-        $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email as remail','u2.email as femail','u1.secondary_email as rsemail','u2.secondary_email as fsemail');
-        $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
-        $user_query = $user_query->join('users as u2','u2.id','=','users.floor_incharge');
-        $user_query = $user_query->where('users.id',$key);
-        $user = $user_query->first();
-
-        return $user;
-    }
-
     public static function getProfileInfo($user_id) {
 
         $query = User::query();
@@ -432,19 +393,15 @@ class User extends Authenticatable
         return $response;
     }
 
-    public static function getFloorInchargeById($user_id) {
+    public static function getReportsToUsersEmail($key) {
 
-        $user_floor_incharge = '';
+        $user_query = User::query();
+        $user_query = $user_query->select('users.id','u1.email as remail','u1.secondary_email as rsemail');
+        $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
+        $user_query = $user_query->where('users.id',$key);
+        $user = $user_query->first();
 
-        $query = User::query();
-        $query = $query->select('floor_incharge');
-        $query = $query->where('users.id',$user_id);
-        $response = $query->first();
-
-        if(isset($response)) {
-            $user_floor_incharge = $response->floor_incharge;
-        }
-        return $user_floor_incharge;
+        return $user;
     }
 
     public static function getReportsToById($user_id) {
@@ -623,7 +580,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersForEligibilityReport($type=NULL) {
+    public static function getAllUsersForEligibilityReport() {
 
         $superadmin = getenv('SUPERADMINUSERID');
         $super_array = array($superadmin);
@@ -633,10 +590,6 @@ class User extends Authenticatable
         
         $user_query = User::query();
 
-        if($type!=NULL){
-            $user_query = $user_query->where('type','=',$type);
-        }
-
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->where('eligibility_report','=','Yes');
@@ -645,7 +598,9 @@ class User extends Authenticatable
         $users = $user_query->get();
 
         $userArr = array();
-        if(isset($users) && sizeof($users)){
+
+        if(isset($users) && sizeof($users)) {
+            
             foreach ($users as $user) {
                 $userArr[$user->id] = $user->name;
             }

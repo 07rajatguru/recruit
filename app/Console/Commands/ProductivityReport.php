@@ -56,21 +56,16 @@ class ProductivityReport extends Command
                 if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
 
                     $report_email = '';
-                    $floor_incharge_email = '';
                     $res = User::getReportsToUsersEmail($key);
 
                     if(isset($res->remail) && $res->remail!='')
                         $report_email = $res->remail;
-
-                    if(isset($res->femail) && $res->femail!='')
-                        $floor_incharge_email = $res->femail;
 
                     $to_array = array();
                     $to_array[] = $value;
 
                     $cc_array = array();
                     $cc_array[] = $report_email;
-                    $cc_array[] = $floor_incharge_email;
                     $cc_array[] = 'rajlalwani@adlertalent.com';
                     $cc_array[] = 'hr@adlertalent.com';
 

@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Eligibilityworking extends Model
 {
-
 	public $table = "eligibility_working";
 
-    public static function getCheckuserworkingreport($user_id,$month,$year){
+    public static function getCheckuserworkingreport($user_id,$month,$year) {
 
     	$query = Eligibilityworking::query();
     	$query = $query->where('user_id',$user_id);
@@ -27,7 +26,7 @@ class Eligibilityworking extends Model
     	return $eligibility_id;
     }
 
-    public static function getEligibilityDataByUser($user_id,$first,$last){
+    public static function getEligibilityDataByUser($user_id,$first,$last) {
 
         $query = Eligibilityworking::query();
         $query = $query->where('user_id',$user_id);
@@ -39,7 +38,9 @@ class Eligibilityworking extends Model
         $data = array();
         $target = 0;
         $achieved = 0;
+
         foreach ($res as $key => $value) {
+
             $target = $target + $value->target;
             $achieved = $achieved + $value->achieved;
 
@@ -56,7 +57,6 @@ class Eligibilityworking extends Model
             $data['achieved'] = $achieved;
             $data['eligibility'] = $eligibility;
         }
-
         return $data;
     }
 }

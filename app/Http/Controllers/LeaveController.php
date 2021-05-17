@@ -27,7 +27,6 @@ class LeaveController extends Controller
         $isAdmin = $user_obj::isAdmin($role_id);
         $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
         $isAccountant = $user_obj::isAccountant($role_id);
-        //$isOperationsExecutive = $user_obj::isOperationsExecutive($role_id);
 
         if(!$isSuperAdmin){
             $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
@@ -37,18 +36,17 @@ class LeaveController extends Controller
             $leave_balance = '';
         }
 
-        /*if($isSuperAdmin || $isAdmin || $isAccountant || $isOperationsExecutive){*/
         if($isSuperAdmin || $isAdmin || $isAccountant) {
             $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
         }
         else {
-            $floor_reports_id = User::getAssignedUsers($user_id,NULL);
+            $floor_reports_id = User::getAssignedUsers($user_id);
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
             }
             $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids);   
         }
-        //print_r($user_ids);exit;
+
         return view('adminlte::leave.index',compact('leave_details','leave_balance','isSuperAdmin'));
     }
 
@@ -125,14 +123,12 @@ class LeaveController extends Controller
         }
 
         $superadmin_userid = getenv('SUPERADMINUSERID');
-        $floor_incharge_id = User::getFloorInchargeById($user_id);
         $reports_to_id = User::getReportsToById($user_id);
 
-        $superadmin_secondary_email=User::getUserEmailById($superadmin_userid);
-        $floor_incharge_secondary_email = User::getUserEmailById($floor_incharge_id);
+        $superadmin_secondary_email = User::getUserEmailById($superadmin_userid);
         $reports_to_secondary_email = User::getUserEmailById($reports_to_id);
 
-        $cc_users_array = array($floor_incharge_secondary_email,$superadmin_secondary_email);
+        $cc_users_array = array($superadmin_secondary_email);
         $cc_users_array = array_filter($cc_users_array);
 
         $module = "Leave";
@@ -170,30 +166,20 @@ class LeaveController extends Controller
         $user_id = $_POST['user_id'];
 
         $superadmin_userid = getenv('SUPERADMINUSERID');
-        $floor_incharge_id = User::getFloorInchargeById($user_id);
         $reports_to_id = User::getReportsToById($user_id);
 
         $user_email = User::getUserEmailById($user_id);
 
-        if ($loggedin_user_id == $floor_incharge_id) {
+        if ($loggedin_user_id == $reports_to_id) {
             $superadmin_email = User::getUserEmailById($superadmin_userid);
-            $reports_to_email = User::getUserEmailById($reports_to_id);
 
-            $cc_users_array = array($superadmin_email,$reports_to_email);
-            $cc_users_array = array_filter($cc_users_array);
-        }
-        else if ($loggedin_user_id == $reports_to_id) {
-            $superadmin_email = User::getUserEmailById($superadmin_userid);
-            $floor_incharge_email = User::getUserEmailById($floor_incharge_id);
-
-            $cc_users_array = array($superadmin_email,$floor_incharge_email);
+            $cc_users_array = array($superadmin_email);
             $cc_users_array = array_filter($cc_users_array);
         }
         else {
             $reports_to_email = User::getUserEmailById($reports_to_id);
-            $floor_incharge_email = User::getUserEmailById($floor_incharge_id);
 
-            $cc_users_array = array($reports_to_email,$floor_incharge_email);
+            $cc_users_array = array($reports_to_email);
             $cc_users_array = array_filter($cc_users_array);
         }
 

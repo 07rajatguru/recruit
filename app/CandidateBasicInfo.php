@@ -454,10 +454,6 @@ class CandidateBasicInfo extends Model
         // get user company description by logged in user
         $user_company_details = User::getCompanyDetailsByUserID($user_id);
 
-        // Candidate owner email
-        //$candidate_owner_email = User::getUserEmailById($user_id);
-        //$input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
-
         $candidate_details = self::getCandidateDetailsById($candidate_id);
         $candidate_owner_email = User::getUserEmailById($candidate_details['candidate_owner_id']);
         $input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
@@ -469,19 +465,8 @@ class CandidateBasicInfo extends Model
 
         $to_address = array();
         $to_address[] = $candidate_owner_email;
-        // $to_address[] = $client_owner_email;
-
-        //$to_address[] = 'tarikapanjwani@gmail.com';
-       // $to_address[] = 'rajlalwani@adlertalent.com';
 
         $input['to'] = $to_address;
-
-        // CC to Superadmin
-        // $superadminuserid = getenv('SUPERADMINUSERID');
-        // $superadminemail = User::getUserEmailById($superadminuserid);
-        // $cc = $superadminemail;
-        // $cc = $client_owner_email;
-        // $input['cc'] = $cc;
 
         // job Details
         $job_details = JobOpen::getJobById($job_id);
