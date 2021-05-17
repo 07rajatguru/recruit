@@ -349,7 +349,7 @@ class User extends Authenticatable
         return $user_email;
     }
 
-    public static function getAssignedUsers() {
+    public static function getAssignedUsers($user_id) {
 
         $user_query = User::query();
 
@@ -618,21 +618,26 @@ class User extends Authenticatable
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
+        $superadmin = getenv('SUPERADMINUSERID');
+        $super_array = array($superadmin);
+
         $query = User::query();
 
         // Get before 7 days users list
         $query = $query->where('users.created_at','<=',$date);
         $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('type',$client_type);
-        $query = $query->select('users.id','users.first_name','users.last_name');
+        $query = $query->whereNotIn('id',$super_array);
+        $query = $query->select('users.id','users.first_name','users.last_name','users.email');
 
         $query = $query->groupBy('users.id');
         $query = $query->orderBy('users.id','ASC');
         $response = $query->get();
 
-        if(isset($response) && sizeof($response) > 0) {
+        $full_name_array = array();
+        $i=0;
 
-            $users_string = '';
+        if(isset($response) && sizeof($response) > 0) {
 
             foreach ($response as $key => $value) {
 
@@ -642,21 +647,12 @@ class User extends Authenticatable
                 }
                 else {
 
-                    $full_name = $value->first_name." - ".$value->last_name;
-
-                    if($full_name != '') {
-
-                        if($users_string =='')
-                            $users_string .= $full_name;
-                        else
-                            $users_string .= ", ".$full_name;
-                    }
+                    $full_name_array[$i]['name'] = $value->first_name." - ".$value->last_name;
+                    $full_name_array[$i]['email'] = $value->email;
+                    $i++;
                 }
             }
         }
-        else {
-            $users_string = '';
-        }
-        return $users_string;
+        return $full_name_array;
     }
 }

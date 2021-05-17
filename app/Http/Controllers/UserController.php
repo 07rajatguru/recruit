@@ -40,15 +40,7 @@ class UserController extends Controller
 
         $count = sizeof($users);
 
-        // Get users for popup of add information
-
-        $user_id =  \Auth::user()->id;
-        $users_string = User::getBefore7daysUsersDetails();
-
-        // For not display superadmin popup
-        $superadmin = getenv('SUPERADMINUSERID');
-
-        return view('adminlte::users.index',compact('users','count','users_string','user_id','superadmin'));
+        return view('adminlte::users.index',compact('users','count'));
     }
 
     public function create() {
