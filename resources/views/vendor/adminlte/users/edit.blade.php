@@ -269,6 +269,7 @@
             $("#type").select2();
             $("#roles").select2({placeholder: 'Select Role'});
             $("#reports_to").select2();
+            $("#company_id").select2();
 
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {

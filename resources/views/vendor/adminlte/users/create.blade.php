@@ -110,7 +110,7 @@
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
                                 <strong>Select Company : <span class = "required_fields">*</span> 
                                 </strong>
-                                {!! Form::select('company_id', $companies,null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
+                                {!! Form::select('company_id', $companies,$company_id, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
                                 @if ($errors->has('company_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('company_id') }}</strong>
@@ -264,6 +264,7 @@
             $("#type").select2();
             $("#roles").select2({placeholder: 'Select Role'});
             $("#reports_to").select2();
+            $("#company_id").select2();
 
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {
