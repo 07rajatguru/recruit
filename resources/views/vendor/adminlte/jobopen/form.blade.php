@@ -234,8 +234,8 @@
                         <strong>Select Users who can access the job : <span class = "required_fields">*</span></strong>
                         <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
                         @foreach($select_all_users as $k=>$v)&nbsp;&nbsp; 
-                        {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
-                        {!! Form::label ($v) !!}
+                            {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                            {!! Form::label ($v) !!}
                         @endforeach
 
                         @if ($errors->has('user_ids'))
@@ -566,6 +566,7 @@
     </div>
 
 <input type="hidden" id="action" name="action" value="{!! $action !!}">
+
 </div>
 
 {!! Form::close() !!}
@@ -776,6 +777,15 @@
                        if(response.answer == 'True') {
 
                             document.getElementById("hiring_manager_id").value = response.am_id;
+
+                            var department_ids_string = [];
+                            jQuery("input[name='user_ids[]']").each(function(i) {
+
+                                if($(this).val() == response.am_id) {
+
+                                    $("input[value='" + response.am_id + "']").prop('checked', true);
+                                }
+                            });
                        }
                        else {
 
