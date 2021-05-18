@@ -13,6 +13,7 @@ use App\TrainingVisibleUser;
 use App\Utils;
 use DB;
 use App\Events\NotificationMail;
+use App\Department;
 
 class TrainingController extends Controller
 {
@@ -129,26 +130,31 @@ class TrainingController extends Controller
 
         $action = 'add';
 
-        $user = \Auth::user();
-        $user_id = $user->id;
+        $department_res = Department::orderBy('id','ASC')->get();
+        $departments = array();
 
-        $users = User::getAllUsers();
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
         
-        $super_admin_user_id = getenv('SUPERADMINUSERID');
-        $selected_users = array($user_id,$super_admin_user_id);
-        
-        return view('adminlte::training.create',compact('action','users','selected_users','user_id'));
+        $selected_departments = array();
+
+        return view('adminlte::training.create',compact('action','departments','selected_departments'));
     }
 
     public function store(Request $request) {
         
         $user_id = \Auth::user()->id;
         $title = $request->input('title');
+        $department_ids = $request->input('department_ids');
         
         $training = new Training();
-        $training->title = $request->input('title');
+        $training->title = $title;
+        $training->department_ids = implode(",", $department_ids);
         $training->owner_id = $user_id;
-        $trainingStored  = $training->save();
+        $training->save();
 
         $upload_documents = $request->file('upload_documents');
 
@@ -156,6 +162,7 @@ class TrainingController extends Controller
         $training_id = $training->id;
 
         if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
             foreach ($upload_documents as $k => $v) {
 
                 if (isset($v) && $v->isValid()) {
@@ -188,9 +195,11 @@ class TrainingController extends Controller
         }  
 
         $users = $request->input('user_ids');
+
         if (isset($users) && sizeof($users)>0) {
 
             foreach ($users as $key => $value) {
+
                 $training_visible_users = new TrainingVisibleUser;
                 $training_visible_users->training_id = $training_id;
                 $training_visible_users->user_id = $value;
@@ -202,12 +211,10 @@ class TrainingController extends Controller
         $users_id = User::getAllUsers();
         $user_count = sizeof($users_id);
 
-        if(isset($users)){
-
+        if(isset($users)) {
             $training_users = sizeof($users);
         }
         else {
-
             $training_users = 0;
         }
         
@@ -223,6 +230,7 @@ class TrainingController extends Controller
         $superadminemail = User::getUserEmailById($superadminuserid);
 
         if (isset($users) && sizeof($users)>0) {
+
             foreach ($users as $key => $value) {
                 $email = User::getUserEmailById($value);
                 $user_emails[] = $email;
@@ -245,19 +253,17 @@ class TrainingController extends Controller
 
     public function edit($id) {
 
-        $users = User::getAllUsers();
-
         $training = Training::find($id);
         
         $action = "edit";
 
         $i = 0;
         $trainingdetails['files'] = array();
-        $trainingFiles = TrainingDoc::select('training_doc.*')->where('training_doc.training_id',$id)
-        ->get();
+        $trainingFiles = TrainingDoc::select('training_doc.*')->where('training_doc.training_id',$id)->get();
 
         $utils = new Utils();
-        if(isset($trainingFiles) && sizeof($trainingFiles) > 0){
+
+        if(isset($trainingFiles) && sizeof($trainingFiles) > 0) {
 
             foreach ($trainingFiles as $trainingfile) {
 
@@ -271,28 +277,39 @@ class TrainingController extends Controller
             }
         }
         
-        $training_visible_users =TrainingVisibleUser::where('training_id',$id)->get();
+        $training_visible_users = TrainingVisibleUser::where('training_id',$id)->get();
        
         $selected_users = array();
-        if(isset($training_visible_users) && sizeof($training_visible_users)>0){
+        if(isset($training_visible_users) && sizeof($training_visible_users)>0)  {
             foreach($training_visible_users as $row){
                 $selected_users[] = $row->user_id;
             }
         }
 
-        return view('adminlte::training.edit',compact('action','users','training','trainingdetails','selected_users'));
+        $department_res = Department::orderBy('id','ASC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+
+        $selected_departments = explode(",",$training->department_ids);
+
+        $users = User::getAllUsers($selected_departments);
+  
+        return view('adminlte::training.edit',compact('action','users','selected_users','training','trainingdetails','selected_departments','departments'));
     }
 
     public function update(Request $request,$id) {
 
-        $user_id = \Auth::user()->id;
+        $department_ids = $request->input('department_ids');
         
         $training = Training::find($id);
-        $owner_id = $training->owner_id;
-
         $training->title = $request->input('title');
-        $training->owner_id = $owner_id;
-        $trainingStored  = $training->save();
+        $training->department_ids = implode(",", $department_ids);
+        $training->save();
 
         $file = $request->file('file');
 
@@ -496,5 +513,17 @@ class TrainingController extends Controller
             $order->save();
             $i++;
         }
+    }
+
+    public function getUsersByDepartment() {
+
+        $department_ids_string = $_GET['department_ids_string'];
+
+        // get user names
+        $users = User::getUsersByDepartmentId($department_ids_string);
+
+        $data['users'] = $users;
+
+        return json_encode($data);
     }
 }

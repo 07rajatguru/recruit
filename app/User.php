@@ -655,4 +655,36 @@ class User extends Authenticatable
         }
         return $full_name_array;
     }
+
+    public static function getUsersByDepartmentId($department_ids_string) {
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $departments = explode(",", $department_ids_string);
+
+        $query = User::query();
+
+        // Get before 7 days users list
+        $query = $query->whereNotIn('users.status',$status_array);
+        $query = $query->whereNotIn('type',$client_type);
+        $query = $query->whereIn('type',$departments);
+        $query = $query->select('users.id','users.name');
+        $query = $query->orderBy('users.name');
+        $response = $query->get();
+
+        $user_name_array = array();
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $user_name_array[$value->id] = $value->name;
+            }
+        }
+        return $user_name_array;
+    }
 }

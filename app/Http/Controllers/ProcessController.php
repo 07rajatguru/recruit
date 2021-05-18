@@ -13,6 +13,7 @@ use App\ProcessVisibleUser;
 use App\Utils;
 use DB;
 use App\Events\NotificationMail;
+use App\Department;
 
 class ProcessController extends Controller
 {
@@ -129,24 +130,29 @@ class ProcessController extends Controller
 
 		$action = 'add';
 
-        $user = \Auth::user();
-        $user_id = $user->id;
+        $department_res = Department::orderBy('id','ASC')->get();
+        $departments = array();
 
-        $users = User::getAllUsers();
-
-        $super_admin_user_id = getenv('SUPERADMINUSERID');
-        $selected_users = array($user_id,$super_admin_user_id);
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
         
-        return view('adminlte::process.create',compact('action','users','selected_users','user_id'));
+        $selected_departments = array();
+        
+        return view('adminlte::process.create',compact('action','departments','selected_departments'));
     }
 
     public function store(Request $request) {
 
 		$user_id = \Auth::user()->id;
         $title = $request->input('title');
+        $department_ids = $request->input('department_ids');
 
         $process = new ProcessManual();
-        $process->title = $request->input('title');
+        $process->title = $title;
+        $process->department_ids = implode(",", $department_ids);
         $process->owner_id = $user_id;
         $process->save();
 
@@ -183,7 +189,6 @@ class ProcessController extends Controller
                     $process_doc->size = $file_size;
                     $process_doc->created_at = date('Y-m-d');
                     $process_doc->updated_at = date('Y-m-d');
-				
                     $process_doc->save();
                 }
             }
@@ -191,9 +196,11 @@ class ProcessController extends Controller
         // insert in Process_Visible_Table
 
         $users = $request->input('user_ids');
-        $process_id = $process->id;
-        if(isset($users) && sizeof($users)>0){
-            foreach ($users as $key=>$value){
+
+        if(isset($users) && sizeof($users)>0) {
+
+            foreach ($users as $key => $value) {
+
                 $process_visible_users = new ProcessVisibleUser();
                 $process_visible_users->process_id = $process_id;
                 $process_visible_users->user_id = $value;
@@ -205,12 +212,10 @@ class ProcessController extends Controller
         $users_id = User::getAllUsers();
         $user_count = sizeof($users_id);
 
-        if(isset($users)){
-
+        if(isset($users)) {
             $process_users = sizeof($users);
         }
         else {
-
             $process_users = 0;
         }
 
@@ -226,6 +231,7 @@ class ProcessController extends Controller
         $superadminemail = User::getUserEmailById($superadminuserid);
 
         if (isset($users) && sizeof($users)>0) {
+
             foreach ($users as $key => $value) {
                 $email = User::getUserEmailById($value);
                 $user_emails[] = $email;
@@ -248,7 +254,6 @@ class ProcessController extends Controller
 
     public function edit($id) {
 
-     	$users = User::getAllUsers();
      	$process = ProcessManual::find($id);
        
         $action = "edit";
@@ -262,6 +267,7 @@ class ProcessController extends Controller
         $utils = new Utils();
 
         if(isset($processFiles) && sizeof($processFiles) > 0) {
+
             foreach ($processFiles as $processFile) {
 
                 $processdetails['files'][$i]['id'] = $processFile->id;
@@ -277,21 +283,35 @@ class ProcessController extends Controller
         $process_visible_users = ProcessVisibleUser::where('process_id',$id)->get();
        
         $selected_users = array();
-        if(isset($process_visible_users) && sizeof($process_visible_users)>0){
-            foreach($process_visible_users as $row){
+        if(isset($process_visible_users) && sizeof($process_visible_users)>0) {
+            foreach($process_visible_users as $row) {
                 $selected_users[] = $row->user_id;
             }
         }
 
-        return view('adminlte::process.edit',compact('action','users','process','processdetails','selected_users'));
+        $department_res = Department::orderBy('id','ASC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+
+        $selected_departments = explode(",",$process->department_ids);
+
+        $users = User::getAllUsers($selected_departments);
+
+        return view('adminlte::process.edit',compact('action','users','selected_users','process','processdetails','selected_departments','departments'));
      }
 
-    public function update(Request $request,$id) {
+     public function update(Request $request,$id) {
         
-     	$user_id = \Auth::user()->id;
+        $department_ids = $request->input('department_ids');
         
         $process = ProcessManual::find($id);
         $process->title = $request->input('title');
+        $process->department_ids = implode(",", $department_ids);
         $process->save();
 
         $file = $request->file('file');
@@ -329,11 +349,11 @@ class ProcessController extends Controller
 
         // Update in process visible table
         $users = $request->input('user_ids');
-        $process_id = $process->id;
         ProcessVisibleUser::where('process_id',$process_id)->delete();
-        if(isset($users) && sizeof($users)>0){
 
-            foreach ($users as $key=>$value){
+        if(isset($users) && sizeof($users)>0) {
+
+            foreach ($users as $key => $value) {
 
                 $process_visible_users = new ProcessVisibleUser();
                 $process_visible_users->process_id = $process_id;
@@ -498,5 +518,17 @@ class ProcessController extends Controller
             $order->save();
             $i++;
         }
+    }
+
+    public function getUsersByDepartment() {
+
+        $department_ids_string = $_GET['department_ids_string'];
+
+        // get user names
+        $users = User::getUsersByDepartmentId($department_ids_string);
+
+        $data['users'] = $users;
+
+        return json_encode($data);
     }
 }

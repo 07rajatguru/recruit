@@ -57,18 +57,25 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
-                        <strong>Select Users who can access the Process : <span class = "required_fields">*</span></strong>
-                        <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
-                        @foreach($users as $k=>$v)&nbsp;&nbsp; 
-                            {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                    <div class="form-group">
+                        <strong>Select Users who can access the Process : <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
+                        <input type="checkbox" id="departments_all"/> <strong>Select All</strong><br/>
+
+                        @foreach($departments as $k=>$v)&nbsp;&nbsp; 
+                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('class' => 'department_ids','onclick' => 'displayUsers()')) !!}
                             {!! Form::label ($v) !!}
                         @endforeach
 
-                        @if ($errors->has('user_ids'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('user_ids') }}</strong>
-                            </span>
+                        @if($action == "add")
+                            <div class="add_user_list"></div>
+                        @endif
+                        @if($action == "edit")
+                            <div class="add_user_list">
+                                @foreach($users as $k1=>$v1)&nbsp;&nbsp; 
+                                    {!! Form::checkbox('user_ids[]', $k1, in_array($k1,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                                    {!! Form::label ($v1) !!}
+                                @endforeach
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -139,7 +146,7 @@
                     "title": {
                         required: true
                     },
-                    "user_ids[]": {
+                    "department_ids[]": {
                         required: true
                     },
                     "upload_documents[]": {
@@ -150,8 +157,8 @@
                     "title": {
                         required: "Title is Required Field."
                     },
-                    "user_ids[]": {
-                        required: "Please Select Users."
+                    "department_ids[]": {
+                        required: "Please Select Department."
                     },
                     "upload_documents[]": {
                         required: "Please Select File."
@@ -159,18 +166,58 @@
                 }
             });
             
-            $("#users_all").click(function () {
+            $("#departments_all").click(function () {
                 
-                $('.users_ids').prop('checked', this.checked);
+                $('.department_ids').prop('checked', this.checked);
+                displayUsers();
             });
 
-            $(".users_ids").click(function () {
-                $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
+            $(".department_ids").click(function () {
+                $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+                displayUsers();
             });
 
             // Edit form if all user select then select all selected
-            $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
+            $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
         });
+
+        function displayUsers() {
+
+            var department_ids_string = [];
+            jQuery("input[name='department_ids[]']:checked").each(function(i) {
+                department_ids_string.push($(this).val());
+            });
+
+            if(department_ids_string != '') {
+
+                $.ajax({
+
+                    url:'/process/getusers',
+                    data:'department_ids_string='+department_ids_string,
+                    dataType:'json',
+                    success: function(data) {
+
+                        if(data.users) {
+
+                            $(".add_user_list").html("");
+
+                            var html = '';
+
+                            $.each(data.users,function(key, value) {
+
+                                html += '<b>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="user_ids[]" value="'+key+'">&nbsp;&nbsp;'+value+'</b>';
+                            }); 
+
+                            $(".add_user_list").append(html);
+                        }
+                    }
+                });
+            }
+            else {
+
+                $(".add_user_list").html("");
+            }
+        }
     </script>
 @endsection
 

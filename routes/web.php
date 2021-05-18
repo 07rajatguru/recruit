@@ -1945,6 +1945,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@UpdatePosition'
     ]);
 
+    Route::get('/training/getusers', [
+        'as' => 'training.getusers',
+        'uses' => 'TrainingController@getUsersByDepartment'
+    ]);
+
     // Admin > Process Manual
     
     Route::get('process', [
@@ -2013,6 +2018,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-process-manual']
     ]);
 
+    Route::get('/process/getusers', [
+        'as' => 'process.getusers',
+        'uses' => 'ProcessController@getUsersByDepartment'
+    ]);
+    
     // Admin > Accounting Heads
     
     Route::get('accounting', [
