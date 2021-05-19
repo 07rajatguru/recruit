@@ -59,7 +59,7 @@ class JobAssociateCandidates extends Model
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->select('job_openings.posting_title','client_basicinfo.name as cname',\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),
-                'job_openings.city','job_openings.state','job_openings.country','job_associate_candidates.date as date');
+                'job_openings.city','job_openings.state','job_openings.country','job_associate_candidates.date as date','job_openings.remote_working as remote_working');
         $query = $query->where('job_associate_candidates.associate_by',$user_id);
 
         if ($date == NULL) {
@@ -101,7 +101,16 @@ class JobAssociateCandidates extends Model
                     $location .= ", ".$value1->country;
             }
 
-            $response['associate_data'][$i]['location'] = $location;
+            if($value1->remote_working == '1') {
+
+                $city = "Remote Working";
+            }
+            else {
+
+                $city = $location;
+            }
+
+            $response['associate_data'][$i]['location'] = $city;
             $response['associate_data'][$i]['associate_candidate_count'] = $value1->count;
             $response['associate_data'][$i]['status'] = 'CVs sent';
             $i++;
@@ -211,7 +220,7 @@ class JobAssociateCandidates extends Model
         $tanisha_user_id = getenv('TANISHAUSERID');
 
         $query = JobAssociateCandidates::query();
-        $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
+        $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email','job_openings.remote_working as remote_working');
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
@@ -262,10 +271,18 @@ class JobAssociateCandidates extends Model
             $result[$i]['posting_title'] = $v->posting_title;
             $result[$i]['hm_name'] = $v->hm_name;
             $result[$i]['company_name'] = $v->company_name;
-            $result[$i]['location'] = $location;
             $result[$i]['candidate_name'] = $v->full_name;
             $result[$i]['candidate_owner_name'] = $v->candidate_owner_name;
             $result[$i]['candidate_email'] = $v->candidate_email;
+
+            if($v->remote_working == '1') {
+
+                $result[$i]['location'] = "Remote Working";
+            }
+            else {
+
+                $result[$i]['location'] = $location;
+            }
             $i++;
         }
         return $result;
@@ -307,18 +324,6 @@ class JobAssociateCandidates extends Model
         return $candidate;
     }
 
-    /*// function for convert active/passive client job associated cvs by date wise desc 
-    public static function getClientJobAssociatedIdByDESCDate($job_id){
-
-        $job_cvs_data = JobAssociateCandidates::query();
-        $job_cvs_data = $job_cvs_data->select('job_associate_candidates.id','job_associate_candidates.created_at');
-        $job_cvs_data = $job_cvs_data->orderBy('job_associate_candidates.created_at','desc');
-        $job_cvs_data = $job_cvs_data->whereIn('job_associate_candidates.job_id',$job_id);
-        $job_cvs_res = $job_cvs_data->first();
-
-        return $job_cvs_res;
-    }*/
-
     public static function getProductivityReportCVCount($user_id=0,$from_date=NULL,$to_date=NULL) {
         
         $query = JobAssociateCandidates::query();
@@ -334,12 +339,6 @@ class JobAssociateCandidates extends Model
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
 
-        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-
-        $query = $query->orwhere('job_associate_candidates.created_at','>=',"$from_date");
-        $query = $query->Where('job_associate_candidates.created_at','<=',"$to_date");
-       */
         $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
         $query_response = $query->get();
 
@@ -364,12 +363,6 @@ class JobAssociateCandidates extends Model
 
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
-
-        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        
-        $query = $query->orwhere('job_associate_candidates.shortlisted_date','>=',"$from_date");
-        $query = $query->Where('job_associate_candidates.shortlisted_date','<=',"$to_date");*/
 
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');
        
@@ -397,13 +390,7 @@ class JobAssociateCandidates extends Model
 
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('job_associate_candidates.selected_date','<=',$to_date);
-        
-        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        
-        $query = $query->orwhere('job_associate_candidates.selected_date','>=',"$from_date");
-        $query = $query->Where('job_associate_candidates.selected_date','<=',"$to_date");
-*/
+     
         $query = $query->where('job_associate_candidates.shortlisted','=','3');
         $query = $query->where('job_associate_candidates.status_id','=','3');
        
@@ -464,7 +451,7 @@ class JobAssociateCandidates extends Model
         $query = $query->leftjoin('users as u1','u1.id','=','job_openings.hiring_manager_id');
         $query = $query->leftjoin('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
-        $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email');
+        $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email','job_openings.remote_working as remote_working');
         
         if($user_id > 0) {
 
@@ -511,10 +498,19 @@ class JobAssociateCandidates extends Model
             $result[$i]['posting_title'] = $v->posting_title;
             $result[$i]['hm_name'] = $v->hm_name;
             $result[$i]['company_name'] = $v->company_name;
-            $result[$i]['location'] = $location;
             $result[$i]['candidate_name'] = $v->full_name;
             $result[$i]['candidate_owner_name'] = $v->candidate_owner_name;
             $result[$i]['candidate_email'] = $v->candidate_email;
+
+            if($v->remote_working == '1') {
+
+                $result[$i]['location'] = "Remote Working";
+            }
+            else {
+
+                $result[$i]['location'] = $location;
+            }
+            
             $i++;
         }
         return $result;
@@ -527,7 +523,7 @@ class JobAssociateCandidates extends Model
         $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
 
-        $query = $query->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date');
+        $query = $query->select('job_openings.posting_title as posting_title','client_basicinfo.name as company_name','job_openings.city as city','job_openings.state as state','job_openings.country as country','users.name as managed_by','job_associate_candidates.created_at as date','job_openings.remote_working as remote_working');
 
         $query = $query->where('job_associate_candidates.candidate_id',$candidate_id);
         $response = $query->get();
@@ -564,14 +560,23 @@ class JobAssociateCandidates extends Model
 
                 $date_time = strtotime($candidateJobs->date);
                 date_default_timezone_set("Asia/kolkata");
-                $candidate_jobs[$i]['location'] = $location;
-                $candidate_jobs[$i]['managed_by'] = $candidateJobs->managed_by;
                 $candidate_jobs[$i]['datetime'] = date('d-m-Y h:i A',$date_time);
+
+
+                if($candidateJobs->remote_working == '1') {
+
+                    $candidate_jobs[$i]['location'] = "Remote Working";
+                }
+                else {
+
+                    $candidate_jobs[$i]['location'] = $location;
+                }
+
+                $candidate_jobs[$i]['managed_by'] = $candidateJobs->managed_by;
 
                 $i++; 
             }
         }
-
         return $candidate_jobs;
     }
 }

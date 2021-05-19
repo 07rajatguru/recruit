@@ -699,7 +699,7 @@ class ToDos extends Model
         if ($type == 1) {
             $job_response = JobOpen::getJobsByIds(0,explode(',',$type_list));
             foreach ($job_response as $k=>$v){
-                $jobopen[$i] =  $v['company_name']." - ".$v['posting_title']." - ".$v['location'];
+                $jobopen[$i] =  $v['company_name']." - ".$v['posting_title']." - ".$v['city'];
                 $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }   

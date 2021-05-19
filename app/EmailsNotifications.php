@@ -35,9 +35,8 @@ class EmailsNotifications extends Model
         $query = $query->join('client_basicinfo', 'client_basicinfo.id', '=', 'job_openings.client_id');
         $query = $query->join('users', 'users.id', '=', 'job_openings.hiring_manager_id');
         $query = $query->join('industry', 'industry.id', '=', 'job_openings.industry_id');
-        //$query = $query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
 
-        $query = $query->select('emails_notification.module_id as module_id','emails_notification.sender_name as sender_name','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name'/*,'client_heirarchy.name as level_name'*/);
+        $query = $query->select('emails_notification.module_id as module_id','emails_notification.sender_name as sender_name','job_openings.*', 'client_basicinfo.name as client_name', 'users.name as hiring_manager_name', 'industry.name as industry_name');
         $query = $query->where('emails_notification.id',$id);
         $query_res = $query->get();
 
@@ -91,25 +90,18 @@ class EmailsNotifications extends Model
             $job_open['country'] = $value->country;
             $job_open['state'] = $value->state;
             $job_open['city'] = $value->city;
+
             $job_open['education_qualification'] = $value->qualifications;
             $job_open['sender_name'] = $value->sender_name;
 
-            /*$user_id = $job_open['sender_name'];
+            if($value->remote_working == '1') {
 
-            $user = \Auth::user();
-            $all_jobs_perm = $user->can('display-jobs');
-
-            if($all_jobs_perm) {
-                $job_open['access'] = '1';
+                $job_open['remote_working'] = "Remote Working";
             }
             else {
-                if($value->hiring_manager_id == $user_id) {
-                    $job_open['access'] = '1';
-                }
-                else {
-                    $job_open['access'] = '0';
-                }
-            }*/
+
+                $job_open['remote_working'] = '';
+            }
 
             // already added posting,massmail and job search options
             $selected_posting = array();
@@ -119,15 +111,16 @@ class EmailsNotifications extends Model
             $mo_posting = '';
             $mo_mass_mail='';
             $mo_job_search = '';
-            if(isset($value->posting) && $value->posting!=''){
+
+            if(isset($value->posting) && $value->posting!='') {
                 $mo_posting = $value->posting;
                 $selected_posting = explode(",",$mo_posting);
             }
-            if(isset($value->mass_mail) && $value->mass_mail!=''){
+            if(isset($value->mass_mail) && $value->mass_mail!='') {
                 $mo_mass_mail = $value->mass_mail;
                 $selected_mass_mail = explode(",",$mo_mass_mail);
             }
-            if(isset($value->job_search) && $value->job_search!=''){
+            if(isset($value->job_search) && $value->job_search!='') {
                 $mo_job_search = $value->job_search;
                 $selected_job_search = explode(",",$mo_job_search);
             }
@@ -135,8 +128,7 @@ class EmailsNotifications extends Model
             $job_visible_users = \DB::table('job_visible_users')
             ->select('users.id','users.name')
             ->join('users','users.id','=','job_visible_users.user_id')
-            ->join('emails_notification','emails_notification.module_id','=','job_visible_users.job_id')
-            ->where('emails_notification.id',$id)->get();
+            ->join('emails_notification','emails_notification.module_id','=','job_visible_users.job_id')->where('emails_notification.id',$id)->get();
 
             $count = 0;
             foreach ($job_visible_users as $key => $value) {

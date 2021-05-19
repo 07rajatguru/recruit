@@ -56,7 +56,7 @@ class Bills extends Model
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
         $bills_query = $bills_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
-        $bills_query = $bills_query->select('bills.*','users.name as name','candidate_basicinfo.full_name as c_name','candidate_basicinfo.phone as candidate_other_no','client_basicinfo.other_number as client_other_no');
+        $bills_query = $bills_query->select('bills.*','users.name as name','candidate_basicinfo.full_name as c_name','candidate_basicinfo.phone as candidate_other_no','client_basicinfo.other_number as client_other_no','job_openings.remote_working as remote_working');
         $bills_query = $bills_query->whereIn('bills.id',$ids);
 
         $bills_res = $bills_query->get();
@@ -71,7 +71,15 @@ class Bills extends Model
             $bills[$i]['candidate_contact_number'] = $value->candidate_contact_number;
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
-            $bills[$i]['job_location'] = $value->job_location;
+
+            if($value->remote_working == '1') {
+
+                $bills[$i]['job_location'] = "Remote Working";
+            }
+            else {
+
+                $bills[$i]['job_location'] = $value->job_location;
+            }
 
             $salary = str_replace(",", "", $value->fixed_salary);
             $salary = (int)$salary;
@@ -1318,7 +1326,7 @@ class Bills extends Model
         $join_mail = $join_mail->join('job_openings','job_openings.id','=','bills.job_id');
         $join_mail = $join_mail->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $join_mail = $join_mail->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix','client_basicinfo.gst_no as gst_no','client_address.*','client_basicinfo.name as client_company_name');
+        $join_mail = $join_mail->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix','client_basicinfo.gst_no as gst_no','client_address.*','client_basicinfo.name as client_company_name','job_openings.remote_working as remote_working');
         $join_mail = $join_mail->where('bills.id',$id);
         $join_mail_res = $join_mail->first();
 
@@ -1344,7 +1352,16 @@ class Bills extends Model
             $join_confirmation_mail['candidate_name'] = $join_mail_res->candidate_name;
             $join_confirmation_mail['designation_offered'] = $join_mail_res->designation_offered;
             $join_confirmation_mail['joining_date'] = $join_mail_res->date_of_joining;
-            $join_confirmation_mail['job_location'] = $join_mail_res->job_location;
+
+            if($join_mail_res->remote_working == '1') {
+
+                $join_confirmation_mail['job_location'] = "Remote Working";
+            }
+            else {
+
+                $join_confirmation_mail['job_location'] = $join_mail_res->job_location;
+            }
+
             $join_confirmation_mail['fixed_salary'] = Utils::IND_money_format(round($salary));
             $join_confirmation_mail['percentage_charged'] = $join_mail_res->percentage_charged;
             $join_confirmation_mail['fees'] = Utils::IND_money_format(round($fees));
@@ -1686,12 +1703,6 @@ class Bills extends Model
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('bills_date.forecasting_date','<=',$to_date);
 
-        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        
-        $query = $query->orwhere('bills_date.forecasting_date','>=',"$from_date");
-        $query = $query->Where('bills_date.forecasting_date','<=',"$to_date");*/
-
         $query = $query->groupBy(\DB::raw('Date(bills_date.forecasting_date)'));
         $query_response = $query->get();
 
@@ -1718,12 +1729,6 @@ class Bills extends Model
 
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('bills_date.recovery_date','<=',$to_date);
-
-        /*$from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        
-        $query = $query->orwhere('bills_date.recovery_date','>=',"$from_date");
-        $query = $query->Where('bills_date.recovery_date','<=',"$to_date");*/
 
         $query = $query->groupBy(\DB::raw('Date(bills_date.recovery_date)'));
         $query_response = $query->get();
@@ -1752,12 +1757,6 @@ class Bills extends Model
         $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
         $query = $query->where('bills_date.joining_success_date','<=',$to_date);
         
-/*        $from_date = date("Y-m-d 00:00:00",strtotime($from_date));
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        
-        $query = $query->orwhere('bills_date.joining_success_date','>=',"$from_date");
-        $query = $query->Where('bills_date.joining_success_date','<=',"$to_date");
-*/
         $query = $query->groupBy(\DB::raw('Date(bills_date.joining_success_date)'));
         $query_response = $query->get();
 

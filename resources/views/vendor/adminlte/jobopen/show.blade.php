@@ -24,7 +24,7 @@
         <div class="col-lg-12 margin-tb">
 
             <div class="pull-left">
-                <h3>{{ $jobopen['posting_title'] }} - {{--<a target="_blank" href="/client/{{ $jobopen['client_id'] }}">--}}{{ $jobopen['client_name']  }}{{--</a>--}} </h3>
+                <h3>{{ $jobopen['posting_title'] }} - {{ $jobopen['client_name']  }}</h3>
             </div>
 
             <div class="pull-right">
@@ -130,9 +130,15 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
 
-                <div class="box-header col-md-6 ">
-                    <h3 class="box-title">Job Location</h3>
-                </div>
+                @if(isset($jobopen['remote_working']) && $jobopen['remote_working'] != '')
+                    <div class="box-header col-md-6 ">
+                        <h3 class="box-title">Job Location - Remote Working</h3>
+                    </div>
+                @else
+                    <div class="box-header col-md-6 ">
+                        <h3 class="box-title">Job Location</h3>
+                    </div>
+                @endif
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
@@ -145,7 +151,7 @@
                             <td>{{ $jobopen['city'] }}</td>
                         </tr>
                     </table>
-                 </div>
+                </div>
              </div>
         </div>
 

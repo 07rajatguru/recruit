@@ -58,20 +58,19 @@ class EveryMinute extends Command
     public function handle()
     {
         $mail_res = \DB::table('emails_notification')
-            ->select('emails_notification.*', 'emails_notification.id as id')
-            ->where('status','=',0)
-            ->limit(1)
-            ->get();
+        ->select('emails_notification.*', 'emails_notification.id as id')
+        ->where('status','=',0)->limit(1)->get();
 
         $mail = array();
         $i = 0;
+
         foreach ($mail_res as $key => $value) {
+
             $email_notification_id = $value->id;
             $mail[$i]['id'] = $value->id;
             $mail[$i]['module'] = $value->module;
             $mail[$i]['to'] = $value->to;
             $mail[$i]['cc'] = $value->cc;
-            //$mail[$i]['bcc'] = $value->bcc;
             $mail[$i]['subject'] = $value->subject;
             $mail[$i]['message'] = $value->message;
             $mail[$i]['status'] = $value->status;
@@ -95,32 +94,29 @@ class EveryMinute extends Command
         $input['mail'] = $mail;
 
         $status = 1;
-        
-        /*print_r($mail);
-        exit;*/
+
         foreach ($mail as $key => $value) {
 
             $input['to'] = $value['to'];
             $input['cc'] = $value['cc'];
-            //$input['bcc'] = $value['bcc'];
             $input['subject'] = $value['subject'];
             $input['message'] = $value['message'];
             $input['app_url'] = $app_url;
             $module_id = $value['module_id'];
             $sender_id = $value['sender_name'];
 
-            if ($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All') 
-            {
-                $to_array=array();
-                $to_array=explode(",",$input['to']);
+            if ($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All') {
 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $to_array = array();
+                $to_array = explode(",",$input['to']);
 
-                $input['to_array']=$to_array;
-                $input['cc_array']=array_unique($cc_array);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $id=$value['id'];
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = array_unique($cc_array);
+
+                $id = $value['id'];
 
                 $job = EmailsNotifications::getShowJobs($id);
 
@@ -129,32 +125,19 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.emailNotification', $input, function ($job) use($input) {
                     $job->from($input['from_address'], $input['from_name']);
                     $job->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
-                        });  
+                });  
 
-                /*$jobopen=JobOpen::find($module_id);
-                $input['jobopen_subject'] = $jobopen->subject;
-                $input['description'] = $jobopen->description;
-
-                $user_name = User::getUserNameByEmail($input['to']);
-                $input['uname'] = $user_name;
-                $input['jobopen_id'] = $module_id;
-
-                \Mail::send('adminlte::emails.todomail', $input, function ($message) use ($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
-                });
-*/
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
-                
             } 
-            else if ($value['module'] == 'Todos') 
-            {
+
+            else if ($value['module'] == 'Todos') {
+
                 // get todos subject and description
 
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
 
-                $input['cc_array']=$cc_array;
+                $input['cc_array'] = $cc_array;
 
                 $todos = ToDos::find($module_id);
 
@@ -168,23 +151,26 @@ class EveryMinute extends Command
                 $input['todo_id'] = $module_id;
 
                 \Mail::send('adminlte::emails.todomail', $input, function ($message) use ($input) {
-                $message->from($input['from_address'], $input['from_name']);
-                $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                        });              
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });              
                
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
-            else if ($value['module'] == 'Leave') 
-            {
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']); 
 
-                $input['cc_array']=array_unique($cc_array);
+            else if ($value['module'] == 'Leave') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']); 
+
+                $input['cc_array'] = array_unique($cc_array);
 
                 $leave = UserLeave::find($module_id);
 
                 $leave_doc = LeaveDoc::getLeaveDocById($module_id);
+
                 if (isset($leave_doc) && sizeof($leave_doc) > 0) {
+
                     $input['attachment'] = array();$j = 0;
                     foreach ($leave_doc as $key => $value) {
                         $input['attachment'][$j] = 'public/'.$value['fileName'];
@@ -210,42 +196,12 @@ class EveryMinute extends Command
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
-
-                /*\DB::statement("UPDATE user_leave SET `status`='$status' where `id` = '$module_id'"); */
             }
-            else if ($value['module'] == 'Daily Report'){
 
-                /*$to_array=explode(",",$input['to']);
-                $cc_array=explode(",",$input['cc']);
-
-                $associate_response = JobAssociateCandidates::getDailyReportAssociate($sender_id,NULL);
-                //print_r($associate_response);exit;
-                $associate_daily = $associate_response['associate_data'];
-                $associate_count = $associate_response['cvs_cnt'];
-
-                $lead_count = Lead::getDailyReportLeadCount($sender_id,NULL);
-
-                $interview_daily = Interview::getDailyReportInterview($sender_id,NULL);
-                $user_name = User::getUserNameById($sender_id);
-
-                $input['value'] = $user_name;
-                $input['associate_daily'] = $associate_daily;
-                $input['associate_count'] = $associate_count;
-                $input['lead_count'] = $lead_count;
-                $input['interview_daily'] = $interview_daily;
-                $input['to_array'] = array_unique($to_array);
-                $input['cc_array'] = array_unique($cc_array);
-
-                \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
-                });
-
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); */
+            else if ($value['module'] == 'Daily Report') {
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
-                //$bcc_array = explode(",",$input['bcc']);
 
                 $associate_response = JobAssociateCandidates::getDailyReportAssociate($sender_id,NULL);
                 $associate_daily = $associate_response['associate_data'];
@@ -263,16 +219,17 @@ class EveryMinute extends Command
                 $user_details = User::getAllDetailsByUserID($sender_id);
 
                 $input['value'] = $user_details->name;
+
                 $input['user_details'] = $user_details;
                 $input['associate_daily'] = $associate_daily;
                 $input['associate_count'] = $associate_count;
-                //$input['lead_count'] = $lead_count;
+
                 $input['leads_daily'] = $leads_daily;
                 $input['leads_count'] = $leads_count;
                 $input['interview_daily'] = $interview_daily;
+
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
-                //$input['bcc_array'] = array_unique($bcc_array);
 
                 \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -285,7 +242,6 @@ class EveryMinute extends Command
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
-                //$bcc_array = explode(",",$input['bcc']);
 
                 $associate_weekly_response = JobAssociateCandidates::getWeeklyReportAssociate($sender_id,NULL,NULL);
 
@@ -303,9 +259,6 @@ class EveryMinute extends Command
 
                 $user_details = User::getAllDetailsByUserID($sender_id);
 
-                /*$user_name = User::getUserNameById($sender_id);
-                $input['value'] = $user_name;*/
-
                 $input['value'] = $user_details->name;
                 $input['user_details'] = $user_details;
                 $input['associate_weekly'] = $associate_weekly;
@@ -316,7 +269,6 @@ class EveryMinute extends Command
                 $input['leads_count'] = $leads_count;
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
-                //$input['bcc_array'] = array_unique($bcc_array);
 
                 \Mail::send('adminlte::emails.WeeklyReport', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -345,7 +297,7 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
-            else if ($value['module'] == 'Forecasting') {
+            else if ($value['module'] == 'Forecasting' || $value['module'] == 'Recovery') {
                 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
@@ -380,106 +332,7 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
-            else if ($value['module'] == 'Recovery') {
-                
-                $cc_array = array();
-                $cc_array = explode(",",$input['cc']);
-
-                $input['cc_array'] = $cc_array;
-
-                $id = array($value['module_id']);
-
-                $bills_details = Bills::getBillsByIds($id);
-
-                $input['bills_details'] = $bills_details;
-
-                $bill_docs = BillsDoc::getBillDocs($value['module_id']);
-
-                $input['bill_docs'] = $bill_docs;
-
-                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
-
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-
-                    if (isset($input['bill_docs']) && sizeof($input['bill_docs']) > 0) {
-
-                        foreach ($input['bill_docs'] as $key => $value) {
-
-                            if(isset($value['file']) && $value['file'] != '') {
-                                $message->attach($value['file']);
-                            }
-                        }
-                    }
-                });
-
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
-            }
-
-            else if ($value['module'] == 'Cancel Forecasting') {
-                
-                $cc_array = array();
-                $cc_array = explode(",",$input['cc']);
-
-                $input['cc_array'] = $cc_array;
-
-                $id = array($value['module_id']);
-
-                $bills_details = Bills::getBillsByIds($id);
-
-                $input['bills_details'] = $bills_details;
-
-                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                });
-
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
-            }
-
-            else if ($value['module'] == 'Cancel Recovery') {
-                
-                $cc_array = array();
-                $cc_array = explode(",",$input['cc']);
-
-                $input['cc_array'] = $cc_array;
-
-                $id = array($value['module_id']);
-
-                $bills_details = Bills::getBillsByIds($id);
-
-                $input['bills_details'] = $bills_details;
-
-                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                });
-
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
-            }
-
-            else if ($value['module'] == 'Relive Forecasting') {
-                
-                $cc_array = array();
-                $cc_array = explode(",",$input['cc']);
-
-                $input['cc_array'] = $cc_array;
-
-                $id = array($value['module_id']);
-
-                $bills_details = Bills::getBillsByIds($id);
-
-                $input['bills_details'] = $bills_details;
-
-                \Mail::send('adminlte::emails.billsemail', $input, function ($message) use($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                });
-
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
-            }
-
-            else if ($value['module'] == 'Relive Recovery') {
+            else if ($value['module'] == 'Cancel Forecasting' || $value['module'] == 'Cancel Recovery' || $value['module'] == 'Relive Forecasting' || $value['module'] == 'Relive Recovery') {
                 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
@@ -606,10 +459,11 @@ class EveryMinute extends Command
 
             // Mail for Leave reply approved/unapproved
             else if ($value['module'] == 'Leave Reply') {
-                $cc_array=array();
-                $cc_array=explode(",",$input['cc']); 
 
-                $input['cc_array']=array_unique($cc_array);
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']); 
+
+                $input['cc_array'] = array_unique($cc_array);
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -620,10 +474,11 @@ class EveryMinute extends Command
             }
 
             // Mail for Joining Confirmation of recovery
-            else if ($value['module'] == 'Joining Confirmation'){
+            else if ($value['module'] == 'Joining Confirmation') {
 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
+
                 $input['cc_array'] = array_unique($cc_array);
 
                 $join_mail = Bills::getJoinConfirmationMail($module_id);
@@ -639,10 +494,11 @@ class EveryMinute extends Command
             }
 
             // Mail for Invoice gererate of recovery
-            else if ($value['module'] == 'Invoice Generate'){
+            else if ($value['module'] == 'Invoice Generate') {
 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
+
                 $input['cc_array'] = array_unique($cc_array);
 
                 $join_mail = Bills::getJoinConfirmationMail($module_id);
@@ -665,7 +521,7 @@ class EveryMinute extends Command
             }
 
             // Mail for Passive Client Listing
-            else if ($value['module'] == 'Passive Client List'){
+            else if ($value['module'] == 'Passive Client List') {
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
@@ -714,13 +570,6 @@ class EveryMinute extends Command
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
                     config([
-                        /*'mail.driver' => trim('smtp'),
-                        'mail.host' => trim('smtp.googlemail.com'),
-                        'mail.port' => trim('465'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('ssl'),*/
-
                         'mail.driver' => trim('mail'),
                         'mail.host' => trim('smtp.gmail.com'),
                         'mail.port' => trim('587'),
@@ -773,7 +622,7 @@ class EveryMinute extends Command
             }
 
             // Mail for Expected Passive Client Listing in next week
-            else if ($value['module'] == 'Expected Passive Client'){
+            else if ($value['module'] == 'Expected Passive Client') {
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
@@ -795,6 +644,7 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
             else if ($value['module'] == 'Monthly Report') {
 
                 $recruitment = getenv('RECRUITMENT');
@@ -887,60 +737,8 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
             else if ($value['module'] == 'Productivity Report') {
-
-                /*$selected_month = date('F', mktime(0, 0, 0, $month, 10));
-                $next_month = date('F', strtotime('+1 month', strtotime($selected_month)));
-
-                if($selected_month == 'December') {
-
-                    $next_year = $year + 1;
-
-                    $mondays  = new \DatePeriod(
-                        Carbon::parse("first monday of $selected_month $year"),
-                        CarbonInterval::week(),
-                        Carbon::parse("first monday of $next_month $next_year")
-                    );
-                }
-                else {
-
-                    $mondays  = new \DatePeriod(
-                        Carbon::parse("first monday of $selected_month $year"),
-                        CarbonInterval::week(),
-                        Carbon::parse("first monday of $next_month $year")
-                    );
-                }*/
-
-                /*$dates1 = array();
-                $dates2 = array();
-
-                $week = date("W", strtotime($year . "-" . $month ."-01"));
-                $a = date("Y-m-d", strtotime($year . "-" . $month ."-01"));
-                array_push($dates1,$a);
-
-                $unix = strtotime($year."W".$week ."+1 week");
-
-                While(date("m", $unix) == $month) {
-
-                    $b = date("Y-m-d", $unix-86400);
-                    array_push($dates2,$b);
-
-                    $c = date("Y-m-d", $unix);
-                    array_push($dates1,$c);
-
-                    $unix = $unix + (86400*7);
-                }
-
-                $d = date("Y-m-d", strtotime("last day of ".$year . "-" . $month));
-                array_push($dates2,$d);
-
-                $dates_array = array();
-
-                foreach ($dates1 as $key => $val) {
-
-                    $val2 = $dates2[$key];
-                    $dates_array[$key] = $val."--".$val2;
-                }*/
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
@@ -1045,6 +843,7 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
             else if ($value['module'] == 'New Candidate AutoScript Mail') {
 
                 // get todos subject and description
@@ -1065,6 +864,7 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
             }
+
             else if ($value['module'] == 'Client 2nd Line Account Manager') {
 
                 $to_array = explode(",",$input['to']);
@@ -1143,12 +943,6 @@ class EveryMinute extends Command
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
                     config([
-                        /*'mail.driver' => trim('smtp'),
-                        'mail.host' => trim('smtp.googlemail.com'),
-                        'mail.port' => trim('465'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('ssl'),*/
 
                         'mail.driver' => trim('mail'),
                         'mail.host' => trim('smtp.gmail.com'),
@@ -1346,7 +1140,15 @@ class EveryMinute extends Command
                         $interview_details[$i]['id'] = $v2['id'];
                         $interview_details[$i]['client_name'] = $v2['client_name'];
                         $interview_details[$i]['job_designation'] = $v2['posting_title'];
-                        $interview_details[$i]['job_location'] = $v2['job_city'];
+
+                        if($v2['remote_working'] == '1') {
+
+                            $interview_details[$i]['job_location'] = "Remote Working";
+                        }
+                        else {
+
+                            $interview_details[$i]['job_location'] = $v2['job_city'];
+                        }
 
                         $interview_details[$i]['interview_type'] = $v2['interview_type'];
                         $interview_details[$i]['interview_location'] = $v2['interview_location'];

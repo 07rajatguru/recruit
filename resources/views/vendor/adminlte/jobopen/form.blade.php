@@ -455,6 +455,15 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="">
+                        <div class="form-group">
+                            <strong>Is this job going to be Remote Working or Working from Home? :</strong>
+                            {!! Form::checkbox('remote_working','1', $remote_working, array('id' => 'remote_working','tabindex' => '23')) !!}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

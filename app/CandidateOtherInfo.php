@@ -74,7 +74,6 @@ class CandidateOtherInfo extends Model
         $query = new CandidateOtherInfo();
 
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','candidate_otherinfo.candidate_id');
-
         $query = $query->select('candidate_basicinfo.id as can_id', 'candidate_basicinfo.full_name as fname');
 
         $query = $query->where('candidate_otherinfo.applicant_job_id','=',$job_id);
