@@ -566,6 +566,7 @@
     </div>
 
 <input type="hidden" id="action" name="action" value="{!! $action !!}">
+<input type="hidden" id="super_admin_user_id" name="super_admin_user_id" value="{!! $super_admin_user_id !!}">
 
 </div>
 
@@ -775,23 +776,27 @@
                     dataType:'json',
                     success: function(response){
                        if(response.answer == 'True') {
-
                             document.getElementById("hiring_manager_id").value = response.am_id;
-
-                            var department_ids_string = [];
-                            jQuery("input[name='user_ids[]']").each(function(i) {
-
-                                if($(this).val() == response.am_id) {
-
-                                    $("input[value='" + response.am_id + "']").prop('checked', true);
-                                }
-                            });
                        }
                        else {
-
-                            //document.getElementById("hiring_manager_id").disabled = false;
                             document.getElementById("hiring_manager_id").value = response.user_id;
                        }
+
+                       jQuery("input[name='user_ids[]']").each(function(i) {
+
+                            if($(this).val() == response.am_id) {
+
+                                $("input[value='" + response.am_id + "']").prop('checked', true);
+                            }
+                            else {
+
+                                var a = ($(this).val());
+                                $("input[value='" + a + "']").prop('checked', false);
+                            }
+
+                            var super_admin_user_id = $("#super_admin_user_id").val();
+                            $("input[value='" + super_admin_user_id + "']").prop('checked', true);
+                        });
 
                        $("#hiring_manager_id").select2();
                     }
