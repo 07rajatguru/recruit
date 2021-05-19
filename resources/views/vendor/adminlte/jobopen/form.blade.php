@@ -700,7 +700,6 @@
             $("#client_id").select2();
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
-            //$("#level_id").select2();
             $("#industry_id").select2();
 
             /*$("#candidate_tracker").bind('change', function() {
@@ -766,6 +765,7 @@
 
             var client_id = $("#client_id").val();
             var app_url = "{!! env('APP_URL') !!}";
+            var action = $("#action").val();
 
             if(client_id > 0) {
 
@@ -782,23 +782,26 @@
                             document.getElementById("hiring_manager_id").value = response.user_id;
                        }
 
-                       jQuery("input[name='user_ids[]']").each(function(i) {
-
-                            if($(this).val() == response.am_id) {
-
-                                $("input[value='" + response.am_id + "']").prop('checked', true);
-                            }
-                            else {
-
-                                var a = ($(this).val());
-                                $("input[value='" + a + "']").prop('checked', false);
-                            }
-
-                            var super_admin_user_id = $("#super_admin_user_id").val();
-                            $("input[value='" + super_admin_user_id + "']").prop('checked', true);
-                        });
-
                        $("#hiring_manager_id").select2();
+
+                       if(action == 'add') {
+
+                           jQuery("input[name='user_ids[]']").each(function(i) {
+
+                                if($(this).val() == response.am_id) {
+
+                                    $("input[value='" + response.am_id + "']").prop('checked', true);
+                                }
+                                else {
+
+                                    var a = ($(this).val());
+                                    $("input[value='" + a + "']").prop('checked', false);
+                                }
+
+                                var super_admin_user_id = $("#super_admin_user_id").val();
+                                $("input[value='" + super_admin_user_id + "']").prop('checked', true);
+                            });
+                        }
                     }
                 });
             }
