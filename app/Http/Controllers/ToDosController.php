@@ -1218,8 +1218,18 @@ class ToDosController extends Controller
 
                 $i = 0;
                 foreach ($typeDetails as $typeDetail) {
+
+                    if($typeDetail->remote_working == '1') {
+
+                        $city = "Remote Working";
+                    }
+                    else {
+
+                        $city = $typeDetail->job_city;
+                    }
+
                     $typeArr[$i]['id'] = $typeDetail->id;
-                    $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$typeDetail->city;
+                    $typeArr[$i]['value'] = $typeDetail->client_name." - ".$typeDetail->posting_title." - ".$city;
                     $i++;
                 }
             } 

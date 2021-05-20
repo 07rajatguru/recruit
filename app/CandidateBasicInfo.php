@@ -332,8 +332,7 @@ class CandidateBasicInfo extends Model
         $candidateArray = array('' => 'Select Candidate');
 
         $candidateDetails = JobAssociateCandidates::join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id')
-        ->select('job_associate_candidates.id as id','job_associate_candidates.candidate_id as candidate_id')
-        ->get();
+        ->select('job_associate_candidates.id as id','job_associate_candidates.candidate_id as candidate_id')->get();
 
         if(isset($candidateDetails) && sizeof($candidateDetails) > 0){
             foreach ($candidateDetails as $candidateDetail) {
@@ -471,7 +470,6 @@ class CandidateBasicInfo extends Model
         // job Details
         $job_details = JobOpen::getJobById($job_id);
 
-        $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
         $input['company_url'] = $job_details['company_url'];
         $input['company_desc'] = $user_company_details['description'];
@@ -616,10 +614,7 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.educational_qualification_id');
         $query = $query->leftjoin('education_specialization','education_specialization.id','=','candidate_otherinfo.specialization');
 
-        $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary',
-            'candidate_otherinfo.expected_salary as expected_salary',
-            'candidate_otherinfo.skype_id as skype_id',
-            'candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization','users.email as owner_email');
+        $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','candidate_otherinfo.skype_id as skype_id','candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization','users.email as owner_email');
 
         $query = $query->where('candidate_basicinfo.id','=',$candidate_id);
         $response = $query->first();

@@ -854,10 +854,9 @@ class JobOpen extends Model
 
         $job_open_query = JobOpen::query();
 
-        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name'/*,'client_heirarchy.name as level_name'*/);
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name');
 
         $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
-        //$job_open_query = $job_open_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
@@ -865,13 +864,11 @@ class JobOpen extends Model
         // assign jobs to logged in user
         if($all==0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
-            //$job_open_query = $job_open_query->where('user_id','=',$user_id);
             $job_open_query = $job_open_query->where('client_basicinfo.account_manager_id','=',$user_id);
             $job_open_query = $job_open_query->orWhere('client_basicinfo.second_line_am','=',$user_id);
         }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
-        //$job_open_query = $job_open_query->where('job_associate_candidates.deleted_at','NULL');
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->orderBy('job_openings.id','desc');
 
@@ -1422,7 +1419,7 @@ class JobOpen extends Model
         $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $job_query = $job_query->leftjoin('interview', 'interview.posting_title','=', 'job_openings.id');
         $job_query = $job_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
-        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id','interview.candidate_location as candidate_location','job_openings.remote_working as remote_working');
+        $job_query = $job_query->select('job_openings.*','client_basicinfo.name as client_name','client_basicinfo.description as client_desc', 'client_basicinfo.website as website','interview.interview_date as date', 'interview.location as interview_location','interview.type as interview_type','client_basicinfo.coordinator_name as contact_person','users.name as user_name','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
 
         $job_query = $job_query->where('job_openings.id', '=', $job_id);
         $job_response = $job_query->get();
@@ -1451,7 +1448,15 @@ class JobOpen extends Model
                     $location .= ", ".$v->country;
             }
 
-            $response['job_location'] = $location;
+            if($v->remote_working == '1') {
+
+                $response['job_location'] = "Remote Working";
+            }
+            else {
+
+                $response['job_location'] = $location;
+            }
+
             $response['contact_person'] = $v->contact_person;
             $response['job_description'] = $v->job_description;
 
@@ -1474,15 +1479,6 @@ class JobOpen extends Model
             }
             else {
                 $response['new_posting_title'] = $v->posting_title;
-            }
-
-            if($v->remote_working == '1') {
-
-                $response['city'] = "Remote Working";
-            }
-            else {
-
-                $response['city'] = $v->city;
             }
         }
         return $response;
@@ -2069,32 +2065,6 @@ class JobOpen extends Model
         }
         return $job_id;
     }
-
-    /*// function for client convert active/passive
-    public static function getClientJobDetails($client_id){
-
-        $job_data = JobOpen::query();
-        //$job_data = $job_data->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $job_data = $job_data->select('job_openings.id');
-        //$job_data = $job_data->groupBy('job_openings.client_id');
-        // $job_data = $job_data->orderBy('job_openings.created_at','asc');
-        $job_data = $job_data->where('job_openings.client_id',$client_id);
-        $job_res = $job_data->get();
-
-        return $job_res;
-    }
-
-    // function for convert active/passive client job by date wise desc 
-    public static function getClientJobIdByDESCDate($job_id){
-
-        $job_data = JobOpen::query();
-        $job_data = $job_data->select('job_openings.id','job_openings.created_at');
-        $job_data = $job_data->orderBy('job_openings.created_at','desc');
-        $job_data = $job_data->whereIn('job_openings.id',$job_id);
-        $job_res = $job_data->first();
-
-        return $job_res;
-    }*/
 
     public static function getAllAPIJobsDetails($limit=0,$offset=0) {
 

@@ -208,11 +208,20 @@
                                         $link = 'interview/' . $interview->id . "/show";
                                     ?>
                                     <tr>
-                                        <td style="border: 1px solid #00c0ef;">
-                                            <a href="{{ $link }}" target="_blank">
-                                            {{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}
-                                            </a>
-                                        </td>
+
+                                        @if(isset($interview->remote_working) && $interview->remote_working != '')
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a href="{{ $link }}" target="_blank">
+                                                {{ $interview->display_name }} - {{ $interview->posting_title }} , Remote Working
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a href="{{ $link }}" target="_blank">
+                                                {{ $interview->display_name }} - {{ $interview->posting_title }} , {{$interview->city}}
+                                                </a>
+                                            </td>
+                                        @endif
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}} </td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->contact }}</td>
                                         <td style="border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>

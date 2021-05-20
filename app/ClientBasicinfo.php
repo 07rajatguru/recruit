@@ -598,9 +598,8 @@ class ClientBasicinfo extends Ardent
         $query = JobOpen::query();
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        //$query = $query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id'/*,'client_heirarchy.name as level_name'*/,'client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code');
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code');
         $response = $query->first();
 
         $client = array();
@@ -622,22 +621,6 @@ class ClientBasicinfo extends Ardent
             }
 
             $client['job_location'] = $response->city;
-            
-           /* // Get Percentage charged
-            $position = ClientHeirarchy::getClientHeirarchyPositionById($response->level_id);
-
-            if(isset($position) && $position != '') {
-
-                if($position == 'Above AM') {
-                    $percentage_charged = $response->percentage_charged_above;
-                }
-                if($position == 'Below AM') {
-                    $percentage_charged = $response->percentage_charged_below;
-                }
-            }
-            else {
-                $percentage_charged = '';
-            }*/
 
             // Get Percentage charged
 

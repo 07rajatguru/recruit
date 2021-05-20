@@ -10,25 +10,23 @@ class Interview extends Model
     public $table = "interview";
 
     public static $rules = array(
-        //'interview_name' => 'required',
         'candidate_id' => 'required',
         'interview_date' => 'required',
     );
 
-    public function messages()
-    {
+    public function messages() {
+
         return [
-            //'interview_name.required' => 'Interview Name is required field',
             'candidate_id.required' => 'Candidate is required field',
             'interview_date.required' => 'Interview Date is required field'
         ];
     }
 
-    public static function createInterview($data){
+    public static function createInterview($data) {
+
         $interview = new Interview();
         $interview->interview_name = '';
         $interview->candidate_id = $data['candidate_id'];
-       // $interview->client_id = $data['client'];
         $interview->posting_title = $data['posting_title'];
 
         if(isset($data['interviewer_id']) && $data['interviewer_id']!='')
@@ -36,15 +34,16 @@ class Interview extends Model
 
         $interview->type = $data['type'];
         $interview->interview_date = $data['interview_date'];
-        //$interview->to = $to;
         $interview->location = $data['location'];
         $interview->status = $data['status'];
         $interview->about = $data['about'];
         $interview->comments = $data['comments'];
         $interview->interview_owner_id = $data['interview_owner_id'];
+
         if (isset($data['skype_id']) && $data['skype_id'] != '') {
             $interview->skype_id = $data['skype_id'];
         }
+
         $interview->select_round = $data['round'];
         $interview->candidate_location = $data['candidate_location'];
         $interview->interview_location = $data['interview_location'];
@@ -52,7 +51,7 @@ class Interview extends Model
         return $interview;
     }
 
-    public static function getTypeArray(){
+    public static function getTypeArray() {
 
         $typeArray = array('' => 'Select Interview Type');
         $typeArray['Telephonic Interview'] = 'Telephonic Interview';
@@ -66,6 +65,7 @@ class Interview extends Model
     }
 
     public static function getCreateInterviewStatus() {
+
         /*$interviewStatus['Selected'] = 'Selected';
         $interviewStatus['Rejected'] = 'Rejected';
         $interviewStatus['OnHold'] = 'OnHold';*/
@@ -77,6 +77,7 @@ class Interview extends Model
     }
 
     public static function getEditInterviewStatus() {
+
         /*$interviewStatus['Selected'] = 'Selected';
         $interviewStatus['Rejected'] = 'Rejected';
         $interviewStatus['OnHold'] = 'OnHold';*/
@@ -89,7 +90,7 @@ class Interview extends Model
         return $interviewStatus;
     }
 
-    public static function getSelectRound(){
+    public static function getSelectRound() {
 
         $interviewround['1'] = 'Round 1';
         $interviewround['2'] = 'Round 2';
@@ -106,7 +107,8 @@ class Interview extends Model
         $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->select('interview.id as id','interview.interview_date','client_basicinfo.name as client_name','candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as candidate_email','job_openings.posting_title as posting_title','job_openings.city as job_city','candidate_basicinfo.mobile as candidate_mobile','users.name as candidate_owner','interview.type as interview_type','interview.interview_location as interview_location','interview.candidate_location as candidate_location','interview.skype_id as skype_id','interview.candidate_id as candidate_id');
+
+        $query = $query->select('interview.id as id','interview.interview_date','client_basicinfo.name as client_name','job_openings.posting_title as posting_title','job_openings.city as job_city','interview.type as interview_type','interview.interview_location as interview_location','job_openings.remote_working as remote_working');
 
         $query = $query->orderby('interview.interview_date','asc');
 
@@ -131,29 +133,18 @@ class Interview extends Model
             $interview[$i]['id'] = $value->id;
             $interview[$i]['client_name'] = $value->client_name;
             $interview[$i]['posting_title'] = $value->posting_title;
-            $interview[$i]['city'] = $value->job_city;
+
+            if($value->remote_working == '1') {
+
+                $interview[$i]['city'] = "Remote Working";
+            }
+            else {
+
+                $interview[$i]['city'] = $value->job_city;
+            }
+            
             $interview[$i]['interview_type'] = $value->interview_type;
-            $interview[$i]['interview_location'] = $value->interview_location;
-            
-            $interview[$i]['candidate_id'] = $value->candidate_id;
-            $interview[$i]['candidate_owner'] = $value->candidate_owner;
-            $interview[$i]['cname'] = $value->full_name;
-            $interview[$i]['cemail'] = $value->candidate_email;
-            $interview[$i]['cmobile'] = $value->candidate_mobile;
-            $interview[$i]['candidate_location'] = $value->candidate_location;
-            $interview[$i]['skype_id'] = $value->skype_id;
-
-            $datearray = explode(' ', $value->interview_date);
-            $interview_date = $datearray[0];
-            $interview_time = $datearray[1];
-            $interview[$i]['interview_date'] = $interview_date;
-            $interview[$i]['interview_time'] = $interview_time;
-
-            $interview[$i]['job_designation'] = $value->posting_title;
-            $interview[$i]['job_location'] = $value->job_city;
-
-            $interview[$i]['interview_date_actual'] = $value->interview_date;
-            
+            $interview[$i]['interview_location'] = $value->interview_location;            
             $i++;
         }
 
@@ -161,7 +152,7 @@ class Interview extends Model
     }
 
     //function for indax using ajax call
-    public static function getAllInterviewsByAjax($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL){
+    public static function getAllInterviewsByAjax($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL) {
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -169,7 +160,7 @@ class Interview extends Model
         $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner','job_openings.remote_working as remote_working');
 
         if($all==0) {
 
@@ -201,11 +192,11 @@ class Interview extends Model
         }
 
         if (isset($search) && $search != '') {
-            $query = $query->where(function($query) use ($search){
+            $query = $query->where(function($query) use ($search) {
 
                 $date_search = false;
                 $date_array = explode("-",$search);
-                if(isset($date_array) && sizeof($date_array)>0){
+                if(isset($date_array) && sizeof($date_array)>0) {
                     $stamp = strtotime($search);
                     if (is_numeric($stamp)){
                         $month = date( 'm', $stamp );
@@ -219,13 +210,19 @@ class Interview extends Model
                 }
 
                 $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('job_openings.city','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
 
-                if($date_search){
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                    $query = $query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
                    
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
@@ -240,11 +237,22 @@ class Interview extends Model
 
         $interview = array();
         $i=0;
+
         foreach ($response as $key => $value) {
+
             $interview[$i]['id'] = $value->id;
             $interview[$i]['client_name'] = $value->client_name;
             $interview[$i]['posting_title'] = $value->posting_title;
-            $interview[$i]['city'] = $value->city;
+
+            if($value->remote_working == '1') {
+
+                $interview[$i]['city'] = "Remote Working";
+            }
+            else {
+
+                $interview[$i]['city'] = $value->city;
+            }
+
             $interview[$i]['candidate_fname'] = $value->candidate_fname;
             $interview[$i]['contact'] = $value->contact;
             $interview[$i]['interview_date'] = date('d-m-Y h:i A', strtotime("$value->interview_date"));
@@ -254,11 +262,10 @@ class Interview extends Model
             $interview[$i]['candidate_owner'] = $value->candidate_owner;
             $i++;
         }
-
         return $interview;
     }
 
-    public static function getAllInterviewsCountByAjax($all=0,$user_id,$search=0,$current_year=NULL,$next_year=NULL){
+    public static function getAllInterviewsCountByAjax($all=0,$user_id,$search=0,$current_year=NULL,$next_year=NULL) {
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -267,10 +274,12 @@ class Interview extends Model
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner','job_openings.remote_working as remote_working');
 
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+        if($all==0) {
+
+            $query = $query->where(function($query) use ($user_id) {
+
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
@@ -308,13 +317,19 @@ class Interview extends Model
                 }
 
                 $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('job_openings.city','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
 
-                if($date_search){
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                    $query = $query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
                    
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
@@ -331,7 +346,7 @@ class Interview extends Model
     }
 
     // function for today, tomorrow, this week & Upcoming/Previous interview page
-    public static function getInterviewsByType($all=0,$user_id,$time,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc'){
+    public static function getInterviewsByType($all=0,$user_id,$time,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc') {
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -339,13 +354,14 @@ class Interview extends Model
         $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        //$query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner','job_openings.remote_working as remote_working');
+
         $query = $query->orderby('interview.interview_date','desc');
 
         if($all==0) {
 
             $query = $query->where(function($query) use ($user_id) {
+
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
@@ -385,11 +401,18 @@ class Interview extends Model
                 }
 
                 $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('job_openings.city','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
+
+
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                    $query = $query->orwhere('job_openings.remote_working','=',"1");
+                }
 
                 if($date_search) {
                    
@@ -427,16 +450,26 @@ class Interview extends Model
             $query = $query->where('interview.interview_date','<',"$from_date");
             $query = $query->orwhere('interview.interview_date','>',"$to_date");
         }
-
         $response = $query->get();
 
         $interview = array();
         $i=0;
+
         foreach ($response as $key => $value) {
+
             $interview[$i]['id'] = $value->id;
             $interview[$i]['client_name'] = $value->client_name;
             $interview[$i]['posting_title'] = $value->posting_title;
-            $interview[$i]['city'] = $value->city;
+
+            if($value->remote_working == '1') {
+
+                $interview[$i]['city'] = "Remote Working";
+            }
+            else {
+
+                $interview[$i]['city'] = $value->city;
+            }
+
             $interview[$i]['candidate_fname'] = $value->candidate_fname;
             $interview[$i]['contact'] = $value->contact;
             $interview[$i]['interview_date'] = $value->interview_date;
@@ -459,7 +492,7 @@ class Interview extends Model
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','users.name as candidate_owner','job_openings.remote_working as remote_working');
 
         if($all==0) {
 
@@ -495,11 +528,17 @@ class Interview extends Model
                 }
 
                 $query = $query->where('job_openings.posting_title','like',"%$search%");
+                $query = $query->orwhere('job_openings.city','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $query = $query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
+
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                    $query = $query->orwhere('job_openings.remote_working','=',"1");
+                }
 
                 if($date_search) {
                    
@@ -544,7 +583,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getTodayTomorrowsInterviews($all=0,$user_id){
+    public static function getTodayTomorrowsInterviews($all=0,$user_id) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
@@ -555,11 +594,14 @@ class Interview extends Model
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','job_openings.remote_working as remote_working');
+
         $query = $query->orderby('interview.interview_date','desc');
 
-        if($all==0){
-            $query = $query->where(function($query) use ($user_id){
+        if($all==0) {
+
+            $query = $query->where(function($query) use ($user_id) {
+
                 $query = $query->where('client_basicinfo.account_manager_id',$user_id);
                 $query = $query->orwhere('client_basicinfo.second_line_am',$user_id);
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
@@ -586,10 +628,9 @@ class Interview extends Model
         $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status',
-            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
-            'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact');
+
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','job_openings.remote_working as remote_working');
+
         $query = $query->where('interview.status','=','Attended');
         $query = $query->where(\DB::raw('MONTH(interview_date)'),'=',$month);
         $query = $query->where(\DB::raw('YEAR(interview_date)'),'=',$year);
@@ -624,7 +665,7 @@ class Interview extends Model
         $query = $query->leftJoin('users as u1','u1.id','=','interview.interviewer_id');
         $query = $query->leftJoin('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','client_basicinfo.name as client_name','client_basicinfo.display_name as display_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact','u2.name as candidate_owner_name');
+        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','client_basicinfo.name as client_name','client_basicinfo.display_name as display_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact','u2.name as candidate_owner_name','job_openings.remote_working as remote_working');
 
         if($all==0) {
             
@@ -640,33 +681,6 @@ class Interview extends Model
         $query = $query->where('interview_date','>',"$from_date");
         $query = $query->where('interview_date','<',"$to_date");
         $query = $query->orderby('interview.interview_date','asc');
-
-        $response = $query->get();
-
-        return $response;
-    }
-
-    public static function getTodaysInterviews($all=0,$user_id) {
-
-        $from_date = date("Y-m-d 00:00:00");
-        $to_date = date("Y-m-d 23:59:59");
-
-        $query = Interview::query();
-        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
-        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
-        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
-        $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
-            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname',
-            'candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id',
-            'job_openings.posting_title as posting_title');
-
-        if($all==0){
-            $query = $query->where('interviewer_id',$user_id);
-        }
-
-        $query = $query->where('interview_date','>',"$from_date");
-        $query = $query->where('interview_date','<',"$to_date");
 
         $response = $query->get();
 
@@ -936,7 +950,6 @@ class Interview extends Model
         $interview_type = $interview->interview_type;
 
         $input['cname'] = $cname;
-        $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
         $input['company_url'] = $job_details['company_url'];
         $input['company_desc'] = $user_company_details['description'];
@@ -1037,7 +1050,14 @@ class Interview extends Model
 
 
         $input['job_designation'] = $interview->posting_title;
-        $input['job_location'] = $location;
+
+        if(isset($interview->remote_working) && $interview->remote_working != '') {
+            $input['job_location'] = "Remote Working";
+        }
+        else {
+            $input['job_location'] = $location;
+        }
+
         $input['interview_date'] = $interview_date;
         $input['interview_time'] = $interview_time;
         $input['interview_type'] =$interview->interview_type;
@@ -1118,8 +1138,14 @@ class Interview extends Model
         $interview_details['cemail'] = $cemail;
         $interview_details['job_designation'] = $interview->posting_title;
         $interview_details['client_name'] = $interview->client_name;
-        
-        $interview_details['job_location'] = $city;
+
+        if(isset($interview->remote_working) && $interview->remote_working != '') {
+            $interview_details['job_location'] = "Remote Working";
+        }
+        else {
+            $interview_details['job_location'] = $city;
+        }
+
         $interview_details['interview_date'] = $interview_date;
         $interview_details['interview_time'] = $interview_time;
         $interview_details['interview_type'] =$interview->interview_type;
@@ -1164,7 +1190,7 @@ class Interview extends Model
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date',
-            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location');
+            'client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city as job_city','job_openings.state as job_state','job_openings.country as job_country','interview.type as interview_type','interview.skype_id as skype_id','interview.candidate_location as candidate_location','job_openings.remote_working as remote_working');
         $query = $query->whereIn('interview.id',$ids);
         $query = $query->orderBy('interview.interview_date','asc');
         $response = $query->get();
@@ -1234,7 +1260,6 @@ class Interview extends Model
             $interview[$i]['am_id'] = $value->am_id;
             $interview[$i]['client_name'] = $value->client_name;
             $interview[$i]['posting_title'] = $value->posting_title;
-            $interview[$i]['city'] = $value->job_city;
             $interview[$i]['interview_type'] = $value->interview_type;
             $interview[$i]['interview_location'] = $value->interview_location;
             

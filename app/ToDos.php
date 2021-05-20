@@ -690,7 +690,7 @@ class ToDos extends Model
         return $todo;
     }
 
-    public static function getTypeListById($id,$type){
+    public static function getTypeListById($id,$type) {
 
         $type_list = AssociatedTypeList::getAssociatedListByTodoId($id);
         $jobopen = array();
@@ -706,8 +706,17 @@ class ToDos extends Model
         }
         else if ($type == 2) {
             $interview_res = Interview::getTodosInterviewsByIds(explode(',',$type_list));
-            foreach ($interview_res as $k=>$v){
-                $jobopen[$i] =  $v->client_name." - ".$v->posting_title." - ".$v->city;
+
+            foreach ($interview_res as $k=>$v) {
+
+                if($v->remote_working == '1') {
+                    $city = "Remote Working";
+                }
+                else {
+                    $city = $v->job_city;
+                }
+
+                $jobopen[$i] =  $v->client_name." - ".$v->posting_title." - ".$city;
                 $todo_type .= "<li>".$jobopen[$i]."</li>";
                 $i++;
             }

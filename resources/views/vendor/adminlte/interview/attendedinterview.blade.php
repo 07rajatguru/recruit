@@ -79,7 +79,14 @@
                             @include('adminlte::partials.deleteInterview', ['data' => $attendedinterview, 'name' => 'interview','display_name'=>'Interview'])
                         @endpermission
                     </td>
-                    <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , {{$attendedinterview['city']}}</td>
+
+                    @if(isset($attendedinterview['remote_working']) && $attendedinterview['remote_working'] != '')
+
+                        <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , Remote Working</td>
+                    @else
+                        <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , {{$attendedinterview['city']}}</td>
+                    @endif
+                    
                     <td>{{ $attendedinterview['candidate_fname'] }}</td>
                     <td>{{ $attendedinterview['contact'] }}</td>
                     <td>{{ date('d-m-Y h:i A',strtotime($attendedinterview['interview_date'])) }}</td>
