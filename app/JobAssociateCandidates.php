@@ -58,8 +58,7 @@ class JobAssociateCandidates extends Model
         $query = JobAssociateCandidates::query();
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->select('job_openings.posting_title','client_basicinfo.name as cname',\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),
-                'job_openings.city','job_openings.state','job_openings.country','job_associate_candidates.date as date','job_openings.remote_working as remote_working');
+        $query = $query->select('job_openings.posting_title','client_basicinfo.name as cname',\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.city','job_openings.state','job_openings.country','job_associate_candidates.date as date','job_openings.remote_working as remote_working');
         $query = $query->where('job_associate_candidates.associate_by',$user_id);
 
         if ($date == NULL) {
@@ -508,7 +507,7 @@ class JobAssociateCandidates extends Model
             }
             else {
 
-                $result[$i]['location'] = $location;
+                $result[$i]['location'] = $v->city;
             }
             
             $i++;

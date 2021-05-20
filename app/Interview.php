@@ -962,6 +962,7 @@ class Interview extends Model
         $input['interview_location'] = $job_details['interview_location'];
         $input['contact_person'] = $job_details['contact_person'];
         $input['interview_type'] = $interview_type;
+        $input['city'] = $job_details['city'];
 
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
@@ -1058,19 +1059,34 @@ class Interview extends Model
             $input['job_location'] = $location;
         }
 
+        if(isset($interview->remote_working) && $interview->remote_working != '') {
+            $input['city'] = "Remote Working";
+        }
+        else {
+            $input['city'] = $interview->job_city;
+        }
+
         $input['interview_date'] = $interview_date;
         $input['interview_time'] = $interview_time;
         $input['interview_type'] =$interview->interview_type;
         $input['skype_id'] = $interview->skype_id;
         $input['candidate_location'] = $interview->candidate_location;
         $input['company_name'] = $interview->client_name;
-        $input['city'] = $interview->job_city;
         $input['interview_location'] = $interview->interview_location;
         $input['file_path'] = $file_path;
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
-            $message->from($input['from_address'], $input['from_name']);
-            $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' position in '. $input['city']);
+
+            if($input['city'] == "Remote Working") {
+
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' Position  - '. $input['city']);
+            }
+            else {
+
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' Position in '. $input['city']);
+            }
 
             if (isset($input['file_path']) && $input['file_path'] != '') {
                 $message->attach($input['file_path']);
@@ -1133,7 +1149,6 @@ class Interview extends Model
 
         $interview_details = array();
         $interview_details['cname'] = $cname;
-        $interview_details['ccity'] = '';
         $interview_details['cmobile'] = $cmobile;
         $interview_details['cemail'] = $cemail;
         $interview_details['job_designation'] = $interview->posting_title;

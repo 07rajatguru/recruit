@@ -501,7 +501,7 @@ class InterviewController extends Controller
         $jobopen[''] = 'Select';
 
         foreach ($job_response as $k=>$v) {
-            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
+            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['city'];
         }
 
         $viewVariable = array();
@@ -652,7 +652,7 @@ class InterviewController extends Controller
         $jobopen[0] = 'Select';
 
         foreach ($job_response as $k=>$v) {
-           $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
+           $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['city'];
         }
 
         $dateClass = new Date();
@@ -820,7 +820,7 @@ class InterviewController extends Controller
         ->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id')
         ->leftjoin('users','users.id','=','interview.interviewer_id')
         ->select('interview.*', DB::raw('CONCAT(candidate_basicinfo.full_name) AS candidate_name'),
-        'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city','candidate_basicinfo.mobile as contact')->where('interview.id','=',$id)->first();
+        'job_openings.posting_title as posting_title','users.name as interviewer_name','client_basicinfo.name as company_name','job_openings.city','candidate_basicinfo.mobile as contact','job_openings.remote_working as remote_working')->where('interview.id','=',$id)->first();
 
         $interviewer_id = $interviewDetails->interviewer_id;
 
@@ -837,6 +837,16 @@ class InterviewController extends Controller
         $interview['candidate'] = $interviewDetails->candidate_name;
         $interview['contact'] = $interviewDetails->contact;
         $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.",".$interviewDetails->city;
+
+        if($interviewDetails->remote_working == '1') {
+
+            $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.","."Remote Working";
+        }
+        else {
+
+            $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.",".$interviewDetails->city;
+        }
+
         $interview['interviewer'] = $interviewDetails->interviewer_name;
         $interview['type'] = $interviewDetails->type;
         $interview['interview_date'] = $dateClass->changeYMDHMStoDMYHMS($interviewDetails->interview_date);

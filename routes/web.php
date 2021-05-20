@@ -1484,11 +1484,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:send-consolidated-schedule']
     ]);
 
-    Route::get('recovery-duplicate', [
-        'as' => 'recovery.duplicate',
-        'uses' => 'BillsController@billsMade2'
-    ]);
-
     // Bills Module
     Route::get('forecasting/create', [
         'as' => 'bills.create',
@@ -2331,11 +2326,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('vendor/destroy/{id}',[
         'as' =>'vendorattachments.destroy',
         'uses' =>'VendorController@attachmentsDestroy'
-    ]);
-
-    Route::get('test/email', [
-        'as' => 'user.testemail',
-        'uses' => 'UserController@testEmail',
     ]);
 
     // Admin > Holidays

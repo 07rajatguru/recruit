@@ -32,12 +32,9 @@
                 <tr>
                     <td align="center">
                        <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
-                {{--<a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                <img class="site-logo" width="60px" height="80px" src="http://adlertalent.com/wp-content/uploads/2016/06/logo.png" alt="Adler Talent Solutions Pvt. Ltd." style=" padding-top: 16px;   vertical-align: middle;">
-                <span>Adler Talent Solutions Pvt. Ltd.</span> </a>--}}
-   <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                            <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:70%;height: 120px;padding-top: 16px;   vertical-align: middle;">
-                        </a>
+                            <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
+                                <img class="site-logo"  src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="width:70%;height: 120px;padding-top: 16px;   vertical-align: middle;">
+                            </a>
                        </div>
                     </td>
                 </tr>
@@ -114,7 +111,7 @@
                     <tr>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
-                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['interview_location']}}</td>
+                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cname']}}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
                         <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('h:i A',strtotime($value['interview_time']))  }}</td>

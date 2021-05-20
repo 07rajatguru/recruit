@@ -330,8 +330,6 @@ class BillsController extends Controller
             if($access == 'true') {
                 $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
             }
-            
-            /*$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';*/
 
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
@@ -670,9 +668,6 @@ class BillsController extends Controller
             if($access=='true') {
                 $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
             }
-            //$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
-
-            /*$job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['level_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';*/
 
             $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
 
@@ -818,14 +813,6 @@ class BillsController extends Controller
         return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year','jc_sent','got_con','invoice_gen','pymnt_rcv'));
     }
 
-    public function billsMade2() {
-
-        $user = \Auth::user();
-        $user_id = $user->id;
-
-        $bnm = Bills::getAllBills2(1,1,$user_id,0,0,0,0,'','','');
-    }
-
     public function cancelbm() {
 
         $cancel_bill = 1;
@@ -906,7 +893,6 @@ class BillsController extends Controller
         }
         $title = "Cancel Recovery";
         return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn','jc_sent','got_con','invoice_gen','pymnt_rcv','year_array','year'));
-
     }
 
     public function create() {
@@ -1709,7 +1695,7 @@ class BillsController extends Controller
     public function cancel($id) {
 
         // Get Selected Year
-        if(isset($_GET['year']) && $_GET['year'] != ''){    
+        if(isset($_GET['year']) && $_GET['year'] != '') {    
             $year = $_GET['year'];
         }
         

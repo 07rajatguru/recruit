@@ -599,7 +599,7 @@ class ClientBasicinfo extends Ardent
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code');
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code','job_openings.remote_working as remote_working');
         $response = $query->first();
 
         $client = array();
@@ -620,7 +620,14 @@ class ClientBasicinfo extends Ardent
                 $client['designation'] = $response->posting_title;
             }
 
-            $client['job_location'] = $response->city;
+            if($response->remote_working == '1') {
+
+                $client['job_location'] = "Remote Working";
+            }
+            else {
+
+                $client['job_location'] = $response->city;
+            }
 
             // Get Percentage charged
 

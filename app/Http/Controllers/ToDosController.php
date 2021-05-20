@@ -982,13 +982,14 @@ class ToDosController extends Controller
         $user_id = $user->id;
 
         $selectedType = Input::get('selectedType');
+        $userArr = array();
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
         $users_array = User::getAllUsers($type_array);
-        $users = array();
+        $array_of_users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
 
@@ -998,11 +999,11 @@ class ToDosController extends Controller
 
                 if($user_details->type == '2') {
                     if($user_details->hr_adv_recruitemnt == 'Yes') {
-                        $users[$k1] = $v1;
+                        $array_of_users[$k1] = $v1;
                     }
                 }
                 else {
-                    $users[$k1] = $v1;
+                    $array_of_users[$k1] = $v1;
                 }    
             }
         }
@@ -1030,7 +1031,7 @@ class ToDosController extends Controller
             }
 
             $j=0;
-            foreach ($users as $key => $value) {
+            foreach ($array_of_users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1062,7 +1063,7 @@ class ToDosController extends Controller
             }
 
             $j=0;
-            foreach ($users as $key => $value) {
+            foreach ($array_of_users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1102,7 +1103,7 @@ class ToDosController extends Controller
             }
             
             $j=0;
-            foreach ($users as $key => $value) {
+            foreach ($array_of_users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1127,7 +1128,7 @@ class ToDosController extends Controller
             }
 
             $j=0;
-            foreach ($users as $key => $value) {
+            foreach ($array_of_users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1153,13 +1154,14 @@ class ToDosController extends Controller
 
         $selected_typeList = AssociatedTypeList::getAssociatedListByTodoId($toDoId);
         $selected_userArr = TodoAssignedUsers::getUserListByTodoId($toDoId);
+        $userArr = array();
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
 
         $users_array = User::getAllUsers($type_array);
-        $users = array();
+        $array_of_users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
 
@@ -1169,11 +1171,11 @@ class ToDosController extends Controller
 
                 if($user_details->type == '2') {
                     if($user_details->hr_adv_recruitemnt == 'Yes') {
-                        $users[$k1] = $v1;
+                        $array_of_users[$k1] = $v1;
                     }
                 }
                 else {
-                    $users[$k1] = $v1;
+                    $array_of_users[$k1] = $v1;
                 }    
             }
         }
@@ -1202,7 +1204,7 @@ class ToDosController extends Controller
             }
 
             $j=0;
-            foreach ($users as $key => $value) {
+            foreach ($array_of_users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;
@@ -1235,7 +1237,7 @@ class ToDosController extends Controller
             } 
 
             $j=0;
-            foreach ($users as $key => $value) {
+            foreach ($array_of_users as $key => $value) {
                 $userArr[$j]['user_id'] = $key;
                 $userArr[$j]['user_name'] = $value;
                 $j++;

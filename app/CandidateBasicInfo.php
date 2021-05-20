@@ -470,6 +470,7 @@ class CandidateBasicInfo extends Model
         // job Details
         $job_details = JobOpen::getJobById($job_id);
 
+        $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
         $input['company_url'] = $job_details['company_url'];
         $input['company_desc'] = $user_company_details['description'];

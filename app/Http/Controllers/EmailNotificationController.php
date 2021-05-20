@@ -11,17 +11,16 @@ use Date;
 
 class EmailNotificationController extends Controller
 {
-	public function sendingmail(){
-
+	public function sendingmail() {
 
         $mail_res = \DB::table('emails_notification')
-                    ->select('emails_notification.*', 'emails_notification.id as id')
-                    ->limit(1)
-                    ->get();
+        ->select('emails_notification.*', 'emails_notification.id as id')->limit(1)->get();
 
         $mail = array();
         $i=0;
+
         foreach ($mail_res as $key => $value) {
+
             $mail[$i]['id'] = $value->id;
             $mail[$i]['module'] = $value->module;
             $mail[$i]['to'] = $value->to;
@@ -48,6 +47,7 @@ class EmailNotificationController extends Controller
         $input['mail'] = $mail;
 
         foreach ($mail as $key => $value) {
+
             $input['to'] = $value['to'];
             $input['cc'] = $value['cc'];
             $input['subject'] = $value['subject'];
@@ -56,16 +56,9 @@ class EmailNotificationController extends Controller
             $module_id = $value['module_id'];
             if ($value['module'] == 'Job Open') {
 
-                /*$job = EmailsNotifications::getShowJobs($value['id']);
-
-                $input['job'] = $job;
-
-                \Mail::send('adminlte::emails.emailNotification', $input, function ($job) use($input) {
-                    $job->from($input['from_address'], $input['from_name']);
-                    $job->to($input['to'])->subject($input['subject']);
-                });*/
             }
             else if ($value['module'] == 'Todos') {
+
                 // get todos subject and description
                 $todos = ToDos::find($module_id);
                 $user_name = User::getUserNameByEmail($input['to']);
@@ -87,16 +80,6 @@ class EmailNotificationController extends Controller
             $status = 1;
 
             DB::statement("UPDATE emails_notification SET status=$status where id = $id");
-
-            /*if ($value['module'] == 'Job Open') {
-
-                $job = EmailsNotifications::getShowJobs($value['id']);
-
-                return view('adminlte::emails.emailNotification', compact('mail','job'));
-            }
-            else{
-                return view('adminlte::emails.emailNotification', compact('mail'));
-            }*/
         }
     }
 }

@@ -142,14 +142,12 @@ class Bills extends Model
         $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        //$bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id'/*,'client_heirarchy.name as level_name'*/);
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','job_openings.remote_working as remote_working');
 
-        if($all==0){
-            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+        if($all==0) {
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
 
                 $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
-                //$bills_query = $bills_query->orwhere('uploaded_by',$user_id);
                 $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
             });
         }
@@ -191,7 +189,11 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                //$bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                    $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
+                }
 
                 if($date_search){
                     $dateClass = new Date();
@@ -230,7 +232,15 @@ class Bills extends Model
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
-            $bills[$i]['job_location'] = $value->job_location;
+
+            if($value->remote_working == '1') {
+
+                $bills[$i]['job_location'] = "Remote Working";
+            }
+            else {
+
+                $bills[$i]['job_location'] = $value->job_location;
+            }
 
             $salary = str_replace(",", "", $value->fixed_salary);
             $salary = (int)$salary;
@@ -247,7 +257,16 @@ class Bills extends Model
             $bills[$i]['uploaded_by'] = $value->uploaded_by;
             $bills[$i]['posting_title'] = $value->posting_title;
             $bills[$i]['display_name'] = $value->display_name;
-            $bills[$i]['city'] = $value->city;
+
+             if($value->remote_working == '1') {
+
+                $bills[$i]['city'] = "Remote Working";
+            }
+            else {
+
+                $bills[$i]['city'] = $value->city;
+            }
+
             $bills[$i]['cname'] = $value->full_name;
             $bills[$i]['cancel_bill'] = $value->cancel_bill;
 
@@ -264,14 +283,6 @@ class Bills extends Model
             }
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
-
-           /* $url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
-            if (!file_exists($url) && !is_dir($url)) {
-                $bills[$i]['invoice_url'] = NULL;
-            }
-            else{
-                $bills[$i]['invoice_url'] = $url;
-            }*/
 
             // Generate Excel Invoice URL
 
@@ -314,103 +325,9 @@ class Bills extends Model
             $bills[$i]['lead_efforts'] = $lead_efforts_str;
             $bills[$i]['client_id'] = $value->client_id;
 
-            //$bills[$i]['level_name'] = $value->level_name;
             $i++;
         }
         return $bills;
-    }
-
-    public static function getAllBills2($status=0,$all=0,$user_id=0,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL) {
-
-        $date_class = new Date();
-
-        $cancel_bill = 1;
-
-        $cancel = array($cancel_bill);
-
-        $bills_query = Bills::query();
-        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
-        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
-        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
-        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        //$bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id'/*,'client_heirarchy.name as level_name'*/);
-
-        if($all==0){
-            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
-
-                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
-                $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
-                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
-            });
-        }
-
-        if (isset($limit) && $limit > 0) {
-            $bills_query = $bills_query->limit($limit);
-        }
-        if (isset($offset) && $offset > 0) {
-            $bills_query = $bills_query->offset($offset);
-        }
-        if (isset($order) && $order !='') {
-            $bills_query = $bills_query->orderBy($order,$type);
-        }
-
-        if (isset($search) && $search != '') {
-            $bills_query = $bills_query->where(function($bills_query) use ($search){
-
-                $date_search = false;
-                    $date_array = explode("-",$search);
-                    if(isset($date_array) && sizeof($date_array)>0){
-                        $stamp = strtotime($search);
-                        if (is_numeric($stamp)){
-                            $month = date( 'm', $stamp );
-                            $day   = date( 'd', $stamp );
-                            $year  = date( 'Y', $stamp );
-
-                        if(checkdate($month, $day, $year)){
-                            $date_search = true;
-                        }
-                    }
-                }
-
-                $bills_query = $bills_query->where('users.name','like',"%$search%");
-                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
-                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
-                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
-                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
-                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
-                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
-                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                //$bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
-
-                if($date_search){
-                    $dateClass = new Date();
-                    $search_string = $dateClass->changeDMYtoYMD($search);
-                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
-                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
-                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
-                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
-                }
-            });
-        }
-
-        // Get data by financial year
-        if (isset($current_year) && $current_year != NULL) {
-            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
-        }
-        if (isset($next_year) && $next_year != NULL) {
-            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
-        }
-
-        $bills_query = $bills_query->where('bills.status',$status);
-        $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
-
-        $bills_query = $bills_query->groupBy('bills.id');
-
-        $bills_res = $bills_query->get();
-
-        return $bills_res;
     }
 
     public static function getAllBillsCount($status=0,$all=0,$user_id=0,$search=0,$current_year=NULL,$next_year=NULL) {
@@ -424,16 +341,15 @@ class Bills extends Model
         $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        //$bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
+
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname'/*,'client_heirarchy.name as level_name'*/);
+        ,'candidate_basicinfo.lname','job_openings.remote_working as remote_working');
 
-        if($all==0){
+        if($all==0) {
 
-            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
 
                 $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
-                //$bills_query = $bills_query->orwhere('uploaded_by',$user_id);
                 $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
             });
         }
@@ -465,9 +381,14 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                //$bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
 
-                if($date_search){
+                    $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
                     $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
@@ -512,12 +433,13 @@ class Bills extends Model
         $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        //$bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname'/*,'client_heirarchy.name as level_name'*/);
 
-        if($all==0){
-            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
+        ,'candidate_basicinfo.lname','job_openings.remote_working as remote_working');
+
+        if($all==0) {
+
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
 
                 $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
                 $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
@@ -562,9 +484,14 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                //$bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
 
-                if($date_search){
+                    $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
                     $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
@@ -600,7 +527,15 @@ class Bills extends Model
             $bills[$i]['designation_offered'] = $value->designation_offered;
             $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
             $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
-            $bills[$i]['job_location'] = $value->job_location;
+
+            if($value->remote_working == '1') {
+
+                $bills[$i]['job_location'] = "Remote Working";
+            }
+            else {
+
+                $bills[$i]['job_location'] = $value->job_location;
+            }
 
             $salary = str_replace(",", "", $value->fixed_salary);
             $salary = (int)$salary;
@@ -617,7 +552,16 @@ class Bills extends Model
             $bills[$i]['uploaded_by'] = $value->uploaded_by;
             $bills[$i]['posting_title'] = $value->posting_title;
             $bills[$i]['display_name'] = $value->display_name;
-            $bills[$i]['city'] = $value->city;
+
+            if($value->remote_working == '1') {
+
+                $bills[$i]['city'] = "Remote Working";
+            }
+            else {
+
+                $bills[$i]['city'] = $value->city;
+            }
+
             $bills[$i]['cname'] = $value->full_name;
             $bills[$i]['cancel_bill'] = $value->cancel_bill;
 
@@ -634,14 +578,6 @@ class Bills extends Model
             }
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
-
-            /*$url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.xls';
-            if (!file_exists($url) && !is_dir($url)) {
-                $bills[$i]['invoice_url'] = NULL;
-            }
-            else{
-                $bills[$i]['invoice_url'] = $url;
-            }*/
 
             // Generate Excel Invoice URL
             $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
@@ -681,8 +617,6 @@ class Bills extends Model
                 }
             }
             $bills[$i]['lead_efforts'] = $lead_efforts_str;
-
-            //$bills[$i]['level_name'] = $value->level_name;
             $i++;
         }
 
@@ -700,12 +634,13 @@ class Bills extends Model
         $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        //$bills_query = $bills_query->leftjoin('client_heirarchy','client_heirarchy.id','=','job_openings.level_id');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname'/*,'client_heirarchy.name as level_name'*/);
 
-        if($all==0){
-            $bills_query = $bills_query->where(function($bills_query) use ($user_id){
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
+        ,'candidate_basicinfo.lname','job_openings.remote_working as remote_working');
+
+        if($all==0) {
+
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
 
                 $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
                 $bills_query = $bills_query->orwhere('uploaded_by',$user_id);
@@ -740,9 +675,14 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                //$bills_query = $bills_query->orwhere('client_heirarchy.name','like',"%$search%");
+                
+                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
 
-                if($date_search){
+                    $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+
                     $dateClass = new Date();
                     $search_string = $dateClass->changeDMYtoYMD($search);
                     $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
@@ -785,6 +725,7 @@ class Bills extends Model
         $employeepercentage = array();
     
          if(isset($bills) && $bills != '') {
+
             $billsdetails['id'] = $bills->id;
             $billsdetails['company_name'] = $bills->company_name;
             $billsdetails['candidate_name'] = $bills->candidate_name;
@@ -965,7 +906,6 @@ class Bills extends Model
         $selection_query = $selection_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
         $selection_query = $selection_query->whereNotIn('bills.cancel_bill',$cancel_bill);
 
-        //$selection_query = $selection_query->where(function($selection_query) use ($month,$year){
         if ($select == 0) {   
             $selection_query = $selection_query->where('date_of_joining','>=', $month);
             $selection_query = $selection_query->where('date_of_joining','<=', $year);
@@ -985,34 +925,8 @@ class Bills extends Model
         if ($select == 3) {   
             $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
         }
-        //});
-
         $selection_res = $selection_query->get();
 
-        /*$selection = array();
-        $i = 0;
-        foreach ($selection_res as $key => $value) {
-
-            $fixed_salary = $value->fixed_salary;
-            $percentage_charged = $value->percentage_charged;
-            $billing = ($fixed_salary * $percentage_charged) / 100;
-            $gst = ($billing * 18 ) / 100;
-            $invoice = $billing+$gst;
-            $payment = (($billing * 90) / 100) + (($billing * 18) / 100);
-
-            $selection[$i]['candidate_name'] = $value->fname;
-            $selection[$i]['company_name'] = $value->company_name;
-            $selection[$i]['position'] = $value->position;
-            $selection[$i]['fixed_salary'] = $value->fixed_salary;
-            $selection[$i]['billing'] = $billing;
-            $selection[$i]['gst'] = $gst;
-            $selection[$i]['invoice'] = $invoice;
-            $selection[$i]['payment'] = $payment;
-            $selection[$i]['joining_date'] = $date_class->changeYMDtoDMY($value->date_of_joining);
-            $selection[$i]['contact_person'] = $value->client_name;
-            $selection[$i]['location'] = $value->job_location;
-            $i++;
-        }*/
         return $selection_res;
     }
 
@@ -1112,7 +1026,6 @@ class Bills extends Model
             $fixed_salary = round($salary);
 
             $percentage_charged = (float)$value->percentage_charged;
-            //$percentage_charged = (int)$percentage_charged;
 
             if($percentage_charged==0) {
 
@@ -1169,7 +1082,6 @@ class Bills extends Model
         $selection_query = $selection_query->select('bills.*','candidate_basicinfo.full_name as fname','client_basicinfo.display_name as cname','job_openings.posting_title as position');
         $selection_query = $selection_query->whereNotIn('bills.cancel_bill',$cancel_bill);
 
-        //$selection_query = $selection_query->where(function($selection_query) use ($month,$year){
         if ($select == 0) {   
             $selection_query = $selection_query->where('date_of_joining','>=', $month);
             $selection_query = $selection_query->where('date_of_joining','<=', $year);
@@ -1189,14 +1101,14 @@ class Bills extends Model
         if ($select == 3) {
             $selection_query = $selection_query->where(\DB::raw('year(date_of_joining)'),'=', $year);
         }
-        //});
 
         $selection_res = $selection_query->get();
 
         $selection = array();
         $i = 0;
         
-        if(sizeof($selection_res)>0){
+        if(sizeof($selection_res)>0) {
+
             foreach ($selection_res as $key => $value) {
 
                 $salary = str_replace(",", "", $value->fixed_salary);
@@ -1204,7 +1116,6 @@ class Bills extends Model
                 $fixed_salary = round($salary);
 
                 $percentage_charged = (float)$value->percentage_charged;
-                //$percentage_charged = (int)$percentage_charged;
 
                 if($percentage_charged == 0) {
 
@@ -1284,7 +1195,6 @@ class Bills extends Model
                 $fixed_salary = round($salary);
 
                 $percentage_charged = (float)$value->percentage_charged;
-                //$percentage_charged = (int)$percentage_charged;
 
                 if($percentage_charged<=0) {
 
@@ -1452,31 +1362,6 @@ class Bills extends Model
         return $join_confirmation_mail;
     }
 
-    public static function getCandidateOwnerEmail($bill_id) {
-
-        $query = Bills::query();
-        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
-        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
-        $query = $query->where('bills.id','=',$bill_id);
-        $query = $query->select('users.email as candidateowneremail');
-        $res = $query->first();
-
-        return $res;
-    }
-
-    public static function getClientOwnerEmail($bill_id) {
-
-        $query = Bills::query();
-        $query = $query->join('job_openings','job_openings.id','=','bills.job_id');
-        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->join('users','users.id','=','client_basicinfo.account_manager_id');
-        $query = $query->where('bills.id','=',$bill_id);
-        $query = $query->select('users.email as clientowneremail');
-        $response = $query->first();
-
-        return $response;
-    }
-
     public static function getCandidatesalaryByJobidCandidateid($job_id,$candidate_id) {
 
         $salary_data = Bills::query();
@@ -1511,7 +1396,9 @@ class Bills extends Model
 
         $person_data = array();
         $j = 0;
+
         if (isset($personwise_res) && sizeof($personwise_res)>0) {
+
             $total_salary_offered = 0;
             $total_billing = 0;
             $total_monthwise_billing = 0;
@@ -1634,6 +1521,7 @@ class Bills extends Model
 
         $client_data = array();
         $i = 0;
+        
         foreach ($clientwise_res as $key => $value) {
 
             $salary = str_replace(",", "", $value->fixed_salary);
