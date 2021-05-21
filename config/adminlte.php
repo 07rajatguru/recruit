@@ -120,8 +120,32 @@ return [
                ],
              ]
         ],
-
-
+        [
+               'text'        => 'Contactsphere',
+               'icon'        => 'user-plus',
+               'submenu' => [
+                   [
+                       'text' => 'Add Contact',
+                       'url'  => 'contactsphere/create',
+                       'icon' => 'plus',
+                   ],
+                   [
+                       'text' => 'List Contacts',
+                       'url'  => 'contactsphere',
+                       'icon' => 'list',
+                   ],
+                   [
+                       'text' => 'Hold Contacts',
+                       'url'  => 'contactsphere/hold',
+                       'icon' => 'list',
+                   ],
+                   [
+                       'text' => 'Forbid Contacts',
+                       'url'  => 'contactsphere/forbid',
+                       'icon' => 'list',
+                   ]
+               ],
+           ],
         [
                'text'        => 'Lead',
                'icon'        => 'users',
@@ -143,7 +167,6 @@ return [
                    ]
                ],
            ],
-
             [
                'text'        => 'Clients',
                'icon'        => 'users',

@@ -77,6 +77,11 @@
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
                                                         <ul class="menu" style=" width: 100%; height;150px">
                                                             <li>
+                                                                <a href="{{getenv('APP_URL').'/contactsphere/add'}}">
+                                                                    Add Contact
+                                                                </a>
+                                                            </li>
+                                                            <li>
                                                                 <a href="{{getenv('APP_URL').'/lead/create'}}">
                                                                     Add Lead
                                                                 </a>

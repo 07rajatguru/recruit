@@ -214,6 +214,114 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@testMail'
     ]);
 
+    //Contactsphere Routes
+
+    Route::post('contactsphere/checkContactsphereId',[
+        'as' => 'contactsphere.checkContactsphereId',
+        'uses' => 'ContactsphereController@checkContactsphereId'
+    ]);
+
+    Route::post('contactsphere/emailnotification', [
+        'as' => 'contactsphere.emailnotification',
+        'uses' => 'ContactsphereController@postEmails'
+    ]);
+
+    Route::get('contactsphere/add',[
+        'as'=>'contactsphere.add',
+        'uses'=>'ContactsphereController@add',
+        'middleware' => ['permission:contactsphere-add']
+    ]);
+
+    Route::get('contactsphere',[
+        'as'=>'contactsphere.index',
+        'uses'=>'ContactsphereController@index',
+        'middleware' => ['permission:display-contactsphere|display-user-wise-contactsphere']
+    ]);
+
+    Route::get('contactsphere/all',[
+        'as' => 'contactsphere.all',
+        'uses' => 'ContactsphereController@getAllContactsphereDetails',
+        'middleware' => ['permission:display-contactsphere|display-user-wise-contactsphere']
+    ]);
+
+    Route::get('contactsphere/hold', [
+        'as' => 'contactsphere.hold',
+        'uses' => 'ContactsphereController@holdContactsphere',
+        'middleware' => ['permission:display-hold-contactsphere'],
+    ]);
+
+    Route::get('contactsphere/hold/all', [
+        'as' => 'contactsphere.holdall',
+        'uses' => 'ContactsphereController@getHoldContactsphereDetails',
+        'middleware' => ['permission:display-hold-contactsphere'],
+    ]);
+
+    Route::get('contactsphere/forbid', [
+        'as' => 'contactsphere.forbid',
+        'uses' => 'ContactsphereController@forbidContactsphere',
+        'middleware' => ['permission:display-forbid-contactsphere'],
+    ]);
+
+    Route::get('contactsphere/forbid/all', [
+        'as' => 'contactsphere.forbidall',
+        'uses' => 'ContactsphereController@getForbidContactsphereDetails',
+        'middleware' => ['permission:display-forbid-contactsphere'],
+    ]);
+    
+    Route::post('contactsphere/store', [
+        'as' => 'contactsphere.store',
+        'uses' => 'ContactsphereController@store',
+        'middleware' => ['permission:contactsphere-add'],
+    ]);
+
+    Route::get('contactsphere/{id}/show', [
+        'as' => 'contactsphere.show',
+        'uses' => 'ContactsphereController@show',
+        'middleware' => ['permission:display-contactsphere|display-user-wise-contactsphere']
+    ]);
+     
+    Route::get('contactsphere/{id}/edit', [
+        'as' => 'contactsphere.edit',
+        'uses' => 'ContactsphereController@edit',
+        'middleware' => ['permission:contactsphere-edit'],
+    ]);
+
+    Route::put('contactsphere/{id}', [
+        'as' => 'contactsphere.update',
+        'uses' => 'ContactsphereController@update',
+        'middleware' => ['permission:contactsphere-edit'],
+    ]);
+
+    Route::delete('contactsphere/{id}', [
+        'as' => 'contactsphere.destroy',
+        'uses' => 'ContactsphereController@destroy',
+        'middleware' => ['permission:contactsphere-delete'],
+    ]);
+
+    Route::get('contactsphere/{id}/clone', [
+        'as' => 'contactsphere.clone',
+        'uses' => 'ContactsphereController@contactsphereClone',
+        'middleware' => ['permission:contactsphere-to-lead'],
+    ]);
+    
+    Route::post('contactsphere/{id}', [
+        'as' => 'contactsphere.clonestore',
+        'uses' => 'ContactsphereController@cloneStore',
+        'middleware' => ['permission:contactsphere-to-lead'],
+    ]); 
+
+    Route::get('contactsphere/{id}', [
+        'as' => 'contactsphere.hold',
+        'uses' => 'ContactsphereController@hold',
+        'middleware' => ['permission:hold-contactsphere'],
+    ]);
+
+    Route::get('contactsphere/{id}', [
+        'as' => 'contactsphere.forbid',
+        'uses' => 'ContactsphereController@forbid',
+        'middleware' => ['permission:forbid-contactsphere'],
+    ]);
+
     //lead management route
 
     Route::post('lead/checkLeadId',[
