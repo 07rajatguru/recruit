@@ -664,6 +664,8 @@ class User extends Authenticatable
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
+        $saloni_user_id = getenv('SALONIUSERID');
+
         $departments = explode(",", $department_ids_string);
 
         $query = User::query();
@@ -672,6 +674,7 @@ class User extends Authenticatable
         $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('type',$client_type);
         $query = $query->whereIn('type',$departments);
+        $query = $query->where('id','!=',$saloni_user_id);
         $query = $query->select('users.id','users.name');
         $query = $query->orderBy('users.name');
         $response = $query->get();
