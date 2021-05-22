@@ -134,9 +134,6 @@ class CandidateController extends Controller
             else if ($order == 5) {
                 $order_column_name = "candidate_basicinfo.mobile";
             }
-            else if ($order == 6) {
-                $order_column_name = "job_openings.posting_title";
-            }
             else if ($order == 7) {
                 $order_column_name = "candidate_basicinfo.created_at";
             }

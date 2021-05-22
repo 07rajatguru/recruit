@@ -142,7 +142,7 @@
                 "bProcessing": true,
                 "serverSide": true,
                 "order": [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]},],
+                "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [6]}],
                 "ajax":{
 
                     url :"/candidate/all", // json datasource
@@ -192,7 +192,7 @@
                 "bProcessing": true,
                 "serverSide": true,
                 "order": [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]},],
+                "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [6]}],
                "ajax":{
                     url :"/candidate/all", // json datasource
                     "data" : {
@@ -224,7 +224,6 @@
                 "responsive": true,
                 "autoWidth": false,
                 "pagingType": "full_numbers",
-                "stateSave" : true,
             });
         }
 
