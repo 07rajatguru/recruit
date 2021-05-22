@@ -135,6 +135,9 @@ class CandidateController extends Controller
                 $order_column_name = "candidate_basicinfo.mobile";
             }
             else if ($order == 6) {
+                $order_column_name = "job_openings.posting_title";
+            }
+            else if ($order == 7) {
                 $order_column_name = "candidate_basicinfo.created_at";
             }
         }
@@ -230,23 +233,23 @@ class CandidateController extends Controller
             if(isset($job_string_array) && sizeof($job_string_array) > 0) {
 
                 $incr = 1;
-                $aa = '';
+                $job_list = '';
 
                 foreach ($job_string_array as $kk => $vv) {
 
                     if($vv != '') {
-                        if($aa == '') {
-                            $aa = $incr . " . " . $vv . " " . "<br/>";
+                        if($job_list == '') {
+                            $job_list = $incr . " . " . $vv . " " . "<br/>";
                         }
                         else {
-                            $aa .= $incr . ". " . $vv . " " . "<br/>";
+                            $job_list .= $incr . ". " . $vv . " " . "<br/>";
                         }
                         $incr++;
                     }
                 }
             }
 
-            $job_string = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$aa.'</a>';
+            $job_string = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$job_list.'</a>';
 
             $data = array(++$j,$action,$value['full_name'],$value['owner'],$value['email'],$value['mobile'],$job_string,$value['created_at']);
             $candidate_details[$i] = $data;
