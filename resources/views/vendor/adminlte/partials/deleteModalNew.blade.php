@@ -26,6 +26,10 @@
             @if(isset($Lead_Type) && $Lead_Type != '')
                 <input type="hidden" name="Lead_Type" id="Lead_Type" value="{{ $Lead_Type }}"/>
             @endif
+
+            @if(isset($Contact_Type) && $Contact_Type != '')
+                <input type="hidden" name="Contact_Type" id="Contact_Type" value="{{ $Contact_Type }}"/>
+            @endif
             
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>

@@ -126,11 +126,11 @@ return [
                'submenu' => [
                    [
                        'text' => 'Add Contact',
-                       'url'  => 'contactsphere/create',
+                       'url'  => 'contactsphere/add',
                        'icon' => 'plus',
                    ],
                    [
-                       'text' => 'List Contacts',
+                       'text' => 'View Contacts',
                        'url'  => 'contactsphere',
                        'icon' => 'list',
                    ],

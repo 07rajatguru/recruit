@@ -12,11 +12,11 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Total Contacts({{ $count or '0' }})</h2>
-                <h4><span>Contact converted to lead - {{ $convert_lead_count }}</span></h4>
+                <h4><span>Contact converted to Lead - {{ $convert_lead_count }}</span></h4>
             </div>
 
             <div class="pull-right">
-                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal" onclick="leads_emails_notification()">Send Mail</button>
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal" onclick="contacts_emails_notification()">Send Mail</button>
                 <a class="btn btn-success" href="{{ route('contactsphere.add') }}">Add New Contact</a>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     <th>Name</th>
                     <th>Designation</th>
                     <th>Company</th>
-                    <th>Contact <br/> Number</th>
+                    <th>Contact Number</th>
                     <th>City</th>
                     <th>Referred By</th>
                     <th>Official Email ID</th>
@@ -110,7 +110,7 @@
                 "order" : [0,'desc'],
                 "columnDefs": [{orderable: false, targets: [1]},{orderable: false, targets: [2]}],
                 "ajax":{
-                    url :"lead/all",
+                    url :"contactsphere/all",
                     type: "get",
                     error: function() {
                     }
@@ -146,10 +146,10 @@
                 }
             });
 
-            $('.other_leads').change(function() {
+            $('.other_contacts').change(function() {
 
                 if ($(this).prop('checked')) {
-                    if ($('.other_leads:checked').length == $('.other_leads').length) {
+                    if ($('.other_contacts:checked').length == $('.other_contacts').length) {
                         $("#allcb").prop('checked', true);
                     }
                 }
@@ -159,25 +159,25 @@
             });
         });
 
-        function leads_emails_notification() {
+        function contacts_emails_notification() {
 
             var token = $('input[name="csrf_token"]').val();
             var app_url = "{!! env('APP_URL'); !!}";
-            var leads_ids = new Array();
+            var contacts_ids = new Array();
 
-            var table = $("#lead_table").dataTable();
+            var table = $("#contactsphere_table").dataTable();
             
-            table.$("input:checkbox[name=lead]:checked").each(function(){
-                leads_ids.push($(this).val());
+            table.$("input:checkbox[name=contact]:checked").each(function() {
+                contacts_ids.push($(this).val());
             });
 
-            $("#email_contacts_ids").val(leads_ids);
+            $("#email_contacts_ids").val(contacts_ids);
 
             $.ajax({
 
                 type : 'POST',
-                url : app_url+'/lead/checkLeadId',
-                data : {leads_ids : leads_ids, '_token':token},
+                url : app_url+'/contactsphere/checkContactsphereId',
+                data : {contacts_ids : contacts_ids, '_token':token},
                 dataType : 'json',
                 success: function(msg) {
 
