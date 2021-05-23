@@ -508,7 +508,7 @@ return [
                 ],
                 [
                     'text' => 'Roles',
-                    'url'  => 'roles',
+                    'url'  => 'user-role',
                     'icon' => 'circle-o',
                 ],
                 [
