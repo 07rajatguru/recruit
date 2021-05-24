@@ -16,7 +16,7 @@ class NewRoleController extends Controller
 {
     public function index() {
 
-    	$roles = Role::orderBy('id','ASC')
+    	$roles = Role::orderBy('position','ASC')
         ->leftjoin('department','department.id','=','roles.department')
         ->select('roles.*','department.name as department')->get();
 
@@ -53,6 +53,7 @@ class NewRoleController extends Controller
         }
 
         $role = new Role();
+        $role->position = $request->input('position');
         $role->module_ids = $module_ids;
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
@@ -129,6 +130,7 @@ class NewRoleController extends Controller
         }
 
         $role = Role::find($id);
+        $role->position = $request->input('position');
         $role->module_ids = $module_ids;
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');

@@ -62,9 +62,19 @@
                         {!! Form::select('department', $departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
                     </div>
 
+                    <div class="form-group {{ $errors->has('position') ? 'has-error' : '' }}">
+                        <strong>Position: <span class = "required_fields">*</span></strong>
+                        {!! Form::text('position', null, array('placeholder' => 'Position','class' => 'form-control','tabindex' => '4')) !!}
+                        @if ($errors->has('position'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('position') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
                     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                         <strong>Description: <span class = "required_fields">*</span></strong>
-                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '4')) !!}
+                        {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '5')) !!}
                         @if ($errors->has('description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('description') }}</strong>
@@ -128,6 +138,9 @@
                     "display_name": {
                         required: true
                     },
+                    "position": {
+                        required: true
+                    },
                     "description": {
                         required: true
                     },
@@ -141,6 +154,9 @@
                     },
                     "display_name": {
                         required: "Display Name is Required."
+                    },
+                    "position": {
+                        required: "Please Add Position of Role."
                     },
                     "description": {
                         required: "Description is Required."
