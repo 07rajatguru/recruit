@@ -140,11 +140,11 @@
                             </div>
 
                             <div class="form-group hr_adv" style="display: none;">
-                                <strong> HR Advisory With or Without Recruitemnt : </strong> &nbsp;&nbsp;
+                                <strong> HR Advisory With or Without Recruitment : </strong> &nbsp;&nbsp;
                                 {!! Form::radio('hr_adv_recruitemnt','Yes', false) !!}
-                                {!! Form::label('With Recruitemnt') !!} &nbsp;&nbsp;
+                                {!! Form::label('With Recruitment') !!} &nbsp;&nbsp;
                                 {!! Form::radio('hr_adv_recruitemnt','No',true) !!}
-                                {!! Form::label('Without Recruitemnt') !!}
+                                {!! Form::label('Without Recruitment') !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
