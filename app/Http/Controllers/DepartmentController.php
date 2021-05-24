@@ -11,7 +11,7 @@ class DepartmentController extends Controller
 {
     public function index(Request $request) {
 
-        $departments = Department::orderBy('id','DESC')->get();
+        $departments = Department::orderBy('id','ASC')->get();
 
         $count = sizeof($departments);
         return view('adminlte::departments.index',compact('departments','count'));
