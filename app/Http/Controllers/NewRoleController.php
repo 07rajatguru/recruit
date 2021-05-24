@@ -31,7 +31,7 @@ class NewRoleController extends Controller
         $modules = Module::getModules();
         $module_ids_array = array();
         
-        $department_res = Department::orderBy('name','DESC')->get();
+        $department_res = Department::orderBy('id','ASC')->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {
@@ -108,7 +108,7 @@ class NewRoleController extends Controller
 
         $module_ids_array = array_unique($module_ids_array);
 
-        $department_res = Department::orderBy('name','DESC')->get();
+        $department_res = Department::orderBy('id','ASC')->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {
