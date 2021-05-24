@@ -351,16 +351,16 @@
                             $("#roles").empty();
 
                             $("#roles").append('<option value=""> Select Role </option>');
-                            
-                            $.each(data.roles_res,function(key, value) {
 
-                                if (data.pre_role_id == key) {
+                            $.each(data.roles_res,function(key, value) { 
 
-                                    $('select[id="roles"]').append('<option selected="selected" value="'+ key +'">' + value + '</option>');        
+                                if (data.pre_role_id == value.id) {
+
+                                    $('select[id="roles"]').append('<option selected="selected" value="'+ value.id +'">' + value.name + '</option>');        
                                 }
                                 else {
 
-                                    $('select[id="roles"]').append('<option value="'+ key +'">' + value + '</option>');
+                                    $('select[id="roles"]').append('<option value="'+ value.id +'">' + value.name + '</option>');
                                 }
                             }); 
                             $("#roles").select2();

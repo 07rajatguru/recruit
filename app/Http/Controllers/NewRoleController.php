@@ -299,8 +299,20 @@ class NewRoleController extends Controller
         $roles_res = Role::getRolesByDepartmentId($department_id);
 
         $data['pre_role_id'] = $pre_role_id;
-        $data['roles_res'] = $roles_res;
 
+        $data['roles_res'] = array();
+        $i=0;
+
+        if(isset($roles_res) && sizeof($roles_res) > 0) {
+
+            foreach ($roles_res as $key => $value) {
+                
+                $data['roles_res'][$i]['id'] = $key;
+                $data['roles_res'][$i]['name'] = $value;
+                $i++;
+            }
+        }
+        
         return json_encode($data);
     }
 }

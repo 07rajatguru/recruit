@@ -355,13 +355,13 @@
                             
                             $.each(data.roles_res,function(key, value) { 
 
-                                if (data.pre_department_id == key) {
+                                if (data.pre_role_id == value.id) {
 
-                                    $('select[id="roles"]').append('<option selected="selected" value="'+ key +'">' + value + '</option>');        
+                                    $('select[id="roles"]').append('<option selected="selected" value="'+ value.id +'">' + value.name + '</option>');        
                                 }
                                 else {
 
-                                    $('select[id="roles"]').append('<option value="'+ key +'">' + value + '</option>');
+                                    $('select[id="roles"]').append('<option value="'+ value.id +'">' + value.name + '</option>');
                                 }
                             }); 
                             $("#roles").select2();
