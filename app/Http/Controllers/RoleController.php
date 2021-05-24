@@ -173,31 +173,4 @@ class RoleController extends Controller
         DB::table("roles")->where('id',$id)->delete();
         return redirect()->route('roles.index')->with('success','Role Deleted Successfully.');
     }
-
-    public function getRoles() {
-
-        $department_id = $_GET['department_id'];
-        $user_id = $_GET['user_id'];
-
-        if (isset($user_id) && $user_id > 0) {
-            $user = User::find($user_id);
-
-            $user = \DB::table('users')
-            ->leftjoin('role_user','role_user.user_id','=','users.id')
-            ->select('role_user.role_id as role_id')
-            ->where('users.id','=',$user_id)->first();
-
-            $pre_role_id = $user->role_id;
-        }
-        else {
-            $pre_role_id = 0;
-        }
-
-        $roles_res = Role::getRolesByDepartmentId($department_id);
-
-        $data['pre_role_id'] = $pre_role_id;
-        $data['roles_res'] = $roles_res;
-
-        return json_encode($data);
-    }
 }

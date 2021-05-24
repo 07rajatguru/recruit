@@ -66,7 +66,7 @@ class UserController extends Controller
 
         // Replace Type with Department
 
-        $department_res = Department::orderBy('name','DESC')->get();
+        $department_res = Department::orderBy('id','ASC')->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {
@@ -323,7 +323,7 @@ class UserController extends Controller
       
         // Replace Type with Department
 
-        $department_res = Department::orderBy('name','DESC')->get();
+        $department_res = Department::orderBy('id','ASC')->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {

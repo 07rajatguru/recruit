@@ -590,11 +590,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:role-add']
     ]);
 
-    Route::get('departments/getroles',[
-        'as' =>'departments.getroles',
-        'uses' => 'RoleController@getRoles',
-    ]);
-
     Route::post('roles/create', [
         'as' => 'roles.store',
         'uses' => 'RoleController@store',
@@ -2904,6 +2899,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'userrole.create',
         'uses' => 'NewRoleController@create',
         'middleware' => ['permission:role-add']
+    ]);
+
+    Route::get('departments/getroles',[
+        'as' =>'departments.getroles',
+        'uses' => 'NewRoleController@getRoles',
     ]);
 
     Route::post('user-role/create', [
