@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EmailTemplate;
 use Illuminate\Support\Facades\Input;
+use App\User;
+use App\Events\NotificationMail;
 
 class EmailTemplateController extends Controller
 {
@@ -53,6 +55,9 @@ class EmailTemplateController extends Controller
 
     public function store(Request $request) {
 
+        $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
+
     	$name = $request->get('name');
     	$subject = $request->get('subject');
     	$email_body = $request->get('email_body');
@@ -65,16 +70,19 @@ class EmailTemplateController extends Controller
 
         // Send email notification
 
+        $email_template_id = $email_template->id;
+
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $all_am_users = User::getAllUsersEmails(NULL,NULL,'Yes');
-        $module = "Client";
+        $to_users_array = User::getAllUsersEmails(NULL,NULL,'Yes');
+
+        $module = "Email Template";
         $sender_name = $user_id;
-        $to = $user_email;
-        $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
-        $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
-        $module_id = $client_id;
+        $to = implode(",",$to_users_array);
+        $subject = "New Email Template - " . $name;
+        $message = "<tr><td>" . $user_name . " added new Email Template</td></tr>";
+        $module_id = $email_template_id;
         $cc = $superadminemail;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

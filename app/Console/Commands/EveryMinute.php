@@ -23,6 +23,7 @@ use App\ClientTimeline;
 use App\UsersEmailPwd;
 use App\Date;
 use App\CandidateUploadedResume;
+use App\EmailTemplate;
 
 class EveryMinute extends Command
 {
@@ -1213,6 +1214,30 @@ class EveryMinute extends Command
                     
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to_array'])->subject($input['subject']);
+                    });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
+            else if ($value['module'] == 'Email Template') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                // Get users for popup of add information
+                $email_template_details = EmailTemplate::getEmailTemplateDetailsById($value['module_id']);
+
+                if(isset($email_template_details) && sizeof($email_template_details) > 0) {
+
+                    $input['email_template_details'] = $email_template_details;
+                    $input['to_array'] = $to_array;
+                    $input['cc_array'] = $cc_array;
+
+                     \Mail::send('adminlte::emails.newemailtemplatemail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
