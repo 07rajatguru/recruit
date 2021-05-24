@@ -160,7 +160,8 @@ class User extends Authenticatable
         $status_array = array($status);
 
         $superadmin = getenv('SUPERADMINUSERID');
-        $super_array = array($superadmin);
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $user_query = User::query();
 
