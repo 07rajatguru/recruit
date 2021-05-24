@@ -44,6 +44,15 @@
                 </table>
             </td>
         </tr>
+        <tr>
+            <td width="600">
+                <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                    <tr style="height: 45px; background-color: #dddddd;">
+                        <td style="text-align: center; font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent <?php echo date('Y'); ?>. All rights reserved</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
     </table>
 </body>
 </html>
