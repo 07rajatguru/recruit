@@ -75,7 +75,7 @@ class Role extends EntrustRole
         $query = Role::query();
         $query = $query->where('roles.department','=',$department_id);
         $query = $query->select('roles.*');
-        $query = $query->orderBy('roles.position','asc');
+        $query = $query->orderBy('roles.position','ASC');
 
         $response = $query->get();
 
