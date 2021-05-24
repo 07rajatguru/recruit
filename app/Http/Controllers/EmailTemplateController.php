@@ -63,6 +63,22 @@ class EmailTemplateController extends Controller
     	$email_template->email_body = $email_body;
     	$email_template->save();
 
+        // Send email notification
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $all_am_users = User::getAllUsersEmails(NULL,NULL,'Yes');
+        $module = "Client";
+        $sender_name = $user_id;
+        $to = $user_email;
+        $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
+        $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
+        $module_id = $client_id;
+        $cc = $superadminemail;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Added Successfully.');
     }
 

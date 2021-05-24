@@ -154,7 +154,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersEmails($type=NULL,$report=NULL) {
+    public static function getAllUsersEmails($type=NULL,$report=NULL,$am=NULL) {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -164,13 +164,18 @@ class User extends Authenticatable
 
         $user_query = User::query();
 
-        if($type!=NULL){
+        if($type!=NULL) {
             $user_query = $user_query->where('type','=',$type);
         }
 
-        if($report!=NULL){
+        if($report!=NULL) {
             $user_query = $user_query->where('daily_report','=',$report);
         }
+
+        if($am!=NULL) {
+            $user_query = $user_query->where('account_manager','=',$am);
+        }
+
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->orderBy('name');
