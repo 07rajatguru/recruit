@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-2 col-sm-4">
-                <a href="{{ route('lead.list','recruitment') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#FABF8F;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Recruitment Leads">Recruitment ({{ $recruitment }})</div></a>
+                <a href="{{ route('lead.list','recruitment') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#FFCC00;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Recruitment Leads">Recruitment ({{ $recruitment }})</div></a>
             </div>
 
             <div class="col-md-2 col-sm-4">
