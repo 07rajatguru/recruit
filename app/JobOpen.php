@@ -1869,6 +1869,9 @@ class JobOpen extends Model
                 $jobs_list[$i]['city'] = $value->city;
             }
 
+            $jobs_list[$i]['lacs_from'] = $value->lacs_from;
+            $jobs_list[$i]['lacs_to'] = $value->lacs_to;
+
             $i++;
         }
         return $jobs_list;

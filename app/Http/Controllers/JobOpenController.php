@@ -260,9 +260,13 @@ class JobOpenController extends Controller
         $priority_7 = 0;
         $priority_8 = 0;
 
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         foreach ($job_priority_data as $job_priority) {
 
-           if($job_priority['priority'] == 0) {
+            if($job_priority['priority'] == 0) {
                 $priority_0++;
             }
             else if($job_priority['priority'] == 1) {
@@ -286,6 +290,35 @@ class JobOpenController extends Controller
             else if($job_priority['priority'] == 8) {
                 $priority_8++;
             }
+
+            // For salary wise count
+
+            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
+
+                $under_ten_lacs++;
+            }
+            else {
+
+                $under_ten_lacs = '0';
+            }
+
+            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
+
+                $between_ten_to_twenty_lacs++;
+            }
+            else {
+
+                $between_ten_to_twenty_lacs = '0';
+            }
+
+            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 4  && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
+
+                $above_twenty_lacs++;
+            }
+            else {
+
+                $above_twenty_lacs = '0';
+            }
         }
 
         // Get All Client Heirarchy
@@ -307,6 +340,12 @@ class JobOpenController extends Controller
         $viewVariable['priority_6'] = $priority_6;
         $viewVariable['priority_7'] = $priority_7;
         $viewVariable['priority_8'] = $priority_8;
+
+        // For salary wise count
+
+        $viewVariable['under_ten_lacs'] = $under_ten_lacs;
+        $viewVariable['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
 
         return view('adminlte::jobopen.index', $viewVariable);
     }
@@ -3135,17 +3174,52 @@ class JobOpenController extends Controller
 
         $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         foreach ($job_priority_data as $job_priority) {
 
-           if($job_priority['priority'] == 4) {
+            if($job_priority['priority'] == 4) {
                 $priority_4++;
-           }
-           else if($job_priority['priority'] == 9) {
+            }
+            else if($job_priority['priority'] == 9) {
                 $priority_9++;
-           }
-           else if($job_priority['priority'] == 10) {
+            }
+            else if($job_priority['priority'] == 10) {
                 $priority_10++;
-           }
+            }
+
+            // For salary wise count
+
+            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
+
+                $under_ten_lacs++;
+            }
+            else {
+
+                $under_ten_lacs = '0';
+            }
+
+            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
+
+                $between_ten_to_twenty_lacs++;
+            }
+            else {
+
+                $between_ten_to_twenty_lacs = '0';
+            }
+
+            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
+
+                $above_twenty_lacs++;
+            }
+            else {
+
+                $above_twenty_lacs = '0';
+            }
         }
 
         $close_priority = array();
@@ -3160,6 +3234,12 @@ class JobOpenController extends Controller
         $viewVariable['close_priority'] = $close_priority;
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
+
+         // For salary wise count
+
+        $viewVariable['under_ten_lacs'] = $under_ten_lacs;
+        $viewVariable['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
 
         return view('adminlte::jobopen.close',$viewVariable);   
     }
