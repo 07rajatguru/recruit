@@ -86,7 +86,7 @@
                             {!! Form::select('status',$status, $lead_status, array('id'=>'status','class' => 'form-control','tabindex' => '9')) !!}
                         </div>
 
-                        <div class="form-group}">
+                        <div class="form-group">
                             <strong>Remarks : </strong>
                             {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control','tabindex' => '11','rows' => '8')) !!}
                         </div>

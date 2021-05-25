@@ -40,6 +40,7 @@ class ContactsphereController extends Controller
         $order_column_name = '';
 
         if (isset($order) && $order >= 0) {
+
             if ($order == 0) {
                 $order_column_name = "contactsphere.id";
             }
@@ -59,13 +60,13 @@ class ContactsphereController extends Controller
                 $order_column_name = "contactsphere.city";
             }
             else if ($order == 8) {
-                $order_column_name = "contactsphere.official_email_id";
+                $order_column_name = "users.name";
             }
             else if ($order == 9) {
-                $order_column_name = "contactsphere.personal_id";
+                $order_column_name = "contactsphere.official_email_id";
             }
             else if ($order == 10) {
-                $order_column_name = "users.name";
+                $order_column_name = "contactsphere.personal_id";
             }
         }
         return $order_column_name;
@@ -158,6 +159,7 @@ class ContactsphereController extends Controller
                 $data = array(++$j,$checkbox,$action,$name,$designation,$company_name,$value['contact_number'],$value['city'],$value['referred_by'],$value['official_email_id'],$value['personal_id'],$value['convert_lead']);
             }
             else {
+
                 $data = array(++$j,$checkbox,$action,$name,$designation,$company_name,$value['contact_number'],$value['city'],$value['referred_by'],$value['official_email_id'],$value['personal_id'],$value['convert_lead']);
             }
             $contacts[$i] = $data;
@@ -450,88 +452,73 @@ class ContactsphereController extends Controller
         $user = \Auth::user();
         $input = $request->all();
 
-        $company_name = trim($input['name']);
-        $co_category = $input['co_category'];
-        $coordinator_name = trim($input['contact_point']);
-        $email=$input['mail'];
-        $s_email=$input['s_email'];
-        $mobile=$input['mobile'];
-        $other_number=$input['other_number'];
-        $display_name=trim($input['display_name']);
-        $leads=$input['leads'];
-        $remark=$input['remarks'];
-        $city=$input['city'];
-        $state=$input['state'];
-        $country=$input['country'];
-        $website=$input['website'];
-        $source=$input['source'];
-        $designation=$input['designation'];
-        $referredby_id=$input['referredby_id'];
-        $lead_status = $input['status'];
+        $name = trim($input['name']);
+        $designation = trim($input['designation']);
+        $company = trim($input['company']);
+        $contact_number = $input['contact_number'];
+        $official_email_id = $input['official_email_id'];
+        $personal_id = $input['personal_id'];
+        $self_remarks = $input['self_remarks'];
+        $source = $input['source'];
+        $linkedin_profile_link = $input['linkedin_profile_link'];
+        $city = $input['city'];
+        $state = $input['state'];
+        $country = $input['country'];
+        $referred_by = $input['referred_by'];
 
-        $lead=new Lead();
-        $lead->name=$company_name;
-        $lead->coordinator_prefix=$co_category;
-        $lead->coordinator_name=$coordinator_name;
-        $lead->mail=$email;
-        $lead->s_email=$s_email;
-        $lead->mobile=$mobile;
-        $lead->other_number=$other_number;
-        $lead->display_name=$display_name;
-        $lead->service=$leads;
-        $lead->remarks=$remark;
-        $lead->city=$city;
-        $lead->state=$state;
-        $lead->country=$country;
-        $lead->convert_client = 0;
-        $lead->account_manager_id = $user->id;
-        $lead->website=$website;
-        $lead->source=$source;
-        $lead->designation=$designation;
-        $lead->referredby=$referredby_id;
-        $lead->lead_status=$lead_status;
-        
-        $validator = \Validator::make(Input::all(),$lead::$rules);
-
-        if($validator->fails()){
-            return redirect('lead/create')->withInput(Input::all())->withErrors($validator->errors());
-        }
-
-        $lead->save();
+        $contactsphere = new Contactsphere();
+        $contactsphere->name = $name;
+        $contactsphere->designation = $designation;
+        $contactsphere->company = $company;
+        $contactsphere->contact_number = $contact_number;
+        $contactsphere->official_email_id = $official_email_id;
+        $contactsphere->personal_id = $personal_id;
+        $contactsphere->self_remarks = $self_remarks;
+        $contactsphere->source = $source;
+        $contactsphere->linkedin_profile_link = $linkedin_profile_link;
+        $contactsphere->city = $city;
+        $contactsphere->state = $state;
+        $contactsphere->country = $country;
+        $contactsphere->convert_lead = 0;
+        $contactsphere->hold = 0;
+        $contactsphere->forbid = 0;
+        $contactsphere->referred_by = $referred_by;
+        $contactsphere->save();
 
         // For Lead Emails [data entry in email_notification table]
-        $lead_id = $lead->id;
+        $contactsphere_id = $contactsphere->id;
         $user_id = $user->id;
         $user_email = $user->email;
+
         $superadminuserid = getenv('SUPERADMINUSERID');
-        //$strategyuserid = getenv('STRATEGYUSERID');
-        $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+        $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
 
         $superadminemail = User::getUserEmailById($superadminuserid);
-        $strategyemail = User::getUserEmailById($strategyuserid);
-        $referredby_email = User::getUserEmailById($referredby_id);
+        $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
+        $referredby_email = User::getUserEmailById($referred_by);
 
-        $cc_users_array = array($superadminemail,$strategyemail,$referredby_email);
+        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referredby_email);
 
-        $module = "Lead";
+        $module = "Contactsphere";
         $sender_name = $user_id;
         $to = $user_email;
 
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "New Lead for " . $leads . " - ". $company_name . " - " . $city;
-        $message = "New Lead for " . $leads . " - ". $company_name . " - " . $city;
-        $module_id = $lead_id;
+        $subject = "New Contact Add - " . $name;
+        $message = "New Contact Add - " . $name;
+        $module_id = $contactsphere_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-        return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
+
+        return redirect()->route('contactsphere.index')->with('success','Contact Added Successfully.');
     }
 
     public function show($id) {
 
-        $lead_details = Lead::getLeadDetailsById($id);
+        $contact_details = Contactsphere::getContactDetailsById($id);
 
-        return view('adminlte::lead.show',compact('lead_details'));
+        return view('adminlte::contactsphere.show',compact('contact_details'));
     }
 }

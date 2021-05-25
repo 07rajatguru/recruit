@@ -332,4 +332,49 @@ class Contactsphere extends Model
         }
         return $contacts_array;
     }
+
+    public static function getContactDetailsById($contact_id) {
+        
+        $query = Contactsphere::query();
+        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->where('contactsphere.id','=',$contact_id);
+        $res = $query->first();
+
+        $contact = array();
+
+        if (isset($res) && $res != '') {
+
+            $contact['id'] = $res->id;
+            $contact['name'] = $res->name;
+            $contact['designation'] = $res->designation;
+            $contact['company'] = $res->company;
+            $contact['contact_number'] = $res->contact_number;
+            $contact['official_email_id'] = $res->official_email_id;
+            $contact['personal_id'] = $res->personal_id;
+            $contact['source'] = $res->source;
+            $contact['self_remarks'] = $res->self_remarks;
+            $contact['linkedin_profile_link'] = $res->linkedin_profile_link;
+            $contact['referred_by'] = $res->referred_by;
+
+            $location ='';
+            if($res->city!='') {
+                $location .= $res->city;
+            }
+            if($res->state!='') {
+                if($location=='')
+                    $location .= $res->state;
+                else
+                    $location .= ", ".$res->state;
+            }
+            if($res->country!='') {
+                if($location=='')
+                    $location .= $res->country;
+                else
+                    $location .= ", ".$res->country;
+            }
+            $contact['location'] = $location;
+        }
+        return $contact;
+    }
 }

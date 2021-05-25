@@ -68,8 +68,12 @@ class DailyReport extends Command
                         //Get Reports to Email
                         $report_res = User::getReportsToUsersEmail($key);
 
-                        if(isset($report_res->remail) && $report_res->remail!='')
+                        if(isset($report_res->remail) && $report_res->remail!='') {
                             $report_email = $report_res->remail;
+                        }
+                        else {
+                            $report_email = '';
+                        }
 
                         $to_array = array();
                         $to_array[] = $value;

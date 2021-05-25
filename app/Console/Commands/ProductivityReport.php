@@ -58,9 +58,13 @@ class ProductivityReport extends Command
                     $report_email = '';
                     $res = User::getReportsToUsersEmail($key);
 
-                    if(isset($res->remail) && $res->remail!='')
+                    if(isset($res->remail) && $res->remail!='') {
                         $report_email = $res->remail;
-
+                    }
+                    else {
+                        $report_email = '';
+                    }
+                    
                     $to_array = array();
                     $to_array[] = $value;
 
