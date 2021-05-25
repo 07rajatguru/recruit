@@ -524,6 +524,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-users|user-add|user-edit|user-delete']
     ]);
 
+    Route::get('users-list/{status}', [
+        'as' => 'users.list',
+        'uses' => 'UserController@getAllUsersByStatus',
+        'middleware' => ['permission:display-users|user-add|user-edit|user-delete']
+    ]);
+
     Route::get('users/attendance',[
         'as' => 'users.attendance',
         'uses' => 'UserController@UserAttendanceAdd',

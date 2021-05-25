@@ -40,7 +40,19 @@ class UserController extends Controller
 
         $count = sizeof($users);
 
-        return view('adminlte::users.index',compact('users','count'));
+        $active = 0;
+        $inactive = 0;
+
+        foreach($users as $user) {
+
+            if($user['status'] == 'Active') {
+                $active++;
+            }
+            else if ($user['status'] == 'Inactive') {
+                $inactive++;
+            }
+        }
+        return view('adminlte::users.index',compact('users','count','active','inactive'));
     }
 
     public function create() {
@@ -1967,5 +1979,30 @@ class UserController extends Controller
             }
         }
         return json_encode($checked);
+    }
+
+    public function getAllUsersByStatus($status) {
+
+        $all_users = User::orderBy('status','ASC')->get();
+
+        $status_wise_users = User::orderBy('status','ASC')
+        ->leftjoin('department','department.id','=','users.type')
+        ->select('users.*','department.name as department')->where('status','=',$status)->get();
+
+        $count = sizeof($status_wise_users);
+
+        $active = 0;
+        $inactive = 0;
+
+        foreach($all_users as $user) {
+
+            if($user['status'] == 'Active') {
+                $active++;
+            }
+            else if ($user['status'] == 'Inactive') {
+                $inactive++;
+            }
+        }
+        return view('adminlte::users.usersstatusindex',compact('status_wise_users','status','count','active','inactive'));
     }
 }

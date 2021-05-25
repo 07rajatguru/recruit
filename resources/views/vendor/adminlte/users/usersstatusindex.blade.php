@@ -10,14 +10,18 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Users Management</h2>
+                @if(isset($status) && $status == 'active')
+                    <h2>Current Users List({{ $count or '0' }})</h2>
+                @else
+                    <h2>Left Users List({{ $count or '0' }})</h2>
+                @endif
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
+                <a class="btn btn-success" href="{{ route('users.create') }}">Create New User</a>
             </div>
         </div>
-    </div>
+    </div><br/>
 
     <div class="row">
         <div class="col-md-12">
@@ -58,7 +62,7 @@
         </thead>
         <tbody>
             <?php $i=0; ?>
-            @foreach ($users as $key => $user)
+            @foreach ($status_wise_users as $key => $user)
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>
@@ -70,9 +74,7 @@
                         @endpermission
                         
                         @permission(('edit-user-profile'))
-
                             <a class="fa fa-user" title="View Profile" href="{{ route('users.myprofile',$user->id) }}" target="_blank"></a>
-
                         @endpermission
                     </td>
 
