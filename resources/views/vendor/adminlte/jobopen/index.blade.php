@@ -185,15 +185,15 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#CCFF99;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">10L ({{ $under_ten_lacs }})</div>
+                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#BDB76B;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">10L ({{ $under_ten_lacs }})</div>
                     </a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="between_ten_to_twenty_lacs" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#ecc6c6;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="between_ten_to_twenty_lacs"> 10-20L ({{ $between_ten_to_twenty_lacs }})</div>
+                    <a id="between_ten_to_twenty_lacs" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FF9633;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="between_ten_to_twenty_lacs"> 10-20L ({{ $between_ten_to_twenty_lacs }})</div>
                     </a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="above_twenty_lacs" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;"><div class="above_twenty_lacs" style="width:max-content;height:40px;background-color:#c2d6d6;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L ({{ $above_twenty_lacs }})</div>
+                    <a id="above_twenty_lacs" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;"><div class="above_twenty_lacs" style="width:max-content;height:40px;background-color:#BC8F8F;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L ({{ $above_twenty_lacs }})</div>
                     </a>
                 </div>
             </div>
@@ -329,6 +329,8 @@
 
                     var count = json.recordsTotal;
                     var job_priority = json.job_priority;
+                    var job_salary = json.job_salary;
+
 
                     $("#count").html("(" + count + ")");
 
@@ -349,6 +351,12 @@
                     $("#priority_6").attr("href", '/jobs/priority/'+job_priority[6]);
                     $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]);
                     $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]);
+
+                    // For salary wise display job listing
+
+                    $("#under_ten_lacs").attr("href", '/jobs/salary/'+job_salary[0]);
+                    $("#between_ten_to_twenty_lacs").attr("href", '/jobs/salary/'+job_salary[1]);
+                    $("#above_twenty_lacs").attr("href", '/jobs/salary/'+job_salary[2]);
                 },
                 responsive: true,
                 "pageLength": 50,

@@ -297,27 +297,15 @@ class JobOpenController extends Controller
 
                 $under_ten_lacs++;
             }
-            else {
-
-                $under_ten_lacs = '0';
-            }
 
             if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
 
                 $between_ten_to_twenty_lacs++;
             }
-            else {
-
-                $between_ten_to_twenty_lacs = '0';
-            }
 
             if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 4  && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
 
                 $above_twenty_lacs++;
-            }
-            else {
-
-                $above_twenty_lacs = '0';
             }
         }
 
@@ -442,6 +430,68 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
 
+    public function salaryWise($salary) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        if (isset($year) && $year != 0) {
+
+            $year_data = explode(", ", $year); // [result : Array ( [0] => 2019-4 [1] => 2020-3 )] by default
+            $year1 = $year_data[0]; // [result : 2019-4]
+            $year2 = $year_data[1]; // [result : 2020-3]
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+
+            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+        }
+        else {
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+            $financial_year = '';
+        }
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
+        if($all_jobs_perm) {
+
+            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,1);
+        }
+        else if($isClient) {
+
+            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,1);
+        }
+        else if($user_jobs_perm) {
+
+            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,1);
+        }
+
+        $count = sizeof($job_response);
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
+        $viewVariable['count'] = $count;
+        $viewVariable['salary'] = $salary;
+        $viewVariable['isClient'] = $isClient;
+        $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
+
+        return view('adminlte::jobopen.salarywisejob', $viewVariable);
+    }
+
     public function priorityWiseClosedJobs($priority,$year) {
 
         $user = \Auth::user();
@@ -506,6 +556,69 @@ class JobOpenController extends Controller
         $viewVariable['year'] = $year;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
+    }
+
+    public function salaryWiseClosedJobs($priority,$year) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_jobs_perm = $user->can('display-closed-jobs');
+        $user_jobs_perm = $user->can('display-closed-jobs-by-loggedin-user');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        // for get client id by email
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
+        if (isset($year) && $year != 0) {
+
+            $year_data = explode(", ", $year);
+            $year1 = $year_data[0];
+            $year2 = $year_data[1];
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+
+            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+        }
+        else {
+
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+
+            $financial_year = '';
+        }
+
+        if($all_jobs_perm) {
+
+            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$priority,$current_year,$next_year,4);
+        }
+        else if ($isClient) {
+
+            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$priority,$current_year,$next_year,4);
+        }
+        else if ($user_jobs_perm) {
+
+            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$priority,$current_year,$next_year,4);
+        }
+
+        $count = sizeof($job_response);
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
+        $viewVariable['count'] = $count;
+        $viewVariable['priority'] = $priority;
+        $viewVariable['isClient'] = $isClient;
+        $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
+
+        return view('adminlte::jobopen.salarywisejob', $viewVariable);
     }
 
     public static function getJobOrderColumnName($order) {
@@ -706,31 +819,53 @@ class JobOpenController extends Controller
         $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
         $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
 
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         foreach ($job_priority_data as $value) {
-           if($value['priority'] == 0) {
+
+            if($value['priority'] == 0) {
                 $priority_0++;
-           }
-           else if($value['priority'] == 1) {
+            }
+            else if($value['priority'] == 1) {
                 $priority_1++;
-           }
+            }
             else if($value['priority'] == 2) {
                 $priority_2++;
-           }
+            }
             else if($value['priority'] == 3) {
                 $priority_3++;
-           }
+            }
             else if($value['priority'] == 5) {
                 $priority_5++;
-           }
+            }
             else if($value['priority'] == 6) {
                 $priority_6++;
-           }
+            }
             else if($value['priority'] == 7) {
                 $priority_7++;
-           }
+            }
             else if($value['priority'] == 8) {
                 $priority_8++;
-           }
+            }
+
+            // For salary wise count
+
+            if($value['lacs_from'] >= 0 && $value['lacs_from'] < 10 && $value['lacs_to'] >= 0 && $value['lacs_to'] < 10 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
+
+                $under_ten_lacs++;
+            }
+
+            if($value['lacs_from'] >= 10 && $value['lacs_from'] <= 20 && $value['lacs_to'] >= 10 && $value['lacs_to'] <= 20 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
+
+                $between_ten_to_twenty_lacs++;
+            }
+
+            if($value['lacs_from'] >= 20 && $value['lacs_to'] >= 20 && $value['priority'] != 4  && $value['priority'] != 9 && $value['priority'] != 10) {
+
+                $above_twenty_lacs++;
+            }
         }
 
         $priority = array();
@@ -743,6 +878,14 @@ class JobOpenController extends Controller
         $priority['priority_7'] = $priority_7;
         $priority['priority_8'] = $priority_8;
 
+        // For salary wise display
+
+        $job_salary = JobOpen::getSalaryArray();
+
+        $priority['under_ten_lacs'] = $under_ten_lacs;
+        $priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $priority['above_twenty_lacs'] = $above_twenty_lacs;
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
@@ -750,6 +893,7 @@ class JobOpenController extends Controller
             "data" => $jobs,
             "priority" => $priority,
             "job_priority" => $job_priority,
+            "job_salary" => $job_salary,
             //'year' => $year,
         );
 
@@ -3157,20 +3301,24 @@ class JobOpenController extends Controller
         $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
 
         if($all_jobs_perm) {
-            $job_response = JobOpen::getClosedJobs(1,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
+
+            $count = JobOpen::getAllClosedJobsCount(1,$user_id,'',$current_year,$next_year);
+
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
         }
         else if ($isClient) {
 
             $job_response = JobOpen::getClosedJobsByClient($client_id,0,0,0,NULL,'DESC',$current_year,$next_year);
+            $count = sizeof($job_response);
+
             $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,0);
         }
         else if ($user_jobs_perm) {
-            $job_response = JobOpen::getClosedJobs(0,$user_id,0,0,0,NULL,'DESC',$current_year,$next_year);
+
+            $count = JobOpen::getAllClosedJobsCount(0,$user_id,'',$current_year,$next_year);
+
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
         }
-
-        $count = sizeof($job_response);
 
         $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
 
@@ -3198,27 +3346,15 @@ class JobOpenController extends Controller
 
                 $under_ten_lacs++;
             }
-            else {
-
-                $under_ten_lacs = '0';
-            }
 
             if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
 
                 $between_ten_to_twenty_lacs++;
             }
-            else {
-
-                $between_ten_to_twenty_lacs = '0';
-            }
 
             if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
 
                 $above_twenty_lacs++;
-            }
-            else {
-
-                $above_twenty_lacs = '0';
             }
         }
 
@@ -3228,7 +3364,7 @@ class JobOpenController extends Controller
         $close_priority['priority_10'] = $priority_10++;
 
         $viewVariable = array();
-        $viewVariable['jobList'] = $job_response;
+
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
         $viewVariable['close_priority'] = $close_priority;
@@ -3301,6 +3437,12 @@ class JobOpenController extends Controller
 
         $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         foreach ($job_priority_data as $job_priority) {
 
            if($job_priority['priority'] == 4) {
@@ -3312,12 +3454,35 @@ class JobOpenController extends Controller
            else if($job_priority['priority'] == 10) {
                 $priority_10++;
            }
+
+           // For salary wise count
+
+            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
+
+                $under_ten_lacs++;
+            }
+
+            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
+
+                $between_ten_to_twenty_lacs++;
+            }
+
+            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
+
+                $above_twenty_lacs++;
+            }
         }
         
         $close_priority = array();
         $close_priority['priority_4'] = $priority_4++;
         $close_priority['priority_9'] = $priority_9++;
         $close_priority['priority_10'] = $priority_10++;
+
+        // For salary wise count
+        
+        $close_priority['under_ten_lacs'] = $under_ten_lacs++;
+        $close_priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs++;
+        $close_priority['above_twenty_lacs'] = $above_twenty_lacs++;
 
         $job_priority = JobOpen::getJobPriorities();
         $jobs = array();
@@ -3367,6 +3532,8 @@ class JobOpenController extends Controller
             $i++;
         }
 
+        $job_salary = JobOpen::getSalaryArray();
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
@@ -3374,7 +3541,8 @@ class JobOpenController extends Controller
             'close_priority' => $close_priority,
             'year' => $year,
             'job_priority' => $job_priority,
-            "data" => $jobs
+            "data" => $jobs,
+            "job_salary" => $job_salary,
         );
 
         echo json_encode($json_data);exit;

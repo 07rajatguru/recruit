@@ -73,6 +73,17 @@ class HomeController extends Controller
         $superadmin = getenv('SUPERADMINUSERID');
         $recruitment = getenv('RECRUITMENT');
 
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        if($isClient) {
+
+            return redirect()->route('jobopen.index');
+        }
+
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         if($all_perm) {

@@ -1228,9 +1228,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
+    Route::get('jobs/salary/{salary}',[
+        'as' => 'jobopen.salary',
+        'uses' => 'JobOpenController@salaryWise',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
     Route::get('jobs/priority/{priority}/{year}',[
         'as' => 'jobclose.priority',
         'uses' => 'JobOpenController@priorityWiseClosedJobs',
+        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
+    ]);
+
+    Route::get('jobs/salary/{salary}/{year}',[
+        'as' => 'jobclose.salary',
+        'uses' => 'JobOpenController@salaryWiseClosedJobs',
         'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
