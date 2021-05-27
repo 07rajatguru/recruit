@@ -421,14 +421,10 @@
                 </td>
 
                 <?php
-                    $utc = $candidate->job_associate_candidates_date;
-                    $dt = new \DateTime($utc);
-                    $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
-
-                    $dt->setTimezone($tz);
-                    $associated_date = $dt->format('Y-m-d H:i:s');
+                    $associated_date = $candidate->job_associate_candidates_date;
                     $month = date('m',strtotime($associated_date));
                 ?>
+                
                 @if($candidate->shortlisted == 1)
                 <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
 

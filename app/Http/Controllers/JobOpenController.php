@@ -29,6 +29,8 @@ use App\ClientHeirarchy;
 use App\Notifications;
 use Illuminate\Support\Facades\File;
 use App\CandidateOtherInfo;
+use DateTime;
+use DateTimeZone;
 
 class JobOpenController extends Controller
 {
@@ -2766,6 +2768,10 @@ class JobOpenController extends Controller
         $title = $_POST['title'];
         $status_id = env('associate_candidate_status', 1);
 
+        // Set Associated Datetime
+
+        $datetime = new DateTime( "now", new DateTimeZone( "Asia/Kolkata" ) );
+
         $candidate_ids_array = explode(",", $candidate_ids);
 
         foreach ($candidate_ids_array as $key => $value) {
@@ -2776,7 +2782,7 @@ class JobOpenController extends Controller
             $job_associate_candidate->status_id = $status_id;
             $job_associate_candidate->created_at = time();
             $job_associate_candidate->updated_at = time();
-            $job_associate_candidate->date = date("Y-m-d h:i:s");
+            $job_associate_candidate->date = $datetime;
             $job_associate_candidate->associate_by = $user_id;
             $job_associate_candidate->shortlisted = 0;
             $job_associate_candidate->save();
