@@ -29,7 +29,8 @@
             </div>
 
             <div class="col-md-2 col-sm-4">
-                <a href="{{ route('lead.list','contract-staffing') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#f17a40;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Contract Staffing Leads">Contract Staffing ({{ $contract_staffing }}) </div></a>
+                <a href="{{ route('lead.list','hr-advisory') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00aace;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="HR Advisory Leads">HR Advisory ({{ $hr_advisory }}) </div>
+                </a>
             </div>
 
             <div class="col-md-2 col-sm-4">
@@ -37,8 +38,7 @@
             </div>
 
             <div class="col-md-2 col-sm-4">
-                <a href="{{ route('lead.list','hr-advisory') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00aace;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="HR Advisory Leads">HR Advisory ({{ $hr_advisory }}) </div>
-                </a>
+                <a href="{{ route('lead.list','contract-staffing') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#f17a40;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Contract Staffing Leads">Contract Staffing ({{ $contract_staffing }}) </div></a>
             </div>
         </div>
     </div><br/>
