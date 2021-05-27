@@ -22,8 +22,6 @@ use App\FunctionalRoles;
 use App\EducationQualification;
 use App\EducationSpecialization;
 use App\Events\NotificationMail;
-use DateTime;
-use DateTimeZone;
     
 class CandidateController extends Controller
 {
@@ -696,10 +694,6 @@ class CandidateController extends Controller
                     $job_id = $request->input('jobopen');
                     $status_id = env('associate_candidate_status', 1);
 
-                    // Set Associated Datetime
-
-                    $datetime = new DateTime( "now", new DateTimeZone( "Asia/Kolkata" ) );
-
                     $jobopening = new JobAssociateCandidates();
                     $jobopening->job_id = $job_id;
                     $jobopening->candidate_id = $candidate_id;
@@ -708,7 +702,7 @@ class CandidateController extends Controller
                     $jobopening->updated_at = time();
                     $jobopening->shortlisted = 0;
                     $jobopening->associate_by = $user_id;
-                    $jobopening->date = $datetime;
+                    $jobopening->date = date("Y-m-d h:i:s");
                     $jobopening->save();
                 }
             }

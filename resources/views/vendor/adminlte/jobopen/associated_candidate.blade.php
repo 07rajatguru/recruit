@@ -421,7 +421,12 @@
                 </td>
 
                 <?php
-                    $associated_date = $candidate->job_associate_candidates_date;
+                    $utc = $candidate->job_associate_candidates_date;
+                    $dt = new \DateTime($utc);
+                    $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+
+                    $dt->setTimezone($tz);
+                    $associated_date = $dt->format('Y-m-d H:i:s');
                     $month = date('m',strtotime($associated_date));
                 ?>
                 
