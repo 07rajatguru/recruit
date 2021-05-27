@@ -19,9 +19,9 @@
                 @endif
             </div>
             <div class="pull-right">
-                @if($hold_contact == 1)
+                @if(isset($hold_contact) && $hold_contact == 1)
                     <a class="btn btn-primary" href="{{ route('contactsphere.hold') }}">Back</a>
-                @elseif($forbid_contact == 1)
+                @elseif(isset($forbid_contact) && $forbid_contact == 1)
                     <a class="btn btn-primary" href="{{ route('contactsphere.forbid') }}">Back</a>
                 @else
                     <a class="btn btn-primary" href="{{ route('contactsphere.index') }}">Back</a>

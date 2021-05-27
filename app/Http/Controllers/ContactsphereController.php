@@ -277,7 +277,7 @@ class ContactsphereController extends Controller
 
             if ($delete_perm) {
 
-                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'contactsphere','display_name'=>'Contact','Contact_Type' => 'Index']);
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'contactsphere','display_name'=>'Contact','Contact_Type' => 'Hold']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
@@ -405,7 +405,7 @@ class ContactsphereController extends Controller
 
             if ($delete_perm) {
 
-                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'contactsphere','display_name'=>'Contact','Contact_Type' => 'Index']);
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'contactsphere','display_name'=>'Contact','Contact_Type' => 'Forbid']);
                 $delete = $delete_view->render();
                 $action .= $delete;
             }
@@ -520,5 +520,94 @@ class ContactsphereController extends Controller
         $contact_details = Contactsphere::getContactDetailsById($id);
 
         return view('adminlte::contactsphere.show',compact('contact_details'));
+    }
+
+    public function edit($id) {
+
+        $action = 'edit';
+        $generate_contact = '0';
+        $hold_contact = '0';
+        $forbid_contact = '0';
+
+        $contact = Contactsphere::find($id);
+
+        $user = \Auth::user();
+        $all_perm = $user->can('display-contactsphere');
+        $userwise_perm = $user->can('display-user-wise-contactsphere');
+
+        if($all_perm || $userwise_perm) {
+
+            $convert_lead = $contact->convert_lead;
+            if($convert_lead == 1){
+                $generate_contact = 1;
+            }
+
+            $referredby_id = $contact->referred_by;
+
+            $users = User::getAllUsers();
+        }
+        else {
+            return view('errors.403');
+        }
+                    
+       return view('adminlte::contactsphere.edit',compact('contact','action','users','generate_contact','convert_lead','referredby_id'));
+    }
+
+    public function update(Request $request, $id) {
+
+        $user  = \Auth::user()->id;
+        $input = $request->all();
+
+        $name = trim($input['name']);
+        $designation = trim($input['designation']);
+        $company = trim($input['company']);
+        $contact_number = $input['contact_number'];
+        $official_email_id = $input['official_email_id'];
+        $personal_id = $input['personal_id'];
+        $self_remarks = $input['self_remarks'];
+        $source = $input['source'];
+        $linkedin_profile_link = $input['linkedin_profile_link'];
+        $city = $input['city'];
+        $state = $input['state'];
+        $country = $input['country'];
+        $referred_by = $input['referred_by'];
+
+        $contactsphere = Contactsphere::find($id);
+        $contactsphere->name = $name;
+        $contactsphere->designation = $designation;
+        $contactsphere->company = $company;
+        $contactsphere->contact_number = $contact_number;
+        $contactsphere->official_email_id = $official_email_id;
+        $contactsphere->personal_id = $personal_id;
+        $contactsphere->self_remarks = $self_remarks;
+        $contactsphere->source = $source;
+        $contactsphere->linkedin_profile_link = $linkedin_profile_link;
+        $contactsphere->city = $city;
+        $contactsphere->state = $state;
+        $contactsphere->country = $country;
+        $contactsphere->convert_lead = 0;
+        $contactsphere->hold = 0;
+        $contactsphere->forbid = 0;
+        $contactsphere->referred_by = $referred_by;
+        $contactsphere->save();
+
+        return redirect()->route('contactsphere.index')->with('success','Contact Updated Successfully.');
+     }
+
+    public function destroy(Request $request,$id) {
+
+        Contactsphere::where('id',$id)->delete();
+
+        $Contact_Type = $request->input('Contact_Type');
+
+        if($Contact_Type == 'Index') {
+            return redirect()->route('contactsphere.index')->with('success','Contact Deleted Successfully.');
+        }
+        else if($Contact_Type == 'Hold') {
+            return redirect()->route('contactsphere.hold')->with('success','Contact Deleted Successfully.');
+        }
+        else if($Contact_Type == 'Forbid') {
+            return redirect()->route('contactsphere.forbid')->with('success','Contact Deleted Successfully.');
+        }
     }
 }
