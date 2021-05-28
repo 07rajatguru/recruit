@@ -238,14 +238,31 @@ class CandidateCreateFormController extends Controller
                 }
             }
 
-            $module = "Applicant Candidate";
-            $sender_name = $owner_id;
-            //$to = 'careers@adlertalent.com';
-            $to = 'info@adlertalent.com';
-            $subject = "New Applicant Candidate - " . $candiateFname;
-            $message = "<tr><td>" . $candiateFname . " added new Applicant Candidate.</td></tr>";
-            $module_id = $candidate_id;
-            $cc = '';
+            if(isset($applicant_job_id) && $applicant_job_id > 0) {
+
+                $job_details = JobOpen::getHiringManagerEmailByJobId($applicant_job_id);
+
+                $module = "Applicant Candidate";
+                $sender_name = $owner_id;
+
+                $to = 'hr@adlertalent.com';
+                $subject = "New Applicant Candidate - " . $candiateFname;
+                $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
+                $module_id = $candidate_id;
+                $cc = 'info@adlertalent.com';
+            }
+            else {
+
+                $module = "Applicant Candidate";
+                $sender_name = $owner_id;
+
+                $to = 'hr@adlertalent.com';
+                $subject = "New Applicant Candidate - " . $candiateFname;
+                $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
+                $module_id = $candidate_id;
+                $cc = 'info@adlertalent.com';
+            }
+
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
