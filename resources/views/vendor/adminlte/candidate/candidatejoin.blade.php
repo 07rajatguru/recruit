@@ -50,10 +50,10 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $candidate['candidate_name'] or '' }}</td>
-                <td><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">{{ $candidate['position_name'] or '' }}</a></td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;"><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">{{ $candidate['position_name'] or '' }}</a></td>
                 <td>{{ $candidate['salary'] }}</td>
                 <td>{{ date('d-m-Y', strtotime($candidate['date'])) }}</td>
-                <td>{{ $candidate['efforts'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['efforts'] or '' }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['candidate_email'] or ''}}</td>
                 <td>{{ $candidate['candidate_mobile'] or ''}}</td>
             </tr>

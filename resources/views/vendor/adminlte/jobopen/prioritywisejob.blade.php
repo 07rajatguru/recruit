@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Job Openings')
+@section('title', 'Job Listing')
 
 @section('content_header')
     <h1></h1>

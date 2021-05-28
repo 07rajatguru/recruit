@@ -4142,6 +4142,10 @@ class JobOpenController extends Controller
         $priority_7 = 0;
         $priority_8 = 0;
 
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         foreach ($job_priority_data as $job_priority) {
 
            if($job_priority['priority'] == 0) {
@@ -4168,6 +4172,23 @@ class JobOpenController extends Controller
             else if($job_priority['priority'] == 8) {
                 $priority_8++;
             }
+
+            // For salary wise count
+
+            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
+
+                $under_ten_lacs++;
+            }
+
+            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
+
+                $between_ten_to_twenty_lacs++;
+            }
+
+            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 4  && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
+
+                $above_twenty_lacs++;
+            }
         }
 
         
@@ -4184,6 +4205,10 @@ class JobOpenController extends Controller
         $viewVariable['priority_6'] = $priority_6;
         $viewVariable['priority_7'] = $priority_7;
         $viewVariable['priority_8'] = $priority_8;
+
+        $viewVariable['under_ten_lacs'] = $under_ten_lacs;
+        $viewVariable['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
 
         return view('adminlte::jobopen.applicant', $viewVariable);
     }
@@ -4360,32 +4385,53 @@ class JobOpenController extends Controller
         $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
         $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
 
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         foreach ($job_priority_data as $value) {
 
-           if($value['priority'] == 0) {
+            if($value['priority'] == 0) {
                 $priority_0++;
-           }
-           else if($value['priority'] == 1) {
+            }
+            else if($value['priority'] == 1) {
                 $priority_1++;
-           }
+            }
             else if($value['priority'] == 2) {
                 $priority_2++;
-           }
+            }
             else if($value['priority'] == 3) {
                 $priority_3++;
-           }
+            }
             else if($value['priority'] == 5) {
                 $priority_5++;
-           }
+            }
             else if($value['priority'] == 6) {
                 $priority_6++;
-           }
+            }
             else if($value['priority'] == 7) {
                 $priority_7++;
-           }
+            }
             else if($value['priority'] == 8) {
                 $priority_8++;
-           }
+            }
+
+           // For salary wise count
+
+            if($value['lacs_from'] >= 0 && $value['lacs_from'] < 10 && $value['lacs_to'] >= 0 && $value['lacs_to'] < 10 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
+
+                $under_ten_lacs++;
+            }
+
+            if($value['lacs_from'] >= 10 && $value['lacs_from'] <= 20 && $value['lacs_to'] >= 10 && $value['lacs_to'] <= 20 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
+
+                $between_ten_to_twenty_lacs++;
+            }
+
+            if($value['lacs_from'] >= 20 && $value['lacs_to'] >= 20 && $value['priority'] != 4  && $value['priority'] != 9 && $value['priority'] != 10) {
+
+                $above_twenty_lacs++;
+            }
         }
 
         $priority = array();
@@ -4398,6 +4444,14 @@ class JobOpenController extends Controller
         $priority['priority_7'] = $priority_7;
         $priority['priority_8'] = $priority_8;
 
+        // For salary wise display
+
+        $job_salary = JobOpen::getSalaryArray();
+
+        $priority['under_ten_lacs'] = $under_ten_lacs;
+        $priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $priority['above_twenty_lacs'] = $above_twenty_lacs;
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
@@ -4405,6 +4459,7 @@ class JobOpenController extends Controller
             "data" => $jobs,
             "priority" => $priority,
             "job_priority" => $job_priority,
+            "job_salary" => $job_salary,
         );
 
         echo json_encode($json_data);exit;
@@ -4460,6 +4515,57 @@ class JobOpenController extends Controller
         $viewVariable['isClient'] = $isClient;
 
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
+    }
+
+    public function salaryWiseApplicant($salary) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        $year = NULL;
+        $current_year = NULL;
+        $next_year = NULL;
+        $financial_year = '';
+    
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
+        if($all_jobs_perm) {
+
+            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,11);
+        }
+        else if($isClient) {
+
+            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,11);
+        }
+        else if($user_jobs_perm) {
+
+            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,11);
+        }
+
+        $count = sizeof($job_response);
+
+        $viewVariable = array();
+        $viewVariable['jobList'] = $job_response;
+        $viewVariable['job_priority'] = JobOpen::getJobPriorities();
+        $viewVariable['count'] = $count;
+        $viewVariable['salary'] = $salary;
+        $viewVariable['isClient'] = $isClient;
+        $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
+        $viewVariable['page'] = "Applicant";
+
+        return view('adminlte::jobopen.salarywisejob', $viewVariable);
     }
 
     public function getJobDetailsBySearch() {

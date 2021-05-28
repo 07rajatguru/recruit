@@ -1918,6 +1918,11 @@ class JobOpen extends Model
 
             $job_open_query = $job_open_query->whereIn('job_openings.priority',$job_status);
         }
+        else if (isset($priority) && $priority == '11') {
+
+            $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+            $job_open_query = $job_open_query->where('adler_career_checkbox','=',1);
+        }
 
         if (isset($salary) && $salary == '10') {
 
@@ -3141,6 +3146,9 @@ class JobOpen extends Model
                 $jobs_list[$i]['city'] = $value->city;
             }
 
+            $jobs_list[$i]['lacs_from'] = $value->lacs_from;
+            $jobs_list[$i]['lacs_to'] = $value->lacs_to;
+
             $i++;
         }
         return $jobs_list;
@@ -3298,6 +3306,9 @@ class JobOpen extends Model
                 $jobs_list[$i]['city'] = $value->city;
             }
 
+            $jobs_list[$i]['lacs_from'] = $value->lacs_from;
+            $jobs_list[$i]['lacs_to'] = $value->lacs_to;
+            
             $i++;
         }
         return $jobs_list;

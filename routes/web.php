@@ -1252,6 +1252,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
+    Route::get('jobs-applicant/salary/{salary}',[
+        'as' => 'applicantjobopen.salary',
+        'uses' => 'JobOpenController@salaryWiseApplicant',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
     Route::post('jobs/create', [
         'as' => 'jobopen.store',
         'uses' => 'JobOpenController@store',

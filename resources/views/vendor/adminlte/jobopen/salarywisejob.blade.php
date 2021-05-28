@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Job Openings')
+@section('title', 'Job Listing')
 
 @section('content_header')
     <h1></h1>
@@ -24,10 +24,16 @@
         <div class="col-lg-12 margin-tb">
             @if(isset($financial_year) && $financial_year != '')
                 <h4><b>Financial Year</b> : {{ $financial_year }}</h4>
+
+                <div class="pull-left">
+                    <h2>Job Closing List ({{ $count or 0}})</h2>
+                </div>
+            @else
+                <div class="pull-left">
+                    <h2>Job Openings List ({{ $count or 0}})</h2>
+                </div>
             @endif
-            <div class="pull-left">
-                <h2>Job Openings List ({{ $count or 0}})</h2>
-            </div>
+            
 
             <div class="pull-right">
                 @if(!$isClient)
@@ -39,7 +45,14 @@
                         <a class="btn btn-success" href="{{ route('jobopen.create') }}">Create Job Openings</a>
                     @endpermission
                 @endif
-                <a class="btn btn-primary" href="{{ route('jobopen.index') }}"> Back</a>
+
+                @if(isset($financial_year) && $financial_year != '')
+                    <a class="btn btn-primary" href="{{ route('jobopen.close') }}"> Back</a>
+                @elseif(isset($page) && $page != '')
+                    <a class="btn btn-primary" href="{{ route('jobopen.applicant') }}"> Back</a>
+                @else
+                    <a class="btn btn-primary" href="{{ route('jobopen.index') }}"> Back</a>
+                @endif
             </div>
         </div>
     </div>

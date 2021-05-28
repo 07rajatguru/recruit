@@ -42,7 +42,6 @@
     @permission(('display-job-priority-count-in-listing'))
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
-                {{-- Changes from 12-12-2019 --}}
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                     <a id="priority_1" href="" title="Urgent Positions" style="text-decoration: none;color: black;" target="_blank"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_1 }}</div></a>
                 </div>
@@ -61,6 +60,31 @@
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                     <a id="priority_7" href="" title="No Deliveries Needed" style="text-decoration: none;color: black;" target="_blank"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_7 }}</div></a>
+                </div>
+
+                {{-- Changes from 28-05-2021 Salary Wise Listing --}}
+
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">10L ({{ $under_ten_lacs }})</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="between_ten_to_twenty_lacs" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="between_ten_to_twenty_lacs"> 10-20L ({{ $between_ten_to_twenty_lacs }})</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="above_twenty_lacs" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;"><div class="above_twenty_lacs" style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L ({{ $above_twenty_lacs }})</div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -162,6 +186,7 @@
 
                     var count = json.recordsTotal;
                     var job_priority = json.job_priority;
+                    var job_salary = json.job_salary;
 
                     $("#count").html("(" + count + ")");
 
@@ -171,6 +196,12 @@
                     $("#priority_5").attr("href", '/jobs-applicant/priority/'+job_priority[5]);
                     $("#priority_7").attr("href", '/jobs-applicant/priority/'+job_priority[7]);
                     $("#priority_8").attr("href", '/jobs-applicant/priority/'+job_priority[8]);
+
+                    // For salary wise display job listing
+
+                    $("#under_ten_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[0]);
+                    $("#between_ten_to_twenty_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[1]);
+                    $("#above_twenty_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[2]);
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -275,44 +306,6 @@
                     }
                 }
             });
-        }
-
-        function prioritywise() {
-            var priority = $("#priority").val();
-
-            var url = '/jobs/priority/'+priority;
-
-            var form = $('<form action="'+url+ '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="priority" value="'+priority+'" />' +
-                '</form>');
-
-            $('body').append(form);
-            form.submit();
-        }
-
-        function getJobsByPosition() {
-
-            var client_heirarchy=$("#client_heirarchy").val();
-            //var year = $("#year").val();
-            
-            var url = '/jobs';
-            if(client_heirarchy>=0)
-            {
-                /*var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="client_heirarchy" value="'+client_heirarchy+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
-                '</form>');*/
-
-                var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="client_heirarchy" value="'+client_heirarchy+'" />' +
-                '</form>');
-
-                $('body').append(form);
-                form.submit();
-            }
         }
     </script>
 @endsection
