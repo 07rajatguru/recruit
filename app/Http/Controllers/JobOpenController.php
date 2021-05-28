@@ -228,6 +228,12 @@ class JobOpenController extends Controller
             $client_heirarchy = '0';
         }
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         if($all_jobs_perm) {
 
             //$count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
@@ -235,12 +241,24 @@ class JobOpenController extends Controller
 
             $count = JobOpen::getAllJobsCount(1,$user_id,NUll,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','');
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10','','',1);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20','','',1);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20','','',1);
         }
         else if ($isClient) {
 
             $job_response = JobOpen::getAllJobsByCLient($client_id,0,0,0,NULL,'',$client_heirarchy);
             $count = sizeof($job_response);
             $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,'','');
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10','','',1);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20','','',1);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20','','',1);
         }
         else if ($user_jobs_perm) {
 
@@ -249,6 +267,12 @@ class JobOpenController extends Controller
 
             $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','');
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10','','',1);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20','','',1);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20','','',1);
         }
 
         $priority_0 = 0;
@@ -259,10 +283,6 @@ class JobOpenController extends Controller
         $priority_6 = 0;
         $priority_7 = 0;
         $priority_8 = 0;
-
-        $under_ten_lacs = 0;
-        $between_ten_to_twenty_lacs = 0;
-        $above_twenty_lacs = 0;
 
         foreach ($job_priority_data as $job_priority) {
 
@@ -290,23 +310,6 @@ class JobOpenController extends Controller
             else if($job_priority['priority'] == 8) {
                 $priority_8++;
             }
-
-            // For salary wise count
-
-            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
-
-                $under_ten_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
-
-                $between_ten_to_twenty_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 4  && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
-
-                $above_twenty_lacs++;
-            }
         }
 
         // Get All Client Heirarchy
@@ -328,8 +331,6 @@ class JobOpenController extends Controller
         $viewVariable['priority_6'] = $priority_6;
         $viewVariable['priority_7'] = $priority_7;
         $viewVariable['priority_8'] = $priority_8;
-
-        // For salary wise count
 
         $viewVariable['under_ten_lacs'] = $under_ten_lacs;
         $viewVariable['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
@@ -726,17 +727,35 @@ class JobOpenController extends Controller
 
         $job_priority = JobOpen::getJobPriorities();
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         if($all_jobs_perm) {
             
             $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
             $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10',$current_year,$next_year,1);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20',$current_year,$next_year,1);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20',$current_year,$next_year,1);
         }
         else if ($isClient) {
 
             $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type,$client_heirarchy);
             $count = sizeof($job_response);
             $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,$client_heirarchy);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10',$current_year,$next_year,1);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20',$current_year,$next_year,1);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20',$current_year,$next_year,1);
         }
         else if ($user_jobs_perm) {
 
@@ -744,6 +763,12 @@ class JobOpenController extends Controller
             $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy);
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10',$current_year,$next_year,1);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20',$current_year,$next_year,1);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20',$current_year,$next_year,1);
         }
 
         $jobs = array();
@@ -819,10 +844,6 @@ class JobOpenController extends Controller
         $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
         $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
 
-        $under_ten_lacs = 0;
-        $between_ten_to_twenty_lacs = 0;
-        $above_twenty_lacs = 0;
-
         foreach ($job_priority_data as $value) {
 
             if($value['priority'] == 0) {
@@ -848,23 +869,6 @@ class JobOpenController extends Controller
             }
             else if($value['priority'] == 8) {
                 $priority_8++;
-            }
-
-            // For salary wise count
-
-            if($value['lacs_from'] >= 0 && $value['lacs_from'] < 10 && $value['lacs_to'] >= 0 && $value['lacs_to'] < 10 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
-
-                $under_ten_lacs++;
-            }
-
-            if($value['lacs_from'] >= 10 && $value['lacs_from'] <= 20 && $value['lacs_to'] >= 10 && $value['lacs_to'] <= 20 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
-
-                $between_ten_to_twenty_lacs++;
-            }
-
-            if($value['lacs_from'] >= 20 && $value['lacs_to'] >= 20 && $value['priority'] != 4  && $value['priority'] != 9 && $value['priority'] != 10) {
-
-                $above_twenty_lacs++;
             }
         }
 
@@ -3300,11 +3304,23 @@ class JobOpenController extends Controller
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
         $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         if($all_jobs_perm) {
 
             $count = JobOpen::getAllClosedJobsCount(1,$user_id,'',$current_year,$next_year);
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10',$current_year,$next_year,4);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20',$current_year,$next_year,4);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20',$current_year,$next_year,4);
         }
         else if ($isClient) {
 
@@ -3312,21 +3328,27 @@ class JobOpenController extends Controller
             $count = sizeof($job_response);
 
             $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,0);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10',$current_year,$next_year,4);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20',$current_year,$next_year,4);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20',$current_year,$next_year,4);
         }
         else if ($user_jobs_perm) {
 
             $count = JobOpen::getAllClosedJobsCount(0,$user_id,'',$current_year,$next_year);
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10',$current_year,$next_year,4);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20',$current_year,$next_year,4);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20',$current_year,$next_year,4);
         }
 
         $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
-
-        // For salary wise count
-
-        $under_ten_lacs = 0;
-        $between_ten_to_twenty_lacs = 0;
-        $above_twenty_lacs = 0;
 
         foreach ($job_priority_data as $job_priority) {
 
@@ -3338,23 +3360,6 @@ class JobOpenController extends Controller
             }
             else if($job_priority['priority'] == 10) {
                 $priority_10++;
-            }
-
-            // For salary wise count
-
-            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
-
-                $under_ten_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
-
-                $between_ten_to_twenty_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
-
-                $above_twenty_lacs++;
             }
         }
 
@@ -3416,60 +3421,61 @@ class JobOpenController extends Controller
         $user_email = $user->email;
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
-        if($all_jobs_perm) {
-
-            $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
-            $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search,$current_year,$next_year);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
-        }
-        else if ($isClient) {
-
-            $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
-            $count = sizeof($job_response);
-            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,0);
-        }
-        else if ($user_jobs_perm) {
-
-            $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
-            $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search,$current_year,$next_year);
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
-        }
-
-        $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
-
         // For salary wise count
 
         $under_ten_lacs = 0;
         $between_ten_to_twenty_lacs = 0;
         $above_twenty_lacs = 0;
 
+        if($all_jobs_perm) {
+
+            $job_response = JobOpen::getClosedJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = JobOpen::getAllClosedJobsCount(1,$user_id,$search,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10',$current_year,$next_year,4);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20',$current_year,$next_year,4);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20',$current_year,$next_year,4);
+        }
+        else if ($isClient) {
+
+            $job_response = JobOpen::getClosedJobsByClient($client_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = sizeof($job_response);
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,0);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10',$current_year,$next_year,4);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20',$current_year,$next_year,4);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20',$current_year,$next_year,4);
+        }
+        else if ($user_jobs_perm) {
+
+            $job_response = JobOpen::getClosedJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year);
+            $count = JobOpen::getAllClosedJobsCount(0,$user_id,$search,$current_year,$next_year);
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10',$current_year,$next_year,4);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20',$current_year,$next_year,4);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20',$current_year,$next_year,4);
+        }
+
+        $priority_4 = 0;$priority_9 = 0;$priority_10 = 0;
+
         foreach ($job_priority_data as $job_priority) {
 
-           if($job_priority['priority'] == 4) {
+            if($job_priority['priority'] == 4) {
                 $priority_4++;
-           }
-           else if($job_priority['priority'] == 9) {
+            }
+            else if($job_priority['priority'] == 9) {
                 $priority_9++;
-           }
-           else if($job_priority['priority'] == 10) {
+            }
+            else if($job_priority['priority'] == 10) {
                 $priority_10++;
-           }
-
-           // For salary wise count
-
-            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
-
-                $under_ten_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
-
-                $between_ten_to_twenty_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 0 && $job_priority['priority'] != 1 && $job_priority['priority'] != 2 && $job_priority['priority'] != 3 && $job_priority['priority'] != 5 && $job_priority['priority'] != 6 && $job_priority['priority'] != 7 && $job_priority['priority'] != 8) {
-
-                $above_twenty_lacs++;
             }
         }
         
@@ -3480,9 +3486,9 @@ class JobOpenController extends Controller
 
         // For salary wise count
         
-        $close_priority['under_ten_lacs'] = $under_ten_lacs++;
-        $close_priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs++;
-        $close_priority['above_twenty_lacs'] = $above_twenty_lacs++;
+        $close_priority['under_ten_lacs'] = $under_ten_lacs;
+        $close_priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $close_priority['above_twenty_lacs'] = $above_twenty_lacs;
 
         $job_priority = JobOpen::getJobPriorities();
         $jobs = array();
@@ -4116,21 +4122,45 @@ class JobOpenController extends Controller
         $user_email = $user->email;
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         if($all_jobs_perm) {
 
             $count = JobOpen::getAllApplicantJobsCount(1,$user_id,NUll);
             $job_priority_data = JobOpen::getPriorityWiseApplicantJobs(1,$user_id,NULL);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10','','',11);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20','','',11);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20','','',11);
         }
         else if ($isClient) {
 
             $job_response = JobOpen::getAllApplicantJobsByCLient($client_id,0,0,0,NULL,'');
             $count = sizeof($job_response);
             $job_priority_data = JobOpen::getPriorityWiseApplicantJobsByClient($client_id,NULL);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10','','',11);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20','','',11);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20','','',11);
         }
         else if ($user_jobs_perm) {
 
             $count = JobOpen::getAllApplicantJobsCount(0,$user_id,NULL);
             $job_priority_data = JobOpen::getPriorityWiseApplicantJobs(0,$user_id,NULL);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10','','',11);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20','','',11);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20','','',11);
         }
 
         $priority_0 = 0;
@@ -4141,10 +4171,6 @@ class JobOpenController extends Controller
         $priority_6 = 0;
         $priority_7 = 0;
         $priority_8 = 0;
-
-        $under_ten_lacs = 0;
-        $between_ten_to_twenty_lacs = 0;
-        $above_twenty_lacs = 0;
 
         foreach ($job_priority_data as $job_priority) {
 
@@ -4171,23 +4197,6 @@ class JobOpenController extends Controller
             }
             else if($job_priority['priority'] == 8) {
                 $priority_8++;
-            }
-
-            // For salary wise count
-
-            if($job_priority['lacs_from'] >= 0 && $job_priority['lacs_from'] < 10 && $job_priority['lacs_to'] >= 0 && $job_priority['lacs_to'] < 10 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
-
-                $under_ten_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 10 && $job_priority['lacs_from'] <= 20 && $job_priority['lacs_to'] >= 10 && $job_priority['lacs_to'] <= 20 && $job_priority['priority'] != 4 && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
-
-                $between_ten_to_twenty_lacs++;
-            }
-
-            if($job_priority['lacs_from'] >= 20 && $job_priority['lacs_to'] >= 20 && $job_priority['priority'] != 4  && $job_priority['priority'] != 9 && $job_priority['priority'] != 10) {
-
-                $above_twenty_lacs++;
             }
         }
 
@@ -4294,17 +4303,35 @@ class JobOpenController extends Controller
 
         $job_priority = JobOpen::getJobPriorities();
 
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+
         if($all_jobs_perm) {
             
             $job_response = JobOpen::getApplicantJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type);
             $count = JobOpen::getAllApplicantJobsCount(1,$user_id,$search);
             $job_priority_data = JobOpen::getPriorityWiseApplicantJobs(1,$user_id,NULL);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10','','',11);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20','','',11);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20','','',11);
         }
         else if ($isClient) {
 
             $job_response = JobOpen::getAllApplicantJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type);
             $count = sizeof($job_response);
             $job_priority_data = JobOpen::getPriorityWiseApplicantJobsByClient($client_id,NULL);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10','','',11);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20','','',11);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20','','',11);
         }
         else if ($user_jobs_perm) {
 
@@ -4312,6 +4339,12 @@ class JobOpenController extends Controller
             $count = JobOpen::getAllApplicantJobsCount(0,$user_id,$search);
 
             $job_priority_data = JobOpen::getPriorityWiseApplicantJobs(0,$user_id,NULL);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10','','',11);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20','','',11);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20','','',11);
         }
 
         $jobs = array();
@@ -4385,10 +4418,6 @@ class JobOpenController extends Controller
         $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
         $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
 
-        $under_ten_lacs = 0;
-        $between_ten_to_twenty_lacs = 0;
-        $above_twenty_lacs = 0;
-
         foreach ($job_priority_data as $value) {
 
             if($value['priority'] == 0) {
@@ -4414,23 +4443,6 @@ class JobOpenController extends Controller
             }
             else if($value['priority'] == 8) {
                 $priority_8++;
-            }
-
-           // For salary wise count
-
-            if($value['lacs_from'] >= 0 && $value['lacs_from'] < 10 && $value['lacs_to'] >= 0 && $value['lacs_to'] < 10 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
-
-                $under_ten_lacs++;
-            }
-
-            if($value['lacs_from'] >= 10 && $value['lacs_from'] <= 20 && $value['lacs_to'] >= 10 && $value['lacs_to'] <= 20 && $value['priority'] != 4 && $value['priority'] != 9 && $value['priority'] != 10) {
-
-                $between_ten_to_twenty_lacs++;
-            }
-
-            if($value['lacs_from'] >= 20 && $value['lacs_to'] >= 20 && $value['priority'] != 4  && $value['priority'] != 9 && $value['priority'] != 10) {
-
-                $above_twenty_lacs++;
             }
         }
 

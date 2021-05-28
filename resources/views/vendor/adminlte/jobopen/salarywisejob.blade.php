@@ -23,11 +23,18 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             @if(isset($financial_year) && $financial_year != '')
+
                 <h4><b>Financial Year</b> : {{ $financial_year }}</h4>
 
                 <div class="pull-left">
                     <h2>Job Closing List ({{ $count or 0}})</h2>
                 </div>
+            @elseif(isset($page) && $page != '')
+
+                <div class="pull-left">
+                    <h2>Applicant Job List ({{ $count or 0}})</h2>
+                </div>
+
             @else
                 <div class="pull-left">
                     <h2>Job Openings List ({{ $count or 0}})</h2>
