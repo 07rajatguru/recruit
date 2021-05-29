@@ -1908,17 +1908,18 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
 
+        // Salary Wise Listing
+
         if (isset($salary) && $salary == '10') {
             $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',5);
             $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
-            $job_open_query = $job_open_query->orwhere('lacs_to','>=',20);
+            $job_open_query = $job_open_query->where('lacs_to','>',20);
         }
 
          // Get data by financial year
@@ -1972,17 +1973,18 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
 
+        // Salary Wise Listing
+
         if (isset($salary) && $salary == '10') {
             $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',5);
             $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
-            $job_open_query = $job_open_query->orwhere('lacs_to','>=',20);
+            $job_open_query = $job_open_query->where('lacs_to','>',20);
         }
 
          // Get data by financial year
@@ -2322,17 +2324,18 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
+        // Salary Wise Listing
+
         if (isset($salary) && $salary == '10') {
             $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',5);
             $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
-            $job_open_query = $job_open_query->orwhere('lacs_to','>=',20);
+            $job_open_query = $job_open_query->where('lacs_to','>',20);
         }
 
         // Get data by financial year
@@ -2380,17 +2383,18 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftJoin('users','users.id','=','job_openings.hiring_manager_id');
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
+        // Salary Wise Listing
+
         if (isset($salary) && $salary == '10') {
             $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',5);
             $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
-            $job_open_query = $job_open_query->orwhere('lacs_to','>=',20);
+            $job_open_query = $job_open_query->where('lacs_to','>',20);
         }
 
         // Get data by financial year

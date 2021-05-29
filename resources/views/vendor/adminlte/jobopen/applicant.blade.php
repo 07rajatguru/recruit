@@ -75,7 +75,7 @@
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
                 
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">10L ({{ $under_ten_lacs }})</div>
+                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L ({{ $under_ten_lacs }})</div>
                     </a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
