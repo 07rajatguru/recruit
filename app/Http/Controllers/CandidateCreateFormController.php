@@ -15,6 +15,7 @@ use App\FunctionalRoles;
 use App\EducationQualification;
 use App\EducationSpecialization;
 use App\Events\NotificationMail;
+use App\JobOpen;
 
 class CandidateCreateFormController extends Controller
 {
@@ -240,16 +241,20 @@ class CandidateCreateFormController extends Controller
 
             if(isset($applicant_job_id) && $applicant_job_id > 0) {
 
-                $job_details = JobOpen::getHiringManagerEmailByJobId($applicant_job_id);
+                $hiring_manager_email = JobOpen::getHiringManagerEmailByJobId($applicant_job_id);
 
                 $module = "Applicant Candidate";
                 $sender_name = $owner_id;
 
-                $to = 'hr@adlertalent.com';
+                $to = $hiring_manager_email;
                 $subject = "New Applicant Candidate - " . $candiateFname;
                 $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
                 $module_id = $candidate_id;
                 $cc = 'info@adlertalent.com';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                return redirect('candidate/add/'.$applicant_job_id)->with('success','Your Details Saved Successfully.');
             }
             else {
 
@@ -261,12 +266,12 @@ class CandidateCreateFormController extends Controller
                 $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
                 $module_id = $candidate_id;
                 $cc = 'info@adlertalent.com';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');
             }
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
-
-        return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');
     }
 
     public function getSpecialization() {

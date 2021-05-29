@@ -1909,14 +1909,16 @@ class JobOpen extends Model
         }
 
         if (isset($salary) && $salary == '10') {
+            $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',9);
+            $job_open_query = $job_open_query->where('lacs_from','>=',5);
+            $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
-            $job_open_query = $job_open_query->where('lacs_to','>=',20);
+            $job_open_query = $job_open_query->orwhere('lacs_to','>=',20);
         }
 
          // Get data by financial year
@@ -1971,14 +1973,16 @@ class JobOpen extends Model
         }
 
         if (isset($salary) && $salary == '10') {
+            $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',9);
+            $job_open_query = $job_open_query->where('lacs_from','>=',5);
+            $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
-            $job_open_query = $job_open_query->where('lacs_to','>=',20);
+            $job_open_query = $job_open_query->orwhere('lacs_to','>=',20);
         }
 
          // Get data by financial year
@@ -2319,10 +2323,12 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         if (isset($salary) && $salary == '10') {
+            $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',9);
+            $job_open_query = $job_open_query->where('lacs_from','>=',5);
+            $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
@@ -2375,10 +2381,12 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
 
         if (isset($salary) && $salary == '10') {
+            $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
         }
         else if (isset($salary) && $salary == '10-20') {
-            $job_open_query = $job_open_query->where('lacs_from','>=',9);
+            $job_open_query = $job_open_query->where('lacs_from','>=',5);
+            $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
         }
         else if (isset($salary) && $salary == '20') {
@@ -3889,5 +3897,25 @@ class JobOpen extends Model
             $i++;
         }
         return $jobs_list;
+    }
+
+    public static function getHiringManagerEmailByJobId($job_id) {
+
+        $job_query = JobOpen::query();
+
+        $job_query = $job_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
+        $job_query = $job_query->select('users.email as hiring_manager_email');
+        $job_query = $job_query->where('job_openings.id', '=', $job_id);
+        $job_response = $job_query->first();
+
+        $hiring_manager_email = '';
+
+        if(isset($job_response) && $job_response != '') {
+            $hiring_manager_email = $job_response->hiring_manager_email;
+        }
+        else {
+            $hiring_manager_email = '';
+        }
+        return $hiring_manager_email;
     }
 }
