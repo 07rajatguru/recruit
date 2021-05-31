@@ -140,8 +140,9 @@ class ProcessController extends Controller
         }
         
         $selected_departments = array();
+        $process_id = 0;
         
-        return view('adminlte::process.create',compact('action','departments','selected_departments'));
+        return view('adminlte::process.create',compact('action','departments','selected_departments','process_id'));
     }
 
     public function store(Request $request) {
@@ -302,7 +303,9 @@ class ProcessController extends Controller
 
         $users = User::getAllUsers($selected_departments);
 
-        return view('adminlte::process.edit',compact('action','users','selected_users','process','processdetails','selected_departments','departments'));
+        $process_id = $id;
+
+        return view('adminlte::process.edit',compact('action','users','selected_users','process','processdetails','selected_departments','departments','process_id'));
      }
 
      public function update(Request $request,$id) {
@@ -522,13 +525,52 @@ class ProcessController extends Controller
 
     public function getUsersByDepartment() {
 
-        $department_ids_string = $_GET['department_ids_string'];
+        $department_id = $_GET['department_id'];
 
         // get user names
-        $users = User::getUsersByDepartmentId($department_ids_string);
+        $users = User::getUsersByDepartmentId($department_id);
 
-        $data['users'] = $users;
+        return $users;
+    }
 
-        return json_encode($data);
+    public function getUsersByProcessID() {
+
+        $department_ids = $_GET['department_selected_items'];
+        $process_id = $_GET['process_id'];
+
+        $users = User::getUsersByDepartmentIDArray($department_ids);
+
+        $process_user_res = \DB::table('process_visible_users')
+        ->join('users','users.id','=','process_visible_users.user_id')
+        ->select('users.id as user_id', 'users.name as name')
+        ->where('process_visible_users.process_id',$process_id)->get();
+
+        $selected_users = array();
+        $i=0;
+
+        foreach ($process_user_res as $key => $value) {
+            $selected_users[$i] = $value->user_id;
+            $i++;       
+        }
+
+        $data = array();
+        $j=0;
+
+        foreach ($users as $key => $value) {
+
+            if(in_array($value['id'], $selected_users)) {
+                $data[$j]['checked'] = '1';
+            }
+            else {
+                $data[$j]['checked'] = '0';
+            }
+            
+            $data[$j]['id'] = $value['id'];
+            $data[$j]['type'] = $value['type'];
+            $data[$j]['name'] = $value['name'];
+
+            $j++;
+        }
+        return $data;exit;
     }
 }

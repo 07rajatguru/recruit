@@ -49,7 +49,7 @@
                 <div class="">
                     <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
                         <strong>Title : <span class = "required_fields">*</span></strong>
-                        {!! Form::text('title', null, array('id'=>'title','placeholder' => 'Title','class' => 'form-control','required','tabindex' => '1')) !!}
+                        {!! Form::text('title', null, array('id'=>'title','placeholder' => 'Title','class' => 'form-control','tabindex' => '1')) !!}
                         @if ($errors->has('title'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('title') }}</strong>
@@ -62,21 +62,25 @@
                         <input type="checkbox" id="departments_all"/><strong>Select All</strong><br/>
 
                         @foreach($departments as $k=>$v)&nbsp;&nbsp; 
-                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('class' => 'department_ids','onclick' => 'displayUsers()')) !!}
+                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}
                             {!! Form::label ($v) !!}
                         @endforeach
 
-                        @if($action == "add")
-                            <div class="add_user_list"></div>
-                        @endif
-                        @if($action == "edit")
-                            <div class="add_user_list">
-                                @foreach($users as $k1=>$v1)&nbsp;&nbsp; 
-                                    {!! Form::checkbox('user_ids[]', $k1, in_array($k1,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
-                                    {!! Form::label ($v1) !!}
-                                @endforeach
+                        <br/><br/>
+
+                        <?php 
+                            $id = '';
+                        ?>
+                        @foreach($departments as $k=>$v)
+                            <div class="div_{{ $k }}" style="margin-left: 12px;display:none;">
                             </div>
-                        @endif
+                            <?php
+                                $id = $id . "," . $k;
+                            ?>
+                        @endforeach
+
+                        <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
+
                     </div>
                 </div>
             </div>
@@ -85,7 +89,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Upload Documents : <span class = "required_fields">*</span></strong>
-                        <input type="file" name="upload_documents[]" id="upload_documents" multiple class="form-control" />
+                        <input type="file" name="upload_documents[]" id="upload_documents" multiple class="form-control"/>
                     </div>
                 </div>
             @endif
@@ -131,6 +135,9 @@
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             {!! Form::submit(isset($training) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
         </div>
+
+        <input type="hidden" name="action" id="action" value="{{ $action }}">
+        <input type="hidden" name="training_id" id="training_id" value="{{ $training_id }}">
     </div>
 </div>
 
@@ -167,54 +174,150 @@
             $("#departments_all").click(function () {
                 
                 $('.department_ids').prop('checked', this.checked);
-                displayUsers();
+
+                var isChecked = $("#departments_all").is(":checked");
+                var id_string = $("#id_string").val();
+                var id_arr = id_string.split(",");;
+
+                if(isChecked == true) {
+                    $('.department_ids').prop('checked', this.checked);
+                    for (var i = 1; i < id_arr.length; i++) {
+                        displayUsers(id_arr[i]);
+                    }
+                }
+                else {
+                    $('.department_ids').prop('checked', false);
+                    $('.department_class').prop('checked', false);
+
+                    for (var i = 1; i < id_arr.length; i++) {
+                        $(".div_"+id_arr[i]).hide();
+                    }
+                }
             });
 
             $(".department_ids").click(function () {
                 $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
-                displayUsers();
             });
 
-            // Edit form > if all user select then select all selected
-            $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+            var action = $("#action").val();
+
+            if(action == 'edit') {
+
+                loadUsers();
+
+                $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+            }        
         });
 
-        function displayUsers() {
+        function displayUsers(department_id) {
 
-            var department_ids_string = [];
-            jQuery("input[name='department_ids[]']:checked").each(function(i) {
-                department_ids_string.push($(this).val());
+            $.ajax({
+
+                url:'/training/getusers',
+                data:'department_id='+department_id,
+                dataType:'json',
+                success: function(data) {
+
+                    // for department_ids
+                    var department_items = document.getElementsByName('department_ids[]');
+                    var department_selected_items = "";
+
+                    for(var i=0; i < department_items.length; i++) {
+
+                        if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
+                            department_selected_items += department_items[i].value+",";
+                    }
+
+                    var search_str = ","+department_id+",";
+                    var search_str_2 = department_id+",";
+
+                    var bool_1 = department_selected_items.includes(department_id);
+                    var bool_2 = department_selected_items.search(search_str) > -1;
+                    var bool_3 = department_selected_items.search(search_str_2) > -1;
+
+                    if(bool_1 == true || bool_2 == true || bool_3 == true) {
+
+                        if(data.length > 0) {
+
+                            $(".div_"+department_id).html('');
+
+                            var html = '';
+                           
+                            for (var i = 0; i < data.length; i++) {
+
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
+                            }
+
+                            html += '<br/>';
+
+                            $(".div_"+department_id).append(html);
+                            $(".div_"+department_id).show();
+
+                            var isChecked = $("#departments_all").is(":checked");
+                            if(isChecked == true) {
+                                $('.department_class').prop('checked', true);
+                            }
+                        }
+                    }
+                    else {
+
+                        $(".div_"+department_id).html('');
+                        $(".div_"+department_id).hide();
+                    }
+                }
             });
+        }
 
-            if(department_ids_string != '') {
+        function loadUsers() {
 
-                $.ajax({
+            // for department_ids
+            var department_items = document.getElementsByName('department_ids[]');
+            var department_selected_items = "";
 
-                    url:'/training/getusers',
-                    data:'department_ids_string='+department_ids_string,
-                    dataType:'json',
-                    success: function(data) {
+            for(var i=0; i<department_items.length; i++) {
 
-                        if(data.users) {
+                if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
+                    department_selected_items += department_items[i].value+",";
+            }
 
-                            $(".add_user_list").html("");
+            var training_id = $("#training_id").val();
+
+            $.ajax({
+
+                url:'/getUsersByTrainingID',
+                method:'GET',
+                data:{'training_id':training_id,'department_selected_items':department_selected_items},
+                dataType:'json',
+                success: function(data) {
+
+                    if(data.length > 0) {
+
+                        for (var i = 0; i < data.length; i++) {
 
                             var html = '';
 
-                            $.each(data.users,function(key, value) {
+                            if(data[i].checked == '1') {
 
-                                html += '<b>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="user_ids[]" value="'+key+'">&nbsp;&nbsp;'+value+'</b>';
-                            }); 
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                            }
 
-                            $(".add_user_list").append(html);
+                            if(data[i].checked == '0') {
+
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                            }
+
+                            $(".div_"+data[i].type).append(html);
+                            $(".div_"+data[i].type).show();
                         }
                     }
-                });
-            }
-            else {
-
-                $(".add_user_list").html("");
-            }
+                }
+            });
         }
     </script>
 @endsection

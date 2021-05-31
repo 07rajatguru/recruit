@@ -662,7 +662,7 @@ class User extends Authenticatable
         return $full_name_array;
     }
 
-    public static function getUsersByDepartmentId($department_ids_string) {
+    public static function getUsersByDepartmentId($department_id) {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -672,26 +672,69 @@ class User extends Authenticatable
 
         $saloni_user_id = getenv('SALONIUSERID');
 
-        $departments = explode(",", $department_ids_string);
-
         $query = User::query();
-
-        // Get before 7 days users list
         $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('type',$client_type);
-        $query = $query->whereIn('type',$departments);
+
+        if(isset($department_id) && $department_id > 0) {
+            $query = $query->where('users.type',$department_id);
+        }
+
         $query = $query->where('id','!=',$saloni_user_id);
-        $query = $query->select('users.id','users.name');
+        $query = $query->select('users.id','users.name','users.type');
         $query = $query->orderBy('users.name');
         $response = $query->get();
 
         $user_name_array = array();
+        $i=0;
 
         if(isset($response) && sizeof($response) > 0) {
 
             foreach ($response as $key => $value) {
 
-                $user_name_array[$value->id] = $value->name;
+                $user_name_array[$i]['id'] = $value->id;
+                $user_name_array[$i]['name'] = $value->name;
+                $user_name_array[$i]['type'] = $value->type;
+                
+                $i++;
+            }
+        }
+        return $user_name_array;
+    }
+
+    public static function getUsersByDepartmentIDArray($department_ids) {
+
+        $department_ids_array = explode(",", $department_ids);
+        
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $saloni_user_id = getenv('SALONIUSERID');
+
+        $query = User::query();
+        $query = $query->whereNotIn('users.status',$status_array);
+        $query = $query->whereNotIn('type',$client_type);
+        $query = $query->whereIn('users.type',$department_ids_array);
+        $query = $query->where('id','!=',$saloni_user_id);
+        $query = $query->select('users.id','users.name','users.type');
+        $query = $query->orderBy('users.name');
+        $response = $query->get();
+
+        $user_name_array = array();
+        $i=0;
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $user_name_array[$i]['id'] = $value->id;
+                $user_name_array[$i]['name'] = $value->name;
+                $user_name_array[$i]['type'] = $value->type;
+                
+                $i++;
             }
         }
         return $user_name_array;

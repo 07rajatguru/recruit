@@ -2072,6 +2072,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@getUsersByDepartment'
     ]);
 
+    Route::get('getUsersByTrainingID', [
+        'as' => 'getusers.bytrainingid',
+        'uses' => 'TrainingController@getUsersByTrainingID',
+    ]);
+
     // Admin > Process Manual
     
     Route::get('process', [
@@ -2143,6 +2148,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/process/getusers', [
         'as' => 'process.getusers',
         'uses' => 'ProcessController@getUsersByDepartment'
+    ]);
+
+    Route::get('getUsersByProcessID', [
+        'as' => 'getusers.byprocessid',
+        'uses' => 'ProcessController@getUsersByProcessID',
     ]);
     
     // Admin > Accounting Heads
