@@ -379,7 +379,7 @@ class CandidateController extends Controller
         $jobopen[0] = 'Select';
 
         foreach ($job_response as $k=>$v) {
-            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
+            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].", ".$v['city'];
         }
 
         $job_id = 0;
@@ -416,6 +416,8 @@ class CandidateController extends Controller
         $candiateCountry = $request->input('country');
         $candiateZipCode = $request->input('zipcode');
         $candidateEmail = $request->input('email');
+        $candidateSource = $request->input('candidateSource');
+        $job_id = $request->input('jobopen');
 
         $candiateHighest_qualification = $request->input('highest_qualification');
         $candiateExperience_years = $request->input('experience_years');
@@ -426,8 +428,7 @@ class CandidateController extends Controller
         $candiateCurrent_salary = $request->input('current_salary');
         $candiateSkill = $request->input('skill');
         $candiateSkype_id = $request->input('skype_id');
-        $candidateSource = $request->input('candidateSource');
-        $job_id = $request->input('jobopen');
+        
 
         // Save Candidate Basic Info
         $candidate = new CandidateBasicInfo();
@@ -762,7 +763,7 @@ class CandidateController extends Controller
 
         foreach ($job_response as $k=>$v) {
 
-            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['location'];
+            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].", ".$v['city'];
         }
 
 

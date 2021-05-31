@@ -710,7 +710,7 @@ class ToDos extends Model
             foreach ($interview_res as $k=>$v) {
 
                 if($v->remote_working == '1') {
-                    $city = "Remote Working";
+                    $city = "Remote";
                 }
                 else {
                     $city = $v->job_city;

@@ -1144,7 +1144,7 @@ class EveryMinute extends Command
 
                         if($v2['remote_working'] == '1') {
 
-                            $interview_details[$i]['job_location'] = "Remote Working";
+                            $interview_details[$i]['job_location'] = "Remote";
                         }
                         else {
 

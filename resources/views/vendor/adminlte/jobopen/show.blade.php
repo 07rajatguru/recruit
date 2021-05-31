@@ -132,7 +132,7 @@
 
                 @if(isset($jobopen['remote_working']) && $jobopen['remote_working'] != '')
                     <div class="box-header col-md-6 ">
-                        <h3 class="box-title">Job Location - Remote Working</h3>
+                        <h3 class="box-title">Job Location - Remote</h3>
                     </div>
                 @else
                     <div class="box-header col-md-6 ">

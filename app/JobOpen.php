@@ -198,7 +198,7 @@ class JobOpen extends Model
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
                 $job_query = $job_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $job_query = $job_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -237,7 +237,7 @@ class JobOpen extends Model
                 $job_query = $job_query->where('job_openings.posting_title','like',"%$search%");
                 $job_query = $job_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_query = $job_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -271,7 +271,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -359,7 +359,7 @@ class JobOpen extends Model
                 $job_close_query = $job_close_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_close_query = $job_close_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -505,7 +505,7 @@ class JobOpen extends Model
             
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -570,7 +570,7 @@ class JobOpen extends Model
                 $job_close_query = $job_close_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_close_query = $job_close_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_close_query = $job_close_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -681,7 +681,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -732,7 +732,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -845,7 +845,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -899,7 +899,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['location'] = "Remote Working";
+                $jobs_list[$i]['location'] = "Remote";
             }
             else {
 
@@ -1036,7 +1036,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -1169,7 +1169,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -1232,8 +1232,8 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
-
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                    
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -1333,7 +1333,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -1404,7 +1404,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -1469,7 +1469,7 @@ class JobOpen extends Model
 
             if($v->remote_working == '1') {
 
-                $response['job_location'] = "Remote Working";
+                $response['job_location'] = "Remote";
             }
             else {
 
@@ -1478,7 +1478,7 @@ class JobOpen extends Model
 
             if($v->remote_working == '1') {
 
-                $response['city'] = "Remote Working";
+                $response['city'] = "Remote";
             }
             else {
 
@@ -1680,7 +1680,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_open_list[$i]['city'] = "Remote Working";
+                $jobs_open_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -1872,7 +1872,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -2124,7 +2124,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -2294,7 +2294,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -2516,7 +2516,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -2688,7 +2688,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -2788,7 +2788,7 @@ class JobOpen extends Model
 
             if($response->remote_working == '1') {
 
-                $jobs_list['city'] = "Remote Working";
+                $jobs_list['city'] = "Remote";
             }
             else {
 
@@ -2851,7 +2851,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -2946,7 +2946,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -3077,7 +3077,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -3258,7 +3258,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -3418,7 +3418,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -3486,7 +3486,7 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
                 $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
                     
                     $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -3583,7 +3583,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
@@ -3804,7 +3804,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
                 
@@ -3878,7 +3878,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['location'] = "Remote Working";
+                $jobs_list[$i]['location'] = "Remote";
             }
             else {
 
@@ -3887,7 +3887,7 @@ class JobOpen extends Model
 
             if($value->remote_working == '1') {
 
-                $jobs_list[$i]['city'] = "Remote Working";
+                $jobs_list[$i]['city'] = "Remote";
             }
             else {
 

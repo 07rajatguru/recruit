@@ -96,7 +96,7 @@ class EmailsNotifications extends Model
 
             if($value->remote_working == '1') {
 
-                $job_open['remote_working'] = "Remote Working";
+                $job_open['remote_working'] = "Remote";
             }
             else {
 

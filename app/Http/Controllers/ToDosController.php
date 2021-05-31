@@ -1223,7 +1223,7 @@ class ToDosController extends Controller
 
                     if($typeDetail->remote_working == '1') {
 
-                        $city = "Remote Working";
+                        $city = "Remote";
                     }
                     else {
 

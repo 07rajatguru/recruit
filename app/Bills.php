@@ -74,7 +74,7 @@ class Bills extends Model
 
             if($value->remote_working == '1') {
 
-                $bills[$i]['job_location'] = "Remote Working";
+                $bills[$i]['job_location'] = "Remote";
             }
             else {
 
@@ -190,7 +190,7 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
                 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -235,7 +235,7 @@ class Bills extends Model
 
             if($value->remote_working == '1') {
 
-                $bills[$i]['job_location'] = "Remote Working";
+                $bills[$i]['job_location'] = "Remote";
             }
             else {
 
@@ -260,7 +260,7 @@ class Bills extends Model
 
              if($value->remote_working == '1') {
 
-                $bills[$i]['city'] = "Remote Working";
+                $bills[$i]['city'] = "Remote";
             }
             else {
 
@@ -381,8 +381,8 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -484,8 +484,8 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -530,7 +530,7 @@ class Bills extends Model
 
             if($value->remote_working == '1') {
 
-                $bills[$i]['job_location'] = "Remote Working";
+                $bills[$i]['job_location'] = "Remote";
             }
             else {
 
@@ -555,7 +555,7 @@ class Bills extends Model
 
             if($value->remote_working == '1') {
 
-                $bills[$i]['city'] = "Remote Working";
+                $bills[$i]['city'] = "Remote";
             }
             else {
 
@@ -675,8 +675,8 @@ class Bills extends Model
                 $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
                 $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
-                
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -1265,7 +1265,7 @@ class Bills extends Model
 
             if($join_mail_res->remote_working == '1') {
 
-                $join_confirmation_mail['job_location'] = "Remote Working";
+                $join_confirmation_mail['job_location'] = "Remote";
             }
             else {
 

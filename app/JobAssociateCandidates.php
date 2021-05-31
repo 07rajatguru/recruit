@@ -87,13 +87,13 @@ class JobAssociateCandidates extends Model
             if($value1->city!=''){
                 $location .= $value1->city;
             }
-            if($value1->state!=''){
+            if($value1->state!='') {
                 if($location=='')
                     $location .= $value1->state;
                 else
                     $location .= ", ".$value1->state;
             }
-            if($value1->country!=''){
+            if($value1->country!='') {
                 if($location=='')
                     $location .= $value1->country;
                 else
@@ -102,7 +102,7 @@ class JobAssociateCandidates extends Model
 
             if($value1->remote_working == '1') {
 
-                $city = "Remote Working";
+                $city = "Remote";
             }
             else {
 
@@ -276,7 +276,7 @@ class JobAssociateCandidates extends Model
 
             if($v->remote_working == '1') {
 
-                $result[$i]['location'] = "Remote Working";
+                $result[$i]['location'] = "Remote";
             }
             else {
 
@@ -503,7 +503,7 @@ class JobAssociateCandidates extends Model
 
             if($v->remote_working == '1') {
 
-                $result[$i]['location'] = "Remote Working";
+                $result[$i]['location'] = "Remote";
             }
             else {
 
@@ -564,7 +564,7 @@ class JobAssociateCandidates extends Model
 
                 if($candidateJobs->remote_working == '1') {
 
-                    $candidate_jobs[$i]['location'] = "Remote Working";
+                    $candidate_jobs[$i]['location'] = "Remote";
                 }
                 else {
 

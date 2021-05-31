@@ -501,7 +501,7 @@ class InterviewController extends Controller
         $jobopen[''] = 'Select';
 
         foreach ($job_response as $k=>$v) {
-            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['city'];
+            $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].", ".$v['city'];
         }
 
         $viewVariable = array();
@@ -652,7 +652,7 @@ class InterviewController extends Controller
         $jobopen[0] = 'Select';
 
         foreach ($job_response as $k=>$v) {
-           $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].",".$v['city'];
+           $jobopen[$v['id']] = $v['company_name']." - ".$v['posting_title'].", ".$v['city'];
         }
 
         $dateClass = new Date();
@@ -840,7 +840,7 @@ class InterviewController extends Controller
 
         if($interviewDetails->remote_working == '1') {
 
-            $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.","."Remote Working";
+            $interview['posting_title'] = $interviewDetails->company_name." - ".$interviewDetails->posting_title.","."Remote";
         }
         else {
 

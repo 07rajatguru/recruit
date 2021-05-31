@@ -1490,7 +1490,7 @@ class JobOpenController extends Controller
 
             if($job_open_detail->remote_working == '1') {
 
-                $job_open['remote_working'] = 'Remote Working';
+                $job_open['remote_working'] = 'Remote';
             }
             else {
 

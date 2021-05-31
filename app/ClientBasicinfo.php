@@ -622,7 +622,7 @@ class ClientBasicinfo extends Ardent
 
             if($response->remote_working == '1') {
 
-                $client['job_location'] = "Remote Working";
+                $client['job_location'] = "Remote";
             }
             else {
 

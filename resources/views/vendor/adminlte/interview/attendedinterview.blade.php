@@ -82,7 +82,7 @@
 
                     @if(isset($attendedinterview['remote_working']) && $attendedinterview['remote_working'] != '')
 
-                        <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , Remote Working</td>
+                        <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , Remote</td>
                     @else
                         <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $attendedinterview['client_name'] }} - {{ $attendedinterview['posting_title'] }} , {{$attendedinterview['city']}}</td>
                     @endif

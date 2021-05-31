@@ -212,7 +212,7 @@
                                         @if(isset($interview->remote_working) && $interview->remote_working != '')
                                             <td style="border: 1px solid #00c0ef;">
                                                 <a href="{{ $link }}" target="_blank">
-                                                {{ $interview->display_name }} - {{ $interview->posting_title }} , Remote Working
+                                                {{ $interview->display_name }} - {{ $interview->posting_title }}, Remote
                                                 </a>
                                             </td>
                                         @else

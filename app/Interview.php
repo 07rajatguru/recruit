@@ -136,7 +136,7 @@ class Interview extends Model
 
             if($value->remote_working == '1') {
 
-                $interview[$i]['city'] = "Remote Working";
+                $interview[$i]['city'] = "Remote";
             }
             else {
 
@@ -217,7 +217,7 @@ class Interview extends Model
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $query = $query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -246,7 +246,7 @@ class Interview extends Model
 
             if($value->remote_working == '1') {
 
-                $interview[$i]['city'] = "Remote Working";
+                $interview[$i]['city'] = "Remote";
             }
             else {
 
@@ -324,7 +324,7 @@ class Interview extends Model
                 $query = $query->orwhere('interview.location','like',"%$search%");
                 $query = $query->orwhere('interview.status','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $query = $query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -408,8 +408,7 @@ class Interview extends Model
                 $query = $query->orwhere('interview.status','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
 
-
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $query = $query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -463,7 +462,7 @@ class Interview extends Model
 
             if($value->remote_working == '1') {
 
-                $interview[$i]['city'] = "Remote Working";
+                $interview[$i]['city'] = "Remote";
             }
             else {
 
@@ -535,7 +534,7 @@ class Interview extends Model
                 $query = $query->orwhere('interview.status','like',"%$search%");
                 $query = $query->orwhere('users.name','like',"%$search%");
 
-                if(($search == 'Remote') || ($search == 'Remote ') || ($search == 'remote') || ($search == 'remote ') || ($search == 'Working') || ($search == ' Working') || ($search == 'working') || ($search == ' working')|| ($search == 'Remote Working') || ($search == 'Remote working') || ($search == 'remote Working')) {
+                if(($search == 'Remote') || ($search == 'remote')) {
 
                     $query = $query->orwhere('job_openings.remote_working','=',"1");
                 }
@@ -744,7 +743,7 @@ class Interview extends Model
 
             if($value->remote_working == '1') {
 
-                $response[$i]['location'] = "Remote Working";
+                $response[$i]['location'] = "Remote";
             }
             else {
 
@@ -1053,14 +1052,14 @@ class Interview extends Model
         $input['job_designation'] = $interview->posting_title;
 
         if(isset($interview->remote_working) && $interview->remote_working != '') {
-            $input['job_location'] = "Remote Working";
+            $input['job_location'] = "Remote";
         }
         else {
             $input['job_location'] = $location;
         }
 
         if(isset($interview->remote_working) && $interview->remote_working != '') {
-            $input['city'] = "Remote Working";
+            $input['city'] = "Remote";
         }
         else {
             $input['city'] = $interview->job_city;
@@ -1077,7 +1076,7 @@ class Interview extends Model
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
 
-            if($input['city'] == "Remote Working") {
+            if($input['city'] == "Remote") {
 
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' Position  - '. $input['city']);
@@ -1155,7 +1154,7 @@ class Interview extends Model
         $interview_details['client_name'] = $interview->client_name;
 
         if(isset($interview->remote_working) && $interview->remote_working != '') {
-            $interview_details['job_location'] = "Remote Working";
+            $interview_details['job_location'] = "Remote";
         }
         else {
             $interview_details['job_location'] = $city;
@@ -1296,7 +1295,7 @@ class Interview extends Model
 
             if($value->remote_working == '1') {
 
-                $interview[$i]['job_location'] = "Remote Working";
+                $interview[$i]['job_location'] = "Remote";
             }
             else {
 
