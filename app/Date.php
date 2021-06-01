@@ -51,6 +51,7 @@ class Date
 
         for ($i = 1; $i <= $iDaysInMonth; $i++) {
 
+            
             if ($lastDayOfWeek == $date->format('N') || $i == $iDaysInMonth) {
 
                 $aOneWeek[] = $date->format('Y-m-d');
@@ -61,6 +62,58 @@ class Date
             }
             $date->add(new DateInterval('P1D'));
         }
-        return $aWeeksOfMonth;
+
+
+        if(sizeof($aOneWeek) == 1) {
+
+            $aOneWeek[] = $date->format('Y-m-d');
+            $aWeeksOfMonth[$weekNumber++] = $aOneWeek;
+            $date->add(new DateInterval('P1D'));
+            $aOneWeek = [$date->format('Y-m-d')];
+        }
+
+        if(isset($aWeeksOfMonth) && sizeof($aWeeksOfMonth) > 0) {
+
+            $new_array = array();
+            $j=0;
+
+            foreach ($aWeeksOfMonth as $key => $value) {
+                
+                foreach ($value as $k1 => $v1) {
+
+                    $new_array[$j] = $value[0] . "--" . $value[1];
+                    $j++;
+                }
+            }
+        }
+
+        $new_array = array_unique($new_array);
+
+        if(isset($new_array) && sizeof($new_array) > 0) {
+
+            $final_array = array();
+            $kk=0;
+
+            foreach ($new_array as $key => $value) {
+
+                $frm_to_array = explode("--", $value);
+
+                $m0 = date('m',strtotime($frm_to_array[0]));
+                $m1 = date('m',strtotime($frm_to_array[1]));
+
+                if($m1 == $month) {
+
+                    $final_array[$kk]['from_date'] = $frm_to_array[0];
+                    $final_array[$kk]['to_date'] = $frm_to_array[1];
+                }
+                else if ($m0 == $month) {
+
+                    $final_array[$kk]['from_date'] = $frm_to_array[0];
+                    $final_array[$kk]['to_date'] = $frm_to_array[0];
+                }
+                $kk++;
+            }
+        }
+        return $final_array;
     }
 }

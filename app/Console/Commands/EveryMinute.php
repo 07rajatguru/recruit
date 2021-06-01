@@ -753,29 +753,18 @@ class EveryMinute extends Command
 
                 $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
 
-                $dates_array = array();
-                $i=0;
-
-                foreach ($weeks as $key => $val) {
-
-                    $dates_array[$i] = implode("--",$val);
-                    $i++;
-                }
-
                 // Get no of weeks in month & get from date & to date
                 $i=1;
                 $frm_to_date_array = array();
 
-                if(isset($dates_array) && $dates_array != '') {
+                if(isset($weeks) && $weeks != '') {
 
-                    foreach ($dates_array as $key => $value) {
+                    foreach ($weeks as $key => $value) {
 
                         $no_of_weeks = $i;
 
-                        $frm_to_array = explode("--", $value);
-
-                        $frm_to_date_array[$i]['from_date'] = $frm_to_array[0];
-                        $frm_to_date_array[$i]['to_date'] = $frm_to_array[1];
+                        $frm_to_date_array[$i]['from_date'] = $value['from_date'];
+                        $frm_to_date_array[$i]['to_date'] = $value['to_date'];
 
                         // Get no of cv's associated count in this week
                         $frm_to_date_array[$i]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount($sender_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
