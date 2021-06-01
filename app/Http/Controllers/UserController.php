@@ -129,7 +129,6 @@ class UserController extends Controller
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
         $role_id = $request->input('roles');
-        $eligibility_report = $request->input('eligibility_report');
 
         $type = $request->input('type');
         $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
@@ -183,7 +182,6 @@ class UserController extends Controller
         $user->first_name = $first_name;
         $user->last_name = $last_name;
         $user->check_floor_incharge = $check_floor_incharge;
-        $user->eligibility_report = $eligibility_report;
         $user->type = $type;
         $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
 
@@ -405,7 +403,6 @@ class UserController extends Controller
         $check_report = $request->input('daily_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
-        $eligibility_report = $request->input('eligibility_report');
 
         $type = $request->input('type');
         $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
@@ -416,7 +413,6 @@ class UserController extends Controller
         $user->floor_incharge = $floor_incharge;
         $user->status = $status;
         $user->account_manager = $account_manager;
-        $user->eligibility_report = $eligibility_report;
         $user->type = $type;
         $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
 

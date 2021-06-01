@@ -204,15 +204,7 @@
                                     {!! Form::label('Leads Added') !!}
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <strong> Eligibility Report : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('eligibility_report','Yes', true) !!}
-                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('eligibility_report','No',false) !!}
-                                {!! Form::label('No') !!}
-                            </div>
-                          
+                                                      
                             <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
                                 <strong> Status : </strong> &nbsp;&nbsp;
                                 {!! Form::radio('status','Active', true) !!}

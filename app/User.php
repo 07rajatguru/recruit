@@ -593,12 +593,19 @@ class User extends Authenticatable
 
         $status = 'Inactive';
         $status_array = array($status);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
         
         $user_query = User::query();
 
+        if($type_array!=NULL) {
+            $user_query = $user_query->whereIn('type',$type_array);
+        }
+
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
-        $user_query = $user_query->where('eligibility_report','=','Yes');
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -608,7 +615,15 @@ class User extends Authenticatable
         if(isset($users) && sizeof($users)) {
             
             foreach ($users as $user) {
-                $userArr[$user->id] = $user->name;
+
+                if($user->type == '2') {
+                    if($user->hr_adv_recruitemnt == 'Yes') {
+                        $userArr[$user->id] = $user->name;
+                    }
+               }
+               else {
+                    $userArr[$user->id] = $user->name;
+               }
             }
         }
         return $userArr;

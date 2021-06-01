@@ -1294,7 +1294,7 @@
             var doc_size = $("#doc_size").val();
 
             if(doc_size > 0) {
-
+/*
                 $("#editprofile").validate({
                     rules: {
                         "name": {
@@ -1414,10 +1414,10 @@
                             required: "Please Select Confirmation Date.",
                         }
                     }
-                });
+                });*/
             }
             else {
-                $("#editprofile").validate({
+                /*$("#editprofile").validate({
                     rules: {
                         "name": {
                             required: true
@@ -1566,7 +1566,7 @@
                             required: "Passport Photo is Required.",
                         },
                     }
-                });
+                });*/
             }
 
             $("#date_of_birth").datepicker({

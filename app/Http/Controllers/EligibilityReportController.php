@@ -54,6 +54,7 @@ class EligibilityReportController extends Controller
 
             // For Quater wise[Q1, Q2, Q3, Q4]
             for ($m=$current_month; $m <= 15 ; $m=$m+3) {
+
                 // For Quater 4 
                 if ($m==13) {
                     $m = 1;

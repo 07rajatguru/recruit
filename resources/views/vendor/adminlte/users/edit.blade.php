@@ -218,14 +218,6 @@
                                     {!! Form::label('Leads Added') !!}
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <strong> Eligibility Report : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('eligibility_report','Yes', '') !!}
-                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('eligibility_report','No','') !!}
-                                {!! Form::label('No') !!}
-                            </div>
        
                             <div class="form-group">
                                 <strong>Status:</strong>&nbsp;&nbsp;
