@@ -15,7 +15,6 @@ use App\UserOthersInfo;
 use App\UsersDoc;
 use App\Utils;
 use App\UserLeave;
-use App\Events\NotificationMail;
 use App\UsersLog;
 use App\UsersFamily;
 use App\Training;
@@ -29,6 +28,7 @@ use App\ModuleVisibleUser;
 use App\CandidateBasicInfo;
 use App\UsersEmailPwd;
 use App\Department;
+use App\Events\NotificationMail;
 
 class UserController extends Controller
 {
@@ -189,14 +189,15 @@ class UserController extends Controller
 
         $user_id = $user->id;
 
-        // Add new User to training & process manual if it is for all users and entry in database
-        if ($type == '1' && $status == 'Active') {
+        if ($status == 'Active') {
 
-            $training_id = Training::getAlltrainingIds(1);
+            // Add new User to training & process manual if it is display to all users.
 
-            if (isset($training_id) && $training_id != '') {
+            $training_ids = Training::getAlltrainingIds(1);
 
-                foreach ($training_id as $key => $value) {
+            if (isset($training_ids) && $training_ids != '') {
+
+                foreach ($training_ids as $key => $value) {
 
                     $training_visible_users = new TrainingVisibleUser;
                     $training_visible_users->training_id = $value;
@@ -204,40 +205,37 @@ class UserController extends Controller
                     $training_visible_users->save();
                 }
             }
-        }
-        if ($status == 'Active') {
 
-            $process_id = ProcessManual::getAllprocessmanualIds(1);
-            if (isset($process_id) && $process_id != '') {
+            $process_ids = ProcessManual::getAllprocessmanualIds(1);
 
-                foreach ($process_id as $key => $value) {
+            if (isset($process_ids) && $process_ids != '') {
+
+                foreach ($process_ids as $key1 => $value1) {
 
                     $process_visible_users = new ProcessVisibleUser();
-                    $process_visible_users->process_id = $value;
+                    $process_visible_users->process_id = $value1;
                     $process_visible_users->user_id = $user_id;
                     $process_visible_users->save();
                 }
             }
-        }
 
-        // If job_open_to_all = 1 then new user visible that all jobs
-        if ($type == '1' && $status == 'Active') {
+            // If job_open_to_all = 1 then new user visible that all jobs
 
-            $job_id = JobOpen::getAllJobsId(1);
+            $job_ids = JobOpen::getAllJobsId(1);
 
-            if (isset($job_id) && $job_id != '') {
+            if (isset($job_ids) && $job_ids != '') {
 
-                foreach ($job_id as $key => $value) {
+                foreach ($job_ids as $key2 => $value2) {
                     
                     $job_visible_users = new JobVisibleUsers();
-                    $job_visible_users->job_id = $value;
+                    $job_visible_users->job_id = $value2;
                     $job_visible_users->user_id = $user_id;
                     $job_visible_users->save();
                 }
             }
         }
 
-         // Add new user module visibility by it's role id
+        // Add new user module visibility by it's role id
         if (isset($role_id) && $role_id > 0) {
 
             $other_user_id = RoleUser::getUserIdByRoleId($role_id);
@@ -273,14 +271,40 @@ class UserController extends Controller
             }
         }
 
-        // Add entry in email password table
+        // Add entry in email password table for send lead & client bulk email functionality
 
         $users_email_pwd = new UsersEmailPwd();
         $users_email_pwd->user_id = $user_id;
         $users_email_pwd->email = $request->input('email');
         $users_email_pwd->save();
 
-        return redirect()->route('users.index')->with('success','User Created Successfully.');
+        // Send email notification when new user is add
+
+        $logged_in_user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
+
+        $hr_userid = getenv('HRUSERID');
+        $hr_email = User::getUserEmailById($hr_userid);
+
+        $admin_userid = getenv('ADMINUSERID');
+        $admin_email = User::getUserEmailById($admin_userid);
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $cc_users_array = array($admin_email,$superadminemail);
+
+        $module = "New User";
+        $sender_name = $logged_in_user_id;
+        $to = $hr_email;
+        $subject = "New User - " . $first_name . " " . $last_name . " - Added By - " . $user_name;
+        $message = "<tr><td>" . $user_name . " added new User</td></tr>";
+        $module_id = $user_id;
+        $cc = implode(",",$cc_users_array);
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('users.index')->with('success','User Added Successfully.');
     }
 
     /**
