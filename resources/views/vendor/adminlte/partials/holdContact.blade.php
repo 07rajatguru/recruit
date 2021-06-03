@@ -1,8 +1,8 @@
-<a data-toggle="modal" href="#modal-close-{!! $data['id'] !!}" class="fa fa-close" title="Hold {!! $display_name !!}"></a>
-<div id="modal-close-{!! $data['id'] !!}" class="modal text-left fade">
+<a data-toggle="modal" href="#modal-hold-{!! $data['id'] !!}" class="fa fa-lock" title="Hold {!! $display_name !!}"></a>
+<div id="modal-hold-{!! $data['id'] !!}" class="modal text-left fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            {!! Form::open(['method' => 'GET', 'route' => ["$name.hold", $data['id']]])!!}
+            {!! Form::open(['method' => 'GET', 'route' => ["$name.generatehold", $data['id']]])!!}
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

@@ -10,19 +10,21 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                @if($generate_lead==1)
+                @if($generate_lead == 1 || $action == 'contact')
                     <h2>Please confirm the details and generate Lead</h2>
-                @elseif( $action == 'edit')
+                @elseif($action == 'edit')
                     <h2>Edit Lead</h2>
                 @else
                     <h2>Create New Lead</h2>
                 @endif
             </div>
             <div class="pull-right">
-                @if($cancel_lead==1)
-                    <a class="btn btn-primary" href="{{ route('lead.leadcancel') }}"> Back</a>
+                @if($action == 'contact')
+                    <a class="btn btn-primary" href="{{ route('contactsphere.index') }}">Back</a>
+                @elseif($cancel_lead==1)
+                    <a class="btn btn-primary" href="{{ route('lead.leadcancel') }}">Back</a>
                 @else
-                    <a class="btn btn-primary" href="{{ route('lead.index') }}"> Back</a>
+                    <a class="btn btn-primary" href="{{ route('lead.index') }}">Back</a>
                 @endif
             </div>
         </div>
@@ -34,6 +36,9 @@
 
     @elseif($action == 'copy')
         {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['lead.clonestore'],'id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
+
+    @elseif($action == 'contact')
+        {!! Form::model($lead,['method' => 'POST', 'files' => true, 'route' => ['contactsphere.clonestore', $lead['id']],'id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}
 
     @else
         {!! Form::open(['files' => true, 'route' => 'lead.store','id'=>'lead_form','autocomplete' => 'off','onsubmit' => "return emailValidation()"]) !!}

@@ -33,7 +33,6 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>{{ Form::checkbox('client[]',0 ,null,array('id'=>'allcb')) }}</th>
                     <th>Action</th>
                     <th>Name</th>
                     <th>Designation</th>
@@ -70,7 +69,18 @@
                 "responsive": true,
                 "pagingType": "full_numbers",
                 "stateSave" : true,
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[10] == "1" ) {
+                        $('td:eq(2)', Row).css('background-color', 'LimeGreen');
+                    }
+                    else {
+                        $('td:eq(2)', Row).css('background-color', 'white');
+                    }
+                }
             });
+
+            var table = $('#contactsphere_table').DataTable();
+            table.columns( [10] ).visible( false );
         });
     </script>
 @endsection

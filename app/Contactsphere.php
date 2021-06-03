@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Contactsphere extends Model
 {
@@ -10,22 +11,20 @@ class Contactsphere extends Model
 
     public static function getAllContactsCount($all=0,$user_id,$search=NULL) {
 
-        $convert_lead = '0';
         $hold_status = '0';
         $forbid_status = '0';
 
         $query = Contactsphere::query();
 
-        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
+        $query = $query->leftjoin('users','users.id','=','contactsphere.added_by');
 
-        $query = $query->where('convert_lead',$convert_lead);
         $query = $query->where('hold',$hold_status);
         $query = $query->where('forbid',$forbid_status);
 
-        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as added_by');
 
         if($all == 0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
         
         if (isset($search) && $search != '') {
@@ -49,19 +48,17 @@ class Contactsphere extends Model
 
     public static function getAllContacts($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc') {
 
-        $convert_lead = '0';
         $hold_status = '0';
         $forbid_status = '0';
 
         $query = Contactsphere::query();
 
-        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
+        $query = $query->leftjoin('users','users.id','=','contactsphere.added_by');
 
-        $query = $query->where('convert_lead',$convert_lead);
         $query = $query->where('hold',$hold_status);
         $query = $query->where('forbid',$forbid_status);
 
-        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as added_by');
 
         if (isset($order) && $order != '') {
             $query = $query->orderBy($order,$type);
@@ -74,7 +71,7 @@ class Contactsphere extends Model
         }
 
         if($all == 0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
 
         if (isset($search) && $search != '') {
@@ -106,7 +103,7 @@ class Contactsphere extends Model
             $contacts_array[$i]['city'] = $value->city;
             $contacts_array[$i]['official_email_id'] = $value->official_email_id;
             $contacts_array[$i]['personal_id'] = $value->personal_id;
-            $contacts_array[$i]['referred_by'] = $value->referred_by;
+            $contacts_array[$i]['referred_by'] = User::getUserNameById($value->referred_by);
             $contacts_array[$i]['convert_lead'] = $value->convert_lead;
 
             $i++;
@@ -122,7 +119,7 @@ class Contactsphere extends Model
         $query = $query->where('convert_lead',$convert_lead);
 
         if($all==0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
         $count = $query->count();
 
@@ -131,20 +128,17 @@ class Contactsphere extends Model
 
     public static function getHoldContactsCount($all=0,$user_id,$search=NULL) {
 
-        $convert_lead = '0';
         $hold_status = '1';
 
         $query = Contactsphere::query();
 
-        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
-
-        $query = $query->where('convert_lead',$convert_lead);
+        $query = $query->leftjoin('users','users.id','=','contactsphere.added_by');
         $query = $query->where('hold',$hold_status);
 
-        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as added_by');
 
         if($all==0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
 
         if (isset($search) && $search != '') {
@@ -168,20 +162,17 @@ class Contactsphere extends Model
 
     public static function getHoldContacts($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc') {
 
-        $convert_lead = '0';
         $hold_status = '1';
 
         $query = Contactsphere::query();
 
-        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
-
-        $query = $query->where('convert_lead',$convert_lead);
+        $query = $query->leftjoin('users','users.id','=','contactsphere.added_by');
         $query = $query->where('hold',$hold_status);
 
-        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as added_by');
 
         if($all==0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
 
         if (isset($search) && $search != '') {
@@ -223,7 +214,7 @@ class Contactsphere extends Model
             $contacts_array[$i]['city'] = $value->city;
             $contacts_array[$i]['official_email_id'] = $value->official_email_id;
             $contacts_array[$i]['personal_id'] = $value->personal_id;
-            $contacts_array[$i]['referred_by'] = $value->referred_by;
+            $contacts_array[$i]['referred_by'] = User::getUserNameById($value->referred_by);
             $contacts_array[$i]['convert_lead'] = $value->convert_lead;
 
             $i++;
@@ -233,20 +224,17 @@ class Contactsphere extends Model
 
     public static function getForbidContactsCount($all=0,$user_id,$search=NULL) {
 
-        $convert_lead = '0';
         $forbid_status = '1';
 
         $query = Contactsphere::query();
 
-        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
-
-        $query = $query->where('convert_lead',$convert_lead);
+        $query = $query->leftjoin('users','users.id','=','contactsphere.added_by');
         $query = $query->where('forbid',$forbid_status);
 
-        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as added_by');
 
         if($all==0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
 
         if (isset($search) && $search != '') {
@@ -270,20 +258,17 @@ class Contactsphere extends Model
 
     public static function getForbidContacts($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc') {
 
-        $convert_lead = '0';
         $forbid_status = '1';
 
         $query = Contactsphere::query();
 
-        $query = $query->leftjoin('users','users.id','=','contactsphere.referred_by');
-
-        $query = $query->where('convert_lead',$convert_lead);
+        $query = $query->leftjoin('users','users.id','=','contactsphere.added_by');
         $query = $query->where('forbid',$forbid_status);
 
-        $query = $query->select('contactsphere.*', 'users.name as referred_by');
+        $query = $query->select('contactsphere.*', 'users.name as added_by');
 
         if($all==0) {
-            $query = $query->where('referred_by',$user_id);
+            $query = $query->where('added_by',$user_id);
         }
 
         if (isset($search) && $search != '') {
@@ -325,7 +310,7 @@ class Contactsphere extends Model
             $contacts_array[$i]['city'] = $value->city;
             $contacts_array[$i]['official_email_id'] = $value->official_email_id;
             $contacts_array[$i]['personal_id'] = $value->personal_id;
-            $contacts_array[$i]['referred_by'] = $value->referred_by;
+            $contacts_array[$i]['referred_by'] = User::getUserNameById($value->referred_by);
             $contacts_array[$i]['convert_lead'] = $value->convert_lead;
 
             $i++;
@@ -358,17 +343,17 @@ class Contactsphere extends Model
             $contact['referred_by'] = $res->referred_by;
 
             $location ='';
-            if($res->city!='') {
+            if($res->city != '') {
                 $location .= $res->city;
             }
-            if($res->state!='') {
-                if($location=='')
+            if($res->state != '') {
+                if($location == '')
                     $location .= $res->state;
                 else
                     $location .= ", ".$res->state;
             }
-            if($res->country!='') {
-                if($location=='')
+            if($res->country != '') {
+                if($location == '')
                     $location .= $res->country;
                 else
                     $location .= ", ".$res->country;

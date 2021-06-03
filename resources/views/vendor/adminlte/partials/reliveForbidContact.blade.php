@@ -1,8 +1,8 @@
-<a data-toggle="modal" href="#modal-forbid-{!! $data['id'] !!}" class="fa fa-foursquare" title="Forbid {!! $display_name !!}"></a>
-<div id="modal-forbid-{!! $data['id'] !!}" class="modal text-left fade">
+<a data-toggle="modal" href="#modal-relive-forbid-{!! $data['id'] !!}" class="fa fa-registered" title="Relive Forbid {!! $display_name !!}"></a>
+<div id="modal-relive-forbid-{!! $data['id'] !!}" class="modal text-left fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            {!! Form::open(['method' => 'GET', 'route' => ["$name.generateforbid", $data['id']]])!!}
+            {!! Form::open(['method' => 'GET', 'route' => ["$name.reliveforbid", $data['id']]])!!}
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    Are you sure want to Forbid this {!! $display_name !!}?
+                    Are you sure want to Relive this Forbid {!! $display_name !!}?
                 </p>
             </div>
             

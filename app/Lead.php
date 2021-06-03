@@ -32,13 +32,13 @@ class Lead extends Model
         //$typeArray = array('' => 'Select Lead Service');
         $typeArray = array('' => '-NONE-');
         $typeArray['Recruitment'] = 'Recruitment';
-        //$typeArray['Temp'] = 'Temp';
-        $typeArray['Contract Staffing'] = 'Contract Staffing';
+        $typeArray['HR Advisory'] = 'HR Advisory';
         $typeArray['Payroll'] = 'Payroll';
-        //$typeArray['Compliance']='Compliance';
-        //$typeArray['IT'] = 'IT';
-        $typeArray['HR Advisory'] = 'HR Advisory';	
-       
+        $typeArray['Contract Staffing'] = 'Contract Staffing';
+        /*$typeArray['Temp'] = 'Temp';
+        $typeArray['Compliance']='Compliance';
+        $typeArray['IT'] = 'IT';*/
+        
         return $typeArray;
     }
 

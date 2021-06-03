@@ -223,7 +223,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('contactsphere/emailnotification', [
         'as' => 'contactsphere.emailnotification',
-        'uses' => 'ContactsphereController@postEmails'
+        'uses' => 'ContactsphereController@postContactEmails'
     ]);
 
     Route::get('contactsphere/add',[
@@ -244,6 +244,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-contactsphere|display-user-wise-contactsphere']
     ]);
 
+    Route::get('contactsphere-hold/{id}', [
+        'as' => 'contactsphere.generatehold',
+        'uses' => 'ContactsphereController@hold',
+        'middleware' => ['permission:hold-contactsphere'],
+    ]);
+
     Route::get('contactsphere/hold', [
         'as' => 'contactsphere.hold',
         'uses' => 'ContactsphereController@holdContactsphere',
@@ -256,6 +262,18 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-hold-contactsphere'],
     ]);
 
+    Route::get('contactsphere-relive-hold/{id}', [
+        'as' => 'contactsphere.relivehold',
+        'uses' => 'ContactsphereController@reliveHoldContact',
+        'middleware' => ['permission:hold-contactsphere'],
+    ]);
+
+    Route::get('contactsphere-forbid/{id}', [
+        'as' => 'contactsphere.generateforbid',
+        'uses' => 'ContactsphereController@forbid',
+        'middleware' => ['permission:forbid-contactsphere'],
+    ]);
+
     Route::get('contactsphere/forbid', [
         'as' => 'contactsphere.forbid',
         'uses' => 'ContactsphereController@forbidContactsphere',
@@ -266,6 +284,12 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'contactsphere.forbidall',
         'uses' => 'ContactsphereController@getForbidContactsphereDetails',
         'middleware' => ['permission:display-forbid-contactsphere'],
+    ]);
+
+    Route::get('contactsphere-relive-forbid/{id}', [
+        'as' => 'contactsphere.reliveforbid',
+        'uses' => 'ContactsphereController@reliveForbidContact',
+        'middleware' => ['permission:forbid-contactsphere'],
     ]);
     
     Route::post('contactsphere/store', [
@@ -308,18 +332,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'contactsphere.clonestore',
         'uses' => 'ContactsphereController@cloneStore',
         'middleware' => ['permission:contactsphere-to-lead'],
-    ]); 
-
-    Route::get('contactsphere/{id}', [
-        'as' => 'contactsphere.hold',
-        'uses' => 'ContactsphereController@hold',
-        'middleware' => ['permission:hold-contactsphere'],
-    ]);
-
-    Route::get('contactsphere/{id}', [
-        'as' => 'contactsphere.forbid',
-        'uses' => 'ContactsphereController@forbid',
-        'middleware' => ['permission:forbid-contactsphere'],
     ]);
 
     //lead management route
