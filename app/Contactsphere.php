@@ -341,6 +341,7 @@ class Contactsphere extends Model
             $contact['self_remarks'] = $res->self_remarks;
             $contact['linkedin_profile_link'] = $res->linkedin_profile_link;
             $contact['referred_by'] = $res->referred_by;
+            $contact['city'] = $res->city;
 
             $location ='';
             if($res->city != '') {

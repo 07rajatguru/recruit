@@ -183,7 +183,8 @@ class ContactsphereController extends Controller
         $contact->hold = '1';
         $contact->save();
 
-        $company_name = $contact->name;
+        $name = $contact->name;
+        $company = $contact->company;
         $city = $contact->city;
         $added_by_id = $contact->added_by;
 
@@ -208,8 +209,8 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Hold Contact " . " - ". $company_name . " - " . $city;
-        $message = "Hold Contact " . " - ". $company_name . " - " . $city;
+        $subject = "Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+        $message = "Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -319,7 +320,8 @@ class ContactsphereController extends Controller
         $contact->hold = '0';
         $contact->save();
 
-        $company_name = $contact->name;
+        $name = $contact->name;
+        $company = $contact->company;
         $city = $contact->city;
         $added_by_id = $contact->added_by;
 
@@ -344,8 +346,8 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Relive Hold Contact " . " - ". $company_name . " - " . $city;
-        $message = "Relive Hold Contact " . " - ". $company_name . " - " . $city;
+        $subject = "Relive Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+        $message = "Relive Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -359,7 +361,8 @@ class ContactsphereController extends Controller
         $contact->forbid = '1';
         $contact->save();
 
-        $company_name = $contact->name;
+        $name = $contact->name;
+        $company = $contact->company;
         $city = $contact->city;
         $added_by_id = $contact->added_by;
 
@@ -384,8 +387,8 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Forbid Contact " . " - ". $company_name . " - " . $city;
-        $message = "Forbid Contact " . " - ". $company_name . " - " . $city;
+        $subject = "Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+        $message = "Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -495,7 +498,8 @@ class ContactsphereController extends Controller
         $contact->forbid = '0';
         $contact->save();
 
-        $company_name = $contact->name;
+        $name = $contact->name;
+        $company = $contact->company;
         $city = $contact->city;
         $added_by_id = $contact->added_by;
 
@@ -520,8 +524,8 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Relive Forbid Contact " . " - ". $company_name . " - " . $city;
-        $message = "Relive Forbid Contact " . " - ". $company_name . " - " . $city;
+        $subject = "Relive Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+        $message = "Relive Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -577,11 +581,11 @@ class ContactsphereController extends Controller
         $contactsphere->city = $city;
         $contactsphere->state = $state;
         $contactsphere->country = $country;
+        $contactsphere->referred_by = $referred_by;
+        $contactsphere->added_by = $added_by;
         $contactsphere->convert_lead = 0;
         $contactsphere->hold = 0;
         $contactsphere->forbid = 0;
-        $contactsphere->referred_by = $referred_by;
-        $contactsphere->added_by = $added_by;
         $contactsphere->save();
 
         // For Lead Emails [data entry in email_notification table]
@@ -601,13 +605,12 @@ class ContactsphereController extends Controller
         $module = "Contactsphere";
         $sender_name = $user_id;
         $to = $user_email;
+        $subject = "New Contact Add - " . $name . " - " . $company . " - " . $city;
+        $message = "New Contact Add - " . $name . " - " . $company . " - " . $city;
+        $module_id = $contactsphere_id;
 
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
-        
-        $subject = "New Contact Add - " . $name;
-        $message = "New Contact Add - " . $name;
-        $module_id = $contactsphere_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
@@ -625,8 +628,6 @@ class ContactsphereController extends Controller
 
         $action = 'edit';
         $generate_contact = '0';
-        $hold_contact = '0';
-        $forbid_contact = '0';
 
         $contact = Contactsphere::find($id);
 
@@ -684,9 +685,6 @@ class ContactsphereController extends Controller
         $contactsphere->city = $city;
         $contactsphere->state = $state;
         $contactsphere->country = $country;
-        $contactsphere->convert_lead = 0;
-        $contactsphere->hold = 0;
-        $contactsphere->forbid = 0;
         $contactsphere->referred_by = $referred_by;
         $contactsphere->save();
 
@@ -811,7 +809,6 @@ class ContactsphereController extends Controller
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
-        
     }
 
     public function checkContactsphereId() {
@@ -857,7 +854,6 @@ class ContactsphereController extends Controller
             
             event(new NotificationMail($module,$sender_name,$to,$subject,$new_email_body,$module_id,$cc));
         }
-
         return redirect()->route('contactsphere.index')->with('success','Email Sent Successfully.');
     }
 
