@@ -650,6 +650,8 @@ class EveryMinute extends Command
             else if ($value['module'] == 'Monthly Report') {
 
                 $recruitment = getenv('RECRUITMENT');
+                $hr_advisory = getenv('HRADVISORY');
+                $type_array = array($recruitment,$hr_advisory);
 
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
@@ -660,7 +662,27 @@ class EveryMinute extends Command
                 $access_roles_id = array($superAdminUserID,$managerUserID);
 
                 if(in_array($value['sender_name'],$access_roles_id)) {
-                    $users = User::getAllUsersExpectSuperAdmin($recruitment);
+                    
+                    $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+                    $users = array();
+
+                    if(isset($users_array) && sizeof($users_array) > 0) {
+
+                        foreach ($users_array as $k1 => $v1) {
+                                       
+                            $user_details = User::getAllDetailsByUserID($k1);
+
+                            if($user_details->type == '2') {
+                                if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                    $users[$k1] = $v1;
+                                }
+                            }
+                            else {
+                                $users[$k1] = $v1;
+                            }    
+                        }
+                    }
                 }
                 else {
                     $users = User::getAssignedUsers($value['sender_name']);

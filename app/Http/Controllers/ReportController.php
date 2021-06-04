@@ -28,9 +28,31 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-daily-report-of-loggedin-user-team');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id);
@@ -39,14 +61,14 @@ class ReportController extends Controller
         if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
             $user_id = $_POST['users_id'];
         }
-        else{
+        else {
             $user_id = $user_id;
         }
 
         if (isset($_POST['date']) && $_POST['date']!=0) {
             $date = $_POST['date'];
         }
-        else{
+        else {
             $date = date('Y-m-d');
         }
 
@@ -82,9 +104,31 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-weekly-report-of-loggedin-user-team');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id);
@@ -223,9 +267,31 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-monthly-report-of-loggedin-user-team');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
-        if($all_perm){
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+        if($all_perm) {
+
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id);
@@ -313,11 +379,34 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-monthly-report-of-loggedin-user-team');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
-        if($all_perm){
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+        if($all_perm) {
+            
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
         }
-        else if($userwise_perm || $teamwise_perm){
+        else if($userwise_perm || $teamwise_perm) {
+
             $users = User::getAssignedUsers($user_id);
         }
 
@@ -894,11 +983,34 @@ class ReportController extends Controller
         $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
         }
         else if($userwise_perm || $teamwise_perm) {
+
             $users = User::getAssignedUsers($user_id);
         }
 
@@ -1040,9 +1152,31 @@ class ReportController extends Controller
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
-            $users = User::getAllUsersExpectSuperAdmin($recruitment);
+
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+
+            $users = array();
+
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                               
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
+                }
+            }
         }
         // Get Selected Month
         $month_array = array();

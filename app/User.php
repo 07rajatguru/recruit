@@ -85,10 +85,11 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersExpectSuperAdmin($type='') {
+    public static function getAllUsersExpectSuperAdmin($type=NULL) {
 
         $superadmin = getenv('SUPERADMINUSERID');
-        $super_array = array($superadmin);
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -98,8 +99,8 @@ class User extends Authenticatable
         
         $user_query = User::query();
 
-        if($type != '') {
-            $user_query = $user_query->where('type','=',$type);
+        if($type != NULL) {
+            $user_query = $user_query->whereIn('type',$type);
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
