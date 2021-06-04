@@ -107,8 +107,8 @@ class Bills extends Model
                 }
             }
             $bills[$i]['efforts'] = $efforts_str;
-            $bills[$i]['candidate_other_no'] = '/'. $value->candidate_other_no;
-            $bills[$i]['client_other_no'] = '/'. $value->client_other_no;
+            $bills[$i]['candidate_other_no'] = $value->candidate_other_no;
+            $bills[$i]['client_other_no'] = $value->client_other_no;
 
             // get Lead employee efforts
             $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);

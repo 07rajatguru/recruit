@@ -21,7 +21,12 @@
 
 			<tr style="height: auto;width: auto;">
 				<td>Candidate Contact number (Cell Phone & home both)</td>
-				<td>{{ $value['candidate_contact_number'] }} {{ $value['candidate_other_no'] }}</td>
+
+				@if(isset($value['candidate_other_no']) && $value['candidate_other_no'] != '')
+					<td>{{ $value['candidate_contact_number'] }} / {{ $value['candidate_other_no'] }}</td>
+				@else
+					<td>{{ $value['candidate_contact_number'] }}</td>
+				@endif
 			</tr>
 
 			<tr style="height: auto;width: auto;">
@@ -66,7 +71,11 @@
 			@if(isset($value['source']) && $value['source'] != '0')
 				<tr style="height: auto;width: auto;">
 					<td>Source (Naukri/Monster/Referral)</p></td>
-					<td>{{ $value['source'] }}</p></td>
+
+					<?php
+						$source = ucwords($value['source']);
+					?>
+					<td>{{ $source }}</p></td>
 				</tr>
 			@endif
 
@@ -77,7 +86,13 @@
 
 			<tr style="height: auto;width: auto;">
 				<td>Contact number (Cell phone & Office land line)</td>
-				<td>{{ $value['client_contact_number'] }} {{ $value['client_other_no'] }}</td>
+
+				@if(isset($value['client_other_no']) && $value['client_other_no'] != '')
+					<td>{{ $value['client_contact_number'] }} / {{ $value['client_other_no'] }}
+					</td>
+				@else
+					<td>{{ $value['client_contact_number'] }}</td>
+				@endif
 			</tr>
 
 			<tr style="height: auto;width: auto;">
