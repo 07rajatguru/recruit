@@ -27,7 +27,7 @@
 
     <tr>
         <td>
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 20px 50px 54px;">
                 <td colspan="7">
                     <h3>Basic Information</h3>
                 </td>

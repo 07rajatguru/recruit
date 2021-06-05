@@ -208,9 +208,18 @@ class ContactsphereController extends Controller
 
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
+
+        if(isset($city) && $city != '') {
         
-        $subject = "Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
-        $message = "Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+            $subject = "Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+            $message = "Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+        }
+        else {
+
+            $subject = "Hold Contact " . " - " . $name . " - " . $company;
+            $message = "Hold Contact " . " - " . $name . " - " . $company;
+        }
+
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -345,9 +354,17 @@ class ContactsphereController extends Controller
 
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
+
+        if(isset($city) && $city != '') {
         
-        $subject = "Relive Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
-        $message = "Relive Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+            $subject = "Relive Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+            $message = "Relive Hold Contact " . " - " . $name . " - " . $company . " - " . $city;
+        }
+        else {
+
+            $subject = "Relive Hold Contact " . " - " . $name . " - " . $company;
+            $message = "Relive Hold Contact " . " - " . $name . " - " . $company;
+        }
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -387,8 +404,16 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
-        $message = "Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+        if(isset($city) && $city != '') {
+
+            $subject = "Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+            $message = "Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+        }
+        else {
+
+            $subject = "Forbid Contact " . " - " . $name . " - " . $company;
+            $message = "Forbid Contact " . " - " . $name . " - " . $company;
+        }
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -524,8 +549,16 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
         
-        $subject = "Relive Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
-        $message = "Relive Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+        if(isset($city) && $city != '') {
+
+            $subject = "Relive Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+            $message = "Relive Forbid Contact " . " - " . $name . " - " . $company . " - " . $city;
+        }
+        else {
+
+            $subject = "Relive Forbid Contact " . " - " . $name . " - " . $company;
+            $message = "Relive Forbid Contact " . " - " . $name . " - " . $company;
+        }
         $module_id = $id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -605,8 +638,17 @@ class ContactsphereController extends Controller
         $module = "Contactsphere";
         $sender_name = $user_id;
         $to = $user_email;
-        $subject = "New Contact Add - " . $name . " - " . $company . " - " . $city;
-        $message = "New Contact Add - " . $name . " - " . $company . " - " . $city;
+
+        if(isset($city) && $city != '') {
+
+            $subject = "New Contact Add - " . $name . " - " . $company . " - " . $city;
+            $message = "New Contact Add - " . $name . " - " . $company . " - " . $city;
+        }
+        else {
+
+            $subject = "New Contact Add - " . $name . " - " . $company;
+            $message = "New Contact Add - " . $name . " - " . $company;
+        }
         $module_id = $contactsphere_id;
 
         $cc_users_array = array_filter($cc_users_array);
