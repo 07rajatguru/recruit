@@ -144,7 +144,7 @@
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <div class="form-group">
-                                <strong>City : <span class = "required_fields">*</span></strong>
+                                <strong>City : </strong>
                                 {!! Form::text('city', null, array('id'=>'city','placeholder' => 'City','class' => 'form-control','tabindex' => '12')) !!}
                             </div>
                         </div>
