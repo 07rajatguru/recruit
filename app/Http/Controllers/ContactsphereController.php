@@ -186,7 +186,7 @@ class ContactsphereController extends Controller
         $name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
-        $added_by_id = $contact->added_by;
+        $referred_by_id = $contact->referred_by;
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -198,9 +198,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
-        $added_by_email = User::getUserEmailById($added_by_id);
+        $referred_by_email = User::getUserEmailById($referred_by_id);
 
-        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$added_by_email);
+        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
 
         $module = "Hold Contact";
         $sender_name = $user_id;
@@ -323,7 +323,7 @@ class ContactsphereController extends Controller
         $name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
-        $added_by_id = $contact->added_by;
+        $referred_by_id = $contact->referred_by;
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -335,9 +335,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
-        $added_by_email = User::getUserEmailById($added_by_id);
+        $referred_by_email = User::getUserEmailById($referred_by_id);
 
-        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$added_by_email);
+        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
 
         $module = "Relive Hold Contact";
         $sender_name = $user_id;
@@ -364,7 +364,7 @@ class ContactsphereController extends Controller
         $name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
-        $added_by_id = $contact->added_by;
+        $referred_by_id = $contact->referred_by;
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -376,9 +376,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
-        $added_by_email = User::getUserEmailById($added_by_id);
+        $referred_by_email = User::getUserEmailById($referred_by_id);
 
-        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$added_by_email);
+        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
 
         $module = "Forbid Contact";
         $sender_name = $user_id;
@@ -501,7 +501,7 @@ class ContactsphereController extends Controller
         $name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
-        $added_by_id = $contact->added_by;
+        $referred_by_id = $contact->referred_by;
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -513,9 +513,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
-        $added_by_email = User::getUserEmailById($added_by_id);
+        $referred_by_email = User::getUserEmailById($referred_by_id);
 
-        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$added_by_email);
+        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
 
         $module = "Relive Forbid Contact";
         $sender_name = $user_id;
@@ -598,9 +598,9 @@ class ContactsphereController extends Controller
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
-        $added_by_email = User::getUserEmailById($added_by);
+        $referred_by_email = User::getUserEmailById($referred_by);
 
-        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$added_by_email);
+        $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
 
         $module = "Contactsphere";
         $sender_name = $user_id;
