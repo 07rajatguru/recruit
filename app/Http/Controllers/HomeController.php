@@ -260,6 +260,12 @@ class HomeController extends Controller
         $viewVariable['superadmin'] = $superadmin;
         $viewVariable['user_id'] = $user_id;
 
+        // Get Birthday Dates Array of users
+
+        $today_birthday = User::getAllUsersBirthDateString();
+        $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+        $viewVariable['birthday_date_string'] = $birthday_date_string;
+
         return view('dashboard',$viewVariable);
     }
 

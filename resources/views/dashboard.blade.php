@@ -32,6 +32,28 @@
     @endif
     <!-- popup -->
 
+    <!-- Birthday Popup -->
+    @if(isset($birthday_date_string) && $birthday_date_string != '')
+        <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="{{ $birthday_date_string }}">
+    @endif
+
+    <div id="birthDayModal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ $birthday_date_string }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <img class="img-popup" src="../images/adler_birthday.jpg"/ height="250px" width="600px">
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Birthday Popup -->
+
     <input type="hidden" name="msg" id="msg" value="{{ $msg }}">
 
     <div class="row">
@@ -533,6 +555,15 @@
                 else {
                     jQuery("#benchMarkModal").modal('show');
                 }
+            }
+
+            // For birth day modal popup
+
+            var birthday_date_string = $("#birthday_date_string").val();
+
+            if(birthday_date_string != '') {
+
+                jQuery("#birthDayModal").modal('show');
             }
         });
 
