@@ -263,7 +263,15 @@ class HomeController extends Controller
         // Get Birthday Dates Array of users
 
         $today_birthday = User::getAllUsersBirthDateString();
-        $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+
+        if(isset($today_birthday) && $today_birthday != '') {
+
+            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+        }
+        else {
+
+            $birthday_date_string = '';
+        }
         $viewVariable['birthday_date_string'] = $birthday_date_string;
 
         return view('dashboard',$viewVariable);

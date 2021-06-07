@@ -526,12 +526,21 @@
              }
              });*/
 
-            if($(".inline").length>0){
+            if($(".inline").length>0) {
                 setTimeout(function (){$('.inline').fancybox().trigger('click')}, 1000);
             }
             
             opentoalljob();
 
+            // Get Current Date & Time
+            var event = new Date();
+            var options = { weekday: 'long' };
+            var day = event.toLocaleDateString('en-US', options);
+
+            var hours = event.getHours();
+            var minutes = event.getMinutes();
+
+            // For Benchmark Modal Popoup
             var msg = $("#msg").val();
 
             if(msg != '') {
@@ -540,13 +549,6 @@
                 var user_id = $("#user_id").val();
 
                 if(superadmin == user_id) {
-
-                    var event = new Date();
-                    var options = { weekday: 'long' };
-                    var day = event.toLocaleDateString('en-US', options);
-
-                    var hours = event.getHours();
-                    var minutes = event.getMinutes();
 
                     if((day == 'Saturday' && hours == '11') || (day == 'Saturday' && hours == '12' && minutes == '0')) {
                         jQuery("#benchMarkModal").modal('show');
@@ -557,13 +559,15 @@
                 }
             }
 
-            // For birth day modal popup
+            // For Birthday Modal Popup
 
             var birthday_date_string = $("#birthday_date_string").val();
 
-            if(birthday_date_string != '') {
+            if(birthday_date_string != undefined) {
 
-                jQuery("#birthDayModal").modal('show');
+                if((hours >= '8') || (hours <= '11')) {
+                    jQuery("#birthDayModal").modal('show');
+                }
             }
         });
 
