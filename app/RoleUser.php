@@ -9,7 +9,7 @@ class RoleUser extends Model
     public $table = "role_user";
     public $timestamps = false;
 
-    public static function getUserIdByRoleId($role_id){
+    public static function getUserIdByRoleId($role_id) {
 
     	$query = RoleUser::query();
     	$query = $query->where('role_id',$role_id);
@@ -20,7 +20,6 @@ class RoleUser extends Model
     	if (isset($res) && $res != '') {
     		$user_id = $res->user_id;
     	}
-
     	return $user_id;
     }
 }

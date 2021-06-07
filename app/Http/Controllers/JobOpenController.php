@@ -973,7 +973,8 @@ class JobOpenController extends Controller
         // For account manager
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -1650,7 +1651,8 @@ class JobOpenController extends Controller
         // For account manager
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -1842,7 +1844,8 @@ class JobOpenController extends Controller
         // For account manager
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -2101,7 +2104,8 @@ class JobOpenController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users_id = array();
@@ -2244,7 +2248,8 @@ class JobOpenController extends Controller
         // For account manager
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -2850,7 +2855,8 @@ class JobOpenController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $users_array = User::getAllUsers($type_array);
         $users = array();

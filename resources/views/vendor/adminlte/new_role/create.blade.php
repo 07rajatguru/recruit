@@ -57,13 +57,23 @@
                         </div>
 
                         <div class="form-group">
+                            <strong>Is this Role in Management Team? :</strong>
+                            {!! Form::checkbox('role_in_mngmnt_team','1', $role_in_mngmnt_team, array('id' => 'role_in_mngmnt_team','tabindex' => '3')) !!}
+                        </div>
+
+                        <div class="form-group">
+                            <strong>Is this Role Visible to All Users? :</strong>
+                            {!! Form::checkbox('role_visible_to_all','1', $role_visible_to_all, array('id' => 'role_visible_to_all','tabindex' => '4')) !!}
+                        </div>
+
+                        <div class="form-group">
                             <strong>Department : <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('department', $departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
+                            {!! Form::select('department', $departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '5')) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('position') ? 'has-error' : '' }}">
                             <strong>Position: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('position', null, array('placeholder' => 'Position','class' => 'form-control','tabindex' => '4')) !!}
+                            {!! Form::text('position', null, array('placeholder' => 'Position','class' => 'form-control','tabindex' => '6')) !!}
                             @if ($errors->has('position'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('position') }}</strong>
@@ -73,7 +83,7 @@
 
                         <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                             <strong>Description: <span class = "required_fields">*</span></strong>
-                            {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '5')) !!}
+                            {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px','tabindex' => '7')) !!}
                             @if ($errors->has('description'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('description') }}</strong>

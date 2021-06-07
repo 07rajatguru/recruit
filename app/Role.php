@@ -8,20 +8,6 @@ use App\Module;
 
 class Role extends EntrustRole
 {
-    public static function getUserRoleNameById($role_id) {
-
-        $role_name = '';
-
-        $query = Role::query();
-        $query = $query->where('id','=',$role_id);
-        $query = $query->first();
-
-        if(isset($query)) {
-            $role_name = $query->display_name;
-        }
-        return $role_name;
-    }
-
     public static function getModulesByUserRoleId($user_role_id) {
 
         $query = Role::query();
@@ -66,13 +52,25 @@ class Role extends EntrustRole
             $roles[$i]['description'] = $value->description;
             $i++;
         }
-
         return $roles;
     }
 
-    public static function getRolesByDepartmentId($department_id) {
+    public static function getRolesByDepartmentId($department_id,$user_id) {
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $query = Role::query();
+
+        if(in_array($user_id,$super_array)) {
+        }
+        else {
+
+            $query = $query->where('roles.role_visible_to_all','=',1);
+            $query = $query->where('roles.role_in_mngmnt_team','=',0);
+        }
+        
         $query = $query->where('roles.department','=',$department_id);
         $query = $query->select('roles.*');
         $query = $query->orderBy('roles.position','ASC');
@@ -85,7 +83,6 @@ class Role extends EntrustRole
 
             $roles[$v->id] = $v->display_name;
         }
-        
         return $roles;
     }
 }

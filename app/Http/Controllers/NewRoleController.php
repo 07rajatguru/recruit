@@ -40,8 +40,11 @@ class NewRoleController extends Controller
             }
         }
         $department_id = '';
+
+        $role_in_mngmnt_team = '0';
+        $role_visible_to_all = '0';
        
-        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments','department_id'));
+        return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments','department_id','role_in_mngmnt_team','role_visible_to_all'));
     }
 
     public function store(Request $request) {
@@ -59,6 +62,8 @@ class NewRoleController extends Controller
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
         $role->department = $request->input('department');
+        $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
+        $role->role_visible_to_all = $request->input('role_visible_to_all');
         $role->save();
 
         if($role->save()) {
@@ -118,7 +123,10 @@ class NewRoleController extends Controller
         }
         $department_id = $role->department;
 
-        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments','department_id'));
+        $role_in_mngmnt_team = $role->role_in_mngmnt_team;
+        $role_visible_to_all = $role->role_visible_to_all;
+
+        return view('adminlte::new_role.edit',compact('role','modules','module_ids_array','departments','department_id','role_in_mngmnt_team','role_visible_to_all'));
     }
 
     public function update(Request $request,$id) {
@@ -136,6 +144,8 @@ class NewRoleController extends Controller
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
         $role->department = $request->input('department');
+        $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
+        $role->role_visible_to_all = $request->input('role_visible_to_all');
         $role->save();
 
         if($role->save()) {
@@ -281,6 +291,9 @@ class NewRoleController extends Controller
         $department_id = $_GET['department_id'];
         $user_id = $_GET['user_id'];
 
+        $user =  \Auth::user();
+        $loggedin_userid = $user->id;
+        
         if (isset($user_id) && $user_id > 0) {
 
             $user = User::find($user_id);
@@ -296,7 +309,7 @@ class NewRoleController extends Controller
             $pre_role_id = 0;
         }
 
-        $roles_res = Role::getRolesByDepartmentId($department_id);
+        $roles_res = Role::getRolesByDepartmentId($department_id,$loggedin_userid);
 
         $data['pre_role_id'] = $pre_role_id;
 

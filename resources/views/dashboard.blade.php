@@ -565,7 +565,7 @@
 
             if(birthday_date_string != undefined) {
 
-                if((hours >= '8') || (hours <= '11')) {
+                if((hours >= '8') && (hours <= '11')) {
                     jQuery("#birthDayModal").modal('show');
                 }
             }
