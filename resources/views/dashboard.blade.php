@@ -52,7 +52,29 @@
             </div>
         </div>
     </div>
-    <!-- Birthday Popup -->
+    <!-- Birthday Popup End -->
+
+    <!-- Work Anniversary Popup -->
+    @if(isset($work_ani_date_string) && $work_ani_date_string != '')
+        <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="{{ $work_ani_date_string }}">
+    @endif
+
+    <div id="workAnniversaryModal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ $work_ani_date_string }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <img class="img-popup" src="../images/adler_work_anniversary.jpg"/ height="250px" width="600px">
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Work Anniversary Popup End -->
 
     <input type="hidden" name="msg" id="msg" value="{{ $msg }}">
 
@@ -567,6 +589,17 @@
 
                 if((hours >= '8') && (hours <= '11')) {
                     jQuery("#birthDayModal").modal('show');
+                }
+            }
+
+            // For Work Anniversary Modal Popup
+
+            var work_ani_date_string = $("#work_ani_date_string").val();
+
+            if(work_ani_date_string != undefined) {
+
+                if((hours >= '8') && (hours <= '11')) {
+                    jQuery("#workAnniversaryModal").modal('show');
                 }
             }
         });

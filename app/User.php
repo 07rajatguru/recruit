@@ -800,4 +800,51 @@ class User extends Authenticatable
         }
         return $birthday_date_string;
     }
+
+    public static function getAllUsersWorkAnniversaryDateString() {
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $saloni_user_id = getenv('SALONIUSERID');
+
+        $query = User::query();
+        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+        $query = $query->whereNotIn('users.status',$status_array);
+        $query = $query->whereNotIn('users.type',$client_type);
+        $query = $query->where('users.id','!=',$saloni_user_id);
+        $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_joining');
+        $response = $query->get();
+
+        $user_name_array = array();
+        $i=0;
+        $work_ani_date_string = '';
+        $today_date = date('d-m-Y');
+        $date_class = new Date();
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                if($today_date == $date_class->changeYMDtoDMY($value->date_of_joining)) {
+
+                    if($work_ani_date_string == '') {
+                        $work_ani_date_string = $value->first_name . " " . $value->last_name . "'s ";
+                    }
+                    else {
+                        $work_ani_date_string .= " & " . $value->first_name . " " . $value->last_name . "'s";
+                    }
+                }
+                $i++;
+            }
+        }
+        else {
+
+            $work_ani_date_string = '';
+        }
+        return $work_ani_date_string;
+    }
 }

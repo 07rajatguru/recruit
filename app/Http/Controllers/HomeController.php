@@ -274,6 +274,20 @@ class HomeController extends Controller
         }
         $viewVariable['birthday_date_string'] = $birthday_date_string;
 
+        // Get Work Anniversary Dates Array of users
+
+        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
+
+        if(isset($today_work_ani) && $today_work_ani != '') {
+
+            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
+        }
+        else {
+
+            $work_ani_date_string = '';
+        }
+        $viewVariable['work_ani_date_string'] = $work_ani_date_string;
+
         return view('dashboard',$viewVariable);
     }
 
