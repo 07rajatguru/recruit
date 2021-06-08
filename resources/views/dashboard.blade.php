@@ -172,6 +172,117 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            <!-- USERS LIST -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Members</h3>
+
+                  <div class="box-tools pull-right">
+                        <span class="label label-success">16 Members</span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <ul class="users-list clearfix">
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Aarti Patel</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Brijesh Patel</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Chaitali Sohaliya</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Dhara Sorathiya</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Erik Johnsan</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Falak Patel</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Gopi Palan</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Harsh Thakkar</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Aarti Patel</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Brijesh Patel</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Chaitali Sohaliya</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Dhara Sorathiya</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Erik Johnsan</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Falak Patel</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Gopi Palan</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                        <li>
+                            <img src="/images/default.png" alt="User Image">
+                            <a class="users-list-name" href="#">Harsh Thakkar</a>
+                            <span class="users-list-date">Sr. Executive</span>
+                        </li>
+                    </ul>
+                  <!-- /.users-list -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer text-center">
+                    <a href="javascript:void(0)" class="uppercase">View All Users</a>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+            <!--/.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
     @permission(('display-jobs-open-to-all'))
         <div class="row">
             <div class="col-lg-12 col-xs-12">
