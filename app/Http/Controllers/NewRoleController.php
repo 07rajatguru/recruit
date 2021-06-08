@@ -41,8 +41,8 @@ class NewRoleController extends Controller
         }
         $department_id = '';
 
-        $role_in_mngmnt_team = '0';
-        $role_visible_to_all = '0';
+        $role_in_mngmnt_team = 0;
+        $role_visible_to_all = 0;
        
         return view('adminlte::new_role.create',compact('permissions','modules','module_ids_array','departments','department_id','role_in_mngmnt_team','role_visible_to_all'));
     }
@@ -62,8 +62,20 @@ class NewRoleController extends Controller
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
         $role->department = $request->input('department');
-        $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
-        $role->role_visible_to_all = $request->input('role_visible_to_all');
+
+        if($request->input('role_in_mngmnt_team') != '') {
+            $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
+        }
+        else {
+            $role->role_in_mngmnt_team = 0;
+        }
+
+        if($request->input('role_visible_to_all') != '') {
+            $role->role_visible_to_all = $request->input('role_visible_to_all');
+        }
+        else {
+            $role->role_visible_to_all = 0;
+        }
         $role->save();
 
         if($role->save()) {
@@ -144,8 +156,20 @@ class NewRoleController extends Controller
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
         $role->department = $request->input('department');
-        $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
-        $role->role_visible_to_all = $request->input('role_visible_to_all');
+
+        if($request->input('role_in_mngmnt_team') != '') {
+            $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
+        }
+        else {
+            $role->role_in_mngmnt_team = 0;
+        }
+
+        if($request->input('role_visible_to_all') != '') {
+            $role->role_visible_to_all = $request->input('role_visible_to_all');
+        }
+        else {
+            $role->role_visible_to_all = 0;
+        }
         $role->save();
 
         if($role->save()) {
