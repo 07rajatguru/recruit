@@ -591,9 +591,6 @@ class User extends Authenticatable
 
     public static function getAllUsersForEligibilityReport() {
 
-        $superadmin = getenv('SUPERADMINUSERID');
-        $super_array = array($superadmin);
-
         $status = 'Inactive';
         $status_array = array($status);
 
@@ -608,7 +605,6 @@ class User extends Authenticatable
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
-        $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();

@@ -197,6 +197,8 @@
 
             $(".department_ids").click(function () {
                 $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+
+                displayUsers();
             });
 
             var action = $("#action").val();
