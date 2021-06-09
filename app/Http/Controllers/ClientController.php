@@ -2047,17 +2047,22 @@ class ClientController extends Controller
         $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
         $all_client_user_email = User::getUserEmailById($all_client_user_id);
 
+        // Get Account Manager Id
+
+        $assigned_by_email = User::getUserEmailById($user_id);
+
         if ($second_line_am_id != '0') {
 
             $to = $superadminemail;
-            $account_manager_email = User::getUserEmailById($second_line_am_id);
-            $cc_users_array = array($all_client_user_email,$account_manager_email);
+            $secondline_account_manager_email = User::getUserEmailById($second_line_am_id);
+            $cc_users_array = array($assigned_by_email,$secondline_account_manager_email,$all_client_user_email);
             $cc = implode(",",$cc_users_array);
         }
         else {
 
             $to = $superadminemail;
-            $cc = $all_client_user_email;
+            $cc_users_array = array($assigned_by_email,$all_client_user_email);
+            $cc = implode(",",$cc_users_array);
         }
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -2244,17 +2249,23 @@ class ClientController extends Controller
         $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
         $all_client_user_email = User::getUserEmailById($all_client_user_id);
 
+        // Get Account Manager Id
+
+        $account_manager_id = $client_info['account_manager_id'];
+        $account_manager_email = User::getUserEmailById($account_manager_id);
+
         if ($secondline_account_manager != '0') {
 
             $to = $superadminemail;
-            $account_manager_email = User::getUserEmailById($secondline_account_manager);
-            $cc_users_array = array($all_client_user_email,$account_manager_email);
+            $secondline_account_manager_email = User::getUserEmailById($secondline_account_manager);
+            $cc_users_array = array($account_manager_email,$secondline_account_manager_email,$all_client_user_email);
             $cc = implode(",",$cc_users_array);
         }
         else {
 
             $to = $superadminemail;
-            $cc = $all_client_user_email;
+            $cc_users_array = array($account_manager_email,$all_client_user_email);
+            $cc = implode(",",$cc_users_array);
         }
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
