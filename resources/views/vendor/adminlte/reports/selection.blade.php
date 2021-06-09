@@ -14,9 +14,12 @@
             <div class="pull-left">
                 <h2>Selection Report</h2>
             </div>
-            <div class="pull-right col-md-2">
-                <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
-            </div>
+
+            @permission(('display-selection-report'))
+                <div class="pull-right col-md-2">
+                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
+                </div>
+            @endpermission
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
         	<div class="box-body col-xs-3 col-sm-3 col-md-3">

@@ -14,9 +14,12 @@
             <div class="pull-left">
                 <h2>Userwise Report</h2>
             </div>
-            <div class="pull-right col-md-2">
-                <a class="btn btn-success btn-block" href="javascript:void(0)" onClick="export_data()">Export</a>
-            </div>
+
+            @permission(('display-user-report'))
+                <div class="pull-right col-md-2">
+                    <a class="btn btn-success btn-block" href="javascript:void(0)" onClick="export_data()">Export</a>
+                </div>
+            @endpermission
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -235,7 +238,7 @@
             var quater = $("#quater").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = app_url+'userreport/export';
+            var url = app_url+'/userreport/export';
 
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +

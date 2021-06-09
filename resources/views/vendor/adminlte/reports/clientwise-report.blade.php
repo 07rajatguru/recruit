@@ -28,9 +28,12 @@
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
-        <div class="pull-right col-xs-12 col-md-2 col-sm-3 export-btn">
-            <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
-        </div>
+
+        @permission(('display-client-wise-report-of-all-users'))
+        	<div class="pull-right col-xs-12 col-md-2 col-sm-3 export-btn">
+            	<a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Export</a>
+        	</div>
+        @endpermission
     </div>
     <br/>
     

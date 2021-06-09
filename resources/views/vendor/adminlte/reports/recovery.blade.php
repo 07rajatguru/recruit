@@ -14,9 +14,12 @@
             <div class="pull-left">
                 <h2>Recovery Report</h2>
             </div>
-        <div class="pull-right col-md-2">
-            <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
-        </div>
+
+            @permission(('display-recovery-report'))
+                <div class="pull-right col-md-2">
+                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()"> Export</a>
+                </div>
+            @endpermission
         </div>
     </div>
 
