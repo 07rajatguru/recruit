@@ -1848,7 +1848,7 @@ class ClientController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message_2,$module_id,$cc));
         }
 
-        \DB::statement("UPDATE email_template SET `name`='$template_nm',`subject`='$email_subject',`email_body`='$email_body',updated_at = '$updated_at' where `id` = '$email_template_id'"); 
+        \DB::statement("UPDATE email_template SET `user_id`=$user_id, `name`='$template_nm', `subject`='$email_subject', `email_body`='$email_body', `updated_at` = '$updated_at' where `id` = '$email_template_id'"); 
 
         return redirect()->route('client.index')->with('success','Email Sent Successfully.');
     }

@@ -63,6 +63,7 @@ class EmailTemplateController extends Controller
     	$email_body = $request->get('email_body');
 
     	$email_template = new EmailTemplate();
+        $email_template->user_id = $user_id;
     	$email_template->name = $name;
     	$email_template->subject = $subject;
     	$email_template->email_body = $email_body;
@@ -106,11 +107,14 @@ class EmailTemplateController extends Controller
 
     public function update($id,Request $request) {
     	
+        $user_id = \Auth::user()->id;
+
     	$name = $request->get('name');
     	$subject = $request->get('subject');
     	$email_body = $request->get('email_body');
 
     	$email_template = EmailTemplate::find($id);
+        $email_template->user_id = $user_id;
     	$email_template->name = $name;
     	$email_template->subject = $subject;
     	$email_template->email_body = $email_body;
@@ -142,15 +146,38 @@ class EmailTemplateController extends Controller
 
     public function storeNewEmailTemplate() {
 
+        $user_id = \Auth::user()->id;
+        $user_name = \Auth::user()->name;
+
         $template_nm = $_POST['template_nm'];
         $email_subject = $_POST['email_subject'];
         $email_body = $_POST['email_body'];
 
         $email_template = new EmailTemplate();
+        $email_template->user_id = $user_id;
         $email_template->name = $template_nm;
         $email_template->subject = $email_subject;
         $email_template->email_body = $email_body;
         $email_template->save();
+
+        // Send email notification
+
+        $email_template_id = $email_template->id;
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $to_users_array = User::getAllUsersEmails(NULL,NULL,'Yes');
+
+        $module = "Email Template";
+        $sender_name = $user_id;
+        $to = implode(",",$to_users_array);
+        $subject = "New Email Template - " . $template_nm;
+        $message = "<tr><td>" . $user_name . " added new Email Template</td></tr>";
+        $module_id = $email_template_id;
+        $cc = $superadminemail;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         $data = "Success";
         return json_encode($data);
