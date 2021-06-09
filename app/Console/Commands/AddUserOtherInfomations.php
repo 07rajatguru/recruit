@@ -43,12 +43,15 @@ class AddUserOtherInfomations extends Command
         $superadmin = getenv('SUPERADMINUSERID');
         $accountant = getenv('ACCOUNTANTUSERID');
         $hr = getenv('HRUSERID');
+        $admin_userid = getenv('ADMINUSERID');
+        
 
         $superadminemail = User::getUserEmailById($superadmin);
         $accountantemail = User::getUserEmailById($accountant);
         $hremail = User::getUserEmailById($hr);
+        $admin_email = User::getUserEmailById($admin_userid);
 
-        $to_users_array = array($superadminemail,$accountantemail,$hremail);
+        $to_users_array = array($superadminemail,$accountantemail,$hremail,$admin_email);
         $to_users_array = array_filter($to_users_array);
 
         $module = "Update User Informations";
