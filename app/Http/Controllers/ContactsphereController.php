@@ -8,7 +8,6 @@ use App\User;
 use App\Lead;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
-use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
 use App\ClientBasicinfo;
 
@@ -183,7 +182,7 @@ class ContactsphereController extends Controller
         $contact->hold = '1';
         $contact->save();
 
-        $name = $contact->name;
+        /*$name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
         $referred_by_id = $contact->referred_by;
@@ -222,7 +221,7 @@ class ContactsphereController extends Controller
 
         $module_id = $id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
 
         return redirect()->route('contactsphere.index')->with('success','Contact on Hold Successfully.');
     }
@@ -329,7 +328,7 @@ class ContactsphereController extends Controller
         $contact->hold = '0';
         $contact->save();
 
-        $name = $contact->name;
+        /*$name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
         $referred_by_id = $contact->referred_by;
@@ -367,7 +366,7 @@ class ContactsphereController extends Controller
         }
         $module_id = $id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
 
         return redirect()->route('contactsphere.index')->with('success', 'Hold Contact Relived Successfully.');
     }
@@ -378,7 +377,7 @@ class ContactsphereController extends Controller
         $contact->forbid = '1';
         $contact->save();
 
-        $name = $contact->name;
+        /*$name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
         $referred_by_id = $contact->referred_by;
@@ -416,7 +415,7 @@ class ContactsphereController extends Controller
         }
         $module_id = $id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
         
         return redirect()->route('contactsphere.index')->with('success','Contact Forbid Successfully.');
     }
@@ -523,7 +522,7 @@ class ContactsphereController extends Controller
         $contact->forbid = '0';
         $contact->save();
 
-        $name = $contact->name;
+        /*$name = $contact->name;
         $company = $contact->company;
         $city = $contact->city;
         $referred_by_id = $contact->referred_by;
@@ -561,7 +560,7 @@ class ContactsphereController extends Controller
         }
         $module_id = $id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
         
         return redirect()->route('contactsphere.index')->with('success','Forbid Contact Relived Successfully.');
     }
@@ -621,8 +620,8 @@ class ContactsphereController extends Controller
         $contactsphere->forbid = 0;
         $contactsphere->save();
 
-        // For Lead Emails [data entry in email_notification table]
-        $contactsphere_id = $contactsphere->id;
+        // For Entry in email_notification table
+        /*$contactsphere_id = $contactsphere->id;
         $user_id = $user->id;
         $user_email = $user->email;
 
@@ -654,7 +653,7 @@ class ContactsphereController extends Controller
         $cc_users_array = array_filter($cc_users_array);
         $cc = implode(",",$cc_users_array);
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
 
         return redirect()->route('contactsphere.index')->with('success','Contact Added Successfully.');
     }
@@ -823,8 +822,8 @@ class ContactsphereController extends Controller
         $contact->convert_lead = 1;
         $contact->save();
 
-        // For Lead Emails [data entry in email_notification table]
-        $lead_id = $lead->id;
+        // For Entry in email_notification table
+        /*$lead_id = $lead->id;
         $user_id = $user->id;
         $user_email = $user->email;
 
@@ -848,7 +847,7 @@ class ContactsphereController extends Controller
         $message = "New Lead for " . $leads . " - ". $company_name . " - " . $city;
         $module_id = $lead_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
 
         return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
     }
@@ -894,7 +893,7 @@ class ContactsphereController extends Controller
             $module_id = $value;
             $new_email_body = "<tr><td style='padding:8px;'>$email_body</td></tr>";
             
-            event(new NotificationMail($module,$sender_name,$to,$subject,$new_email_body,$module_id,$cc));
+            //event(new NotificationMail($module,$sender_name,$to,$subject,$new_email_body,$module_id,$cc));
         }
         return redirect()->route('contactsphere.index')->with('success','Email Sent Successfully.');
     }
