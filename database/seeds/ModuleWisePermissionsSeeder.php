@@ -405,6 +405,10 @@ class ModuleWisePermissionsSeeder extends Seeder
 			array('id' => '168','module_id' => '13','name' => 'user-benchmark-delete', 'display_name' => 'Delete User Benchmark','description' => 'Delete User Benchmark.', 'created_at' => '2020-07-08 16:00:00', 'updated_at' => '2020-07-08 16:00:00'),
 
 			array('id' => '169','module_id' => '13','name' => 'display-user-benchmark', 'display_name' => 'Display User Benchmark List','description' => 'Display User Benchmark List.', 'created_at' => '2020-07-08 16:00:00', 'updated_at' => '2020-07-08 16:00:00'),
+
+			// Add Salary Permission
+
+			array('id' => '181','module_id' => '13','name' => 'display-salary', 'display_name' => 'Display Salary Information','description' => 'Display Salary Information.', 'created_at' => '2021-06-09 18:00:00', 'updated_at' => '2021-06-09 18:00:00'),
 		);
         DB::table("permissions")->insert($data);
     }

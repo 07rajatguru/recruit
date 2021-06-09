@@ -584,7 +584,7 @@
         </div>
     </div>
 
-    @permission(('edit-user-profile'))
+    @permission(('display-salary'))
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
