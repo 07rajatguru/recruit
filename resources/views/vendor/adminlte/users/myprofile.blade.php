@@ -172,27 +172,45 @@
         </div>
 
         @permission(('display-salary'))
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Salary Details</h3>
+
+        @if(isset($user['fixed_salary']) && $user['fixed_salary'] != '')
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header with-border col-md-6 ">
+                        <h3 class="box-title"><a href="#" data-toggle="modal" data-target="#salaryModal">View Salary Details</a></h3>
+                    </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <br/>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Fixed Salary</th>
-                            <td>{{ $user['fixed_salary'] }}</td>
-                            <th>Performance Bonus</th>
-                            <td>{{ $user['performance_bonus'] }}</td>
-                            <th>Total Salary</th>
-                            <td>{{ $user['total_salary'] }}</td>
-                        </tr>
-                    </table>
+            </div>
+        @endif
+        @endpermission
+
+        <!-- Salary Popup -->
+        <div id="salaryModal" class="modal text-left fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h5 class="modal-title"><b>Salary Information</b></h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <table id="salary_table" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                            <tr>
+                                <td style="text-align: center;"><b>Fixed Salary (Monthly)</b></td>
+                                <td style="text-align: center;"><b>Performance Bonus </b></td>
+                                <td style="text-align: center;"><b>Total Salary</b></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">{{ $user['fixed_salary'] }}</td>
+                                <td style="text-align: center;">{{ $user['performance_bonus'] }}</td>
+                                <td style="text-align: center;">{{ $user['total_salary'] }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        @endpermission
+        <!-- Salary Popup End -->
  
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">

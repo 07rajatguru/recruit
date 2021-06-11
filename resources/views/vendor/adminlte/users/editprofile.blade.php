@@ -585,6 +585,16 @@
     </div>
 
     @permission(('display-salary'))
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6 ">
+                    <h3 class="box-title"><a href="#" data-toggle="modal" data-target="#salaryModal">ADD Salary Details</a></h3>
+                </div>
+            </div>
+        </div>
+    @endpermission
+
+    @permission(('display-salary'))
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             <div class="box-header with-border col-md-6 ">
