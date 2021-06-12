@@ -588,47 +588,48 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title"><a href="#" data-toggle="modal" data-target="#salaryModal">ADD Salary Details</a></h3>
+                    <h3 class="box-title"><a href="#" data-toggle="modal" data-target="#salaryModal">Add Salary Details</a></h3>
                 </div>
             </div>
         </div>
     @endpermission
 
-    @permission(('display-salary'))
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
-                <h3 class="box-title">Salary Information</h3>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="box-body col-xs-4 col-sm-4 col-md-4">
-                    <div class="">
+    <!-- Salary Popup -->
+    <div id="salaryModal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title"><b>Add Salary Details</b></h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="body_class">
                         <div class="form-group">
                             <strong>Fixed Salary : (Monthly)</strong>
                             {!! Form::number('fixed_salary',isset($user['fixed_salary']) ? $user['fixed_salary'] : null,array('id'=>'fixed_salary','placeholder' => 'Fixed Salary','class' => 'form-control', 'tabindex' => '48','onfocusout' => 'countTotalSalary();')) !!}
                         </div>
-                    </div>
-                </div>
-                <div class="box-body col-xs-4 col-sm-4 col-md-4">
-                    <div class="">
+
                         <div class="form-group">
                             <strong>Performance Bonus : </strong>
                             {!! Form::number('performance_bonus',isset($user['performance_bonus']) ? $user['performance_bonus'] : null,array('id'=>'performance_bonus', 'placeholder' => 'Performance Bonus','class' => 'form-control', 'tabindex' => '49','onfocusout' => 'countTotalSalary();')) !!}
                         </div>
-                    </div>
-                </div>
-                <div class="box-body col-xs-4 col-sm-4 col-md-4">
-                    <div class="">
+
                         <div class="form-group">
                             <strong>Total Salary : </strong>
                             {!! Form::number('total_salary',isset($user['total_salary']) ? $user['total_salary'] : null,array('id'=>'total_salary','placeholder' => 'Total Salary','class' => 'form-control', 'tabindex' => '50')) !!}
                         </div>
                     </div>
                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="salary_add_id" onclick="addSalary();">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-    @endpermission
+    <!-- Salary Popup End -->
 
     <input type="hidden" name="doc_size" id="doc_size" value="{{ sizeof($user['doc']) }}">
 
@@ -1168,6 +1169,9 @@
 
     <input type="hidden" name="employee_id_increment" id="employee_id_increment" value="{!! $employee_id_increment !!}">
 
+    <input type="hidden" name="user_id" id="user_id" value="{{ $user['user_id'] }}">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary">Update</button>
@@ -1279,14 +1283,12 @@
                 $(".passport_photo_div").html(fileName);
             });
 
-            CKEDITOR.replace( 'signature', 
-            {
+            CKEDITOR.replace( 'signature', {
                 filebrowserUploadUrl: '{{ route('upload.signature',['_token' => csrf_token() ]) }}',
                 customConfig: '/js/ckeditor_config.js'
             });
 
-            CKEDITOR.on('dialogDefinition', function( ev )
-            {
+            CKEDITOR.on('dialogDefinition', function( ev ) {
                var dialogName = ev.data.name;  
                var dialogDefinition = ev.data.definition;
                      
@@ -1625,6 +1627,37 @@
         var performance_bonus = $("#performance_bonus").val();
         var total_salary = parseFloat(fixed_salary) + parseFloat(performance_bonus);
         $("#total_salary").val(total_salary);
+    }
+
+    function addSalary() {
+        
+        var token = $('input[name="csrf_token"]').val();
+
+        var user_id = $("#user_id").val();
+        var fixed_salary = $("#fixed_salary").val();
+        var performance_bonus = $("#performance_bonus").val();
+        var total_salary = $("#total_salary").val();
+
+        if(fixed_salary != '') {
+
+            $.ajax({
+
+                type: 'POST',
+                url: '/salary-info/store',
+                data:{'user_id': user_id, 'fixed_salary': fixed_salary, 'performance_bonus': performance_bonus, 'total_salary': total_salary, '_token':token},
+                dataType: 'json',
+                success: function (data) {
+
+                    alert("Salary Information Add Successfully.");
+                    jQuery("#salaryModal").modal('hide');
+                },
+            });
+        }
+        else {
+
+            alert("Please Add Fixed Salary.");
+            return false;
+        }
     }
     </script>
 @endsection

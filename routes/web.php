@@ -450,6 +450,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:edit-profile-of-loggedin-user']
     ]);
 
+    Route::post('salary-info/store',[
+        'as' => 'salary-info.store',
+        'uses' => 'UserController@storeSalaryInfo',
+    ]);
+
     Route::get('users/myprofile/{id}',[
         'as' => 'users.myprofile',
         'uses' => 'UserController@profileShow',

@@ -2025,4 +2025,17 @@ class UserController extends Controller
         }
         return view('adminlte::users.usersstatusindex',compact('status_wise_users','status','count','active','inactive'));
     }
+
+    public function storeSalaryInfo() {
+
+        $user_id = $_POST['user_id'];
+        $fixed_salary = $_POST['fixed_salary'];
+        $performance_bonus = $_POST['performance_bonus'];
+        $total_salary = $_POST['total_salary'];
+
+        \DB::statement("UPDATE users_otherinfo SET fixed_salary = '$fixed_salary', performance_bonus = '$performance_bonus', total_salary = '$total_salary' WHERE user_id  = '$user_id'");
+
+        $data = "Success";
+        return json_encode($data);
+    }
 }
