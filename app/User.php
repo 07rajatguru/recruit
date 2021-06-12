@@ -847,4 +847,55 @@ class User extends Authenticatable
         }
         return $work_ani_date_string;
     }
+
+    public static function getDashboardUsers() {
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $saloni_user_id = getenv('SALONIUSERID');
+
+        $user_query = User::query();
+        $user_query = $user_query->leftjoin('role_user','role_user.user_id','=','users.id');
+        $user_query = $user_query->leftjoin('roles','roles.id','=','role_user.role_id');
+
+        $user_query = $user_query->whereNotIn('users.status',$status_array);
+        $user_query = $user_query->whereNotIn('users.type',$client_type);
+        $user_query = $user_query->where('users.id','!=',$saloni_user_id);
+
+        $user_query = $user_query->orderBy('users.id');
+        $user_query = $user_query->select('users.id as uid','users.first_name as fnm','users.last_name as lnm','roles.name as role_name');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+        $i=0;
+
+        if(isset($users) && sizeof($users)) {
+
+            foreach ($users as $user) {
+
+                $userArr[$i]['id'] = $user->uid;
+                $userArr[$i]['name'] = $user->fnm . " " . $user->lnm;
+                $userArr[$i]['role_name'] = $user->role_name;
+
+                $user_doc_info = UsersDoc::getUserDocInfoByIDType($user->uid,'Photo');
+
+                if(isset($user_doc_info) && $user_doc_info != '') {
+
+                    $userArr[$i]['photo'] = $user_doc_info->file;
+                }
+                else {
+
+                    $userArr[$i]['photo'] = '';
+                }
+
+                $i++;
+            }
+        }
+        return $userArr;
+    }
 }

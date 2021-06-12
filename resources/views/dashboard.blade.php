@@ -3,17 +3,11 @@
 @section('title', 'HRM')
 
 @section('content_header')
-
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Dashboard</h2>
             </div>
-
-            <!--<div class="pull-right">
-                @include('adminlte::partials.login', ['name' => 'dashboard'])
-                @include('adminlte::partials.logout', ['name' => 'dashboard'])
-            </div>-->
         </div>
     </div>
 @stop
@@ -172,116 +166,46 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <!-- USERS LIST -->
-            <div class="box box-info">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Members</h3>
-
-                  <div class="box-tools pull-right">
-                        <span class="label label-success">16 Members</span>
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                  </div>
+    @if(isset($dashboard_users) && sizeof($dashboard_users) > 0)
+        <div class="row">
+            <div class="col-lg-12 col-xs-12">
+                <!-- USERS LIST -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Members</h3>
+                        <div class="box-tools pull-right">
+                            <span class="label label-success">{{ $total_dashboard_users }} Members</span>
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <ul class="users-list clearfix">
+                            @foreach($dashboard_users as $key => $value)
+                                @if(isset($value['photo']) && $value['photo'] != '')
+                                    <li>
+                                        <img src="/{{ $value['photo'] }}" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
+                                        <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
+                                        <span class="users-list-date">{{ $value['role_name'] }}</span>
+                                    </li>
+                                @else
+                                    <li>
+                                        <img src="/images/default.png" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
+                                        <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
+                                        <span class="users-list-date">{{ $value['role_name'] }}</span>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="box-footer text-center">
+                        <a href="/users" target="_blank">View All Users</a>
+                    </div>
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body no-padding">
-                    <ul class="users-list clearfix">
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Aarti Patel</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Brijesh Patel</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Chaitali Sohaliya</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Dhara Sorathiya</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Erik Johnsan</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Falak Patel</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Gopi Palan</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Harsh Thakkar</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Aarti Patel</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Brijesh Patel</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Chaitali Sohaliya</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Dhara Sorathiya</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Erik Johnsan</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Falak Patel</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Gopi Palan</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                        <li>
-                            <img src="/images/default.png" alt="User Image">
-                            <a class="users-list-name" href="#">Harsh Thakkar</a>
-                            <span class="users-list-date">Sr. Executive</span>
-                        </li>
-                    </ul>
-                  <!-- /.users-list -->
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer text-center">
-                    <a href="javascript:void(0)" class="uppercase">View All Users</a>
-                </div>
-                <!-- /.box-footer -->
             </div>
-            <!--/.box -->
         </div>
-        <!-- /.col -->
-    </div>
-    <!-- /.row -->
+    @endif
 
     @permission(('display-jobs-open-to-all'))
         <div class="row">
@@ -646,18 +570,8 @@
 <input type="hidden" name="user_id" id="user_id" value="{{ $user_id }}">
 
 @section('customscripts')
-
     <script>
-
         jQuery(document).ready(function () {
-
-            /*jQuery.ajax({
-             url:'jobs/getopenjobs',
-             dataType:'json',
-             success: function(data) {
-
-             }
-             });*/
 
             if($(".inline").length>0) {
                 setTimeout(function (){$('.inline').fancybox().trigger('click')}, 1000);
@@ -698,9 +612,7 @@
 
             if(birthday_date_string != undefined) {
 
-                if((hours >= '8') && (hours <= '11')) {
-                    jQuery("#birthDayModal").modal('show');
-                }
+                jQuery("#birthDayModal").modal('show');
             }
 
             // For Work Anniversary Modal Popup
@@ -709,19 +621,22 @@
 
             if(work_ani_date_string != undefined) {
 
-                if((hours >= '8') && (hours <= '11')) {
-                    jQuery("#workAnniversaryModal").modal('show');
-                }
+                jQuery("#workAnniversaryModal").modal('show');
             }
         });
 
         function opentoalljob() {
+
             var app_url = "{!! env('APP_URL'); !!}";
+
             $.ajax({
+
                 url:app_url+'/dashboard/opentoalljob',
                 dataType:'json',
-                success: function(job_opened){
+                success: function(job_opened) {
+
                     if (job_opened.length > 0) {
+
                         for (var i = 0; i <= job_opened.length; i++) {
 
                             var link = /jobs/+job_opened[i].id+/associated_candidates/;
@@ -750,7 +665,7 @@
                             $("#job_open_to_all").append(html);
                         }
                     }
-                    else{
+                    else {
                         var html = '';
                         html += '<tr>';
                         html += '<td colspan="8" style="border: 1px solid #00c0ef;">No Jobs open to all</td>';

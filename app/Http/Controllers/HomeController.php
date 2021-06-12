@@ -243,6 +243,36 @@ class HomeController extends Controller
             }
         }
 
+        // Get Birthday Dates Array of users
+
+        $today_birthday = User::getAllUsersBirthDateString();
+
+        if(isset($today_birthday) && $today_birthday != '') {
+
+            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+        }
+        else {
+
+            $birthday_date_string = '';
+        }
+
+        // Get Work Anniversary Dates Array of users
+
+        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
+
+        if(isset($today_work_ani) && $today_work_ani != '') {
+
+            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
+        }
+        else {
+
+            $work_ani_date_string = '';
+        }
+
+        // Display Users Listing With Role Name & Profile Photo
+
+        $dashboard_users = User::getDashboardUsers();
+
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;
@@ -259,34 +289,10 @@ class HomeController extends Controller
         $viewVariable['msg'] = $msg;
         $viewVariable['superadmin'] = $superadmin;
         $viewVariable['user_id'] = $user_id;
-
-        // Get Birthday Dates Array of users
-
-        $today_birthday = User::getAllUsersBirthDateString();
-
-        if(isset($today_birthday) && $today_birthday != '') {
-
-            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
-        }
-        else {
-
-            $birthday_date_string = '';
-        }
         $viewVariable['birthday_date_string'] = $birthday_date_string;
-
-        // Get Work Anniversary Dates Array of users
-
-        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
-
-        if(isset($today_work_ani) && $today_work_ani != '') {
-
-            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
-        }
-        else {
-
-            $work_ani_date_string = '';
-        }
         $viewVariable['work_ani_date_string'] = $work_ani_date_string;
+        $viewVariable['dashboard_users'] = $dashboard_users;
+        $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
 
         return view('dashboard',$viewVariable);
     }
