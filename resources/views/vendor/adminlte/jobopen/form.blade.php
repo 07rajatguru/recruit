@@ -576,6 +576,7 @@
 
 <input type="hidden" id="action" name="action" value="{!! $action !!}">
 <input type="hidden" id="super_admin_user_id" name="super_admin_user_id" value="{!! $super_admin_user_id !!}">
+<input type="hidden" id="loggedin_user_id" name="loggedin_user_id" value="{{ $loggedin_user_id }}">
 
 </div>
 
@@ -809,6 +810,9 @@
 
                                 var super_admin_user_id = $("#super_admin_user_id").val();
                                 $("input[value='" + super_admin_user_id + "']").prop('checked', true);
+
+                                var loggedin_user_id = $("#loggedin_user_id").val();
+                                $("input[value='" + loggedin_user_id + "']").prop('checked', true);
                             });
                         }
                     }
