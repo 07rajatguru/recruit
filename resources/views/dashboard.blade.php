@@ -28,7 +28,9 @@
 
     <!-- Birthday Popup -->
     @if(isset($birthday_date_string) && $birthday_date_string != '')
-        <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="{{ $birthday_date_string }}">
+        <!-- <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="{{ $birthday_date_string }}"> -->
+
+        <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="">
     @endif
 
     <div id="birthDayModal" class="modal text-left fade">
@@ -50,7 +52,9 @@
 
     <!-- Work Anniversary Popup -->
     @if(isset($work_ani_date_string) && $work_ani_date_string != '')
-        <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="{{ $work_ani_date_string }}">
+        <!-- <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="{{ $work_ani_date_string }}"> -->
+
+        <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="">
     @endif
 
     <div id="workAnniversaryModal" class="modal text-left fade">
@@ -166,46 +170,48 @@
         </div>
     </div>
 
-    @if(isset($dashboard_users) && sizeof($dashboard_users) > 0)
-        <div class="row">
-            <div class="col-lg-12 col-xs-12">
-                <!-- USERS LIST -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Members</h3>
-                        <div class="box-tools pull-right">
-                            <span class="label label-success">{{ $total_dashboard_users }} Members</span>
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+    @permission(('display-jobs-open-to-all'))
+        @if(isset($dashboard_users) && sizeof($dashboard_users) > 0)
+            <div class="row">
+                <div class="col-lg-12 col-xs-12">
+                    <!-- USERS LIST -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Members</h3>
+                            <div class="box-tools pull-right">
+                                <span class="label label-success">{{ $total_dashboard_users }} Members</span>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body no-padding">
-                        <ul class="users-list clearfix">
-                            @foreach($dashboard_users as $key => $value)
-                                @if(isset($value['photo']) && $value['photo'] != '')
-                                    <li>
-                                        <img src="/{{ $value['photo'] }}" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
-                                        <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
-                                        <span class="users-list-date">{{ $value['role_name'] }}</span>
-                                    </li>
-                                @else
-                                    <li>
-                                        <img src="/images/default.png" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
-                                        <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
-                                        <span class="users-list-date">{{ $value['role_name'] }}</span>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="box-footer text-center">
-                        <a href="/users" target="_blank">View All Users</a>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <ul class="users-list clearfix">
+                                @foreach($dashboard_users as $key => $value)
+                                    @if(isset($value['photo']) && $value['photo'] != '')
+                                        <li>
+                                            <img src="/{{ $value['photo'] }}" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
+                                            <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
+                                            <span class="users-list-date">{{ $value['role_name'] }}</span>
+                                        </li>
+                                    @else
+                                        <li>
+                                            <img src="/images/default.png" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
+                                            <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
+                                            <span class="users-list-date">{{ $value['role_name'] }}</span>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="box-footer text-center">
+                            <a href="/users" target="_blank">View All Users</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
+    @endpermission
 
     @permission(('display-jobs-open-to-all'))
         <div class="row">
@@ -610,7 +616,10 @@
 
             var birthday_date_string = $("#birthday_date_string").val();
 
-            if(birthday_date_string != undefined) {
+            if(birthday_date_string == undefined || birthday_date_string == '') {
+                
+            }
+            else {
 
                 jQuery("#birthDayModal").modal('show');
             }
@@ -618,9 +627,12 @@
             // For Work Anniversary Modal Popup
 
             var work_ani_date_string = $("#work_ani_date_string").val();
+            
+            if(work_ani_date_string == undefined || work_ani_date_string == '') {
 
-            if(work_ani_date_string != undefined) {
-
+                
+            }
+            else {
                 jQuery("#workAnniversaryModal").modal('show');
             }
         });
