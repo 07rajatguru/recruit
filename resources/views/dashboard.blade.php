@@ -170,7 +170,7 @@
         </div>
     </div>
 
-    @permission(('display-jobs-open-to-all'))
+    @permission(('display-users'))
         @if(isset($dashboard_users) && sizeof($dashboard_users) > 0)
             <div class="row">
                 <div class="col-lg-12 col-xs-12">

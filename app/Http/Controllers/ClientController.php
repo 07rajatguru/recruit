@@ -122,8 +122,9 @@ class ClientController extends Controller
         $user_id =  \Auth::user()->id;
 
         $superadmin = getenv('SUPERADMINUSERID');
+        $manager = getenv('MANAGERUSERID');
 
-        return view('adminlte::client.index',compact('count','active','passive','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin'));
+        return view('adminlte::client.index',compact('count','active','passive','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager'));
     }
 
     public static function getOrderColumnName($order) {

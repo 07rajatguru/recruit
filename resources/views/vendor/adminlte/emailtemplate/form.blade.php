@@ -71,17 +71,9 @@
                             <td style="text-align: center;">{Clientname}</td>
                             <td style="text-align: center;">Name of the Client</td>
                         </tr>
-                       <!--  <tr>
-                            <td style="text-align: center;">{Candidatename}</td>
-                            <td style="text-align: center;">Name of the Candidate</td>
-                        </tr> -->
                         <tr>
                             <td style="text-align: center;">{Lusignature}</td>
                             <td style="text-align: center;">Logged in User Signature</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center;">{Amsignature}</td>
-                            <td style="text-align: center;">Account Manager Signature</td>
                         </tr>
                     </table>
                 </div>

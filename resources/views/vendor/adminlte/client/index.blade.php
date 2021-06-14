@@ -204,7 +204,10 @@
                     <input type="hidden" name="email_client_ids" id="email_client_ids" value="">
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="email_temp_submit_id" onclick="saveTemplate();">Save as New Template</button>
+
+                        @if($user_id == $superadmin || $user_id == $manager)
+                            <button type="button" class="btn btn-primary" id="email_temp_submit_id" onclick="saveTemplate();">Save as New Template</button>
+                        @endif
                         <button type="submit" class="btn btn-primary" id="email_submit">Submit</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
