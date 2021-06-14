@@ -48,7 +48,8 @@ class JobOpentoAll extends Command
         
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
 
         $job_data = JobOpen::getJobforOpentoAll();
         $job = array();
