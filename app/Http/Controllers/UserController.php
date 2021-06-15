@@ -58,6 +58,8 @@ class UserController extends Controller
     public function create() {
 
         $user_id = \Auth::user()->id;
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
 
         $roles = array();
         $roles_id = '';
@@ -81,9 +83,25 @@ class UserController extends Controller
         $department_res = Department::orderBy('id','ASC')->get();
         $departments = array();
 
-        if(sizeof($department_res) > 0) {
-            foreach($department_res as $r) {
-                $departments[$r->id] = $r->name;
+        if($user_id == $superadmin || $user_id == $saloni_user_id) {
+
+            if(sizeof($department_res) > 0) {
+                foreach($department_res as $r) {
+                    $departments[$r->id] = $r->name;
+                }
+            }
+        }
+        else {
+
+            if(sizeof($department_res) > 0) {
+                foreach($department_res as $r) {
+
+                    if($r->name == 'Management') {
+                    }
+                    else {
+                        $departments[$r->id] = $r->name;
+                    }
+                }
             }
         }
         $department_id = '';
@@ -334,6 +352,10 @@ class UserController extends Controller
 
     public function edit($id) {
 
+        $user_id = \Auth::user()->id;
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+
         $user = User::find($id);
         $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id');
 
@@ -360,9 +382,25 @@ class UserController extends Controller
         $department_res = Department::orderBy('id','ASC')->get();
         $departments = array();
 
-        if(sizeof($department_res) > 0) {
-            foreach($department_res as $r) {
-                $departments[$r->id] = $r->name;
+        if($user_id == $superadmin || $user_id == $saloni_user_id) {
+
+            if(sizeof($department_res) > 0) {
+                foreach($department_res as $r) {
+                    $departments[$r->id] = $r->name;
+                }
+            }
+        }
+        else {
+
+            if(sizeof($department_res) > 0) {
+                foreach($department_res as $r) {
+
+                    if($r->name == 'Management') {
+                    }
+                    else {
+                        $departments[$r->id] = $r->name;
+                    }
+                }
             }
         }
         
