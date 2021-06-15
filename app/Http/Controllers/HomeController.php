@@ -249,7 +249,7 @@ class HomeController extends Controller
 
         if(isset($today_birthday) && $today_birthday != '') {
 
-            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+            $birthday_date_string = "Let's wish " . $today_birthday . " a very Happy Birthday today!";
         }
         else {
 
@@ -262,7 +262,7 @@ class HomeController extends Controller
 
         if(isset($today_work_ani) && $today_work_ani != '') {
 
-            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
+            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary!";
         }
         else {
 
@@ -786,5 +786,471 @@ class HomeController extends Controller
             'end' => date('Y-m-d')
         );
         return json_encode($data);
+    }
+
+    public function recruitmentDashboard() {
+
+        $user = \Auth::user();
+        $user_id =  \Auth::user()->id;
+        $allclient = getenv('ALLCLIENTVISIBLEUSERID');
+        $strtegy = getenv('STRATEGYUSERID');
+        $superadmin = getenv('SUPERADMINUSERID');
+        $recruitment = getenv('RECRUITMENT');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        if($isClient) {
+
+            return redirect()->route('jobopen.index');
+        }
+
+        $all_perm = $user->can('display-productivity-report-of-all-users');
+
+        if($all_perm) {
+
+            $users = User::getAllUsersForBenchmarkModal($recruitment);
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                $users_array = array();
+                $i=0;
+
+                foreach ($users as $key => $value) {
+                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($key);
+
+                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                    }
+                    else {
+                        $users_array[$i] = $value;
+                    }
+                    $i++;
+                }   
+
+                if(isset($users_array) && sizeof($users_array) > 0) {
+
+                    $users_name_string = implode(", ", $users_array);
+                    $msg = 'Please Add User Benchmark of Users : ' . $users_name_string;
+                }
+                else {
+                    $msg = '';
+                }
+            }
+        }
+        else {
+
+            if($user_id == $allclient || $user_id == $strtegy) {
+                $msg = '';
+            }
+            else {
+                $user_details = User::getAllDetailsByUserID($user_id);
+
+                if($user_details->type == 'recruiter') {
+
+                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
+
+                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                        $msg = '';
+                    }
+                    else {
+                        $msg = "Please Contact to HR for add your benchmark";
+                    }
+                }
+                else {
+                    $msg = '';
+                }
+            }
+        }
+
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $toDos = array();
+
+        if(isset($todo_ids) && sizeof($todo_ids)>0) {
+            $toDos = ToDos::getAllTodosdash($todo_ids,7);
+        }
+
+        $date = date('Y-m-d');
+        $month = date('m');
+        $year = date('Y');
+
+        if($display_all_count) {
+
+            // Client Count
+            $client = DB::table('client_basicinfo')
+            ->whereRaw('MONTH(created_at) = ?',[$month])
+            ->whereRaw('YEAR(created_at) = ?',[$year])
+            ->where('delete_client','=',0)->count();
+
+            // Job Count
+            $job = JobOpen::getAllJobsCount(1,$user_id,0);
+
+            // Cvs Associated this month
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
+
+            // Cvs Shortlisted this month
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+
+            // Interview Attended this month
+            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+            $interview_attend = sizeof($interview_attended_list);
+
+            // Candidate Join this month
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+
+            // Interview Count
+            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews_cnt = sizeof($interviews);
+        }
+        else if($display_userwise_count) {
+
+            // Client Count
+            $client = DB::table('client_basicinfo')
+            ->whereRaw('MONTH(created_at) = ?',[$month])
+            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
+            ->where('delete_client','=',0)->count();
+
+            // Job Count
+            $job = JobOpen::getAllJobsCount(0,$user_id,0);
+
+            $tanisha_user_id = getenv('TANISHAUSERID');
+
+            if($user_id == $tanisha_user_id) {
+
+                // Cvs Associated this month
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year);
+                $associate_count = $associate_monthly_response['cvs_cnt'];
+
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year);
+
+                // Interview Attended this month
+                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year);
+                $interview_attend = sizeof($interview_attended_list);
+
+                // Candidate Join this month
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year);
+
+                // Interview Count
+                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id);
+                $interviews_cnt = sizeof($interviews);
+            }
+            else {
+
+                // Cvs Associated this month
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_count = $associate_monthly_response['cvs_cnt'];
+
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+
+                // Interview Attended this month
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attend = sizeof($interview_attended_list);
+
+                // Candidate Join this month
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+
+                // Interview Count
+                $interviews = Interview::getDashboardInterviews(0,$user_id);
+                $interviews_cnt = sizeof($interviews);
+            }
+        }
+
+        // Get Birthday Dates Array of users
+
+        $today_birthday = User::getAllUsersBirthDateString();
+
+        if(isset($today_birthday) && $today_birthday != '') {
+
+            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+        }
+        else {
+
+            $birthday_date_string = '';
+        }
+
+        // Get Work Anniversary Dates Array of users
+
+        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
+
+        if(isset($today_work_ani) && $today_work_ani != '') {
+
+            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
+        }
+        else {
+
+            $work_ani_date_string = '';
+        }
+
+        // Display Users Listing With Role Name & Profile Photo
+
+        $dashboard_users = User::getDashboardUsers();
+
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['interviews'] = $interviews;
+        $viewVariable['interviewCount'] = $interviews_cnt;
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
+        $viewVariable['associatedCount'] = $associate_count;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['shortlisted_count'] = $shortlisted_count;
+        $viewVariable['date'] = $date;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
+        $viewVariable['msg'] = $msg;
+        $viewVariable['superadmin'] = $superadmin;
+        $viewVariable['user_id'] = $user_id;
+        $viewVariable['birthday_date_string'] = $birthday_date_string;
+        $viewVariable['work_ani_date_string'] = $work_ani_date_string;
+        $viewVariable['dashboard_users'] = $dashboard_users;
+        $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
+
+        return view('dashboard',$viewVariable);
+    }
+
+    public function hrAdvisoryDashboard() {
+
+        $user = \Auth::user();
+        $user_id =  \Auth::user()->id;
+        $allclient = getenv('ALLCLIENTVISIBLEUSERID');
+        $strtegy = getenv('STRATEGYUSERID');
+        $superadmin = getenv('SUPERADMINUSERID');
+        $recruitment = getenv('RECRUITMENT');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        if($isClient) {
+
+            return redirect()->route('jobopen.index');
+        }
+
+        $all_perm = $user->can('display-productivity-report-of-all-users');
+
+        if($all_perm) {
+
+            $users = User::getAllUsersForBenchmarkModal($recruitment);
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                $users_array = array();
+                $i=0;
+
+                foreach ($users as $key => $value) {
+                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($key);
+
+                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                    }
+                    else {
+                        $users_array[$i] = $value;
+                    }
+                    $i++;
+                }   
+
+                if(isset($users_array) && sizeof($users_array) > 0) {
+
+                    $users_name_string = implode(", ", $users_array);
+                    $msg = 'Please Add User Benchmark of Users : ' . $users_name_string;
+                }
+                else {
+                    $msg = '';
+                }
+            }
+        }
+        else {
+
+            if($user_id == $allclient || $user_id == $strtegy) {
+                $msg = '';
+            }
+            else {
+                $user_details = User::getAllDetailsByUserID($user_id);
+
+                if($user_details->type == 'recruiter') {
+
+                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
+
+                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
+                        $msg = '';
+                    }
+                    else {
+                        $msg = "Please Contact to HR for add your benchmark";
+                    }
+                }
+                else {
+                    $msg = '';
+                }
+            }
+        }
+
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $toDos = array();
+
+        if(isset($todo_ids) && sizeof($todo_ids)>0) {
+            $toDos = ToDos::getAllTodosdash($todo_ids,7);
+        }
+
+        $date = date('Y-m-d');
+        $month = date('m');
+        $year = date('Y');
+
+        if($display_all_count) {
+
+            // Client Count
+            $client = DB::table('client_basicinfo')
+            ->whereRaw('MONTH(created_at) = ?',[$month])
+            ->whereRaw('YEAR(created_at) = ?',[$year])
+            ->where('delete_client','=',0)->count();
+
+            // Job Count
+            $job = JobOpen::getAllJobsCount(1,$user_id,0);
+
+            // Cvs Associated this month
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_count = $associate_monthly_response['cvs_cnt'];
+
+            // Cvs Shortlisted this month
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+
+            // Interview Attended this month
+            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+            $interview_attend = sizeof($interview_attended_list);
+
+            // Candidate Join this month
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+
+            // Interview Count
+            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews_cnt = sizeof($interviews);
+        }
+        else if($display_userwise_count) {
+
+            // Client Count
+            $client = DB::table('client_basicinfo')
+            ->whereRaw('MONTH(created_at) = ?',[$month])
+            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
+            ->where('delete_client','=',0)->count();
+
+            // Job Count
+            $job = JobOpen::getAllJobsCount(0,$user_id,0);
+
+            $tanisha_user_id = getenv('TANISHAUSERID');
+
+            if($user_id == $tanisha_user_id) {
+
+                // Cvs Associated this month
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year);
+                $associate_count = $associate_monthly_response['cvs_cnt'];
+
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year);
+
+                // Interview Attended this month
+                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year);
+                $interview_attend = sizeof($interview_attended_list);
+
+                // Candidate Join this month
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year);
+
+                // Interview Count
+                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id);
+                $interviews_cnt = sizeof($interviews);
+            }
+            else {
+
+                // Cvs Associated this month
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_count = $associate_monthly_response['cvs_cnt'];
+
+                // Cvs Shortlisted this month
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+
+                // Interview Attended this month
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attend = sizeof($interview_attended_list);
+
+                // Candidate Join this month
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+
+                // Interview Count
+                $interviews = Interview::getDashboardInterviews(0,$user_id);
+                $interviews_cnt = sizeof($interviews);
+            }
+        }
+
+        // Get Birthday Dates Array of users
+
+        $today_birthday = User::getAllUsersBirthDateString();
+
+        if(isset($today_birthday) && $today_birthday != '') {
+
+            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
+        }
+        else {
+
+            $birthday_date_string = '';
+        }
+
+        // Get Work Anniversary Dates Array of users
+
+        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
+
+        if(isset($today_work_ani) && $today_work_ani != '') {
+
+            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
+        }
+        else {
+
+            $work_ani_date_string = '';
+        }
+
+        // Display Users Listing With Role Name & Profile Photo
+
+        $dashboard_users = User::getDashboardUsers();
+
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['interviews'] = $interviews;
+        $viewVariable['interviewCount'] = $interviews_cnt;
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
+        $viewVariable['associatedCount'] = $associate_count;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['shortlisted_count'] = $shortlisted_count;
+        $viewVariable['date'] = $date;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
+        $viewVariable['msg'] = $msg;
+        $viewVariable['superadmin'] = $superadmin;
+        $viewVariable['user_id'] = $user_id;
+        $viewVariable['birthday_date_string'] = $birthday_date_string;
+        $viewVariable['work_ani_date_string'] = $work_ani_date_string;
+        $viewVariable['dashboard_users'] = $dashboard_users;
+        $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
+
+        return view('dashboard',$viewVariable);
     }
 }

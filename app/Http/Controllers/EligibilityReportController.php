@@ -69,7 +69,15 @@ class EligibilityReportController extends Controller
                     $last_three = date('Y-m-d',strtotime("last day of $next_month_year"));
                     
                     foreach ($users as $key => $value) {
-                        $eligible_data[$value][$m.'-'.$next_month_three] = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
+
+                        $data = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
+
+                        if(isset($data) && sizeof($data) > 0) {
+                            $eligible_data[$value][$m.'-'.$next_month_three] = $data;
+                        }
+                        else {
+                            $eligible_data[$value][$m.'-'.$next_month_three] = array();
+                        }
                     }
                     $m = 13;
                 }
@@ -86,7 +94,15 @@ class EligibilityReportController extends Controller
                     $last_three = date('Y-m-d',strtotime("last day of $next_month_year"));
                     
                     foreach ($users as $key => $value) {
-                        $eligible_data[$value][$m.'-'.$next_month_three] = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
+
+                        $data = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
+
+                        if(isset($data) && sizeof($data) > 0) {
+                            $eligible_data[$value][$m.'-'.$next_month_three] = $data;
+                        }
+                        else {
+                            $eligible_data[$value][$m.'-'.$next_month_three] = array();
+                        }
                     }
                 }
             }
@@ -104,7 +120,12 @@ class EligibilityReportController extends Controller
                 $last_six = date('Y-m-d',strtotime("last day of $next_month_year"));
                 
                 foreach ($users as $key => $value) {
-                    $eligible_detail[$value][$i.'-'.$next_month_six] = Eligibilityworking::getEligibilityDataByUser($key,$first_six,$last_six);
+
+                    $data = Eligibilityworking::getEligibilityDataByUser($key,$first_six,$last_six);
+
+                    if(isset($data) && $data != '') {
+                        $eligible_detail[$value][$i.'-'.$next_month_six] = $data;
+                    }
                 }
             }
 
@@ -121,7 +142,12 @@ class EligibilityReportController extends Controller
                 $last_nine = date('Y-m-d',strtotime("last day of $next_month_year"));
                 
                 foreach ($users as $key => $value) {
-                    $eligible_detail[$value][$i.'-'.$next_month_nine] = Eligibilityworking::getEligibilityDataByUser($key,$first_nine,$last_nine);
+
+                    $data = Eligibilityworking::getEligibilityDataByUser($key,$first_nine,$last_nine);
+
+                    if(isset($data) && $data != '') {
+                        $eligible_detail[$value][$i.'-'.$next_month_nine] = $data;
+                    }
                 }
             }
 
@@ -135,7 +161,12 @@ class EligibilityReportController extends Controller
             $last_year = date('Y-m-d',strtotime("last day of $next_month_year"));
             
             foreach ($users as $key => $value) {
-                $eligible_detail[$value][$year] = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
+
+                $data = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
+
+                if(isset($data) && $data != '') {
+                    $eligible_detail[$value][$year] = $data;
+                }
             }
 
         	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail'));

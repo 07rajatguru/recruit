@@ -28,9 +28,9 @@
 
     <!-- Birthday Popup -->
     @if(isset($birthday_date_string) && $birthday_date_string != '')
-        <!-- <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="{{ $birthday_date_string }}"> -->
+        <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="{{ $birthday_date_string }}">
 
-        <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="">
+        
     @endif
 
     <div id="birthDayModal" class="modal text-left fade">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        <img class="img-popup" src="../images/adler_birthday.jpg"/ height="250px" width="600px">
+                        <img class="img-popup" src="../images/BirthDay.png"/ height="300px" width="600px">
                     </p>
                 </div>
             </div>
@@ -52,9 +52,7 @@
 
     <!-- Work Anniversary Popup -->
     @if(isset($work_ani_date_string) && $work_ani_date_string != '')
-        <!-- <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="{{ $work_ani_date_string }}"> -->
-
-        <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="">
+        <input type="hidden" name="work_ani_date_string" id="work_ani_date_string" value="{{ $work_ani_date_string }}">
     @endif
 
     <div id="workAnniversaryModal" class="modal text-left fade">
@@ -66,7 +64,7 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        <img class="img-popup" src="../images/adler_work_anniversary.jpg"/ height="250px" width="600px">
+                        <img class="img-popup" src="../images/Work_Anniversary.png"/ height="300px" width="600px">
                     </p>
                 </div>
             </div>

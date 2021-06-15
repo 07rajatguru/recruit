@@ -592,9 +592,6 @@ class User extends Authenticatable
 
     public static function getAllUsersForEligibilityReport() {
 
-        $status = 'Inactive';
-        $status_array = array($status);
-
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
@@ -605,7 +602,6 @@ class User extends Authenticatable
             $user_query = $user_query->whereIn('type',$type_array);
         }
 
-        $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();
@@ -786,10 +782,10 @@ class User extends Authenticatable
                 if($today_date == $date_class->changeYMDtoDMY($value->date_of_birth)) {
 
                     if($birthday_date_string == '') {
-                        $birthday_date_string = $value->first_name . " " . $value->last_name . "'s ";
+                        $birthday_date_string = $value->first_name;
                     }
                     else {
-                        $birthday_date_string .= " & " . $value->first_name . " " . $value->last_name . "'s";
+                        $birthday_date_string .= " & " . $value->first_name;
                     }
                 }
                 $i++;
@@ -833,10 +829,10 @@ class User extends Authenticatable
                 if($today_date == $date_class->changeYMDtoDMY($value->date_of_joining)) {
 
                     if($work_ani_date_string == '') {
-                        $work_ani_date_string = $value->first_name . " " . $value->last_name . "'s ";
+                        $work_ani_date_string = $value->first_name . "'s ";
                     }
                     else {
-                        $work_ani_date_string .= " & " . $value->first_name . " " . $value->last_name . "'s";
+                        $work_ani_date_string .= " & " . $value->first_name . "'s";
                     }
                 }
                 $i++;
