@@ -116,7 +116,17 @@ return [
                [
                    'text' => 'Dashboard',
                    'url'  => 'dashboard',
-                   'icon' => 'dashboard',
+                   'icon' => 'list',
+               ],
+               [
+                   'text' => 'Recruitment Dashboard',
+                   'url'  => 'recruitment-dashboard',
+                   'icon' => 'list',
+               ],
+               [
+                   'text' => 'HR Advisory Dashboard',
+                   'url'  => 'hr-advisory-dashboard',
+                   'icon' => 'list',
                ],
              ]
         ],

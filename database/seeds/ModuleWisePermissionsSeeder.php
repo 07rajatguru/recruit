@@ -409,6 +409,12 @@ class ModuleWisePermissionsSeeder extends Seeder
 			// Add Salary Permission
 
 			array('id' => '181','module_id' => '13','name' => 'display-salary', 'display_name' => 'Display Salary Information','description' => 'Display Salary Information.', 'created_at' => '2021-06-09 18:00:00', 'updated_at' => '2021-06-09 18:00:00'),
+
+			// Two Types of Dashboard Permissions
+
+			array('id' => '182','module_id' => '1','name' => 'display-recruitment-dashboard', 'display_name' => 'Display Recruitment Dashboard','description' => 'Display Recruitment Dashboard.', 'created_at' => '2021-06-15 15:00:00', 'updated_at' => '2021-06-15 15:00:00'),
+
+			array('id' => '183','module_id' => '1','name' => 'display-hr-advisory-dashboard', 'display_name' => 'Display HR Advisory Dashboard','description' => 'Display HR Advisory Dashboard.', 'created_at' => '2021-06-15 15:00:00', 'updated_at' => '2021-06-15 15:00:00'),
 		);
         DB::table("permissions")->insert($data);
     }
