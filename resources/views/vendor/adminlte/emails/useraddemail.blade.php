@@ -65,8 +65,10 @@
 
                                     @if($users_details['hr_adv_recruitemnt'] == 'Yes')
                                         <td align="left">{{ $users_details['designation'] }} - With Recruitemnt</td>
-                                    @else
+                                    @elseif($users_details['hr_adv_recruitemnt'] == 'No')
                                         <td align="left">{{ $users_details['designation'] }} - Without Recruitemnt</td>
+                                    @else
+                                        <td align="left">{{ $users_details['designation'] }}</td>
                                     @endif
                                 </tr>
 
