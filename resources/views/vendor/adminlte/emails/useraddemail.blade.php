@@ -63,10 +63,12 @@
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Role</b></td>
 
-                                    @if($users_details['hr_adv_recruitemnt'] == 'Yes')
-                                        <td align="left">{{ $users_details['designation'] }} - With Recruitemnt</td>
-                                    @elseif($users_details['hr_adv_recruitemnt'] == 'No')
-                                        <td align="left">{{ $users_details['designation'] }} - Without Recruitemnt</td>
+                                    @if($users_details['department_name'] == 'HR Advisory')
+                                        @if($users_details['hr_adv_recruitemnt'] == 'Yes')
+                                            <td align="left">{{ $users_details['designation'] }} - With Recruitemnt</td>
+                                        @else
+                                            <td align="left">{{ $users_details['designation'] }} - Without Recruitemnt</td>
+                                        @endif
                                     @else
                                         <td align="left">{{ $users_details['designation'] }}</td>
                                     @endif
