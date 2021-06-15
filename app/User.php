@@ -395,7 +395,8 @@ class User extends Authenticatable
         $query = $query->leftjoin('users_doc','users_doc.user_id','=','users.id');
         $query = $query->leftjoin('companies','companies.id','=','users.company_id');
         $query = $query->leftjoin('department','department.id','=','users.type');
-        $query = $query->select('users.first_name','users.last_name','users.name','users.email','users.secondary_email','roles.display_name as designation','users_otherinfo.*','users_doc.id as doc_id','users_doc.file','users_doc.type','companies.name as company_name','department.name as department_name');
+        $query = $query->leftjoin('users as u1','u1.id','=','users.reports_to');
+        $query = $query->select('users.*','roles.display_name as designation','users_otherinfo.*','users_doc.id as doc_id','users_doc.file','users_doc.type','companies.name as company_name','department.name as department_name','u1.first_name as report_first_name','u1.last_name as report_last_name');
         $query = $query->where('users.id' ,'=',$user_id);
         $response = $query->first();
 

@@ -34,16 +34,77 @@
                         <td>
                             <h4 style="margin: 0;line-height:1.4;">Greetings from Adler Talent Solutions !</h4><br/>
 
-                            @if(isset($users_details) && $users_details != '')
+                            <table width="600" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>User Name</b></td>
+                                    <td align="left">{{ $users_details['first_name'] }}  {{ $users_details['last_name'] }}</td>
+                                </tr>
 
-                                <p style="margin:8px 0; line-height:1.4;"><b>User Name : </b>{{ $users_details['first_name'] }} {{ $users_details['last_name'] }}</p>
-                                <p style="margin:8px 0; line-height:1.4;"><b>Company Name : </b>{{ $users_details['company_name'] }}</p>
-                                <p style="margin:8px 0; line-height:1.4;"><b>User Email : </b>{!! $users_details['email'] !!}</p>
-                                <p style="margin:8px 0; line-height:1.4;"><b>Secondary Gmail : </b>{!! $users_details['secondary_email'] !!}</p>
-                                <p style="margin:8px 0; line-height:1.4;"><b>Department : </b>{!! $users_details['department_name'] !!}</p>
-                                <p style="margin:8px 0; line-height:1.4;"><b>Role : </b>{!! $users_details['designation'] !!}</p>
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Email</b></td>
+                                    <td align="left">{{ $users_details['email'] }}</td>
+                                </tr>
 
-                            @endif
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Secondary Gmail</b></td>
+                                    <td align="left">{{ $users_details['secondary_email'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Company Name</b></td>
+                                    <td align="left">{{ $users_details['company_name'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Department</b></td>
+                                    <td align="left">{{ $users_details['department_name'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Role</b></td>
+
+                                    @if($users_details['hr_adv_recruitemnt'] == 'Yes')
+                                        <td align="left">{{ $users_details['designation'] }} - With Recruitemnt</td>
+                                    @else
+                                        <td align="left">{{ $users_details['designation'] }} - Without Recruitemnt</td>
+                                    @endif
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Reports To</b></td>
+                                    <td align="left">{{ $users_details['report_first_name'] }}  {{ $users_details['report_last_name'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Generate Report</b></td>
+                                    <td align="left">{{ $users_details['daily_report'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>CVs Associated</b></td>
+                                    <td align="left">{{ $users_details['cv_report'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Interviews Scheduled</b></td>
+                                    <td align="left">{{ $users_details['interview_report'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Leads Added</b></td>
+                                    <td align="left">{{ $users_details['lead_report'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Status</b></td>
+                                    <td align="left">{{ $users_details['status'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Account Manager</b></td>
+                                    <td align="left">{{ $users_details['account_manager'] }}</td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
