@@ -1448,10 +1448,17 @@ class Bills extends Model
                 }
                 if (isset($person_billing) && $person_billing != '') {
                     $person_data[$j]['person_billing'] = Utils::IND_money_format(round($person_billing));
+
+                    // Set for Eligibility Report
+                    $person_data[$j]['person_billing_new'] = round($person_billing);
                 }
                 else {
-                    $person_data[$j]['person_billing'] = 0;   
+                    $person_data[$j]['person_billing'] = 0;
+
+                    // Set for Eligibility Report
+                    $person_data[$j]['person_billing_new'] = 0;
                 }
+
                 $person_data[$j]['efforts'] = $efforts_str;
                 $person_data[$j]['client_name'] = $value->coordinator_prefix. " " .$value->client_name;
                 $person_data[$j]['location'] = $value->job_location;

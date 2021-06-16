@@ -68,17 +68,23 @@
 			</thead>
             <?php $i = 0;?>
             <tbody>
-                @foreach($eligible_data as $key => $value)
+                @if(isset($eligible_data) && sizeof($eligible_data) > 0)
+                    @foreach($eligible_data as $key => $value)
+                        <tr>
+                            <td>{{++$i}}</td>
+                            <td>{{ $key }}</td>
+                            @foreach($value as $k => $v)
+                                <td>{{ $v['target'] or '-' }}</td>
+                                <td>{{ $v['achieved'] or '-' }}</td>
+                                <td>{{ $v['eligibility'] or '-' }}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
-                        <td>{{++$i}}</td>
-                        <td>{{ $key }}</td>
-                        @foreach($value as $k => $v)
-                            <td>{{ $v['target'] or '-' }}</td>
-                            <td>{{ $v['achieved'] or '-' }}</td>
-                            <td>{{ $v['eligibility'] or '-' }}</td>
-                        @endforeach
+                        <td colspan="14" style="text-align:center;">No Records Found.</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
 		</table>
 	</div>
@@ -107,17 +113,23 @@
             </thead>
             <?php $i = 0;?>
             <tbody>
-                @foreach($eligible_detail as $key => $value)
+                @if(isset($eligible_data) && sizeof($eligible_data) > 0)
+                    @foreach($eligible_detail as $key => $value)
+                        <tr>
+                            <td>{{++$i}}</td>
+                            <td>{{ $key }}</td>
+                            @foreach($value as $k => $v)
+                                <td>{{ $v['target'] or '-' }}</td>
+                                <td>{{ $v['achieved'] or '-' }}</td>
+                                <td>{{ $v['eligibility'] or '-' }}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
-                        <td>{{++$i}}</td>
-                        <td>{{ $key }}</td>
-                        @foreach($value as $k => $v)
-                            <td>{{ $v['target'] or '-' }}</td>
-                            <td>{{ $v['achieved'] or '-' }}</td>
-                            <td>{{ $v['eligibility'] or '-' }}</td>
-                        @endforeach
+                        <td colspan="14" style="text-align:center;">No Records Found.</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
     </div>

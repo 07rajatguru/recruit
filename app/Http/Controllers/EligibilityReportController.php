@@ -20,7 +20,7 @@ class EligibilityReportController extends Controller
         if ($all_perm) {
 
         	// Year Data
-            $starting_year = '2017';
+            $starting_year = '2019';
             $ending_year = date('Y',strtotime('+2 year'));
             $year_array = array();
             for ($y=$starting_year; $y < $ending_year ; $y++) {
@@ -75,9 +75,6 @@ class EligibilityReportController extends Controller
                         if(isset($data) && sizeof($data) > 0) {
                             $eligible_data[$value][$m.'-'.$next_month_three] = $data;
                         }
-                        else {
-                            $eligible_data[$value][$m.'-'.$next_month_three] = array();
-                        }
                     }
                     $m = 13;
                 }
@@ -99,9 +96,6 @@ class EligibilityReportController extends Controller
 
                         if(isset($data) && sizeof($data) > 0) {
                             $eligible_data[$value][$m.'-'.$next_month_three] = $data;
-                        }
-                        else {
-                            $eligible_data[$value][$m.'-'.$next_month_three] = array();
                         }
                     }
                 }
@@ -168,6 +162,15 @@ class EligibilityReportController extends Controller
                     $eligible_detail[$value][$year] = $data;
                 }
             }
+
+            if(isset($eligible_data) && $eligible_data != '') {
+
+            }
+            else {
+                $eligible_data = array();
+            }
+
+
 
         	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail'));
         }
@@ -312,7 +315,7 @@ class EligibilityReportController extends Controller
             }
 
             // Year Data
-            $starting_year = '2017';
+            $starting_year = '2019';
             $ending_year = date('Y',strtotime('+3 year'));
             $default = date('Y');
 
@@ -354,7 +357,7 @@ class EligibilityReportController extends Controller
             $user_bill_data = Bills::getPersonwiseReportData($key,$start_month,$last_month);
 
             foreach ($user_bill_data as $key1 => $value1) {
-                $achieved = $achieved + $value1['person_billing'];
+                $achieved = $achieved + $value1['person_billing_new'];
             }
             // Check Eligibility
             if ($achieved == 0) {

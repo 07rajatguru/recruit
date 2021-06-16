@@ -58,7 +58,7 @@ class EligibilityWorkingReport extends Command
             $user_bill_data = Bills::getPersonwiseReportData($key,$start_month,$last_month);
            
             foreach ($user_bill_data as $key1 => $value1) {
-                $achieved = $achieved + $value1['person_billing'];
+                $achieved = $achieved + $value1['person_billing_new'];
             }
 
             // Check Eligibility

@@ -16,7 +16,7 @@ class Eligibilityworking extends Model
         $query = $query->where(\DB::raw('YEAR(date)'),'=',$year);
     	$res = $query->first();
 
-    	if (isset($res) && sizeof($res)>0) {
+    	if (isset($res) && $res != '') {
     		$eligibility_id = $res->id;
     	}
     	else {
