@@ -3071,7 +3071,7 @@ class JobOpenController extends Controller
 
             // Set Interview Round
 
-            if($response->shortlisted == '1') {
+            if($response->shortlisted == '0' || $response->shortlisted == '1') {
                 $data['round'] = '1';
             }
             else if($response->shortlisted == '2') {
@@ -3108,7 +3108,7 @@ class JobOpenController extends Controller
 
                 // Set Interview Round
 
-                if($response->shortlisted == '1') {
+                if($response->shortlisted == '0' || $response->shortlisted == '1') {
                     $data['round'] = '1';
                 }
                 else if($response->shortlisted == '2') {
@@ -3148,7 +3148,7 @@ class JobOpenController extends Controller
 
                     // Set Interview Round
 
-                    if($response->shortlisted == '1') {
+                    if($response->shortlisted == '0' || $response->shortlisted == '1') {
                         $data['round'] = '1';
                     }
                     else if($response->shortlisted == '2') {
