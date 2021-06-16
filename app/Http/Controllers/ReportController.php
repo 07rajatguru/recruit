@@ -1213,7 +1213,40 @@ class ReportController extends Controller
         
         $lastDayOfWeek = '7';
 
+        $new_weeks = array();
+
         $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+
+        if(isset($weeks) && sizeof($weeks) >= 5) {
+
+            // Week1
+            $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+            $new_weeks[0]['to_date'] = $weeks[1]['to_date'];
+
+            // Week2
+            $new_weeks[1]['from_date'] = $weeks[2]['from_date'];
+            $new_weeks[1]['to_date'] = $weeks[2]['to_date'];
+
+            // Week3
+            $new_weeks[2]['from_date'] = $weeks[3]['from_date'];
+            $new_weeks[2]['to_date'] = $weeks[3]['to_date'];
+
+            // Week4
+            $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
+
+            if(isset($weeks[5]['to_date'])) {
+                $new_weeks[3]['to_date'] = $weeks[5]['to_date'];
+            }
+            else {
+                $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
+            }
+        }
+        else {
+
+            $new_weeks = $weeks;
+        }
+
+        //print_r($new_weeks);exit;
 
         if(isset($users) && sizeof($users) > 0) {
 
