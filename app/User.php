@@ -819,20 +819,32 @@ class User extends Authenticatable
         $user_name_array = array();
         $i=0;
         $work_ani_date_string = '';
-        $today_date = date('d-m-Y');
+        $today_date = date('d-m');
         $date_class = new Date();
 
         if(isset($response) && sizeof($response) > 0) {
 
             foreach ($response as $key => $value) {
 
-                if($today_date == $date_class->changeYMDtoDMY($value->date_of_joining)) {
+                $date1 = date('Y');
+                $date2 = date('Y',strtotime($value->date_of_joining));
+                $year_diff = $date1 - $date2;
+                $convert = date("S", mktime(0, 0, 0, 0, $year_diff, 0));
+                $number = $year_diff.$convert;
+                $joining_date = date('d-m',strtotime($value->date_of_joining));
+
+                if($today_date == $joining_date) {
 
                     if($work_ani_date_string == '') {
-                        $work_ani_date_string = $value->first_name . "'s ";
+
+                        if($year_diff > 0) {
+                            $work_ani_date_string = $value->first_name . "'s " . $number . " Year";
+                        }
                     }
                     else {
-                        $work_ani_date_string .= " & " . $value->first_name . "'s";
+                        if($year_diff > 0) {
+                            $work_ani_date_string .= " & " . $value->first_name . "'s " . $number . " Year";
+                        }
                     }
                 }
                 $i++;

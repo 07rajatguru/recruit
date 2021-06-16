@@ -243,29 +243,42 @@ class HomeController extends Controller
             }
         }
 
-        // Get Birthday Dates Array of users
+        // Get User logs from log table
 
-        $today_birthday = User::getAllUsersBirthDateString();
+        $date = date('Y-m-d');
+        $user_log_count = UsersLog::getUserLogsByIdDate($user_id,$date);
 
-        if(isset($today_birthday) && $today_birthday != '') {
+        if($user_log_count == 1) {
 
-            $birthday_date_string = "Let's wish " . $today_birthday . " a very Happy Birthday today!";
+            // Get Birthday Dates Array of users
+
+            $today_birthday = User::getAllUsersBirthDateString();
+
+            if(isset($today_birthday) && $today_birthday != '') {
+
+                $birthday_date_string = "Let's wish " . $today_birthday . " a very Happy Birthday today!";
+            }
+            else {
+
+                $birthday_date_string = '';
+            }
+
+            // Get Work Anniversary Dates Array of users
+
+            $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
+
+            if(isset($today_work_ani) && $today_work_ani != '') {
+
+                $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary!";
+            }
+            else {
+
+                $work_ani_date_string = '';
+            }
         }
         else {
 
             $birthday_date_string = '';
-        }
-
-        // Get Work Anniversary Dates Array of users
-
-        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
-
-        if(isset($today_work_ani) && $today_work_ani != '') {
-
-            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary!";
-        }
-        else {
-
             $work_ani_date_string = '';
         }
 
@@ -967,32 +980,6 @@ class HomeController extends Controller
             }
         }
 
-        // Get Birthday Dates Array of users
-
-        $today_birthday = User::getAllUsersBirthDateString();
-
-        if(isset($today_birthday) && $today_birthday != '') {
-
-            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
-        }
-        else {
-
-            $birthday_date_string = '';
-        }
-
-        // Get Work Anniversary Dates Array of users
-
-        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
-
-        if(isset($today_work_ani) && $today_work_ani != '') {
-
-            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
-        }
-        else {
-
-            $work_ani_date_string = '';
-        }
-
         // Display Users Listing With Role Name & Profile Photo
 
         $dashboard_users = User::getDashboardUsers();
@@ -1013,8 +1000,8 @@ class HomeController extends Controller
         $viewVariable['msg'] = $msg;
         $viewVariable['superadmin'] = $superadmin;
         $viewVariable['user_id'] = $user_id;
-        $viewVariable['birthday_date_string'] = $birthday_date_string;
-        $viewVariable['work_ani_date_string'] = $work_ani_date_string;
+        $viewVariable['birthday_date_string'] = '';
+        $viewVariable['work_ani_date_string'] = '';
         $viewVariable['dashboard_users'] = $dashboard_users;
         $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
 
@@ -1200,32 +1187,6 @@ class HomeController extends Controller
             }
         }
 
-        // Get Birthday Dates Array of users
-
-        $today_birthday = User::getAllUsersBirthDateString();
-
-        if(isset($today_birthday) && $today_birthday != '') {
-
-            $birthday_date_string = "Today is " . $today_birthday . " Birthday";
-        }
-        else {
-
-            $birthday_date_string = '';
-        }
-
-        // Get Work Anniversary Dates Array of users
-
-        $today_work_ani = User::getAllUsersWorkAnniversaryDateString();
-
-        if(isset($today_work_ani) && $today_work_ani != '') {
-
-            $work_ani_date_string = "Today is " . $today_work_ani . " Work Anniversary";
-        }
-        else {
-
-            $work_ani_date_string = '';
-        }
-
         // Display Users Listing With Role Name & Profile Photo
 
         $dashboard_users = User::getDashboardUsers();
@@ -1246,8 +1207,8 @@ class HomeController extends Controller
         $viewVariable['msg'] = $msg;
         $viewVariable['superadmin'] = $superadmin;
         $viewVariable['user_id'] = $user_id;
-        $viewVariable['birthday_date_string'] = $birthday_date_string;
-        $viewVariable['work_ani_date_string'] = $work_ani_date_string;
+        $viewVariable['birthday_date_string'] = '';
+        $viewVariable['work_ani_date_string'] = '';
         $viewVariable['dashboard_users'] = $dashboard_users;
         $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
 
