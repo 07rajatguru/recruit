@@ -772,14 +772,16 @@ class User extends Authenticatable
         $user_name_array = array();
         $i=0;
         $birthday_date_string = '';
-        $today_date = date('d-m-Y');
+        $today_date = date('d-m');
         $date_class = new Date();
 
         if(isset($response) && sizeof($response) > 0) {
 
             foreach ($response as $key => $value) {
 
-                if($today_date == $date_class->changeYMDtoDMY($value->date_of_birth)) {
+                $birth_date = date('d-m',strtotime($value->date_of_birth));
+
+                if($today_date == $birth_date) {
 
                     if($birthday_date_string == '') {
                         $birthday_date_string = $value->first_name;
