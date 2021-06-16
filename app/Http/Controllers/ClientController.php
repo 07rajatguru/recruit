@@ -824,7 +824,7 @@ class ClientController extends Controller
 
         if(isset($client_basicinfo) && $client_basicinfo != '') {
 
-            if($all_perm || ($client_basicinfo->am_id == $user_id)) {
+            if($all_perm || ($client_basicinfo->am_id == $user_id) || ($client_basicinfo->second_line_am == $user_id)) {
 
                 $client['name'] = $client_basicinfo->name;
                 $client['display_name'] = $client_basicinfo->display_name;
