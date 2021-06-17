@@ -215,7 +215,7 @@
 
             $.ajax({
 
-                url:'/training/getusers',
+                url:'/getusers/bydepartment',
                 data:'department_id='+department_id,
                 dataType:'json',
                 success: function(data) {

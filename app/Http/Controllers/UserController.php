@@ -2076,4 +2076,14 @@ class UserController extends Controller
         $data = "Success";
         return json_encode($data);
     }
+
+    public function getUsersByDepartment() {
+
+        $department_id = $_GET['department_id'];
+
+        // get user names
+        $users = User::getUsersByDepartmentId($department_id);
+
+        return $users;
+    }
 }

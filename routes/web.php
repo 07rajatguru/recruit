@@ -496,6 +496,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@storeSalaryInfo',
     ]);
 
+    Route::get('/getusers/bydepartment', [
+        'as' => 'getusers.bydepartment',
+        'uses' => 'UserController@getUsersByDepartment'
+    ]);
+
     Route::get('users/myprofile/{id}',[
         'as' => 'users.myprofile',
         'uses' => 'UserController@profileShow',
@@ -1550,6 +1555,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@shortlistedCandidates'
     ]);
 
+    Route::get('getUsersByJobID', [
+        'as' => 'getusers.byjobid',
+        'uses' => 'JobOpenController@getUsersByJobID',
+    ]);
+
     // Interview Module
     Route::get('interview', [
         'as' => 'interview.index',
@@ -2125,11 +2135,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@UpdatePosition'
     ]);
 
-    Route::get('/training/getusers', [
-        'as' => 'training.getusers',
-        'uses' => 'TrainingController@getUsersByDepartment'
-    ]);
-
     Route::get('getUsersByTrainingID', [
         'as' => 'getusers.bytrainingid',
         'uses' => 'TrainingController@getUsersByTrainingID',
@@ -2201,11 +2206,6 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'process.update-position',
         'uses' => 'ProcessController@UpdatePosition',
         'middleware' => ['permission:display-process-manual']
-    ]);
-
-    Route::get('/process/getusers', [
-        'as' => 'process.getusers',
-        'uses' => 'ProcessController@getUsersByDepartment'
     ]);
 
     Route::get('getUsersByProcessID', [

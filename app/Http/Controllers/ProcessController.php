@@ -523,16 +523,6 @@ class ProcessController extends Controller
         }
     }
 
-    public function getUsersByDepartment() {
-
-        $department_id = $_GET['department_id'];
-
-        // get user names
-        $users = User::getUsersByDepartmentId($department_id);
-
-        return $users;
-    }
-
     public function getUsersByProcessID() {
 
         $department_ids = $_GET['department_selected_items'];
