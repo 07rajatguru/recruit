@@ -774,15 +774,103 @@ class EveryMinute extends Command
                 $month = date('m');
                 $lastDayOfWeek = '7';
 
+                // Get Weeks
                 $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+
+                // Set new weeks
+                $new_weeks = array();
+
+                if(isset($weeks) && sizeof($weeks) == 6) {
+
+                    // Week1
+                    $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                    $new_weeks[0]['to_date'] = $weeks[1]['to_date'];
+
+                    // Week2
+                    $new_weeks[1]['from_date'] = $weeks[2]['from_date'];
+                    $new_weeks[1]['to_date'] = $weeks[2]['to_date'];
+
+                    // Week3
+                    $new_weeks[2]['from_date'] = $weeks[3]['from_date'];
+                    $new_weeks[2]['to_date'] = $weeks[3]['to_date'];
+
+                    // Week4
+                    $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
+                    $new_weeks[3]['to_date'] = $weeks[5]['to_date'];
+                }
+                else if(isset($weeks) && sizeof($weeks) == 5) {
+
+                    $date1 = $weeks[0]['from_date'];
+                    $date2 = $weeks[0]['to_date'];
+
+                    $diff = (strtotime($date2) - strtotime($date1))/24/3600;
+                    
+                    if($diff > 2) {
+
+                        // Week1
+                        $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                        $new_weeks[0]['to_date'] = $weeks[0]['to_date'];
+
+                        // Week2
+                        $new_weeks[1]['from_date'] = $weeks[1]['from_date'];
+                        $new_weeks[1]['to_date'] = $weeks[1]['to_date'];
+
+                        // Week3
+                        $new_weeks[2]['from_date'] = $weeks[2]['from_date'];
+                        $new_weeks[2]['to_date'] = $weeks[2]['to_date'];
+
+                        // Week4
+                        $last_date1 = $weeks[4]['from_date'];
+                        $last_date2 = $weeks[4]['to_date'];
+
+                        $last_diff = (strtotime($last_date2) - strtotime($last_date1))/24/3600;
+
+                        if($last_diff > 1) {
+
+                            $new_weeks[3]['from_date'] = $weeks[3]['from_date'];
+                            $new_weeks[3]['to_date'] = $weeks[3]['to_date'];
+
+                            $new_weeks[4]['from_date'] = $weeks[4]['from_date'];
+                            $new_weeks[4]['to_date'] = $weeks[4]['to_date'];
+                        }
+                        else {
+
+                            $new_weeks[3]['from_date'] = $weeks[3]['from_date'];
+                            $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
+                        }
+                    }
+                    else {
+
+                        // Week1
+                        $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                        $new_weeks[0]['to_date'] = $weeks[1]['to_date'];
+
+                        // Week2
+                        $new_weeks[1]['from_date'] = $weeks[2]['from_date'];
+                        $new_weeks[1]['to_date'] = $weeks[2]['to_date'];
+
+                        // Week3
+                        $new_weeks[2]['from_date'] = $weeks[3]['from_date'];
+                        $new_weeks[2]['to_date'] = $weeks[3]['to_date'];
+
+                        // Week4
+                        $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
+                        $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
+                    }
+                }
+                else {
+
+                    // Set all Weeks
+                    $new_weeks = $weeks;
+                }
 
                 // Get no of weeks in month & get from date & to date
                 $i=1;
                 $frm_to_date_array = array();
 
-                if(isset($weeks) && $weeks != '') {
+                if(isset($new_weeks) && $new_weeks != '') {
 
-                    foreach ($weeks as $key => $value) {
+                    foreach ($new_weeks as $key => $value) {
 
                         $no_of_weeks = $i;
 
@@ -838,8 +926,86 @@ class EveryMinute extends Command
                     $user_bench_mark['after_joining_success_ratio_weekly'] = number_format($user_bench_mark['after_joining_success_ratio_monthly'] / $no_of_weeks);
                 }
 
-                // Get user name
+                // Set last column Monthly Achivment value
 
+                if(isset($frm_to_date_array) && $frm_to_date_array != '') {
+
+                    $no_of_resumes_monthly = '';
+                    $shortlist_ratio_monthly = '';
+                    $interview_ratio_monthly = '';
+                    $selection_ratio_monthly = '';
+                    $offer_acceptance_ratio_monthly = '';
+                    $joining_ratio_monthly = '';
+                    $after_joining_success_ratio_monthly = '';
+
+                    foreach ($frm_to_date_array as $key => $value) {
+
+                        if($no_of_resumes_monthly == '') {
+
+                            $no_of_resumes_monthly = $value['ass_cnt'];
+                        }
+                        else {
+
+                            $no_of_resumes_monthly = $no_of_resumes_monthly + $value['ass_cnt'];
+                        }
+
+                        if($shortlist_ratio_monthly == '') {
+
+                            $shortlist_ratio_monthly = $value['shortlisted_cnt'];
+                        }
+                        else {
+
+                            $shortlist_ratio_monthly = $shortlist_ratio_monthly + $value['shortlisted_cnt'];
+                        }
+
+                        if($interview_ratio_monthly == '') {
+
+                            $interview_ratio_monthly = $value['interview_cnt'];
+                        }
+                        else {
+
+                            $interview_ratio_monthly = $interview_ratio_monthly + $value['interview_cnt'];
+                        }
+
+                        if($selection_ratio_monthly == '') {
+
+                            $selection_ratio_monthly = $value['selected_cnt'];
+                        }
+                        else {
+
+                            $selection_ratio_monthly =  $selection_ratio_monthly + $value['selected_cnt'];
+                        }
+
+                        if($offer_acceptance_ratio_monthly == '') {
+
+                            $offer_acceptance_ratio_monthly = $value['offer_acceptance_ratio'];
+                        }
+                        else {
+
+                            $offer_acceptance_ratio_monthly = $offer_acceptance_ratio_monthly + $value['offer_acceptance_ratio'];
+                        }
+
+                        if($joining_ratio_monthly == '') {
+
+                            $joining_ratio_monthly = $value['joining_ratio'];
+                        }
+                        else {
+
+                            $joining_ratio_monthly = $joining_ratio_monthly + $value['joining_ratio'];
+                        }
+
+                        if($after_joining_success_ratio_monthly == '') {
+
+                            $after_joining_success_ratio_monthly = $value['joining_success_ratio'];
+                        }
+                        else {
+
+                            $after_joining_success_ratio_monthly = $after_joining_success_ratio_monthly + $value['joining_success_ratio'];
+                        }
+                    }
+                }
+
+                // Get user name
                 $user_details = User::getAllDetailsByUserID($sender_id);
 
                 $input['user_bench_mark'] = $user_bench_mark;
@@ -849,6 +1015,57 @@ class EveryMinute extends Command
                 $input['cc_array'] = array_unique($cc_array);
                 $input['user_name'] = $user_details->name;
 
+                // Set last column Monthly Achivment value
+
+                if(isset($no_of_resumes_monthly) && $no_of_resumes_monthly > 0) {
+                    $input['no_of_resumes_monthly'] = $no_of_resumes_monthly;
+                }
+                else {
+                    $input['no_of_resumes_monthly'] = '';
+                }
+
+                if(isset($shortlist_ratio_monthly) && $shortlist_ratio_monthly > 0) {
+                    $input['shortlist_ratio_monthly'] = $shortlist_ratio_monthly;
+                }
+                else {
+                    $input['shortlist_ratio_monthly'] = '';
+                }
+
+                if(isset($interview_ratio_monthly) && $interview_ratio_monthly > 0) {
+                    $input['interview_ratio_monthly'] = $interview_ratio_monthly;
+                }
+                else {
+                    $input['interview_ratio_monthly'] = '';
+                }
+
+                if(isset($selection_ratio_monthly) && $selection_ratio_monthly > 0) {
+                    $input['selection_ratio_monthly'] = $selection_ratio_monthly;
+                }
+                else {
+                    $input['selection_ratio_monthly'] = '';
+                }
+
+                if(isset($offer_acceptance_ratio_monthly) && $offer_acceptance_ratio_monthly > 0) {
+                    $input['offer_acceptance_ratio_monthly'] = $offer_acceptance_ratio_monthly;
+                }
+                else {
+                    $input['offer_acceptance_ratio_monthly'] = '';
+                }
+
+                if(isset($joining_ratio_monthly) && $joining_ratio_monthly > 0) {
+                    $input['joining_ratio_monthly'] = $joining_ratio_monthly;
+                }
+                else {
+                    $input['joining_ratio_monthly'] = '';
+                }
+                
+                if(isset($after_joining_success_ratio_monthly) && $after_joining_success_ratio_monthly > 0) {
+                    $input['after_joining_success_ratio_monthly'] = $after_joining_success_ratio_monthly;
+                }
+                else {
+                    $input['after_joining_success_ratio_monthly'] = '';
+                }
+                
                 \Mail::send('adminlte::emails.ProductivityReport', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Productivity Report -'.$input['user_name']);

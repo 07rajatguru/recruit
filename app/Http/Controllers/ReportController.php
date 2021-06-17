@@ -1048,7 +1048,7 @@ class ReportController extends Controller
         if (isset($_POST['month']) && $_POST['month']!=0) {
             $month = $_POST['month'];
         }
-        else{
+        else {
             $month = date('m');
         }
 
@@ -1063,15 +1063,103 @@ class ReportController extends Controller
 
         $lastDayOfWeek = '7';
 
+        // Get Weeks
         $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+
+        // Set new weeks
+        $new_weeks = array();
+
+        if(isset($weeks) && sizeof($weeks) == 6) {
+
+            // Week1
+            $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+            $new_weeks[0]['to_date'] = $weeks[1]['to_date'];
+
+            // Week2
+            $new_weeks[1]['from_date'] = $weeks[2]['from_date'];
+            $new_weeks[1]['to_date'] = $weeks[2]['to_date'];
+
+            // Week3
+            $new_weeks[2]['from_date'] = $weeks[3]['from_date'];
+            $new_weeks[2]['to_date'] = $weeks[3]['to_date'];
+
+            // Week4
+            $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
+            $new_weeks[3]['to_date'] = $weeks[5]['to_date'];
+        }
+        else if(isset($weeks) && sizeof($weeks) == 5) {
+
+            $date1 = $weeks[0]['from_date'];
+            $date2 = $weeks[0]['to_date'];
+
+            $diff = (strtotime($date2) - strtotime($date1))/24/3600;
+            
+            if($diff > 2) {
+
+                // Week1
+                $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                $new_weeks[0]['to_date'] = $weeks[0]['to_date'];
+
+                // Week2
+                $new_weeks[1]['from_date'] = $weeks[1]['from_date'];
+                $new_weeks[1]['to_date'] = $weeks[1]['to_date'];
+
+                // Week3
+                $new_weeks[2]['from_date'] = $weeks[2]['from_date'];
+                $new_weeks[2]['to_date'] = $weeks[2]['to_date'];
+
+                // Week4
+                $last_date1 = $weeks[4]['from_date'];
+                $last_date2 = $weeks[4]['to_date'];
+
+                $last_diff = (strtotime($last_date2) - strtotime($last_date1))/24/3600;
+
+                if($last_diff > 1) {
+
+                    $new_weeks[3]['from_date'] = $weeks[3]['from_date'];
+                    $new_weeks[3]['to_date'] = $weeks[3]['to_date'];
+
+                    $new_weeks[4]['from_date'] = $weeks[4]['from_date'];
+                    $new_weeks[4]['to_date'] = $weeks[4]['to_date'];
+                }
+                else {
+
+                    $new_weeks[3]['from_date'] = $weeks[3]['from_date'];
+                    $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
+                }
+            }
+            else {
+
+                // Week1
+                $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                $new_weeks[0]['to_date'] = $weeks[1]['to_date'];
+
+                // Week2
+                $new_weeks[1]['from_date'] = $weeks[2]['from_date'];
+                $new_weeks[1]['to_date'] = $weeks[2]['to_date'];
+
+                // Week3
+                $new_weeks[2]['from_date'] = $weeks[3]['from_date'];
+                $new_weeks[2]['to_date'] = $weeks[3]['to_date'];
+
+                // Week4
+                $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
+                $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
+            }
+        }
+        else {
+
+            // Set all weeks
+            $new_weeks = $weeks;
+        }
 
         // Get no of weeks in month & get from date & to date
         $i=1;
         $frm_to_date_array = array();
 
-        if(isset($weeks) && $weeks != '') {
+        if(isset($new_weeks) && $new_weeks != '') {
 
-            foreach ($weeks as $key => $value) {
+            foreach ($new_weeks as $key => $value) {
 
                 $no_of_weeks = $i;
 
@@ -1213,11 +1301,13 @@ class ReportController extends Controller
         
         $lastDayOfWeek = '7';
 
-        $new_weeks = array();
-
+        // Get Weeks
         $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
 
-        if(isset($weeks) && sizeof($weeks) >= 5) {
+        // Set new weeks
+        $new_weeks = array();
+
+        if(isset($weeks) && sizeof($weeks) == 6) {
 
             // Week1
             $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
@@ -1233,20 +1323,73 @@ class ReportController extends Controller
 
             // Week4
             $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
+            $new_weeks[3]['to_date'] = $weeks[5]['to_date'];
+        }
+        else if(isset($weeks) && sizeof($weeks) == 5) {
 
-            if(isset($weeks[5]['to_date'])) {
-                $new_weeks[3]['to_date'] = $weeks[5]['to_date'];
+            $date1 = $weeks[0]['from_date'];
+            $date2 = $weeks[0]['to_date'];
+
+            $diff = (strtotime($date2) - strtotime($date1))/24/3600;
+            
+            if($diff > 2) {
+
+                // Week1
+                $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                $new_weeks[0]['to_date'] = $weeks[0]['to_date'];
+
+                // Week2
+                $new_weeks[1]['from_date'] = $weeks[1]['from_date'];
+                $new_weeks[1]['to_date'] = $weeks[1]['to_date'];
+
+                // Week3
+                $new_weeks[2]['from_date'] = $weeks[2]['from_date'];
+                $new_weeks[2]['to_date'] = $weeks[2]['to_date'];
+
+                // Week4
+                $last_date1 = $weeks[4]['from_date'];
+                $last_date2 = $weeks[4]['to_date'];
+
+                $last_diff = (strtotime($last_date2) - strtotime($last_date1))/24/3600;
+
+                if($last_diff > 1) {
+
+                    $new_weeks[3]['from_date'] = $weeks[3]['from_date'];
+                    $new_weeks[3]['to_date'] = $weeks[3]['to_date'];
+
+                    $new_weeks[4]['from_date'] = $weeks[4]['from_date'];
+                    $new_weeks[4]['to_date'] = $weeks[4]['to_date'];
+                }
+                else {
+
+                    $new_weeks[3]['from_date'] = $weeks[3]['from_date'];
+                    $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
+                }
             }
             else {
+
+                // Week1
+                $new_weeks[0]['from_date'] = $weeks[0]['from_date'];
+                $new_weeks[0]['to_date'] = $weeks[1]['to_date'];
+
+                // Week2
+                $new_weeks[1]['from_date'] = $weeks[2]['from_date'];
+                $new_weeks[1]['to_date'] = $weeks[2]['to_date'];
+
+                // Week3
+                $new_weeks[2]['from_date'] = $weeks[3]['from_date'];
+                $new_weeks[2]['to_date'] = $weeks[3]['to_date'];
+
+                // Week4
+                $new_weeks[3]['from_date'] = $weeks[4]['from_date'];
                 $new_weeks[3]['to_date'] = $weeks[4]['to_date'];
             }
         }
         else {
 
+            // Set all weeks
             $new_weeks = $weeks;
         }
-
-        //print_r($new_weeks);exit;
 
         if(isset($users) && sizeof($users) > 0) {
 
@@ -1264,9 +1407,9 @@ class ReportController extends Controller
         $i=1;
         $frm_to_date_array = array();
 
-        if(isset($weeks) && $weeks != '') {
+        if(isset($new_weeks) && $new_weeks != '') {
 
-            foreach ($weeks as $key => $value) {
+            foreach ($new_weeks as $key => $value) {
 
                 $no_of_weeks = $i;
 
