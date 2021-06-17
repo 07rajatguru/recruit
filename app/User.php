@@ -592,16 +592,17 @@ class User extends Authenticatable
 
     public static function getAllUsersForEligibilityReport() {
 
+        $status = 'Inactive';
+        $status_array = array($status);
+
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
         
         $user_query = User::query();
 
-        if($type_array!=NULL) {
-            $user_query = $user_query->whereIn('type',$type_array);
-        }
-
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereIn('type',$type_array);
         $user_query = $user_query->orderBy('name');
 
         $users = $user_query->get();

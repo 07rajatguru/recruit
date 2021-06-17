@@ -20,7 +20,7 @@ class EligibilityReportController extends Controller
         if ($all_perm) {
 
         	// Year Data
-            $starting_year = '2019';
+            $starting_year = '2018';
             $ending_year = date('Y',strtotime('+2 year'));
             $year_array = array();
             for ($y=$starting_year; $y < $ending_year ; $y++) {
@@ -315,7 +315,7 @@ class EligibilityReportController extends Controller
             }
 
             // Year Data
-            $starting_year = '2019';
+            $starting_year = '2018';
             $ending_year = date('Y',strtotime('+3 year'));
             $default = date('Y');
 
