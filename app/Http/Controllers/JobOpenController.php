@@ -29,6 +29,7 @@ use App\ClientHeirarchy;
 use App\Notifications;
 use Illuminate\Support\Facades\File;
 use App\CandidateOtherInfo;
+use App\Department;
 
 class JobOpenController extends Controller
 {
@@ -1052,7 +1053,22 @@ class JobOpenController extends Controller
         $adler_job_disclosed_checkbox = '1';
         $remote_working = '0';
 
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working'));
+        // Set Department
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        
+        $selected_departments = array();
+        $job_id = 0;
+
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
     }
 
     public function store(Request $request) {
@@ -1095,6 +1111,7 @@ class JobOpenController extends Controller
         $thousand_to = $input['thousand_to'];
         $work_exp_from = $input['work_experience_from'];
         $work_exp_to = $input['work_experience_to'];
+        $department_ids = $input['department_ids'];
 
         if (isset($no_of_positions) && $no_of_positions == '')
             $no_of_positions = 0;
@@ -1210,6 +1227,7 @@ class JobOpenController extends Controller
         $job_open->adler_career_checkbox = $adler_career_checkbox;
         $job_open->adler_job_disclosed_checkbox = $adler_job_disclosed_checkbox;
         $job_open->remote_working = $remote_working;
+        $job_open->department_ids = implode(",", $department_ids);
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -1768,7 +1786,22 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working'));
+        // Set Department
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        
+        $selected_departments = explode(",",$job_open->department_ids);
+        $job_id = $id;
+
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
     }
 
     public function editClosedJob($id,$year) {
@@ -1950,7 +1983,22 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working'));
+        // Set Department
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        
+        $selected_departments = explode(",",$job_open->department_ids);
+        $job_id = $id;
+
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
     }
 
     public function update(Request $request, $id) {
@@ -2049,6 +2097,8 @@ class JobOpenController extends Controller
             $remote_working = '0';
         }
 
+        $department_ids = $request->input('department_ids');
+
         $job_open = JobOpen::find($id);
         $job_open->posting_title = $posting_title;
         $job_open->hiring_manager_id = $hiring_manager_id;
@@ -2076,6 +2126,7 @@ class JobOpenController extends Controller
         $job_open->adler_career_checkbox = $adler_career_checkbox;
         $job_open->adler_job_disclosed_checkbox = $adler_job_disclosed_checkbox;
         $job_open->remote_working = $remote_working;
+        $job_open->department_ids = implode(",", $department_ids);
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -4597,5 +4648,46 @@ class JobOpenController extends Controller
         $search_job_details = JobOpen::getJobDetailsBySearchArea($key_skill,$desired_location,$min_experience,$max_experience,$min_ctc,$max_ctc,$limit,$offset);
 
         return response()->json(['data'=>$search_job_details]);
+    }
+
+    public function getUsersByJobID() {
+
+        $department_ids = $_GET['department_selected_items'];
+        $job_id = $_GET['job_id'];
+
+        $users = User::getUsersByDepartmentIDArray($department_ids);
+
+        $job_user_res = \DB::table('job_visible_users')
+        ->join('users','users.id','=','job_visible_users.user_id')
+        ->select('users.id as user_id', 'users.name as name')
+        ->where('job_visible_users.job_id',$job_id)->get();
+
+        $selected_users = array();
+        $i=0;
+
+        foreach ($job_user_res as $key => $value) {
+            $selected_users[$i] = $value->user_id;
+            $i++;       
+        }
+
+        $data = array();
+        $j=0;
+
+        foreach ($users as $key => $value) {
+
+            if(in_array($value['id'], $selected_users)) {
+                $data[$j]['checked'] = '1';
+            }
+            else {
+                $data[$j]['checked'] = '0';
+            }
+            
+            $data[$j]['id'] = $value['id'];
+            $data[$j]['type'] = $value['type'];
+            $data[$j]['name'] = $value['name'];
+
+            $j++;
+        }
+        return $data;exit;
     }
 }

@@ -231,18 +231,28 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
-                        <strong>Select Users who can access the job : <span class = "required_fields">*</span></strong>
-                        <input type="checkbox" id="users_all"/> <strong>Select All</strong><br/>
-                        @foreach($select_all_users as $k=>$v)&nbsp;&nbsp; 
-                            {!! Form::checkbox('user_ids[]', $k, in_array($k,$selected_users), array('id'=>'user_ids','size'=>'10','class' => 'users_ids')) !!}
+                        <strong>Select Users who can access the job : <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
+                        <input type="checkbox" id="departments_all" /><strong>Select All</strong><br/>
+
+                        @foreach($departments as $k=>$v)&nbsp;&nbsp; 
+                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}
                             {!! Form::label ($v) !!}
                         @endforeach
 
-                        @if ($errors->has('user_ids'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('user_ids') }}</strong>
-                            </span>
-                        @endif
+                        <br/><br/>
+
+                        <?php 
+                            $id = '';
+                        ?>
+                        @foreach($departments as $k=>$v)
+                            <div class="div_{{ $k }}" style="margin-left: 12px;display:none;">
+                            </div>
+                            <?php
+                                $id = $id . "," . $k;
+                            ?>
+                        @endforeach
+
+                        <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
                     </div>
 
                     <div class="">
@@ -577,7 +587,7 @@
 <input type="hidden" id="action" name="action" value="{!! $action !!}">
 <input type="hidden" id="super_admin_user_id" name="super_admin_user_id" value="{!! $super_admin_user_id !!}">
 <input type="hidden" id="loggedin_user_id" name="loggedin_user_id" value="{{ $loggedin_user_id }}">
-
+<input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
 </div>
 
 {!! Form::close() !!}
@@ -596,16 +606,44 @@
                 }
             });
 
-            $("#users_all").click(function () {
-                $('.users_ids').prop('checked', this.checked);
+            $("#departments_all").click(function () {
+                
+                $('.department_ids').prop('checked', this.checked);
+
+                var isChecked = $("#departments_all").is(":checked");
+                var id_string = $("#id_string").val();
+                var id_arr = id_string.split(",");;
+
+                if(isChecked == true) {
+                    $('.department_ids').prop('checked', this.checked);
+                    for (var i = 1; i < id_arr.length; i++) {
+                        displayUsers(id_arr[i]);
+                    }
+                }
+                else {
+                    $('.department_ids').prop('checked', false);
+                    $('.department_class').prop('checked', false);
+
+                    for (var i = 1; i < id_arr.length; i++) {
+                        $(".div_"+id_arr[i]).hide();
+                    }
+                }
             });
 
-            $(".users_ids").click(function () {
-                $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
+            $(".department_ids").click(function () {
+                $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+
+                displayUsers();
             });
 
-            // Edit form if all user select then select all selected
-            $("#users_all").prop('checked', ($('.users_ids:checked').length == $('.users_ids').length) ? true : false);
+            var action = $("#action").val();
+
+            if(action == 'edit') {
+
+                loadUsers();
+
+                $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+            }
 
             $("#jobsForm").validate({
                 rules: {
@@ -640,6 +678,9 @@
                     "level_id": {
                         required : true,
                     },
+                    "department_ids[]": {
+                        required: true
+                    },
                 },
                 messages: {
                     
@@ -672,6 +713,9 @@
                     },
                     "level_id": {
                         required : "Please Select Position",
+                    },
+                    "department_ids[]": {
+                        required: "Please Select Department."
                     },
                 }
             });
@@ -818,6 +862,117 @@
                     }
                 });
             }
+        }
+
+        function displayUsers(department_id) {
+
+            $.ajax({
+
+                url:'/getusers/bydepartment',
+                data:'department_id='+department_id,
+                dataType:'json',
+                success: function(data) {
+
+                    // for department_ids
+                    var department_items = document.getElementsByName('department_ids[]');
+                    var department_selected_items = "";
+
+                    for(var i=0; i < department_items.length; i++) {
+
+                        if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
+                            department_selected_items += department_items[i].value+",";
+                    }
+
+                    var search_str = ","+department_id+",";
+                    var search_str_2 = department_id+",";
+
+                    var bool_1 = department_selected_items.includes(department_id);
+                    var bool_2 = department_selected_items.search(search_str) > -1;
+                    var bool_3 = department_selected_items.search(search_str_2) > -1;
+
+                    if(bool_1 == true || bool_2 == true || bool_3 == true) {
+
+                        if(data.length > 0) {
+
+                            $(".div_"+department_id).html('');
+
+                            var html = '';
+                           
+                            for (var i = 0; i < data.length; i++) {
+
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
+                            }
+
+                            html += '<br/>';
+
+                            $(".div_"+department_id).append(html);
+                            $(".div_"+department_id).show();
+
+                            var isChecked = $("#departments_all").is(":checked");
+                            if(isChecked == true) {
+                                $('.department_class').prop('checked', true);
+                            }
+                        }
+                    }
+                    else {
+
+                        $(".div_"+department_id).html('');
+                        $(".div_"+department_id).hide();
+                    }
+                }
+            });
+        }
+
+        function loadUsers() {
+
+            // for department_ids
+            var department_items = document.getElementsByName('department_ids[]');
+            var department_selected_items = "";
+
+            for(var i=0; i<department_items.length; i++) {
+
+                if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
+                    department_selected_items += department_items[i].value+",";
+            }
+
+            var job_id = $("#job_id").val();
+
+            $.ajax({
+
+                url:'/getUsersByJobID',
+                method:'GET',
+                data:{'job_id':job_id,'department_selected_items':department_selected_items},
+                dataType:'json',
+                success: function(data) {
+
+                    if(data.length > 0) {
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            var html = '';
+
+                            if(data[i].checked == '1') {
+
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                            }
+
+                            if(data[i].checked == '0') {
+
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                            }
+
+                            $(".div_"+data[i].type).append(html);
+                            $(".div_"+data[i].type).show();
+                        }
+                    }
+                }
+            });
         }
 
         var placeSearch, autocomplete;
