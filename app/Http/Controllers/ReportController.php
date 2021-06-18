@@ -446,7 +446,7 @@ class ReportController extends Controller
             $year = date('Y');
         }
 
-        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,0);
         $associate_monthly = $associate_monthly_response['associate_data'];
         $associate_count = $associate_monthly_response['cvs_cnt'];
 

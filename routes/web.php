@@ -176,7 +176,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/dashboard/opentoalljob',[
         'as' => 'open.toall',
-        'uses' => 'HomeController@OpentoAllJob'
+        'uses' => 'HomeController@openToAllJob'
     ]);
 
     Route::any('/dashboard/monthwise',[
@@ -194,12 +194,17 @@ Route::group(['middleware' => ['auth']], function () {
     ));
 
     Route::get('/recruitment-dashboard/opentoalljob',[
-        'as' => 'open.toall',
-        'uses' => 'HomeController@OpentoAllJob'
+        'as' => 'recruitment.opentoalljob',
+        'uses' => 'HomeController@recruitmentOpentoAllJob'
+    ]);
+
+    Route::get('/recruitment-jobs',[
+        'as' => 'recruitment.jobs',
+        'uses' => 'JobOpenController@recruitmentJobs'
     ]);
 
     Route::any('/recruitment-dashboard/monthwise',[
-        'as' => 'dashboard.monthwise',
+        'as' => 'recruitment.dashboardmonthwise',
         'uses' => 'HomeController@dashboardMonthwise'
     ]);
 
@@ -213,12 +218,17 @@ Route::group(['middleware' => ['auth']], function () {
     ));
 
     Route::get('/hr-advisory-dashboard/opentoalljob',[
-        'as' => 'open.toall',
-        'uses' => 'HomeController@OpentoAllJob'
+        'as' => 'hr-advisory.opentoalljob',
+        'uses' => 'HomeController@hrAdvisoryOpentoAllJob'
+    ]);
+
+    Route::get('/hr-advisory-jobs',[
+        'as' => 'hr-advisory.jobs',
+        'uses' => 'JobOpenController@hrAdvisoryJobs'
     ]);
 
     Route::any('/hr-advisory-dashboard/monthwise',[
-        'as' => 'dashboard.monthwise',
+        'as' => 'hr-advisory.dashboardmonthwise',
         'uses' => 'HomeController@dashboardMonthwise'
     ]);
 
@@ -959,7 +969,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
-    Route::get('monthwiseclient/{month}/{year}', [
+    Route::get('monthwiseclient/{month}/{year}/{department_id}', [
         'as' => 'monthwiseclient.index',
         'uses' => 'ClientController@getMonthWiseClient',
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
@@ -1159,7 +1169,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CandidateController@getCandidateInfo'
     ]);
 
-    Route::get('candidatejoin/{month}/{year}', [
+    Route::get('candidatejoin/{month}/{year}/{department_id}', [
         'as' => 'candidatejoin.index',
         'uses' => 'CandidateController@candidatejoin',
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
@@ -1274,7 +1284,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]); 
 
-    Route::get('jobs/opentoall', [
+    Route::get('jobs/opentoall/{department_id}', [
         'as' => 'jobopen.toall',
         'uses' => 'JobOpenController@OpentoAll',
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
@@ -1518,13 +1528,13 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // Get list of Associated cvs
-    Route::get('associatedcvs/{month}/{year}', [
+    Route::get('associatedcvs/{month}/{year}/{department_id}', [
         'as' => 'jobopen.associatedcvs',
         'uses' => 'JobOpenController@associatedCVS',
     ]);
 
     // Get list of Shortlisted cvs
-    Route::get('shortlistedcvs/{month}/{year}', [
+    Route::get('shortlistedcvs/{month}/{year}/{department_id}', [
         'as' => 'jobopen.shortlistedcvs',
         'uses' => 'JobOpenController@shortlistedCVS',
     ]);
@@ -1573,7 +1583,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
-    Route::get('todaytomorrow',[
+    Route::get('todaytomorrow/{department_id}',[
         'as' => 'interview.todaytomorrow',
         'uses' => 'InterviewController@todaytomorrow',
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
@@ -1609,7 +1619,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 
-    Route::get('attendedinterview/{month}/{year}',[
+    Route::get('attendedinterview/{month}/{year}/{department_id}',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview',
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']

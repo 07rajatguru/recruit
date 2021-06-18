@@ -24,13 +24,14 @@ class JobCandidateJoiningdate extends Model
         return 0;
     }
 
-    public static function getJoiningCandidateByUserId($user_id,$all=0,$month=NULL,$year=NULL) {
+    public static function getJoiningCandidateByUserId($user_id,$all=0,$month=NULL,$year=NULL,$department_id=0) {
 
         $query = JobCandidateJoiningdate::query();
         $query = $query->Join('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id');
         $query = $query->leftJoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id');
         $query = $query->leftJoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftJoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('bills','bills.candidate_id','=','job_candidate_joining_date.candidate_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner','candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid', 'job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_candidate_joining_date.fixed_salary as salary','bills.id as bill_id');
 
@@ -42,6 +43,11 @@ class JobCandidateJoiningdate extends Model
                 $query = $query->where('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orWhere('job_openings.hiring_manager_id',$user_id);
             });
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $query = $query->orderBy('job_candidate_joining_date.id','desc');
@@ -81,13 +87,14 @@ class JobCandidateJoiningdate extends Model
     }
 
     // For dashboard monthwise data
-    public static function getJoiningCandidateByUserIdCountByMonthwise($user_id,$all=0,$month,$year) {
+    public static function getJoiningCandidateByUserIdCountByMonthwise($user_id,$all=0,$month,$year,$department_id=0) {
 
         $query = JobCandidateJoiningdate::query();
         $query = $query->Join('candidate_basicinfo','candidate_basicinfo.id','=','job_candidate_joining_date.candidate_id');
         $query = $query->leftJoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_candidate_joining_date.candidate_id');
         $query = $query->leftJoin('users','users.id','=','candidate_otherinfo.owner_id');
         $query = $query->leftJoin('job_openings','job_openings.id','=','job_candidate_joining_date.job_id');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('bills','bills.candidate_id','=','job_candidate_joining_date.candidate_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner',
             'candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid', 'job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_candidate_joining_date.fixed_salary as salary','bills.id as bill_id');
@@ -100,6 +107,11 @@ class JobCandidateJoiningdate extends Model
                 $query = $query->where('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orWhere('job_openings.hiring_manager_id',$user_id);
             });
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $query = $query->orderBy('job_candidate_joining_date.id','desc');

@@ -511,7 +511,7 @@ class ClientBasicinfo extends Ardent
         return $client_city;
      }
 
-    public static function getMonthWiseClientByUserId($user_id,$all=0,$month=NULL,$year=NULL) {
+    public static function getMonthWiseClientByUserId($user_id,$all=0,$month=NULL,$year=NULL,$department_id=0) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
@@ -526,6 +526,11 @@ class ClientBasicinfo extends Ardent
             });
         }
 
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
+        }
+        
         // Not Display Delete Client Status '1' Entry
         $query = $query->where('client_basicinfo.delete_client','=','0');
 

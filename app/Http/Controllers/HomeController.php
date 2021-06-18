@@ -67,7 +67,7 @@ class HomeController extends Controller
     public function dashboard() {
 
         $user = \Auth::user();
-        $user_id =  \Auth::user()->id;
+        $user_id =  $user->id;
         $allclient = getenv('ALLCLIENTVISIBLEUSERID');
         $strtegy = getenv('STRATEGYUSERID');
         $superadmin = getenv('SUPERADMINUSERID');
@@ -80,7 +80,6 @@ class HomeController extends Controller
         $isClient = $user_obj::isClient($role_id);
 
         if($isClient) {
-
             return redirect()->route('jobopen.index');
         }
 
@@ -132,7 +131,7 @@ class HomeController extends Controller
                         $msg = '';
                     }
                     else {
-                        $msg = "Please Contact to HR for add your benchmark";
+                        $msg = "Please Contact to HR for add your benchmark.";
                     }
                 }
                 else {
@@ -163,82 +162,80 @@ class HomeController extends Controller
 
             // Client Count
             $client = DB::table('client_basicinfo')
-            ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])
+            ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
             ->where('delete_client','=',0)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(1,$user_id,0);
+            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,0);
 
             // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,0);
             $associate_count = $associate_monthly_response['cvs_cnt'];
 
             // Cvs Shortlisted this month
-            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,0);
 
             // Interview Attended this month
-            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,0);
             $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
-            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,0);
 
             // Interview Count
-            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews = Interview::getDashboardInterviews(1,$user_id,0);
             $interviews_cnt = sizeof($interviews);
         }
         else if($display_userwise_count) {
 
             // Client Count
             $client = DB::table('client_basicinfo')
-            ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
-            ->where('delete_client','=',0)->count();
+            ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
+            ->where('account_manager_id',$user_id)->where('delete_client','=',0)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(0,$user_id,0);
+            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,0);
 
             $tanisha_user_id = getenv('TANISHAUSERID');
 
             if($user_id == $tanisha_user_id) {
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year,0);
                 $associate_count = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year,0);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year,0);
                 $interview_attend = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year);
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year,0);
 
                 // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id);
+                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id,0);
                 $interviews_cnt = sizeof($interviews);
             }
             else {
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,0);
                 $associate_count = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year,0);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year,0);
                 $interview_attend = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year,0);
 
                 // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$user_id);
+                $interviews = Interview::getDashboardInterviews(0,$user_id,0);
                 $interviews_cnt = sizeof($interviews);
             }
         }
@@ -306,6 +303,7 @@ class HomeController extends Controller
         $viewVariable['work_ani_date_string'] = $work_ani_date_string;
         $viewVariable['dashboard_users'] = $dashboard_users;
         $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
+        $viewVariable['department_id'] = 0;
 
         return view('dashboard',$viewVariable);
     }
@@ -337,12 +335,14 @@ class HomeController extends Controller
             $month_array[$m] = date('M', mktime(0,0,0,$m));
         }
 
+        // Year Data
+        $starting_year = '2017';
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
-        $year_array[2017] = 2017;
-        $year_array[2018] = 2018;
-        $year_array[2019] = 2019;
-        $year_array[2020] = 2020;
-        $year_array[2021] = 2021;
+
+        for ($y = $starting_year; $y < $ending_year ; $y++) { 
+            $year_array[$y] = $y;
+        }
 
         if($display_monthwise) {
 
@@ -355,46 +355,46 @@ class HomeController extends Controller
                 ->where('delete_client','=',0)->count();
 
                 // Job Count
-                $jobCount = JobOpen::getAllJobsCount(1,$user_id,0);
+                $jobCount = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,0);
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,0);
                 $associatedCount = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,0);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,0);
                 $interviewAttendCount = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+                $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,0);
             }
             else if($display_userwise_count) {
 
                 // Client Count
                 $clientCount = DB::table('client_basicinfo')
-                ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
-                ->where('account_manager_id',$user_id)
-                ->where('delete_client','=',0)->count();
+                ->whereRaw('MONTH(created_at) = ?',[$month])
+                ->whereRaw('YEAR(created_at) = ?',[$year])
+                ->where('account_manager_id',$user_id)->where('delete_client','=',0)->count();
 
                 // Job Count
-                $jobCount = JobOpen::getAllJobsCount(0,$user_id,0);
+                $jobCount = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,0);
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,0);
                 $associatedCount = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year,0);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year,0);
                 $interviewAttendCount = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+                $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year,0);
             }
 
             $viewVariable = array();
@@ -416,17 +416,17 @@ class HomeController extends Controller
         }
     }
 
-    public function OpentoAllJob() {
+    public function openToAllJob() {
 
         $user = \Auth::user();
         $user_id = \Auth::user()->id;
         $display_jobs = $user->can('display-jobs-open-to-all');
+        $department_id = 0;
 
         if($display_jobs) {
-            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id);
+            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
         }
         else {
-
             $job_opened = array();
         }
         return json_encode($job_opened);
@@ -804,79 +804,7 @@ class HomeController extends Controller
     public function recruitmentDashboard() {
 
         $user = \Auth::user();
-        $user_id =  \Auth::user()->id;
-        $allclient = getenv('ALLCLIENTVISIBLEUSERID');
-        $strtegy = getenv('STRATEGYUSERID');
-        $superadmin = getenv('SUPERADMINUSERID');
-        $recruitment = getenv('RECRUITMENT');
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isClient = $user_obj::isClient($role_id);
-
-        if($isClient) {
-
-            return redirect()->route('jobopen.index');
-        }
-
-        $all_perm = $user->can('display-productivity-report-of-all-users');
-
-        if($all_perm) {
-
-            $users = User::getAllUsersForBenchmarkModal($recruitment);
-
-            if(isset($users) && sizeof($users) > 0) {
-
-                $users_array = array();
-                $i=0;
-
-                foreach ($users as $key => $value) {
-                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($key);
-
-                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
-                    }
-                    else {
-                        $users_array[$i] = $value;
-                    }
-                    $i++;
-                }   
-
-                if(isset($users_array) && sizeof($users_array) > 0) {
-
-                    $users_name_string = implode(", ", $users_array);
-                    $msg = 'Please Add User Benchmark of Users : ' . $users_name_string;
-                }
-                else {
-                    $msg = '';
-                }
-            }
-        }
-        else {
-
-            if($user_id == $allclient || $user_id == $strtegy) {
-                $msg = '';
-            }
-            else {
-                $user_details = User::getAllDetailsByUserID($user_id);
-
-                if($user_details->type == 'recruiter') {
-
-                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
-
-                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
-                        $msg = '';
-                    }
-                    else {
-                        $msg = "Please Contact to HR for add your benchmark";
-                    }
-                }
-                else {
-                    $msg = '';
-                }
-            }
-        }
+        $user_id =  $user->id;
 
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
@@ -892,9 +820,9 @@ class HomeController extends Controller
             $toDos = ToDos::getAllTodosdash($todo_ids,7);
         }
 
-        $date = date('Y-m-d');
         $month = date('m');
         $year = date('Y');
+        $department_id = getenv('RECRUITMENT');
 
         if($display_all_count) {
 
@@ -902,27 +830,27 @@ class HomeController extends Controller
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
             ->whereRaw('YEAR(created_at) = ?',[$year])
-            ->where('delete_client','=',0)->count();
+            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(1,$user_id,0);
+            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,$department_id);
 
             // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
             $associate_count = $associate_monthly_response['cvs_cnt'];
 
             // Cvs Shortlisted this month
-            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,$department_id);
 
             // Interview Attended this month
-            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,$department_id);
             $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
-            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,$department_id);
 
             // Interview Count
-            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews = Interview::getDashboardInterviews(1,$user_id,$department_id);
             $interviews_cnt = sizeof($interviews);
         }
         else if($display_userwise_count) {
@@ -931,58 +859,54 @@ class HomeController extends Controller
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
             ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
-            ->where('delete_client','=',0)->count();
+            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(0,$user_id,0);
+            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,$department_id);
 
             $tanisha_user_id = getenv('TANISHAUSERID');
 
             if($user_id == $tanisha_user_id) {
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year,$department_id);
                 $associate_count = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year,$department_id);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year,$department_id);
                 $interview_attend = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year);
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year,$department_id);
 
                 // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id);
+                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id,$department_id);
                 $interviews_cnt = sizeof($interviews);
             }
             else {
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,$department_id);
                 $associate_count = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year,$department_id);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year,$department_id);
                 $interview_attend = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year,$department_id);
 
                 // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$user_id);
+                $interviews = Interview::getDashboardInterviews(0,$user_id,$department_id);
                 $interviews_cnt = sizeof($interviews);
             }
         }
-
-        // Display Users Listing With Role Name & Profile Photo
-
-        $dashboard_users = User::getDashboardUsers();
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
@@ -994,96 +918,34 @@ class HomeController extends Controller
         $viewVariable['associatedCount'] = $associate_count;
         $viewVariable['interviewAttendCount'] = $interview_attend;
         $viewVariable['shortlisted_count'] = $shortlisted_count;
-        $viewVariable['date'] = $date;
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
-        $viewVariable['msg'] = $msg;
-        $viewVariable['superadmin'] = $superadmin;
-        $viewVariable['user_id'] = $user_id;
-        $viewVariable['birthday_date_string'] = '';
-        $viewVariable['work_ani_date_string'] = '';
-        $viewVariable['dashboard_users'] = $dashboard_users;
-        $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
+        $viewVariable['department_id'] = $department_id;
 
-        return view('dashboard',$viewVariable);
+        return view('recruitment-dashboard',$viewVariable);
+    }
+
+    public function recruitmentOpentoAllJob() {
+
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_jobs = $user->can('display-jobs-open-to-all');
+
+        $department_id = getenv('RECRUITMENT');
+
+        if($display_jobs) {
+            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
+        }
+        else {
+            $job_opened = array();
+        }
+        return json_encode($job_opened);
     }
 
     public function hrAdvisoryDashboard() {
 
         $user = \Auth::user();
-        $user_id =  \Auth::user()->id;
-        $allclient = getenv('ALLCLIENTVISIBLEUSERID');
-        $strtegy = getenv('STRATEGYUSERID');
-        $superadmin = getenv('SUPERADMINUSERID');
-        $recruitment = getenv('RECRUITMENT');
-
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isClient = $user_obj::isClient($role_id);
-
-        if($isClient) {
-
-            return redirect()->route('jobopen.index');
-        }
-
-        $all_perm = $user->can('display-productivity-report-of-all-users');
-
-        if($all_perm) {
-
-            $users = User::getAllUsersForBenchmarkModal($recruitment);
-
-            if(isset($users) && sizeof($users) > 0) {
-
-                $users_array = array();
-                $i=0;
-
-                foreach ($users as $key => $value) {
-                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($key);
-
-                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
-                    }
-                    else {
-                        $users_array[$i] = $value;
-                    }
-                    $i++;
-                }   
-
-                if(isset($users_array) && sizeof($users_array) > 0) {
-
-                    $users_name_string = implode(", ", $users_array);
-                    $msg = 'Please Add User Benchmark of Users : ' . $users_name_string;
-                }
-                else {
-                    $msg = '';
-                }
-            }
-        }
-        else {
-
-            if($user_id == $allclient || $user_id == $strtegy) {
-                $msg = '';
-            }
-            else {
-                $user_details = User::getAllDetailsByUserID($user_id);
-
-                if($user_details->type == 'recruiter') {
-
-                    $user_benchmark = UserBenchMark::getBenchMarkByUserID($user_id);
-
-                    if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
-                        $msg = '';
-                    }
-                    else {
-                        $msg = "Please Contact to HR for add your benchmark";
-                    }
-                }
-                else {
-                    $msg = '';
-                }
-            }
-        }
+        $user_id =  $user->id;
 
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
@@ -1099,9 +961,9 @@ class HomeController extends Controller
             $toDos = ToDos::getAllTodosdash($todo_ids,7);
         }
 
-        $date = date('Y-m-d');
         $month = date('m');
         $year = date('Y');
+        $department_id = getenv('HRADVISORY');
 
         if($display_all_count) {
 
@@ -1109,27 +971,27 @@ class HomeController extends Controller
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
             ->whereRaw('YEAR(created_at) = ?',[$year])
-            ->where('delete_client','=',0)->count();
+            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(1,$user_id,0);
+            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,$department_id);
 
             // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year);
+            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
             $associate_count = $associate_monthly_response['cvs_cnt'];
 
             // Cvs Shortlisted this month
-            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year);
+            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,$department_id);
 
             // Interview Attended this month
-            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year);
+            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,$department_id);
             $interview_attend = sizeof($interview_attended_list);
 
             // Candidate Join this month
-            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year);
+            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,$department_id);
 
             // Interview Count
-            $interviews = Interview::getDashboardInterviews(1,$user_id);
+            $interviews = Interview::getDashboardInterviews(1,$user_id,$department_id);
             $interviews_cnt = sizeof($interviews);
         }
         else if($display_userwise_count) {
@@ -1138,58 +1000,54 @@ class HomeController extends Controller
             $client = DB::table('client_basicinfo')
             ->whereRaw('MONTH(created_at) = ?',[$month])
             ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
-            ->where('delete_client','=',0)->count();
+            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(0,$user_id,0);
+            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,$department_id);
 
             $tanisha_user_id = getenv('TANISHAUSERID');
 
             if($user_id == $tanisha_user_id) {
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year,$department_id);
                 $associate_count = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year,$department_id);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year,$department_id);
                 $interview_attend = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year);
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year,$department_id);
 
                 // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id);
+                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id,$department_id);
                 $interviews_cnt = sizeof($interviews);
             }
             else {
 
                 // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year);
+                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,$department_id);
                 $associate_count = $associate_monthly_response['cvs_cnt'];
 
                 // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year);
+                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year,$department_id);
 
                 // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year);
+                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year,$department_id);
                 $interview_attend = sizeof($interview_attended_list);
 
                 // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year);
+                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year,$department_id);
 
                 // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$user_id);
+                $interviews = Interview::getDashboardInterviews(0,$user_id,$department_id);
                 $interviews_cnt = sizeof($interviews);
             }
         }
-
-        // Display Users Listing With Role Name & Profile Photo
-
-        $dashboard_users = User::getDashboardUsers();
 
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
@@ -1201,17 +1059,27 @@ class HomeController extends Controller
         $viewVariable['associatedCount'] = $associate_count;
         $viewVariable['interviewAttendCount'] = $interview_attend;
         $viewVariable['shortlisted_count'] = $shortlisted_count;
-        $viewVariable['date'] = $date;
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
-        $viewVariable['msg'] = $msg;
-        $viewVariable['superadmin'] = $superadmin;
-        $viewVariable['user_id'] = $user_id;
-        $viewVariable['birthday_date_string'] = '';
-        $viewVariable['work_ani_date_string'] = '';
-        $viewVariable['dashboard_users'] = $dashboard_users;
-        $viewVariable['total_dashboard_users'] = sizeof($dashboard_users);
+        $viewVariable['department_id'] = $department_id;
 
-        return view('dashboard',$viewVariable);
+        return view('hr-advisory-dashboard',$viewVariable);
+    }
+
+    public function hrAdvisoryOpentoAllJob() {
+
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_jobs = $user->can('display-jobs-open-to-all');
+
+        $department_id = getenv('HRADVISORY');
+
+        if($display_jobs) {
+            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
+        }
+        else {
+            $job_opened = array();
+        }
+        return json_encode($job_opened);
     }
 }

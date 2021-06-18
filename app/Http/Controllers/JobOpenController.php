@@ -240,7 +240,7 @@ class JobOpenController extends Controller
             //$count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
             //$job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
-            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,'','',$client_heirarchy);
+            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,'','',$client_heirarchy,0);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','');
 
             // For salary wise count
@@ -266,7 +266,7 @@ class JobOpenController extends Controller
             //$count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
             //$job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
-            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy);
+            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy,0);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','');
 
             // For salary wise count
@@ -341,7 +341,7 @@ class JobOpenController extends Controller
     }
 
     // Job open to all page
-    public function OpentoAll(Request $request) {
+    public function OpentoAll($department_id) {
 
         // logged in user with role 'Administrator,Director,Manager can see all the open jobs
         // Rest other users can only see the jobs assigned to them
@@ -351,7 +351,7 @@ class JobOpenController extends Controller
         $display_jobs = $user->can('display-jobs-open-to-all');
        
         if($display_jobs) {
-            $job_response = JobOpen::getOpenToAllJobs(0,$user_id);
+            $job_response = JobOpen::getOpenToAllJobs(0,$user_id,$department_id);
         }
 
         $count = sizeof($job_response);
@@ -736,8 +736,8 @@ class JobOpenController extends Controller
 
         if($all_jobs_perm) {
             
-            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
-            $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy);
+            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy,0);
+            $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy,0);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
             // For salary wise count
@@ -760,8 +760,8 @@ class JobOpenController extends Controller
         }
         else if ($user_jobs_perm) {
 
-            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
-            $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy);
+            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy,0);
+            $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy,0);
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
@@ -3846,7 +3846,7 @@ class JobOpenController extends Controller
         echo json_encode($response);exit;
     }
 
-    public function associatedCVS($month,$year) {
+    public function associatedCVS($month,$year,$department_id) {
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -3855,11 +3855,11 @@ class JobOpenController extends Controller
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
         if($all_jobs_perm) {
-            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year);
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,$department_id);
             $count = sizeof($response);
         }
         else if($user_jobs_perm) {
-            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year);
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
             $count = sizeof($response);
         }
         else {
@@ -4077,7 +4077,7 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.alljobs_associated_candidate',compact('candidateDetails','posting_title','count'));
     }
 
-    public function shortlistedCVS($month,$year) {
+    public function shortlistedCVS($month,$year,$department_id) {
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -4086,11 +4086,11 @@ class JobOpenController extends Controller
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
         if($all_jobs_perm) {
-            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year);
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,$department_id);
             $count = sizeof($response);
         }
         else if($user_jobs_perm) {
-            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise($user_id,$month,$year);
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
             $count = sizeof($response);
         }
         else {
@@ -4689,5 +4689,47 @@ class JobOpenController extends Controller
             $j++;
         }
         return $data;exit;
+    }
+
+    public function recruitmentJobs() {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        $department_id = getenv('RECRUITMENT');
+
+        if($all_jobs_perm) {
+            $job_response = JobOpen::getAllJobs(1,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+        }
+        if($user_jobs_perm) {
+            $job_response = JobOpen::getAllJobs(0,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+        }
+
+        $count = sizeof($job_response);
+
+        return view('adminlte::jobopen.recruitment-jobs', compact('job_response','count'));
+    }
+
+    public function hrAdvisoryJobs() {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        $department_id = getenv('HRADVISORY');
+
+        if($all_jobs_perm) {
+            $job_response = JobOpen::getAllJobs(1,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+        }
+        if($user_jobs_perm) {
+            $job_response = JobOpen::getAllJobs(0,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+        }
+
+        $count = sizeof($job_response);
+
+        return view('adminlte::jobopen.hr-advisory-jobs', compact('job_response','count'));
     }
 }

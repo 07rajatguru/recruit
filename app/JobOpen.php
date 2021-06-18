@@ -956,7 +956,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
+    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$department_id=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -979,6 +979,11 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_visible_users.user_id','=',$user_id);
         }
 
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
+        }
+        
         $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
@@ -1344,7 +1349,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
+    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$department_id=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1424,6 +1429,11 @@ class JobOpen extends Model
         // For Client Heirarchy
         if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $job_response = $job_open_query->get();
@@ -1541,7 +1551,7 @@ class JobOpen extends Model
         return $job_res;
     }
 
-    public static function getOpenToAllJobs($limit=0,$user_id) {
+    public static function getOpenToAllJobs($limit=0,$user_id,$department_id=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1561,6 +1571,11 @@ class JobOpen extends Model
         if($user_id > 0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
@@ -3656,7 +3671,14 @@ class JobOpen extends Model
         }
         if (isset($desired_location) && $desired_location != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.city','=',"$desired_location");
+            if($desired_location == 'Remote') {
+
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
+            }
+            else {
+
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$desired_location");
+            }
         }
 
         if (isset($min_experience) && $min_experience != '') {

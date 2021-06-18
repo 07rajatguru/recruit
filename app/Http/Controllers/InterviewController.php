@@ -442,7 +442,7 @@ class InterviewController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function todaytomorrow() {
+    public function todaytomorrow($department_id) {
 
         $user = \Auth::user();
         
@@ -450,10 +450,10 @@ class InterviewController extends Controller
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
         if($all_perm) {
-            $todaytomorrow = Interview::getTodayTomorrowsInterviews(1,$user->id);
+            $todaytomorrow = Interview::getTodayTomorrowsInterviews(1,$user->id,$department_id);
         }
         else if($userwise_perm) {
-            $todaytomorrow = Interview::getTodayTomorrowsInterviews(0,$user->id);
+            $todaytomorrow = Interview::getTodayTomorrowsInterviews(0,$user->id,$department_id);
         }
 
         $count = sizeof($todaytomorrow);
@@ -462,7 +462,7 @@ class InterviewController extends Controller
         return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source'));
     }
 
-    public function attendedinterview($month,$year) {
+    public function attendedinterview($month,$year,$department_id) {
 
         $user = \Auth::user();
         
@@ -470,10 +470,10 @@ class InterviewController extends Controller
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
         if($all_perm) {
-            $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year);
+            $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,$department_id);
         }
         else if($userwise_perm) {
-            $attended_interview = Interview::getAttendedInterviews(0,$user->id,$month,$year);
+            $attended_interview = Interview::getAttendedInterviews(0,$user->id,$month,$year,$department_id);
         }
 
         $count = sizeof($attended_interview);

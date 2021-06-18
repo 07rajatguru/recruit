@@ -175,12 +175,13 @@ class JobAssociateCandidates extends Model
         return $cvs_associated_res;
     }
 
-    public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL) {
+    public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
         
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.created_at as created_at');
 
         if($user_id > 0) {
@@ -196,6 +197,11 @@ class JobAssociateCandidates extends Model
         if ($month != '' && $year != '') {
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
             $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
         $query_response = $query->get();
 
@@ -214,7 +220,7 @@ class JobAssociateCandidates extends Model
         return $response;  
     }
 
-    public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL) {
+    public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
 
@@ -240,6 +246,11 @@ class JobAssociateCandidates extends Model
         if ($month != '' && $year != '') {
             $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
             $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $query = $query->groupBy('job_openings.id','job_associate_candidates.candidate_id');
@@ -403,12 +414,13 @@ class JobAssociateCandidates extends Model
         return $cnt;  
     }
 
-    public static function getMonthlyReprtShortlisted($user_id,$month=NULL,$year=NULL) {
+    public static function getMonthlyReprtShortlisted($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
 
         $query = JobAssociateCandidates::query(); 
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_associate_candidates.shortlisted_date as shortlisted_date');
 
         if($user_id > 0) {
@@ -426,6 +438,11 @@ class JobAssociateCandidates extends Model
             $query =$query->where(\DB::raw('year(job_associate_candidates.shortlisted_date)'),'=',$year);
         }
 
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
+        }
+
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');
 
         $query_response = $query->get();
@@ -438,7 +455,7 @@ class JobAssociateCandidates extends Model
         return $cnt;  
     }
 
-    public static function getShortlistedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL) {
+    public static function getShortlistedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
 
@@ -463,8 +480,13 @@ class JobAssociateCandidates extends Model
         }
 
         if ($month != '' && $year != '') {
-            $query =$query->where(\DB::raw('month(job_associate_candidates.shortlisted_date)'),'=',$month);
-            $query =$query->where(\DB::raw('year(job_associate_candidates.shortlisted_date)'),'=',$year);
+            $query = $query->where(\DB::raw('month(job_associate_candidates.shortlisted_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(job_associate_candidates.shortlisted_date)'),'=',$year);
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');

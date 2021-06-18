@@ -582,7 +582,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getTodayTomorrowsInterviews($all=0,$user_id) {
+    public static function getTodayTomorrowsInterviews($all=0,$user_id,$department_id=0) {
 
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
@@ -608,6 +608,11 @@ class Interview extends Model
             });
         }
 
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
+        }
+
         $query = $query->where('interview_date','>',"$from_date");
         $query = $query->where('interview_date','<',"$to_date");
         $query = $query->orderby('interview.interview_date','asc');
@@ -617,7 +622,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL) {
+    public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
 
@@ -629,6 +634,11 @@ class Interview extends Model
         $query = $query->leftJoin('users','users.id','=','interview.interviewer_id');
 
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','job_openings.remote_working as remote_working');
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
+        }
 
         $query = $query->where('interview.status','=','Attended');
         $query = $query->where(\DB::raw('MONTH(interview_date)'),'=',$month);
@@ -650,7 +660,7 @@ class Interview extends Model
         return $response;
     }
 
-    public static function getDashboardInterviews($all=0,$user_id) {
+    public static function getDashboardInterviews($all=0,$user_id,$department_id=0) {
 
         $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
@@ -675,6 +685,11 @@ class Interview extends Model
                 $query = $query->orwhere('candidate_otherinfo.owner_id',$user_id);
                 $query = $query->orwhere('interviewer_id',$user_id);
             });
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
         $query = $query->where('interview_date','>',"$from_date");

@@ -336,7 +336,7 @@ class CandidateController extends Controller
         echo json_encode($json_data);exit;
     }
 
-    public function candidatejoin($month,$year) {
+    public function candidatejoin($month,$year,$department_id) {
 
         $user =  \Auth::user();
         $display_all_count = $user->can('display-all-count');
@@ -344,12 +344,12 @@ class CandidateController extends Controller
 
         if($display_all_count) {
 
-            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year);
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,$department_id);
             $count = sizeof($response);
         }
         else if($display_userwise_count) {
 
-            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year);
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year,$department_id);
             $count = sizeof($response);
         }
         
