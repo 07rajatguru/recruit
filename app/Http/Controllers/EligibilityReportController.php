@@ -72,9 +72,7 @@ class EligibilityReportController extends Controller
 
                         $data = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
 
-                        if(isset($data) && sizeof($data) > 0) {
-                            $eligible_data[$value][$m.'-'.$next_month_three] = $data;
-                        }
+                        $eligible_data[$value][$m.'-'.$next_month_three] = $data;
                     }
                     $m = 13;
                 }
@@ -94,9 +92,7 @@ class EligibilityReportController extends Controller
 
                         $data = Eligibilityworking::getEligibilityDataByUser($key,$first_three,$last_three);
 
-                        if(isset($data) && sizeof($data) > 0) {
-                            $eligible_data[$value][$m.'-'.$next_month_three] = $data;
-                        }
+                        $eligible_data[$value][$m.'-'.$next_month_three] = $data;
                     }
                 }
             }
@@ -116,10 +112,7 @@ class EligibilityReportController extends Controller
                 foreach ($users as $key => $value) {
 
                     $data = Eligibilityworking::getEligibilityDataByUser($key,$first_six,$last_six);
-
-                    if(isset($data) && $data != '') {
-                        $eligible_detail[$value][$i.'-'.$next_month_six] = $data;
-                    }
+                    $eligible_detail[$value][$i.'-'.$next_month_six] = $data;
                 }
             }
 
@@ -139,9 +132,7 @@ class EligibilityReportController extends Controller
 
                     $data = Eligibilityworking::getEligibilityDataByUser($key,$first_nine,$last_nine);
 
-                    if(isset($data) && $data != '') {
-                        $eligible_detail[$value][$i.'-'.$next_month_nine] = $data;
-                    }
+                    $eligible_detail[$value][$i.'-'.$next_month_nine] = $data;
                 }
             }
 
@@ -157,20 +148,8 @@ class EligibilityReportController extends Controller
             foreach ($users as $key => $value) {
 
                 $data = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
-
-                if(isset($data) && $data != '') {
-                    $eligible_detail[$value][$year] = $data;
-                }
+                $eligible_detail[$value][$year] = $data;
             }
-
-            if(isset($eligible_data) && $eligible_data != '') {
-
-            }
-            else {
-                $eligible_data = array();
-            }
-
-
 
         	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail'));
         }
