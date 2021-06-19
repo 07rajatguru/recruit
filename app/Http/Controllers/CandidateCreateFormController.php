@@ -254,6 +254,19 @@ class CandidateCreateFormController extends Controller
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
+                // Add Entry in email notifications for autoscript email
+
+                $module = "New Candidate AutoScript Mail";
+                $sender_name = $owner_id;
+                $to = $candidateEmail;
+                $subject = 'Thanks for your application - Adler Talent Solution';
+                $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
+                $module_id = $candidate_id;
+
+                $cc = '';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
                 return redirect('candidate/add/'.$applicant_job_id)->with('success','Your Details Saved Successfully.');
             }
             else {
@@ -266,6 +279,19 @@ class CandidateCreateFormController extends Controller
                 $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
                 $module_id = $candidate_id;
                 $cc = 'info@adlertalent.com';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                // Add Entry in email notifications for autoscript email
+
+                $module = "New Candidate AutoScript Mail";
+                $sender_name = $owner_id;
+                $to = $candidateEmail;
+                $subject = 'Thanks for your application - Adler Talent Solution';
+                $message = "<tr><td>" . $candiateFname . " - New Applicant Candidate Added. </td></tr>";
+                $module_id = $candidate_id;
+
+                $cc = '';
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 

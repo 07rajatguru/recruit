@@ -1083,13 +1083,23 @@ class EveryMinute extends Command
                 $input['candidate_name'] = $candidate_details['full_name'];
                 $input['owner_email'] = $candidate_details['owner_email'];
 
-                \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
+                if($input['owner_email'] == 'careers@adlertalent.com') {
 
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->bcc($input['owner_email'])->subject($input['subject']);
-                });
-           
-               
+                    \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
+
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->subject($input['subject']);
+                    });
+                }
+                else {
+
+                    \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
+
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->bcc($input['owner_email'])->subject($input['subject']);
+                    });
+                }
+
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
