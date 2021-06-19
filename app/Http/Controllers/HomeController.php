@@ -166,7 +166,7 @@ class HomeController extends Controller
             ->where('delete_client','=',0)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,0);
+            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0);
 
             // Cvs Associated this month
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,0);
@@ -194,7 +194,7 @@ class HomeController extends Controller
             ->where('account_manager_id',$user_id)->where('delete_client','=',0)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,0);
+            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0);
 
             $tanisha_user_id = getenv('TANISHAUSERID');
 
@@ -355,7 +355,7 @@ class HomeController extends Controller
                 ->where('delete_client','=',0)->count();
 
                 // Job Count
-                $jobCount = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,0);
+                $jobCount = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0);
 
                 // Cvs Associated this month
                 $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,0);
@@ -380,7 +380,7 @@ class HomeController extends Controller
                 ->where('account_manager_id',$user_id)->where('delete_client','=',0)->count();
 
                 // Job Count
-                $jobCount = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,0);
+                $jobCount = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0);
 
                 // Cvs Associated this month
                 $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,0);
@@ -833,7 +833,7 @@ class HomeController extends Controller
             ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,$department_id);
+            $job = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
 
             // Cvs Associated this month
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
@@ -862,7 +862,7 @@ class HomeController extends Controller
             ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,$department_id);
+            $job = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
 
             $tanisha_user_id = getenv('TANISHAUSERID');
 
@@ -974,7 +974,7 @@ class HomeController extends Controller
             ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(1,$user_id,0,NULL,NULL,0,$department_id);
+            $job = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
 
             // Cvs Associated this month
             $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
@@ -1003,7 +1003,7 @@ class HomeController extends Controller
             ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
 
             // Job Count
-            $job = JobOpen::getAllJobsCount(0,$user_id,0,NULL,NULL,0,$department_id);
+            $job = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
 
             $tanisha_user_id = getenv('TANISHAUSERID');
 

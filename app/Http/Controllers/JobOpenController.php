@@ -240,7 +240,7 @@ class JobOpenController extends Controller
             //$count = JobOpen::getAllJobsCount(1,$user_id,NUll,$current_year,$next_year,$client_heirarchy);
             //$job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
-            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,'','',$client_heirarchy,0);
+            $count = JobOpen::getAllJobsCount(1,$user_id,NUll,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','');
 
             // For salary wise count
@@ -266,7 +266,7 @@ class JobOpenController extends Controller
             //$count = JobOpen::getAllJobsCount(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
             //$job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
-            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy,0);
+            $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','');
 
             // For salary wise count
@@ -736,8 +736,8 @@ class JobOpenController extends Controller
 
         if($all_jobs_perm) {
             
-            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy,0);
-            $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy,0);
+            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
+            $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
             // For salary wise count
@@ -760,8 +760,8 @@ class JobOpenController extends Controller
         }
         else if ($user_jobs_perm) {
 
-            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy,0);
-            $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy,0);
+            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy);
+            $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy);
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
@@ -4691,6 +4691,52 @@ class JobOpenController extends Controller
         return $data;exit;
     }
 
+    public static function getJobOrderColumnNameByDepartment($order) {
+
+        $order_column_name = '';
+
+        if (isset($order) && $order >= 0) {
+
+            if ($order == 0) {
+                $order_column_name = "job_openings.id";
+            }
+            else if ($order == 1) {
+                $order_column_name = "users.name";
+            }
+            else if ($order == 2) {
+                $order_column_name = "client_basicinfo.display_name";
+            }
+            else if ($order == 3) {
+                $order_column_name = "job_openings.posting_title";
+            }
+            else if ($order == 4) {
+                $order_column_name = "count";
+            }
+            else if ($order == 5) {
+                $order_column_name = "job_openings.city";
+            }
+            else if ($order == 6) {
+                $order_column_name = "job_openings.lacs_from";
+            }
+            else if($order == 7) {
+                $order_column_name = "job_openings.lacs_to";
+            }
+            else if ($order == 8) {
+                $order_column_name = "job_openings.created_at";
+            }
+            else if ($order == 9) {
+                $order_column_name = "job_openings.updated_at";
+            }
+            else if ($order == 10) {
+                $order_column_name = "job_openings.no_of_positions";
+            }
+            else if ($order == 11) {
+                $order_column_name = "client_basicinfo.coordinator_name";
+            }
+        }
+        return $order_column_name;
+    }
+
     public function recruitmentJobs() {
 
         $user = \Auth::user();
@@ -4701,15 +4747,72 @@ class JobOpenController extends Controller
         $department_id = getenv('RECRUITMENT');
 
         if($all_jobs_perm) {
-            $job_response = JobOpen::getAllJobs(1,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
         }
-        if($user_jobs_perm) {
-            $job_response = JobOpen::getAllJobs(0,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+        else if ($user_jobs_perm) {
+            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
         }
 
-        $count = sizeof($job_response);
+        return view('adminlte::jobopen.recruitment-jobs', compact('count'));
+    }
 
-        return view('adminlte::jobopen.recruitment-jobs', compact('job_response','count'));
+    public function getAllRecruitmentJobs() {
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getJobOrderColumnNameByDepartment($order);
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        $department_id = getenv('RECRUITMENT');
+
+        if($all_jobs_perm) {
+            
+            $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
+            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,$department_id);
+        }
+        else if ($user_jobs_perm) {
+
+            $job_response = JobOpen::getAllJobsByDepartment(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
+            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,$department_id);
+        }
+
+        $jobs = array();
+        $i = 0;$j = 0;
+
+        foreach ($job_response as $key => $value) {
+
+            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+
+            $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
+
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            
+            $data = array(++$j,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['desired_candidate'],$value['priority']);
+            $jobs[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $jobs,
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function hrAdvisoryJobs() {
@@ -4722,14 +4825,71 @@ class JobOpenController extends Controller
         $department_id = getenv('HRADVISORY');
 
         if($all_jobs_perm) {
-            $job_response = JobOpen::getAllJobs(1,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
         }
-        if($user_jobs_perm) {
-            $job_response = JobOpen::getAllJobs(0,$user_id,0,0,0,NULL,'',NULL,NULL,0,$department_id);
+        else if ($user_jobs_perm) {
+            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
         }
 
-        $count = sizeof($job_response);
+        return view('adminlte::jobopen.hr-advisory-jobs', compact('count'));
+    }
 
-        return view('adminlte::jobopen.hr-advisory-jobs', compact('job_response','count'));
+    public function getAllHRAdvisoryJobs() {
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getJobOrderColumnNameByDepartment($order);
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+
+        $department_id = getenv('HRADVISORY');
+
+        if($all_jobs_perm) {
+            
+            $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
+            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,$department_id);
+        }
+        else if ($user_jobs_perm) {
+
+            $job_response = JobOpen::getAllJobsByDepartment(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
+            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,$department_id);
+        }
+
+        $jobs = array();
+        $i = 0;$j = 0;
+
+        foreach ($job_response as $key => $value) {
+
+            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+
+            $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
+
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            
+            $data = array(++$j,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['desired_candidate'],$value['priority']);
+            $jobs[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $jobs,
+        );
+
+        echo json_encode($json_data);exit;
     }
 }

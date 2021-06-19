@@ -33,7 +33,7 @@
     </div>
 
     <div class = "table-responsive">
-        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
+        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="job_table">
             <thead>
             <tr>
                 <th>No</th>
@@ -45,39 +45,14 @@
                 <th>Min CTC<br/>(in Lacs)</th>
                 <th>Max CTC<br/>(in Lacs)</th>
                 <th>Added Date</th>
+                <th>Updated Date</th>
                 <th>No. Of <br/> Positions</th>
                 <th>Edu Qualifications</th>
                 <th>Contact <br/> Point</th>
-                <th>Target Industries</th>
                 <th>Desired Candidate</th>
             </tr>
             </thead>
-            <?php $i=0; ?>
             <tbody>
-                @foreach($job_response as $key=>$value)
-                    <tr>
-                        <td>{{ ++$i }}</td>
-
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['am_name'] or '' }}</td>
-                        <td style="background-color: {{ $value['color'] }}">{{ $value['display_name'] or '' }}
-                        </td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or ''}}</td>
-                        <td>
-                            <a title="Show Associated Candidates" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a>
-                        </td>
-
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['city'] or ''}}</td>
-                        <td>{{ $value['min_ctc'] or ''}}</td>
-                        <td>{{ $value['max_ctc'] or ''}}</td>
-                        <td>{{ $value['created_date'] or ''}}</td>
-                        <td>{{ $value['no_of_positions'] or ''}}</td>
-
-                        <td>{{ $value['qual'] or ''}}</td>
-                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['coordinator_name'] or ''}}</td>
-                        <td>{{ $value['industry'] or ''}}</td>
-                        <td>{!! $value['desired_candidate'] or ''!!}</td>
-                    </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
@@ -87,10 +62,13 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            var table = jQuery('#jo_table').DataTable({
+            $("#job_table").dataTable({
 
-                responsive: true,
-                "columnDefs": [
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [9,'desc'],
+                "columnDefs": [ 
+
                     { "width": "10px", "targets": 0},
                     { "width": "10px", "targets": 1},
                     { "width": "10px", "targets": 2},
@@ -99,18 +77,63 @@
                     { "width": "10px", "targets": 5},
                     { "width": "10px", "targets": 6},
                     { "width": "10px", "targets": 7},
-                    { "width": "10px", "targets": 8, "order": 'desc'},
-                    { "width": "5px", "targets": 9},
+                    { "width": "5px", "targets": 8,},
+                    { "visible": false,  "targets": 9},
                 ],
-                "pageLength": 100,
-                stateSave: true
-            });
+                "ajax" : {
+                    'url' : 'hr-advisory-jobs/all',
+                    'type' : 'get',
+                    error: function(){
 
-            if (!table.data().any()) {
-            }
-            else {
-                new jQuery.fn.dataTable.FixedHeader( table );
-            }
+                    },
+                },
+                initComplete:function( settings, json) {
+
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                "fnRowCallback": function( Row, Data ) {
+
+                    if ( Data[14] == "0" ) {
+                        $('td:eq(2)', Row).css('background-color', '');
+                    }
+                    else if ( Data[14] == "1" ) {
+                        $('td:eq(2)', Row).css('background-color', '#FF0000');
+                    }
+                    else if ( Data[14] == "2" ) {
+                        $('td:eq(2)', Row).css('background-color', '#00B0F0');
+                    }
+                    else if ( Data[14] == "3" ) {
+                        $('td:eq(2)', Row).css('background-color', '#FABF8F');
+                    }
+                    else if ( Data[14] == "4" ) {
+                        $('td:eq(2)', Row).css('background-color', '#B1A0C7');
+                    }
+                    else if ( Data[14] == "5" ) {
+                        $('td:eq(2)', Row).css('background-color', 'yellow');
+                    }
+                    else if ( Data[14] == "6" ) {
+                        $('td:eq(2)', Row).css('background-color', '');
+                    }
+                    else if ( Data[14] == "7" ) {
+                        $('td:eq(2)', Row).css('background-color', '#808080');
+                    }
+                    else if ( Data[14] == "8" ) {
+                        $('td:eq(2)', Row).css('background-color', '#92D050');
+                    }
+                    else if ( Data[14] == "9" ) {
+                        $('td:eq(2)', Row).css('background-color', '#92D050');
+                    }
+                    else if ( Data[14] == "10" ) {
+                        $('td:eq(2)', Row).css('background-color', '#FFFFFF');
+                    }
+                    else {
+                        $('td:eq(2)', Row).css('background-color', '');
+                    }
+                },
+                stateSave : true,
+            });
         });
     </script>
 @endsection

@@ -956,7 +956,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$department_id=0) {
+    public static function getAllJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -977,11 +977,6 @@ class JobOpen extends Model
         if($all==0) {
             $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
             $job_open_query = $job_open_query->where('job_visible_users.user_id','=',$user_id);
-        }
-
-        // For Department
-        if (isset($department_id) && $department_id > 0) {
-            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
         }
         
         $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
@@ -1349,7 +1344,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$department_id=0) {
+    public static function getAllJobsCount($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL,$client_heirarchy=0) {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -1430,12 +1425,6 @@ class JobOpen extends Model
         if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
-
-        // For Department
-        if (isset($department_id) && $department_id > 0) {
-            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
-        }
-
         $job_response = $job_open_query->get();
 
         return sizeof($job_response);
@@ -3943,5 +3932,297 @@ class JobOpen extends Model
             $hiring_manager_email = '';
         }
         return $hiring_manager_email;
+    }
+
+    public static function getAllJobsCountByDepartment($all=0,$user_id,$search,$department_id=0) {
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.updated_at as updated_at','job_openings.remote_working as remote_working');
+
+        $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+
+        // assign jobs to logged in user
+        if($all==0) {
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+            $job_open_query = $job_open_query->where('user_id','=',$user_id);
+        }
+
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+        $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+
+        if (isset($search) && $search != '') {
+
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.qualifications','like',"%$search%");
+
+                if(($search == 'Remote') || ($search == 'remote')) {
+                    
+                    $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $job_open_query = $job_open_query->orwhere('job_openings.created_at','>=',"$from_date");
+                    $job_open_query = $job_open_query->Where('job_openings.created_at','<=',"$to_date");
+                }
+            });
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
+        }
+
+        $job_response = $job_open_query->get();
+
+        return sizeof($job_response);
+    }
+
+    public static function getAllJobsByDepartment($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$department_id=0) {
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+
+        $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.updated_at as updated_at','client_basicinfo.second_line_am as second_line_am','job_openings.remote_working as remote_working');
+        
+        $job_open_query = $job_open_query->leftJoin('job_associate_candidates','job_openings.id','=','job_associate_candidates.job_id');
+        $job_open_query = $job_open_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_open_query = $job_open_query->join('users','users.id','=','job_openings.hiring_manager_id');
+
+        // assign jobs to logged in user
+        if($all==0) {
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+            $job_open_query = $job_open_query->where('job_visible_users.user_id','=',$user_id);
+        }
+
+        // For Department
+        if (isset($department_id) && $department_id > 0) {
+            $job_open_query = $job_open_query->where('client_basicinfo.department_id','=',$department_id);
+        }
+        
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+        $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_open_query = $job_open_query->groupBy('job_openings.id');
+
+        if (isset($order) && $order != '') {
+            if ($order == 'job_openings.lacs_from') {
+                $job_open_query = $job_open_query->orderBy($order,$type);
+                $job_open_query = $job_open_query->orderBy('job_openings.thousand_from',$type);
+            }
+            else if ($order == 'job_openings.lacs_to') {
+                $job_open_query = $job_open_query->orderBy($order,$type);
+                $job_open_query = $job_open_query->orderBy('job_openings.thousand_to',$type);
+            }
+            else{
+                $job_open_query = $job_open_query->orderBy($order,$type);
+            }
+        }
+
+        if (isset($limit) && $limit > 0) {
+            $job_open_query = $job_open_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $job_open_query = $job_open_query->offset($offset);
+        }
+
+        if (isset($search) && $search != '') {
+
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+                if(isset($date_array) && sizeof($date_array)>0){
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)){
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)){
+                            $date_search = true;
+                        }
+                    }
+                }
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('users.name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.no_of_positions','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.qualifications','like',"%$search%");
+
+                if(($search == 'Remote') || ($search == 'remote')) {
+                    
+                    $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $job_open_query = $job_open_query->orwhere('job_openings.created_at','>=',"$from_date");
+                    $job_open_query = $job_open_query->Where('job_openings.created_at','<=',"$to_date");
+                }
+            });
+        }
+
+        $job_response = $job_open_query->get();
+
+        $jobs_list = array();
+        $colors = self::getJobPrioritiesColor();
+        $i = 0;
+
+        foreach ($job_response as $key => $value) {
+
+            // value get in 2 decimal point
+            if ($value->lacs_from >= '100') {
+                $min_ctc = '100+';
+            }
+            else {
+                $lacs_from = $value->lacs_from*100000;
+                $thousand_from = $value->thousand_from*1000;
+                $mictc = $lacs_from+$thousand_from;
+                $minctc = $mictc/100000;
+                $min_ctc = number_format($minctc,2);
+            }
+
+            if ($value->lacs_to >= '100') {
+                $max_ctc = '100+';
+            }
+            else {
+                $lacs_to = $value->lacs_to*100000;
+                $thousand_to = $value->thousand_to*1000;
+                $mactc = $lacs_to+$thousand_to;
+                $maxctc = $mactc/100000;
+                $max_ctc = number_format($maxctc,2);
+            }
+            
+            $jobs_list[$i]['id'] = $value->id;
+            $jobs_list[$i]['job_id'] = $value->job_id;
+            $jobs_list[$i]['company_name'] = $value->company_name;
+            $jobs_list[$i]['display_name'] = $value->display_name;
+            $jobs_list[$i]['client'] = $value->company_name." - ".$value->coordinator_name;
+            $jobs_list[$i]['no_of_positions'] = $value->no_of_positions;
+
+            if (isset($value->level_name) && $value->level_name != '') {
+                $jobs_list[$i]['posting_title'] = $value->level_name." - ".$value->posting_title;
+            }
+            else {
+                $jobs_list[$i]['posting_title'] = $value->posting_title;
+            }
+            
+            $location ='';
+            if($value->city!=''){
+                $location .= $value->city;
+            }
+            if($value->state!=''){
+                if($location=='')
+                    $location .= $value->state;
+                else
+                    $location .= ", ".$value->state;
+            }
+            if($value->country!=''){
+                if($location=='')
+                    $location .= $value->country;
+                else
+                    $location .= ", ".$value->country;
+            }
+
+            $jobs_list[$i]['location'] = $location;
+            $jobs_list[$i]['qual'] = $value->qualifications;
+            $jobs_list[$i]['min_ctc'] = $min_ctc;
+            $jobs_list[$i]['max_ctc'] = $max_ctc;
+            $jobs_list[$i]['desired_candidate'] = $value->desired_candidate;
+            $jobs_list[$i]['associate_candidate_cnt'] = JobAssociateCandidates::getJobAssociatedCvsCount($value->id);
+            $jobs_list[$i]['priority'] = $value->priority;
+            $jobs_list[$i]['created_date'] = date('d-m-Y',strtotime($value->created_at));
+            $jobs_list[$i]['updated_date'] = date('d-m-Y',strtotime($value->updated_at));
+
+            if(isset($value->priority) && $value->priority!='')
+                $jobs_list[$i]['color'] = $colors[$value->priority];
+            else
+                $jobs_list[$i]['color'] ='';
+
+            if($all==1) {
+                $jobs_list[$i]['access'] = '1';
+                $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+            }
+            else {
+                if(isset($value->hiring_manager_id) && $value->hiring_manager_id == $user_id) {
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+                    $jobs_list[$i]['access'] = '1';
+                }
+                else if(isset($value->second_line_am) && $value->second_line_am == $user_id) {
+                    $jobs_list[$i]['coordinator_name'] = $value->coordinator_name;
+                    $jobs_list[$i]['access'] = '1';
+                }
+                else{
+                    $jobs_list[$i]['coordinator_name'] = '';
+                    $jobs_list[$i]['access'] = '0';
+                }
+            }
+
+            if($value->hiring_manager_id == 0) {
+
+                $jobs_list[$i]['am_name'] = 'Yet to Assign';
+            }
+            else {
+
+                $jobs_list[$i]['am_name'] = $value->am_name;
+            }
+
+            if($value->remote_working == '1') {
+
+                $jobs_list[$i]['city'] = "Remote";
+            }
+            else {
+
+                $jobs_list[$i]['city'] = $value->city;
+            } 
+
+            $i++;
+        }
+        return $jobs_list;
     }
 }
