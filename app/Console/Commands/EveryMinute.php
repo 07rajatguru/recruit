@@ -1604,7 +1604,7 @@ class EveryMinute extends Command
                     $input['candidate_job_details'] = $candidate_job_details;
                     $input['to_array'] = $to_array;
                     $input['bcc_email'] = $candidate_job_details['owner_email'];
-                    $input['attachment'] = 'public/uploads/Candidate Information Form Adler.docx';
+                    $input['attachment'] = public_path() . "/" . 'uploads/Candidate_Information_Form_Adler.docx';
 
                      \Mail::send('adminlte::emails.candidateinformationform', $input, function ($message) use($input) {
                     

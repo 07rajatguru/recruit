@@ -32,7 +32,7 @@
         </td>
     </tr>
     <tr>
-        <td width="600"  style="background-color: green; !important;">
+        <td width="600">
             <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                     <td style="font-family:Cambria, serif;font-size: 11.0pt;">
@@ -65,12 +65,13 @@
                         </p>
 
                         <p><b>Thanks.</b></p>
-
-                        <p style="text-align: left;">{!! $owner_signature !!}</p>
                     </td>
                 </tr>
             </table>
         </td>
+    </tr>
+    <tr>
+        <p style="text-align: left;">{!! $owner_signature !!}</p>
     </tr>
     <tr>
         <td width="600">
