@@ -2989,6 +2989,20 @@ class JobOpenController extends Controller
         else if ($status_id == '3') {
 
             DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', selected_date = '$today_date', status_id = '3', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
+
+            // Email Notification : After Clear 3rd Round of Interview
+
+            $module = "Candidate Information Form";
+            $sender_name = $user_id;
+            $candidate_info = CandidateBasicInfo::getCandidateDetailsById($candidate_id);
+            $to = $candidate_info['email'];
+                        
+            $subject = "Candidate Information Form - Adler";
+            $message = "<tr><th>Candidate Information Form - Adler </th></tr>";
+            $module_id = $candidate_id . "-" . $job_id;
+            $cc = '';
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
         // For show interview modal popup        
@@ -3024,6 +3038,8 @@ class JobOpenController extends Controller
     // For shortlist associated candidate
     public function shortlistedCandidates(Request $request) {
 
+        $user_id = \Auth::user()->id;
+        
         $input = $request->all();       
 
         $update_status_id = $input['update_status_id'];
@@ -3071,6 +3087,20 @@ class JobOpenController extends Controller
             else if ($update_status_id == '3') {
 
                 DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', status_id = '3', shortlisted_date = '$today_date', selected_date = '$today_date'  WHERE candidate_id = $value AND job_id = $job_id");
+
+                // Email Notification : After Clear 3rd Round of Interview
+
+                $module = "Candidate Information Form";
+                $sender_name = $user_id;
+                $candidate_info = CandidateBasicInfo::getCandidateDetailsById($value);
+                $to = $candidate_info['email'];
+                        
+                $subject = "Candidate Information Form - Adler";
+                $message = "<tr><th>Candidate Information Form - Adler </th></tr>";
+                $module_id = $value . "-" . $job_id;
+                $cc = '';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
         }
 

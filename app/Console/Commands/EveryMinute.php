@@ -1581,6 +1581,44 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == 'Candidate Information Form') {
+
+                $to_array = explode(",",$input['to']);
+
+                $split_module_id = explode("-",$value['module_id']);
+
+                $candidate_id = $split_module_id[0];
+                $job_id = $split_module_id[1];
+
+                // Get users for popup of add information
+                $candidate_job_details = CandidateBasicInfo::getCandidateJobDetailsById($candidate_id,$job_id);
+
+                if(isset($candidate_job_details) && $candidate_job_details != '') {
+
+                    // Get candidate owner signature
+                    $owner_id = $candidate_job_details['owner_id'];
+                    $owner_info = User::getProfileInfo($owner_id);
+                    $input['owner_signature'] = $owner_info['signature'];
+                    
+                    $input['candidate_job_details'] = $candidate_job_details;
+                    $input['to_array'] = $to_array;
+                    $input['bcc_email'] = $candidate_job_details['owner_email'];
+                    $input['attachment'] = 'public/uploads/Candidate Information Form Adler.docx';
+
+                     \Mail::send('adminlte::emails.candidateinformationform', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->bcc($input['bcc_email'])->subject($input['subject']);
+
+                        if (isset($input['attachment']) && $input['attachment'] != '') {
+                            $message->attach($input['attachment']);
+                        }
+                    });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
         }
     }
 }

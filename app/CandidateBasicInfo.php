@@ -699,4 +699,35 @@ class CandidateBasicInfo extends Model
         }
         return $candidate;
     }
+
+    public static function getCandidateJobDetailsById($candidate_id,$job_id) {
+    
+        $query = CandidateBasicInfo::query();
+
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->leftjoin('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
+        $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->select('candidate_basicinfo.*','job_openings.posting_title as posting_title','client_basicinfo.name as company_name','users.email as owner_email','users.name as owner_name','users.id as owner_id');
+
+        $query = $query->where('job_associate_candidates.candidate_id','=',$candidate_id);
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+        $response = $query->first();
+
+        $candidate = array();
+        $utils = new Utils();
+
+        $candidate['candidate_id'] = $response->id;
+        $candidate['owner_id'] = $response->owner_id;
+        $candidate['owner'] = $response->owner_name;
+        $candidate['owner_email'] = $response->owner_email;
+        $candidate['full_name'] = $response->full_name;
+        $candidate['email'] = $response->email;
+
+        $candidate['posting_title'] = $response->posting_title;
+        $candidate['company_name'] = $response->company_name;
+
+        return $candidate;
+    }   
 }
