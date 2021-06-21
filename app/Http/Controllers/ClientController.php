@@ -1505,6 +1505,15 @@ class ClientController extends Controller
         $input = (object)$input;
 
         $client_basicinfo = ClientBasicinfo::find($id);
+
+        // Check Account Manager is changed or not
+        $old_account_manager = $client_basicinfo->account_manager_id;
+        $new_account_manager = $input->account_manager;
+
+        // Check Second line Account Manager is changed or not
+        $old_secondline_account_manager = $client_basicinfo->second_line_am;
+        $new_secondline_account_manager = $input->second_line_am;
+
         $client_basicinfo->name = trim($input->name);
         $client_basicinfo->display_name = trim($input->display_name);
         $client_basicinfo->mobile = $input->mobile;
@@ -1662,35 +1671,83 @@ class ClientController extends Controller
                 }
             }
 
-            // Email Notifications : On change account manager of client.
+            // If Client Account Manager is changed.
 
-            $module_id = $id;
-            $module = 'Client Account Manager';
-            $link = route('client.show',$id);
-            $subject = "Client Account Manager Changed - " . $input->name . " - " . $input->billing_city;
-            $message = "<tr><td>" . $input->name . " Change Account Manager </td></tr>";
-            $sender_name = $user_id;
+            if($old_account_manager == $new_account_manager) {
 
-            $super_admin_userid = getenv('SUPERADMINUSERID');
-            $superadminemail = User::getUserEmailById($super_admin_userid);
-
-            $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-            $all_client_user_email = User::getUserEmailById($all_client_user_id);
-
-            if ($input->account_manager != '0') {
-
-                $to = $superadminemail;
-                $account_manager_email = User::getUserEmailById($input->account_manager);
-                $cc_users_array = array($all_client_user_email,$account_manager_email);
-                $cc = implode(",",$cc_users_array);
             }
             else {
 
-                $to = $superadminemail;
-                $cc = $all_client_user_email;
+                $module_id = $id;
+                $module = 'Client Account Manager';
+                $link = route('client.show',$id);
+                $subject = "Client Account Manager Changed - " . $input->name . " - " . $input->billing_city;
+                $message = "<tr><td>" . $input->name . " Change Account Manager </td></tr>";
+                $sender_name = $user_id;
+
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $superadminemail = User::getUserEmailById($super_admin_userid);
+
+                $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+                $all_client_user_email = User::getUserEmailById($all_client_user_id);
+
+                if ($input->account_manager != '0') {
+
+                    $to = $superadminemail;
+                    $account_manager_email = User::getUserEmailById($input->account_manager);
+                    $cc_users_array = array($all_client_user_email,$account_manager_email);
+                    $cc = implode(",",$cc_users_array);
+                }
+                else {
+
+                    $to = $superadminemail;
+                    $cc = $all_client_user_email;
+                }
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            // If Client Second line AM Changed
+
+            if($old_secondline_account_manager == $new_secondline_account_manager) {
+
+            }
+            else {
+
+                $module_id = $id;
+                $module = 'Client 2nd Line Account Manager';
+
+                $subject = "Client 2nd Line Account Manager Assigned - " . $input->name .  " - " . $input->contact_point . " - " . $input->billing_city;
+                $message = "<tr><td>" . $input->name . " Client 2nd Line Account Manager </td></tr>";
+                $sender_name = $user_id;
+
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $superadminemail = User::getUserEmailById($super_admin_userid);
+
+                $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+                $all_client_user_email = User::getUserEmailById($all_client_user_id);
+
+                // Get Account Manager Id
+
+                $account_manager_id = $input->account_manager;
+                $account_manager_email = User::getUserEmailById($account_manager_id);
+
+                if ($new_secondline_account_manager != '0') {
+
+                    $to = $superadminemail;
+                    $secondline_account_manager_email = User::getUserEmailById($new_secondline_account_manager);
+                    $cc_users_array = array($account_manager_email,$secondline_account_manager_email,$all_client_user_email);
+                    $cc = implode(",",$cc_users_array);
+                }
+                else {
+
+                    $to = $superadminemail;
+                    $cc_users_array = array($account_manager_email,$all_client_user_email);
+                    $cc = implode(",",$cc_users_array);
+                }
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
 
             // Add Entry in Client Timeline.
             $check_entry_exist = ClientTimeline::checkTimelineEntry($input->account_manager,$id);
