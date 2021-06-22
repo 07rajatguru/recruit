@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td align="center">
-                        <p style="display: block;border-top: solid 5.0px #c024e4!important;margin: 0.0px auto;width: 100.0%;"><br/></p>
+                        <p style="display: block;border-top: solid 5.0px #c024e4!important;margin: 0.0px auto;width:920px;"><br/></p>
                     </td>
                 </tr>
             </table>
@@ -71,7 +71,13 @@
         </td>
     </tr>
     <tr>
-        <p style="text-align: left;">{!! $owner_signature !!}</p>
+        <td width="600">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0;">
+                <tr>
+                    <td style="padding: 20px;">{!! $owner_signature !!}</td>
+                </tr>
+            </table>
+        </td>
     </tr>
     <tr>
         <td width="600">
