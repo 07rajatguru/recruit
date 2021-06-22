@@ -11,7 +11,7 @@
         <tr>
             <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
                 <i><p style="text-align: left;">Greetings from Adler Talent Solutions !</p></i>
-                <p style="text-align: left;"><u>Please update following users salary information:</u></p>
+                <p style="text-align: left;"><u>Please add following users salary information:</u></p>
                 <table width="600" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                     <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 11.0pt;">
                         <td align="center"><b>Sr. No.</b></td>
