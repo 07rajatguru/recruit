@@ -637,7 +637,8 @@ class User extends Authenticatable
         $client_type = array($client);
 
         $superadmin = getenv('SUPERADMINUSERID');
-        $super_array = array($superadmin);
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $query = User::query();
 
@@ -909,5 +910,54 @@ class User extends Authenticatable
             }
         }
         return $userArr;
+    }
+
+    public static function getBefore7daysUserSalaryDetails() {
+
+        $date = date('Y-m-d h:m:s', strtotime('-7 days'));
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
+
+        $query = User::query();
+
+        // Get before 7 days users list
+        $query = $query->where('users.created_at','<=',$date);
+        $query = $query->whereNotIn('users.status',$status_array);
+        $query = $query->whereNotIn('type',$client_type);
+        $query = $query->whereNotIn('id',$super_array);
+        $query = $query->select('users.id','users.first_name','users.last_name','users.email');
+
+        $query = $query->groupBy('users.id');
+        $query = $query->orderBy('users.id','ASC');
+        $response = $query->get();
+
+        $full_name_array = array();
+        $i=0;
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $users_otherinfo = UserOthersInfo::getUserOtherInfo($value->id);
+
+                if(isset($users_otherinfo->fixed_salary) && $users_otherinfo->fixed_salary != '') {
+                }
+                else {
+
+                    $full_name_array[$i]['name'] = $value->first_name." - ".$value->last_name;
+                    $full_name_array[$i]['email'] = $value->email;
+                    $i++;
+                }
+            }
+        }
+        return $full_name_array;
     }
 }
