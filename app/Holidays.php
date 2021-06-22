@@ -29,8 +29,8 @@ class Holidays extends Model
     public static function getHolidaysType(){
 
     	$type = array('' => 'Select Type');
-    	$type['fixed'] = 'Fixed Leave';
-    	$type['optional'] = 'Optional Leave';
+    	$type['Fixed'] = 'Fixed Leave';
+    	$type['Optional'] = 'Optional Leave';
 
     	return $type;
     }
@@ -39,6 +39,7 @@ class Holidays extends Model
 
         $query = Holidays::query();
         $query = $query->select('holidays.*');
+        $query = $query->orderBy('holidays.id','DESC');
         $res = $query->get();
 
         $holidays = array();

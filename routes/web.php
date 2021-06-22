@@ -2584,6 +2584,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:holiday-delete']
     ]);
 
+    Route::get('getUsersByHolidayID', [
+        'as' => 'getusers.byholidayid',
+        'uses' => 'HolidaysController@getUsersByHolidayID',
+    ]);
+
     // Receipt module
 
     //Talent
