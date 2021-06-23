@@ -525,6 +525,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@getUsersByDepartment'
     ]);
 
+    Route::get('/getjobusers/bydepartment', [
+        'as' => 'getjobusers.bydepartment',
+        'uses' => 'UserController@getJobUsersByDepartment'
+    ]);
+
     Route::get('users/myprofile/{id}',[
         'as' => 'users.myprofile',
         'uses' => 'UserController@profileShow',

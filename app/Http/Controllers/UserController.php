@@ -2086,4 +2086,14 @@ class UserController extends Controller
 
         return $users;
     }
+
+    public function getJobUsersByDepartment() {
+
+        $department_id = $_GET['department_id'];
+
+        // get user names
+        $users = User::getJobUsersByDepartmentId($department_id);
+
+        return $users;
+    }
 }

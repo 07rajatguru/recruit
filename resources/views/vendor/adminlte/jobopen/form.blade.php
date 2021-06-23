@@ -868,7 +868,7 @@
 
             $.ajax({
 
-                url:'/getusers/bydepartment',
+                url:'/getjobusers/bydepartment',
                 data:'department_id='+department_id,
                 dataType:'json',
                 success: function(data) {
