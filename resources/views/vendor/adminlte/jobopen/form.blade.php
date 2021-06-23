@@ -638,7 +638,7 @@
 
             var action = $("#action").val();
 
-            if(action == 'edit') {
+            if(action == 'edit' || action == 'clone') {
 
                 loadUsers();
 

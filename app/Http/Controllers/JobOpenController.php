@@ -2403,7 +2403,22 @@ class JobOpenController extends Controller
         $arjun_user_id = getenv('ARJUNUSERID');
         $tanisha_user_id = getenv('TANISHAUSERID');
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working'));
+         // Set Department
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        
+        $selected_departments = explode(",",$job_open->department_ids);
+        $job_id = $id;
+
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
     }
 
     public function clonestore(Request $request) {
@@ -2527,6 +2542,8 @@ class JobOpenController extends Controller
             $remote_working = '0';
         }
 
+        $department_ids = $request->input('department_ids');
+
         $job_open = new JobOpen();
         $job_open->job_id = $job_unique_id;
         $job_open->job_show = $job_show;
@@ -2557,6 +2574,7 @@ class JobOpenController extends Controller
         $job_open->adler_career_checkbox = $adler_career_checkbox;
         $job_open->adler_job_disclosed_checkbox = $adler_job_disclosed_checkbox;
         $job_open->remote_working = $remote_working;
+        $job_open->department_ids = implode(",", $department_ids);
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
