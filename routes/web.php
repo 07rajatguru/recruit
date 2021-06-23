@@ -945,6 +945,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'client.secondlineam',
         'uses' => 'ClientController@postSecondlineClientAccountManager'
     ]);
+
+    Route::post('client/status', [
+        'as' => 'client.status',
+        'uses' => 'ClientController@postClientStatus'
+    ]);
      
     Route::get('client', [
         'as' => 'client.index',

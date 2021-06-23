@@ -124,7 +124,12 @@ class ClientController extends Controller
         $superadmin = getenv('SUPERADMINUSERID');
         $manager = getenv('MANAGERUSERID');
 
-        return view('adminlte::client.index',compact('count','active','passive','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager'));
+        // Get Client Status
+
+        $status = ClientBasicinfo::getAllStatus();
+        $status_id = 1;
+
+        return view('adminlte::client.index',compact('count','active','passive','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id'));
     }
 
     public static function getOrderColumnName($order) {
@@ -395,7 +400,12 @@ class ClientController extends Controller
 
         $all_account_manager[0] = 'Yet to Assign';
 
-        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager'));
+        // Get Client Status
+
+        $status = ClientBasicinfo::getAllStatus();
+        $status_id = 1;
+
+        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id'));
     }
 
     public function getAllClientsDetailsByType() {
@@ -2827,5 +2837,31 @@ class ClientController extends Controller
         $client_info->save();
 
         return json_encode($response);exit;
+    }
+
+    public function postClientStatus() {
+
+        $status_id = $_POST['status_id'];
+
+        $client_ids = $_POST['status_client_ids'];
+        $client_ids_array = explode(",",$client_ids);
+
+        $source = $_POST['status_source'];
+
+        foreach($client_ids_array as $key => $value) {
+
+            // Update New Status
+            $client = ClientBasicinfo::find($value);
+            $client->status = $status_id;
+            $client->save();
+        }
+
+        if(isset($source) && $source != '') {
+
+            return redirect('/client-list/'.$source)->with('success', 'Status Changed Successfully.');
+        }
+        else {
+            return redirect()->route('client.index')->with('success', 'Status Changed Successfully.');
+        }
     }
 }

@@ -22,6 +22,8 @@
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
                 @endpermission
 
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changestatus" onclick="change_status()">Change Status</button>
+
                 @permission(('display-client'))
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
                     </button>
@@ -282,6 +284,39 @@
         </div>
     </div>
     
+    <!-- Client Status Modal Popup -->
+
+    <div id="changestatus" class="modal text-left fade status_modal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Change Client Status</h4>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'client.status']) !!}
+                    <div class="modal-body">
+                        <div class="status_cls">
+                            <div class="form-group">
+                                <strong>Select Client Status : <span class = "required_fields">*</span></strong><br/><br/>
+                                {!! Form::select('status_id',$status,$status_id, array('id'=>'status_id','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        <div class="status_error"></div>
+                    </div>
+
+                    <input type="hidden" name="status_client_ids" id="status_client_ids" value="">
+
+                    <input type="hidden" name="status_source" id="status_source" value="">
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="status_submit">Submit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
     <input type="hidden" name="user_id" id="user_id" value="{{ $user_id }}">
@@ -660,6 +695,54 @@
                     $(".second_line_am_error").empty();
                     $('#second_line_am_submit').hide();
                     $(".second_line_am_error").append(msg.err);
+                }
+            }
+        });
+    }
+
+    function change_status() {
+
+        var token = $('input[name="csrf_token"]').val();
+        var app_url = "{!! env('APP_URL'); !!}";
+        var status_client_ids = new Array();
+
+        var table = $("#client_table").dataTable();
+
+        table.$("input:checkbox[name=client]:checked").each(function(){
+            status_client_ids.push($(this).val());
+        });
+
+        $("#status_client_ids").val(status_client_ids);
+
+        $.ajax({
+
+            type : 'POST',
+            url : app_url+'/client/checkClientId',
+            data : {client_ids : status_client_ids, '_token':token},
+            dataType : 'json',
+            success: function(msg) {
+
+                if (msg.success == 'Success') {
+
+                    $(".status_modal").show();
+                    $(".status_cls").show();
+                    $(".status_error").empty();
+                    $('#status_submit').show();
+                }
+                else if (msg.success == 'Leaders Clients') {
+
+                    $(".status_modal").show();
+                    $(".status_cls").show();
+                    $(".status_error").empty();
+                    $('#status_submit').show();
+                }
+                else {
+
+                    $(".status_modal").show();
+                    $(".status_cls").hide();
+                    $(".status_error").empty();
+                    $('#status_submit').hide();
+                    $(".status_error").append(msg.err);
                 }
             }
         });
