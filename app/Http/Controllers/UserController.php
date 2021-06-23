@@ -2094,6 +2094,19 @@ class UserController extends Controller
         // get user names
         $users = User::getJobUsersByDepartmentId($department_id);
 
-        return $users;
+        $user_array = array();
+        $i=0;
+
+        if(isset($users) && sizeof($users) > 0) {
+
+            foreach ($users as $key => $value) {
+                
+                $user_array[$i]['id'] = $value['id'];
+                $user_array[$i]['name'] = $value['name'];
+                $user_array[$i]['type'] = $value['type'];
+                $i++;
+            }
+        }
+        return $user_array;
     }
 }

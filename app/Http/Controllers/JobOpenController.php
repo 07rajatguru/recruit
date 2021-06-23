@@ -4703,7 +4703,7 @@ class JobOpenController extends Controller
         $department_ids = $_GET['department_selected_items'];
         $job_id = $_GET['job_id'];
 
-        $users = User::getUsersByDepartmentIDArray($department_ids);
+        $users = User::getJobUsersByDepartmentIDArray($department_ids);
 
         $job_user_res = \DB::table('job_visible_users')
         ->join('users','users.id','=','job_visible_users.user_id')
