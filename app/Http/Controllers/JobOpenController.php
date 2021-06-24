@@ -3169,11 +3169,19 @@ class JobOpenController extends Controller
             ->where('job_id',$job_id)->first();
 
             // Set Interview Round
+            if($response->shortlisted == '0') {
 
-            if($response->shortlisted == '0' || $response->shortlisted == '1') {
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '1', status_id = '1', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
+                $data['round'] = '1';
+            }
+            else if($response->shortlisted == '1') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '2', status_id = '1', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
                 $data['round'] = '1';
             }
             else if($response->shortlisted == '2') {
+
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', status_id = '1', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
                 $data['round'] = '2';
             }
             else if($response->shortlisted == '3') {

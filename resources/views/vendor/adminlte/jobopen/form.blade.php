@@ -595,7 +595,7 @@
 @section('customscripts')
     <script type="text/javascript">
 
-        var action={!! json_encode($action) !!};
+        var action = {!! json_encode($action) !!};
         $(document).ready(function() {
 
             $('#jobsForm').on('keyup keypress', function(e) {
@@ -612,7 +612,7 @@
 
                 var isChecked = $("#departments_all").is(":checked");
                 var id_string = $("#id_string").val();
-                var id_arr = id_string.split(",");;
+                var id_arr = id_string.split(",");
 
                 if(isChecked == true) {
                     $('.department_ids').prop('checked', this.checked);
@@ -721,9 +721,7 @@
             });
 
             getClientId();
-        });
 
-        $(function () {
 
             $("#target_date").datepicker({
                 format: "dd-mm-yyyy",
