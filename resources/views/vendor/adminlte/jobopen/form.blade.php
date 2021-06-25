@@ -232,10 +232,10 @@
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job : <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
-                        <input type="checkbox" id="departments_all" /><strong>Select All</strong><br/>
+                        <input type="checkbox" id="departments_all" checked="" /><strong>Select All</strong><br/>
 
                         @foreach($departments as $k=>$v)&nbsp;&nbsp; 
-                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}
+                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','checked','onclick' => 'displayUsers("'.$k.'")')) !!}
                             {!! Form::label ($v) !!}
                         @endforeach
 
@@ -720,8 +720,14 @@
                 }
             });
 
-            getClientId();
+            // Set users
 
+            var id_string = $("#id_string").val();
+            var id_arr = id_string.split(",");
+
+            for (var i = 1; i < id_arr.length; i++) {
+                displayUsers(id_arr[i]);
+            }
 
             $("#target_date").datepicker({
                 format: "dd-mm-yyyy",
@@ -817,7 +823,6 @@
 
             var client_id = $("#client_id").val();
             var app_url = "{!! env('APP_URL') !!}";
-            var action = $("#action").val();
 
             if(client_id > 0) {
 
@@ -827,42 +832,30 @@
                     data:'client_id='+client_id,
                     dataType:'json',
                     success: function(response){
-                       if(response.answer == 'True') {
+                        if(response.answer == 'True') {
+
                             document.getElementById("hiring_manager_id").value = response.am_id;
-                       }
-                       else {
-                            document.getElementById("hiring_manager_id").value = response.user_id;
-                       }
-
-                       $("#hiring_manager_id").select2();
-
-                       if(action == 'add') {
-
-                           jQuery("input[name='user_ids[]']").each(function(i) {
-
-                                if($(this).val() == response.am_id) {
-
-                                    $("input[value='" + response.am_id + "']").prop('checked', true);
-                                }
-                                else {
-
-                                    var a = ($(this).val());
-                                    $("input[value='" + a + "']").prop('checked', false);
-                                }
-
-                                var super_admin_user_id = $("#super_admin_user_id").val();
-                                $("input[value='" + super_admin_user_id + "']").prop('checked', true);
-
-                                var loggedin_user_id = $("#loggedin_user_id").val();
-                                $("input[value='" + loggedin_user_id + "']").prop('checked', true);
-                            });
                         }
+                        else {
+
+                            document.getElementById("hiring_manager_id").value = response.user_id;
+                        }
+
+                        $("#hiring_manager_id").select2();
                     }
                 });
+
+                var super_admin_user_id = $("#super_admin_user_id").val();
+                $("input[value='" + super_admin_user_id + "']").prop('checked', true);
+
+                var loggedin_user_id = $("#loggedin_user_id").val();
+                $("input[value='" + loggedin_user_id + "']").prop('checked', true);
             }
         }
 
         function displayUsers(department_id) {
+
+            var action = $("#action").val();
 
             $.ajax({
 
@@ -898,7 +891,7 @@
                            
                             for (var i = 0; i < data.length; i++) {
 
-                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
                                 html += '&nbsp;&nbsp;';
                                 html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
                             }
@@ -907,11 +900,6 @@
 
                             $(".div_"+department_id).append(html);
                             $(".div_"+department_id).show();
-
-                            var isChecked = $("#departments_all").is(":checked");
-                            if(isChecked == true) {
-                                $('.department_class').prop('checked', true);
-                            }
                         }
                     }
                     else {
@@ -919,6 +907,8 @@
                         $(".div_"+department_id).html('');
                         $(".div_"+department_id).hide();
                     }
+
+                    getClientId();
                 }
             });
         }
