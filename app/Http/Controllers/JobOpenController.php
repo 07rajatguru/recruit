@@ -4353,9 +4353,9 @@ class JobOpenController extends Controller
             else if ($order == 6) {
                 $order_column_name = "count";
             }
-            else if ($order == 7) {
+           /* else if ($order == 7) {
                 $order_column_name = "applicant_count";
-            }
+            }*/
             else if ($order == 8) {
                 $order_column_name = "job_openings.city";
             }
