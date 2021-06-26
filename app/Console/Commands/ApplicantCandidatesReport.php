@@ -59,24 +59,16 @@ class ApplicantCandidatesReport extends Command
                     foreach ($jobs as $k1 => $v1) {
 
                         if(isset($v1['applicant_candidates']) && sizeof($v1['applicant_candidates']) > 0) {
-                        
+
+                            $module = "Applicant Candidates Report";
+                            $sender_name = $key;
                             $to = User::getUserEmailById($v1['hiring_manager_id']);
-                            $from_name = getenv('FROM_NAME');
-                            $from_address = getenv('FROM_ADDRESS');
-                            $app_url = getenv('APP_URL');
+                            $subject = $v1['posting_title'] . " - " . $v1['city'] . " - Applicant Candidates Report";
+                            $message = "";
+                            $module_id = 0;
+                            $cc = "";
 
-                            $input['to'] = $to;
-                            $input['from_name'] = $from_name;
-                            $input['from_address'] = $from_address;
-                            $input['app_url'] = $app_url;
-                            $input['applicant_candidates'] = $v1['applicant_candidates'];
-                            $input['subject'] = $v1['posting_title'] . " - " . $v1['city'] . " - Applicant Candidates Report";
-
-                            \Mail::send('adminlte::emails.applicantcandidatesreport', $input, function ($message) use($input) {
-
-                                $message->from($input['from_address'], $input['from_name']);
-                                $message->to($input['to'])->subject($input['subject']);
-                            });
+                            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                         }
                     }
                 }

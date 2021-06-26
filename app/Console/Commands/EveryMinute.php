@@ -1643,6 +1643,36 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
+
+            else if ($value['module'] == 'Applicant Candidates Report') {
+
+                $to_array = explode(",",$input['to']);
+
+                $from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
+                $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
+
+                $jobs = JobOpen::getJobsByMB($value['sender_name'],$from_date,$to_date);
+
+                if(isset($jobs) && sizeof($jobs) > 0) {
+
+                    foreach ($jobs as $k1 => $v1) {
+
+                        if(isset($v1['applicant_candidates']) && sizeof($v1['applicant_candidates']) > 0) {
+
+                            $input['applicant_candidates'] = $v1['applicant_candidates'];
+                            $input['to_array'] = $to_array;
+
+                            \Mail::send('adminlte::emails.applicantcandidatesreport', $input, function ($message) use($input) {
+
+                                $message->from($input['from_address'], $input['from_name']);
+                                $message->to($input['to_array'])->subject($input['subject']);
+                            });
+
+                            \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                        }
+                    }
+                }
+            }
         }
     }
 }
