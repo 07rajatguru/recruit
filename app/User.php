@@ -62,7 +62,8 @@ class User extends Authenticatable
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
         
         $user_query = User::query();
 
