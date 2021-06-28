@@ -965,7 +965,7 @@ class JobOpenController extends Controller
             $client_res = ClientBasicinfo::getLoggedInUserClients($user_id);
         }
 
-        if (sizeof($client_res) > 0) {
+        if (isset($client_res) && sizeof($client_res) > 0) {
             foreach ($client_res as $r) {
                 $client[$r->id] = $r->name." - ".$r->coordinator_name." - ".$r->billing_city;
             }

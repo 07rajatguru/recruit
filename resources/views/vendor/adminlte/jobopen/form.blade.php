@@ -722,11 +722,13 @@
 
             // Set users
 
-            var id_string = $("#id_string").val();
-            var id_arr = id_string.split(",");
+            if(action == 'add') {
+                var id_string = $("#id_string").val();
+                var id_arr = id_string.split(",");
 
-            for (var i = 1; i < id_arr.length; i++) {
-                displayUsers(id_arr[i]);
+                for (var i = 1; i < id_arr.length; i++) {
+                    displayUsers(id_arr[i]);
+                }
             }
 
             $("#target_date").datepicker({
