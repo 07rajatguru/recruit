@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use App\Events\NotificationMail;
 use App\ClientBasicinfo;
+use Excel;
 
 class ContactsphereController extends Controller
 {
@@ -913,5 +914,109 @@ class ContactsphereController extends Controller
         else if($Contact_Type == 'Forbid') {
             return redirect()->route('contactsphere.forbid')->with('success','Contact Deleted Successfully.');
         }
+    }
+
+    public function importExport() {
+        return view('adminlte::contactsphere.import');
+    }
+
+    public function importExcel(Request $request) {
+
+        if($request->hasFile('import_file')) {
+
+            $path = $request->file('import_file')->getRealPath();
+            $data = Excel::load($path, function ($reader) {})->get();
+            $messages = array();
+
+            echo "HERE";exit;
+
+            if(!empty($data) && $data->count()) {
+
+                foreach($data->toArray() as $key => $value) {
+
+                    if(!empty($value)) {
+
+                        $superadminuserid = getenv('SUPERADMINUSERID');
+
+                        foreach($value as $v) {
+
+                            $sr_no = $v['sr_no'];
+                            $name = $v['name'];
+                            $designation = $v['designation'];
+                            $company = $v['company'];
+                            $contact_number = $v['contact_number'];
+                            $country = $v['country'];
+                            $state = $v['state'];
+                            $city = $v['city'];
+                            $official_email_id = $v['official_email_id'];
+                            $personal_id = $v['personal_id'];
+                            $source = $v['source'];
+                            $self_remarks = $v['self_remarks'];
+                            $linkedin_profile_link = $v['linkedin_profile_link'];
+
+                            $contactsphere = new Contactsphere();
+                            $contactsphere->referred_by = $superadminuserid;
+                            $contactsphere->added_by = $superadminuserid;
+                            $contactsphere->convert_lead = 0;
+                            $contactsphere->hold = 0;
+                            $contactsphere->forbid = 0;
+                            $contactsphere->name = $name;
+                            $contactsphere->designation = $designation;
+                            $contactsphere->company = $company;
+                            $contactsphere->contact_number = $contact_number;
+                            $contactsphere->country = $country;
+                            $contactsphere->state = $state;
+                            $contactsphere->city = $city;
+                            $contactsphere->official_email_id = $official_email_id;
+                            $contactsphere->personal_id = $personal_id;
+                            $contactsphere->source = $source;
+                            $contactsphere->self_remarks = $self_remarks;
+                            $contactsphere->linkedin_profile_link = $linkedin_profile_link;
+
+                            if($contactsphere->save()) {
+                                $messages[] = "Record $sr_no inserted successfully";
+                            }
+                            else {
+                                $messages[] = "Error while inserting record $sr_no";  
+                            }
+                        }
+                    }
+                    else {
+                        $messages[] = "No Data in file";
+                    }
+                }
+            }
+            return view('adminlte::contactsphere.import',compact('messages'));
+        }
+        else {
+            return redirect()->route('contactsphere.importExport')->with('error','Please Select Excel file.');
+        }
+    }
+
+    public function exportContacts() {
+
+        $user = \Auth::user();
+        $all_perm = $user->can('display-contactsphere');
+        $userwise_perm = $user->can('display-user-wise-contactsphere');
+
+        Excel::create('Personwise Report',function($excel) {
+
+            $excel->sheet('sheet 1',function($sheet) {
+
+                if($all_perm) {
+
+                    $contacts_array = Contactsphere::getAllContacts(1,$user->id);
+                }
+                else if($userwise_perm) {
+
+                    $contacts_array = Contactsphere::getAllContacts(0,$user->id);
+                }
+
+                if(isset($contacts_array) && sizeof($contacts_array) > 0) {
+
+                    $sheet->loadview('adminlte::contactsphere.contactsphere-export')->with('personwise_data',$contacts_array);
+                }
+            });
+        })->export('xls');
     }
 }

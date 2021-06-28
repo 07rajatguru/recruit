@@ -18,6 +18,8 @@
             <div class="pull-right">
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal" onclick="contacts_emails_notification()">Send Mail</button>
                 <a class="btn btn-success" href="{{ route('contactsphere.add') }}">Add New Contact</a>
+                <a class="btn btn-primary" href="{{ route('contactsphere.importExport') }}">Import Contacts</a>
+                <a class="btn btn-success" href="javascript:void(0);" onClick="export_data()">Export Contacts</a>
             </div>
         </div>
     </div>
@@ -248,6 +250,18 @@
             else {
                 $("#email_body_error").hide();
             }
+        }
+
+        function export_data() {
+
+            var url = '/contactsphere/export';
+
+            var form = $('<form action="'+url+ '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
         }
     </script>
 @endsection

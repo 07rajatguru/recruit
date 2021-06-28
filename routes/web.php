@@ -387,6 +387,26 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:contactsphere-delete'],
     ]);
 
+    // Excel
+
+    Route::get('contactsphere/importExport',[ 
+        'as' => 'contactsphere.importExport',
+        'uses' => 'ContactsphereController@importExport',
+        'middleware' => ['permission:contactsphere-add']
+    ]);
+
+    Route::post('contactsphere/importExcel',[
+        'as' => 'contactsphere.importExcel',
+        'uses' => 'ContactsphereController@importExcel',
+        'middleware' => ['permission:contactsphere-add']
+    ]);
+
+    Route::post('contactsphere/export',[
+        'as' => 'contactsphere.export',
+        'uses' => 'ContactsphereController@exportContacts',
+        'middleware' => ['permission:contactsphere-add']
+    ]);
+
     Route::get('contactsphere/{id}/clone', [
         'as' => 'contactsphere.clone',
         'uses' => 'ContactsphereController@contactsphereClone',
