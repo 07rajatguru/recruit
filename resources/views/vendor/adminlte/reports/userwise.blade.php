@@ -190,10 +190,10 @@
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="user" value="'+user+'" />' +
-                '<input type="text" name="select" value="'+select+'" />'+
-                '<input type="text" name="from_date" value="'+from_date+'" />' +
-                '<input type="text" name="to_date" value="'+to_date+'" />' +
+                '<input type="hidden" name="user" value="'+user+'" />' +
+                '<input type="hidden" name="select" value="'+select+'" />'+
+                '<input type="hidden" name="from_date" value="'+from_date+'" />' +
+                '<input type="hidden" name="to_date" value="'+to_date+'" />' +
                 '</form>');
 
             $('body').append(form);
@@ -203,10 +203,10 @@
             if (select == 1){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="user" value="'+user+'" />' +
-                '<input type="text" name="select" value="'+select+'" />'+
-                '<input type="text" name="month" value="'+month+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="user" value="'+user+'" />' +
+                '<input type="hidden" name="select" value="'+select+'" />'+
+                '<input type="hidden" name="month" value="'+month+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);
@@ -216,10 +216,10 @@
             else if (select == 2){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="user" value="'+user+'" />' +
-                '<input type="text" name="select" value="'+select+'" />'+
-                '<input type="text" name="quater" value="'+quater+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="user" value="'+user+'" />' +
+                '<input type="hidden" name="select" value="'+select+'" />'+
+                '<input type="hidden" name="quater" value="'+quater+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);
@@ -243,10 +243,10 @@
             if (select == 0){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="user" value="'+user+'" />' +
-                '<input type="text" name="select" value="'+select+'" />'+
-                '<input type="text" name="from_date" value="'+from_date+'" />' +
-                '<input type="text" name="to_date" value="'+to_date+'" />' +
+                '<input type="hidden" name="user" value="'+user+'" />' +
+                '<input type="hidden" name="select" value="'+select+'" />'+
+                '<input type="hidden" name="from_date" value="'+from_date+'" />' +
+                '<input type="hidden" name="to_date" value="'+to_date+'" />' +
                 '</form>');
 
             $('body').append(form);
@@ -256,10 +256,10 @@
             if (select == 1){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="user" value="'+user+'" />' +
-                '<input type="text" name="select" value="'+select+'" />'+
-                '<input type="text" name="month" value="'+month+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="user" value="'+user+'" />' +
+                '<input type="hidden" name="select" value="'+select+'" />'+
+                '<input type="hidden" name="month" value="'+month+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);
@@ -269,10 +269,10 @@
             else if (select == 2){
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="user" value="'+user+'" />' +
-                '<input type="text" name="select" value="'+select+'" />'+
-                '<input type="text" name="quater" value="'+quater+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="user" value="'+user+'" />' +
+                '<input type="hidden" name="select" value="'+select+'" />'+
+                '<input type="hidden" name="quater" value="'+quater+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);

@@ -270,9 +270,9 @@
 
                 var form = $('<form action="' + url + '" method="post">' +
                     '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                    '<input type="text" name="users_id" value="'+users_id+'" />' +
-                    '<input type="text" name="from_date" value="'+from_date+'" />' +
-                    '<input type="text" name="to_date" value="'+to_date+'" />' +
+                    '<input type="hidden" name="users_id" value="'+users_id+'" />' +
+                    '<input type="hidden" name="from_date" value="'+from_date+'" />' +
+                    '<input type="hidden" name="to_date" value="'+to_date+'" />' +
                     '</form>');
 
                 $('body').append(form);

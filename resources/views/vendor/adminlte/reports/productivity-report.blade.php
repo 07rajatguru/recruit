@@ -863,9 +863,9 @@
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="users_id" value="'+users_id+'" />' +
-                '<input type="text" name="month" value="'+month+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="users_id" value="'+users_id+'" />' +
+                '<input type="hidden" name="month" value="'+month+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);

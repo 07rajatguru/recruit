@@ -231,8 +231,8 @@
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="users_id" value="'+users_id+'" />' +
-                '<input type="text" name="date" value="'+date+'" />' +
+                '<input type="hidden" name="users_id" value="'+users_id+'" />' +
+                '<input type="hidden" name="date" value="'+date+'" />' +
                 '</form>');
 
             $('body').append(form);
