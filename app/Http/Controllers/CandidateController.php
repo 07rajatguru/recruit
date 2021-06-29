@@ -199,7 +199,7 @@ class CandidateController extends Controller
         $job_title = $_GET['job_title'];
 
         $order_column_name = self::getCandidateOrderColumnName($order);
-        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter,$cname,$cemail,$cmno,$job_title);
+        $response = CandidateBasicInfo::getAllCandidatesDetails($limit,$offset,$search,$order_column_name,$type,$initial_letter,$cname,$cemail,$cmno,$job_title,NULL,NULL);
 
         if(isset($initial_letter) && $initial_letter != '') {
 
@@ -716,7 +716,7 @@ class CandidateController extends Controller
             $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($candidate_id,$user_id,$job_id);
         }
 
-        // Add Entry in email notifications for autoscript email
+/*        // Add Entry in email notifications for autoscript email
 
         $module = "New Candidate AutoScript Mail";
         $sender_name = $user_id;
@@ -727,7 +727,7 @@ class CandidateController extends Controller
 
         $cc = '';
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
 
         return redirect()->route('candidate.index')->with('success','Candidate Created Successfully');
     }

@@ -63,16 +63,20 @@ class CandidateBasicInfo extends Model
         return $type;
     }
 
-    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL,$cname,$cemail,$cmno,$job_title) {
+    public static function getAllCandidatesDetails($limit=0,$offset=0,$search=NULL,$order=0,$type='desc',$initial_letter=NULL,$cname,$cemail,$cmno,$job_title,$from_date=NULL,$to_date=NULL) {
 
         $query = CandidateBasicInfo::query();
         $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email', 'users.name as owner', 'candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','users.name as owner','users.id as owner_id','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
 
-        if (isset($order) && $order >= 0) {
+        if (isset($order) && $order > 0) {
            $query = $query->orderBy($order,$type);
         }
+        else {
+            $query = $query->orderBy('candidate_basicinfo.id','DESC');
+        }
+
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
         }
@@ -102,6 +106,11 @@ class CandidateBasicInfo extends Model
 
                 $query = $query->where('job_openings.posting_title','like',"%$job_title%");
             }
+        }
+
+        if(isset($from_date) && $from_date != NULL) {
+            $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+            $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
         }
 
         $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
@@ -150,6 +159,7 @@ class CandidateBasicInfo extends Model
 
             $candidate[$i]['id'] = $value->id;
             $candidate[$i]['full_name'] = $value->fname;
+            $candidate[$i]['owner_id'] = $value->owner_id;
             $candidate[$i]['owner'] = $value->owner;
             $candidate[$i]['email'] = $value->email;
             $candidate[$i]['mobile'] = $value->mobile;
