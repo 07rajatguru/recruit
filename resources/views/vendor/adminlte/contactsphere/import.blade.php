@@ -20,6 +20,14 @@
         </div>
     @endif
 
+    @if(isset($messages) && sizeof($messages)>0)
+        <div class="alert alert-success">
+            @foreach($messages as $key=>$value)
+                    <p>{{ $value }}</p>
+            @endforeach
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">

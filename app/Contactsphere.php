@@ -63,6 +63,10 @@ class Contactsphere extends Model
         if (isset($order) && $order != '') {
             $query = $query->orderBy($order,$type);
         }
+        else {
+            $query = $query->orderBy('contactsphere.id','desc');
+        }
+        
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
         }

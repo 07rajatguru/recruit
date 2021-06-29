@@ -928,61 +928,57 @@ class ContactsphereController extends Controller
             $data = Excel::load($path, function ($reader) {})->get();
             $messages = array();
 
-            echo "HERE";exit;
-
             if(!empty($data) && $data->count()) {
 
                 foreach($data->toArray() as $key => $value) {
 
                     if(!empty($value)) {
 
-                        $superadminuserid = getenv('SUPERADMINUSERID');
+                        $user = \Auth::user();
+                        $user_id = $user->id;
 
-                        foreach($value as $v) {
+                        $sr_no = $value['sr_no'];
+                        $name = $value['name'];
+                        $designation = $value['designation'];
+                        $company = $value['company'];
+                        $contact_number = $value['contact_number'];
+                        $country = $value['country'];
+                        $state = $value['state'];
+                        $city = $value['city'];
+                        $official_email_id = $value['official_email_id'];
+                        $personal_id = $value['personal_id'];
+                        $source = $value['source'];
+                        $self_remarks = $value['self_remarks'];
+                        $linkedin_profile_link = $value['linkedin_profile_link'];
 
-                            $sr_no = $v['sr_no'];
-                            $name = $v['name'];
-                            $designation = $v['designation'];
-                            $company = $v['company'];
-                            $contact_number = $v['contact_number'];
-                            $country = $v['country'];
-                            $state = $v['state'];
-                            $city = $v['city'];
-                            $official_email_id = $v['official_email_id'];
-                            $personal_id = $v['personal_id'];
-                            $source = $v['source'];
-                            $self_remarks = $v['self_remarks'];
-                            $linkedin_profile_link = $v['linkedin_profile_link'];
+                        $contactsphere = new Contactsphere();
+                        $contactsphere->referred_by = $user_id;
+                        $contactsphere->added_by = $user_id;
+                        $contactsphere->convert_lead = 0;
+                        $contactsphere->hold = 0;
+                        $contactsphere->forbid = 0;
+                        $contactsphere->name = $name;
+                        $contactsphere->designation = $designation;
+                        $contactsphere->company = $company;
+                        $contactsphere->contact_number = $contact_number;
+                        $contactsphere->country = $country;
+                        $contactsphere->state = $state;
+                        $contactsphere->city = $city;
+                        $contactsphere->official_email_id = $official_email_id;
+                        $contactsphere->personal_id = $personal_id;
+                        $contactsphere->source = $source;
+                        $contactsphere->self_remarks = $self_remarks;
+                        $contactsphere->linkedin_profile_link = $linkedin_profile_link;
 
-                            $contactsphere = new Contactsphere();
-                            $contactsphere->referred_by = $superadminuserid;
-                            $contactsphere->added_by = $superadminuserid;
-                            $contactsphere->convert_lead = 0;
-                            $contactsphere->hold = 0;
-                            $contactsphere->forbid = 0;
-                            $contactsphere->name = $name;
-                            $contactsphere->designation = $designation;
-                            $contactsphere->company = $company;
-                            $contactsphere->contact_number = $contact_number;
-                            $contactsphere->country = $country;
-                            $contactsphere->state = $state;
-                            $contactsphere->city = $city;
-                            $contactsphere->official_email_id = $official_email_id;
-                            $contactsphere->personal_id = $personal_id;
-                            $contactsphere->source = $source;
-                            $contactsphere->self_remarks = $self_remarks;
-                            $contactsphere->linkedin_profile_link = $linkedin_profile_link;
-
-                            if($contactsphere->save()) {
-                                $messages[] = "Record $sr_no inserted successfully";
-                            }
-                            else {
-                                $messages[] = "Error while inserting record $sr_no";  
-                            }
+                        if($contactsphere->save()) {
+                            $messages[] = "Record $sr_no inserted successfully.";
+                        }
+                        else {
+                            $messages[] = "Error while inserting record $sr_no.";  
                         }
                     }
                     else {
-                        $messages[] = "No Data in file";
+                        $messages[] = "No Data in file.";
                     }
                 }
             }
@@ -999,22 +995,22 @@ class ContactsphereController extends Controller
         $all_perm = $user->can('display-contactsphere');
         $userwise_perm = $user->can('display-user-wise-contactsphere');
 
-        Excel::create('Personwise Report',function($excel) {
+        if($all_perm) {
 
-            $excel->sheet('sheet 1',function($sheet) {
+            $contacts_array = Contactsphere::getAllContacts(1,$user->id,0,0,NULL,NULL,'');
+        }
+        else if($userwise_perm) {
 
-                if($all_perm) {
+            $contacts_array = Contactsphere::getAllContacts(0,$user->id,0,0,NULL,NULL,'');
+        }
 
-                    $contacts_array = Contactsphere::getAllContacts(1,$user->id);
-                }
-                else if($userwise_perm) {
+        Excel::create('Contacts',function($excel) use ($contacts_array) {
 
-                    $contacts_array = Contactsphere::getAllContacts(0,$user->id);
-                }
+            $excel->sheet('sheet 1',function($sheet) use ($contacts_array) {
 
                 if(isset($contacts_array) && sizeof($contacts_array) > 0) {
 
-                    $sheet->loadview('adminlte::contactsphere.contactsphere-export')->with('personwise_data',$contacts_array);
+                    $sheet->loadview('adminlte::contactsphere.contactsphere-export')->with('contacts_array',$contacts_array);
                 }
             });
         })->export('xls');
