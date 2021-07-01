@@ -208,13 +208,13 @@
                             <div class="report_class" style="display:none;">
                                 <div class="form-group">
                                     <strong> Report Status : </strong> &nbsp;&nbsp;
-                                    {!! Form::checkbox('cv_report','Yes') !!}
+                                    {!! Form::checkbox('cv_report','Yes', $cv_report, array('id' => 'cv_report')) !!}
                                     {!! Form::label('CVs Associated') !!} &nbsp;&nbsp;
                                    
-                                    {!! Form::checkbox('interview_report','Yes') !!}
+                                    {!! Form::checkbox('interview_report','Yes', $interview_report, array('id' => 'interview_report')) !!}
                                     {!! Form::label('Interviews Scheduled') !!}&nbsp;&nbsp;
                                    
-                                    {!! Form::checkbox('lead_report','Yes') !!}
+                                    {!! Form::checkbox('lead_report','Yes', $lead_report, array('id' => 'lead_report')) !!}
                                     {!! Form::label('Leads Added') !!}
                                 </div>
                             </div>

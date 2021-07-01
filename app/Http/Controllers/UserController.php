@@ -159,7 +159,7 @@ class UserController extends Controller
             $user->cv_report = $cv_report;
         }
         else {
-            $user->cv_report = NULL;
+            $user->cv_report = 'No';
         }
 
         $interview_report = $request->input('interview_report');
@@ -168,7 +168,7 @@ class UserController extends Controller
             $user->interview_report = $interview_report;
         }
         else {
-            $user->interview_report = NULL;
+            $user->interview_report = 'No';
         }
 
         $lead_report = $request->input('lead_report');
@@ -177,7 +177,7 @@ class UserController extends Controller
             $user->lead_report = $lead_report;
         }
         else {
-            $user->lead_report = NULL;
+            $user->lead_report = 'No';
         }
 
         // End Report Status
@@ -407,7 +407,28 @@ class UserController extends Controller
         $department_id = $user->type;
         $hr_adv_recruitemnt = $user->hr_adv_recruitemnt;
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt'));
+        if($user->cv_report == 'Yes') {
+            $cv_report = '1';
+        }
+        else {
+            $cv_report = '0';
+        }
+
+        if($user->interview_report == 'Yes') {
+            $interview_report = '1';
+        }
+        else {
+            $interview_report = '0';
+        }
+
+        if($user->lead_report == 'Yes') {
+            $lead_report = '1';
+        }
+        else {
+            $lead_report = '0';
+        }
+
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report'));
     }
 
     /**
@@ -442,104 +463,317 @@ class UserController extends Controller
             $input = array_except($input,array('reports_to'));
         }
 
-        if(!empty($input['floor_incharge'])){
-            $input['floor_incharge'] = $input['floor_incharge'];
-        }else{
-            $input = array_except($input,array('floor_incharge'));
-        }
+        // Get New Value
 
-        $user = User::find($id);
-        $user->update($input);
-        DB::table('role_user')->where('user_id',$id)->delete();
+        $first_name = $request->input('first_name');
+        $last_name = $request->input('last_name');
+        $name = $request->input('name');
 
-        // Attach Role of user
-        /*foreach ($request->input('roles') as $key => $value) {
-            $user->attachRole($value);
-        }*/
+        $email = $request->input('email');
+        $semail = $request->input('semail');
 
+        $company_id = $request->input('company_id');
+        $department_id = $request->input('type');
+        $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
         $role = $request->input('roles');
-        $user->attachRole($role);
-
         $reports_to = $request->input('reports_to');
-        $floor_incharge = $request->input('floor_incharge');
+        
         $check_report = $request->input('daily_report');
+        $cv_report = $request->input('cv_report');
+        $interview_report = $request->input('interview_report');
+        $lead_report = $request->input('lead_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
 
-        $type = $request->input('type');
-        $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
-
-        $user->secondary_email = $request->input('semail');
-        $user->daily_report = $check_report;
-        $user->reports_to = $reports_to; 
-        $user->floor_incharge = $floor_incharge;
-        $user->status = $status;
-        $user->account_manager = $account_manager;
-        $user->type = $type;
-        $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
-
         // Start Report Status
 
-        if($check_report == 'Yes'){
-
-            $cv_report = $request->input('cv_report');
+        if($check_report == 'Yes') {
 
             if(isset($cv_report) && $cv_report != '') {
-                $user->cv_report = $cv_report;
+                $set_cv_report = $cv_report;
             }
             else {
-                $user->cv_report = NULL;
+                $set_cv_report = 'No';
             }
-
-            $interview_report = $request->input('interview_report');
 
             if(isset($interview_report) && $interview_report != '') {
-                $user->interview_report = $interview_report;
+                $set_interview_report = $interview_report;
             }
             else {
-                $user->interview_report = NULL;
+                $set_interview_report = 'No';
             }
-
-            $lead_report = $request->input('lead_report');
 
             if(isset($lead_report) && $lead_report != '') {
-                $user->lead_report = $lead_report;
+                $set_lead_report = $lead_report;
             }
             else {
-                $user->lead_report = NULL;
+                $set_lead_report = 'No';
             }
         }
         else {
 
-            $user->cv_report = NULL;
-            $user->interview_report = NULL;
-            $user->lead_report = NULL;
+            $set_cv_report = 'No';
+            $set_interview_report = 'No';
+            $set_lead_report = 'No';
         }
         // End Report Status
 
-        // Get first & last name
+        $new_value_array = array();
+        $new_value_array['first_name'] = $first_name;
+        $new_value_array['last_name'] = $last_name;
+        $new_value_array['email'] = $email;
+        $new_value_array['semail'] = $semail;
 
-        $first_name = $request->input('first_name');
-        $last_name = $request->input('last_name');
+        $new_value_array['company_name'] = Companies::getCompanyNameById($company_id);
+        $new_value_array['department_name'] = Department::getDepartmentNameById($department_id);
+        $new_value_array['hr_adv_recruitemnt'] = $hr_adv_recruitemnt;
+        $new_value_array['designation'] = Role::getRoleNameById($role);
+        $new_value_array['reports_to'] = User::getUserNameById($reports_to);
+
+        $new_value_array['check_report'] = $check_report;
+        $new_value_array['cv_report'] = $set_cv_report;
+        $new_value_array['interview_report'] = $set_interview_report;
+        $new_value_array['lead_report'] = $set_lead_report;
+        $new_value_array['status'] = $status;
+        $new_value_array['account_manager'] = $account_manager;
+
+        // Get Old Value
+
+        $user_all_info = User::getProfileInfo($id);
+
+        $old_first_name = $user_all_info->first_name;
+        $old_last_name = $user_all_info->last_name;
+        $old_name = $user_all_info->name;
+
+        $old_email = $user_all_info->email;
+        $old_semail = $user_all_info->secondary_email;
+
+        $old_company_id = $user_all_info->company_id;
+        $old_department = $user_all_info->department_id;
+        $old_hr_adv_recruitemnt = $user_all_info->hr_adv_recruitemnt;
+        $old_role_id = $user_all_info->role_id;
+        $old_reports_to = $user_all_info->reports_to;
+
+        $old_check_report = $user_all_info->daily_report;
+        $old_cv_report = $user_all_info->cv_report;
+        $old_interview_report = $user_all_info->interview_report;
+        $old_lead_report = $user_all_info->lead_report;
+        $old_status = $user_all_info->status;
+        $old_account_manager = $user_all_info->account_manager;
+
+        $old_value_array = array();
+        $old_value_array['first_name'] = $old_first_name;
+        $old_value_array['last_name'] = $old_last_name;
+        $old_value_array['email'] = $old_email;
+        $old_value_array['semail'] = $old_semail;
+
+        $old_value_array['company_name'] = Companies::getCompanyNameById($old_company_id);
+        $old_value_array['department_name'] = Department::getDepartmentNameById($old_department);
+        $old_value_array['hr_adv_recruitemnt'] = $old_hr_adv_recruitemnt;
+        $old_value_array['designation'] = Role::getRoleNameById($old_role_id);
+        $old_value_array['reports_to'] = User::getUserNameById($old_reports_to);
+
+        $old_value_array['check_report'] = $old_check_report;
+        $old_value_array['cv_report'] = $old_cv_report;
+        $old_value_array['interview_report'] = $old_interview_report;
+        $old_value_array['lead_report'] = $old_lead_report;
+        $old_value_array['status'] = $old_status;
+        $old_value_array['account_manager'] = $old_account_manager;
+
+        if($first_name != $old_first_name) {
+            $first_name_value = 1;
+        }
+        else {
+            $first_name_value = 0;
+        }
+
+        if($last_name != $old_last_name) {
+            $last_name_value = 1;
+        }
+        else {
+            $last_name_value = 0;
+        }
+
+        if($name != $old_name) {
+            $name_value = 1;
+        }
+        else {
+            $name_value = 0;
+        }
+
+        if($email != $old_email) {
+            $email_value = 1;
+        }
+        else {
+            $email_value = 0;
+        }
+
+        if($semail != $old_semail) {
+            $semail_value = 1;
+        }
+        else {
+            $semail_value = 0;
+        }
+
+        if($company_id != $old_company_id) {
+            $company_id_value = 1;
+        }
+        else {
+            $company_id_value = 0;
+        }
+
+        if($department_id != $old_department) {
+            $department_value = 1;
+        }
+        else {
+            $department_value = 0;
+        }
+
+        if($hr_adv_recruitemnt != $old_hr_adv_recruitemnt) {
+            $hr_adv_recruitemnt_value = 1;
+        }
+        else {
+            $hr_adv_recruitemnt_value = 0;
+        }
+
+        if($role != $old_role_id) {
+            $role_id_value = 1;
+        }
+        else {
+            $role_id_value = 0;
+        }
+
+        if($reports_to != $old_reports_to) {
+            $reports_to_value = 1;
+        }
+        else {
+            $reports_to_value = 0;
+        }
+
+        if($check_report != $old_check_report) {
+            $check_report_value = 1;
+        }
+        else {
+            $check_report_value = 0;
+        }
+
+        if($cv_report != $old_cv_report) {
+            $cv_report_value = 1;
+        }
+        else {
+            $cv_report_value = 0;
+        }
+
+        if($interview_report != $old_interview_report) {
+            $interview_report_value = 1;
+        }
+        else {
+            $interview_report_value = 0;
+        }
+
+        if($lead_report != $old_lead_report) {
+            $lead_report_value = 1;
+        }
+        else {
+            $lead_report_value = 0;
+        }
+
+        if($status != $old_status) {
+            $status_value = 1;
+        }
+        else {
+            $status_value = 0;
+        }
+
+        if($account_manager != $old_account_manager) {
+            $account_manager_value = 1;
+        }
+        else {
+            $account_manager_value = 0;
+        }
         
+        // Save new value
+
+        // Delete Old Role
+        //DB::table('role_user')->where('user_id',$id)->delete();
+        DB::statement("UPDATE role_user SET role_id = '$role' where user_id = '$id'");
+        $user = User::find($id);
+        $user->update($input);
+
         $user->first_name = $first_name;
         $user->last_name = $last_name;
+        $user->name = $name;
+        $user->email = $email;
+        $user->secondary_email = $semail;
+        $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
+        //$user->attachRole($role);
+        $user->reports_to = $reports_to;
+        $user->daily_report = $check_report;
+        $user->cv_report = $set_cv_report;
+        $user->interview_report = $set_interview_report;
+        $user->lead_report = $set_lead_report;
+        $user->save();
+        
+        // Send email notification when user information is update
 
-        // Floor incharge or not
+        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0) {
 
-        $check_floor_incharge = $request->input('check_floor_incharge');
-        $user->check_floor_incharge = $check_floor_incharge;
+            $logged_in_user_id = \Auth::user()->id;
+            $logged_in_user_name = \Auth::user()->name;
 
-        $users = $user->save();
+            $hr_userid = getenv('HRUSERID');
+            $hr_email = User::getUserEmailById($hr_userid);
 
-        //  If status is inactive then delete this user process and training
+            $admin_userid = getenv('ADMINUSERID');
+            $admin_email = User::getUserEmailById($admin_userid);
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+
+            $cc_users_array = array($admin_email,$superadminemail);
+
+            $module = "Update User";
+            $sender_name = $logged_in_user_id;
+            $to = $hr_email;
+            $subject = "Details of - " . $first_name . " " . $last_name . " - Updated By - " . $logged_in_user_name;
+            $message = "<tr><td>" . $logged_in_user_name . " update user information.</td></tr>";
+            $module_id = $id;
+            $cc = implode(",", $cc_users_array);
+
+            $from_name = getenv('FROM_NAME');
+            $from_address = getenv('FROM_ADDRESS');
+            $app_url = getenv('APP_URL');
+
+            $input = array();
+            $input['from_name'] = $from_name;
+            $input['from_address'] = $from_address;
+            $input['subject'] = $subject;
+            $input['to'] = $to;
+            $input['cc'] = $cc_users_array;
+            $input['app_url'] = $app_url;
+            $input['new_value_array'] = $new_value_array;
+            $input['old_value_array'] = $old_value_array;
+
+            \Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input){
+                    
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+            });
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        } 
+
+        if (isset($status) && $status == 'Active') {
+
+            return redirect()->route('users.index')->with('success','User Updated Successfully, please add this user manually in training and process module.');
+        }
+
+        // If status is inactive then delete this user process and training
         if (isset($status) && $status == 'Inactive') {
+
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
             JobVisibleUsers::where('user_id',$id)->delete();
-        }
-        if (isset($status) && $status == 'Active') {
-            return redirect()->route('users.index')->with('success','User updated successfully. please add this user manually in training and process module.');
         }
 
         return redirect()->route('users.index')->with('success','User Updated Successfully.');

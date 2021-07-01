@@ -37,4 +37,18 @@ class Companies extends Model
         }
         return $company_id;
     }
+
+    public static function getCompanyNameById($company_id) {
+
+        $company_nm = '';
+
+        $query = Companies::query();
+        $query = $query->where('companies.id','=',$company_id);
+        $query = $query->first();
+
+        if(isset($query)) {
+            $company_nm = $query->name;
+        }
+        return $company_nm;
+    }
 }

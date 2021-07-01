@@ -1455,7 +1455,7 @@ class EveryMinute extends Command
                         $message->to($input['to_array'])->subject($input['subject']);
                     });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -1479,7 +1479,7 @@ class EveryMinute extends Command
                         $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -1503,7 +1503,7 @@ class EveryMinute extends Command
                         $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -1527,7 +1527,7 @@ class EveryMinute extends Command
                         $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -1616,7 +1616,7 @@ class EveryMinute extends Command
                         }
                     });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -1640,7 +1640,7 @@ class EveryMinute extends Command
                         $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -1671,6 +1671,17 @@ class EveryMinute extends Command
                             \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                         }
                     }
+                }
+            }
+
+            else if ($value['module'] == 'Update User') {
+
+                // Get users for popup of add information
+                $users_details = User::getProfileInfo($value['module_id']);
+
+                if(isset($users_details) && $users_details != '') {
+
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
         }
