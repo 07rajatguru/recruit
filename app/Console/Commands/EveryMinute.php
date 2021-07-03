@@ -25,6 +25,7 @@ use App\Date;
 use App\CandidateUploadedResume;
 use App\EmailTemplate;
 use App\Contactsphere;
+use App\JobOpen;
 
 class EveryMinute extends Command
 {
