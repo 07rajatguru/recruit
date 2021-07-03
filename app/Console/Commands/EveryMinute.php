@@ -1648,10 +1648,7 @@ class EveryMinute extends Command
 
                 $to_array = explode(",",$input['to']);
 
-                $from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
-                $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
-
-                $jobs = JobOpen::getJobsByMB($value['sender_name'],$from_date,$to_date);
+                $jobs = JobOpen::getJobsByMB($value['sender_name']);
 
                 if(isset($jobs) && sizeof($jobs) > 0) {
 
