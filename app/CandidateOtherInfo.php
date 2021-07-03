@@ -29,7 +29,7 @@ class CandidateOtherInfo extends Model
         return $res;
     }
 
-    public static function getApplicantCandidatesByJobId($job_id) {
+    public static function getApplicantCandidatesByJobId($job_id,$from_date='',$to_date='') {
 
         $query = new CandidateOtherInfo();
 
@@ -37,7 +37,14 @@ class CandidateOtherInfo extends Model
         $query = $query->leftjoin('functional_roles','functional_roles.id','=','candidate_otherinfo.functional_roles_id');
         $query = $query->leftjoin('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
 
-         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as full_name', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name','candidate_basicinfo.created_at as applicant_date','job_associate_candidates.shortlisted as shortlisted');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as full_name', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','candidate_basicinfo.mobile as mobile','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','functional_roles.name as functional_roles_name','candidate_basicinfo.created_at as applicant_date','job_associate_candidates.shortlisted as shortlisted');
+
+        if(isset($from_date) && $from_date != '' && isset($to_date) && $to_date != '') {
+
+            $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+            $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+        }
+
         $query = $query->where('candidate_otherinfo.applicant_job_id','=',$job_id);
 
         $response = $query->get();

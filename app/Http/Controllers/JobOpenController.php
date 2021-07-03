@@ -4211,7 +4211,7 @@ class JobOpenController extends Controller
         $client_id = $jobopen_response->client_id;
         $posting_title = $jobopen_response->posting_title;
 
-        $candidateDetails = CandidateOtherInfo::getApplicantCandidatesByJobId($id);
+        $candidateDetails = CandidateOtherInfo::getApplicantCandidatesByJobId($id,'','');
 
         return view('adminlte::jobopen.applicant_candidate', array('job_id' => $id, 'posting_title' => $posting_title,'candidates'=>$candidateDetails ,'client_id'=>$client_id,'user_id'=>$user_id));
     }
@@ -4353,9 +4353,9 @@ class JobOpenController extends Controller
             else if ($order == 6) {
                 $order_column_name = "count";
             }
-            else if ($order == 7) {
+            /*else if ($order == 7) {
                 $order_column_name = "applicant_count";
-            }
+            }*/
             else if ($order == 8) {
                 $order_column_name = "job_openings.city";
             }

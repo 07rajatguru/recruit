@@ -162,13 +162,14 @@
                 "order" : [12,'desc'],
                 "columnDefs": [ 
 
+                    { "width": "10px", "targets": 0, "searchable": false},
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 2, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 3 },
                     { "width": "10px", "targets": 4 },
                     { "width": "150px", "targets": 5 },
                     { "width": "10px", "targets": 6 },
-                    { "width": "10px", "targets": 7 },
+                    { "width": "10px", "targets": 7, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 8 },
                     { "width": "10px", "targets": 9 },
                     { "width": "5px",  "targets": 10 },

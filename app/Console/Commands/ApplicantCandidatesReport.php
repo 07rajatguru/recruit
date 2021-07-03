@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\JobOpen;
 use App\User;
+use App\Events\NotificationMail;
 
 class ApplicantCandidatesReport extends Command
 {
@@ -39,9 +40,6 @@ class ApplicantCandidatesReport extends Command
      */
     public function handle()
     {
-        $from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
-        $to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
-
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $type_array = array($recruitment,$hr_advisory);
@@ -52,7 +50,7 @@ class ApplicantCandidatesReport extends Command
 
             foreach ($users as $key => $value) {
 
-                $jobs = JobOpen::getJobsByMB($key,$from_date,$to_date);
+                $jobs = JobOpen::getJobsByMB($key);
 
                 if(isset($jobs) && sizeof($jobs) > 0) {
 
