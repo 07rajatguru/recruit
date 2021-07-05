@@ -513,9 +513,14 @@
                 <input type="hidden" name="candi_ids" id="candi_ids" value="">
                 <input type="hidden" name="posting_title" id="posting_title" value="{{ $posting_title }}">
                 <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="submit">Yes</button>
+
+                <div class="modal-footer" id="footer1">
+                    <button type="submit" class="btn btn-primary" id="send-mail-btn">Yes</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                <div class="modal-footer" id="footer2" style="display: none;">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -791,10 +796,16 @@
                     $(".candidate-mail").show();
                     if (msg.success == 'success') {
                         $(".check-id").append(msg.mail);
-                        $('#submit').attr('onclick','usertosendmail()');
+                        $('#send-mail-btn').attr('onclick','usertosendmail()');
+
+                        document.getElementById("footer2").style.display = 'none';
+                        document.getElementById("footer1").style.display = "block";
                     }
                     else{
                         $(".check-id").append(msg.err);
+
+                        document.getElementById("footer1").style.display = 'none';
+                        document.getElementById("footer2").style.display = "block";
                     }
                 }
             });

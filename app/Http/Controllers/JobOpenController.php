@@ -4042,7 +4042,7 @@ class JobOpenController extends Controller
             $message->to($input['to_address'])->subject($input['subject']);
         });
 
-        return redirect('/jobs/'.$job_id.'/associated_candidates');
+        return redirect('/jobs/'.$job_id.'/associated_candidates')->with('success', 'Email send Successfully.');
     }
 
     // Function for associated candidates details by job for clinet login show page 

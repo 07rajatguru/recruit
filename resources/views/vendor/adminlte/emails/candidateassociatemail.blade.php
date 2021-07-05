@@ -9,7 +9,6 @@
 
 <body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
 
-<body>
 <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
     <tr>
         <td width="600" >
