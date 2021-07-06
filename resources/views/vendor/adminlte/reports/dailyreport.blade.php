@@ -90,13 +90,13 @@
 					<tr style="background-color: #7598d9">
 						<th>No</th>
 						<th>Position</th>
-						<th>Position Location</th>
-						<th>Name of the candidate</th>
+						<th>Position <br/> Location</th>
+						<th>Name of the <br/> candidate</th>
 						<th>Interview Date</th>
 						<th>Interview Time</th>
-						<th>Candidate Location</th>
-						<th>Mode of Interview</th>
-						<th>Skype ID</th>
+						<th>Candidate <br/> Location</th>
+						<th>Mode of  <br/> Interview</th>
+						<th>Video ID</th>
 						<th>Contact No.</th>
 						<th>Email ID</th>
 						<th>Confirmed</th>
@@ -107,16 +107,16 @@
 					@foreach($interview_daily as $key=>$value)
 						<tr>
 							<td>{{ ++$i }}</td>
-							<td>{{ $value['posting_title'] }}</td>
-							<td>{{ $value['interview_location'] }}</td>
+							<td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] }}</td>
+							<td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['interview_location'] }}</td>
 							<td>{{ $value['cname'] }}</td>
 							<td>{{ date('d/m/Y',strtotime($value['interview_date'])) }}</td>
 							<td>{{ date('h:i A',strtotime($value['interview_time'])) }}</td>
 							<td>{{ $value['ccity'] }}</td>
 							<td>{{ $value['interview_type'] }}</td>
 							<td>{{ '' }}</td>
-							<td>{{ $value['cmobile'] }}</td>
-							<td>{{ $value['cemail'] }}</td>
+							<td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cmobile'] }}</td>
+							<td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cemail'] }}</td>
 							<td>{{ 'Yes' }}</td>
 							<td>{{ 'Adler' }}</td>
 						</tr>
