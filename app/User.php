@@ -290,7 +290,7 @@ class User extends Authenticatable
         $user_query = $user_query->first();
 
         if(isset($user_query)){
-            $user_name = $user_query->name;
+            $user_name = $user_query->first_name . " " . $user_query->last_name;
         }
         return $user_name;
     }
