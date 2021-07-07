@@ -14,6 +14,7 @@ class TicketsDiscussionDoc extends Model
         $query = TicketsDiscussionDoc::query();
         $query = $query->orderBy('tickets_discussion_doc.id','DESC');
         $query = $query->select('tickets_discussion_doc.*');
+        $query = $query->where('tickets_discussion_doc.tickets_discussion_id','=',$id);
         $response = $query->get();
 
         $i=0;

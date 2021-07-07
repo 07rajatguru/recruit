@@ -26,6 +26,8 @@ use App\CandidateUploadedResume;
 use App\EmailTemplate;
 use App\Contactsphere;
 use App\JobOpen;
+use App\TicketsDiscussion;
+use App\TicketsDiscussionDoc;
 
 class EveryMinute extends Command
 {
@@ -1678,6 +1680,59 @@ class EveryMinute extends Command
                 $users_details = User::getProfileInfo($value['module_id']);
 
                 if(isset($users_details) && $users_details != '') {
+
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
+            else if ($value['module'] == 'Ticket Discussion') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                // Get users for popup of add information
+                $ticket_res = TicketsDiscussion::getTicketDetailsById($value['module_id']);
+                $ticket_res_doc = TicketsDiscussionDoc::getTicketDocsById($value['module_id']);
+
+                if (isset($ticket_res_doc) && $ticket_res_doc != '') {
+
+                    $file_path_array = array();
+                    $j=0;
+
+                    foreach ($ticket_res_doc as $k => $v) {
+
+                        $file_path = public_path() . "/" . $v['fileName'];
+                        $file_path_array[$j] = $file_path;
+                        $j++;
+                    }
+                }
+
+                if(isset($ticket_res) && sizeof($ticket_res) > 0) {
+
+                    $input['ticket_res'] = $ticket_res;
+                    $input['to_array'] = $to_array;
+                    $input['cc_array'] = $cc_array;
+
+                    if (isset($file_path_array) && sizeof($file_path_array) > 0) {
+
+                        $input['file_path'] = $file_path_array;
+                    }
+
+                    \Mail::send('adminlte::emails.ticketdiscussionemail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+
+                        if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                            foreach ($input['file_path'] as $key => $value) {
+
+                                if(isset($value) && $value != '') {
+                                    $message->attach($value);
+                                }
+                            }
+                        }
+                    });
 
                     \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\TicketsDiscussion;
 use App\TicketsDiscussionDoc;
+use App\User;
+use App\Events\NotificationMail;
 
 class TicketsDiscussionController extends Controller
 {
@@ -82,27 +84,23 @@ class TicketsDiscussionController extends Controller
             }
         }
 
-        // get superadmin email id
-
-        /*$superadminuserid = getenv('SUPERADMINUSERID');
-        $superadminemail = User::getUserEmailById($superadminuserid);
-
         // get loggedin_user_email_id
-
         $loggedin_useremail = User::getUserEmailById($user_id);
 
-        $cc_array = array($superadminemail,$loggedin_useremail);
+        // get superadmin email id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
 
         $module = "Tickets Discussion";
         $sender_name = $user_id;
-        $to = "saloni@trajinfotech.com";
-        $cc = implode(",", $cc_array);
+        $to = $loggedin_useremail;
+        $cc = $superadminemail;
 
         $subject = "Tickets Discussion - " . $question_type;
         $message = "Tickets Discussion - " . $question_type;
         $module_id = $tickets_discussion_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         return redirect()->route('ticket.index')->with('success','Ticket Generated Successfully.');
     }
@@ -222,5 +220,16 @@ class TicketsDiscussionController extends Controller
         TicketsDiscussionDoc::where('id',$docid)->delete();
 
         return redirect()->route('ticket.show',[$tickets_discussion_id])->with('success','Attachment Deleted Successfully.');
+    }
+
+    public function remarks($id) {
+
+        $user_id = \Auth::user()->id;
+        $tickets_discussion_id = $id;
+
+        $ticket_discussion = TicketsDiscussion::find($tickets_discussion_id);
+        $post = $ticket_discussion->post()->orderBy('created_at', 'desc')->get();
+
+        return view('adminlte::ticketDiscussion.remarks',compact('user_id','id','ticket_discussion','post'));
     }
 }

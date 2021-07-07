@@ -3175,4 +3175,41 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'ticket.destroy',
         'uses' => 'TicketsDiscussionController@destroy'
     ]);
+
+    // Client Remarks Section Start
+
+    Route::get('ticket/{id}/remarks', [
+        'as' => 'ticket.remarks',
+        'uses' => 'TicketsDiscussionController@remarks'
+    ]);
+
+    Route::post('ticket/{client_id}/post',[
+        'as'=>'ticket.post.write',
+        'uses'=>'TicketsDiscussionController@writePost'
+    ]);
+
+    Route::post('post/update/{client_id}/{post_id}',[
+        'as'=>'ticket.post.update',
+        'uses'=>'TicketsDiscussionController@updateClientRemarks'
+    ]);
+
+    Route::post('post/{post_id}',[
+        'as'=>'post.comments.write',
+        'uses'=>'TicketsDiscussionController@writeComment'
+    ]);
+
+    Route::post('ticket/post/delete/{id}',[
+        'as'=>'ticket.reviewdestroy',
+        'uses'=>'TicketsDiscussionController@postDestroy'
+    ]);
+
+    Route::post('ticket/comment/delete/{id}',[
+        'as'=>'ticket.commentdelete',
+        'uses'=>'TicketsDiscussionController@commentDestroy'
+    ]);
+
+    Route::post('ticket/comment/update',[
+        'as'=>'ticket.commentupdate',
+        'uses'=>'TicketsDiscussionController@updateComment'
+    ]);
 });
