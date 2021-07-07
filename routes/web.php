@@ -3090,6 +3090,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'userrolewise.modulevisible',
         'uses' => 'NewRoleController@userWiseModuleAjax'
     ]);
+
     // User Bench Mark Routes
 
     Route::get('user-bench-mark',[
@@ -3128,5 +3129,50 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:user-benchmark-delete']
     ]);
 
-    // User Bench Mark Routes End
+    // Customer Support routes
+
+    Route::get('ticket-discussion',[
+        'as' => 'ticket.index',
+        'uses' => 'TicketsDiscussionController@index'
+    ]);
+
+    Route::get('ticket-discussion/create',[
+        'as' => 'ticket.create',
+        'uses' => 'TicketsDiscussionController@create'
+    ]);
+
+    Route::post('ticket-discussion/create',[
+        'as' => 'ticket.store',
+        'uses' => 'TicketsDiscussionController@store'
+    ]);
+
+    Route::get('ticket-discussion/{id}',[
+        'as'=>'ticket.show',
+        'uses'=>'TicketsDiscussionController@show'
+    ]);
+
+    Route::get('ticket-discussion/{id}/edit',[
+        'as' => 'ticket.edit',
+        'uses' => 'TicketsDiscussionController@edit'
+    ]);
+
+    Route::patch('ticket-discussion/{id}',[
+        'as' => 'ticket.update',
+        'uses' => 'TicketsDiscussionController@update'
+    ]);
+
+    Route::post('ticket-discussion/upload/{id}', [
+        'as' => 'ticketattachments.upload',
+        'uses' => 'TicketsDiscussionController@upload'
+    ]);
+    
+    Route::delete('ticket-discussion/destroy/{id}', [
+        'as' => 'ticketattachments.destroy',
+        'uses' => 'TicketsDiscussionController@attachmentsDestroy'
+    ]);
+
+    Route::delete('ticket-discussion/{id}',[
+        'as' => 'ticket.destroy',
+        'uses' => 'TicketsDiscussionController@destroy'
+    ]);
 });
